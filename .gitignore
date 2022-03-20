@@ -1,2 +1,3 @@
 *.pkl
+__pycache__/
 simple_image_compare_*
