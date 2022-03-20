@@ -239,16 +239,14 @@ class Compare:
     def __init__(self, base_dir, search_file_path, counter_limit, use_thumb,
                  compare_faces, color_diff_threshold, inclusion_pattern,
                  overwrite, verbose):
-        self.base_dir = base_dir
-        self.search_file_path = search_file_path
-        self.is_run_search = search_file_path is not None
-        self.counter_limit = counter_limit
         self.use_thumb = use_thumb
+        self.set_base_dir(base_dir)
+        self.set_search_file_path(search_file_path)
+        self.counter_limit = counter_limit
         self.compare_faces = compare_faces
         self.inclusion_pattern = inclusion_pattern
         self.overwrite = overwrite
         self.verbose = verbose
-        self.file_faces_filepath = os.path.join(base_dir, "image_faces.pkl")
         if self.use_thumb:
             self.thumb_dim = 15
             self.n_colors = self.thumb_dim ** 2
@@ -256,8 +254,6 @@ class Compare:
             self.color_diff_threshold = color_diff_threshold
             if self.color_diff_threshold is None:
                 self.color_diff_threshold = 15
-            self.file_colors_filepath = os.path.join(
-                base_dir, "image_thumb_colors.pkl")
             self.modifier = self.thumb_dim
             self.color_getter = get_image_thumb_colors
             self.color_diff_alg = is_any_x_true_consecutive
@@ -267,8 +263,6 @@ class Compare:
             self.color_diff_threshold = color_diff_threshold
             if self.color_diff_threshold is None:
                 self.color_diff_threshold = 15
-            self.file_colors_filepath = os.path.join(
-                base_dir, "image_top_colors.pkl")
             self.modifier = KMeans(n_clusters=self.n_colors)
             self.color_getter = get_image_colors
             self.color_diff_alg = is_any_x_true_weighted
@@ -276,14 +270,37 @@ class Compare:
             self.set_face_cascade()
         self.file_colors = np.empty((0, self.n_colors, 3))
         self.file_faces = np.empty((0))
+        self.settings_updated = False
+
+    def set_base_dir(self, base_dir):
+        self.base_dir = base_dir
+        self.search_output_path = os.path.join(
+            base_dir, "simple_image_compare_search_output.txt")
+        self.groups_output_path = os.path.join(
+            base_dir, "simple_image_compare_file_groups_output.txt")
+        self.file_faces_filepath = os.path.join(base_dir, "image_faces.pkl")
+        if self.use_thumb:
+            self.file_colors_filepath = os.path.join(
+                base_dir, "image_thumb_colors.pkl")
+        else:
+            self.file_colors_filepath = os.path.join(
+                base_dir, "image_top_colors.pkl")
+
+    def set_search_file_path(self, search_file_path):
+        self.search_file_path = search_file_path
+        self.is_run_search = search_file_path is not None
 
     def get_files(self):
         self.files_found = []
         self.files = []
-        self.files.extend(glob(os.path.join(self.base_dir, "*.jpg")))
-        self.files.extend(glob(os.path.join(self.base_dir, "*.jpeg")))
-        self.files.extend(glob(os.path.join(self.base_dir, "*.png")))
-        self.files.extend(glob(os.path.join(self.base_dir, "*.webp")))
+        self.files.extend(
+            glob(os.path.join(self.base_dir, "**/*.jpg"), recursive=True))
+        self.files.extend(
+            glob(os.path.join(self.base_dir, "**/*.jpeg"), recursive=True))
+        self.files.extend(
+            glob(os.path.join(self.base_dir, "**/*.png"), recursive=True))
+        self.files.extend(
+            glob(os.path.join(self.base_dir, "**/*.webp"), recursive=True))
         self.files.sort()
         self.has_new_file_data = False
         self.max_files_processed = min(self.counter_limit, len(self.files))
@@ -338,9 +355,11 @@ class Compare:
     def get_data(self):
         if self.overwrite or not os.path.exists(self.file_colors_filepath):
             if not os.path.exists(self.file_colors_filepath):
-                print("Image data cache not found so creating new cache"
+                print("Image data not found so creating new cache"
                       + " - this may take a while.")
-            self.base_dirfile_colors_dict = {}
+            elif self.overwrite:
+                print("Overwriting image data caches - this may take a while.")
+            self.file_colors_dict = {}
             self.file_faces_dict = {}
         else:
             file_colors_file = open(self.file_colors_filepath, "rb")
@@ -352,7 +371,7 @@ class Compare:
 
         # Gather image file data from directory
 
-        if verbose:
+        if self.verbose:
             print("Gathering image data...")
         else:
             print("Gathering image data", end="", flush=True)
@@ -404,14 +423,14 @@ class Compare:
             if counter % 200 == 0:
                 percent_complete = counter / self.max_files_processed_even * 100
                 if percent_complete % 10 == 0:
-                    if verbose:
+                    if self.verbose:
                         print(str(int(percent_complete)) + "% data gathered")
                     else:
                         print(".", end="", flush=True)
 
         # Save image file data
 
-        if self.has_new_file_data:
+        if self.has_new_file_data or self.overwrite:
             file_colors_file = open(self.file_colors_filepath, "wb")
             file_faces_file = open(self.file_faces_filepath, "wb")
             pickle.dump(self.file_colors_dict, file_colors_file)
@@ -485,8 +504,8 @@ class Compare:
             files_grouped[_files_found[_index]] = color_similars[1][_index]
 
         if len(files_grouped) > 0:
-            with open(search_output_path, "w") as textfile:
-                header = "Possibly related images to \"" + search_file_path + "\":\n"
+            with open(self.search_output_path, "w") as textfile:
+                header = "Possibly related images to \"" + search_path + "\":\n"
                 textfile.write(header)
                 print(header)
                 for f in sorted(files_grouped, key=lambda f: files_grouped[f]):
@@ -503,9 +522,10 @@ class Compare:
                             textfile.write(f + " - similarity: "
                                            + similarity_score + "\n")
                             print(f + " - similarity: " + similarity_score)
-            print("\nThis output data saved to file at " + search_output_path)
+            print("\nThis output data saved to file at "
+                  + self.search_output_path)
         else:
-            print("No similar images to \"" + search_file_path
+            print("No similar images to \"" + self.search_file_path
                   + "\" identified with current params.")
         return files_grouped
 
@@ -636,7 +656,7 @@ class Compare:
             file_group[_file] = diff_score
             file_groups[group_index] = file_group
 
-        if not verbose:
+        if not self.verbose:
             print("")
         group_counter = 0
         group_print_cutoff = 5
@@ -647,7 +667,7 @@ class Compare:
 
             # TODO calculate group similarities and mark duplicates separately in this case
 
-            with open(groups_output_path, "w") as textfile:
+            with open(self.groups_output_path, "w") as textfile:
                 for group_index in sorted(file_groups,
                                           key=lambda group_index:
                                           len(file_groups[group_index])):
@@ -673,7 +693,7 @@ class Compare:
                   + " image groups with current parameters.")
             print("\nPrinted up to first " + str(group_print_cutoff)
                   + " groups identified. All group data saved to file at "
-                  + groups_output_path)
+                  + self.groups_output_path)
         else:
             print("No similar images identified with current params.")
         return (files_grouped, file_groups)
