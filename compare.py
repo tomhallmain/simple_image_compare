@@ -379,7 +379,7 @@ class Compare:
         counter = 0
 
         for f in self.files:
-            if is_invalid_file(f, counter, self.run_search, inclusion_pattern):
+            if is_invalid_file(f, counter, self.run_search, self.inclusion_pattern):
                 continue
 
             if counter > self.counter_limit:
@@ -668,9 +668,7 @@ class Compare:
             # TODO calculate group similarities and mark duplicates separately in this case
 
             with open(self.groups_output_path, "w") as textfile:
-                for group_index in sorted(file_groups,
-                                          key=lambda group_index:
-                                          len(file_groups[group_index])):
+                for group_index in self.sort_groups(file_groups):
                     group = file_groups[group_index]
                     if len(group) < 2:
                         continue
@@ -703,6 +701,11 @@ class Compare:
             return self.run_search(self.search_file_path)
         else:
             return self.run_comparison()
+
+    def sort_groups(self, file_groups):
+        return sorted(file_groups,
+                      key=lambda group_index:
+                      len(file_groups[group_index]))
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import Canvas, PhotoImage, filedialog, messagebox
 # from tkinter.constants import BOTH, DISABLED, NORMAL, LEFT, RAISED, W, X, Y
@@ -143,19 +144,32 @@ class App():
         self.row_counter += 1
         self.prev_image_match_btn = None
         self.next_image_match_btn = None
+        self.prev_group_btn = None
+        self.next_group_btn = None
         self.search_current_image_btn = None
         self.label_current_image_name = None
+        self.rename_image_btn = None
+        self.delete_image_btn = None
 
         self.match_index = 0
         self.master.update()
         self.canvas = ResizingCanvas(self.master)
         self.canvas.grid(column=1, row=0)
         self.files_grouped = None
+        self.file_groups = None
         self.files_matched = None
         self.compare = None
+        self.mode = None
         self.has_image_matches = False
+        self.current_group = None
+        self.current_group_index = 0
+        self.group_indexes = []
+        self.max_group_index = 0
+        
         self.master.bind('<Left>', self.show_prev_image_key)
         self.master.bind('<Right>', self.show_next_image_key)
+        self.master.bind('<Shift-Left>', self.show_prev_group)
+        self.master.bind('<Shift-Right>', self.show_next_group)
         self.master.update()
 
     def set_base_dir(self) -> None:
@@ -251,38 +265,77 @@ class App():
         self.create_image(image_path)
 
     def show_prev_image_key(self, event) -> None:
-        if not self.has_image_matches:
-            return
-        if self.match_index > 0:
-            self.match_index -= 1
-        self.master.update()
-        self.create_image(self.files_matched[self.match_index])
+        self.show_prev_image(False)
 
-    def show_prev_image(self) -> None:
-        if not self.has_image_matches:
-            self.alert("Search required",
-                       "No matches found. Search again to find potential matches.",
-                       kind="info")
+    def show_prev_image(self, show_alert=True) -> None:
+        if len(self.files_matched) == 0:
+            if show_alert:
+                self.alert("Search required",
+                           "No matches found. Search again to find potential matches.",
+                           kind="info")
+            return
+            
         if self.match_index > 0:
             self.match_index -= 1
+        else:
+            self.match_index = len(self.files_matched) - 1
         self.master.update()
         self.create_image(self.files_matched[self.match_index])
 
     def show_next_image_key(self, event) -> None:
-        if not self.has_image_matches:
+        self.show_next_image(False)
+
+    def show_next_image(self, show_alert=True) -> None:
+        if len(self.files_matched) == 0:
+            if show_alert:
+                self.alert("Search required",
+                           "No matches found. Search again to find potential matches.",
+                           kind="info")
             return
+            
         if len(self.files_matched) > self.match_index + 1:
             self.match_index += 1
+        else:
+            self.match_index = 0
+            
         self.master.update()
         self.create_image(self.files_matched[self.match_index])
 
-    def show_next_image(self) -> None:
-        if not self.has_image_matches:
-            self.alert("Search required",
-                       "No matches found. Search again to find potential matches.",
-                       kind="info")
-        if len(self.files_matched) > self.match_index + 1:
-            self.match_index += 1
+    def show_prev_group(self, event=None) -> None:        
+        if (self.file_groups is None or len(self.group_indexes) == 0
+               or self.current_group_index == max(self.group_indexes)):
+            self.current_group_index = 0
+        else:
+            self.current_group_index -= 1
+        
+        self.set_current_group()    
+
+    def show_next_group(self, event=None) -> None:        
+        if (self.file_groups is None or len(self.group_indexes) == 0
+               or self.current_group_index + 1 == len(self.group_indexes)):
+            self.current_group_index = 0
+        else:
+            self.current_group_index += 1
+        
+        self.set_current_group()
+    
+    def set_current_group(self) -> None:
+        if self.mode == "SEARCH":
+            print("Invalid action, there should only be one group in search mode")
+            return
+        elif self.file_groups is None or len(self.file_groups) == 0:
+            print("No groups found")
+            return
+
+        actual_group_index = self.group_indexes[self.current_group_index]
+        self.current_group = self.file_groups[actual_group_index]
+        self.set_group_state_label(self.current_group_index)
+        self.match_index = 0
+        self.files_matched = []
+        
+        for f in sorted(self.current_group, key=lambda f: self.current_group[f]):
+            self.files_matched.append(f)
+
         self.master.update()
         self.create_image(self.files_matched[self.match_index])
 
@@ -330,7 +383,12 @@ class App():
         overwrite = self.get_overwrite()
         color_diff_threshold = self.get_color_diff_threshold()
         inclusion_pattern = self.get_inclusion_pattern()
+        self.current_group_index = 0
+        self.current_group = None
+        self.max_group_index = 0
+        self.group_indexes = []
         self.files_matched = []
+        self.match_index = 0
 
         if self.compare is None or self.compare.base_dir != self.get_base_dir():
             self.labelState["text"] = _wrap_text_to_fit_length(
@@ -355,13 +413,67 @@ class App():
             "Running image comparison with search file provided...", 30)
 
         if search_file_path is None or search_file_path == "":
+            self.mode = "GROUP"
             self.files_grouped, self.file_groups = self.compare.run()
-            self.labelState["text"] = _wrap_text_to_fit_length(
-                "Check groups output at " + self.compare.groups_output_path, 30)
-            # Not sure what to do here...
-        else:
-            self.files_grouped = self.compare.run_search(search_file_path)
+            
             if len(self.files_grouped) == 0:
+                self.has_image_matches = False
+                self.labelState["text"] = "Set a directory and search file."
+                self.alert("No Groups Found",
+                           "None of the files can be grouped with current settings.",
+                           kind="info")
+                return
+            
+            self.group_indexes = self.compare.sort_groups(self.file_groups)
+            self.max_group_index = max(self.file_groups.keys())
+            
+            if self.prev_image_match_btn is None:
+                self.prev_group_btn = Button(master=self.frameFiledetails,
+                                             text="Previous Group",
+                                             command=self.show_prev_group)
+                self.prev_group_btn .grid(
+                    column=0, row=self.row_counter)
+                self.row_counter += 1
+                self.next_group_btn = Button(master=self.frameFiledetails,
+                                             text="Next Group",
+                                             command=self.show_next_group)
+                self.next_group_btn .grid(
+                    column=0, row=self.row_counter)
+                self.row_counter += 1
+                self.prev_image_match_btn = Button(master=self.frameFiledetails,
+                                                    text="Previous Image Match",
+                                                    command=self.show_prev_image)
+                self.prev_image_match_btn.grid(
+                    column=0, row=self.row_counter)
+                self.row_counter += 1
+                self.next_image_match_btn = Button(master=self.frameFiledetails,
+                                                    text="Next Image Match",
+                                                    command=self.show_next_image)
+                self.next_image_match_btn.grid(
+                    column=0, row=self.row_counter)
+                self.row_counter += 1
+                self.search_current_image_btn = Button(
+                    master=self.frameFiledetails, text="Search Current Image",
+                    command=self.set_current_image_run_search)
+                self.search_current_image_btn.grid(
+                    column=0, row=self.row_counter)
+                self.row_counter += 1
+                self.delete_image_btn = Button(master=self.frameFiledetails,
+                                             text="---- DELETE ----",
+                                             command=self.delete_image)
+                self.delete_image_btn.grid(
+                    column=0, row=self.row_counter)
+                self.row_counter += 1
+
+            self.current_group_index = 0
+            self.set_current_group()
+
+        else:
+            self.mode = "SEARCH"
+            self.files_grouped = self.compare.run_search(search_file_path)
+            
+            if len(self.files_grouped) == 0:
+                self.has_image_matches = False
                 self.labelState["text"] = "Set a directory and search file."
                 self.alert("No Match Found",
                            "None of the files match the search file with current settings.",
@@ -397,6 +509,61 @@ class App():
                     column=0, row=self.row_counter)
                 self.row_counter += 1
 
+            self.create_image(self.files_matched[self.match_index])
+
+    def set_group_state_label(self, group_number):
+        self.labelState["text"] = _wrap_text_to_fit_length(
+            f"Group {group_number + 1} of {len(self.file_groups)}", 30)
+
+    def delete_image(self):
+        if len(self.files_matched) == 0:
+           print("Invalid action, the button should not be present if no files are available")
+           return
+           
+        filepath = self.files_matched[self.match_index]
+        filepath = get_valid_file(self.get_base_dir(), filepath)
+        
+        if filepath is not None:
+            print("Removing file: " + filepath)
+            os.remove(filepath)
+            self.update_groups_for_removed_file()
+        else:
+            print("Failed to delete current file, unable to get valid filepath")
+
+    # This would be more complicated if there was not a guarantee that groups
+    # are disjoint
+    def update_groups_for_removed_file(self):
+        if len(self.files_matched) < 3:
+            # remove this group as it will only have one file
+            self.files_grouped  = {k:v for k,v in self.files_grouped.items() if v not in self.files_matched}
+            actual_index = self.group_indexes[self.current_group_index]
+            del self.file_groups[actual_index]
+            del self.group_indexes[self.current_group_index]
+            
+            if len(self.file_groups) == 0:
+                self.alert("No More Groups",
+                           "There are no more image groups remaining for this directory and current filter settings.",
+                           kind="info")
+                self.current_group_index = 0
+                self.files_grouped = None
+                self.file_groups = None
+                self.match_index = 0
+                self.files_matched = []
+                self.group_indexes = []
+                return
+            elif self.current_group_index == len(self.file_groups):
+                self.current_group_index = 0
+            
+            self.set_current_group()
+        else:
+            filepath = self.files_matched[self.match_index]
+            self.files_grouped  = {k:v for k,v in self.files_grouped.items() if v != filepath}
+            del self.files_matched[self.match_index]
+
+            if self.match_index == len(self.files_matched):
+                self.match_index = 0
+            
+            self.master.update()
             self.create_image(self.files_matched[self.match_index])
 
 
