@@ -225,7 +225,7 @@ def is_invalid_file(file_path, counter, run_search, inclusion_pattern):
 
 
 def get_image_array(filepath):
-    image = imageio.imread(filepath)
+    image = imageio.v2.imread(filepath)
     image_shape = np.shape(image)
     if (len(image_shape) < 3 or image_shape[0] < 1 or image_shape[1] < 1
             or image_shape[2] < 1):
@@ -236,10 +236,11 @@ def get_image_array(filepath):
 
 
 class Compare:
-    def __init__(self, base_dir, search_file_path, counter_limit, use_thumb,
-                 compare_faces, color_diff_threshold, inclusion_pattern,
-                 overwrite, verbose):
+    def __init__(self, base_dir, search_file_path=None, counter_limit=30000,
+                 use_thumb=True, compare_faces=False, color_diff_threshold=15,
+                 inclusion_pattern=None, overwrite=False, verbose=False):
         self.use_thumb = use_thumb
+        self.files = None
         self.set_base_dir(base_dir)
         self.set_search_file_path(search_file_path)
         self.counter_limit = counter_limit
@@ -289,6 +290,11 @@ class Compare:
     def set_search_file_path(self, search_file_path):
         self.search_file_path = search_file_path
         self.is_run_search = search_file_path is not None
+        if self.is_run_search and self.files is not None:
+            if self.search_file_path in self.files:
+                self.files.remove(self.search_file_path)
+            self.search_file_index = 0
+            self.files.insert(self.search_file_index, self.search_file_path)
 
     def get_files(self):
         self.files_found = []
@@ -379,12 +385,11 @@ class Compare:
         counter = 0
 
         for f in self.files:
-            if is_invalid_file(f, counter, self.run_search, self.inclusion_pattern):
+            if is_invalid_file(f, counter, self.is_run_search, self.inclusion_pattern):
                 continue
 
             if counter > self.counter_limit:
                 break
-            counter += 1
 
             if f in self.file_colors_dict and f in self.file_faces_dict:
                 colors = self.file_colors_dict[f]
@@ -416,6 +421,7 @@ class Compare:
                     self.file_faces_dict[f] = n_faces
                 self.has_new_file_data = True
 
+            counter += 1
             self.file_colors = np.append(self.file_colors, [colors], 0)
             self.file_faces = np.append(self.file_faces, [n_faces], 0)
             self.files_found.append(f)
@@ -440,7 +446,10 @@ class Compare:
             self.file_colors_dict = None
             self.file_faces_dict = None
             if self.verbose:
-                print("Updated image data saved to: ")
+                if self.overwrite:
+                    print("Overwrote any pre-existing image data at:")
+                else:
+                    print("Updated image data saved to: ")
                 print(self.file_colors_filepath)
                 print(self.file_faces_filepath)
 
@@ -485,14 +494,14 @@ class Compare:
         files_grouped = {}
         _files_found = list(self.files_found)
 
-        if verbose:
+        if self.verbose:
             print("Identifying similar image files...")
         _files_found.pop(search_file_index)
         search_file_colors = self.file_colors[search_file_index]
         file_colors = np.delete(self.file_colors, search_file_index, 0)
         color_similars = self.compute_color_diff(
             file_colors, search_file_colors, True)
-        if compare_faces:
+        if self.compare_faces:
             search_file_faces = self.file_faces[search_file_index]
             file_faces = np.delete(self.file_faces, search_file_index)
             face_comparisons = file_faces - search_file_faces
@@ -522,9 +531,10 @@ class Compare:
                             textfile.write(f + " - similarity: "
                                            + similarity_score + "\n")
                             print(f + " - similarity: " + similarity_score)
-            print("\nThis output data saved to file at "
-                  + self.search_output_path)
-        else:
+            if self.verbose:
+                print("\nThis output data saved to file at "
+                      + self.search_output_path)
+        elif self.verbose:
             print("No similar images to \"" + self.search_file_path
                   + "\" identified with current params.")
         return files_grouped
@@ -548,7 +558,8 @@ class Compare:
         # Gather new image data if it was not in the initial list
 
         if search_file_path not in self.files_found:
-            print("Filepath not found in initial list - gathering new file data")
+            if self.verbose:
+                print("Filepath not found in initial list - gathering new file data")
             try:
                 image = get_image_array(search_file_path)
             except OSError as e:
@@ -565,8 +576,8 @@ class Compare:
                 raise AssertionError(
                     "Encountered an error gathering colors from the file provided.")
             n_faces = self.get_faces_count(search_file_path)
-            self.file_colors = np.append(self.file_colors, [colors], 0)
-            self.file_faces = np.append(self.file_faces, [n_faces], 0)
+            self.file_colors = np.insert(self.file_colors, 0, [colors], 0)
+            self.file_faces = np.insert(self.file_faces, 0, [n_faces], 0)
             self.files_found.insert(0, search_file_path)
 
         files_grouped = self.find_similars_to_image(
@@ -709,9 +720,14 @@ class Compare:
 
 
 if __name__ == "__main__":
-    compare = Compare(base_dir, search_file_path, counter_limit, use_thumb,
-                      compare_faces, color_diff_threshold, inclusion_pattern,
-                      overwrite, verbose)
+    compare = Compare(base_dir,
+                      search_file_path=search_file_path,
+                      counter_limit=counter_limit,
+                      use_thumb=use_thumb,
+                      compare_faces=compare_faces,
+                      color_diff_threshold=color_diff_threshold,
+                      inclusion_pattern=inclusion_pattern,
+                      overwrite=overwrite, verbose=verbose)
     compare.get_files()
     compare.get_data()
     compare.run()
