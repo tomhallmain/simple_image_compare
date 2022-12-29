@@ -42,110 +42,85 @@ class ResizingCanvas(Canvas):
 class App():
     def __init__(self, master):
         self.master = master
+        self.mode = None
         self.base_dir = get_user_dir()
-        self.frameFiledetails = Frame(self.master)
-        self.frameFiledetails.columnconfigure(0, weight=1)
+        self.search_dir = get_user_dir()
+        self.sidebar = Frame(self.master)
+        self.sidebar.columnconfigure(0, weight=1)
         self.row_counter = 0
-        self.frameFiledetails.grid(column=0, row=self.row_counter)
-        self.labelState = Label(self.frameFiledetails,
-                                text="Set a directory and search file.")
-        self.labelState.grid(pady=0)
-        self.row_counter += 1
-        self.label1 = Label(self.frameFiledetails, text="Controls & Settings")
-        self.label1.grid(pady=30)
-        self.row_counter += 1
-        self.labelFiles = Label(self.frameFiledetails, text="")
-        self.set_base_dir_btn = Button(self.frameFiledetails,
-                                       text="Set directory",
-                                       command=self.set_base_dir)
-        self.set_base_dir_btn.grid(column=0, row=self.row_counter)
-        self.row_counter += 1
-        self.set_base_dir_box = Entry(self.frameFiledetails,
+        self.sidebar.grid(column=0, row=self.row_counter)
+        self.labelMode = Label(self.sidebar)
+        self.labelState = Label(self.sidebar)
+        self.label1 = Label(self.sidebar)
+        self.set_base_dir_btn = None
+        self.create_img_btn = None
+        self.add_label(self.labelMode, "", sticky=None)
+        self.add_label(self.labelState,
+                       "Set a directory to run comparison.", pady=20)
+        self.add_label(self.label1, "Controls & Settings",
+                       sticky=None, pady=30)
+        self.add_button(self.set_base_dir_btn,
+                        "Set directory", self.set_base_dir)
+        self.set_base_dir_box = Entry(self.sidebar,
                                       text="Add dirpath...",
                                       width=30,
                                       font=fnt.Font(size=8))
-        self.set_base_dir_box.grid(column=0, row=self.row_counter, sticky=W)
-        self.row_counter += 1
-        self.create_img_btn = Button(self.frameFiledetails,
-                                     text="Set search file",
-                                     command=self.show_searched_image)
-        self.create_img_btn.grid(column=0, row=self.row_counter)
-        self.row_counter += 1
+        self.apply_to_grid(self.set_base_dir_box)
+        self.add_button(self.create_img_btn, "Set search file",
+                        self.set_search_image)
         self.search_image = tk.StringVar()
-        self.create_img_path_box = Entry(self.frameFiledetails,
+        self.create_img_path_box = Entry(self.sidebar,
                                          textvariable=self.search_image,
                                          width=30,
                                          font=fnt.Font(size=8))
-        self.create_img_path_box.grid(column=0, row=self.row_counter, sticky=W)
-        self.row_counter += 1
-        self.label_color_diff_threshold = Label(
-            self.frameFiledetails, text="Color diff threshold")
-        self.label_color_diff_threshold.grid(
-            column=0, row=self.row_counter, sticky=W)
-        self.row_counter += 1
+        self.apply_to_grid(self.create_img_path_box, sticky=W)
+        self.label_color_diff_threshold = Label(self.sidebar)
+        self.add_label(self.label_color_diff_threshold, "Color diff threshold")
         self.color_diff_threshold = tk.StringVar(master)
         self.color_diff_threshold_choice = OptionMenu(
-            self.frameFiledetails, self.color_diff_threshold,
+            self.sidebar, self.color_diff_threshold,
             *[str(i) for i in list(range(31))])
         self.color_diff_threshold.set("15")  # default value
-        self.color_diff_threshold_choice.grid(
-            column=0, row=self.row_counter, sticky=W)
-        self.row_counter += 1
-        self.label_compare_faces = Label(
-            self.frameFiledetails, text="Compare faces")
-        self.label_compare_faces.grid(column=0, row=self.row_counter, sticky=W)
-        self.row_counter += 1
+        self.apply_to_grid(self.color_diff_threshold_choice, sticky=W)
+        self.label_compare_faces = Label(self.sidebar)
+        self.add_label(self.label_compare_faces, "Compare faces")
         self.compare_faces = tk.StringVar(master)
         self.compare_faces_choice = OptionMenu(
-            self.frameFiledetails, self.compare_faces, "Yes", "No")
-        self.compare_faces.set("Yes")  # default value
-        self.compare_faces_choice.grid(
-            column=0, row=self.row_counter, sticky=W)
-        self.row_counter += 1
-        self.label_overwrite = Label(
-            self.frameFiledetails, text="Overwrite cache")
-        self.label_overwrite.grid(column=0, row=self.row_counter, sticky=W)
-        self.row_counter += 1
+            self.sidebar, self.compare_faces, "Yes", "No")
+        self.compare_faces.set("No")  # default value
+        self.apply_to_grid(self.compare_faces_choice, sticky=W)
+        self.label_overwrite = Label(self.sidebar)
+        self.add_label(self.label_overwrite, "Overwrite cache")
         self.overwrite = tk.StringVar(master)
         self.overwrite_choice = OptionMenu(
-            self.frameFiledetails, self.overwrite, "No", "Yes")
+            self.sidebar, self.overwrite, "No", "Yes")
         self.overwrite.set("No")  # default value
-        self.overwrite_choice.grid(
-            column=0, row=self.row_counter, sticky=W)
-        self.row_counter += 1
-        self.label_counter_limit = Label(
-            self.frameFiledetails, text="Max # of files to compare")
-        self.label_counter_limit.grid(column=0, row=self.row_counter, sticky=W)
-        self.row_counter += 1
-        self.set_counter_limit = Entry(self.frameFiledetails,
+        self.apply_to_grid(self.overwrite_choice, sticky=W)
+        self.label_counter_limit = Label(self.sidebar)
+        self.add_label(self.label_counter_limit, "Max # of files to compare")
+        self.set_counter_limit = Entry(self.sidebar,
                                        text="Add file path...",
                                        width=30,
                                        font=fnt.Font(size=8))
-        self.set_counter_limit.insert(0, "25000")
-        self.set_counter_limit.grid(column=0, row=self.row_counter, sticky=W)
-        self.row_counter += 1
-        self.label_inclusion_pattern = Label(
-            self.frameFiledetails, text="Filter files by string in name")
-        self.label_inclusion_pattern.grid(
-            column=0, row=self.row_counter, sticky=W)
-        self.row_counter += 1
+        self.set_counter_limit.insert(0, "40000")
+        self.apply_to_grid(self.set_counter_limit, sticky=W)
+        self.label_inclusion_pattern = Label(self.sidebar)
+        self.add_label(self.label_inclusion_pattern,
+                       "Filter files by string in name")
         self.inclusion_pattern = tk.StringVar()
-        self.set_inclusion_pattern = Entry(self.frameFiledetails,
+        self.set_inclusion_pattern = Entry(self.sidebar,
                                            textvariable=self.inclusion_pattern,
                                            width=30,
                                            font=fnt.Font(size=8))
-        self.set_inclusion_pattern.grid(
-            column=0, row=self.row_counter, sticky=W)
-        self.row_counter += 1
-        self.run_compare_btn = Button(self.frameFiledetails,
-                                      text="Run image compare",
-                                      command=self.run_compare)
-        self.run_compare_btn.grid(column=0, row=self.row_counter)
-        self.row_counter += 1
+        self.apply_to_grid(self.set_inclusion_pattern, sticky=W)
+        self.run_compare_btn = None
+        self.add_button(self.run_compare_btn,
+                        "Run image compare", self.run_compare)
         self.prev_image_match_btn = None
         self.next_image_match_btn = None
         self.prev_group_btn = None
         self.next_group_btn = None
+        self.toggle_image_view_btn = None
         self.search_current_image_btn = None
         self.label_current_image_name = None
         self.rename_image_btn = None
@@ -159,48 +134,79 @@ class App():
         self.file_groups = None
         self.files_matched = None
         self.compare = None
-        self.mode = None
         self.has_image_matches = False
         self.current_group = None
         self.current_group_index = 0
         self.group_indexes = []
         self.max_group_index = 0
+        self.is_toggled_view_matches = True
+        self.has_added_buttons_for_mode = {"GROUP": False, "SEARCH": False}
 
+        self.set_mode("GROUP")
         self.master.bind('<Left>', self.show_prev_image_key)
         self.master.bind('<Right>', self.show_next_image_key)
         self.master.bind('<Shift-Left>', self.show_prev_group)
         self.master.bind('<Shift-Right>', self.show_next_group)
         self.master.update()
 
+    def set_mode(self, mode):
+        self.mode = mode
+        self.labelMode['text'] = "Mode: " + mode
+
+        if mode == "GROUP":
+            self.toggle_image_view_btn = None
+        elif mode == "SEARCH":
+            self.prev_group_btn = None
+            self.next_group_btn = None
+
+        self.master.update()
+
     def set_base_dir(self) -> None:
         base_dir = self.set_base_dir_box.get()
-        if base_dir == "" or base_dir == "Add dirpath...":
+        if base_dir == "" or base_dir == "Add dirpath..." or self.base_dir == base_dir:
             base_dir = filedialog.askdirectory(
-                initialdir=self.get_base_dir(), title="Select image file")
+                initialdir=self.get_base_dir(), title="Set image comparison directory")
         self.base_dir = get_valid_file(self.base_dir, base_dir)
-        if base_dir is None:
-            return
+        if self.base_dir is None:
+            self.base_dir = filedialog.askdirectory(
+                initialdir=self.get_base_dir(), title="Set image comparison directory")
         if self.compare is not None and self.base_dir != self.compare.base_dir:
             self.compare = None
         self.set_base_dir_box.delete(0, "end")
-        self.set_base_dir_box.insert(0, base_dir)
+        self.set_base_dir_box.insert(0, self.base_dir)
         self.master.update()
 
     def get_base_dir(self) -> str:
         return "." if (self.base_dir is None
                        or self.base_dir == "") else self.base_dir
 
+    def get_search_dir(self) -> str:
+        if self.search_dir is None:
+            return self.get_base_dir()
+        else:
+            return self.search_dir
+
     def get_search_file_path(self) -> str:
-        search_file_str = self.search_image.get()
+        image_path = self.search_image.get()
+        if image_path is None or image_path == "":
+            self.search_image_full_path = None
+            return None
+
+        search_file_str = self.search_image_full_path
         if search_file_str == "":
             return None
-        search_file = get_valid_file(self.base_dir, search_file_str)
+
+        search_file = get_valid_file(self.get_base_dir(), image_path)
         if search_file is None:
-            self.alert("Invalid search file",
-                       "Search file is not a valid file for base dir.",
-                       kind="error")
-            raise AssertionError(
-                "Search file is not a valid file for base dir.")
+            search_file = get_valid_file(
+                self.get_search_dir(), image_path)
+            if image_path is None:
+                self.alert("Invalid search file",
+                           "Search file is not a valid file for base dir.",
+                           kind="error")
+                raise AssertionError(
+                    "Search file is not a valid file for base dir.")
+
         return search_file
 
     def get_counter_limit(self) -> int:
@@ -216,17 +222,11 @@ class App():
 
     def get_compare_faces(self) -> bool:
         compare_faces_str = self.compare_faces.get()
-        if compare_faces_str == "" or compare_faces_str == "Yes":
-            return True
-        else:
-            return False
+        return compare_faces_str == "" or compare_faces_str == "Yes"
 
     def get_overwrite(self) -> bool:
         overwrite_str = self.overwrite.get()
-        if overwrite_str == "" or overwrite_str == "Yes":
-            return True
-        else:
-            return False
+        return overwrite_str == "" or overwrite_str == "Yes"
 
     def get_color_diff_threshold(self) -> int:
         color_diff_threshold_str = self.color_diff_threshold.get()
@@ -250,30 +250,51 @@ class App():
         img = img.resize(fit_dims)
         return ImageTk.PhotoImage(img)
 
-    def show_searched_image(self) -> None:
-        image_path = self.search_image.get()
-        image_path = get_valid_file(self.get_base_dir(), image_path)
-        if image_path is None:
+    def set_search_image(self) -> None:
+        image_path = self.get_search_file_path()
+
+        if image_path is None or (self.search_image_full_path is not None
+                                  and image_path == self.search_image_full_path):
             image_path = filedialog.askopenfilename(
-                initialdir=self.get_base_dir(), title="Select image file",
+                initialdir=self.get_search_dir(), title="Select image file",
                 filetypes=(("jpg files", "*.jpg"),
                            ("jpeg files", "*.jpeg"),
                            ("png files", "*.png"),
                            ("tiff files", "*.tiff")))
-        self.search_image.set(basename(image_path))
+
+        if image_path is not None and image_path != "":
+            self.search_image.set(basename(image_path))
+            self.search_dir = os.path.dirname(image_path)
+            self.search_image_full_path = image_path
+            self.show_searched_image()
+
+        if self.search_image_full_path is None or self.search_image_full_path == "":
+            self.set_mode("GROUP")
+        else:
+            self.set_mode("SEARCH")
+
         self.master.update()
-        self.create_image(image_path)
+
+    def show_searched_image(self) -> None:
+        if self.search_image_full_path is not None:
+            self.create_image(self.search_image_full_path,
+                              extra_text="(search image)")
 
     def show_prev_image_key(self, event) -> None:
         self.show_prev_image(False)
 
     def show_prev_image(self, show_alert=True) -> None:
-        if len(self.files_matched) == 0:
+        if self.files_matched is None:
+            return
+        elif len(self.files_matched) == 0:
             if show_alert:
                 self.alert("Search required",
                            "No matches found. Search again to find potential matches.",
                            kind="info")
             return
+
+        if not self.is_toggled_view_matches:
+            self.is_toggled_view_matches = True
 
         if self.match_index > 0:
             self.match_index -= 1
@@ -286,12 +307,17 @@ class App():
         self.show_next_image(False)
 
     def show_next_image(self, show_alert=True) -> None:
-        if len(self.files_matched) == 0:
+        if self.files_matched is None:
+            return
+        elif len(self.files_matched) == 0:
             if show_alert:
                 self.alert("Search required",
                            "No matches found. Search again to find potential matches.",
                            kind="info")
             return
+
+        if not self.is_toggled_view_matches:
+            self.is_toggled_view_matches = True
 
         if len(self.files_matched) > self.match_index + 1:
             self.match_index += 1
@@ -356,25 +382,28 @@ class App():
         self.master.update()
         self.run_compare()
 
-    def create_image(self, image_path) -> None:
+    def create_image(self, image_path, extra_text=None) -> None:
         self.img = self.get_image_to_fit(image_path)
         self.canvas.create_image(self.canvas.get_center_coordinates(),
                                  image=self.img, anchor="center")
-        if self.prev_image_match_btn is not None:
-            if self.label_current_image_name is None:
-                self.label_current_image_name = Label(
-                    self.frameFiledetails, text="")
-                self.row_counter += 1
-                self.label_current_image_name.grid(pady=30)
-            self.label_current_image_name["text"] = \
-                _wrap_text_to_fit_length(basename(image_path), 30)
+        if self.label_current_image_name is None:
+            self.label_current_image_name = Label(self.sidebar)
+            self.add_label(self.label_current_image_name, "", pady=30)
+        text = _wrap_text_to_fit_length(basename(image_path), 30)
+        if extra_text is not None:
+            text += "\n" + extra_text
+        self.label_current_image_name["text"] = text
 
-    def alert(self, title, message, kind="info", hidemain=True) -> None:
-        if kind not in ("error", "warning", "info"):
-            raise ValueError("Unsupported alert kind.")
+    def toggle_image_view(self):
+        if self.mode != "SEARCH":
+            return
 
-        show_method = getattr(messagebox, "show{}".format(kind))
-        show_method(title, message)
+        if self.is_toggled_view_matches:
+            self.show_searched_image()
+        else:
+            self.create_image(self.files_matched[self.match_index])
+
+        self.is_toggled_view_matches = not self.is_toggled_view_matches
 
     def run_compare(self) -> None:
         search_file_path = self.get_search_file_path()
@@ -407,6 +436,9 @@ class App():
             self.compare.get_files()
             self.compare.get_data()
         else:
+            get_new_data = self.is_new_data_request_required(counter_limit,
+                                                             color_diff_threshold,
+                                                             inclusion_pattern, overwrite)
             self.compare.set_search_file_path(search_file_path)
             self.compare.counter_limit = counter_limit
             self.compare.compare_faces = compare_faces
@@ -415,11 +447,15 @@ class App():
             self.compare.overwrite = overwrite
             self.compare.print_settings()
 
+            if get_new_data:
+                self.compare.get_files()
+                self.compare.get_data()
+
         self.labelState["text"] = _wrap_text_to_fit_length(
             "Running image comparison with search file provided...", 30)
 
         if search_file_path is None or search_file_path == "":
-            self.mode = "GROUP"
+            self.set_mode("GROUP")
             self.files_grouped, self.file_groups = self.compare.run()
 
             if len(self.files_grouped) == 0:
@@ -433,49 +469,27 @@ class App():
             self.group_indexes = self.compare.sort_groups(self.file_groups)
             self.max_group_index = max(self.file_groups.keys())
 
-            if self.prev_image_match_btn is None:
-                self.prev_group_btn = Button(master=self.frameFiledetails,
-                                             text="Previous Group",
-                                             command=self.show_prev_group)
-                self.prev_group_btn .grid(
-                    column=0, row=self.row_counter)
-                self.row_counter += 1
-                self.next_group_btn = Button(master=self.frameFiledetails,
-                                             text="Next Group",
-                                             command=self.show_next_group)
-                self.next_group_btn .grid(
-                    column=0, row=self.row_counter)
-                self.row_counter += 1
-                self.prev_image_match_btn = Button(master=self.frameFiledetails,
-                                                   text="Previous Image Match",
-                                                   command=self.show_prev_image)
-                self.prev_image_match_btn.grid(
-                    column=0, row=self.row_counter)
-                self.row_counter += 1
-                self.next_image_match_btn = Button(master=self.frameFiledetails,
-                                                   text="Next Image Match",
-                                                   command=self.show_next_image)
-                self.next_image_match_btn.grid(
-                    column=0, row=self.row_counter)
-                self.row_counter += 1
-                self.search_current_image_btn = Button(
-                    master=self.frameFiledetails, text="Search Current Image",
-                    command=self.set_current_image_run_search)
-                self.search_current_image_btn.grid(
-                    column=0, row=self.row_counter)
-                self.row_counter += 1
-                self.delete_image_btn = Button(master=self.frameFiledetails,
-                                               text="---- DELETE ----",
-                                               command=self.delete_image)
-                self.delete_image_btn.grid(
-                    column=0, row=self.row_counter)
-                self.row_counter += 1
+            if not self.has_added_buttons_for_mode[self.mode]:
+                self.add_button(self.prev_group_btn,
+                                "Previous group", self.show_prev_group)
+                self.add_button(self.next_group_btn,
+                                "Next group", self.show_next_group)
+                if not self.has_added_buttons_for_mode["SEARCH"]:
+                    self.add_prev_image_match_button()
+                    self.add_next_image_match_button()
+                    self.add_search_current_image_button()
+                    self.add_delete_image_button()
+                self.has_added_buttons_for_mode[self.mode] = True
 
             self.current_group_index = 0
             self.set_current_group()
 
         else:
-            self.mode = "SEARCH"
+            self.set_mode("SEARCH")
+
+            if not self.is_toggled_view_matches:
+                self.is_toggled_view_matches = True
+
             self.files_grouped = self.compare.run_search(search_file_path)
 
             if len(self.files_grouped) == 0:
@@ -495,39 +509,44 @@ class App():
             self.labelState["text"] = _wrap_text_to_fit_length(
                 str(len(self.files_matched)) + " possibly related images found.", 30)
 
-            if self.prev_image_match_btn is None:
-                self.prev_image_match_btn = Button(master=self.frameFiledetails,
-                                                   text="Previous Image Match",
-                                                   command=self.show_prev_image)
-                self.prev_image_match_btn.grid(
-                    column=0, row=self.row_counter)
-                self.row_counter += 1
-                self.next_image_match_btn = Button(master=self.frameFiledetails,
-                                                   text="Next Image Match",
-                                                   command=self.show_next_image)
-                self.next_image_match_btn.grid(
-                    column=0, row=self.row_counter)
-                self.row_counter += 1
-                self.search_current_image_btn = Button(
-                    master=self.frameFiledetails, text="Search Current Image",
-                    command=self.set_current_image_run_search)
-                self.search_current_image_btn.grid(
-                    column=0, row=self.row_counter)
-                self.row_counter += 1
+            if not self.has_added_buttons_for_mode[self.mode]:
+                self.add_button(self.toggle_image_view_btn, "Toggle image view",
+                                self.toggle_image_view)
+                if not self.has_added_buttons_for_mode["GROUP"]:
+                    self.add_prev_image_match_button()
+                    self.add_next_image_match_button()
+                    self.add_search_current_image_button()
+                    self.add_delete_image_button()
+                self.has_added_buttons_for_mode[self.mode] = True
 
             self.create_image(self.files_matched[self.match_index])
+
+    def is_new_data_request_required(self, counter_limit, color_diff_threshold,
+                                     inclusion_pattern, overwrite):
+        return (self.compare.counter_limit != counter_limit
+                or self.compare.color_diff_threshold != color_diff_threshold
+                or self.compare.inclusion_pattern != inclusion_pattern
+                or (not self.compare.overwrite and overwrite))
 
     def set_group_state_label(self, group_number):
         self.labelState["text"] = _wrap_text_to_fit_length(
             f"Group {group_number + 1} of {len(self.file_groups)}", 30)
 
     def delete_image(self):
-        if len(self.files_matched) == 0:
-           print(
-               "Invalid action, the button should not be present if no files are available")
-           return
+        is_toggle_search_image = self.mode == "SEARCH" and not self.is_toggled_view_matches
 
-        filepath = self.files_matched[self.match_index]
+        if len(self.files_matched) == 0 and not is_toggle_search_image:
+            print(
+                "Invalid action, the button should not be present if no files are available")
+            return
+        elif is_toggle_search_image and (self.search_image_full_path is None or self.search_image_full_path == ""):
+            print("Invalid action, search image not found")
+            return
+
+        if is_toggle_search_image:
+            filepath = self.search_image_full_path
+        else:
+            filepath = self.files_matched[self.match_index]
         filepath = get_valid_file(self.get_base_dir(), filepath)
 
         if filepath is not None:
@@ -541,6 +560,9 @@ class App():
     # are disjoint
     def update_groups_for_removed_file(self):
         if len(self.files_matched) < 3:
+            if self.mode != "GROUP":
+                return
+
             # remove this group as it will only have one file
             self.files_grouped = {
                 k: v for k, v in self.files_grouped.items() if v not in self.files_matched}
@@ -574,6 +596,48 @@ class App():
 
             self.master.update()
             self.create_image(self.files_matched[self.match_index])
+
+    def alert(self, title, message, kind="info", hidemain=True) -> None:
+        if kind not in ("error", "warning", "info"):
+            raise ValueError("Unsupported alert kind.")
+
+        show_method = getattr(messagebox, "show{}".format(kind))
+        show_method(title, message)
+
+    def apply_to_grid(self, component, sticky=None, pady=0):
+        if sticky is None:
+            component.grid(column=0, row=self.row_counter, pady=pady)
+        else:
+            component.grid(column=0, row=self.row_counter,
+                           sticky=sticky, pady=pady)
+        self.row_counter += 1
+
+    def add_label(self, label_ref, text, sticky=W, pady=0):
+        label_ref['text'] = text
+        self.apply_to_grid(label_ref, sticky=sticky, pady=pady)
+
+    def add_button(self, button_ref, text, command):
+        if button_ref is None:
+            button_ref = Button(master=self.sidebar,
+                                text=text,
+                                command=command)
+            self.apply_to_grid(button_ref)
+
+    def add_prev_image_match_button(self):
+        self.add_button(self.prev_image_match_btn,
+                        "Previous image match", self.show_prev_image)
+
+    def add_next_image_match_button(self):
+        self.add_button(self.next_image_match_btn,
+                        "Next image match", self.show_next_image)
+
+    def add_search_current_image_button(self):
+        self.add_button(self.search_current_image_btn,
+                        "Search current image", self.set_current_image_run_search)
+
+    def add_delete_image_button(self):
+        self.add_button(self.delete_image_btn,
+                        "---- DELETE ----", self.delete_image)
 
 
 if __name__ == "__main__":

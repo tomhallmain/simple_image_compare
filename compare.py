@@ -501,6 +501,7 @@ class Compare:
         file_colors = np.delete(self.file_colors, search_file_index, 0)
         color_similars = self.compute_color_diff(
             file_colors, search_file_colors, True)
+
         if self.compare_faces:
             search_file_faces = self.file_faces[search_file_index]
             file_faces = np.delete(self.file_faces, search_file_index)
@@ -509,6 +510,7 @@ class Compare:
             similars = np.nonzero(color_similars[0] * face_similars)
         else:
             similars = np.nonzero(color_similars[0])
+
         for _index in similars[0]:
             files_grouped[_files_found[_index]] = color_similars[1][_index]
 
@@ -516,21 +518,21 @@ class Compare:
             with open(self.search_output_path, "w") as textfile:
                 header = "Possibly related images to \"" + search_path + "\":\n"
                 textfile.write(header)
-                print(header)
+                if self.verbose:
+                    print(header)
                 for f in sorted(files_grouped, key=lambda f: files_grouped[f]):
                     diff_score = int(files_grouped[f])
                     if not f == search_file_path:
                         if diff_score < 50:
-                            textfile.write("DUPLICATE: " + f)
-                            print("DUPLICATE: " + f)
+                            line = "DUPLICATE: " + f
                         elif diff_score < 1000:
-                            textfile.write("PROBABLE MATCH: " + f)
-                            print("PROBABLE MATCH: " + f)
+                            line = "PROBABLE MATCH: " + f
                         else:
                             similarity_score = str(round(1000/diff_score, 4))
-                            textfile.write(f + " - similarity: "
-                                           + similarity_score + "\n")
-                            print(f + " - similarity: " + similarity_score)
+                            line = f + " - similarity: " + similarity_score
+                        textfile.write(line + "\n")
+                        if self.verbose:
+                            print(line)
             if self.verbose:
                 print("\nThis output data saved to file at "
                       + self.search_output_path)
