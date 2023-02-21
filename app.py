@@ -14,6 +14,10 @@ from utils import (
 
 
 class ResizingCanvas(Canvas):
+    '''
+    Create a Tk Canvas that auto-resizes its components.
+    '''
+
     def __init__(self, parent, **kwargs):
         Canvas.__init__(self, parent, **kwargs)
         self.bind("<Configure>", self.on_resize)
@@ -38,8 +42,47 @@ class ResizingCanvas(Canvas):
     def get_center_coordinates(self):
         return (self.width/2, (self.height)/2)
 
+    def create_image_center(self, img):
+        self.create_image(
+            self.get_center_coordinates(),
+            image=img, anchor="center")
+
+
+class GifImageUI:
+    def __init__(self, filename):
+        im = Image.open(filename)
+        self.n_frames = im.n_frames
+        self.frames = [PhotoImage(file=filename, format='gif -index %i' % (i))
+                       for i in range(self.n_frames)]
+        self.active = False
+        self.canvas = None
+
+    def display(self, canvas):
+        self.active = True
+        self.canvas = canvas
+        self.update(0)
+
+    def stop_display(self):
+        self.active = False
+
+    def update(self, ind):
+        if self.active:
+            frame = self.frames[ind]
+            ind += 1
+            if ind == self.n_frames:
+                ind = 0
+            # TODO inefficient to use canvas here, better to use Label.configure
+            self.canvas.create_image_center(frame)
+            root.after(100, self.update, ind)
+
+
+# TODO add checkbox for include gif option
 
 class App():
+    '''
+    UI for comparing image files and making related file changes.
+    '''
+
     def __init__(self, master):
         self.master = master
         self.mode = None
@@ -121,6 +164,7 @@ class App():
         self.prev_group_btn = None
         self.next_group_btn = None
         self.toggle_image_view_btn = None
+        self.replace_current_image_btn = None
         self.search_current_image_btn = None
         self.label_current_image_name = None
         self.rename_image_btn = None
@@ -130,6 +174,7 @@ class App():
         self.master.update()
         self.canvas = ResizingCanvas(self.master)
         self.canvas.grid(column=1, row=0)
+        self.img = None
         self.files_grouped = None
         self.file_groups = None
         self.files_matched = None
@@ -150,11 +195,15 @@ class App():
         self.master.update()
 
     def set_mode(self, mode):
+        '''
+        Change the current mode of the application.
+        '''
         self.mode = mode
         self.labelMode['text'] = "Mode: " + mode
 
         if mode == "GROUP":
             self.toggle_image_view_btn = None
+            self.replace_current_image_btn = None
         elif mode == "SEARCH":
             self.prev_group_btn = None
             self.next_group_btn = None
@@ -162,6 +211,9 @@ class App():
         self.master.update()
 
     def set_base_dir(self) -> None:
+        '''
+        Change the base directory to the value provided in the UI.
+        '''
         base_dir = self.set_base_dir_box.get()
         if base_dir == "" or base_dir == "Add dirpath..." or self.base_dir == base_dir:
             base_dir = filedialog.askdirectory(
@@ -187,6 +239,9 @@ class App():
             return self.search_dir
 
     def get_search_file_path(self) -> str:
+        '''
+        Get the search file path provided in the UI.
+        '''
         image_path = self.search_image.get()
         if image_path is None or image_path == "":
             self.search_image_full_path = None
@@ -245,12 +300,22 @@ class App():
             return inclusion_pattern
 
     def get_image_to_fit(self, filename) -> ImageTk.PhotoImage:
+        '''
+        Get the object required to display the image in the UI.
+        '''
+        if (filename.endswith(".gif")):
+            return GifImageUI(filename)
+
         img = Image.open(filename)
         fit_dims = scale_dims((img.width, img.height), self.canvas.get_size())
         img = img.resize(fit_dims)
         return ImageTk.PhotoImage(img)
 
     def set_search_image(self) -> None:
+        '''
+        Set the search image using the provided UI value, or prompt the
+        user for selection. Set the mode based on the result.
+        '''
         image_path = self.get_search_file_path()
 
         if image_path is None or (self.search_image_full_path is not None
@@ -260,7 +325,9 @@ class App():
                 filetypes=(("jpg files", "*.jpg"),
                            ("jpeg files", "*.jpeg"),
                            ("png files", "*.png"),
-                           ("tiff files", "*.tiff")))
+                           ("tiff files", "*.tiff"),
+                           ("gif files", "*.gif")
+                           ))
 
         if image_path is not None and image_path != "":
             self.search_image.set(basename(image_path))
@@ -275,6 +342,9 @@ class App():
 
         self.master.update()
 
+       if self.compare is not None:
+           self.run_compare()
+
     def show_searched_image(self) -> None:
         if self.search_image_full_path is not None:
             self.create_image(self.search_image_full_path,
@@ -284,6 +354,10 @@ class App():
         self.show_prev_image(False)
 
     def show_prev_image(self, show_alert=True) -> None:
+        '''
+        If similar image results are present in any mode, display the previous
+        in the list of matches.
+        '''
         if self.files_matched is None:
             return
         elif len(self.files_matched) == 0:
@@ -307,6 +381,10 @@ class App():
         self.show_next_image(False)
 
     def show_next_image(self, show_alert=True) -> None:
+        '''
+        If similar image results are present in any mode, display the next
+        in the list of matches.
+        '''
         if self.files_matched is None:
             return
         elif len(self.files_matched) == 0:
@@ -328,6 +406,9 @@ class App():
         self.create_image(self.files_matched[self.match_index])
 
     def show_prev_group(self, event=None) -> None:
+        '''
+        While in group mode, navigate to the previous group.
+        '''
         if (self.file_groups is None or len(self.group_indexes) == 0
                 or self.current_group_index == max(self.group_indexes)):
             self.current_group_index = 0
@@ -337,6 +418,9 @@ class App():
         self.set_current_group()
 
     def show_next_group(self, event=None) -> None:
+        '''
+        While in group mode, navigate to the next group.
+        '''
         if (self.file_groups is None or len(self.group_indexes) == 0
                 or self.current_group_index + 1 == len(self.group_indexes)):
             self.current_group_index = 0
@@ -346,6 +430,9 @@ class App():
         self.set_current_group()
 
     def set_current_group(self) -> None:
+        '''
+        While in group mode, navigate between the groups.
+        '''
         if self.mode == "SEARCH":
             print("Invalid action, there should only be one group in search mode")
             return
@@ -366,6 +453,9 @@ class App():
         self.create_image(self.files_matched[self.match_index])
 
     def set_current_image_run_search(self) -> None:
+        '''
+        Execute a new image search from the provided search image.
+        '''
         if not self.has_image_matches:
             self.alert("Search required",
                        "No matches found. Search again to find potential matches.",
@@ -383,9 +473,16 @@ class App():
         self.run_compare()
 
     def create_image(self, image_path, extra_text=None) -> None:
+        '''
+        Show an image in the main content pane of the UI.
+        '''
+        if (isinstance(self.img, GifImageUI)):
+            self.img.stop_display()
         self.img = self.get_image_to_fit(image_path)
-        self.canvas.create_image(self.canvas.get_center_coordinates(),
-                                 image=self.img, anchor="center")
+        if (isinstance(self.img, GifImageUI)):
+            self.img.display(self.canvas)
+        else:
+            self.canvas.create_image_center(self.img)
         if self.label_current_image_name is None:
             self.label_current_image_name = Label(self.sidebar)
             self.add_label(self.label_current_image_name, "", pady=30)
@@ -395,6 +492,9 @@ class App():
         self.label_current_image_name["text"] = text
 
     def toggle_image_view(self):
+        '''
+        While in search mode, toggle between the search image and the results.
+        '''
         if self.mode != "SEARCH":
             return
 
@@ -405,7 +505,36 @@ class App():
 
         self.is_toggled_view_matches = not self.is_toggled_view_matches
 
+    def add_all_mode_buttons(self):
+        self.add_prev_image_match_button()
+        self.add_next_image_match_button()
+        self.add_search_current_image_button()
+        self.add_delete_image_button()
+
+    def add_buttons_for_mode(self):
+        if not self.has_added_buttons_for_mode[self.mode]:
+            if self.mode == "SEARCH":
+                self.add_button(self.toggle_image_view_btn, "Toggle image view",
+                                self.toggle_image_view)
+                self.add_button(self.replace_current_image_btn, "Replace with search image",
+                                self.replace_current_image_with_search_image)
+                if not self.has_added_buttons_for_mode["GROUP"]:
+                    self.add_all_mode_buttons()
+            elif self.mode == "GROUP":
+                self.add_button(self.prev_group_btn,
+                                "Previous group", self.show_prev_group)
+                self.add_button(self.next_group_btn,
+                                "Next group", self.show_next_group)
+                if not self.has_added_buttons_for_mode["SEARCH"]:
+                    self.add_all_mode_buttons()
+
+            self.has_added_buttons_for_mode[self.mode] = True
+
     def run_compare(self) -> None:
+        '''
+        Execute operations on the Compare object in any mode. Create a new
+        Compare object.
+        '''
         search_file_path = self.get_search_file_path()
         counter_limit = self.get_counter_limit()
         compare_faces = self.get_compare_faces()
@@ -455,6 +584,13 @@ class App():
             "Running image comparison with search file provided...", 30)
 
         if search_file_path is None or search_file_path == "":
+            if self.mode == "SEARCH":
+                res = self.alert("Confirm group run",
+                                 "Search mode detected, please confirm switch to group mode before run. "
+                                 + "Group mode will take longer as all images in the base directory are compared.",
+                                 kind="warning")
+                if res != messagebox.YES:
+                    return
             self.set_mode("GROUP")
             self.files_grouped, self.file_groups = self.compare.run()
 
@@ -468,19 +604,7 @@ class App():
 
             self.group_indexes = self.compare.sort_groups(self.file_groups)
             self.max_group_index = max(self.file_groups.keys())
-
-            if not self.has_added_buttons_for_mode[self.mode]:
-                self.add_button(self.prev_group_btn,
-                                "Previous group", self.show_prev_group)
-                self.add_button(self.next_group_btn,
-                                "Next group", self.show_next_group)
-                if not self.has_added_buttons_for_mode["SEARCH"]:
-                    self.add_prev_image_match_button()
-                    self.add_next_image_match_button()
-                    self.add_search_current_image_button()
-                    self.add_delete_image_button()
-                self.has_added_buttons_for_mode[self.mode] = True
-
+            self.add_buttons_for_mode()
             self.current_group_index = 0
             self.set_current_group()
 
@@ -509,16 +633,7 @@ class App():
             self.labelState["text"] = _wrap_text_to_fit_length(
                 str(len(self.files_matched)) + " possibly related images found.", 30)
 
-            if not self.has_added_buttons_for_mode[self.mode]:
-                self.add_button(self.toggle_image_view_btn, "Toggle image view",
-                                self.toggle_image_view)
-                if not self.has_added_buttons_for_mode["GROUP"]:
-                    self.add_prev_image_match_button()
-                    self.add_next_image_match_button()
-                    self.add_search_current_image_button()
-                    self.add_delete_image_button()
-                self.has_added_buttons_for_mode[self.mode] = True
-
+            self.add_buttons_for_mode()
             self.create_image(self.files_matched[self.match_index])
 
     def is_new_data_request_required(self, counter_limit, color_diff_threshold,
@@ -533,6 +648,9 @@ class App():
             f"Group {group_number + 1} of {len(self.file_groups)}", 30)
 
     def delete_image(self):
+        '''
+        Delete the currently displayed image from the filesystem.
+        '''
         is_toggle_search_image = self.mode == "SEARCH" and not self.is_toggled_view_matches
 
         if len(self.files_matched) == 0 and not is_toggle_search_image:
@@ -556,9 +674,34 @@ class App():
         else:
             print("Failed to delete current file, unable to get valid filepath")
 
-    # This would be more complicated if there was not a guarantee that groups
-    # are disjoint
+    def replace_current_image_with_search_image(self):
+        '''
+        Overwrite the file at the path of the current image with the
+        search image.
+        '''
+        if (self.mode != "SEARCH"
+                or len(self.files_matched) == 0
+                or not os.path.exists(self.search_image_full_path)):
+            return
+
+        _filepath = self.files_matched[self.match_index]
+        filepath = get_valid_file(self.get_base_dir(), _filepath)
+
+        if filepath is None:
+            print("Invalid target filepath for replacement: " + _filepath)
+            return
+
+        os.rename(self.search_image_full_path, filepath)
+        print("Moved search image to " + filepath)
+
     def update_groups_for_removed_file(self):
+        '''
+        After a file has been removed, delete the cached image path for it and
+        remove the group if only one file remains in it.
+
+        NOTE: This would be more complicated if there was not a guarantee that
+        groups are disjoint.
+        '''
         if len(self.files_matched) < 3:
             if self.mode != "GROUP":
                 return
@@ -602,7 +745,7 @@ class App():
             raise ValueError("Unsupported alert kind.")
 
         show_method = getattr(messagebox, "show{}".format(kind))
-        show_method(title, message)
+        return show_method(title, message)
 
     def apply_to_grid(self, component, sticky=None, pady=0):
         if sticky is None:

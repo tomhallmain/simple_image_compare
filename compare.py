@@ -24,6 +24,7 @@ search_file_index = None
 search_file_path = None
 verbose = False
 compare_faces = True
+include_gifs = False
 use_thumb = True
 counter_limit = 10000
 inclusion_pattern = None
@@ -78,6 +79,8 @@ for o, a in opts:
             base_dir = a
             if not os.path.exists(base_dir) or not os.path.isdir(base_dir):
                 assert False, "Invalid directory: " + base_dir
+        elif o == "--gifs":
+            include_gifs = True
         elif o == "--include":
             inclusion_pattern = a
         elif o == "--faces":
@@ -112,20 +115,6 @@ search_output_path = os.path.join(base_dir, search_output_path)
 groups_output_path = os.path.join(base_dir, groups_output_path)
 
 
-class IndexComparison:
-    def __init__(self, index1, index2):
-        self.index1 = index1
-        self.index2 = index2
-        self.sum = index1+index2
-        self.product = index1*index2
-
-    def __eq__(self, obj):
-        return self.sum == obj.sum and self.product == obj.product
-
-    def __hash__(self):
-        return hash(str(self.index1)) * hash(str(self.index2))
-
-
 def round_up(number, to):
     if number % to == 0:
         return number
@@ -149,6 +138,9 @@ def RGB2HEX(color):
 
 
 def get_image_thumb_colors(image, thumb_dim):
+    '''
+    Normalize and reduce the size of the image array, and return the colors in LAB
+    '''
     modified_image = cv2.resize(
         image, (thumb_dim, thumb_dim), interpolation=cv2.INTER_AREA)
     modified_image = modified_image.reshape(
@@ -157,6 +149,9 @@ def get_image_thumb_colors(image, thumb_dim):
 
 
 def get_image_colors(image, clf, show_chart=False):
+    '''
+    Get the set of the most significant colors in the image array
+    '''
     modified_image = cv2.resize(
         image, (300, 300), interpolation=cv2.INTER_AREA)
     modified_image = modified_image.reshape(
@@ -178,6 +173,9 @@ def get_image_colors(image, clf, show_chart=False):
 
 
 def is_any_x_true_weighted(bool_list, x_threshold):
+    '''
+    Given a list of boolean values. return 1 (true) only if ... ?
+    '''
     count_true = 1
     _count = 0
 
@@ -191,6 +189,10 @@ def is_any_x_true_weighted(bool_list, x_threshold):
 
 
 def is_any_x_true_consecutive(bool_list, x_threshold):
+    '''
+    Given a list of boolean values, return 1 (true) only if at least
+    x_threshold of them are consecutively true.
+    '''
     count_true = 1
     prior_bool = False
     consecutive_count_true = 1
@@ -225,7 +227,13 @@ def is_invalid_file(file_path, counter, run_search, inclusion_pattern):
 
 
 def get_image_array(filepath):
-    image = imageio.v2.imread(filepath)
+    '''
+    If this is a GIF file, return the array from the first frame only.
+
+    If the image is grayscale, raise a ValueError. If the image has more
+    dimensions than standard RGB, reshape it to RGB.
+    '''
+    image = imageio.imread(filepath)
     image_shape = np.shape(image)
     if (len(image_shape) < 3 or image_shape[0] < 1 or image_shape[1] < 1
             or image_shape[2] < 1):
@@ -238,7 +246,8 @@ def get_image_array(filepath):
 class Compare:
     def __init__(self, base_dir, search_file_path=None, counter_limit=30000,
                  use_thumb=True, compare_faces=False, color_diff_threshold=15,
-                 inclusion_pattern=None, overwrite=False, verbose=False):
+                 inclusion_pattern=None, overwrite=False, verbose=False,
+                 include_gifs=False):
         self.use_thumb = use_thumb
         self.files = None
         self.set_base_dir(base_dir)
@@ -246,6 +255,7 @@ class Compare:
         self.counter_limit = counter_limit
         self.compare_faces = compare_faces
         self.inclusion_pattern = inclusion_pattern
+        self.include_gifs = include_gifs
         self.overwrite = overwrite
         self.verbose = verbose
         if self.use_thumb:
@@ -274,6 +284,9 @@ class Compare:
         self.settings_updated = False
 
     def set_base_dir(self, base_dir):
+        '''
+        Set the base directory and prepare cache file references.
+        '''
         self.base_dir = base_dir
         self.search_output_path = os.path.join(
             base_dir, "simple_image_compare_search_output.txt")
@@ -288,6 +301,10 @@ class Compare:
                 base_dir, "image_top_colors.pkl")
 
     def set_search_file_path(self, search_file_path):
+        '''
+        Set the search file path. If it is already in the found data, move the
+        reference to it to the first index in the list.
+        '''
         self.search_file_path = search_file_path
         self.is_run_search = search_file_path is not None
         if self.is_run_search and self.files is not None:
@@ -297,6 +314,9 @@ class Compare:
             self.files.insert(self.search_file_index, self.search_file_path)
 
     def get_files(self):
+        '''
+        Get all image files in the base dir as requested by the parameters.
+        '''
         self.files_found = []
         self.files = []
         self.files.extend(
@@ -307,6 +327,9 @@ class Compare:
             glob(os.path.join(self.base_dir, "**/*.png"), recursive=True))
         self.files.extend(
             glob(os.path.join(self.base_dir, "**/*.webp"), recursive=True))
+        if self.include_gifs:
+            self.files.extend(
+                glob(os.path.join(self.base_dir, "**/*.gif"), recursive=True))
         self.files.sort()
         self.has_new_file_data = False
         self.max_files_processed = min(self.counter_limit, len(self.files))
@@ -334,6 +357,7 @@ class Compare:
         print(" max files processable for base dir: "
               + str(self.max_files_processed))
         print(" file glob pattern: " + str(self.inclusion_pattern))
+        print(" include gifs: " + str(self.include_gifs))
         print(" n colors: " + str(self.n_colors))
         print(" colors below threshold: " + str(self.colors_below_threshold))
         print(" color diff threshold: " + str(self.color_diff_threshold))
@@ -345,6 +369,9 @@ class Compare:
         print("|--------------------------------------------------------------------|\n\n")
 
     def set_face_cascade(self):
+        '''
+        Load the face recognition model if compare_faces option was requested.
+        '''
         for minor_version in range(10, 5, -1):
             cascPath = "/usr/local/lib/python3." + \
                 str(minor_version) + \
@@ -359,6 +386,10 @@ class Compare:
         self.faceCascade = cv2.CascadeClassifier(cascPath)
 
     def get_data(self):
+        '''
+        For all the found files in the base directory, either load the cached
+        image data or extract new data and add it to the cache.
+        '''
         if self.overwrite or not os.path.exists(self.file_colors_filepath):
             if not os.path.exists(self.file_colors_filepath):
                 print("Image data not found so creating new cache"
@@ -426,13 +457,12 @@ class Compare:
             self.file_faces = np.append(self.file_faces, [n_faces], 0)
             self.files_found.append(f)
 
-            if counter % 200 == 0:
-                percent_complete = counter / self.max_files_processed_even * 100
-                if percent_complete % 10 == 0:
-                    if self.verbose:
-                        print(str(int(percent_complete)) + "% data gathered")
-                    else:
-                        print(".", end="", flush=True)
+            percent_complete = counter / self.max_files_processed_even * 100
+            if percent_complete % 10 == 0:
+                if self.verbose:
+                    print(str(int(percent_complete)) + "% data gathered")
+                else:
+                    print(".", end="", flush=True)
 
         # Save image file data
 
@@ -455,7 +485,8 @@ class Compare:
 
         self.n_files_found = len(self.files_found)
 
-        if self.n_files_found == 0 or (self.is_run_search and self.n_files_found < 1):
+        if (self.n_files_found == 0
+                or (self.is_run_search and self.n_files_found < 1)):
             raise AssertionError("No image data found for comparison with"
                                  + " current params - checked"
                                  + " in base dir = \"" + base_dir + "\"")
@@ -464,6 +495,9 @@ class Compare:
                   + " files compiled for comparison.")
 
     def get_faces_count(self, filepath):
+        '''
+        Try to get the number of faces in the image using the face model.
+        '''
         n_faces = random.random() * 10000 + 6  # Set to a value unlikely to match
         try:
             gray = cv2.imread(filepath, 0)
@@ -479,7 +513,12 @@ class Compare:
                 print(e)
         return n_faces
 
-    def compute_color_diff(self, base_array, compare_array, return_diff_scores=False):
+    def compute_color_diff(self, base_array, compare_array,
+                           return_diff_scores=False):
+        '''
+        Perform an elementwise diff between two image color arrays using the
+        selected color difference algorithm.
+        '''
         lab_diff_squares = np.square(base_array - compare_array)
         deltaE_cie76s = np.sqrt(np.sum(lab_diff_squares, 2)).astype(int)
         similars = np.apply_along_axis(
@@ -491,6 +530,10 @@ class Compare:
             return similars
 
     def find_similars_to_image(self, search_path, search_file_index):
+        '''
+        Search the numpy array of all known image arrays for similar
+        characteristics to the provide image.
+        '''
         files_grouped = {}
         _files_found = list(self.files_found)
 
@@ -542,6 +585,9 @@ class Compare:
         return files_grouped
 
     def run_search(self, search_file_path):
+        '''
+        Prepare and begin a search for a provided image file path.
+        '''
         if (search_file_path is None or search_file_path == ""
                 or search_file_path == base_dir):
             while search_file_path is None:
@@ -588,6 +634,16 @@ class Compare:
         return files_grouped
 
     def run_comparison(self):
+        '''
+        Compare all found image arrays to each other by starting with the
+        base numpy array containing all image data and moving each array to
+        the next index.
+
+        For example, if there are three images [X, Y, Z], there are two steps:
+            Step 1: [X, Y, Z] -> [Z, X, Y] (elementwise comparison)
+            Step 2: [X, Y, Z] -> [Y, Z, X] (elementwise comparison)
+            ^ At this point, all arrays have been compared.
+        '''
         files_grouped = {}
         group_index = 0
         file_groups = {}
@@ -602,7 +658,7 @@ class Compare:
             print("Identifying groups of similar image files", end="", flush=True)
 
         for i in range(len(self.files_found)):
-            if i == 0:  # At this roll index all files would be comparing to themselves
+            if i == 0:  # At this roll index the data would compare to itself
                 continue
             percent_complete = (i / n_files_found_even) * 100
             if percent_complete % 10 == 0:
@@ -626,12 +682,6 @@ class Compare:
             for base_index in similars[0]:
                 diff_index = ((base_index - i) % self.n_files_found)
                 diff_score = color_similars[0][base_index]
-
-                # comparison = IndexComparison(base_index, diff_index)
-                # f comparison in comparisons:
-                #     continue
-                # comparisons[comparison] = 0
-
                 f1_grouped = base_index in files_grouped
                 f2_grouped = diff_index in files_grouped
 
@@ -710,6 +760,9 @@ class Compare:
         return (files_grouped, file_groups)
 
     def run(self):
+        '''
+        Runs the specified operation on this Compare.
+        '''
         if self.is_run_search:
             return self.run_search(self.search_file_path)
         else:
@@ -729,7 +782,8 @@ if __name__ == "__main__":
                       compare_faces=compare_faces,
                       color_diff_threshold=color_diff_threshold,
                       inclusion_pattern=inclusion_pattern,
-                      overwrite=overwrite, verbose=verbose)
+                      overwrite=overwrite, verbose=verbose,
+                      include_gifs=include_gifs)
     compare.get_files()
     compare.get_data()
     compare.run()
