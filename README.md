@@ -15,7 +15,7 @@ Individual images can be passed to search against the full image data set by pas
 
 ## Limitations
 
-This is a very simple ap and can only detect fairly similar images. While unmatched dimensions are not an issue, similar images with highly varying perspectives (for example, if images are the same but one is turned sideways) will likely not generate a similar result.
+This is a very simple app and can only detect fairly similar images. While unmatched dimensions are not an issue, similar images with highly varying perspectives (for example, if images are the same but one is turned sideways) will likely not generate a similar result.
 
 The face similarity measure is very crude, and only checks the number of faces in the image. At a future time more complex face matching may be added.
 

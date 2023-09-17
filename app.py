@@ -1,5 +1,4 @@
 import os
-import sys
 import threading
 import tkinter as tk
 from tkinter import Canvas, PhotoImage, filedialog, messagebox, HORIZONTAL
@@ -201,7 +200,7 @@ class App():
         self.master.update()
         
 
-    def set_mode(self, mode):
+    def set_mode(self, mode, do_update=True):
         '''
         Change the current mode of the application.
         '''
@@ -215,7 +214,8 @@ class App():
             self.prev_group_btn = None
             self.next_group_btn = None
 
-        self.master.update()
+        if do_update:
+            self.master.update()
 
     def set_base_dir(self) -> None:
         '''
@@ -231,9 +231,12 @@ class App():
                 initialdir=self.get_base_dir(), title="Set image comparison directory")
         if self.compare is not None and self.base_dir != self.compare.base_dir:
             self.compare = None
-            self.set_group_state_label(None, 0) 
-            self.clear_image()
+            self.set_group_state_label(None, 0)
             self.remove_all_mode_buttons()
+            if self.mode != "SEARCH":
+                self.clear_image()
+            elif self.is_toggled_view_matches:
+                self.toggle_image_view()
         self.set_base_dir_box.delete(0, "end")
         self.set_base_dir_box.insert(0, self.base_dir)
         self.master.update()
@@ -357,8 +360,7 @@ class App():
 
     def show_searched_image(self) -> None:
         if self.search_image_full_path is not None:
-            self.create_image(self.search_image_full_path,
-                              extra_text="(search image)")
+            self.create_image(self.search_image_full_path, extra_text="(search image)")
 
     def show_prev_image_key(self, event) -> None:
         self.show_prev_image(False)
@@ -379,11 +381,12 @@ class App():
 
         if not self.is_toggled_view_matches:
             self.is_toggled_view_matches = True
-
+        
         if self.match_index > 0:
             self.match_index -= 1
         else:
             self.match_index = len(self.files_matched) - 1
+        
         self.master.update()
         self.create_image(self.files_matched[self.match_index])
 
@@ -502,12 +505,13 @@ class App():
         self.label_current_image_name["text"] = text
 
     def clear_image(self) -> None:
-        if (isinstance(self.img, GifImageUI)):
-            self.img.stop_display()
-        self.label_current_image_name.destroy()
-        self.label_current_image_name = None
-        self.canvas.clear_image()
-        self.master.update()
+        if self.img is not None and self.canvas is not None:
+            if (isinstance(self.img, GifImageUI)):
+                self.img.stop_display()
+            self.destroy_grid_element("label_current_image_name")
+            self.label_current_image_name = None
+            self.canvas.clear_image()
+            self.master.update()
 
     def toggle_image_view(self) -> None:
         '''
@@ -530,19 +534,12 @@ class App():
         self.add_button("delete_image_btn", "---- DELETE ----", self.delete_image)
 
     def remove_all_mode_buttons(self) -> None:
-        if self.mode == "GROUP":
-            self.prev_group_btn.destroy()
-            self.prev_group_btn = None
-            self.next_group_btn.destroy()
-            self.next_group_btn = None
-        self.prev_image_match_btn.destroy()
-        self.prev_image_match_btn = None
-        self.next_image_match_btn.destroy()
-        self.next_image_match_btn = None
-        self.search_current_image_btn.destroy()
-        self.search_current_image_btn = None
-        self.delete_image_btn.destroy()
-        self.delete_image_btn = None
+        self.destroy_grid_element("prev_group_btn")
+        self.destroy_grid_element("next_group_btn")
+        self.destroy_grid_element("prev_image_match_btn")
+        self.destroy_grid_element("next_image_match_btn")
+        self.destroy_grid_element("search_current_image_btn")
+        self.destroy_grid_element("delete_image_btn")
         for mode in self.has_added_buttons_for_mode.keys():
             self.has_added_buttons_for_mode[mode] = False
         self.master.update()
@@ -565,17 +562,24 @@ class App():
 
             self.has_added_buttons_for_mode[self.mode] = True
 
-    def run_compare(self) -> None:
-        def run_compare_async(self) -> None:
+    def run_with_progress(self, exec_func, args=None) -> None:
+        def run_with_progress_async(self) -> None:
             self.progress_bar = Progressbar(self.sidebar, orient=HORIZONTAL, length=100, mode='indeterminate')
             self.apply_to_grid(self.progress_bar)
             self.progress_bar.start()
-            self._run_compare()
+            if args is None:
+                exec_func()
+            else:
+                exec_func(args)
             self.progress_bar.stop()
             self.progress_bar.grid_forget()
-            self.progress_bar.destroy()
+            self.destroy_grid_element("progress_bar")
 
-        threading.Thread(target=run_compare_async, args=[self]).start()
+        thread = threading.Thread(target=run_with_progress_async, args=[self])
+        thread.start()
+
+    def run_compare(self) -> None:
+        self.run_with_progress(self._run_compare)
 
     def _run_compare(self) -> None:
         '''
@@ -622,18 +626,31 @@ class App():
             self.compare.inclusion_pattern = inclusion_pattern
             self.compare.overwrite = overwrite
             self.compare.print_settings()
+        
+        if self.compare.is_run_search:
+            self.set_mode("SEARCH", do_update=False)
+            if not self.is_toggled_view_matches:
+                self.is_toggled_view_matches = True
+        else:
+            if self.mode == "SEARCH":
+                res = self.alert("Confirm group run",
+                                    "Search mode detected, please confirm switch to group mode before run. "
+                                    + "Group mode will take longer as all images in the base directory are compared.",
+                                    kind="warning")
+                if res != messagebox.YES:
+                    return
+            self.set_mode("GROUP", do_update=False)
 
         if get_new_data:
-            print("Getting new data for compare")
+            print("Gathering files for compare")
             self.compare.get_files()
+            print("Gathering image data for compare")
             self.compare.get_data()
 
-        if search_file_path is None or search_file_path == "":
-            self.run_group()
-        else:
-            sys.settrace(trace)
+        if self.compare.is_run_search:
             self.run_search()
-            sys.settrace(None)
+        else:
+            self.run_group()
 
     def is_new_data_request_required(self, counter_limit, color_diff_threshold,
                                      inclusion_pattern, overwrite):
@@ -643,18 +660,10 @@ class App():
                 or (not self.compare.overwrite and overwrite))
 
     def run_group(self) -> None:
-        if self.mode == "SEARCH":
-            res = self.alert("Confirm group run",
-                                "Search mode detected, please confirm switch to group mode before run. "
-                                + "Group mode will take longer as all images in the base directory are compared.",
-                                kind="warning")
-            if res != messagebox.YES:
-                return
-        self.set_mode("GROUP")
         self.label_state["text"] = _wrap_text_to_fit_length(
             "Running image comparisons...", 30)
         self.files_grouped, self.file_groups = self.compare.run()
-
+        
         if len(self.files_grouped) == 0:
             self.has_image_matches = False
             self.label_state["text"] = "Set a directory and search file."
@@ -680,15 +689,10 @@ class App():
                         kind="info")
 
     def run_search(self) -> None:
-        self.set_mode("SEARCH")
         self.label_state["text"] = _wrap_text_to_fit_length(
             "Running image comparison with search file...", 30)
-
-        if not self.is_toggled_view_matches:
-            self.is_toggled_view_matches = True
-
         self.files_grouped = self.compare.run_search()
-
+        
         if len(self.files_grouped) == 0:
             self.has_image_matches = False
             self.label_state["text"] = "Set a directory and search file."
@@ -707,8 +711,7 @@ class App():
 
         self.add_buttons_for_mode()
         self.create_image(self.files_matched[self.match_index])
-
-
+        
     def set_group_state_label(self, group_number, size):
         if group_number is None:
             self.label_state["text"] = ""
@@ -832,6 +835,13 @@ class App():
             button = Button(master=self.sidebar, text=text, command=command)
             setattr(self, button_ref_name, button)
             self.apply_to_grid(button)
+
+    def destroy_grid_element(self, element_ref_name):
+        element = getattr(self, element_ref_name)
+        if element is not None:
+            element.destroy()
+            setattr(self, element_ref_name, None)
+            self.row_counter -= 1
 
 
 if __name__ == "__main__":
