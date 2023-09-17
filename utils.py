@@ -1,5 +1,17 @@
 import re
 import os
+import sys
+
+
+def trace(frame, event, arg):
+    if event == "call":
+        filename = frame.f_code.co_filename
+        #if "simple_image_compare" in filename:
+        lineno = frame.f_lineno
+        # Here I'm printing the file and line number, 
+        # but you can examine the frame, locals, etc too.
+        print("%s @ %s" % (filename, lineno))
+    return trace
 
 
 def get_user_dir():

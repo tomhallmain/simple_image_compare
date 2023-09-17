@@ -319,17 +319,12 @@ class Compare:
         '''
         self.files_found = []
         self.files = []
-        self.files.extend(
-            glob(os.path.join(self.base_dir, "**/*.jpg"), recursive=True))
-        self.files.extend(
-            glob(os.path.join(self.base_dir, "**/*.jpeg"), recursive=True))
-        self.files.extend(
-            glob(os.path.join(self.base_dir, "**/*.png"), recursive=True))
-        self.files.extend(
-            glob(os.path.join(self.base_dir, "**/*.webp"), recursive=True))
+        self.files.extend(glob(os.path.join(self.base_dir, "**/*.jpg"), recursive=True))
+        self.files.extend(glob(os.path.join(self.base_dir, "**/*.jpeg"), recursive=True))
+        self.files.extend(glob(os.path.join(self.base_dir, "**/*.png"), recursive=True))
+        self.files.extend(glob(os.path.join(self.base_dir, "**/*.webp"), recursive=True))
         if self.include_gifs:
-            self.files.extend(
-                glob(os.path.join(self.base_dir, "**/*.gif"), recursive=True))
+            self.files.extend(glob(os.path.join(self.base_dir, "**/*.gif"), recursive=True))
         self.files.sort()
         self.has_new_file_data = False
         self.max_files_processed = min(self.counter_limit, len(self.files))
@@ -584,7 +579,7 @@ class Compare:
                   + "\" identified with current params.")
         return files_grouped
 
-    def run_search(self, search_file_path):
+    def run_search_on_path(self, search_file_path):
         '''
         Prepare and begin a search for a provided image file path.
         '''
@@ -632,6 +627,9 @@ class Compare:
             search_file_path, self.files_found.index(search_file_path))
         search_file_path = None
         return files_grouped
+
+    def run_search(self):
+        return self.run_search_on_path(self.search_file_path)
 
     def run_comparison(self):
         '''
@@ -764,14 +762,13 @@ class Compare:
         Runs the specified operation on this Compare.
         '''
         if self.is_run_search:
-            return self.run_search(self.search_file_path)
+            return self.run_search()
         else:
             return self.run_comparison()
 
     def sort_groups(self, file_groups):
         return sorted(file_groups,
-                      key=lambda group_index:
-                      len(file_groups[group_index]))
+                      key=lambda group_index: len(file_groups[group_index]))
 
 
 if __name__ == "__main__":
