@@ -9,7 +9,7 @@ Clone this repository and ensure python 3 and the required packages are installe
 
 Run `app.py` to start the UI, or provide the location of the directory containing images for comparison to `compare.py` at runtime.
 
-Useful for detecting duplicates or finding associations between large unstructured sets of image files. File management controls are availalbe after the image analysis has completed.
+Useful for detecting duplicates or finding associations between large unstructured sets of image files. File management controls are available after the image analysis has completed.
 
 Individual images can be passed to search against the full image data set by passing flag `--search` with the path of the search file, or selecting setting a search file in the UI before running comparison.
 
