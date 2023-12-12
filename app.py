@@ -1,15 +1,17 @@
 import os
 import threading
+
 import tkinter as tk
 from tkinter import Canvas, PhotoImage, filedialog, messagebox, HORIZONTAL
 from tkinter.constants import W
 import tkinter.font as fnt
 from tkinter.ttk import Button, Entry, Frame, Label, OptionMenu, Progressbar
+from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
 from compare import Compare, get_valid_file
 from utils import (
-    _wrap_text_to_fit_length, basename, get_user_dir, scale_dims, trace
+    _wrap_text_to_fit_length, basename, get_user_dir, scale_dims, trace, open_file_location
 )
 
 
@@ -85,6 +87,30 @@ class App():
     UI for comparing image files and making related file changes.
     '''
 
+    IS_DEFAULT_THEME = False
+
+    def configure_style(self, theme):
+        self.master.set_theme(theme, themebg="black")
+
+    def toggle_theme(self):
+        if App.IS_DEFAULT_THEME:
+            # Changes the window to light theme 
+            self.configure_style("breeze")
+            self.master.config(bg="gray")
+            self.sidebar.config(bg="gray")
+            self.canvas.config(bg="gray")
+            App.IS_DEFAULT_THEME = False
+            print("Theme switched to light.")
+        else:
+            # Changes the window to dark theme 
+            self.configure_style("black")
+            self.master.config(bg="#26242f")
+            self.sidebar.config(bg="#26242f")
+            self.canvas.config(bg="#26242f")
+            App.IS_DEFAULT_THEME = True
+            print("Theme switched to dark.")
+        self.master.update()
+
     def __init__(self, master):
         self.master = master
         self.mode = None
@@ -92,18 +118,24 @@ class App():
         self.search_dir = get_user_dir()
 
         # Sidebar
-        self.sidebar = Frame(self.master)
+        self.sidebar = tk.Frame(self.master)
         self.sidebar.columnconfigure(0, weight=1)
         self.row_counter = 0
         self.sidebar.grid(column=0, row=self.row_counter)
+
+        # The top part is a label with info
         self.label_mode = Label(self.sidebar)
         self.label_state = Label(self.sidebar)
         self.label1 = Label(self.sidebar)
-        self.set_base_dir_btn = None
-        self.create_img_btn = None
         self.add_label(self.label_mode, "", sticky=None)
         self.add_label(self.label_state, "Set a directory to run comparison.", pady=20)
+
+        # Settings UI
         self.add_label(self.label1, "Controls & Settings", sticky=None, pady=30)
+        self.set_base_dir_btn = None
+        self.create_img_btn = None
+        self.toggle_theme_btn = None
+        self.add_button("toggle_theme_btn", "Toggle theme", self.toggle_theme)
         self.add_button("set_base_dir_btn", "Set directory", self.set_base_dir)
         self.set_base_dir_box = Entry(self.sidebar,
                                       text="Add dirpath...",
@@ -145,7 +177,7 @@ class App():
                                        text="Add file path...",
                                        width=30,
                                        font=fnt.Font(size=8))
-        self.set_counter_limit.insert(0, "40000")
+        self.set_counter_limit.insert(0, "40000") # default value
         self.apply_to_grid(self.set_counter_limit, sticky=W)
         self.label_inclusion_pattern = Label(self.sidebar)
         self.add_label(self.label_inclusion_pattern,
@@ -156,6 +188,8 @@ class App():
                                            width=30,
                                            font=fnt.Font(size=8))
         self.apply_to_grid(self.set_inclusion_pattern, sticky=W)
+
+        # Run context-aware UI elements
         self.progress_bar = None
         self.run_compare_btn = None
         self.add_button("run_compare_btn", "Run image compare", self.run_compare)
@@ -169,9 +203,10 @@ class App():
         self.label_current_image_name = None
         self.rename_image_btn = None
         self.delete_image_btn = None
+        self.open_image_location_btn = None
         self.rem_dups_btn = None
 
-        # Image panel
+        # Image panel and state management
         self.match_index = 0
         self.master.update()
         self.canvas = ResizingCanvas(self.master)
@@ -192,13 +227,16 @@ class App():
         # Default mode is GROUP
         self.set_mode("GROUP")
 
-        # Arrow key bindings
+        # Key bindings
         self.master.bind('<Left>', self.show_prev_image_key)
         self.master.bind('<Right>', self.show_next_image_key)
         self.master.bind('<Shift-Left>', self.show_prev_group)
         self.master.bind('<Shift-Right>', self.show_next_group)
+        self.master.bind('<Shift-Home>', self.open_image_location)
+        self.master.bind('<Shift-Delete>', self._delete_image)
+        self.toggle_theme()
         self.master.update()
-        
+
 
     def set_mode(self, mode, do_update=True):
         '''
@@ -531,6 +569,7 @@ class App():
         self.add_button("prev_image_match_btn", "Previous image match", self.show_prev_image)
         self.add_button("next_image_match_btn", "Next image match", self.show_next_image)
         self.add_button("search_current_image_btn", "Search current image", self.set_current_image_run_search)
+        self.add_button("open_image_location_btn", "Open image location", self.open_image_location)
         self.add_button("delete_image_btn", "---- DELETE ----", self.delete_image)
 
     def remove_all_mode_buttons(self) -> None:
@@ -540,6 +579,7 @@ class App():
         self.destroy_grid_element("next_image_match_btn")
         self.destroy_grid_element("search_current_image_btn")
         self.destroy_grid_element("delete_image_btn")
+        self.destroy_grid_element("open_image_location_btn")
         for mode in self.has_added_buttons_for_mode.keys():
             self.has_added_buttons_for_mode[mode] = False
         self.master.update()
@@ -719,11 +759,33 @@ class App():
             self.label_state["text"] = _wrap_text_to_fit_length(
                 f"Group {group_number + 1} of {len(self.file_groups)}\nSize: {size}", 30)
 
+    def is_toggled_search_image(self):
+        return self.mode == "SEARCH" and not self.is_toggled_view_matches
+
+    def get_active_image_filepath(self):
+        if self.is_toggled_search_image():
+            filepath = self.search_image_full_path
+        else:
+            filepath = self.files_matched[self.match_index]
+        return get_valid_file(self.get_base_dir(), filepath)
+
+    def open_image_location(self, event):
+        filepath = self.get_active_image_filepath()
+
+        if filepath is not None:
+            print("Opening file location: " + filepath)
+            open_file_location(filepath)
+        else:
+            print("Failed to open location of current file, unable to get valid filepath")
+
+    def _delete_image(self, event):
+        self.delete_image()
+
     def delete_image(self):
         '''
         Delete the currently displayed image from the filesystem.
         '''
-        is_toggle_search_image = self.mode == "SEARCH" and not self.is_toggled_view_matches
+        is_toggle_search_image = self.is_toggled_search_image()
 
         if len(self.files_matched) == 0 and not is_toggle_search_image:
             print(
@@ -733,11 +795,7 @@ class App():
             print("Invalid action, search image not found")
             return
 
-        if is_toggle_search_image:
-            filepath = self.search_image_full_path
-        else:
-            filepath = self.files_matched[self.match_index]
-        filepath = get_valid_file(self.get_base_dir(), filepath)
+        filepath = self.get_active_image_filepath()
 
         if filepath is not None:
             print("Removing file: " + filepath)
@@ -834,6 +892,7 @@ class App():
         if getattr(self, button_ref_name) is None:
             button = Button(master=self.sidebar, text=text, command=command)
             setattr(self, button_ref_name, button)
+            button
             self.apply_to_grid(button)
 
     def destroy_grid_element(self, element_ref_name):
@@ -846,7 +905,7 @@ class App():
 
 if __name__ == "__main__":
     assets = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets")
-    root = tk.Tk()
+    root = ThemedTk(theme="black", themebg="black")
     root.title(" Simple Image Compare ")
     #root.iconbitmap(bitmap=r"icon.ico")
     icon = PhotoImage(file=os.path.join(assets, "icon.png"))

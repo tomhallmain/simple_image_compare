@@ -79,3 +79,16 @@ def _wrap_text_to_fit_length(text: str, fit_length: int):
             text = text[fit_length:]
 
     return new_text
+
+def open_file_location(filepath):
+    if sys.platform=='win32':
+        os.startfile(filepath)
+    elif sys.platform=='darwin':
+        subprocess.Popen(['open', filepath])
+    else:
+        try:
+            subprocess.Popen(['xdg-open', filepath])
+        except OSError:
+            # er, think of something else to try
+            # xdg-open *should* be supported by recent Gnome, KDE, Xfce
+            raise Exception("Unsupported distribution for opening file location.")

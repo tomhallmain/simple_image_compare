@@ -1,3 +1,4 @@
+from collections import Counter
 import getopt
 from glob import glob
 import os
@@ -10,7 +11,6 @@ import imageio
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.cluster import KMeans
-from collections import Counter
 from skimage.color import rgb2lab
 # from imutils import face_utils
 
