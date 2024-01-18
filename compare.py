@@ -394,12 +394,10 @@ class Compare:
             self.file_colors_dict = {}
             self.file_faces_dict = {}
         else:
-            file_colors_file = open(self.file_colors_filepath, "rb")
-            file_faces_file = open(self.file_faces_filepath, "rb")
-            self.file_colors_dict = pickle.load(file_colors_file)
-            self.file_faces_dict = pickle.load(file_faces_file)
-            file_colors_file.close()
-            file_faces_file.close()
+            with open(self.file_colors_filepath, "rb") as f:
+                self.file_colors_dict = pickle.load(f)
+            with open(self.file_faces_filepath, "rb") as f:
+                self.file_faces_dict = pickle.load(f)
 
         # Gather image file data from directory
 
@@ -462,12 +460,10 @@ class Compare:
         # Save image file data
 
         if self.has_new_file_data or self.overwrite:
-            file_colors_file = open(self.file_colors_filepath, "wb")
-            file_faces_file = open(self.file_faces_filepath, "wb")
-            pickle.dump(self.file_colors_dict, file_colors_file)
-            pickle.dump(self.file_faces_dict, file_faces_file)
-            file_colors_file.close()
-            file_faces_file.close()
+            with open(self.file_colors_filepath, "wb") as store:
+                pickle.dump(self.file_colors_dict, store)
+            with open(self.file_faces_filepath, "wb") as store:
+                pickle.dump(self.file_faces_dict, store)
             self.file_colors_dict = None
             self.file_faces_dict = None
             if self.verbose:

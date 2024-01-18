@@ -1,3 +1,4 @@
+from enum import Enum
 import os
 import threading
 
@@ -10,9 +11,25 @@ from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
 from compare import Compare, get_valid_file
+from file_browser import FileBrowser
 from utils import (
     _wrap_text_to_fit_length, basename, get_user_dir, scale_dims, trace, open_file_location
 )
+
+
+### TODO simple image browsing mode
+### TODO remove duplicates mode
+### TODO progress listener for compare class
+### TODO add checkbox for include gif option
+### TODO add checkbox for fill canvas option
+### TODO custom frame class for sidebar to hold all the button crap
+
+
+class Mode(Enum):
+    BROWSE = 1
+    SEARCH = 2
+    GROUP = 3
+    REM_DUP = 4
 
 
 class ResizingCanvas(Canvas):
@@ -79,9 +96,6 @@ class GifImageUI:
             root.after(100, self.update, ind)
 
 
-# TODO progress listener for compare class
-# TODO add checkbox for include gif option
-
 class App():
     '''
     UI for comparing image files and making related file changes.
@@ -113,7 +127,9 @@ class App():
 
     def __init__(self, master):
         self.master = master
-        self.mode = None
+        self.file_browser = FileBrowser()
+        self.mode = Mode.BROWSE
+        self.fill_canvas = True
         self.base_dir = get_user_dir()
         self.search_dir = get_user_dir()
 
@@ -222,10 +238,15 @@ class App():
         self.group_indexes = []
         self.max_group_index = 0
         self.is_toggled_view_matches = True
-        self.has_added_buttons_for_mode = {"GROUP": False, "SEARCH": False, "REM_DUP": False}
+        self.has_added_buttons_for_mode = {
+            Mode.BROWSE: False,
+            Mode.GROUP: False, 
+            Mode.SEARCH: False, 
+            Mode.REM_DUP: False
+        }
 
         # Default mode is GROUP
-        self.set_mode("GROUP")
+        self.set_mode(Mode.BROWSE)
 
         # Key bindings
         self.master.bind('<Left>', self.show_prev_image_key)
@@ -243,12 +264,17 @@ class App():
         Change the current mode of the application.
         '''
         self.mode = mode
-        self.label_mode['text'] = "Mode: " + mode
+        self.label_mode['text'] = f"Mode: {mode}"
 
-        if mode == "GROUP":
+        if mode == Mode.GROUP:
             self.toggle_image_view_btn = None
             self.replace_current_image_btn = None
-        elif mode == "SEARCH":
+        if mode == Mode.SEARCH:
+            self.prev_group_btn = None
+            self.next_group_btn = None
+        if mode == Mode.BROWSE:
+            self.toggle_image_view_btn = None
+            self.replace_current_image_btn = None
             self.prev_group_btn = None
             self.next_group_btn = None
 
@@ -271,12 +297,16 @@ class App():
             self.compare = None
             self.set_group_state_label(None, 0)
             self.remove_all_mode_buttons()
-            if self.mode != "SEARCH":
+            if self.mode != Mode.SEARCH:
                 self.clear_image()
             elif self.is_toggled_view_matches:
                 self.toggle_image_view()
         self.set_base_dir_box.delete(0, "end")
         self.set_base_dir_box.insert(0, self.base_dir)
+        self.file_browser.set_directory(self.base_dir)
+        if self.compare is None and self.mode != Mode.SEARCH:
+            self.set_mode(Mode.BROWSE)
+            self.show_next_image()
         self.master.update()
 
     def get_base_dir(self) -> str:
@@ -284,10 +314,7 @@ class App():
                        or self.base_dir == "") else self.base_dir
 
     def get_search_dir(self) -> str:
-        if self.search_dir is None:
-            return self.get_base_dir()
-        else:
-            return self.search_dir
+        return self.get_base_dir() if self.search_dir is None else self.search_dir
 
     def get_search_file_path(self) -> str:
         '''
@@ -354,11 +381,11 @@ class App():
         '''
         Get the object required to display the image in the UI.
         '''
-        if (filename.endswith(".gif")):
+        if filename.endswith(".gif"):
             return GifImageUI(filename)
 
         img = Image.open(filename)
-        fit_dims = scale_dims((img.width, img.height), self.canvas.get_size())
+        fit_dims = scale_dims((img.width, img.height), self.canvas.get_size(), maximize=self.fill_canvas)
         img = img.resize(fit_dims)
         return ImageTk.PhotoImage(img)
 
@@ -387,9 +414,9 @@ class App():
             self.show_searched_image()
 
         if self.search_image_full_path is None or self.search_image_full_path == "":
-            self.set_mode("GROUP")
+            self.set_mode(Mode.GROUP)
         else:
-            self.set_mode("SEARCH")
+            self.set_mode(Mode.SEARCH)
 
         self.master.update()
 
@@ -408,6 +435,10 @@ class App():
         If similar image results are present in any mode, display the previous
         in the list of matches.
         '''
+        if self.mode == Mode.BROWSE:
+            self.master.update()
+            self.create_image(self.file_browser.previous_file())
+            return
         if self.files_matched is None:
             return
         elif len(self.files_matched) == 0:
@@ -417,8 +448,7 @@ class App():
                            kind="info")
             return
 
-        if not self.is_toggled_view_matches:
-            self.is_toggled_view_matches = True
+        self.is_toggled_view_matches = True
         
         if self.match_index > 0:
             self.match_index -= 1
@@ -436,6 +466,10 @@ class App():
         If similar image results are present in any mode, display the next
         in the list of matches.
         '''
+        if self.mode == Mode.BROWSE:
+            self.master.update()
+            self.create_image(self.file_browser.next_file())
+            return
         if self.files_matched is None:
             return
         elif len(self.files_matched) == 0:
@@ -445,8 +479,7 @@ class App():
                            kind="info")
             return
 
-        if not self.is_toggled_view_matches:
-            self.is_toggled_view_matches = True
+        self.is_toggled_view_matches = True
 
         if len(self.files_matched) > self.match_index + 1:
             self.match_index += 1
@@ -484,7 +517,7 @@ class App():
         '''
         While in group mode, navigate between the groups.
         '''
-        if self.mode == "SEARCH":
+        if self.mode == Mode.SEARCH:
             print("Invalid action, there should only be one group in search mode")
             return
         elif self.file_groups is None or len(self.file_groups) == 0:
@@ -555,7 +588,7 @@ class App():
         '''
         While in search mode, toggle between the search image and the results.
         '''
-        if self.mode != "SEARCH":
+        if self.mode != Mode.SEARCH:
             return
 
         if self.is_toggled_view_matches:
@@ -586,18 +619,18 @@ class App():
 
     def add_buttons_for_mode(self) -> None:
         if not self.has_added_buttons_for_mode[self.mode]:
-            if self.mode == "SEARCH":
+            if self.mode == Mode.SEARCH:
                 self.add_button("toggle_image_view_btn", "Toggle image view", self.toggle_image_view)
                 self.add_button("replace_current_image_btn", "Replace with search image",
                                 self.replace_current_image_with_search_image)
-                if not self.has_added_buttons_for_mode["GROUP"]:
+                if not self.has_added_buttons_for_mode[Mode.GROUP]:
                     self.add_all_mode_buttons()
-            elif self.mode == "GROUP":
+            elif self.mode == Mode.GROUP:
                 self.add_button("prev_group_btn", "Previous group", self.show_prev_group)
                 self.add_button("next_group_btn", "Next group", self.show_next_group)
-                if not self.has_added_buttons_for_mode["SEARCH"]:
+                if not self.has_added_buttons_for_mode[Mode.SEARCH]:
                     self.add_all_mode_buttons()
-            elif self.mode == "REM_DUP":
+            elif self.mode == Mode.REM_DUP:
                 self.add_button("rem_dups_btn", "Remove duplicates", self.rem_dups)
 
             self.has_added_buttons_for_mode[self.mode] = True
@@ -668,18 +701,18 @@ class App():
             self.compare.print_settings()
         
         if self.compare.is_run_search:
-            self.set_mode("SEARCH", do_update=False)
+            self.set_mode(Mode.SEARCH, do_update=False)
             if not self.is_toggled_view_matches:
                 self.is_toggled_view_matches = True
         else:
-            if self.mode == "SEARCH":
+            if self.mode == Mode.SEARCH:
                 res = self.alert("Confirm group run",
                                     "Search mode detected, please confirm switch to group mode before run. "
                                     + "Group mode will take longer as all images in the base directory are compared.",
                                     kind="warning")
                 if res != messagebox.YES:
                     return
-            self.set_mode("GROUP", do_update=False)
+            self.set_mode(Mode.GROUP, do_update=False)
 
         if get_new_data:
             print("Gathering files for compare")
@@ -760,7 +793,7 @@ class App():
                 f"Group {group_number + 1} of {len(self.file_groups)}\nSize: {size}", 30)
 
     def is_toggled_search_image(self):
-        return self.mode == "SEARCH" and not self.is_toggled_view_matches
+        return self.mode == Mode.SEARCH and not self.is_toggled_view_matches
 
     def get_active_image_filepath(self):
         if self.is_toggled_search_image():
@@ -809,7 +842,7 @@ class App():
         Overwrite the file at the path of the current image with the
         search image.
         '''
-        if (self.mode != "SEARCH"
+        if (self.mode != Mode.SEARCH
                 or len(self.files_matched) == 0
                 or not os.path.exists(self.search_image_full_path)):
             return
@@ -833,7 +866,7 @@ class App():
         groups are disjoint.
         '''
         if len(self.files_matched) < 3:
-            if self.mode != "GROUP":
+            if self.mode != Mode.GROUP:
                 return
 
             # remove this group as it will only have one file

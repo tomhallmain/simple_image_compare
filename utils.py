@@ -22,12 +22,17 @@ def basename(filepath):
     return os.path.basename(filepath)
 
 
-def scale_dims(dims, max_dims):
+def scale_dims(dims, max_dims, maximize=False):
     x = dims[0]
     y = dims[1]
     max_x = max_dims[0]
     max_y = max_dims[1]
     if x <= max_x and y <= max_y:
+        if maximize:
+            if x < max_x:
+                return (int(x * max_y/y), max_y)
+            elif y < max_y:
+                return (max_x, int(y * max_x/x))
         return (x, y)
     elif x <= max_x:
         return (int(x * max_y/y), max_y)
