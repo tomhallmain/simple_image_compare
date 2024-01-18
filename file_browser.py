@@ -13,8 +13,8 @@ class SortableFile:
         self.creation_time = datetime.fromtimestamp(os.path.getctime(full_file_path))
 
 class SortBy(Enum):
-    FULL_PATH = 0
-    NAME = 1
+    NAME = 0
+    FULL_PATH = 1
     CREATION_TIME = 2
     TYPE = 3
 
@@ -25,7 +25,7 @@ class Sort(Enum):
     
 
 class FileBrowser:
-    def __init__(self, directory=".", recursive=False, filter=None):
+    def __init__(self, directory=".", recursive=True, filter=None):
         self.directory = directory
         self.recursive = recursive
         self.filter = filter
@@ -55,6 +55,8 @@ class FileBrowser:
 
     def previous_file(self):
         files = self.get_files()
+        if len(files) == 0:
+            raise Exception("No files found for current browsing settings.")
         if self.file_cursor == 0:
             self.file_cursor = len(files) - 1
         else:
@@ -63,6 +65,8 @@ class FileBrowser:
 
     def next_file(self):
         files = self.get_files()
+        if len(files) == 0:
+            raise Exception("No files found for current browsing settings.")
         if len(files) > self.file_cursor + 1:
             self.file_cursor += 1
         else:

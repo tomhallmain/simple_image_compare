@@ -5,13 +5,31 @@ Simple image comparison tool that detects color and face similarities.
 
 ## Usage
 
-Clone this repository and ensure python 3 and the required packages are installed from requirements.txt.
+Clone this repository and ensure Python 3 and the required packages are installed from requirements.txt.
 
 Run `app.py` to start the UI, or provide the location of the directory containing images for comparison to `compare.py` at runtime.
 
 Useful for detecting duplicates or finding associations between large unstructured sets of image files. File management controls are available after the image analysis has completed.
 
 Individual images can be passed to search against the full image data set by passing flag `--search` with the path of the search file, or selecting setting a search file in the UI before running comparison.
+
+## Image Browser
+
+After setting a directory before a comparison is run, the UI can be used as an image file browser. This is especially useful on Windows 11 as there is an option to auto-resize images to fill the screen, which the default Windows Photo Viewer application does not support. There is zoom and drag functionality on this image browser, as well as when viewing grouped images after a comparison has been run.
+
+## UI Keybindings
+
+A directory must be set and/or a comparison must be run for the below bindings to work.
+
+| Binding     | Effect               |
+|-------------|----------------------|
+| Left        | Show previous image  |
+| Right       | Show next image      |
+| Shift-Left  | Show prev group      |
+| Shift-Right | Show next group      |
+| Shift-Enter | Open image location  |
+| Shift-Delete| Delete image         |
+| F11         | Toggle fullscreen    |
 
 ## Limitations
 
