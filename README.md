@@ -15,7 +15,9 @@ Individual images can be passed to search against the full image data set by pas
 
 ## Image Browser
 
-After setting a directory before a comparison is run, the UI can be used as an image file browser. This is especially useful on Windows 11 as there is an option to auto-resize images to fill the screen, which the default Windows Photo Viewer application does not support. There is zoom and drag functionality on this image browser, as well as when viewing grouped images after a comparison has been run.
+After setting a directory before a comparison is run, the UI can be used as an image file browser. This is especially useful on Windows 11 as there is an option to auto-resize images to fill the screen, which the default Windows Photo Viewer application does not support. 
+
+It is not implemented yet, but there will ultimately be zoom and drag functionality on this image browser, as well as when viewing grouped images after a comparison has been run.
 
 ## UI Keybindings
 

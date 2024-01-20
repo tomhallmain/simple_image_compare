@@ -247,7 +247,7 @@ class Compare:
     def __init__(self, base_dir, search_file_path=None, counter_limit=30000,
                  use_thumb=True, compare_faces=False, color_diff_threshold=15,
                  inclusion_pattern=None, overwrite=False, verbose=False,
-                 include_gifs=False):
+                 include_gifs=False, match_dims=False):
         self.use_thumb = use_thumb
         self.files = None
         self.set_base_dir(base_dir)
@@ -256,6 +256,7 @@ class Compare:
         self.compare_faces = compare_faces
         self.inclusion_pattern = inclusion_pattern
         self.include_gifs = include_gifs
+        self.match_dims = match_dims
         self.overwrite = overwrite
         self.verbose = verbose
         if self.use_thumb:

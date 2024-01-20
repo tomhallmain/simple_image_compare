@@ -17,14 +17,12 @@ from utils import (
 )
 
 
-### TODO simple image browsing mode
+### TODO simple image browsing mode zoom feature
+### TODO compare option to restrict by matching image dimensions
 ### TODO remove duplicates mode
 ### TODO progress listener for compare class
 ### TODO add checkbox for include gif option
-### TODO add checkbox for fill canvas option
-### TODO custom frame class for sidebar to hold all the button crap
-
-
+### TODO custom frame class for sidebar to hold all the buttons
 
 
 class Mode(Enum):
@@ -480,9 +478,9 @@ class App():
             self.master.update()
             self.create_image(App.file_browser.previous_file())
             return
-        if self.files_matched is None:
+        if App.files_matched is None:
             return
-        elif len(self.files_matched) == 0:
+        elif len(App.files_matched) == 0:
             if show_alert:
                 self.alert("Search required",
                            "No matches found. Search again to find potential matches.",
@@ -494,10 +492,10 @@ class App():
         if App.match_index > 0:
             App.match_index -= 1
         else:
-            App.match_index = len(self.files_matched) - 1
+            App.match_index = len(App.files_matched) - 1
         
         self.master.update()
-        self.create_image(self.files_matched[App.match_index])
+        self.create_image(App.files_matched[App.match_index])
 
     def show_next_image_key(self, event) -> None:
         self.show_next_image(False)
@@ -514,9 +512,9 @@ class App():
             except Exception as e:
                 self.alert("Exception", str(e))
             return
-        if self.files_matched is None:
+        if App.files_matched is None:
             return
-        elif len(self.files_matched) == 0:
+        elif len(App.files_matched) == 0:
             if show_alert:
                 self.alert("Search required",
                            "No matches found. Search again to find potential matches.",
@@ -525,19 +523,19 @@ class App():
 
         App.is_toggled_view_matches = True
 
-        if len(self.files_matched) > App.match_index + 1:
+        if len(App.files_matched) > App.match_index + 1:
             App.match_index += 1
         else:
             App.match_index = 0
 
         self.master.update()
-        self.create_image(self.files_matched[App.match_index])
+        self.create_image(App.files_matched[App.match_index])
 
     def show_prev_group(self, event=None) -> None:
         '''
         While in group mode, navigate to the previous group.
         '''
-        if (self.file_groups is None or len(App.group_indexes) == 0
+        if (App.file_groups is None or len(App.group_indexes) == 0
                 or App.current_group_index == max(App.group_indexes)):
             App.current_group_index = 0
         else:
@@ -549,7 +547,7 @@ class App():
         '''
         While in group mode, navigate to the next group.
         '''
-        if (self.file_groups is None or len(App.group_indexes) == 0
+        if (App.file_groups is None or len(App.group_indexes) == 0
                 or App.current_group_index + 1 == len(App.group_indexes)):
             App.current_group_index = 0
         else:
@@ -564,21 +562,21 @@ class App():
         if App.mode == Mode.SEARCH:
             print("Invalid action, there should only be one group in search mode")
             return
-        elif self.file_groups is None or len(self.file_groups) == 0:
+        elif App.file_groups is None or len(App.file_groups) == 0:
             print("No groups found")
             return
 
         actual_group_index = App.group_indexes[App.current_group_index]
-        self.current_group = self.file_groups[actual_group_index]
+        App.current_group = App.file_groups[actual_group_index]
         App.match_index = 0
-        self.files_matched = []
+        App.files_matched = []
 
-        for f in sorted(self.current_group, key=lambda f: self.current_group[f]):
-            self.files_matched.append(f)
+        for f in sorted(App.current_group, key=lambda f: App.current_group[f]):
+            App.files_matched.append(f)
 
-        self.set_group_state_label(App.current_group_index, len(self.files_matched))
+        self.set_group_state_label(App.current_group_index, len(App.files_matched))
         self.master.update()
-        self.create_image(self.files_matched[App.match_index])
+        self.create_image(App.files_matched[App.match_index])
 
     def set_current_image_run_search(self) -> None:
         '''
@@ -591,12 +589,12 @@ class App():
         search_image_path = self.search_image.get()
         search_image_path = get_valid_file(
             self.get_base_dir(), search_image_path)
-        if (self.files_matched is None
-                or search_image_path == self.files_matched[App.match_index]):
+        if (App.files_matched is None
+                or search_image_path == App.files_matched[App.match_index]):
             self.alert("Already set image",
                        "Current image is already the search image.",
                        kind="info")
-        self.search_image.set(basename(self.files_matched[App.match_index]))
+        self.search_image.set(basename(App.files_matched[App.match_index]))
         self.master.update()
         self.run_compare()
 
@@ -711,7 +709,7 @@ class App():
         inclusion_pattern = self.get_inclusion_pattern()
         get_new_data = True
         App.current_group_index = 0
-        self.current_group = None
+        App.current_group = None
         App.max_group_index = 0
         App.group_indexes = []
         App.files_matched = []
@@ -808,9 +806,9 @@ class App():
     def run_search(self) -> None:
         self.label_state["text"] = _wrap_text_to_fit_length(
             "Running image comparison with search file...", 30)
-        self.files_grouped = App.compare.run_search()
+        App.files_grouped = App.compare.run_search()
         
-        if len(self.files_grouped) == 0:
+        if len(App.files_grouped) == 0:
             App.has_image_matches = False
             self.label_state["text"] = "Set a directory and search file."
             self.alert("No Match Found",
@@ -818,8 +816,8 @@ class App():
                         kind="info")
             return
 
-        for f in sorted(self.files_grouped, key=lambda f: App.files_grouped[f]):
-            self.files_matched.append(f)
+        for f in sorted(App.files_grouped, key=lambda f: App.files_grouped[f]):
+            App.files_matched.append(f)
 
         App.match_index = 0
         App.has_image_matches = True
@@ -914,8 +912,8 @@ class App():
                 return
 
             # remove this group as it will only have one file
-            self.files_grouped = {
-                k: v for k, v in App.files_grouped.items() if v not in self.files_matched}
+            App.files_grouped = {
+                k: v for k, v in App.files_grouped.items() if v not in App.files_matched}
             actual_index = App.group_indexes[App.current_group_index]
             del App.file_groups[actual_index]
             del App.group_indexes[App.current_group_index]
@@ -925,8 +923,8 @@ class App():
                            "There are no more image groups remaining for this directory and current filter settings.",
                            kind="info")
                 App.current_group_index = 0
-                self.files_grouped = None
-                self.file_groups = None
+                App.files_grouped = None
+                App.file_groups = None
                 App.match_index = 0
                 App.files_matched = []
                 App.group_indexes = []
@@ -937,7 +935,7 @@ class App():
             self.set_current_group()
         else:
             filepath = App.files_matched[App.match_index]
-            self.files_grouped = {
+            App.files_grouped = {
                 k: v for k, v in App.files_grouped.items() if v != filepath}
             del App.files_matched[App.match_index]
 
