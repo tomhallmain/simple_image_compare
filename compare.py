@@ -247,7 +247,7 @@ class Compare:
     def __init__(self, base_dir, search_file_path=None, counter_limit=30000,
                  use_thumb=True, compare_faces=False, color_diff_threshold=15,
                  inclusion_pattern=None, overwrite=False, verbose=False,
-                 include_gifs=False, match_dims=False):
+                 include_gifs=False, match_dims=False, progress_listener=None):
         self.use_thumb = use_thumb
         self.files = None
         self.set_base_dir(base_dir)
@@ -259,6 +259,7 @@ class Compare:
         self.match_dims = match_dims
         self.overwrite = overwrite
         self.verbose = verbose
+        self.progress_listener = progress_listener
         if self.use_thumb:
             self.thumb_dim = 15
             self.n_colors = self.thumb_dim ** 2
@@ -457,6 +458,8 @@ class Compare:
                     print(str(int(percent_complete)) + "% data gathered")
                 else:
                     print(".", end="", flush=True)
+                if self.progress_listener:
+                    self.progress_listener.update("Image data collection", percent_complete)
 
         # Save image file data
 
@@ -658,9 +661,11 @@ class Compare:
             percent_complete = (i / n_files_found_even) * 100
             if percent_complete % 10 == 0:
                 if self.verbose:
-                    print(str(int(percent_complete)) + "% compared")
+                    print(f"{int(percent_complete)}% compared")
                 else:
                     print(".", end="", flush=True)
+                if self.progress_listener:
+                    self.progress_listener.update("Image comparison", percent_complete)
 
             compare_file_colors = np.roll(self.file_colors, i, 0)
             color_similars = self.compute_color_diff(

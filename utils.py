@@ -1,25 +1,30 @@
+import asyncio
 import re
 import os
 import sys
 
+
+def periodic(period):
+    def scheduler(fcn):
+        async def wrapper(*args, **kwargs):
+            while True:
+                asyncio.create_task(fcn(*args, **kwargs))
+                await asyncio.sleep(period)
+        return wrapper
+    return scheduler
 
 def trace(frame, event, arg):
     if event == "call":
         filename = frame.f_code.co_filename
         #if "simple_image_compare" in filename:
         lineno = frame.f_lineno
-        # Here I'm printing the file and line number, 
-        # but you can examine the frame, locals, etc too.
+        # you can examine the frame, locals, etc too.
         print("%s @ %s" % (filename, lineno))
     return trace
 
 
 def get_user_dir():
     return os.path.expanduser("~")
-
-
-def basename(filepath):
-    return os.path.basename(filepath)
 
 
 def scale_dims(dims, max_dims, maximize=False):
@@ -84,6 +89,24 @@ def _wrap_text_to_fit_length(text: str, fit_length: int):
             text = text[fit_length:]
 
     return new_text
+
+
+def get_relative_dirpath_split(base_dir, filepath):
+   # split the filepath from base directory
+    relative_filepath = filepath.split(base_dir)[-1]
+    
+    # remove leading slash if exists 
+    if relative_filepath[0] == '/' or relative_filepath[0] == "\\":
+        relative_filepath = relative_filepath[1:]
+
+    basename = os.path.basename(relative_filepath)
+    relative_dirpath = relative_filepath.replace(basename, "")
+
+    if len(relative_dirpath) > 0 and (relative_dirpath[-1] == '/' or relative_dirpath[-1] == "\\"):
+        relative_dirpath = relative_dirpath[:-1]
+
+    return relative_dirpath, basename
+
 
 def open_file_location(filepath):
     if sys.platform=='win32':

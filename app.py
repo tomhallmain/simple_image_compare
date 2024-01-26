@@ -1,6 +1,8 @@
+import asyncio
 from enum import Enum
 import os
 import threading
+import time
 
 import tkinter as tk
 from tkinter import Canvas, PhotoImage, filedialog, messagebox, HORIZONTAL
@@ -13,12 +15,15 @@ from PIL import ImageTk, Image
 from compare import Compare, get_valid_file
 from file_browser import FileBrowser, SortBy
 from utils import (
-    _wrap_text_to_fit_length, basename, get_user_dir, scale_dims, trace, open_file_location
+    _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, periodic
 )
 
 
 ### TODO simple image browsing mode zoom feature
+### TODO copy image path
+### TODO comfyui plugin for ipadapter/controlnet (maybe)
 ### TODO compare option to restrict by matching image dimensions
+### TODO compare option encoding size
 ### TODO remove duplicates mode
 ### TODO progress listener for compare class
 ### TODO add checkbox for include gif option
@@ -101,6 +106,14 @@ class GifImageUI:
             root.after(100, self.update, ind)
 
 
+class ProgressListener:
+    def __init__(self, update_func):
+        self.update_func = update_func
+
+    def update(self, context, percent_complete):
+        self.update_func(context, percent_complete)
+
+
 class App():
     '''
     UI for comparing image files and making related file changes.
@@ -115,9 +128,10 @@ class App():
     fullscreen = False
     search_file_path = ""
     img = None
-    files_grouped = None
+    files_grouped = {}
     file_groups = None
     files_matched = []
+    search_image_full_path = None
     has_image_matches = False
     current_group = None
     current_group_index = 0
@@ -144,7 +158,7 @@ class App():
             self.sidebar.config(bg="gray")
             self.canvas.config(bg="gray")
             App.IS_DEFAULT_THEME = False
-            print("Theme switched to light.")
+            self.toast("Theme switched to light.")
         else:
             # Changes the window to dark theme 
             self.configure_style("black")
@@ -152,7 +166,7 @@ class App():
             self.sidebar.config(bg="#26242f")
             self.canvas.config(bg="#26242f")
             App.IS_DEFAULT_THEME = True
-            print("Theme switched to dark.")
+            self.toast("Theme switched to dark.")
         self.master.update()
 
     def __init__(self, master):
@@ -260,6 +274,9 @@ class App():
         self.delete_image_btn = None
         self.open_image_location_btn = None
         self.rem_dups_btn = None
+        self.add_button("search_current_image_btn", "Search current image", self.set_current_image_run_search)
+        self.add_button("open_image_location_btn", "Open image location", self.open_image_location)
+        self.add_button("delete_image_btn", "---- DELETE ----", self.delete_image)
 
         # Image panel and state management
         self.master.update()
@@ -279,9 +296,15 @@ class App():
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
 
+        # Call the task every 2 seconds
+        def check_files():
+            asyncio.run(self.check_files())
+
+        thread = threading.Thread(target=check_files)  # Run every 2 seconds
+        thread.daemon = True  # Daemon threads exit when the main process does
+        thread.start()
         self.toggle_theme()
         self.master.update()
-        print(App.search_file_path)
 
     def toggle_fullscreen(self, event=None):
         App.fullscreen = not App.fullscreen
@@ -328,6 +351,19 @@ class App():
     def toggle_fill_canvas(self):
         App.fill_canvas = not App.fill_canvas
 
+    @periodic(10)
+    async def check_files(self, **kwargs):
+        if App.file_browser.checking_files and App.mode == Mode.BROWSE:
+            base_dir = self.set_base_dir_box.get()
+            if base_dir and base_dir != "":
+                App.file_browser.refresh(refresh_cursor=False, file_check=True)
+                if App.file_browser.has_files():
+                    self.show_next_image()
+                else:
+                    self.clear_image()
+                    self.alert("Warning", "No files found in direcftory after refresh.", kind="warning")
+                print("Refreshed files")
+
     def set_base_dir(self) -> None:
         '''
         Change the base directory to the value provided in the UI.
@@ -369,10 +405,10 @@ class App():
         '''
         image_path = self.search_image.get()
         if image_path is None or image_path == "":
-            self.search_image_full_path = None
+            App.search_image_full_path = None
             return None
 
-        search_file_str = self.search_image_full_path
+        search_file_str = App.search_image_full_path
         if search_file_str == "":
             return None
 
@@ -435,8 +471,8 @@ class App():
         '''
         image_path = self.get_search_file_path()
 
-        if image_path is None or (self.search_image_full_path is not None
-                                  and image_path == self.search_image_full_path):
+        if image_path is None or (App.search_image_full_path is not None
+                                  and image_path == App.search_image_full_path):
             image_path = filedialog.askopenfilename(
                 initialdir=self.get_search_dir(), title="Select image file",
                 filetypes=(("jpg files", "*.jpg"),
@@ -447,12 +483,12 @@ class App():
                            ))
 
         if image_path is not None and image_path != "":
-            self.search_image.set(basename(image_path))
+            self.search_image.set(os.path.basename(image_path))
             self.search_dir = os.path.dirname(image_path)
-            self.search_image_full_path = image_path
+            App.search_image_full_path = image_path
             self.show_searched_image()
 
-        if self.search_image_full_path is None or self.search_image_full_path == "":
+        if App.search_image_full_path is None or App.search_image_full_path == "":
             self.set_mode(Mode.GROUP)
         else:
             self.set_mode(Mode.SEARCH)
@@ -463,8 +499,8 @@ class App():
            self.run_compare()
 
     def show_searched_image(self) -> None:
-        if self.search_image_full_path is not None:
-            self.create_image(self.search_image_full_path, extra_text="(search image)")
+        if App.search_image_full_path is not None:
+            self.create_image(App.search_image_full_path, extra_text="(search image)")
 
     def show_prev_image_key(self, event) -> None:
         self.show_prev_image(False)
@@ -560,10 +596,10 @@ class App():
         While in group mode, navigate between the groups.
         '''
         if App.mode == Mode.SEARCH:
-            print("Invalid action, there should only be one group in search mode")
+            self.alert("Error", "Invalid action, there should only be one group in search mode", kind="error")
             return
         elif App.file_groups is None or len(App.file_groups) == 0:
-            print("No groups found")
+            self.toast("No groups found")
             return
 
         actual_group_index = App.group_indexes[App.current_group_index]
@@ -582,21 +618,27 @@ class App():
         '''
         Execute a new image search from the provided search image.
         '''
-        if not App.has_image_matches:
-            self.alert("Search required",
-                       "No matches found. Search again to find potential matches.",
-                       kind="info")
-        search_image_path = self.search_image.get()
-        search_image_path = get_valid_file(
-            self.get_base_dir(), search_image_path)
-        if (App.files_matched is None
-                or search_image_path == App.files_matched[App.match_index]):
-            self.alert("Already set image",
-                       "Current image is already the search image.",
-                       kind="info")
-        self.search_image.set(basename(App.files_matched[App.match_index]))
-        self.master.update()
-        self.run_compare()
+        if App.mode != Mode.BROWSE:
+            if not App.has_image_matches:
+                self.alert("Search required",
+                    "No matches found. Search again to find potential matches.",
+                    kind="info")
+                return
+            search_image_path = self.search_image.get()
+            search_image_path = get_valid_file(
+                self.get_base_dir(), search_image_path)
+            if (App.files_matched is None
+                    or search_image_path == App.files_matched[App.match_index]):
+                self.alert("Already set image",
+                           "Current image is already the search image.",
+                           kind="info")
+        filepath = self.get_active_image_filepath()
+        if filepath:
+            self.search_image.set(os.path.basename(filepath))
+            self.master.update()
+            self.run_compare()
+        else:
+            self.alert("Error", "Failed to get active image filepath", kind="error")
 
     def create_image(self, image_path, extra_text=None) -> None:
         '''
@@ -612,7 +654,9 @@ class App():
         if self.label_current_image_name is None:
             self.label_current_image_name = Label(self.sidebar)
             self.add_label(self.label_current_image_name, "", pady=30)
-        text = _wrap_text_to_fit_length(basename(image_path), 30)
+        relative_filepath, basename = get_relative_dirpath_split(self.base_dir, image_path)
+        text = basename if relative_filepath == "" else relative_filepath + "\n" + basename
+        text = _wrap_text_to_fit_length(text, 30)
         if extra_text is not None:
             text += "\n" + extra_text
         self.label_current_image_name["text"] = text
@@ -643,18 +687,15 @@ class App():
     def add_all_mode_buttons(self) -> None:
         self.add_button("prev_image_match_btn", "Previous image match", self.show_prev_image)
         self.add_button("next_image_match_btn", "Next image match", self.show_next_image)
-        self.add_button("search_current_image_btn", "Search current image", self.set_current_image_run_search)
-        self.add_button("open_image_location_btn", "Open image location", self.open_image_location)
-        self.add_button("delete_image_btn", "---- DELETE ----", self.delete_image)
 
     def remove_all_mode_buttons(self) -> None:
         self.destroy_grid_element("prev_group_btn")
         self.destroy_grid_element("next_group_btn")
         self.destroy_grid_element("prev_image_match_btn")
         self.destroy_grid_element("next_image_match_btn")
-        self.destroy_grid_element("search_current_image_btn")
-        self.destroy_grid_element("delete_image_btn")
-        self.destroy_grid_element("open_image_location_btn")
+        # self.destroy_grid_element("search_current_image_btn")
+        # self.destroy_grid_element("delete_image_btn")
+        # self.destroy_grid_element("open_image_location_btn")
         for mode in App.has_added_buttons_for_mode.keys():
             App.has_added_buttons_for_mode[mode] = False
         self.master.update()
@@ -677,7 +718,25 @@ class App():
 
             App.has_added_buttons_for_mode[App.mode] = True
 
+    def display_progress(self, context, percent_complete):
+        self.label_state["text"] = _wrap_text_to_fit_length(
+                f"{context}: {int(percent_complete)}% compared", 30)
+        self.master.update()
+
+    def validate_run(self):
+        base_dir_selected = self.set_base_dir_box.get()
+        if not base_dir_selected or base_dir_selected == "":
+            res = self.alert("Confirm comparison",
+                    "No base directory has been set, will use current base directory of " +
+                    str(self.base_dir) + "\n\nAre you sure you want to proceed?",
+                    kind="warning")
+            return res == messagebox.YES
+        return True
+
     def run_with_progress(self, exec_func, args=None) -> None:
+        if not self.validate_run():
+            return
+
         def run_with_progress_async(self) -> None:
             self.progress_bar = Progressbar(self.sidebar, orient=HORIZONTAL, length=100, mode='indeterminate')
             self.apply_to_grid(self.progress_bar)
@@ -714,6 +773,7 @@ class App():
         App.group_indexes = []
         App.files_matched = []
         App.match_index = 0
+        listener = ProgressListener(update_func=self.display_progress)
 
         if App.compare is None or App.compare.base_dir != self.get_base_dir():
             self.label_state["text"] = _wrap_text_to_fit_length(
@@ -728,7 +788,8 @@ class App():
                                   color_diff_threshold=color_diff_threshold,
                                   inclusion_pattern=inclusion_pattern,
                                   overwrite=overwrite,
-                                  verbose=True)
+                                  verbose=True,
+                                  progress_listener=listener)
         else:
             get_new_data = self.is_new_data_request_required(counter_limit,
                                                              color_diff_threshold,
@@ -757,9 +818,8 @@ class App():
             self.set_mode(Mode.GROUP, do_update=False)
 
         if get_new_data:
-            print("Gathering files for compare")
+            self.toast("Gathering image data for comparison")
             App.compare.get_files()
-            print("Gathering image data for compare")
             App.compare.get_data()
 
         if App.compare.is_run_search:
@@ -838,20 +898,27 @@ class App():
         return App.mode == Mode.SEARCH and not App.is_toggled_view_matches
 
     def get_active_image_filepath(self):
+        if App.img is None:
+            return None
+        if App.mode == Mode.BROWSE:
+            return App.file_browser.current_file()
         if self.is_toggled_search_image():
-            filepath = self.search_image_full_path
+            filepath = App.search_image_full_path
         else:
             filepath = App.files_matched[App.match_index]
         return get_valid_file(self.get_base_dir(), filepath)
 
-    def open_image_location(self, event):
+    def open_image_location_key(self, event):
+        self.open_image_location()
+
+    def open_image_location(self):
         filepath = self.get_active_image_filepath()
 
         if filepath is not None:
-            print("Opening file location: " + filepath)
+            self.toast("Opening file location: " + filepath)
             open_file_location(filepath)
         else:
-            print("Failed to open location of current file, unable to get valid filepath")
+            self.alert("Error", "Failed to open location of current file, unable to get valid filepath", kind="error")
 
     def _delete_image(self, event):
         self.delete_image()
@@ -860,24 +927,33 @@ class App():
         '''
         Delete the currently displayed image from the filesystem.
         '''
+        if App.mode == Mode.BROWSE:
+            App.file_browser.checking_files = False
+            filepath = App.file_browser.current_file()
+            if filepath:
+                self.toast("Removing file: " + filepath)
+                os.remove(filepath)
+                App.file_browser.refresh(refresh_cursor=False)
+                self.show_next_image()
+            return
+
         is_toggle_search_image = self.is_toggled_search_image()
 
         if len(App.files_matched) == 0 and not is_toggle_search_image:
-            print(
-                "Invalid action, the button should not be present if no files are available")
+            self.toast("Invalid action, the button should not be present if no files are available")
             return
-        elif is_toggle_search_image and (self.search_image_full_path is None or self.search_image_full_path == ""):
-            print("Invalid action, search image not found")
+        elif is_toggle_search_image and (App.search_image_full_path is None or App.search_image_full_path == ""):
+            self.toast("Invalid action, search image not found")
             return
 
         filepath = self.get_active_image_filepath()
 
         if filepath is not None:
-            print("Removing file: " + filepath)
+            self.toast("Removing file: " + filepath)
             os.remove(filepath)
             self.update_groups_for_removed_file()
         else:
-            print("Failed to delete current file, unable to get valid filepath")
+            self.alert("Error", "Failed to delete current file, unable to get valid filepath", kind="error")
 
     def replace_current_image_with_search_image(self):
         '''
@@ -886,23 +962,23 @@ class App():
         '''
         if (App.mode != Mode.SEARCH
                 or len(App.files_matched) == 0
-                or not os.path.exists(self.search_image_full_path)):
+                or not os.path.exists(App.search_image_full_path)):
             return
 
         _filepath = App.files_matched[App.match_index]
         filepath = get_valid_file(self.get_base_dir(), _filepath)
 
         if filepath is None:
-            print("Invalid target filepath for replacement: " + _filepath)
+            self.alert("Error", "Invalid target filepath for replacement: " + _filepath, kind="error")
             return
 
-        os.rename(self.search_image_full_path, filepath)
-        print("Moved search image to " + filepath)
+        os.rename(App.search_image_full_path, filepath)
+        self.toast("Moved search image to " + filepath)
 
     def update_groups_for_removed_file(self):
         '''
         After a file has been removed, delete the cached image path for it and
-        remove the group if only one file remains in it.
+        remove the group if only one file remains in that group.
 
         NOTE: This would be more complicated if there was not a guarantee that
         groups are disjoint.
@@ -928,6 +1004,9 @@ class App():
                 App.match_index = 0
                 App.files_matched = []
                 App.group_indexes = []
+                self.set_mode(Mode.BROWSE)
+                self.label_state["text"] = "Set a directory to run comparison."
+                self.show_next_image()
                 return
             elif App.current_group_index == len(App.file_groups):
                 App.current_group_index = 0
@@ -949,8 +1028,49 @@ class App():
         if kind not in ("error", "warning", "info"):
             raise ValueError("Unsupported alert kind.")
 
+        print(f"Alert - Title: \"{title}\" Message: {message}")
         show_method = getattr(messagebox, "show{}".format(kind))
         return show_method(title, message)
+
+    def toast(self, message):
+        # Set the position of the toast on the screen (top right)
+        width = 300
+        height = 100
+        x = self.master.winfo_screenwidth() - width
+        y = 0
+
+        # Create the toast window
+        toast = tk.Toplevel(self.master, bg='#008CBA')
+        toast.geometry(f'{width}x{height}+{int(x)}+{int(y)}')
+
+        # Create a label for the toast message
+        print("Toast message: " + message)
+
+        # build toast
+        self.container = tk.Frame(toast)
+        self.container.pack(fill=tk.BOTH, expand=tk.YES)
+        label = tk.Label(
+            self.container,
+            text=message,
+            anchor=tk.NW,
+            bg='#008CBA',
+            fg='white',
+            font=('Helvetica', 12)
+        )
+        label.grid(row=1, column=1, sticky="NSEW", padx=10, pady=(0, 5))
+        
+        # Make the window invisible and bring it to front
+        toast.attributes('-topmost', True)
+#        toast.withdraw()
+
+        def thread_job():
+            time.sleep(2)  # Change this value for different durations
+            label.destroy()
+            toast.destroy()
+
+        # Start a new thread that will destroy the window after a few seconds
+        x = threading.Thread(target=thread_job)
+        x.start()
 
     def apply_to_grid(self, component, sticky=None, pady=0):
         if sticky is None:

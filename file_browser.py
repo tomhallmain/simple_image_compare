@@ -34,15 +34,33 @@ class FileBrowser:
         self.sort_by = SortBy.NAME
         self.sort = Sort.ASC
         self.file_cursor = -1
+        self.checking_files = False
+
+    def has_files(self):
+        return len(self._files) > 0
     
-    def refresh(self):
-        self.file_cursor = -1
+    def refresh(self, refresh_cursor=True, file_check=False):
+        if refresh_cursor:
+            self.file_cursor = -1
+        current_file = self.current_file() if file_check else None
         self.filepaths = []
         self._get_sortable_files()
-        return self.get_files()
+        files = self.get_files()
+        self.checking_files = len(files) > 0 and len(files) < 5000 # Avoid rechecking in directories with many files
+        if file_check and current_file:
+            self.file_cursor = files.index(current_file)
+            if self.file_cursor > -1:
+                self.file_cursor -= 1
+        elif not refresh_cursor:
+            if len(files) - 1 <= self.file_cursor:
+                self.file_cursor = -1
+            else:
+                self.file_cursor -= 1
+        return files
 
     def set_directory(self, directory):
         self.directory = directory
+        self.checking_files = True
         return self.refresh()
 
     def set_sort_by(self, sort_by):
@@ -52,6 +70,12 @@ class FileBrowser:
     def set_sort(self, sort):
         self.sort = sort
         return self.get_files()
+
+    def current_file(self):
+        if self.has_files():
+            return self.get_files()[self.file_cursor]
+        else:
+            return None
 
     def previous_file(self):
         files = self.get_files()
