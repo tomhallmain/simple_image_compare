@@ -11,25 +11,46 @@ class SortableFile:
         self.basename = os.path.basename(full_file_path)
         self.root, self.extension = os.path.splitext(self.basename)
         self.creation_time = datetime.fromtimestamp(os.path.getctime(full_file_path))
+        self.size = os.path.getsize(full_file_path)
+
+    def __eq__(self, other):
+        if not isinstance(other, SortableFile):
+            return False
+        return (
+            self.full_file_path == other.full_file_path
+            and self.creation_time == other.creation_time
+            and self.size == other.size
+            )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash((self.full_file_path, self.creation_time, self.size))
 
 class SortBy(Enum):
     NAME = 0
     FULL_PATH = 1
     CREATION_TIME = 2
     TYPE = 3
+    SIZE = 4
+    RANDOMIZE = 5
 
 class Sort(Enum):
     ASC = 1
     DESC = 2
     RANDOM = 3
-    
+
+
+# TODO on refresh, find the newly added files and set them in a list on this object, then enable slideshow for these files in app.py
 
 class FileBrowser:
-    def __init__(self, directory=".", recursive=True, filter=None):
+    def __init__(self, directory=".", recursive=False, filter=None):
         self.directory = directory
         self.recursive = recursive
         self.filter = filter
         self._files = []
+        self._new_files = []
         self.filepaths = []
         self.sort_by = SortBy.NAME
         self.sort = Sort.ASC
@@ -38,8 +59,16 @@ class FileBrowser:
 
     def has_files(self):
         return len(self._files) > 0
-    
+
+    def set_recursive(self, recursive):
+        self.recursive = recursive
+        self.refresh()
+
+    def toggle_recursive(self):
+        self.set_recursive(not self.recursive)
+
     def refresh(self, refresh_cursor=True, file_check=False):
+        last_files = self.get_files() if file_check else []
         if refresh_cursor:
             self.file_cursor = -1
         current_file = self.current_file() if file_check else None
@@ -51,12 +80,18 @@ class FileBrowser:
             self.file_cursor = files.index(current_file)
             if self.file_cursor > -1:
                 self.file_cursor -= 1
+            self._new_files = list(set(files) - set(last_files))
         elif not refresh_cursor:
             if len(files) - 1 <= self.file_cursor:
                 self.file_cursor = -1
             else:
                 self.file_cursor -= 1
         return files
+
+    def update_cursor_to_new_images(self):
+        if len(self._new_files) == 0:
+            return
+        self.file_cursor = self.filepaths.index(self._new_files[0]) - 1
 
     def set_directory(self, directory):
         self.directory = directory
@@ -65,6 +100,8 @@ class FileBrowser:
 
     def set_sort_by(self, sort_by):
         self.sort_by = sort_by
+        if self.sort_by == SortBy.RANDOMIZE:
+            self.sort = Sort.RANDOM
         return self.get_files()
 
     def set_sort(self, sort):
@@ -73,14 +110,19 @@ class FileBrowser:
 
     def current_file(self):
         if self.has_files():
-            return self.get_files()[self.file_cursor]
+            try:
+                return self.get_files()[self.file_cursor]
+            except Exception:
+                self.file_cursor = 0
+                return self.get_files()[self.file_cursor]
         else:
             return None
 
     def previous_file(self):
         files = self.get_files()
         if len(files) == 0:
-            raise Exception("No files found for current browsing settings.")
+            recursive_str = "" if self.recursive else " (try setting recursive to True)"
+            raise Exception("No files found for current browsing settings." + recursive_str)
         if self.file_cursor == 0:
             self.file_cursor = len(files) - 1
         else:
@@ -90,7 +132,8 @@ class FileBrowser:
     def next_file(self):
         files = self.get_files()
         if len(files) == 0:
-            raise Exception("No files found for current browsing settings.")
+            recursive_str = "" if self.recursive else " (try setting recursive to True)"
+            raise Exception("No files found for current browsing settings." + recursive_str)
         if len(files) > self.file_cursor + 1:
             self.file_cursor += 1
         else:
@@ -124,7 +167,7 @@ class FileBrowser:
 
     def get_sorted_filepaths(self, sortable_files):
         if self.sort == Sort.RANDOM:
-            shuffle(sortable_files)
+            shuffle(sortable_files) # TODO technically should be caching the random sort state somehow
         elif self.sort_by == SortBy.FULL_PATH:
             if self.sort == Sort.DESC:
                 sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=True)
@@ -148,6 +191,15 @@ class FileBrowser:
             elif self.sort == Sort.ASC:
                 sortable_files.sort(key=lambda sf: sf.full_file_path.lower())
                 sortable_files.sort(key=lambda sf: sf.extension.lower())
+        elif self.sort_by == SortBy.SIZE:
+            # Sort by full path first, then by extension
+            if self.sort == Sort.DESC:
+                sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=True)
+                sortable_files.sort(key=sf.size, reverse=True)
+            elif self.sort == Sort.ASC:
+                sortable_files.sort(key=lambda sf: sf.full_file_path.lower())
+                sortable_files.sort(key=sf.size)
+
 
         # After sorting, extract the file path only
         filepaths = [sf.full_file_path for sf in sortable_files]

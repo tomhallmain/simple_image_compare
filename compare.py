@@ -15,22 +15,6 @@ from skimage.color import rgb2lab
 # from imutils import face_utils
 
 
-base_dir = "."
-search_output_path = "simple_image_compare_search_output.txt"
-groups_output_path = "simple_image_compare_file_groups_output.txt"
-run_search = False
-overwrite = False
-search_file_index = None
-search_file_path = None
-verbose = False
-compare_faces = True
-include_gifs = False
-use_thumb = True
-counter_limit = 10000
-inclusion_pattern = None
-color_diff_threshold = None
-
-
 def usage():
     print("  Option                 Function                                 Default")
     print("      --dir=dirpath      Set base directory                       .      ")
@@ -45,6 +29,15 @@ def usage():
     print("  -v                     Verbose                                         ")
 
 
+def gather_files(base_dir=".", recursive=True, exts=[".jpg", ".jpeg", ".png", ".tiff", ".webp"]):
+    files = []
+    recursive_str = "**/" if recursive else ""
+    for ext in exts:
+        pattern = os.path.join(base_dir, recursive_str + "*" + ext)
+        files.extend(glob(pattern, recursive=recursive))
+    return files
+
+
 def get_valid_file(base_dir, input_filepath):
     if (not isinstance(input_filepath, str) or input_filepath is None
             or input_filepath == ""):
@@ -55,64 +48,6 @@ def get_valid_file(base_dir, input_filepath):
         return base_dir + "/" + input_filepath
     else:
         return None
-
-
-try:
-    opts, args = getopt.getopt(sys.argv[1:], "bcfist:hov", [
-        "help",  "overwrite", "dir=", "counter=", "faces=", "include=",
-        "search=", "use_thumb=", "threshold="])
-except getopt.GetoptError as err:
-    print(err)
-    usage()
-    sys.exit(2)
-
-for o, a in opts:
-    try:
-        if o == "-v":
-            verbose = True
-        elif o in ("-h", "--help"):
-            usage()
-            sys.exit()
-        elif o == "--counter":
-            counter_limit = int(a)
-        elif o == "--dir":
-            base_dir = a
-            if not os.path.exists(base_dir) or not os.path.isdir(base_dir):
-                assert False, "Invalid directory: " + base_dir
-        elif o == "--gifs":
-            include_gifs = True
-        elif o == "--include":
-            inclusion_pattern = a
-        elif o == "--faces":
-            compare_faces = a == "True" or a == "true" or a == "t"
-        elif o in ("-o", "--overwrite"):
-            overwrite = True
-            confirm = input("Confirm overwriting image data (y/n): ")
-            if confirm != "y" and confirm != "Y":
-                print("No change made.")
-                exit()
-        elif o == "--search":
-            search_file_path = get_valid_file(base_dir, a)
-            run_search = True
-            if search_file_path is None:
-                assert False, "Search file provided \"" + str(a) \
-                    + "\" is invalid - please ensure \"dir\" is passed first" \
-                    + " if not providing full file path."
-        elif o == "--threshold":
-            color_diff_threshold = int(a)
-        elif o == "--use_thumb":
-            use_thumb = a != "False" and a != "false" and a != "f"
-        else:
-            assert False, "unhandled option " + o
-    except Exception as e:
-        print(e)
-        print("")
-        usage()
-        exit(1)
-
-
-search_output_path = os.path.join(base_dir, search_output_path)
-groups_output_path = os.path.join(base_dir, groups_output_path)
 
 
 def round_up(number, to):
@@ -244,12 +179,18 @@ def get_image_array(filepath):
 
 
 class Compare:
-    def __init__(self, base_dir, search_file_path=None, counter_limit=30000,
+    SEARCH_OUTPUT_FILE = "simple_image_compare_search_output.txt"
+    GROUPS_OUTPUT_FILE = "simple_image_compare_file_groups_output.txt"
+    FACES_DATA = "image_faces.pkl"
+    THUMB_COLORS_DATA = "image_thumb_colors.pkl"
+    TOP_COLORS_DATA = "image_top_colors.pkl"
+
+    def __init__(self, base_dir=".", search_file_path=None, counter_limit=30000,
                  use_thumb=True, compare_faces=False, color_diff_threshold=15,
-                 inclusion_pattern=None, overwrite=False, verbose=False,
+                 inclusion_pattern=None, overwrite=False, verbose=False, gather_files_func=gather_files,
                  include_gifs=False, match_dims=False, progress_listener=None):
         self.use_thumb = use_thumb
-        self.files = None
+        self.files = []
         self.set_base_dir(base_dir)
         self.set_search_file_path(search_file_path)
         self.counter_limit = counter_limit
@@ -280,27 +221,24 @@ class Compare:
             self.color_getter = get_image_colors
             self.color_diff_alg = is_any_x_true_weighted
         if self.compare_faces:
-            self.set_face_cascade()
-        self.file_colors = np.empty((0, self.n_colors, 3))
-        self.file_faces = np.empty((0))
+            self._set_face_cascade()
+        self._file_colors = np.empty((0, self.n_colors, 3))
+        self._file_faces = np.empty((0))
         self.settings_updated = False
+        self.gather_files_func = gather_files_func
 
     def set_base_dir(self, base_dir):
         '''
         Set the base directory and prepare cache file references.
         '''
         self.base_dir = base_dir
-        self.search_output_path = os.path.join(
-            base_dir, "simple_image_compare_search_output.txt")
-        self.groups_output_path = os.path.join(
-            base_dir, "simple_image_compare_file_groups_output.txt")
-        self.file_faces_filepath = os.path.join(base_dir, "image_faces.pkl")
+        self.search_output_path = os.path.join(base_dir, Compare.SEARCH_OUTPUT_FILE)
+        self.groups_output_path = os.path.join(base_dir, Compare.GROUPS_OUTPUT_FILE)
+        self._file_faces_filepath = os.path.join(base_dir, Compare.FACES_DATA)
         if self.use_thumb:
-            self.file_colors_filepath = os.path.join(
-                base_dir, "image_thumb_colors.pkl")
+            self._file_colors_filepath = os.path.join(base_dir, Compare.THUMB_COLORS_DATA)
         else:
-            self.file_colors_filepath = os.path.join(
-                base_dir, "image_top_colors.pkl")
+            self._file_colors_filepath = os.path.join(base_dir, Compare.TOP_COLORS_DATA)
 
     def set_search_file_path(self, search_file_path):
         '''
@@ -318,15 +256,17 @@ class Compare:
     def get_files(self):
         '''
         Get all image files in the base dir as requested by the parameters.
+
+        To override the default file inclusion behavior, pass a gather_files_func to the Compare object.
         '''
-        self.files_found = []
-        self.files = []
-        self.files.extend(glob(os.path.join(self.base_dir, "**/*.jpg"), recursive=True))
-        self.files.extend(glob(os.path.join(self.base_dir, "**/*.jpeg"), recursive=True))
-        self.files.extend(glob(os.path.join(self.base_dir, "**/*.png"), recursive=True))
-        self.files.extend(glob(os.path.join(self.base_dir, "**/*.webp"), recursive=True))
-        if self.include_gifs:
-            self.files.extend(glob(os.path.join(self.base_dir, "**/*.gif"), recursive=True))
+        self._files_found = []
+        if self.gather_files_func:
+            exts = [".jpg", ".jpeg", ".png", ".tiff", ".webp"]
+            if self.include_gifs:
+                exts.append(".gif")
+            self.files = self.gather_files_func(base_dir=self.base_dir, exts=exts)
+        else:
+            raise Exception("No gather files function found.")
         self.files.sort()
         self.has_new_file_data = False
         self.max_files_processed = min(self.counter_limit, len(self.files))
@@ -358,17 +298,18 @@ class Compare:
         print(" n colors: " + str(self.n_colors))
         print(" colors below threshold: " + str(self.colors_below_threshold))
         print(" color diff threshold: " + str(self.color_diff_threshold))
-        print(" file colors filepath: " + str(self.file_colors_filepath))
+        print(" file colors filepath: " + str(self._file_colors_filepath))
         print(" modifier: " + str(self.modifier))
         print(" color getter: " + str(self.color_getter))
         print(" color diff alg: " + str(self.color_diff_alg))
         print(" overwrite image data: " + str(self.overwrite))
         print("|--------------------------------------------------------------------|\n\n")
 
-    def set_face_cascade(self):
+    def _set_face_cascade(self):
         '''
         Load the face recognition model if compare_faces option was requested.
         '''
+        cascPath = ""
         for minor_version in range(10, 5, -1):
             cascPath = "/usr/local/lib/python3." + \
                 str(minor_version) + \
@@ -380,26 +321,27 @@ class Compare:
                   + " Python version 3.6 or greater expected)")
             print("Run with flag --faces=False to avoid this warning.")
             self.compare_faces = False
-        self.faceCascade = cv2.CascadeClassifier(cascPath)
+        else:
+            self._faceCascade = cv2.CascadeClassifier(cascPath)
 
     def get_data(self):
         '''
         For all the found files in the base directory, either load the cached
         image data or extract new data and add it to the cache.
         '''
-        if self.overwrite or not os.path.exists(self.file_colors_filepath):
-            if not os.path.exists(self.file_colors_filepath):
+        if self.overwrite or not os.path.exists(self._file_colors_filepath):
+            if not os.path.exists(self._file_colors_filepath):
                 print("Image data not found so creating new cache"
                       + " - this may take a while.")
             elif self.overwrite:
                 print("Overwriting image data caches - this may take a while.")
-            self.file_colors_dict = {}
-            self.file_faces_dict = {}
+            self._file_colors_dict = {}
+            self._file_faces_dict = {}
         else:
-            with open(self.file_colors_filepath, "rb") as f:
-                self.file_colors_dict = pickle.load(f)
-            with open(self.file_faces_filepath, "rb") as f:
-                self.file_faces_dict = pickle.load(f)
+            with open(self._file_colors_filepath, "rb") as f:
+                self._file_colors_dict = pickle.load(f)
+            with open(self._file_faces_filepath, "rb") as f:
+                self._file_faces_dict = pickle.load(f)
 
         # Gather image file data from directory
 
@@ -417,9 +359,9 @@ class Compare:
             if counter > self.counter_limit:
                 break
 
-            if f in self.file_colors_dict and f in self.file_faces_dict:
-                colors = self.file_colors_dict[f]
-                n_faces = self.file_faces_dict[f]
+            if f in self._file_colors_dict and f in self._file_faces_dict:
+                colors = self._file_colors_dict[f]
+                n_faces = self._file_faces_dict[f]
             else:
                 try:
                     image = get_image_array(f)
@@ -429,8 +371,8 @@ class Compare:
                 except ValueError:
                     continue
 
-                if f in self.file_colors_dict:
-                    colors = self.file_colors_dict[f]
+                if f in self._file_colors_dict:
+                    colors = self._file_colors_dict[f]
                 else:
                     try:
                         colors = self.color_getter(image, self.modifier)
@@ -439,18 +381,18 @@ class Compare:
                             print(e)
                             print(f)
                         continue
-                    self.file_colors_dict[f] = colors
-                if f in self.file_faces_dict:
-                    n_faces = self.file_faces_dict[f]
+                    self._file_colors_dict[f] = colors
+                if f in self._file_faces_dict:
+                    n_faces = self._file_faces_dict[f]
                 else:
-                    n_faces = self.get_faces_count(f)
-                    self.file_faces_dict[f] = n_faces
+                    n_faces = self._get_faces_count(f)
+                    self._file_faces_dict[f] = n_faces
                 self.has_new_file_data = True
 
             counter += 1
-            self.file_colors = np.append(self.file_colors, [colors], 0)
-            self.file_faces = np.append(self.file_faces, [n_faces], 0)
-            self.files_found.append(f)
+            self._file_colors = np.append(self._file_colors, [colors], 0)
+            self._file_faces = np.append(self._file_faces, [n_faces], 0)
+            self._files_found.append(f)
 
             percent_complete = counter / self.max_files_processed_even * 100
             if percent_complete % 10 == 0:
@@ -464,39 +406,38 @@ class Compare:
         # Save image file data
 
         if self.has_new_file_data or self.overwrite:
-            with open(self.file_colors_filepath, "wb") as store:
-                pickle.dump(self.file_colors_dict, store)
-            with open(self.file_faces_filepath, "wb") as store:
-                pickle.dump(self.file_faces_dict, store)
-            self.file_colors_dict = None
-            self.file_faces_dict = None
+            with open(self._file_colors_filepath, "wb") as store:
+                pickle.dump(self._file_colors_dict, store)
+            with open(self._file_faces_filepath, "wb") as store:
+                pickle.dump(self._file_faces_dict, store)
+            self._file_colors_dict = None
+            self._file_faces_dict = None
             if self.verbose:
                 if self.overwrite:
                     print("Overwrote any pre-existing image data at:")
                 else:
                     print("Updated image data saved to: ")
-                print(self.file_colors_filepath)
-                print(self.file_faces_filepath)
+                print(self._file_colors_filepath)
+                print(self._file_faces_filepath)
 
-        self.n_files_found = len(self.files_found)
+        self._n_files_found = len(self._files_found)
 
-        if (self.n_files_found == 0
-                or (self.is_run_search and self.n_files_found < 1)):
+        if self._n_files_found == 0:
             raise AssertionError("No image data found for comparison with"
                                  + " current params - checked"
-                                 + " in base dir = \"" + base_dir + "\"")
+                                 + " in base dir = \"" + self.base_dir + "\"")
         elif self.verbose:
-            print("Data from " + str(self.n_files_found)
+            print("Data from " + str(self._n_files_found)
                   + " files compiled for comparison.")
 
-    def get_faces_count(self, filepath):
+    def _get_faces_count(self, filepath):
         '''
         Try to get the number of faces in the image using the face model.
         '''
         n_faces = random.random() * 10000 + 6  # Set to a value unlikely to match
         try:
             gray = cv2.imread(filepath, 0)
-            faces = self.faceCascade.detectMultiScale(
+            faces = self._faceCascade.detectMultiScale(
                 gray,
                 scaleFactor=1.1,
                 minNeighbors=5,
@@ -504,12 +445,12 @@ class Compare:
             )
             n_faces = len(faces)
         except Exception as e:
-            if verbose:
+            if self.verbose:
                 print(e)
         return n_faces
 
-    def compute_color_diff(self, base_array, compare_array,
-                           return_diff_scores=False):
+    def _compute_color_diff(self, base_array, compare_array,
+                            return_diff_scores=False):
         '''
         Perform an elementwise diff between two image color arrays using the
         selected color difference algorithm.
@@ -530,19 +471,19 @@ class Compare:
         characteristics to the provide image.
         '''
         files_grouped = {}
-        _files_found = list(self.files_found)
+        _files_found = list(self._files_found)
 
         if self.verbose:
             print("Identifying similar image files...")
         _files_found.pop(search_file_index)
-        search_file_colors = self.file_colors[search_file_index]
-        file_colors = np.delete(self.file_colors, search_file_index, 0)
-        color_similars = self.compute_color_diff(
+        search_file_colors = self._file_colors[search_file_index]
+        file_colors = np.delete(self._file_colors, search_file_index, 0)
+        color_similars = self._compute_color_diff(
             file_colors, search_file_colors, True)
 
         if self.compare_faces:
-            search_file_faces = self.file_faces[search_file_index]
-            file_faces = np.delete(self.file_faces, search_file_index)
+            search_file_faces = self._file_faces[search_file_index]
+            file_faces = np.delete(self._file_faces, search_file_index)
             face_comparisons = file_faces - search_file_faces
             face_similars = face_comparisons == 0
             similars = np.nonzero(color_similars[0] * face_similars)
@@ -552,13 +493,16 @@ class Compare:
         for _index in similars[0]:
             files_grouped[_files_found[_index]] = color_similars[1][_index]
 
+        # Sort results by increasing difference score
+        files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
+
         if len(files_grouped) > 0:
             with open(self.search_output_path, "w") as textfile:
                 header = "Possibly related images to \"" + search_path + "\":\n"
                 textfile.write(header)
                 if self.verbose:
                     print(header)
-                for f in sorted(files_grouped, key=lambda f: files_grouped[f]):
+                for f in files_grouped:
                     diff_score = int(files_grouped[f])
                     if not f == search_file_path:
                         if diff_score < 50:
@@ -579,7 +523,7 @@ class Compare:
                   + "\" identified with current params.")
         return files_grouped
 
-    def run_search_on_path(self, search_file_path):
+    def _run_search_on_path(self, search_file_path):
         '''
         Prepare and begin a search for a provided image file path.
         '''
@@ -591,8 +535,7 @@ class Compare:
                     + "(enter \"exit\" or press Ctrl-C to quit): \n\n  > ")
                 if search_file_path is not None and search_file_path == "exit":
                     break
-                search_file_path = get_valid_file(
-                    self.base_dir, search_file_path)
+                search_file_path = get_valid_file(self.base_dir, search_file_path)
                 if search_file_path is None:
                     print("Invalid filepath provided.")
                 else:
@@ -600,7 +543,7 @@ class Compare:
 
         # Gather new image data if it was not in the initial list
 
-        if search_file_path not in self.files_found:
+        if search_file_path not in self._files_found:
             if self.verbose:
                 print("Filepath not found in initial list - gathering new file data")
             try:
@@ -618,18 +561,18 @@ class Compare:
                     print(e)
                 raise AssertionError(
                     "Encountered an error gathering colors from the file provided.")
-            n_faces = self.get_faces_count(search_file_path)
-            self.file_colors = np.insert(self.file_colors, 0, [colors], 0)
-            self.file_faces = np.insert(self.file_faces, 0, [n_faces], 0)
-            self.files_found.insert(0, search_file_path)
+            n_faces = self._get_faces_count(search_file_path)
+            self._file_colors = np.insert(self._file_colors, 0, [colors], 0)
+            self._file_faces = np.insert(self._file_faces, 0, [n_faces], 0)
+            self._files_found.insert(0, search_file_path)
 
         files_grouped = self.find_similars_to_image(
-            search_file_path, self.files_found.index(search_file_path))
+            search_file_path, self._files_found.index(search_file_path))
         search_file_path = None
         return files_grouped
 
     def run_search(self):
-        return self.run_search_on_path(self.search_file_path)
+        return self._run_search_on_path(self.search_file_path)
 
     def run_comparison(self):
         '''
@@ -645,9 +588,9 @@ class Compare:
         files_grouped = {}
         group_index = 0
         file_groups = {}
-        n_files_found_even = round_up(self.n_files_found, 5)
+        n_files_found_even = round_up(self._n_files_found, 5)
 
-        if self.n_files_found > 5000:
+        if self._n_files_found > 5000:
             print("\nWARNING: Large image file set found, comparison between all"
                   + " images may take a while.\n")
         if self.verbose:
@@ -655,7 +598,7 @@ class Compare:
         else:
             print("Identifying groups of similar image files", end="", flush=True)
 
-        for i in range(len(self.files_found)):
+        for i in range(len(self._files_found)):
             if i == 0:  # At this roll index the data would compare to itself
                 continue
             percent_complete = (i / n_files_found_even) * 100
@@ -667,20 +610,20 @@ class Compare:
                 if self.progress_listener:
                     self.progress_listener.update("Image comparison", percent_complete)
 
-            compare_file_colors = np.roll(self.file_colors, i, 0)
-            color_similars = self.compute_color_diff(
-                self.file_colors, compare_file_colors, True)
+            compare_file_colors = np.roll(self._file_colors, i, 0)
+            color_similars = self._compute_color_diff(
+                self._file_colors, compare_file_colors, True)
 
             if self.compare_faces:
-                compare_file_faces = np.roll(self.file_faces, i, 0)
-                face_comparisons = self.file_faces - compare_file_faces
+                compare_file_faces = np.roll(self._file_faces, i, 0)
+                face_comparisons = self._file_faces - compare_file_faces
                 face_similars = face_comparisons == 0
                 similars = np.nonzero(color_similars[0] * face_similars)
             else:
                 similars = np.nonzero(color_similars[0])
 
             for base_index in similars[0]:
-                diff_index = ((base_index - i) % self.n_files_found)
+                diff_index = ((base_index - i) % self._n_files_found)
                 diff_score = color_similars[0][base_index]
                 f1_grouped = base_index in files_grouped
                 f2_grouped = diff_index in files_grouped
@@ -710,7 +653,7 @@ class Compare:
                             existing_group_index, diff_score)
 
         for file_index in files_grouped:
-            _file = self.files_found[file_index]
+            _file = self._files_found[file_index]
             group_index, diff_score = files_grouped[file_index]
             if group_index in file_groups:
                 file_group = file_groups[group_index]
@@ -731,7 +674,7 @@ class Compare:
             # TODO calculate group similarities and mark duplicates separately in this case
 
             with open(self.groups_output_path, "w") as textfile:
-                for group_index in self.sort_groups(file_groups):
+                for group_index in self._sort_groups(file_groups):
                     group = file_groups[group_index]
                     if len(group) < 2:
                         continue
@@ -768,12 +711,82 @@ class Compare:
         else:
             return self.run_comparison()
 
-    def sort_groups(self, file_groups):
+    def _sort_groups(self, file_groups):
         return sorted(file_groups,
                       key=lambda group_index: len(file_groups[group_index]))
 
 
 if __name__ == "__main__":
+    base_dir = "."
+    search_output_path = "simple_image_compare_search_output.txt"
+    groups_output_path = "simple_image_compare_file_groups_output.txt"
+    run_search = False
+    overwrite = False
+    search_file_index = None
+    search_file_path = None
+    verbose = False
+    compare_faces = True
+    include_gifs = False
+    use_thumb = True
+    counter_limit = 10000
+    inclusion_pattern = None
+    color_diff_threshold = None
+    search_output_path = os.path.join(base_dir, search_output_path)
+    groups_output_path = os.path.join(base_dir, groups_output_path)
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "bcfist:hov", [
+            "help",  "overwrite", "dir=", "counter=", "faces=", "include=",
+            "search=", "use_thumb=", "threshold="])
+    except getopt.GetoptError as err:
+        print(err)
+        usage()
+        sys.exit(2)
+
+    for o, a in opts:
+        try:
+            if o == "-v":
+                verbose = True
+            elif o in ("-h", "--help"):
+                usage()
+                sys.exit()
+            elif o == "--counter":
+                counter_limit = int(a)
+            elif o == "--dir":
+                base_dir = a
+                if not os.path.exists(base_dir) or not os.path.isdir(base_dir):
+                    assert False, "Invalid directory: " + base_dir
+            elif o == "--gifs":
+                include_gifs = True
+            elif o == "--include":
+                inclusion_pattern = a
+            elif o == "--faces":
+                compare_faces = a == "True" or a == "true" or a == "t"
+            elif o in ("-o", "--overwrite"):
+                overwrite = True
+                confirm = input("Confirm overwriting image data (y/n): ")
+                if confirm != "y" and confirm != "Y":
+                    print("No change made.")
+                    exit()
+            elif o == "--search":
+                search_file_path = get_valid_file(base_dir, a)
+                run_search = True
+                if search_file_path is None:
+                    assert False, "Search file provided \"" + str(a) \
+                        + "\" is invalid - please ensure \"dir\" is passed first" \
+                        + " if not providing full file path."
+            elif o == "--threshold":
+                color_diff_threshold = int(a)
+            elif o == "--use_thumb":
+                use_thumb = a != "False" and a != "false" and a != "f"
+            else:
+                assert False, "unhandled option " + o
+        except Exception as e:
+            print(e)
+            print("")
+            usage()
+            exit(1)
+
     compare = Compare(base_dir,
                       search_file_path=search_file_path,
                       counter_limit=counter_limit,

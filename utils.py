@@ -2,16 +2,40 @@ import asyncio
 import re
 import os
 import sys
+import threading
 
 
-def periodic(period):
+def start_thread(callable, use_asyncio=True, args=None):
+    if use_asyncio:
+        def asyncio_wrapper():
+            asyncio.run(callable())
+
+        target_func = asyncio_wrapper
+    else:
+        target_func = callable
+
+    if args:
+        thread = threading.Thread(target=target_func, args=args)
+    else:
+        thread = threading.Thread(target=target_func)
+
+    thread.daemon = True  # Daemon threads exit when the main process does
+    thread.start()
+
+
+def periodic(run_obj, sleep_attr="", run_attr=None):
     def scheduler(fcn):
         async def wrapper(*args, **kwargs):
             while True:
                 asyncio.create_task(fcn(*args, **kwargs))
+                period = int(run_obj) if isinstance(run_obj, int) else getattr(run_obj, sleep_attr)
                 await asyncio.sleep(period)
+                if run_obj and run_attr and not getattr(run_obj, run_attr):
+                    print(f"Ending periodic task: {run_obj.__name__}.{run_attr} = False")
+                    break
         return wrapper
     return scheduler
+
 
 def trace(frame, event, arg):
     if event == "call":

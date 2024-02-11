@@ -1,8 +1,12 @@
-import asyncio
 from enum import Enum
 import os
-import threading
+import sys
 import time
+
+try:
+    from send2trash import send2trash
+except Exception:
+    print("Could not import trashing utility - all deleted images will be deleted instantly")
 
 import tkinter as tk
 from tkinter import Canvas, PhotoImage, filedialog, messagebox, HORIZONTAL
@@ -13,20 +17,22 @@ from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
 from compare import Compare, get_valid_file
+from config import Config
 from file_browser import FileBrowser, SortBy
 from utils import (
-    _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, periodic
+    _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, periodic, start_thread
 )
 
 
-### TODO simple image browsing mode zoom feature
-### TODO copy image path
+### TODO image zoom feature
+### TODO copy/cut image using hotkey (pywin32 ? win32com? IDataPobject?)
 ### TODO comfyui plugin for ipadapter/controlnet (maybe)
+### TODO some type of plugin to filter the images using a filter function defined externally
 ### TODO compare option to restrict by matching image dimensions
 ### TODO compare option encoding size
-### TODO remove duplicates mode
-### TODO progress listener for compare class
+### TODO add a remove duplicates mode
 ### TODO add checkbox for include gif option
+### TODO tkVideoPlayer or tkVideoUtils for playing videos
 ### TODO custom frame class for sidebar to hold all the buttons
 
 
@@ -35,6 +41,9 @@ class Mode(Enum):
     SEARCH = 2
     GROUP = 3
     REM_DUP = 4
+
+
+config = Config()
 
 
 class ResizingCanvas(Canvas):
@@ -114,6 +123,22 @@ class ProgressListener:
         self.update_func(context, percent_complete)
 
 
+class SlideshowConfig:
+    slideshow_running = False
+    show_new_images = False
+    interval_seconds = config.slideshow_interval_seconds
+
+    @staticmethod
+    def toggle_slideshow():
+        if SlideshowConfig.show_new_images:
+            SlideshowConfig.show_new_images = False
+        elif SlideshowConfig.slideshow_running:
+            SlideshowConfig.show_new_images = True
+            SlideshowConfig.slideshow_running = False
+        else:
+            SlideshowConfig.slideshow_running = True
+
+
 class App():
     '''
     UI for comparing image files and making related file changes.
@@ -122,9 +147,9 @@ class App():
     IS_DEFAULT_THEME = False
 
     compare = None
-    file_browser = FileBrowser()
+    file_browser = FileBrowser(recursive=config.image_browse_recursive)
     mode = Mode.BROWSE
-    fill_canvas = False
+    fill_canvas = config.fill_canvas
     fullscreen = False
     search_file_path = ""
     img = None
@@ -146,7 +171,6 @@ class App():
         Mode.REM_DUP: False
     }
 
-
     def configure_style(self, theme):
         self.master.set_theme(theme, themebg="black")
 
@@ -154,23 +178,26 @@ class App():
         if App.IS_DEFAULT_THEME:
             # Changes the window to light theme 
             self.configure_style("breeze")
-            self.master.config(bg="gray")
-            self.sidebar.config(bg="gray")
-            self.canvas.config(bg="gray")
+            bg_color = "gray"
+            self.master.config(bg=bg_color)
+            self.sidebar.config(bg=bg_color)
+            self.canvas.config(bg=bg_color)
             App.IS_DEFAULT_THEME = False
             self.toast("Theme switched to light.")
         else:
             # Changes the window to dark theme 
             self.configure_style("black")
-            self.master.config(bg="#26242f")
-            self.sidebar.config(bg="#26242f")
-            self.canvas.config(bg="#26242f")
+            bg_color = "#26242f"
+            self.master.config(bg=bg_color)
+            self.sidebar.config(bg=bg_color)
+            self.canvas.config(bg=bg_color)
             App.IS_DEFAULT_THEME = True
             self.toast("Theme switched to dark.")
         self.master.update()
 
     def __init__(self, master):
         self.master = master
+        self.config = config
         self.base_dir = get_user_dir()
         self.search_dir = get_user_dir()
 
@@ -194,27 +221,20 @@ class App():
         self.toggle_theme_btn = None
         self.add_button("toggle_theme_btn", "Toggle theme", self.toggle_theme)
         self.add_button("set_base_dir_btn", "Set directory", self.set_base_dir)
-        self.set_base_dir_box = Entry(self.sidebar,
-                                      text="Add dirpath...",
-                                      width=30,
-                                      font=fnt.Font(size=8))
+        self.set_base_dir_box = self.new_entry(None, text="Add dirpath...")
         self.apply_to_grid(self.set_base_dir_box)
 
         self.add_button("create_img_btn", "Set search file", self.set_search_image)
         self.search_image = tk.StringVar()
-        self.create_img_path_box = Entry(self.sidebar,
-                                         textvariable=self.search_image,
-                                         width=30,
-                                         font=fnt.Font(size=8))
+        self.create_img_path_box = self.new_entry(self.search_image)
         self.apply_to_grid(self.create_img_path_box, sticky=W)
 
         self.label_color_diff_threshold = Label(self.sidebar)
         self.add_label(self.label_color_diff_threshold, "Color diff threshold")
         self.color_diff_threshold = tk.StringVar(master)
-        self.color_diff_threshold_choice = OptionMenu(
-            self.sidebar, self.color_diff_threshold,
-            *[str(i) for i in list(range(31))])
-        self.color_diff_threshold.set("15")  # default value
+        self.color_diff_threshold_choice = OptionMenu(self.sidebar, self.color_diff_threshold,
+                                                      *[str(i) for i in list(range(31))])
+        self.color_diff_threshold.set(str(self.config.color_diff_threshold))
         self.apply_to_grid(self.color_diff_threshold_choice, sticky=W)
 
         self.compare_faces = tk.BooleanVar(value=False)
@@ -227,36 +247,34 @@ class App():
 
         self.label_counter_limit = Label(self.sidebar)
         self.add_label(self.label_counter_limit, "Max # of files to compare")
-        self.set_counter_limit = Entry(self.sidebar,
-                                       text="Add file path...",
-                                       width=30,
-                                       font=fnt.Font(size=8))
-        self.set_counter_limit.insert(0, "40000") # default value
+        self.set_counter_limit = self.new_entry(None)
+        self.set_counter_limit.insert(0, str(self.config.file_counter_limit))
         self.apply_to_grid(self.set_counter_limit, sticky=W)
 
         self.label_inclusion_pattern = Label(self.sidebar)
-        self.add_label(self.label_inclusion_pattern,
-                       "Filter files by string in name")
+        self.add_label(self.label_inclusion_pattern, "Filter files by string in name")
         self.inclusion_pattern = tk.StringVar()
-        self.set_inclusion_pattern = Entry(self.sidebar,
-                                           textvariable=self.inclusion_pattern,
-                                           width=30,
-                                           font=fnt.Font(size=8))
+        self.set_inclusion_pattern = self.new_entry(self.inclusion_pattern)
         self.apply_to_grid(self.set_inclusion_pattern, sticky=W)
 
         self.label_sort_by = Label(self.sidebar)
-        self.add_label(self.label_sort_by,
-                       "Sort for files in browsing mode")
+        self.add_label(self.label_sort_by, "Sort for files in browsing mode")
         self.sort_by = tk.StringVar(master)
-        self.sort_by_choice = OptionMenu(
-            self.sidebar, self.sort_by, *SortBy.__members__.keys(), command=self.set_sort_by)
-        self.sort_by.set("NAME")  # default value
+        self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by,
+                                         *SortBy.__members__.keys(), command=self.set_sort_by)
+        self.sort_by.set(self.config.sort_by.name)
         self.apply_to_grid(self.sort_by_choice, sticky=W)
 
-        fill_canvas_var = tk.BooleanVar(value=False)
+        fill_canvas_var = tk.BooleanVar(value=App.fill_canvas)
         self.fill_canvas_choice = tk.Checkbutton(self.sidebar, text='Image resize to full window',
-                                                 variable=fill_canvas_var, command=self.toggle_fill_canvas)
+                                                 variable=fill_canvas_var, command=App.toggle_fill_canvas)
         self.apply_to_grid(self.fill_canvas_choice, sticky=W)
+
+        image_browse_recurse_var = tk.BooleanVar(value=self.config.image_browse_recursive)
+        self.image_browse_recurse = tk.Checkbutton(self.sidebar, text='Image browsing recursive',
+                                                   variable=image_browse_recurse_var, command=self.toggle_image_browse_recursive)
+        self.apply_to_grid(self.image_browse_recurse, sticky=W)
+
 
         # Run context-aware UI elements
         self.progress_bar = None
@@ -273,9 +291,11 @@ class App():
         self.rename_image_btn = None
         self.delete_image_btn = None
         self.open_image_location_btn = None
+        self.copy_image_path_btn = None
         self.rem_dups_btn = None
         self.add_button("search_current_image_btn", "Search current image", self.set_current_image_run_search)
         self.add_button("open_image_location_btn", "Open image location", self.open_image_location)
+        self.add_button("copy_image_path_btn", "Copy image path", self.copy_image_path)
         self.add_button("delete_image_btn", "---- DELETE ----", self.delete_image)
 
         # Image panel and state management
@@ -283,7 +303,7 @@ class App():
         self.canvas = ResizingCanvas(self.master)
         self.canvas.grid(column=1, row=0)
 
-        # Default mode is GROUP
+        # Default mode is BROWSE - GROUP and SEARCH are only valid modes when a compare is run
         self.set_mode(Mode.BROWSE)
 
         # Key bindings
@@ -294,15 +314,13 @@ class App():
         self.master.bind('<Shift-Enter>', self.open_image_location)
         self.master.bind('<Shift-Delete>', self._delete_image)
         self.master.bind("<F11>", self.toggle_fullscreen)
+        self.master.bind("<Shift-F>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
+        self.master.bind("<Shift-S>", self.toggle_slideshow)
 
-        # Call the task every 2 seconds
-        def check_files():
-            asyncio.run(self.check_files())
+        # Start async threads
+        start_thread(self.check_files)
 
-        thread = threading.Thread(target=check_files)  # Run every 2 seconds
-        thread.daemon = True  # Daemon threads exit when the main process does
-        thread.start()
         self.toggle_theme()
         self.master.update()
 
@@ -348,21 +366,48 @@ class App():
         if App.mode == Mode.BROWSE:
             self.show_next_image()
 
-    def toggle_fill_canvas(self):
-        App.fill_canvas = not App.fill_canvas
+    @classmethod
+    def toggle_fill_canvas(cls):
+        cls.fill_canvas = not cls.fill_canvas
 
-    @periodic(10)
+    def toggle_image_browse_recursive(self):
+        self.file_browser.toggle_recursive()
+        if App.mode == Mode.BROWSE and App.img:
+            self.show_next_image()
+
+    @periodic(config.file_check_interval_seconds)
     async def check_files(self, **kwargs):
         if App.file_browser.checking_files and App.mode == Mode.BROWSE:
             base_dir = self.set_base_dir_box.get()
             if base_dir and base_dir != "":
                 App.file_browser.refresh(refresh_cursor=False, file_check=True)
                 if App.file_browser.has_files():
+                    if SlideshowConfig.show_new_images:
+                        self.file_browser.update_cursor_to_new_images()
                     self.show_next_image()
                 else:
                     self.clear_image()
                     self.alert("Warning", "No files found in direcftory after refresh.", kind="warning")
                 print("Refreshed files")
+
+    @periodic(SlideshowConfig, sleep_attr="interval_seconds", run_attr="slideshow_running")
+    async def do_slideshow(self, **kwargs):
+        if SlideshowConfig.slideshow_running and App.mode == Mode.BROWSE:
+            print("Slideshow next image")
+            base_dir = self.set_base_dir_box.get()
+            if base_dir and base_dir != "":
+                self.show_next_image()
+
+    def toggle_slideshow(self, event=None):
+        SlideshowConfig.toggle_slideshow()
+        if SlideshowConfig.show_new_images:
+            message = "Slideshow for new images started"
+        elif SlideshowConfig.slideshow_running:
+            message = "Slideshow started"
+            start_thread(self.do_slideshow)
+        else:
+            message = "Slideshows ended"
+        self.toast(message)
 
     def set_base_dir(self) -> None:
         '''
@@ -443,7 +488,7 @@ class App():
         try:
             return int(color_diff_threshold_str)
         except Exception:
-            return 20
+            return self.config.color_diff_threshold
 
     def get_inclusion_pattern(self) -> str:
         inclusion_pattern = self.inclusion_pattern.get()
@@ -475,12 +520,7 @@ class App():
                                   and image_path == App.search_image_full_path):
             image_path = filedialog.askopenfilename(
                 initialdir=self.get_search_dir(), title="Select image file",
-                filetypes=(("jpg files", "*.jpg"),
-                           ("jpeg files", "*.jpeg"),
-                           ("png files", "*.png"),
-                           ("tiff files", "*.tiff"),
-                           ("gif files", "*.gif")
-                           ))
+                filetypes=[("Image files", "*.jpg *.jpeg *.png *.tiff *.gif")])
 
         if image_path is not None and image_path != "":
             self.search_image.set(os.path.basename(image_path))
@@ -489,7 +529,8 @@ class App():
             self.show_searched_image()
 
         if App.search_image_full_path is None or App.search_image_full_path == "":
-            self.set_mode(Mode.GROUP)
+            if self.mode != Mode.BROWSE:
+                self.set_mode(Mode.GROUP)
         else:
             self.set_mode(Mode.SEARCH)
 
@@ -499,8 +540,11 @@ class App():
            self.run_compare()
 
     def show_searched_image(self) -> None:
-        if App.search_image_full_path is not None:
-            self.create_image(App.search_image_full_path, extra_text="(search image)")
+        if App.search_image_full_path is not None and App.search_image_full_path != "":
+            if os.path.isfile(App.search_image_full_path):
+                self.create_image(App.search_image_full_path, extra_text="(search image)")
+            else:
+                self.alert("Error", "Somehow, the search file is invalid", kind="error")
 
     def show_prev_image_key(self, event) -> None:
         self.show_prev_image(False)
@@ -694,8 +738,9 @@ class App():
         self.destroy_grid_element("prev_image_match_btn")
         self.destroy_grid_element("next_image_match_btn")
         # self.destroy_grid_element("search_current_image_btn")
-        # self.destroy_grid_element("delete_image_btn")
         # self.destroy_grid_element("open_image_location_btn")
+        # self.destroy_grid_element("copy_image_path")
+        # self.destroy_grid_element("delete_image_btn")
         for mode in App.has_added_buttons_for_mode.keys():
             App.has_added_buttons_for_mode[mode] = False
         self.master.update()
@@ -720,7 +765,7 @@ class App():
 
     def display_progress(self, context, percent_complete):
         self.label_state["text"] = _wrap_text_to_fit_length(
-                f"{context}: {int(percent_complete)}% compared", 30)
+                f"{context}: {int(percent_complete)}% complete", 30)
         self.master.update()
 
     def validate_run(self):
@@ -749,8 +794,7 @@ class App():
             self.progress_bar.grid_forget()
             self.destroy_grid_element("progress_bar")
 
-        thread = threading.Thread(target=run_with_progress_async, args=[self])
-        thread.start()
+        start_thread(run_with_progress_async, use_asyncio=False, args=[self])
 
     def run_compare(self) -> None:
         self.run_with_progress(self._run_compare)
@@ -847,7 +891,7 @@ class App():
                         kind="info")
             return
 
-        App.group_indexes = App.compare.sort_groups(App.file_groups)
+        App.group_indexes = App.compare._sort_groups(App.file_groups)
         App.max_group_index = max(App.file_groups.keys())
         self.add_buttons_for_mode()
         App.current_group_index = 0
@@ -920,6 +964,15 @@ class App():
         else:
             self.alert("Error", "Failed to open location of current file, unable to get valid filepath", kind="error")
 
+    def copy_image_path(self):
+        filepath = self.file_browser.current_file()
+        if sys.platform=='win32':
+            filepath = os.path.normpath(filepath)
+            if self.config.escape_backslash_filepaths:
+                filepath = filepath.replace("\\", "\\\\")
+        self.master.clipboard_clear()
+        self.master.clipboard_append(filepath)
+
     def _delete_image(self, event):
         self.delete_image()
 
@@ -931,8 +984,7 @@ class App():
             App.file_browser.checking_files = False
             filepath = App.file_browser.current_file()
             if filepath:
-                self.toast("Removing file: " + filepath)
-                os.remove(filepath)
+                self._handle_delete(filepath)
                 App.file_browser.refresh(refresh_cursor=False)
                 self.show_next_image()
             return
@@ -949,11 +1001,30 @@ class App():
         filepath = self.get_active_image_filepath()
 
         if filepath is not None:
-            self.toast("Removing file: " + filepath)
-            os.remove(filepath)
+            self._handle_delete(filepath)
             self.update_groups_for_removed_file()
         else:
             self.alert("Error", "Failed to delete current file, unable to get valid filepath", kind="error")
+
+    def _handle_delete(self, filepath):
+        self.toast("Removing file: " + filepath)
+        if self.config.delete_instantly:
+            os.remove(filepath)
+            return
+        if self.config.trash_folder is not None: 
+            filepath = os.path.normpath(filepath)
+            sep = "\\" if "\\" in filepath else "/"
+            new_filepath = filepath[filepath.rfind(sep)+1:len(filepath)]
+            new_filepath = os.path.normpath(os.path.join(self.config.trash_folder, new_filepath))
+            os.rename(filepath, new_filepath)
+            return
+        try:
+            send2trash(os.path.normpath(filepath))
+        except Exception as e:
+            print(e)
+            print("Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json.")
+            os.remove(filepath)
+
 
     def replace_current_image_with_search_image(self):
         '''
@@ -1033,20 +1104,19 @@ class App():
         return show_method(title, message)
 
     def toast(self, message):
+        print("Toast message: " + message)
+        if not self.config.show_toasts:
+            return
+
         # Set the position of the toast on the screen (top right)
         width = 300
         height = 100
         x = self.master.winfo_screenwidth() - width
         y = 0
 
-        # Create the toast window
+        # Create the toast on the top level
         toast = tk.Toplevel(self.master, bg='#008CBA')
         toast.geometry(f'{width}x{height}+{int(x)}+{int(y)}')
-
-        # Create a label for the toast message
-        print("Toast message: " + message)
-
-        # build toast
         self.container = tk.Frame(toast)
         self.container.pack(fill=tk.BOTH, expand=tk.YES)
         label = tk.Label(
@@ -1063,14 +1133,12 @@ class App():
         toast.attributes('-topmost', True)
 #        toast.withdraw()
 
-        def thread_job():
-            time.sleep(2)  # Change this value for different durations
+        # Start a new thread that will destroy the window after a few seconds
+        def self_destruct_after(time_in_seconds):
+            time.sleep(time_in_seconds)
             label.destroy()
             toast.destroy()
-
-        # Start a new thread that will destroy the window after a few seconds
-        x = threading.Thread(target=thread_job)
-        x.start()
+        start_thread(self_destruct_after, use_asyncio=False, args=[self.config.toasts_persist_seconds])
 
     def apply_to_grid(self, component, sticky=None, pady=0):
         if sticky is None:
@@ -1089,6 +1157,10 @@ class App():
             setattr(self, button_ref_name, button)
             button
             self.apply_to_grid(button)
+
+    def new_entry(self, text_variable, text=""):
+        return Entry(self.sidebar, text=text, textvariable=text_variable, width=30, font=fnt.Font(size=8))
+
 
     def destroy_grid_element(self, element_ref_name):
         element = getattr(self, element_ref_name)

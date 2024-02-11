@@ -1,0 +1,15 @@
+{
+  "color_diff_threshold": 15,
+  "escape_backslash_filepaths": true,
+  "file_counter_limit": 40000,
+  "fill_canvas": false,
+  "image_browse_recursive": false,
+  "print_settings": true,
+  "show_toasts": true,
+  "slideshow_interval_seconds": 7,
+  "file_check_interval_seconds": 10,
+  "sort_by": "CREATION_TIME",
+  "toasts_persist_seconds": 2,
+  "delete_instantly": false,
+  "trash_folder": null
+}
