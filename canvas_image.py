@@ -4,9 +4,53 @@
 import math
 import warnings
 import tkinter as tk
+import time
 
-from tkinter import ttk
+from tkinter import Canvas, ttk, filedialog
 from PIL import Image, ImageTk
+
+from gif_image_ui import GifImageUI
+from utils.utils import scale_dims
+
+
+class ResizingCanvas(Canvas):
+    '''
+    Create a Tk Canvas that auto-resizes its components.
+    '''
+
+    def __init__(self, parent, **kwargs):
+        Canvas.__init__(self, parent, **kwargs)
+        self.bind("<Configure>", self.on_resize)
+        self.parent = parent
+        self.height = parent.winfo_height()
+        self.width = parent.winfo_width() * 9/10
+    
+    def reset_sizes(self):
+        self.height = self.parent.winfo_height()
+        self.width = self.parent.winfo_width() * 9/10
+
+    def on_resize(self, event):
+        # determine the ratio of old width/height to new width/height
+        wscale = float(event.width)/self.width
+        hscale = float(event.height)/self.height
+        self.width = event.width
+        self.height = event.height
+        # resize the canvas
+        self.config(width=self.width, height=self.height)
+        # rescale all the objects tagged with the "all" tag
+        self.scale("all", 0, 0, wscale, hscale)
+
+    def get_size(self):
+        return (self.width, self.height)
+
+    def get_center_coordinates(self):
+        return (self.width/2, (self.height)/2)
+
+    def create_image_center(self, img):
+        return self.create_image(self.get_center_coordinates(), image=img, anchor="center", tags=("_"))
+
+    def clear_image(self):
+        self.delete("_")
 
 class AutoScrollbar(ttk.Scrollbar):
     """ A scrollbar that hides itself if it's not needed. Works only for grid geometry manager """
@@ -23,36 +67,38 @@ class AutoScrollbar(ttk.Scrollbar):
     def place(self, **kw):
         raise tk.TclError('Cannot use place with the widget ' + self.__class__.__name__)
 
-class CanvasImage:
+class CanvasImage(ttk.Frame):
     """ Display and zoom image """
-    def __init__(self, placeholder, path):
+    def __init__(self, master):
         """ Initialize the ImageFrame """
+        ttk.Frame.__init__(self, master)
         self.imscale = 1.0  # scale for the canvas image zoom, public for outer classes
         self.__delta = 1.3  # zoom magnitude
-        self.__filter = Image.LANCZOS  # could be: NEAREST, BILINEAR, BICUBIC and ANTIALIAS
+        self.__filter = Image.LANCZOS  # could be: NEAREST, BILINEAR, BICUBIC and LANCZOS
         self.__previous_state = 0  # previous state of the keyboard
-        self.path = path  # path to the image, should be public for outer classes
-        # Create ImageFrame in placeholder widget
-        self.__imframe = ttk.Frame(placeholder)  # placeholder of the ImageFrame object
+        self.path = "."  # path to the image, should be public for outer classes
+        self.do_grid(row=0, column=1)
         # Vertical and horizontal scrollbars for canvas
-        hbar = AutoScrollbar(self.__imframe, orient='horizontal')
-        vbar = AutoScrollbar(self.__imframe, orient='vertical')
+        hbar = AutoScrollbar(self, orient='horizontal')
+        vbar = AutoScrollbar(self, orient='vertical')
         hbar.grid(row=1, column=0, sticky='we')
         vbar.grid(row=0, column=1, sticky='ns')
         # Create canvas and bind it with scrollbars. Public for outer classes
-        self.canvas = tk.Canvas(self.__imframe, highlightthickness=0,
-                                xscrollcommand=hbar.set, yscrollcommand=vbar.set)
+        self.canvas = ResizingCanvas(self, highlightthickness=0,
+                                     xscrollcommand=hbar.set, yscrollcommand=vbar.set)
         self.canvas.grid(row=0, column=0, sticky='nswe')
         self.canvas.update()  # wait till canvas is created
+        self.container = self.canvas.create_rectangle((0, 0, 1400, 800), width=0)
+#        print(self.canvas.get_size())
         hbar.configure(command=self.__scroll_x)  # bind scrollbars to the canvas
         vbar.configure(command=self.__scroll_y)
         # Bind events to the Canvas
         self.canvas.bind('<Configure>', lambda event: self.__show_image())  # canvas is resized
         self.canvas.bind('<ButtonPress-1>', self.__move_from)  # remember canvas position
         self.canvas.bind('<B1-Motion>',     self.__move_to)  # move canvas to the new position
-        self.canvas.bind('<MouseWheel>', self.__wheel)  # zoom for Windows and MacOS, but not Linux
-        self.canvas.bind('<Button-5>',   self.__wheel)  # zoom for Linux, wheel scroll down
-        self.canvas.bind('<Button-4>',   self.__wheel)  # zoom for Linux, wheel scroll up
+        self.canvas.bind('<Shift-MouseWheel>', self.__wheel)  # zoom for Windows and MacOS, but not Linux
+        self.canvas.bind('<Shift-Button-5>',   self.__wheel)  # zoom for Linux, wheel scroll down
+        self.canvas.bind('<Shift-Button-4>',   self.__wheel)  # zoom for Linux, wheel scroll up
         # Handle keystrokes in idle mode, because program slows down on a weak computers,
         # when too many key stroke events in the same time
         self.canvas.bind('<Key>', lambda event: self.canvas.after_idle(self.__keystroke, event))
@@ -61,12 +107,54 @@ class CanvasImage:
         self.__huge_size = 14000  # define size of the huge image
         self.__band_width = 1024  # width of the tile band
         Image.MAX_IMAGE_PIXELS = 1000000000  # suppress DecompressionBombError for the big image
+        self.__offset = 0
+        self.__tile = []
+        self.__image = None
+        self.imwidth = 0
+        self.imheight = 0
+        self.__min_side = min(self.imwidth, self.imheight)  # get the smaller image side
+        # Create image pyramid
+        self.__pyramid = None
+        # Set ratio coefficient for image pyramid
+        self.__ratio = max(self.imwidth, self.imheight) / self.__huge_size if self.__huge else 1.0
+        self.__curr_img = 0  # current image from the pyramid
+        self.__scale = self.imscale * self.__ratio  # image pyramide scale
+        self.__reduction = 2  # reduction degree of image pyramid
+        self.canvas.focus_set()  # set focus on the canvas
+        self.master.update()
+        self.image_displayed = False
+        self.mousewheel_bound = False
+
+    def set_background_color(self, background_color):
+        self.canvas.config(bg=background_color)        
+
+    def show_image(self, path):
+        if (isinstance(self.__image, GifImageUI)):
+            self.__image.stop_display()
+        if path.endswith(".gif"):
+            self.__image = GifImageUI(path)
+            self.__image.display(self.canvas)
+            return
+
+        self.path = path
+        self.fill_canvas = False
+        self.__huge = False  # huge or not
+        self.__huge_size = 14000  # define size of the huge image
+        self.__band_width = 1024  # width of the tile band
+        Image.MAX_IMAGE_PIXELS = 1000000000  # suppress DecompressionBombError for the big image
         with warnings.catch_warnings():  # suppress DecompressionBombWarning
             warnings.simplefilter('ignore')
-            self.__image = Image.open(self.path)  # open image, but down't load it
+            try:
+                self.__image = Image.open(self.path)  # open image, but down't load it
+            except Exception as e:
+                if "truncated" in str(e):
+                    time.sleep(0.25) # If the image was just created in the directory, it's possible it's still being filled with data
+                    self.__image = Image.open(self.path)  # open image, but down't load it
+                else:
+                    raise e
         self.imwidth, self.imheight = self.__image.size  # public for outer classes
         if self.imwidth * self.imheight > self.__huge_size * self.__huge_size and \
-           self.__image.tile[0][0] == 'raw':  # only raw images could be tiled
+                self.__image.tile[0][0] == 'raw':  # only raw images could be tiled
             self.__huge = True  # image is huge
             self.__offset = self.__image.tile[0][2]  # initial tile offset
             self.__tile = [self.__image.tile[0][0],  # it have to be 'raw'
@@ -88,8 +176,15 @@ class CanvasImage:
             self.__pyramid.append(self.__pyramid[-1].resize((int(w), int(h)), self.__filter))
         # Put image into container rectangle and use it to set proper coordinates to the image
         self.container = self.canvas.create_rectangle((0, 0, self.imwidth, self.imheight), width=0)
-        self.__show_image()  # show image on the canvas
+        self.__show_image(center=True)  # show image on the canvas
         self.canvas.focus_set()  # set focus on the canvas
+
+    def clear(self) -> None:
+        if self.__image is not None and self.canvas is not None:
+            if (isinstance(self.__image, GifImageUI)):
+                self.__image.stop_display()
+            self.canvas.clear_image()
+            self.master.update()
 
     def smaller(self):
         """ Resize image proportionally and return smaller image """
@@ -130,12 +225,12 @@ class CanvasImage:
         """ Dummy function to redraw figures in the children classes """
         pass
 
-    def grid(self, **kw):
+    def do_grid(self, **kw):
         """ Put CanvasImage widget on the parent widget """
-        self.__imframe.grid(**kw)  # place CanvasImage widget on the grid
-        self.__imframe.grid(sticky='nswe')  # make frame container sticky
-        self.__imframe.rowconfigure(0, weight=1)  # make canvas expandable
-        self.__imframe.columnconfigure(0, weight=1)
+        self.grid(**kw)  # place CanvasImage widget on the grid
+        self.grid(sticky='nswe')  # make frame container sticky
+        self.rowconfigure(0, weight=1)  # make canvas expandable
+        self.columnconfigure(0, weight=1)
 
     def pack(self, **kw):
         """ Exception: cannot use pack with this widget """
@@ -157,7 +252,18 @@ class CanvasImage:
         self.canvas.yview(*args)  # scroll vertically
         self.__show_image()  # redraw the image
 
-    def __show_image(self):
+    def __show_image(self, center=False):
+        if center:
+            imagetk = self.get_image_to_fit(self.path)
+            imageid = self.canvas.create_image_center(imagetk)
+            self.canvas.reset_sizes()
+            self.canvas.lower(imageid)  # set image into background
+            self.canvas.imagetk = imagetk  # keep an extra reference to prevent garbage-collection
+            self.image_displayed = True
+            return
+        if not self.image_displayed:
+            return
+
         """ Show image on the Canvas. Implements correct image zoom almost like in Google Maps """
         box_image = self.canvas.coords(self.container)  # get image area
         box_canvas = (self.canvas.canvasx(0),  # get visible area of the canvas
@@ -203,6 +309,21 @@ class CanvasImage:
                                                anchor='nw', image=imagetk)
             self.canvas.lower(imageid)  # set image into background
             self.canvas.imagetk = imagetk  # keep an extra reference to prevent garbage-collection
+            self.image_displayed = True
+
+    def get_image_to_fit(self, filename) -> ImageTk.PhotoImage:
+        '''
+        Get the object required to display the image in the UI.
+        '''
+        img = Image.open(filename)
+#        print("TESTING")
+#        print(self.canvas.get_size())
+        size_float = self.canvas.get_size()
+        canvas_width = int(size_float[0])
+        canvas_height = int(size_float[1])
+        fit_dims = scale_dims((img.width, img.height), (canvas_width, canvas_height), maximize=self.fill_canvas)
+        img = img.resize(fit_dims)
+        return ImageTk.PhotoImage(img)
 
     def __move_from(self, event):
         """ Remember previous coordinates for scrolling with the mouse """
@@ -280,31 +401,54 @@ class CanvasImage:
 
     def destroy(self):
         """ ImageFrame destructor """
-        self.__image.close()
-        map(lambda i: i.close, self.__pyramid)  # close all pyramid images
-        del self.__pyramid[:]  # delete pyramid list
-        del self.__pyramid  # delete pyramid variable
-        self.canvas.destroy()
-        self.__imframe.destroy()
+        try:
+            if hasattr(self, "__image"):
+                self.__image.close()
+            if hasattr(self, "__pyramid") and self.__pyramid:
+                map(lambda i: i.close, self.__pyramid)  # close all pyramid images
+                del self.__pyramid[:]  # delete pyramid list
+                del self.__pyramid  # delete pyramid variable
+        except Exception as e:
+            print(e)
+        super().destroy()
+
 
 class MainWindow(ttk.Frame):
     """ Main window class """
-    def __init__(self, mainframe, path):
+    def __init__(self, mainframe):
         """ Initialize the main Frame """
         ttk.Frame.__init__(self, master=mainframe)
         self.master.title('Advanced Zoom v3.0')
-        self.master.geometry('800x600')  # size of the main window
-        self.master.rowconfigure(0, weight=1)  # make the CanvasImage widget expandable
+        self.master.geometry('1400x800')  # size of the main window
+        self.master.resizable(1, 1)
         self.master.columnconfigure(0, weight=1)
-        canvas = CanvasImage(self.master, path)  # create widget
-        canvas.grid(row=0, column=0)  # show widget
+        self.master.columnconfigure(1, weight=9)
+        self.master.rowconfigure(0, weight=1)  # make the CanvasImage widget expandable
+        self.sidebar = tk.Frame(self.master)
+        self.sidebar.grid(row=0, column=0)
+        self.show_image_btn = tk.Button(master=self.sidebar, text="Show image", command=self.show_image)
+        self.show_image_btn.grid(row=0, column=0)
+        self.canvas = CanvasImage(self.master)  # create widget
+        self.canvas.grid(row=0, column=1)  # show widget
+        self.master.update()
 
-filename = 'C:\\Users\\tehal\\ComfyUI\\output\\SOLID\\CUI_17009715322666056.png'  # place path to your image here
-#filename = 'd:/Data/yandex_z18_1-1.tif'  # huge TIFF file 1.4 GB
-#filename = 'd:/Data/The_Garden_of_Earthly_Delights_by_Bosch_High_Resolution.jpg'
-#filename = 'd:/Data/The_Garden_of_Earthly_Delights_by_Bosch_High_Resolution.tif'
-#filename = 'd:/Data/heic1502a.tif'
-#filename = 'd:/Data/land_shallow_topo_east.tif'
-#filename = 'd:/Data/X1D5_B0002594.3FR'
-app = MainWindow(tk.Tk(), path=filename)
-app.mainloop()
+    def get_file(self):
+        return 'C:\\Users\\tehal\\ComfyUI\\output\\SOLID\\CUI_17009716554786131.png'
+#        return filedialog.askopenfile(
+#            initialdir=".", title="Set image comparison file").name
+
+
+    def show_image(self):
+        filepath = self.get_file()
+        self.canvas.show_image(filepath)
+
+if __name__ == "__main__":
+    filename = 'C:\\Users\\tehal\\ComfyUI\\output\\SOLID\\CUI_17009715322666056.png'  # place path to your image here
+    #filename = 'd:/Data/yandex_z18_1-1.tif'  # huge TIFF file 1.4 GB
+    #filename = 'd:/Data/The_Garden_of_Earthly_Delights_by_Bosch_High_Resolution.jpg'
+    #filename = 'd:/Data/The_Garden_of_Earthly_Delights_by_Bosch_High_Resolution.tif'
+    #filename = 'd:/Data/heic1502a.tif'
+    #filename = 'd:/Data/land_shallow_topo_east.tif'
+    #filename = 'd:/Data/X1D5_B0002594.3FR'
+    app = MainWindow(tk.Tk())
+    app.mainloop()

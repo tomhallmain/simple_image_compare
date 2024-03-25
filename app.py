@@ -7,13 +7,14 @@ import traceback
 
 
 import tkinter as tk
-from tkinter import Canvas, PhotoImage, filedialog, messagebox, HORIZONTAL, Label, Checkbutton
+from tkinter import PhotoImage, filedialog, messagebox, HORIZONTAL, Label, Checkbutton
 from tkinter.constants import W
 import tkinter.font as fnt
 from tkinter.ttk import Button, Entry, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
+from canvas_image import CanvasImage
 from compare.compare_args import CompareArgs
 from compare.compare_wrapper import CompareWrapper
 from extensions.refacdir_client import RefacDirClient
@@ -42,7 +43,7 @@ except Exception:
     Utils.log_red("Could not import trashing utility - all deleted images will be deleted instantly")
 
 
-### TODO image zoom feature
+### TODO Polish up image zoom feature
 ### TODO copy/cut image using hotkey (pywin32 ? win32com? IDataPobject?)
 ### TODO some type of plugin to filter the images using a filter function defined externally
 ### TODO enable comparison jobs on user-defined file list
@@ -59,73 +60,9 @@ except Exception:
 ### TODO replace restored files to compare if present after previous deletion
 
 
-class ResizingCanvas(Canvas):
-    '''
-    Create a Tk Canvas that auto-resizes its components.
-    '''
-
-    def __init__(self, parent, **kwargs):
-        Canvas.__init__(self, parent, **kwargs)
-        self.bind("<Configure>", self.on_resize)
-        self.parent = parent
-        self.height = parent.winfo_height()
-        self.width = parent.winfo_width() * 9/10
-
-    def on_resize(self, event):
-        # determine the ratio of old width/height to new width/height
-        wscale = float(event.width)/self.width
-        hscale = float(event.height)/self.height
-        self.width = event.width
-        self.height = event.height
-        # resize the canvas
-        self.config(width=self.width, height=self.height)
-        # rescale all the objects tagged with the "all" tag
-        self.scale("all", 0, 0, wscale, hscale)
-
-    def get_size(self):
-        return (self.width, self.height)
-
-    def get_center_coordinates(self):
-        return (self.width/2, (self.height)/2)
-
-    def create_image_center(self, img):
-        self.create_image(self.get_center_coordinates(), image=img, anchor="center", tags=("_"))
-
-    def clear_image(self):
-        self.delete("_")
-
-
 class Sidebar(tk.Frame):
     def __init__(self, master=None, cnf={}, **kw):
         tk.Frame.__init__(self, master=master, cnf=cnf, **kw)
-
-
-class GifImageUI:
-    def __init__(self, filename):
-        im = Image.open(filename)
-        self.n_frames = im.n_frames
-        self.frames = [PhotoImage(file=filename, format='gif -index %i' % (i))
-                       for i in range(self.n_frames)]
-        self.active = False
-        self.canvas = None
-
-    def display(self, canvas):
-        self.active = True
-        self.canvas = canvas
-        self.update(0)
-
-    def stop_display(self):
-        self.active = False
-
-    def update(self, ind):
-        if self.active:
-            frame = self.frames[ind]
-            ind += 1
-            if ind == self.n_frames:
-                ind = 0
-            # TODO inefficient to use canvas here, better to use Label.configure
-            self.canvas.create_image_center(frame)
-            root.after(100, self.update, ind)
 
 
 class ProgressListener:
@@ -223,7 +160,7 @@ class App():
                                      == AppStyle.DARK_THEME) and to_theme != AppStyle.LIGHT_THEME
         self.master.config(bg=AppStyle.BG_COLOR)
         self.sidebar.config(bg=AppStyle.BG_COLOR)
-        self.canvas.config(bg=AppStyle.BG_COLOR)
+        self.canvas_image.set_background_color(AppStyle.BG_COLOR)
         for name, attr in self.__dict__.items():
             if isinstance(attr, Label):
                 attr.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR,
@@ -393,8 +330,7 @@ class App():
         self.apply_to_grid(self.image_browse_recurse, sticky=W)
 
         fill_canvas_var = tk.BooleanVar(value=self.fill_canvas)
-        self.fill_canvas_choice = Checkbutton(self.sidebar, text=_('Image resize to full window'),
-                                              variable=fill_canvas_var, command=self.toggle_fill_canvas)
+        self.fill_canvas_choice = Checkbutton(self.sidebar, text=_('Image resize to full window'), variable=fill_canvas_var, command=self.toggle_fill_canvas)
         self.apply_to_grid(self.fill_canvas_choice, sticky=W)
 
         search_return_closest_var = tk.BooleanVar(value=config.search_only_return_closest)
@@ -427,8 +363,7 @@ class App():
 
         # Image panel and state management
         self.master.update()
-        self.canvas = ResizingCanvas(self.master)
-        self.canvas.grid(column=1, row=0)
+        self.canvas_image = CanvasImage(self.master)
 
         # Default mode is BROWSE - GROUP and SEARCH are only valid modes when a compare is run
         self.set_mode(Mode.BROWSE)
@@ -453,9 +388,11 @@ class App():
         self.master.bind("<Shift-B>", lambda e: self.check_focus(e, self.clear_hidden_images))
         self.master.bind("<Shift-H>", lambda e: self.check_focus(e, self.get_help_and_config))
         self.master.bind("<Shift-S>", lambda e: self.check_focus(e, self.toggle_slideshow))
-        self.master.bind("<MouseWheel>", lambda event: self.show_next_image() if event.delta > 0 else self.show_prev_image())
+        self.master.bind("<MouseWheel>", lambda event: None if (event.state & 0x1) != 0 else (self.show_next_image() if event.delta > 0 else self.show_prev_image()))
         self.master.bind("<Button-2>", self.delete_image)
         self.master.bind("<Button-3>", lambda event: ImageDetails.run_image_generation_static(self.app_actions))
+        # self.master.bind('<Button-5>',   self.show_next_image)  # for Linux, wheel scroll down
+        # self.master.bind('<Button-4>',   self.show_prev_image)  # for Linux, wheel scroll up
         self.master.bind("<Shift-M>", lambda e: self.check_focus(e, self.add_or_remove_mark_for_current_image))
         self.master.bind("<Shift-N>", lambda e: self.check_focus(e, self._add_all_marks_from_last_or_current_group))
         self.master.bind("<Shift-G>", lambda e: self.check_focus(e, self.go_to_mark))
@@ -517,7 +454,7 @@ class App():
             for _dir in app_info_cache.get_meta("secondary_base_dirs", default_val=[]):
                 App.add_secondary_window(_dir)
 
-        self.canvas.after(1, lambda: self.canvas.focus_force())
+        self.canvas_image.canvas.after(1, lambda: self.canvas_image.canvas.focus_force())
 
         if image_path is not None:
             if do_search:
@@ -617,7 +554,7 @@ class App():
         self.refresh(file_check=False)
 
     def toggle_fill_canvas(self):
-        self.fill_canvas = not self.fill_canvas
+        self.canvas_image.fill_canvas = not self.canvas_image.fill_canvas
 
     def toggle_image_browse_recursive(self):
         self.file_browser.set_recursive(self.image_browse_recurse_var.get())
@@ -625,7 +562,7 @@ class App():
             self.show_next_image()
 
     def refocus(self, event=None):
-        self.canvas.after(1, lambda: self.canvas.focus_force())
+        self.canvas_image.canvas.after(1, lambda: self.canvas_image.canvas.focus_force())
         if config.debug:
             Utils.log_debug("Refocused main window")
 
@@ -944,18 +881,6 @@ class App():
         inclusion_pattern = self.inclusion_pattern.get().strip()
         return None if inclusion_pattern == "" else inclusion_pattern
 
-    def get_image_to_fit(self, filename) -> ImageTk.PhotoImage:
-        '''
-        Get the object required to display the image in the UI.
-        '''
-        if filename.endswith(".gif"):
-            return GifImageUI(filename)
-
-        img = Image.open(filename)
-        fit_dims = Utils.scale_dims((img.width, img.height), self.canvas.get_size(), maximize=self.fill_canvas)
-        img = img.resize(fit_dims)
-        return ImageTk.PhotoImage(img)
-
     def set_search(self, event=None) -> None:
         '''
         Set the search image or text using the provided UI values, or prompt the
@@ -1121,21 +1046,7 @@ class App():
         '''
         Show an image in the main content pane of the UI.
         '''
-        if (isinstance(self.img, GifImageUI)):
-            self.img.stop_display()
-        try:
-            self.img = self.get_image_to_fit(image_path)
-        except Exception as e:
-            if "truncated" in str(e):
-                # If the image was just created in the directory, it's possible it's still being filled with data
-                time.sleep(0.25)
-                self.img = self.get_image_to_fit(image_path)
-            else:
-                raise e
-        if (isinstance(self.img, GifImageUI)):
-            self.img.display(self.canvas)
-        else:
-            self.canvas.create_image_center(self.img)
+        self.canvas_image.show_image(image_path)
         if self.label_current_image_name is None:
             self.label_current_image_name = Label(self.sidebar)
             self.add_label(self.label_current_image_name, "", pady=30)
@@ -1150,15 +1061,11 @@ class App():
         self.label_current_image_name["text"] = text
         if self.app_actions.image_details_window is not None:
             self.get_image_details()
-
-    def clear_image(self) -> None:
-        if self.img is not None and self.canvas is not None:
-            if (isinstance(self.img, GifImageUI)):
-                self.img.stop_display()
-            self.destroy_grid_element("label_current_image_name")
-            self.label_current_image_name = None
-            self.canvas.clear_image()
-            self.master.update()
+    
+    def clear_image(self):
+        self.canvas_image.clear()
+        self.destroy_grid_element("label_current_image_name")
+        self.label_current_image_name = None
 
     def toggle_image_view(self) -> None:
         '''
@@ -1727,7 +1634,7 @@ class App():
             toast.destroy()
         start_thread(self_destruct_after, use_asyncio=False, args=[config.toasts_persist_seconds])
         if sys.platform == "darwin":
-            self.canvas.after(1, lambda: self.canvas.focus_force())
+            self.canvas_image.canvas.after(1, lambda: self.canvas_image.canvas.focus_force())
 
     def _set_label_state(self, text=None, group_number=None, size=-1):
         if text is not None:
