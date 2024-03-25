@@ -184,6 +184,8 @@ class Compare:
     FACES_DATA = "image_faces.pkl"
     THUMB_COLORS_DATA = "image_thumb_colors.pkl"
     TOP_COLORS_DATA = "image_top_colors.pkl"
+    THRESHHOLD_POTENTIAL_DUPLICATE = 50
+    THRESHHOLD_GROUP_CUTOFF = 4500
 
     def __init__(self, base_dir=".", search_file_path=None, counter_limit=30000,
                  use_thumb=True, compare_faces=False, color_diff_threshold=15,
@@ -201,6 +203,7 @@ class Compare:
         self.overwrite = overwrite
         self.verbose = verbose
         self.progress_listener = progress_listener
+        self._faceCascade = None
         if self.use_thumb:
             self.thumb_dim = 15
             self.n_colors = self.thumb_dim ** 2
@@ -226,6 +229,7 @@ class Compare:
         self._file_faces = np.empty((0))
         self.settings_updated = False
         self.gather_files_func = gather_files_func
+        self._probable_duplicates = []
 
     def set_base_dir(self, base_dir):
         '''
@@ -340,8 +344,11 @@ class Compare:
         else:
             with open(self._file_colors_filepath, "rb") as f:
                 self._file_colors_dict = pickle.load(f)
-            with open(self._file_faces_filepath, "rb") as f:
-                self._file_faces_dict = pickle.load(f)
+            if self.compare_faces:
+                with open(self._file_faces_filepath, "rb") as f:
+                    self._file_faces_dict = pickle.load(f)
+            else:
+                self._file_faces_dict = {}
 
         # Gather image file data from directory
 
@@ -359,16 +366,22 @@ class Compare:
             if counter > self.counter_limit:
                 break
 
-            if f in self._file_colors_dict and f in self._file_faces_dict:
+            if f in self._file_colors_dict:
                 colors = self._file_colors_dict[f]
-                n_faces = self._file_faces_dict[f]
+                if self.compare_faces and f in self._file_faces_dict:
+                    n_faces = self._file_faces_dict[f]
             else:
                 try:
                     image = get_image_array(f)
                 except OSError as e:
-                    print(e)
+                    print(f"{f} - {e}")
                     continue
                 except ValueError:
+                    continue
+                except SyntaxError as e:
+                    if self.verbose:
+                        print(f"{f} - {e}")
+                    # i.e. broken PNG file (bad header checksum in b'tEXt')
                     continue
 
                 if f in self._file_colors_dict:
@@ -377,21 +390,23 @@ class Compare:
                     try:
                         colors = self.color_getter(image, self.modifier)
                     except ValueError as e:
-                        if verbose:
+                        if self.verbose:
                             print(e)
                             print(f)
                         continue
                     self._file_colors_dict[f] = colors
-                if f in self._file_faces_dict:
-                    n_faces = self._file_faces_dict[f]
-                else:
-                    n_faces = self._get_faces_count(f)
-                    self._file_faces_dict[f] = n_faces
+                if self.compare_faces:
+                    if f in self._file_faces_dict:
+                        n_faces = self._file_faces_dict[f]
+                    else:
+                        n_faces = self._get_faces_count(f)
+                        self._file_faces_dict[f] = n_faces
                 self.has_new_file_data = True
 
             counter += 1
             self._file_colors = np.append(self._file_colors, [colors], 0)
-            self._file_faces = np.append(self._file_faces, [n_faces], 0)
+            if self.compare_faces:
+                self._file_faces = np.append(self._file_faces, [n_faces], 0)
             self._files_found.append(f)
 
             percent_complete = counter / self.max_files_processed_even * 100
@@ -408,8 +423,9 @@ class Compare:
         if self.has_new_file_data or self.overwrite:
             with open(self._file_colors_filepath, "wb") as store:
                 pickle.dump(self._file_colors_dict, store)
-            with open(self._file_faces_filepath, "wb") as store:
-                pickle.dump(self._file_faces_dict, store)
+            if self._faceCascade:
+                with open(self._file_faces_filepath, "wb") as store:
+                    pickle.dump(self._file_faces_dict, store)
             self._file_colors_dict = None
             self._file_faces_dict = None
             if self.verbose:
@@ -418,7 +434,8 @@ class Compare:
                 else:
                     print("Updated image data saved to: ")
                 print(self._file_colors_filepath)
-                print(self._file_faces_filepath)
+                if self.compare_faces:
+                    print(self._file_faces_filepath)
 
         self._n_files_found = len(self._files_found)
 
@@ -504,8 +521,8 @@ class Compare:
                     print(header)
                 for f in files_grouped:
                     diff_score = int(files_grouped[f])
-                    if not f == search_file_path:
-                        if diff_score < 50:
+                    if not f == search_path:
+                        if diff_score < Compare.THRESHHOLD_POTENTIAL_DUPLICATE:
                             line = "DUPLICATE: " + f
                         elif diff_score < 1000:
                             line = "PROBABLE MATCH: " + f
@@ -528,7 +545,7 @@ class Compare:
         Prepare and begin a search for a provided image file path.
         '''
         if (search_file_path is None or search_file_path == ""
-                or search_file_path == base_dir):
+                or search_file_path == self.base_dir):
             while search_file_path is None:
                 search_file_path = input(
                     "\nEnter a new file path to search for similars "
@@ -550,7 +567,7 @@ class Compare:
                 image = get_image_array(search_file_path)
             except OSError as e:
                 if self.verbose:
-                    print(e)
+                    print(f"{search_file_path} - {e}")
                 raise AssertionError(
                     "Encountered an error accessing the provided file path in the file system.")
 
@@ -584,6 +601,9 @@ class Compare:
             Step 1: [X, Y, Z] -> [Z, X, Y] (elementwise comparison)
             Step 2: [X, Y, Z] -> [Y, Z, X] (elementwise comparison)
             ^ At this point, all arrays have been compared.
+        
+        files_grouped - Keys are the file indexes, values are tuple of the group index and diff score.
+        file_groups - Keys are the group indexes, values are dicts with keys as the file in the group, values the diff score
         '''
         files_grouped = {}
         group_index = 0
@@ -624,9 +644,16 @@ class Compare:
 
             for base_index in similars[0]:
                 diff_index = ((base_index - i) % self._n_files_found)
-                diff_score = color_similars[0][base_index]
+                diff_score = color_similars[1][base_index]
                 f1_grouped = base_index in files_grouped
                 f2_grouped = diff_index in files_grouped
+
+                if diff_score < Compare.THRESHHOLD_POTENTIAL_DUPLICATE:
+                    base_file = self._files_found[base_index]
+                    diff_file = self._files_found[diff_index]
+                    if ((base_file, diff_file) not in self._probable_duplicates
+                            and (diff_file, base_file) not in self._probable_duplicates):
+                        self._probable_duplicates.append((base_file, diff_file))
 
                 if not f1_grouped and not f2_grouped:
                     files_grouped[base_index] = (group_index, diff_score)
@@ -635,7 +662,8 @@ class Compare:
                     continue
                 elif f1_grouped:
                     existing_group_index, previous_diff_score = files_grouped[base_index]
-                    if previous_diff_score - 500 > diff_score:
+                    if previous_diff_score - Compare.THRESHHOLD_GROUP_CUTOFF > diff_score:
+#                        print(f"Previous: {previous_diff_score} , New: {diff_score}")
                         files_grouped[base_index] = (group_index, diff_score)
                         files_grouped[diff_index] = (group_index, diff_score)
                         group_index += 1
@@ -644,13 +672,13 @@ class Compare:
                             existing_group_index, diff_score)
                 else:
                     existing_group_index, previous_diff_score = files_grouped[diff_index]
-                    if previous_diff_score - 500 > diff_score:
+                    if previous_diff_score - Compare.THRESHHOLD_GROUP_CUTOFF > diff_score:
+#                        print(f"Previous: {previous_diff_score} , New: {diff_score}")
                         files_grouped[base_index] = (group_index, diff_score)
                         files_grouped[diff_index] = (group_index, diff_score)
                         group_index += 1
                     else:
-                        files_grouped[base_index] = (
-                            existing_group_index, diff_score)
+                        files_grouped[base_index] = (existing_group_index, diff_score)
 
         for file_index in files_grouped:
             _file = self._files_found[file_index]
@@ -714,6 +742,9 @@ class Compare:
     def _sort_groups(self, file_groups):
         return sorted(file_groups,
                       key=lambda group_index: len(file_groups[group_index]))
+
+    def get_probable_duplicates(self):
+        return self._probable_duplicates
 
 
 if __name__ == "__main__":

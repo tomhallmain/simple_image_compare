@@ -51,6 +51,13 @@ def get_user_dir():
     return os.path.expanduser("~")
 
 
+def alphanumeric_sort(l, text_lambda=lambda i: i, reverse=False): 
+    """ Sort the given iterable in the way that humans expect."""
+    convert = lambda text: int(text) if text.isdigit() else text
+    alphanum_key = lambda item: [ convert(c) for c in re.split('([0-9]+)', text_lambda(item)) ] 
+    return sorted(l, key=alphanum_key, reverse=reverse)
+
+
 def scale_dims(dims, max_dims, maximize=False):
     x = dims[0]
     y = dims[1]

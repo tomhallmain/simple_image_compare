@@ -3,16 +3,18 @@ import os
 import sys
 import time
 
+import pprint
+
 try:
     from send2trash import send2trash
 except Exception:
     print("Could not import trashing utility - all deleted images will be deleted instantly")
 
 import tkinter as tk
-from tkinter import Canvas, PhotoImage, filedialog, messagebox, HORIZONTAL
+from tkinter import Canvas, PhotoImage, filedialog, messagebox, HORIZONTAL, Label, Checkbutton
 from tkinter.constants import W
 import tkinter.font as fnt
-from tkinter.ttk import Button, Entry, Frame, Label, OptionMenu, Progressbar
+from tkinter.ttk import Button, Entry, Frame, OptionMenu, Progressbar
 from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
@@ -30,7 +32,6 @@ from utils import (
 ### TODO some type of plugin to filter the images using a filter function defined externally
 ### TODO compare option to restrict by matching image dimensions
 ### TODO compare option encoding size
-### TODO add a remove duplicates mode
 ### TODO add checkbox for include gif option
 ### TODO tkVideoPlayer or tkVideoUtils for playing videos
 ### TODO custom frame class for sidebar to hold all the buttons
@@ -40,7 +41,7 @@ class Mode(Enum):
     BROWSE = 1
     SEARCH = 2
     GROUP = 3
-    REM_DUP = 4
+    DUPLICATES = 4
 
 
 config = Config()
@@ -145,16 +146,18 @@ class App():
     '''
 
     IS_DEFAULT_THEME = False
+    BG_COLOR = ""
+    FG_COLOR = ""
 
     compare = None
-    file_browser = FileBrowser(recursive=config.image_browse_recursive)
+    file_browser = FileBrowser(recursive=config.image_browse_recursive, sort_by=config.sort_by)
     mode = Mode.BROWSE
     fill_canvas = config.fill_canvas
     fullscreen = False
     search_file_path = ""
     img = None
     files_grouped = {}
-    file_groups = None
+    file_groups = {}
     files_matched = []
     search_image_full_path = None
     has_image_matches = False
@@ -168,7 +171,7 @@ class App():
         Mode.BROWSE: False,
         Mode.GROUP: False, 
         Mode.SEARCH: False, 
-        Mode.REM_DUP: False
+        Mode.DUPLICATES: False
     }
 
     def configure_style(self, theme):
@@ -176,24 +179,25 @@ class App():
 
     def toggle_theme(self):
         if App.IS_DEFAULT_THEME:
-            # Changes the window to light theme 
-            self.configure_style("breeze")
-            bg_color = "gray"
-            self.master.config(bg=bg_color)
-            self.sidebar.config(bg=bg_color)
-            self.canvas.config(bg=bg_color)
-            App.IS_DEFAULT_THEME = False
-            self.toast("Theme switched to light.")
+            self.configure_style("breeze") # Changes the window to light theme
+            App.BG_COLOR = "gray"
+            App.FG_COLOR = "black"
         else:
-            # Changes the window to dark theme 
-            self.configure_style("black")
-            bg_color = "#26242f"
-            self.master.config(bg=bg_color)
-            self.sidebar.config(bg=bg_color)
-            self.canvas.config(bg=bg_color)
-            App.IS_DEFAULT_THEME = True
-            self.toast("Theme switched to dark.")
+            self.configure_style("black") # Changes the window to dark theme
+            App.BG_COLOR = "#26242f"
+            App.FG_COLOR = "white"
+        App.IS_DEFAULT_THEME = not App.IS_DEFAULT_THEME
+        self.master.config(bg=App.BG_COLOR)
+        self.sidebar.config(bg=App.BG_COLOR)
+        self.canvas.config(bg=App.BG_COLOR)
+        for name, attr in self.__dict__.items():
+            if isinstance(attr, Label):
+                attr.config(bg=App.BG_COLOR, fg=App.FG_COLOR)
+            elif isinstance(attr, Checkbutton):
+                attr.config(bg=App.BG_COLOR, fg=App.FG_COLOR, selectcolor=App.BG_COLOR)
         self.master.update()
+        self.toast("Theme switched to dark." if App.IS_DEFAULT_THEME else "Theme switched to light.")
+
 
     def __init__(self, master):
         self.master = master
@@ -233,17 +237,17 @@ class App():
         self.add_label(self.label_color_diff_threshold, "Color diff threshold")
         self.color_diff_threshold = tk.StringVar(master)
         self.color_diff_threshold_choice = OptionMenu(self.sidebar, self.color_diff_threshold,
+                                                      str(self.config.color_diff_threshold),
                                                       *[str(i) for i in list(range(31))])
-        self.color_diff_threshold.set(str(self.config.color_diff_threshold))
         self.apply_to_grid(self.color_diff_threshold_choice, sticky=W)
 
         self.compare_faces = tk.BooleanVar(value=False)
-        self.compare_faces_choice = tk.Checkbutton(self.sidebar, text='Compare faces', variable=self.compare_faces)
-        self.apply_to_grid(self.compare_faces_choice, sticky=None)
+        self.compare_faces_choice = Checkbutton(self.sidebar, text='Compare faces', variable=self.compare_faces)
+        self.apply_to_grid(self.compare_faces_choice, sticky=W)
 
         self.overwrite = tk.BooleanVar(value=False)
-        self.overwrite_choice = tk.Checkbutton(self.sidebar, text='Overwrite cache', variable=self.overwrite)
-        self.apply_to_grid(self.overwrite_choice, sticky=None)
+        self.overwrite_choice = Checkbutton(self.sidebar, text='Overwrite cache', variable=self.overwrite)
+        self.apply_to_grid(self.overwrite_choice, sticky=W)
 
         self.label_counter_limit = Label(self.sidebar)
         self.add_label(self.label_counter_limit, "Max # of files to compare")
@@ -260,19 +264,18 @@ class App():
         self.label_sort_by = Label(self.sidebar)
         self.add_label(self.label_sort_by, "Sort for files in browsing mode")
         self.sort_by = tk.StringVar(master)
-        self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by,
+        self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by, self.config.sort_by.name,
                                          *SortBy.__members__.keys(), command=self.set_sort_by)
-        self.sort_by.set(self.config.sort_by.name)
         self.apply_to_grid(self.sort_by_choice, sticky=W)
 
         fill_canvas_var = tk.BooleanVar(value=App.fill_canvas)
-        self.fill_canvas_choice = tk.Checkbutton(self.sidebar, text='Image resize to full window',
-                                                 variable=fill_canvas_var, command=App.toggle_fill_canvas)
+        self.fill_canvas_choice = Checkbutton(self.sidebar, text='Image resize to full window',
+                                              variable=fill_canvas_var, command=App.toggle_fill_canvas)
         self.apply_to_grid(self.fill_canvas_choice, sticky=W)
 
         image_browse_recurse_var = tk.BooleanVar(value=self.config.image_browse_recursive)
-        self.image_browse_recurse = tk.Checkbutton(self.sidebar, text='Image browsing recursive',
-                                                   variable=image_browse_recurse_var, command=self.toggle_image_browse_recursive)
+        self.image_browse_recurse = Checkbutton(self.sidebar, text='Image browsing recursive',
+                                                variable=image_browse_recurse_var, command=self.toggle_image_browse_recursive)
         self.apply_to_grid(self.image_browse_recurse, sticky=W)
 
 
@@ -280,6 +283,8 @@ class App():
         self.progress_bar = None
         self.run_compare_btn = None
         self.add_button("run_compare_btn", "Run image compare", self.run_compare)
+        self.find_duplicates_btn = None
+        self.add_button("find_duplicates_btn", "Find duplicates", self.find_duplicates)
         self.prev_image_match_btn = None
         self.next_image_match_btn = None
         self.prev_group_btn = None
@@ -292,7 +297,6 @@ class App():
         self.delete_image_btn = None
         self.open_image_location_btn = None
         self.copy_image_path_btn = None
-        self.rem_dups_btn = None
         self.add_button("search_current_image_btn", "Search current image", self.set_current_image_run_search)
         self.add_button("open_image_location_btn", "Open image location", self.open_image_location)
         self.add_button("copy_image_path_btn", "Copy image path", self.copy_image_path)
@@ -317,6 +321,8 @@ class App():
         self.master.bind("<Shift-F>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.master.bind("<Shift-S>", self.toggle_slideshow)
+        self.master.bind("<MouseWheel>", self.handle_mousewheel)
+        self.master.bind("<Button-2>", self._delete_image)
 
         # Start async threads
         start_thread(self.check_files)
@@ -409,6 +415,12 @@ class App():
             message = "Slideshows ended"
         self.toast(message)
 
+    def handle_mousewheel(self, event):
+        if event.delta > 0:
+            self.show_next_image()
+        else:
+            self.show_prev_image()
+
     def set_base_dir(self) -> None:
         '''
         Change the base directory to the value provided in the UI.
@@ -444,7 +456,7 @@ class App():
     def get_search_dir(self) -> str:
         return self.get_base_dir() if self.search_dir is None else self.search_dir
 
-    def get_search_file_path(self) -> str:
+    def get_search_file_path(self) -> str | None:
         '''
         Get the search file path provided in the UI.
         '''
@@ -470,7 +482,7 @@ class App():
 
         return search_file
 
-    def get_counter_limit(self) -> int:
+    def get_counter_limit(self) -> int | None:
         counter_limit_str = self.set_counter_limit.get()
         if counter_limit_str == "":
             return None
@@ -481,7 +493,7 @@ class App():
                        "Counter limit must be an integer value.", kind="error")
             raise AssertionError("Counter limit must be an integer value.")
 
-    def get_color_diff_threshold(self) -> int:
+    def get_color_diff_threshold(self) -> int | None:
         color_diff_threshold_str = self.color_diff_threshold.get()
         if color_diff_threshold_str == "":
             return None
@@ -490,7 +502,7 @@ class App():
         except Exception:
             return self.config.color_diff_threshold
 
-    def get_inclusion_pattern(self) -> str:
+    def get_inclusion_pattern(self) -> str | None:
         inclusion_pattern = self.inclusion_pattern.get()
         if inclusion_pattern == "":
             return None
@@ -642,7 +654,7 @@ class App():
         if App.mode == Mode.SEARCH:
             self.alert("Error", "Invalid action, there should only be one group in search mode", kind="error")
             return
-        elif App.file_groups is None or len(App.file_groups) == 0:
+        if App.file_groups is None or len(App.file_groups) == 0:
             self.toast("No groups found")
             return
 
@@ -671,8 +683,7 @@ class App():
             search_image_path = self.search_image.get()
             search_image_path = get_valid_file(
                 self.get_base_dir(), search_image_path)
-            if (App.files_matched is None
-                    or search_image_path == App.files_matched[App.match_index]):
+            if (App.files_matched is None or search_image_path == App.files_matched[App.match_index]):
                 self.alert("Already set image",
                            "Current image is already the search image.",
                            kind="info")
@@ -690,7 +701,14 @@ class App():
         '''
         if (isinstance(App.img, GifImageUI)):
             App.img.stop_display()
-        App.img = self.get_image_to_fit(image_path)
+        try:
+            App.img = self.get_image_to_fit(image_path)
+        except Exception as e:
+            if "truncated" in str(e):
+                time.sleep(0.25) # If the image was just created in the directory, it's possible it's still being filled with data
+                App.img = self.get_image_to_fit(image_path)
+            else:
+                raise e
         if (isinstance(App.img, GifImageUI)):
             App.img.display(self.canvas)
         else:
@@ -698,6 +716,7 @@ class App():
         if self.label_current_image_name is None:
             self.label_current_image_name = Label(self.sidebar)
             self.add_label(self.label_current_image_name, "", pady=30)
+        self.label_current_image_name.config(bg=App.BG_COLOR, fg=App.FG_COLOR)
         relative_filepath, basename = get_relative_dirpath_split(self.base_dir, image_path)
         text = basename if relative_filepath == "" else relative_filepath + "\n" + basename
         text = _wrap_text_to_fit_length(text, 30)
@@ -758,8 +777,8 @@ class App():
                 self.add_button("next_group_btn", "Next group", self.show_next_group)
                 if not App.has_added_buttons_for_mode[Mode.SEARCH]:
                     self.add_all_mode_buttons()
-            elif App.mode == Mode.REM_DUP:
-                self.add_button("rem_dups_btn", "Remove duplicates", self.rem_dups)
+            elif App.mode == Mode.DUPLICATES:
+                pass
 
             App.has_added_buttons_for_mode[App.mode] = True
 
@@ -778,7 +797,7 @@ class App():
             return res == messagebox.YES
         return True
 
-    def run_with_progress(self, exec_func, args=None) -> None:
+    def run_with_progress(self, exec_func, args=[]) -> None:
         if not self.validate_run():
             return
 
@@ -786,20 +805,17 @@ class App():
             self.progress_bar = Progressbar(self.sidebar, orient=HORIZONTAL, length=100, mode='indeterminate')
             self.apply_to_grid(self.progress_bar)
             self.progress_bar.start()
-            if args is None:
-                exec_func()
-            else:
-                exec_func(args)
+            exec_func(*args)
             self.progress_bar.stop()
             self.progress_bar.grid_forget()
             self.destroy_grid_element("progress_bar")
 
         start_thread(run_with_progress_async, use_asyncio=False, args=[self])
 
-    def run_compare(self) -> None:
-        self.run_with_progress(self._run_compare)
+    def run_compare(self, find_duplicates=False) -> None:
+        self.run_with_progress(self._run_compare, args=[find_duplicates])
 
-    def _run_compare(self) -> None:
+    def _run_compare(self, find_duplicates=False) -> None:
         '''
         Execute operations on the Compare object in any mode. Create a new
         Compare object.
@@ -869,7 +885,7 @@ class App():
         if App.compare.is_run_search:
             self.run_search()
         else:
-            self.run_group()
+            self.run_group(find_duplicates=find_duplicates)
 
     def is_new_data_request_required(self, counter_limit, color_diff_threshold,
                                      inclusion_pattern, overwrite):
@@ -878,7 +894,7 @@ class App():
                 or App.compare.inclusion_pattern != inclusion_pattern
                 or (not App.compare.overwrite and overwrite))
 
-    def run_group(self) -> None:
+    def run_group(self, find_duplicates=False) -> None:
         self.label_state["text"] = _wrap_text_to_fit_length(
             "Running image comparisons...", 30)
         App.files_grouped, App.file_groups = App.compare.run()
@@ -895,17 +911,43 @@ class App():
         App.max_group_index = max(App.file_groups.keys())
         self.add_buttons_for_mode()
         App.current_group_index = 0
-        has_found_stranded_group_members = False
 
-        while len(App.file_groups[App.group_indexes[App.current_group_index]]) == 1:
-            has_found_stranded_group_members = True
-            App.current_group_index += 1
+        if find_duplicates:
+            App.file_groups = {}
+            App.group_indexes = {}
+            duplicates = App.compare.get_probable_duplicates()
+            if len(duplicates) == 0:
+                App.has_image_matches = False
+                self.label_state["text"] = "Set a directory and search file."
+                self.alert("No Groups Found",
+                            "None of the files can be grouped with current settings.",
+                            kind="info")
+                return
+            self.set_mode(Mode.DUPLICATES, do_update=True)
+            print("Probable duplicates:")
+            pprint.pprint(duplicates, width=160)
+            duplicate_group_count = 0
+            for file1, file2 in duplicates:
+                App.file_groups[duplicate_group_count] = {
+                    file1: 0,
+                    file2: 0
+                }
+                App.group_indexes[duplicate_group_count] = duplicate_group_count
+                duplicate_group_count += 1
+            App.max_group_index = duplicate_group_count
+            self.set_current_group()
+        else:
+            has_found_stranded_group_members = False
 
-        self.set_current_group()
-        if has_found_stranded_group_members:
-            self.alert("Stranded Group Members Found",
-                        "Some group members were left stranded by the grouping process.",
-                        kind="info")
+            while len(App.file_groups[App.group_indexes[App.current_group_index]]) == 1:
+                has_found_stranded_group_members = True
+                App.current_group_index += 1
+
+            self.set_current_group()
+            if has_found_stranded_group_members:
+                self.alert("Stranded Group Members Found",
+                            "Some group members were left stranded by the grouping process.",
+                            kind="info")
 
     def run_search(self) -> None:
         self.label_state["text"] = _wrap_text_to_fit_length(
@@ -930,7 +972,10 @@ class App():
 
         self.add_buttons_for_mode()
         self.create_image(App.files_matched[App.match_index])
-        
+
+    def find_duplicates(self):
+        self.run_compare(find_duplicates=True)
+
     def set_group_state_label(self, group_number, size):
         if group_number is None:
             self.label_state["text"] = ""
@@ -1051,7 +1096,7 @@ class App():
         After a file has been removed, delete the cached image path for it and
         remove the group if only one file remains in that group.
 
-        NOTE: This would be more complicated if there was not a guarantee that
+        NOTE: This would be more complex if there was not a guarantee that
         groups are disjoint.
         '''
         if len(App.files_matched) < 3:
@@ -1070,8 +1115,8 @@ class App():
                            "There are no more image groups remaining for this directory and current filter settings.",
                            kind="info")
                 App.current_group_index = 0
-                App.files_grouped = None
-                App.file_groups = None
+                App.files_grouped = {}
+                App.file_groups = {}
                 App.match_index = 0
                 App.files_matched = []
                 App.group_indexes = []
@@ -1155,7 +1200,7 @@ class App():
         if getattr(self, button_ref_name) is None:
             button = Button(master=self.sidebar, text=text, command=command)
             setattr(self, button_ref_name, button)
-            button
+            button # for some reason this is necessary to maintain the reference?
             self.apply_to_grid(button)
 
     def new_entry(self, text_variable, text=""):
@@ -1184,5 +1229,7 @@ if __name__ == "__main__":
     root.columnconfigure(1, weight=9)
     root.rowconfigure(0, weight=1)
     app = App(root)
-    root.mainloop()
-    exit()
+    try:
+        root.mainloop()
+    except KeyboardInterrupt:
+        pass

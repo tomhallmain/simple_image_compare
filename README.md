@@ -23,15 +23,18 @@ It is not implemented yet, but there will ultimately be zoom and drag functional
 
 A directory must be set and/or a comparison must be run for the below bindings to work.
 
-| Binding     | Effect               |
-|-------------|----------------------|
-| Left        | Show previous image  |
-| Right       | Show next image      |
-| Shift-Left  | Show prev group      |
-| Shift-Right | Show next group      |
-| Shift-Enter | Open image location  |
-| Shift-Delete| Delete image         |
-| F11         | Toggle fullscreen    |
+| Binding          | Effect               |
+|------------------|----------------------|
+| Left Arrow       | Show previous image  |
+| Right Arrow      | Show next image      |
+| Mouse Wheel Up   | Show previous image  |
+| Mouse Wheel Down | Show next image      |
+| Shift-Left       | Show prev group      |
+| Shift-Right      | Show next group      |
+| Shift-Enter      | Open image location  |
+| Shift-Delete     | Delete image         |
+| Mouse Wheel Click| Delete image         |
+| F11              | Toggle fullscreen    |
 
 ## Limitations
 
