@@ -81,7 +81,6 @@ class ImageDetails():
 
     def add_label(self, label_ref, text, row=0, column=0, wraplength=500):
         label_ref['text'] = text
-#        label_ref.pack()
         label_ref.grid(column=column, row=row, sticky=W)
         label_ref.config(wraplength=wraplength, justify=LEFT, bg=Style.BG_COLOR, fg=Style.FG_COLOR)
 

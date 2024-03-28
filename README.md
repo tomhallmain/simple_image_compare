@@ -21,29 +21,28 @@ It is not implemented yet, but there will ultimately be zoom and drag functional
 
 ## Configuration
 
-Setting `sort_by` will change the default image browsing sort setting upon starting the application.
+Setting `file_check_interval_seconds` defines the interval between auto-updates to identify recent file changes.
 
-Setting `trash_folder` will change the target folder for image deletion. If not set, it will try to send to your system's default trash folder.
+Setting `sort_by` defines the default image browsing sort setting upon starting the application.
 
-If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) then opening image details for an image with an AI prompt will give prompt information found in the image.
+Setting `trash_folder` defines the target folder for image deletion. If not set, deletion will send the image to your system's default trash folder.
 
-## UI Keybindings
+If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) then opening image details for an image with an stable diffusion prompt will give prompt information found in the image.
+
+## UI Bindings
 
 A directory must be set and/or a comparison must be run for the below bindings to work.
 
-| Binding          | Effect               |
-|------------------|----------------------|
-| Shift-D          | Show image details   |
-| Left Arrow       | Show previous image  |
-| Right Arrow      | Show next image      |
-| Mouse Wheel Up   | Show previous image  |
-| Mouse Wheel Down | Show next image      |
-| Shift-Left       | Show prev group      |
-| Shift-Right      | Show next group      |
-| Shift-Enter      | Open image location  |
-| Shift-Delete     | Delete image         |
-| Mouse Wheel Click| Delete image         |
-| F11              | Toggle fullscreen    |
+| Keys             | Mouse            | Effect               |
+|------------------|------------------|----------------------|
+| Shift-D          |                  | Show image details   |
+| Left Arrow       | Mouse Wheel Up   | Show previous image  |
+| Right Arrow      | Mouse Wheel Down | Show next image      |
+| Shift-Left       |                  | Show prev group      |
+| Shift-Right      |                  | Show next group      |
+| Shift-Enter      |                  | Open image location  |
+| Shift-Delete     | Mouse Wheel Click| Delete image         |
+| F11              |                  | Toggle fullscreen    |
 
 ## Limitations
 
