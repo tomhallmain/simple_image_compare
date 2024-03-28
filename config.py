@@ -1,4 +1,5 @@
 import json
+import os
 
 from file_browser import SortBy
 
@@ -18,6 +19,7 @@ class Config:
             self.toasts_persist_seconds = int(self.dict["toasts_persist_seconds"])
             self.delete_instantly = self.dict["delete_instantly"]
             self.trash_folder = self.dict["trash_folder"]
+            self.sd_prompt_reader_loc = self.set_sd_prompt_reader_loc()
             try:
                 self.sort_by = SortBy[self.dict["sort_by"]]
             except Exception:
@@ -39,9 +41,20 @@ class Config:
             self.toasts_persist_seconds = 2
             self.delete_instantly = False
             self.trash_folder = None
+            self.sd_prompt_reader_loc = None
 
         if self.print_settings:
             self.print_config_settings()
+
+    def set_sd_prompt_reader_loc(self):
+        loc = self.dict["sd_prompt_reader_loc"]
+        if loc and loc.strip() != "":
+            if "{HOME}" in loc:
+                loc = loc.strip().replace("{HOME}", os.path.expanduser("~"))
+            if not os.path.isdir(loc):
+                raise Exception(f"Invalid location provided for SD prompt reader: {loc}")
+            return loc
+        return None
 
     def print_config_settings(self):
         print("Settings active:")
@@ -57,4 +70,10 @@ class Config:
             print(f" - Expand images to fill canvas")
         if self.image_browse_recursive:
             print(f" - Recursive file browsing")
+        if self.sd_prompt_reader_loc is not None:
+            print(f" - Using stable diffusion prompt reader path at {self.sd_prompt_reader_loc}")
+        else:
+            print(f" - Stable diffusion prompt reader location is not set or invalid.")
         print(f" - Max files per compare: {self.file_counter_limit}")
+
+config = Config()

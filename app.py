@@ -19,8 +19,10 @@ from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
 from compare import Compare, get_valid_file
-from config import Config
+from config import config
 from file_browser import FileBrowser, SortBy
+from image_details import ImageDetails # must import after config because of dynamic import
+from style import Style
 from utils import (
     _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, periodic, start_thread
 )
@@ -42,10 +44,6 @@ class Mode(Enum):
     SEARCH = 2
     GROUP = 3
     DUPLICATES = 4
-
-
-config = Config()
-
 
 class ResizingCanvas(Canvas):
     '''
@@ -145,10 +143,6 @@ class App():
     UI for comparing image files and making related file changes.
     '''
 
-    IS_DEFAULT_THEME = False
-    BG_COLOR = ""
-    FG_COLOR = ""
-
     compare = None
     file_browser = FileBrowser(recursive=config.image_browse_recursive, sort_by=config.sort_by)
     mode = Mode.BROWSE
@@ -156,6 +150,7 @@ class App():
     fullscreen = False
     search_file_path = ""
     img = None
+    img_path = None
     files_grouped = {}
     file_groups = {}
     files_matched = []
@@ -178,25 +173,25 @@ class App():
         self.master.set_theme(theme, themebg="black")
 
     def toggle_theme(self):
-        if App.IS_DEFAULT_THEME:
+        if Style.IS_DEFAULT_THEME:
             self.configure_style("breeze") # Changes the window to light theme
-            App.BG_COLOR = "gray"
-            App.FG_COLOR = "black"
+            Style.BG_COLOR = "gray"
+            Style.FG_COLOR = "black"
         else:
             self.configure_style("black") # Changes the window to dark theme
-            App.BG_COLOR = "#26242f"
-            App.FG_COLOR = "white"
-        App.IS_DEFAULT_THEME = not App.IS_DEFAULT_THEME
-        self.master.config(bg=App.BG_COLOR)
-        self.sidebar.config(bg=App.BG_COLOR)
-        self.canvas.config(bg=App.BG_COLOR)
+            Style.BG_COLOR = "#26242f"
+            Style.FG_COLOR = "white"
+        Style.IS_DEFAULT_THEME = not Style.IS_DEFAULT_THEME
+        self.master.config(bg=Style.BG_COLOR)
+        self.sidebar.config(bg=Style.BG_COLOR)
+        self.canvas.config(bg=Style.BG_COLOR)
         for name, attr in self.__dict__.items():
             if isinstance(attr, Label):
-                attr.config(bg=App.BG_COLOR, fg=App.FG_COLOR)
+                attr.config(bg=Style.BG_COLOR, fg=Style.FG_COLOR)
             elif isinstance(attr, Checkbutton):
-                attr.config(bg=App.BG_COLOR, fg=App.FG_COLOR, selectcolor=App.BG_COLOR)
+                attr.config(bg=Style.BG_COLOR, fg=Style.FG_COLOR, selectcolor=Style.BG_COLOR)
         self.master.update()
-        self.toast("Theme switched to dark." if App.IS_DEFAULT_THEME else "Theme switched to light.")
+        self.toast("Theme switched to dark." if Style.IS_DEFAULT_THEME else "Theme switched to light.")
 
 
     def __init__(self, master):
@@ -285,6 +280,8 @@ class App():
         self.add_button("run_compare_btn", "Run image compare", self.run_compare)
         self.find_duplicates_btn = None
         self.add_button("find_duplicates_btn", "Find duplicates", self.find_duplicates)
+        self.image_details_btn = None
+        self.add_button("image_details_btn", "Image details", self.get_image_details)
         self.prev_image_match_btn = None
         self.next_image_match_btn = None
         self.prev_group_btn = None
@@ -320,6 +317,7 @@ class App():
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Shift-F>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
+        self.master.bind("<Shift-D>", self.get_image_details)
         self.master.bind("<Shift-S>", self.toggle_slideshow)
         self.master.bind("<MouseWheel>", self.handle_mousewheel)
         self.master.bind("<Button-2>", self._delete_image)
@@ -420,6 +418,15 @@ class App():
             self.show_next_image()
         else:
             self.show_prev_image()
+
+    def get_image_details(self, event=None):
+        top_level = tk.Toplevel(self.master, bg=Style.BG_COLOR)
+        top_level.title("Image Details")
+        top_level.geometry("600x300")
+        try:
+            image_details = ImageDetails(top_level, App.img, App.img_path, self.config.sd_prompt_reader_loc)
+        except Exception as e:
+            self.alert("Image Details Error", str(e), kind="error")
 
     def set_base_dir(self) -> None:
         '''
@@ -716,8 +723,9 @@ class App():
         if self.label_current_image_name is None:
             self.label_current_image_name = Label(self.sidebar)
             self.add_label(self.label_current_image_name, "", pady=30)
-        self.label_current_image_name.config(bg=App.BG_COLOR, fg=App.FG_COLOR)
+        self.label_current_image_name.config(bg=Style.BG_COLOR, fg=Style.FG_COLOR)
         relative_filepath, basename = get_relative_dirpath_split(self.base_dir, image_path)
+        App.img_path = image_path
         text = basename if relative_filepath == "" else relative_filepath + "\n" + basename
         text = _wrap_text_to_fit_length(text, 30)
         if extra_text is not None:
@@ -919,8 +927,8 @@ class App():
             if len(duplicates) == 0:
                 App.has_image_matches = False
                 self.label_state["text"] = "Set a directory and search file."
-                self.alert("No Groups Found",
-                            "None of the files can be grouped with current settings.",
+                self.alert("No Duplicates Found",
+                            "None of the files appear to be duplicates based on the current settings.",
                             kind="info")
                 return
             self.set_mode(Mode.DUPLICATES, do_update=True)
@@ -1160,16 +1168,17 @@ class App():
         y = 0
 
         # Create the toast on the top level
-        toast = tk.Toplevel(self.master, bg='#008CBA')
+        toast = tk.Toplevel(self.master, bg=Style.BG_COLOR)
         toast.geometry(f'{width}x{height}+{int(x)}+{int(y)}')
         self.container = tk.Frame(toast)
+        self.container.config(bg=Style.BG_COLOR)
         self.container.pack(fill=tk.BOTH, expand=tk.YES)
         label = tk.Label(
             self.container,
             text=message,
             anchor=tk.NW,
-            bg='#008CBA',
-            fg='white',
+            bg=Style.BG_COLOR,
+            fg=Style.FG_COLOR,
             font=('Helvetica', 12)
         )
         label.grid(row=1, column=1, sticky="NSEW", padx=10, pady=(0, 5))

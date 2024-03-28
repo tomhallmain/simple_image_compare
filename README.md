@@ -19,12 +19,21 @@ After setting a directory before a comparison is run, the UI can be used as an i
 
 It is not implemented yet, but there will ultimately be zoom and drag functionality on this image browser, as well as when viewing grouped images after a comparison has been run.
 
+## Configuration
+
+Setting `sort_by` will change the default image browsing sort setting upon starting the application.
+
+Setting `trash_folder` will change the target folder for image deletion. If not set, it will try to send to your system's default trash folder.
+
+If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) then opening image details for an image with an AI prompt will give prompt information found in the image.
+
 ## UI Keybindings
 
 A directory must be set and/or a comparison must be run for the below bindings to work.
 
 | Binding          | Effect               |
 |------------------|----------------------|
+| Shift-D          | Show image details   |
 | Left Arrow       | Show previous image  |
 | Right Arrow      | Show next image      |
 | Mouse Wheel Up   | Show previous image  |

@@ -11,5 +11,6 @@
   "sort_by": "CREATION_TIME",
   "toasts_persist_seconds": 2,
   "delete_instantly": false,
-  "trash_folder": null
+  "trash_folder": null,
+  "sd_prompt_reader_loc": "{HOME}\\stable-diffusion-prompt-reader"
 }
