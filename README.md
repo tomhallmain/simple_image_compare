@@ -11,7 +11,7 @@ Run `app.py` to start the UI, or provide the location of the directory containin
 
 Useful for detecting duplicates or finding associations between large unstructured sets of image files. File management controls are available after the image analysis has completed.
 
-Individual images can be passed to search against the full image data set by passing flag `--search` with the path of the search file, or selecting setting a search file in the UI before running comparison.
+Individual images can be passed to search against the full image data set by passing flag `--search` with the path of the search file, or setting a search file in the UI before running comparison.
 
 ## Image Browser
 
@@ -44,7 +44,7 @@ A directory must be set and/or a comparison must be run for the below bindings t
 | Shift-G          |                  | Go to next mark      |
 | Left Arrow       | Mouse Wheel Up   | Show previous image  |
 | Right Arrow      | Mouse Wheel Down | Show next image      |
-| Shift-Left       |                  | Show prev group      |
+| Shift-Left       |                  | Show previous group  |
 | Shift-Right      |                  | Show next group      |
 | Shift-Enter      |                  | Open image location  |
 | Shift-Delete     | Mouse Wheel Click| Delete image         |
