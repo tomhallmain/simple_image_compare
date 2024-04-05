@@ -36,6 +36,12 @@ A directory must be set and/or a comparison must be run for the below bindings t
 | Keys             | Mouse            | Effect               |
 |------------------|------------------|----------------------|
 | Shift-D          |                  | Show image details   |
+| Home             |                  | Reset image browser  |
+| Page Up          |                  | Page through images  |
+| Page Down        |                  | Page through images  |
+| Shift-M          |                  | Add a mark           |
+| Shift-R          |                  | Remove a mark        |
+| Shift-G          |                  | Go to next mark      |
 | Left Arrow       | Mouse Wheel Up   | Show previous image  |
 | Right Arrow      | Mouse Wheel Down | Show next image      |
 | Shift-Left       |                  | Show prev group      |
