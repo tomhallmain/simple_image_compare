@@ -157,6 +157,37 @@ class FileBrowser:
                 self.file_cursor = 0
             return files[self.file_cursor]
 
+    def go_to_file(self, filepath):
+        files = self.get_files()
+        if filepath in files:
+            self.file_cursor = files.index(filepath)
+
+    def page_down(self):
+        paging_length = self._get_paging_length()
+        test_cursor = self.file_cursor + paging_length
+        if test_cursor > len(self._files):
+            test_cursor = 1
+        with self.cursor_lock:
+            self.file_cursor = test_cursor - 1
+        return self.next_file()
+
+    def page_up(self):
+        paging_length = self._get_paging_length()
+        test_cursor = self.file_cursor - paging_length
+        if test_cursor < 0:
+            test_cursor = -1
+        with self.cursor_lock:
+            self.file_cursor = test_cursor + 1
+        return self.previous_file()
+
+    def _get_paging_length(self):
+        tenth_of_total_count = int(len(self._files) / 10)
+        if tenth_of_total_count > 200:
+            return 200
+        if tenth_of_total_count == 0:
+            return 1
+        return tenth_of_total_count
+
     def _get_sortable_files(self) -> List[SortableFile]:
         self._files = []
         if not os.path.exists(self.directory):
@@ -220,10 +251,10 @@ class FileBrowser:
             # Sort by full path first, then by extension
             if self.sort == Sort.DESC:
                 sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=True)
-                sortable_files.sort(key=sf.size, reverse=True)
+                sortable_files.sort(key=lambda sf: sf.size, reverse=True)
             elif self.sort == Sort.ASC:
                 sortable_files.sort(key=lambda sf: sf.full_file_path.lower())
-                sortable_files.sort(key=sf.size)
+                sortable_files.sort(key=lambda sf: sf.size)
 
 
         # After sorting, extract the file path only

@@ -4,9 +4,27 @@ import os
 from file_browser import SortBy
 
 class Config:
+    CONFIG_FILE_LOC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+
     def __init__(self):
+        self.dict = {}
+        self.color_diff_threshold = 15
+        self.escape_backslash_filepaths = False
+        self.file_counter_limit = 40000
+        self.fill_canvas = False
+        self.image_browse_recursive = False
+        self.print_settings = True
+        self.show_toasts = True
+        self.slideshow_interval_seconds = 7
+        self.file_check_interval_seconds = 10
+        self.sort_by = SortBy.NAME
+        self.toasts_persist_seconds = 2
+        self.delete_instantly = False
+        self.trash_folder = None
+        self.sd_prompt_reader_loc = None
+
         try:
-            self.dict = json.load(open("config.json", "r"))
+            self.dict = json.load(open(Config.CONFIG_FILE_LOC, "r"))
             self.color_diff_threshold = int(self.dict["color_diff_threshold"])
             self.escape_backslash_filepaths = self.dict["escape_backslash_filepaths"]
             self.file_counter_limit = int(self.dict["file_counter_limit"])
@@ -19,7 +37,7 @@ class Config:
             self.toasts_persist_seconds = int(self.dict["toasts_persist_seconds"])
             self.delete_instantly = self.dict["delete_instantly"]
             self.trash_folder = self.dict["trash_folder"]
-            self.sd_prompt_reader_loc = self.set_sd_prompt_reader_loc()
+            self.sd_prompt_reader_loc = self.validate_and_set_directory(key="sd_prompt_reader_loc")
             try:
                 self.sort_by = SortBy[self.dict["sort_by"]]
             except Exception:
@@ -27,32 +45,17 @@ class Config:
         except Exception as e:
             print(e)
             print("Unable to load config. Ensure config.json file is located in the base directory of simple-image-comare.")
-            self.dict = {}
-            self.color_diff_threshold = 15
-            self.escape_backslash_filepaths = False
-            self.file_counter_limit = 40000
-            self.fill_canvas = False
-            self.image_browse_recursive = False
-            self.print_settings = True
-            self.show_toasts = True
-            self.slideshow_interval_seconds = 7
-            self.file_check_interval_seconds = 10
-            self.sort_by = SortBy.NAME
-            self.toasts_persist_seconds = 2
-            self.delete_instantly = False
-            self.trash_folder = None
-            self.sd_prompt_reader_loc = None
 
         if self.print_settings:
             self.print_config_settings()
 
-    def set_sd_prompt_reader_loc(self):
-        loc = self.dict["sd_prompt_reader_loc"]
+    def validate_and_set_directory(self, key):
+        loc = self.dict[key]
         if loc and loc.strip() != "":
             if "{HOME}" in loc:
                 loc = loc.strip().replace("{HOME}", os.path.expanduser("~"))
             if not os.path.isdir(loc):
-                raise Exception(f"Invalid location provided for SD prompt reader: {loc}")
+                raise Exception(f"Invalid location provided for {key}: {loc}")
             return loc
         return None
 

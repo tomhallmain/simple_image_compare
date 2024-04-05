@@ -145,6 +145,8 @@ class App():
 
     compare = None
     file_browser = FileBrowser(recursive=config.image_browse_recursive, sort_by=config.sort_by)
+    file_marks = []
+    mark_cursor = -1
     mode = Mode.BROWSE
     fill_canvas = config.fill_canvas
     fullscreen = False
@@ -308,8 +310,8 @@ class App():
         self.set_mode(Mode.BROWSE)
 
         # Key bindings
-        self.master.bind('<Left>', self.show_prev_image_key)
-        self.master.bind('<Right>', self.show_next_image_key)
+        self.master.bind('<Left>', self.show_prev_image)
+        self.master.bind('<Right>', self.show_next_image)
         self.master.bind('<Shift-Left>', self.show_prev_group)
         self.master.bind('<Shift-Right>', self.show_next_group)
         self.master.bind('<Shift-Enter>', self.open_image_location)
@@ -321,6 +323,12 @@ class App():
         self.master.bind("<Shift-S>", self.toggle_slideshow)
         self.master.bind("<MouseWheel>", self.handle_mousewheel)
         self.master.bind("<Button-2>", self._delete_image)
+        self.master.bind("<Shift-M>", self.add_mark)
+        self.master.bind("<Shift-R>", self.remove_mark)
+        self.master.bind("<Shift-G>", self.go_to_mark)
+        self.master.bind("<Home>", self.home)
+        self.master.bind("<Prior>", self.page_up)
+        self.master.bind("<Next>", self.page_down)
 
         # Start async threads
         start_thread(self.check_files)
@@ -565,10 +573,7 @@ class App():
             else:
                 self.alert("Error", "Somehow, the search file is invalid", kind="error")
 
-    def show_prev_image_key(self, event) -> None:
-        self.show_prev_image(False)
-
-    def show_prev_image(self, show_alert=True) -> None:
+    def show_prev_image(self, event=None, show_alert=True) -> None:
         '''
         If similar image results are present in any mode, display the previous
         in the list of matches.
@@ -596,10 +601,7 @@ class App():
         self.master.update()
         self.create_image(App.files_matched[App.match_index])
 
-    def show_next_image_key(self, event) -> None:
-        self.show_next_image(False)
-
-    def show_next_image(self, show_alert=True) -> None:
+    def show_next_image(self, event=None, show_alert=True) -> None:
         '''
         If similar image results are present in any mode, display the next
         in the list of matches.
@@ -991,6 +993,56 @@ class App():
             self.label_state["text"] = _wrap_text_to_fit_length(
                 f"Group {group_number + 1} of {len(App.file_groups)}\nSize: {size}", 30)
 
+    def add_mark(self, event=None):
+        if not App.mode == Mode.BROWSE:
+            raise Exception("Marks currently only available in Browsing mode.")
+        App.file_marks.append(App.img_path)
+        self.toast(f"Mark added. Total set: {len(App.file_marks)}")
+
+    def remove_mark(self, event=None):
+        if not App.mode == Mode.BROWSE:
+            raise Exception("Marks currently only available in Browsing mode.")
+        if App.img_path in App.file_marks:
+            App.file_marks.remove(App.img_path)
+            remaining_marks_count = len(App.file_marks)
+            if App.mark_cursor >= remaining_marks_count:
+                App.mark_cursor = -1
+            self.toast(f"Mark removed. Remaining: {remaining_marks_count}")
+        else:
+            self.toast("No mark found for current file.")
+
+    def go_to_mark(self, event=None):
+        if not App.mode == Mode.BROWSE:
+            raise Exception("Marks currently only available in Browsing mode.")
+        if len(App.file_marks) == 0:
+            self.toast("No marks have been set. Use Shift+M to set a mark.")
+        App.mark_cursor += 1
+        if App.mark_cursor >= len(App.file_marks):
+            App.mark_cursor = 0
+        marked_file = App.file_marks[App.mark_cursor]
+        App.file_browser.go_to_file(marked_file)
+        self.create_image(marked_file)
+        self.master.update()
+
+    def home(self, event=None):
+        if not App.mode == Mode.BROWSE:
+            raise Exception("Action currently only available in Browsing mode.")
+        App.file_browser.refresh()
+        self.create_image(App.file_browser.next_file())
+        self.master.update()
+
+    def page_up(self, event=None):
+        if not App.mode == Mode.BROWSE:
+            raise Exception("Page up/down currently only available in Browsing mode.")
+        self.create_image(App.file_browser.page_up())
+        self.master.update()
+
+    def page_down(self, event=None):
+        if not App.mode == Mode.BROWSE:
+            raise Exception("Page up/down currently only available in Browsing mode.")
+        self.create_image(App.file_browser.page_down())
+        self.master.update()
+
     def is_toggled_search_image(self):
         return App.mode == Mode.SEARCH and not App.is_toggled_view_matches
 
@@ -1005,10 +1057,7 @@ class App():
             filepath = App.files_matched[App.match_index]
         return get_valid_file(self.get_base_dir(), filepath)
 
-    def open_image_location_key(self, event):
-        self.open_image_location()
-
-    def open_image_location(self):
+    def open_image_location(self, event=None):
         filepath = self.get_active_image_filepath()
 
         if filepath is not None:
@@ -1019,7 +1068,7 @@ class App():
 
     def copy_image_path(self):
         filepath = self.file_browser.current_file()
-        if sys.platform=='win32':
+        if sys.platform == 'win32':
             filepath = os.path.normpath(filepath)
             if self.config.escape_backslash_filepaths:
                 filepath = filepath.replace("\\", "\\\\")
