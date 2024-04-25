@@ -4,13 +4,17 @@
   "file_counter_limit": 40000,
   "fill_canvas": false,
   "image_browse_recursive": false,
+  "image_tagging_enabled": true,
   "print_settings": true,
   "show_toasts": true,
   "slideshow_interval_seconds": 7,
   "file_check_interval_seconds": 10,
+  "default_main_window_size": "1400x950",
   "sort_by": "CREATION_TIME",
   "toasts_persist_seconds": 2,
   "delete_instantly": false,
+  "move_marks_overwrite_existing_file": false,
   "trash_folder": null,
-  "sd_prompt_reader_loc": "{HOME}\\stable-diffusion-prompt-reader"
+  "sd_prompt_reader_loc": "{HOME}\\stable-diffusion-prompt-reader",
+  "tag_suggestions_file": "tag_suggestions.json"
 }

@@ -15,7 +15,7 @@ Individual images can be passed to search against the full image data set by pas
 
 ## Image Browser
 
-After setting a directory before a comparison is run, the UI can be used as an image file browser. This is especially useful on Windows 11 as there is an option to auto-resize images to fill the screen as well as to auto-refresh the directory files, which the default Windows Photo Viewer application does not support.
+After setting a directory before a comparison is run, the UI can be used as an image file browser. This is especially useful on Windows 11 as there is an option to auto-resize images to fill the screen as well as to auto-refresh the directory files, which the default Windows Photo Viewer application does not support. In addition, tests indicate that it supports quicker and smoother transitions between images as well as a faster load time for directories with many images in some cases.
 
 It is not implemented yet, but there will ultimately be zoom and drag functionality on this image browser, as well as when viewing grouped images after a comparison has been run.
 
@@ -27,21 +27,24 @@ Setting `sort_by` defines the default image browsing sort setting upon starting 
 
 Setting `trash_folder` defines the target folder for image deletion. If not set, deletion will send the image to your system's default trash folder.
 
-If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) then opening image details for an image with an stable diffusion prompt will give prompt information found in the image.
+If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) then opening image details for an image with a stable diffusion prompt will give prompt information found in the image.
 
 ## UI Bindings
 
-A directory must be set and/or a comparison must be run for the below bindings to work.
+A directory with images must be set before most of the below bindings will have any effect. The group bindings are only functional in GROUP mode after a comparison has been run.
 
 | Keys             | Mouse            | Effect               |
 |------------------|------------------|----------------------|
+| Shift-H          |                  | Show help window     |
 | Shift-D          |                  | Show image details   |
 | Home             |                  | Reset image browser  |
 | Page Up          |                  | Page through images  |
 | Page Down        |                  | Page through images  |
-| Shift-M          |                  | Add a mark           |
-| Shift-R          |                  | Remove a mark        |
+| Shift-M          |                  | Add/remove a mark    |
+| Shift-N          |                  | Add marks from last  |
 | Shift-G          |                  | Go to next mark      |
+| Shift-C          |                  | Copy marks list      |
+| Ctrl-M           |                  | Move marks to dir    |
 | Left Arrow       | Mouse Wheel Up   | Show previous image  |
 | Right Arrow      | Mouse Wheel Down | Show next image      |
 | Shift-Left       |                  | Show previous group  |

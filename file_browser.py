@@ -16,6 +16,17 @@ class SortableFile:
         self.root, self.extension = os.path.splitext(self.basename)
         self.creation_time = datetime.fromtimestamp(os.path.getctime(full_file_path))
         self.size = os.path.getsize(full_file_path)
+        self.tags = self.get_tags()
+
+    def get_tags(self):
+        tags = []
+
+        try:
+            pass
+        except Exception:
+            pass
+
+        return tags
 
     def __eq__(self, other):
         if not isinstance(other, SortableFile):
@@ -83,7 +94,7 @@ class FileBrowser:
         self._get_sortable_files()
         files = self.get_files()
         self.checking_files = len(files) > 0 and len(files) < 5000 # Avoid rechecking in directories with many files
-        if file_check and current_file:
+        if file_check and current_file and os.path.isfile(current_file):
             with self.cursor_lock:
                 self.file_cursor = files.index(current_file)
                 if self.file_cursor > -1:
@@ -99,9 +110,10 @@ class FileBrowser:
 
     def update_cursor_to_new_images(self):
         if len(self._new_files) == 0:
-            return
+            return False
         with self.cursor_lock:
             self.file_cursor = self.filepaths.index(self._new_files[0]) - 1
+        return True
 
     def set_directory(self, directory):
         self.directory = directory
@@ -161,6 +173,18 @@ class FileBrowser:
         files = self.get_files()
         if filepath in files:
             self.file_cursor = files.index(filepath)
+
+    def select_series(self, start_file, end_file):
+        files = self.get_files()
+        selected = []
+        if start_file in files and end_file in files:
+            start_index = files.index(start_file)
+            end_index = files.index(end_file)
+            if start_index > end_index:
+                selected.extend(files[end_index:start_index+1])
+            else:
+                selected.extend(files[start_index:end_index+1])
+        return selected
 
     def page_down(self):
         paging_length = self._get_paging_length()

@@ -21,10 +21,11 @@ from PIL import ImageTk, Image
 from compare import Compare, get_valid_file
 from config import config
 from file_browser import FileBrowser, SortBy
+from help_and_config import HelpAndConfig
 from image_details import ImageDetails # must import after config because of dynamic import
 from style import Style
 from utils import (
-    _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, periodic, start_thread
+    _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, move_file, periodic, start_thread
 )
 
 
@@ -44,6 +45,16 @@ class Mode(Enum):
     SEARCH = 2
     GROUP = 3
     DUPLICATES = 4
+
+    def readable_str(self):
+        if self == Mode.BROWSE:
+            return "Browsing Mode"
+        if self == Mode.SEARCH:
+            return "Searching Mode"
+        if self == Mode.GROUP:
+            return "Group Comparison Mode"
+        if self == Mode.DUPLICATES:
+            return "Duplicate Detection Mode"
 
 class ResizingCanvas(Canvas):
     '''
@@ -150,6 +161,7 @@ class App():
     mode = Mode.BROWSE
     fill_canvas = config.fill_canvas
     fullscreen = False
+    delete_lock = False
     search_file_path = ""
     img = None
     img_path = None
@@ -170,6 +182,7 @@ class App():
         Mode.SEARCH: False, 
         Mode.DUPLICATES: False
     }
+    last_mark_target_dir = None
 
     def configure_style(self, theme):
         self.master.set_theme(theme, themebg="black")
@@ -222,7 +235,7 @@ class App():
         self.toggle_theme_btn = None
         self.add_button("toggle_theme_btn", "Toggle theme", self.toggle_theme)
         self.add_button("set_base_dir_btn", "Set directory", self.set_base_dir)
-        self.set_base_dir_box = self.new_entry(None, text="Add dirpath...")
+        self.set_base_dir_box = self.new_entry(text="Add dirpath...")
         self.apply_to_grid(self.set_base_dir_box)
 
         self.add_button("create_img_btn", "Set search file", self.set_search_image)
@@ -232,7 +245,7 @@ class App():
 
         self.label_color_diff_threshold = Label(self.sidebar)
         self.add_label(self.label_color_diff_threshold, "Color diff threshold")
-        self.color_diff_threshold = tk.StringVar(master)
+        self.color_diff_threshold = tk.StringVar()
         self.color_diff_threshold_choice = OptionMenu(self.sidebar, self.color_diff_threshold,
                                                       str(self.config.color_diff_threshold),
                                                       *[str(i) for i in list(range(31))])
@@ -248,7 +261,7 @@ class App():
 
         self.label_counter_limit = Label(self.sidebar)
         self.add_label(self.label_counter_limit, "Max # of files to compare")
-        self.set_counter_limit = self.new_entry(None)
+        self.set_counter_limit = self.new_entry()
         self.set_counter_limit.insert(0, str(self.config.file_counter_limit))
         self.apply_to_grid(self.set_counter_limit, sticky=W)
 
@@ -260,7 +273,7 @@ class App():
 
         self.label_sort_by = Label(self.sidebar)
         self.add_label(self.label_sort_by, "Sort for files in browsing mode")
-        self.sort_by = tk.StringVar(master)
+        self.sort_by = tk.StringVar()
         self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by, self.config.sort_by.name,
                                          *SortBy.__members__.keys(), command=self.set_sort_by)
         self.apply_to_grid(self.sort_by_choice, sticky=W)
@@ -320,12 +333,15 @@ class App():
         self.master.bind("<Shift-F>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.master.bind("<Shift-D>", self.get_image_details)
+        self.master.bind("<Shift-H>", self.get_help_and_config)
         self.master.bind("<Shift-S>", self.toggle_slideshow)
         self.master.bind("<MouseWheel>", self.handle_mousewheel)
         self.master.bind("<Button-2>", self._delete_image)
-        self.master.bind("<Shift-M>", self.add_mark)
-        self.master.bind("<Shift-R>", self.remove_mark)
+        self.master.bind("<Shift-M>", self.add_or_remove_mark_for_current_image)
+        self.master.bind("<Shift-N>", self.add_all_marks_from_last)
         self.master.bind("<Shift-G>", self.go_to_mark)
+        self.master.bind("<Shift-C>", self.copy_marks_list)
+        self.master.bind("<Control-m>", self.move_marks)
         self.master.bind("<Home>", self.home)
         self.master.bind("<Prior>", self.page_up)
         self.master.bind("<Next>", self.page_down)
@@ -355,7 +371,7 @@ class App():
         Change the current mode of the application.
         '''
         App.mode = mode
-        self.label_mode['text'] = f"Mode: {mode}"
+        self.label_mode['text'] = mode.readable_str()
 
         if mode == Mode.GROUP:
             self.toggle_image_view_btn = None
@@ -387,20 +403,27 @@ class App():
         if App.mode == Mode.BROWSE and App.img:
             self.show_next_image()
 
+    def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True):
+        App.file_browser.refresh(refresh_cursor=refresh_cursor, file_check=file_check)
+        if App.file_browser.has_files():
+            if show_new_images:
+                has_new_images = self.file_browser.update_cursor_to_new_images()
+            self.show_next_image()
+            if show_new_images and has_new_images:
+                App.delete_lock = True # User may have started delete just before the image changes, lock for a short period after to ensure no misdeletion
+                time.sleep(1)
+                App.delete_lock = False
+        else:
+            self.clear_image()
+            self.alert("Warning", "No files found in direcftory after refresh.", kind="warning")
+        print("Refreshed files")
+
     @periodic(config.file_check_interval_seconds)
     async def check_files(self, **kwargs):
         if App.file_browser.checking_files and App.mode == Mode.BROWSE:
             base_dir = self.set_base_dir_box.get()
             if base_dir and base_dir != "":
-                App.file_browser.refresh(refresh_cursor=False, file_check=True)
-                if App.file_browser.has_files():
-                    if SlideshowConfig.show_new_images:
-                        self.file_browser.update_cursor_to_new_images()
-                    self.show_next_image()
-                else:
-                    self.clear_image()
-                    self.alert("Warning", "No files found in direcftory after refresh.", kind="warning")
-                print("Refreshed files")
+                self.refresh(show_new_images=SlideshowConfig.show_new_images)
 
     @periodic(SlideshowConfig, sleep_attr="interval_seconds", run_attr="slideshow_running")
     async def do_slideshow(self, **kwargs):
@@ -432,7 +455,16 @@ class App():
         top_level.title("Image Details")
         top_level.geometry("600x300")
         try:
-            image_details = ImageDetails(top_level, App.img, App.img_path, self.config.sd_prompt_reader_loc)
+            image_details = ImageDetails(top_level, App.img, App.img_path)
+        except Exception as e:
+            self.alert("Image Details Error", str(e), kind="error")
+
+    def get_help_and_config(self, event=None):
+        top_level = tk.Toplevel(self.master, bg=Style.BG_COLOR)
+        top_level.title("Help and Config")
+        top_level.geometry("600x600")
+        try:
+            help_and_config = HelpAndConfig(top_level)
         except Exception as e:
             self.alert("Image Details Error", str(e), kind="error")
 
@@ -993,15 +1025,8 @@ class App():
             self.label_state["text"] = _wrap_text_to_fit_length(
                 f"Group {group_number + 1} of {len(App.file_groups)}\nSize: {size}", 30)
 
-    def add_mark(self, event=None):
-        if not App.mode == Mode.BROWSE:
-            raise Exception("Marks currently only available in Browsing mode.")
-        App.file_marks.append(App.img_path)
-        self.toast(f"Mark added. Total set: {len(App.file_marks)}")
-
-    def remove_mark(self, event=None):
-        if not App.mode == Mode.BROWSE:
-            raise Exception("Marks currently only available in Browsing mode.")
+    def add_or_remove_mark_for_current_image(self, event=None):
+        self._check_marks(min_mark_size=0)
         if App.img_path in App.file_marks:
             App.file_marks.remove(App.img_path)
             remaining_marks_count = len(App.file_marks)
@@ -1009,13 +1034,21 @@ class App():
                 App.mark_cursor = -1
             self.toast(f"Mark removed. Remaining: {remaining_marks_count}")
         else:
-            self.toast("No mark found for current file.")
+            App.file_marks.append(App.img_path)
+            self.toast(f"Mark added. Total set: {len(App.file_marks)}")
+
+    def add_all_marks_from_last(self, event=None):
+        self._check_marks()
+        if App.img_path in App.file_marks:
+            return
+        files = App.file_browser.select_series(start_file=App.file_marks[-1], end_file=App.img_path)
+        for _file in files:
+            if not _file in App.file_marks:
+                App.file_marks.append(_file)
+        self.toast(f"Marks added. Total set: {len(App.file_marks)}")
 
     def go_to_mark(self, event=None):
-        if not App.mode == Mode.BROWSE:
-            raise Exception("Marks currently only available in Browsing mode.")
-        if len(App.file_marks) == 0:
-            self.toast("No marks have been set. Use Shift+M to set a mark.")
+        self._check_marks()
         App.mark_cursor += 1
         if App.mark_cursor >= len(App.file_marks):
             App.mark_cursor = 0
@@ -1023,6 +1056,46 @@ class App():
         App.file_browser.go_to_file(marked_file)
         self.create_image(marked_file)
         self.master.update()
+
+    def copy_marks_list(self, event=None):
+        self.master.clipboard_clear()
+        self.master.clipboard_append(App.file_marks)
+
+    def move_marks(self, event=None):
+        self._check_marks(min_mark_size=0)
+        if len(App.file_marks) == 0:
+            self.add_or_remove_mark_for_current_image()
+        if App.last_mark_target_dir and os.path.isdir(App.last_mark_target_dir):
+            target_dir = App.last_mark_target_dir
+        else:
+            target_dir = self.get_base_dir()
+        target_dir = filedialog.askdirectory(
+                initialdir=target_dir, title="Select target directory for marked files")
+        if not os.path.isdir(target_dir):
+            self.toast("Failed to set target directory to receive marked files.")
+            return
+        App.last_mark_target_dir = target_dir
+        exceptions = {}
+        for marked_file in App.file_marks:
+            try:
+                move_file(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
+            except Exception as e:
+                exceptions[marked_file] = str(e)
+        if len(exceptions) < len(App.file_marks):
+            self.toast(f"Moved {len(App.file_marks) - len(exceptions)} files to\n{target_dir}")
+        App.file_marks.clear()
+        App.file_marks.extend(exceptions.keys()) # Just in case some of them failed to move for whatever reason.
+        self.refresh()
+        if len(exceptions) > 0:
+            raise Exception(f"Failed to move some files: {exceptions}")
+
+    def _check_marks(self, min_mark_size=1):
+        if not App.mode == Mode.BROWSE:
+            raise Exception("Marks currently only available in Browsing mode.")
+        if len(App.file_marks) < min_mark_size:
+            exception_text = f"{len(App.file_marks)} marks have been set (>={min_mark_size} expected).\nUse Shift+M to set a mark."
+            self.toast(exception_text)
+            raise Exception(exception_text)
 
     def home(self, event=None):
         if not App.mode == Mode.BROWSE:
@@ -1082,6 +1155,10 @@ class App():
         '''
         Delete the currently displayed image from the filesystem.
         '''
+        if App.delete_lock:
+            self.toast("Delete lock after slideshow\ntransition prevented deletion")
+            return
+
         if App.mode == Mode.BROWSE:
             App.file_browser.checking_files = False
             filepath = App.file_browser.current_file()
@@ -1261,7 +1338,7 @@ class App():
             button # for some reason this is necessary to maintain the reference?
             self.apply_to_grid(button)
 
-    def new_entry(self, text_variable, text=""):
+    def new_entry(self, text_variable=None, text=""):
         return Entry(self.sidebar, text=text, textvariable=text_variable, width=30, font=fnt.Font(size=8))
 
 
@@ -1280,7 +1357,7 @@ if __name__ == "__main__":
     #root.iconbitmap(bitmap=r"icon.ico")
     icon = PhotoImage(file=os.path.join(assets, "icon.png"))
     root.iconphoto(False, icon)
-    root.geometry("1400x950")
+    root.geometry(config.default_main_window_size)
     # root.attributes('-fullscreen', True)
     root.resizable(1, 1)
     root.columnconfigure(0, weight=1)

@@ -13,13 +13,16 @@ class Config:
         self.file_counter_limit = 40000
         self.fill_canvas = False
         self.image_browse_recursive = False
+        self.image_tagging_enabled = True
         self.print_settings = True
         self.show_toasts = True
         self.slideshow_interval_seconds = 7
         self.file_check_interval_seconds = 10
+        self.default_main_window_size = "1400x950"
         self.sort_by = SortBy.NAME
         self.toasts_persist_seconds = 2
         self.delete_instantly = False
+        self.move_marks_overwrite_existing_file = False
         self.trash_folder = None
         self.sd_prompt_reader_loc = None
 
@@ -30,12 +33,15 @@ class Config:
             self.file_counter_limit = int(self.dict["file_counter_limit"])
             self.fill_canvas = self.dict["fill_canvas"]
             self.image_browse_recursive = self.dict["image_browse_recursive"]
+            self.image_tagging_enabled = self.dict["image_tagging_enabled"]
             self.print_settings = self.dict["print_settings"]
             self.show_toasts = self.dict["show_toasts"]
             self.slideshow_interval_seconds = int(self.dict["slideshow_interval_seconds"])
             self.file_check_interval_seconds = int(self.dict["file_check_interval_seconds"])
+            self.default_main_window_size = self.dict["default_main_window_size"]
             self.toasts_persist_seconds = int(self.dict["toasts_persist_seconds"])
             self.delete_instantly = self.dict["delete_instantly"]
+            self.move_marks_overwrite_existing_file = self.dict["move_marks_overwrite_existing_file"]
             self.trash_folder = self.dict["trash_folder"]
             self.sd_prompt_reader_loc = self.validate_and_set_directory(key="sd_prompt_reader_loc")
             try:
