@@ -1,7 +1,8 @@
 import json
 import os
 
-from file_browser import SortBy
+from constants import SortBy
+
 
 class Config:
     CONFIG_FILE_LOC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
@@ -18,6 +19,7 @@ class Config:
         self.show_toasts = True
         self.slideshow_interval_seconds = 7
         self.file_check_interval_seconds = 10
+        self.file_check_skip_if_n_files_over = 5000
         self.default_main_window_size = "1400x950"
         self.sort_by = SortBy.NAME
         self.toasts_persist_seconds = 2
@@ -38,6 +40,7 @@ class Config:
             self.show_toasts = self.dict["show_toasts"]
             self.slideshow_interval_seconds = int(self.dict["slideshow_interval_seconds"])
             self.file_check_interval_seconds = int(self.dict["file_check_interval_seconds"])
+            self.file_check_skip_if_n_files_over = int(self.dict["file_check_skip_if_n_files_over"])
             self.default_main_window_size = self.dict["default_main_window_size"]
             self.toasts_persist_seconds = int(self.dict["toasts_persist_seconds"])
             self.delete_instantly = self.dict["delete_instantly"]

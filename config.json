@@ -9,6 +9,7 @@
   "show_toasts": true,
   "slideshow_interval_seconds": 7,
   "file_check_interval_seconds": 10,
+  "file_check_skip_if_n_files_over": 5000,
   "default_main_window_size": "1400x950",
   "sort_by": "CREATION_TIME",
   "toasts_persist_seconds": 2,

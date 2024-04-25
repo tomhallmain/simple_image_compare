@@ -2,10 +2,11 @@ from datetime import datetime
 import os
 from typing import List
 import glob
-from enum import Enum
 from random import shuffle
 import threading
 
+from config import config
+from constants import Sort, SortBy
 from utils import alphanumeric_sort
 
 
@@ -43,21 +44,6 @@ class SortableFile:
     def __hash__(self):
         return hash((self.full_file_path, self.creation_time, self.size))
 
-class SortBy(Enum):
-    NAME = 0
-    FULL_PATH = 1
-    CREATION_TIME = 2
-    TYPE = 3
-    SIZE = 4
-    RANDOMIZE = 5
-
-class Sort(Enum):
-    ASC = 1
-    DESC = 2
-    RANDOM = 3
-
-
-# TODO on refresh, find the newly added files and set them in a list on this object, then enable slideshow for these files in app.py
 
 class FileBrowser:
     def __init__(self, directory=".", recursive=False, filter=None, sort_by=SortBy.NAME):
@@ -77,6 +63,9 @@ class FileBrowser:
     def has_files(self):
         return len(self._files) > 0
 
+    def count(self):
+        return len(self._files)
+
     def set_recursive(self, recursive):
         self.recursive = recursive
         self.refresh()
@@ -93,7 +82,7 @@ class FileBrowser:
         self.filepaths = []
         self._get_sortable_files()
         files = self.get_files()
-        self.checking_files = len(files) > 0 and len(files) < 5000 # Avoid rechecking in directories with many files
+        self.checking_files = len(files) > 0 and len(files) < config.file_check_skip_if_n_files_over # Avoid rechecking in directories with many files
         if file_check and current_file and os.path.isfile(current_file):
             with self.cursor_lock:
                 self.file_cursor = files.index(current_file)

@@ -494,6 +494,7 @@ class App():
         if App.compare is None and App.mode != Mode.SEARCH:
             self.set_mode(Mode.BROWSE)
             self.show_next_image()
+            self.label_state["text"] = f"{App.file_browser.count()} image files found."
         self.master.update()
 
     def get_base_dir(self) -> str:
@@ -520,7 +521,7 @@ class App():
         if search_file is None:
             search_file = get_valid_file(
                 self.get_search_dir(), image_path)
-            if image_path is None:
+            if search_file is None:
                 self.alert("Invalid search file",
                            "Search file is not a valid file for base dir.",
                            kind="error")
