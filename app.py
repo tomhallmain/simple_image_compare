@@ -23,6 +23,7 @@ from config import config
 from file_browser import FileBrowser, SortBy
 from help_and_config import HelpAndConfig
 from image_details import ImageDetails # must import after config because of dynamic import
+from marked_file_mover import MarkedFiles
 from style import Style
 from utils import (
     _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, move_file, periodic, start_thread
@@ -156,8 +157,6 @@ class App():
 
     compare = None
     file_browser = FileBrowser(recursive=config.image_browse_recursive, sort_by=config.sort_by)
-    file_marks = []
-    mark_cursor = -1
     mode = Mode.BROWSE
     fill_canvas = config.fill_canvas
     fullscreen = False
@@ -182,7 +181,6 @@ class App():
         Mode.SEARCH: False, 
         Mode.DUPLICATES: False
     }
-    last_mark_target_dir = None
 
     def configure_style(self, theme):
         self.master.set_theme(theme, themebg="black")
@@ -1028,73 +1026,59 @@ class App():
 
     def add_or_remove_mark_for_current_image(self, event=None):
         self._check_marks(min_mark_size=0)
-        if App.img_path in App.file_marks:
-            App.file_marks.remove(App.img_path)
-            remaining_marks_count = len(App.file_marks)
-            if App.mark_cursor >= remaining_marks_count:
-                App.mark_cursor = -1
+        if App.img_path in MarkedFiles.file_marks:
+            MarkedFiles.file_marks.remove(App.img_path)
+            remaining_marks_count = len(MarkedFiles.file_marks)
+            if MarkedFiles.mark_cursor >= remaining_marks_count:
+                MarkedFiles.mark_cursor = -1
             self.toast(f"Mark removed. Remaining: {remaining_marks_count}")
         else:
-            App.file_marks.append(App.img_path)
-            self.toast(f"Mark added. Total set: {len(App.file_marks)}")
+            MarkedFiles.file_marks.append(App.img_path)
+            self.toast(f"Mark added. Total set: {len(MarkedFiles.file_marks)}")
 
     def add_all_marks_from_last(self, event=None):
         self._check_marks()
-        if App.img_path in App.file_marks:
+        if App.img_path in MarkedFiles.file_marks:
             return
-        files = App.file_browser.select_series(start_file=App.file_marks[-1], end_file=App.img_path)
+        files = App.file_browser.select_series(start_file=MarkedFiles.file_marks[-1], end_file=App.img_path)
         for _file in files:
-            if not _file in App.file_marks:
-                App.file_marks.append(_file)
-        self.toast(f"Marks added. Total set: {len(App.file_marks)}")
+            if not _file in MarkedFiles.file_marks:
+                MarkedFiles.file_marks.append(_file)
+        self.toast(f"Marks added. Total set: {len(MarkedFiles.file_marks)}")
 
     def go_to_mark(self, event=None):
         self._check_marks()
-        App.mark_cursor += 1
-        if App.mark_cursor >= len(App.file_marks):
-            App.mark_cursor = 0
-        marked_file = App.file_marks[App.mark_cursor]
+        MarkedFiles.mark_cursor += 1
+        if MarkedFiles.mark_cursor >= len(MarkedFiles.file_marks):
+            MarkedFiles.mark_cursor = 0
+        marked_file = MarkedFiles.file_marks[MarkedFiles.mark_cursor]
         App.file_browser.go_to_file(marked_file)
         self.create_image(marked_file)
         self.master.update()
 
     def copy_marks_list(self, event=None):
         self.master.clipboard_clear()
-        self.master.clipboard_append(App.file_marks)
+        self.master.clipboard_append(MarkedFiles.file_marks)
 
     def move_marks(self, event=None):
         self._check_marks(min_mark_size=0)
-        if len(App.file_marks) == 0:
+        if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
-        if App.last_mark_target_dir and os.path.isdir(App.last_mark_target_dir):
-            target_dir = App.last_mark_target_dir
-        else:
-            target_dir = self.get_base_dir()
-        target_dir = filedialog.askdirectory(
-                initialdir=target_dir, title="Select target directory for marked files")
-        if not os.path.isdir(target_dir):
-            self.toast("Failed to set target directory to receive marked files.")
-            return
-        App.last_mark_target_dir = target_dir
-        exceptions = {}
-        for marked_file in App.file_marks:
-            try:
-                move_file(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
-            except Exception as e:
-                exceptions[marked_file] = str(e)
-        if len(exceptions) < len(App.file_marks):
-            self.toast(f"Moved {len(App.file_marks) - len(exceptions)} files to\n{target_dir}")
-        App.file_marks.clear()
-        App.file_marks.extend(exceptions.keys()) # Just in case some of them failed to move for whatever reason.
-        self.refresh()
-        if len(exceptions) > 0:
-            raise Exception(f"Failed to move some files: {exceptions}")
+        top_level = tk.Toplevel(self.master, bg=Style.BG_COLOR)
+        top_level.title("Move Marked Files")
+        top_level.geometry("600x300")
+        try:
+            marked_file_mover = MarkedFiles(top_level, self.toast, self.refresh, self.get_base_dir())
+        except Exception as e:
+            self.alert("Marked Files Window Error", str(e), kind="error")
+
+        
 
     def _check_marks(self, min_mark_size=1):
         if not App.mode == Mode.BROWSE:
             raise Exception("Marks currently only available in Browsing mode.")
-        if len(App.file_marks) < min_mark_size:
-            exception_text = f"{len(App.file_marks)} marks have been set (>={min_mark_size} expected).\nUse Shift+M to set a mark."
+        if len(MarkedFiles.file_marks) < min_mark_size:
+            exception_text = f"{len(MarkedFiles.file_marks)} marks have been set (>={min_mark_size} expected).\nUse Shift+M to set a mark."
             self.toast(exception_text)
             raise Exception(exception_text)
 

@@ -17,7 +17,7 @@ class ImageDetails():
         self.frame.columnconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=9)
         self.frame.config(bg=Style.BG_COLOR)
-        row_0_width = 100
+        col_0_width = 100
 
         self._label_path = Label(self.frame)
         self._label_mode = Label(self.frame)
@@ -26,11 +26,11 @@ class ImageDetails():
         self._label_negative = Label(self.frame)
         self._label_tags = Label(self.frame)
 
-        self.add_label(self._label_path, "Image Path", row=0, wraplength=row_0_width)
-        self.add_label(self._label_mode, "Color Mode", row=1, wraplength=row_0_width)
-        self.add_label(self._label_size, "Dimensions", row=2, wraplength=row_0_width)
-        self.add_label(self._label_positive, "Positive", row=3, wraplength=row_0_width)
-        self.add_label(self._label_negative, "Negative", row=4, wraplength=row_0_width)
+        self.add_label(self._label_path, "Image Path", row=0, wraplength=col_0_width)
+        self.add_label(self._label_mode, "Color Mode", row=1, wraplength=col_0_width)
+        self.add_label(self._label_size, "Dimensions", row=2, wraplength=col_0_width)
+        self.add_label(self._label_positive, "Positive", row=3, wraplength=col_0_width)
+        self.add_label(self._label_negative, "Negative", row=4, wraplength=col_0_width)
 
         self.label_path = Label(self.frame)
         self.label_mode = Label(self.frame)
@@ -54,7 +54,7 @@ class ImageDetails():
 
 
         if config.image_tagging_enabled:
-            self.add_label(self._label_tags, "Tags", row=6, wraplength=row_0_width)
+            self.add_label(self._label_tags, "Tags", row=6, wraplength=col_0_width)
 
             self.tags = image_data_extractor.extract_tags(self.image_path)
             tags_str = ", ".join(self.tags) if self.tags else ""
