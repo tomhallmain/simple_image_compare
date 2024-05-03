@@ -14,17 +14,19 @@ import tkinter as tk
 from tkinter import Canvas, PhotoImage, filedialog, messagebox, HORIZONTAL, Label, Checkbutton
 from tkinter.constants import W
 import tkinter.font as fnt
-from tkinter.ttk import Button, Entry, Frame, OptionMenu, Progressbar
+from tkinter.ttk import Button, Entry, Frame, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
 from compare import Compare, get_valid_file
+from compare_embeddings import CompareEmbedding
 from config import config
+from constants import Mode, CompareMode
 from file_browser import FileBrowser, SortBy
 from help_and_config import HelpAndConfig
 from image_details import ImageDetails # must import after config because of dynamic import
 from marked_file_mover import MarkedFiles
-from style import Style
+from app_style import AppStyle
 from utils import (
     _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, move_file, periodic, start_thread
 )
@@ -34,6 +36,7 @@ from utils import (
 ### TODO copy/cut image using hotkey (pywin32 ? win32com? IDataPobject?)
 ### TODO comfyui plugin for ipadapter/controlnet (maybe)
 ### TODO some type of plugin to filter the images using a filter function defined externally
+### TODO recursive option for compare jobs
 ### TODO compare option to restrict by matching image dimensions
 ### TODO compare option encoding size
 ### TODO add checkbox for include gif option
@@ -41,21 +44,6 @@ from utils import (
 ### TODO custom frame class for sidebar to hold all the buttons
 
 
-class Mode(Enum):
-    BROWSE = 1
-    SEARCH = 2
-    GROUP = 3
-    DUPLICATES = 4
-
-    def readable_str(self):
-        if self == Mode.BROWSE:
-            return "Browsing Mode"
-        if self == Mode.SEARCH:
-            return "Searching Mode"
-        if self == Mode.GROUP:
-            return "Group Comparison Mode"
-        if self == Mode.DUPLICATES:
-            return "Duplicate Detection Mode"
 
 class ResizingCanvas(Canvas):
     '''
@@ -158,6 +146,7 @@ class App():
     compare = None
     file_browser = FileBrowser(recursive=config.image_browse_recursive, sort_by=config.sort_by)
     mode = Mode.BROWSE
+    compare_mode = config.compare_mode
     fill_canvas = config.fill_canvas
     fullscreen = False
     delete_lock = False
@@ -186,30 +175,32 @@ class App():
         self.master.set_theme(theme, themebg="black")
 
     def toggle_theme(self):
-        if Style.IS_DEFAULT_THEME:
+        if AppStyle.IS_DEFAULT_THEME:
             self.configure_style("breeze") # Changes the window to light theme
-            Style.BG_COLOR = "gray"
-            Style.FG_COLOR = "black"
+            AppStyle.BG_COLOR = "gray"
+            AppStyle.FG_COLOR = "black"
         else:
             self.configure_style("black") # Changes the window to dark theme
-            Style.BG_COLOR = "#26242f"
-            Style.FG_COLOR = "white"
-        Style.IS_DEFAULT_THEME = not Style.IS_DEFAULT_THEME
-        self.master.config(bg=Style.BG_COLOR)
-        self.sidebar.config(bg=Style.BG_COLOR)
-        self.canvas.config(bg=Style.BG_COLOR)
+            AppStyle.BG_COLOR = "#26242f"
+            AppStyle.FG_COLOR = "white"
+        AppStyle.IS_DEFAULT_THEME = not AppStyle.IS_DEFAULT_THEME
+        self.master.config(bg=AppStyle.BG_COLOR)
+        self.sidebar.config(bg=AppStyle.BG_COLOR)
+        self.canvas.config(bg=AppStyle.BG_COLOR)
         for name, attr in self.__dict__.items():
             if isinstance(attr, Label):
-                attr.config(bg=Style.BG_COLOR, fg=Style.FG_COLOR)
+                attr.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR, font=fnt.Font(size=config.font_size))
             elif isinstance(attr, Checkbutton):
-                attr.config(bg=Style.BG_COLOR, fg=Style.FG_COLOR, selectcolor=Style.BG_COLOR)
+                attr.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR, selectcolor=AppStyle.BG_COLOR, font=fnt.Font(size=config.font_size))
         self.master.update()
-        self.toast("Theme switched to dark." if Style.IS_DEFAULT_THEME else "Theme switched to light.")
+        self.toast("Theme switched to dark." if AppStyle.IS_DEFAULT_THEME else "Theme switched to light.")
 
 
     def __init__(self, master):
         self.master = master
         self.config = config
+        Style().configure(".", font=('Helvetica', config.font_size))
+
         self.base_dir = get_user_dir()
         self.search_dir = get_user_dir()
 
@@ -224,30 +215,47 @@ class App():
         self.label_state = Label(self.sidebar)
         self.label1 = Label(self.sidebar)
         self.add_label(self.label_mode, "", sticky=tk.N)
-        self.add_label(self.label_state, "Set a directory to run comparison.", pady=20)
+        self.add_label(self.label_state, "Set a directory to run comparison.", pady=10)
 
         # Settings UI
-        self.add_label(self.label1, "Controls & Settings", sticky=None, pady=30)
-        self.set_base_dir_btn = None
-        self.create_img_btn = None
+        self.add_label(self.label1, "Controls & Settings", sticky=None, pady=10)
         self.toggle_theme_btn = None
+        self.set_base_dir_btn = None
+        self.set_search_btn = None
+        self.search_text_btn = None
         self.add_button("toggle_theme_btn", "Toggle theme", self.toggle_theme)
         self.add_button("set_base_dir_btn", "Set directory", self.set_base_dir)
         self.set_base_dir_box = self.new_entry(text="Add dirpath...")
         self.apply_to_grid(self.set_base_dir_box)
 
-        self.add_button("create_img_btn", "Set search file", self.set_search_image)
+        self.add_button("set_search_btn", "Set search file", self.set_search_image)
         self.search_image = tk.StringVar()
-        self.create_img_path_box = self.new_entry(self.search_image)
-        self.apply_to_grid(self.create_img_path_box, sticky=W)
+        self.search_img_path_box = self.new_entry(self.search_image)
+        self.apply_to_grid(self.search_img_path_box, sticky=W)
 
-        self.label_color_diff_threshold = Label(self.sidebar)
-        self.add_label(self.label_color_diff_threshold, "Color diff threshold")
-        self.color_diff_threshold = tk.StringVar()
-        self.color_diff_threshold_choice = OptionMenu(self.sidebar, self.color_diff_threshold,
-                                                      str(self.config.color_diff_threshold),
-                                                      *[str(i) for i in list(range(31))])
-        self.apply_to_grid(self.color_diff_threshold_choice, sticky=W)
+        self.add_button("search_text_btn", "Search text (embedding mode)", self.search_text_embedding)
+        self.search_text = tk.StringVar()
+        self.search_text_box = self.new_entry(self.search_text)
+        self.search_text_box.bind("<Return>", self.search_text_embedding)
+        self.apply_to_grid(self.search_text_box, sticky=W)
+
+        self.label_compare_mode = Label(self.sidebar)
+        self.add_label(self.label_compare_mode, "Compare mode")
+        self.compare_mode_var = tk.StringVar()
+        self.compare_mode_choice = OptionMenu(self.sidebar, self.compare_mode_var, App.compare_mode.name,
+                                              *CompareMode.__members__.keys(), command=self.set_compare_mode)
+        self.apply_to_grid(self.compare_mode_choice, sticky=W)
+
+        self.label_compare_threshold = Label(self.sidebar)
+        self.add_label(self.label_compare_threshold, App.compare_mode.threshold_str())
+        self.compare_threshold = tk.StringVar()
+        if App.compare_mode == CompareMode.COLOR_MATCHING:
+            default_val = self.config.color_diff_threshold
+        else:
+            default_val = self.config.embedding_similarity_threshold
+        self.compare_threshold_choice = OptionMenu(self.sidebar, self.compare_threshold,
+                                                   str(default_val), *App.compare_mode.threshold_vals())
+        self.apply_to_grid(self.compare_threshold_choice, sticky=W)
 
         self.compare_faces = tk.BooleanVar(value=False)
         self.compare_faces_choice = Checkbutton(self.sidebar, text='Compare faces', variable=self.compare_faces)
@@ -258,34 +266,38 @@ class App():
         self.apply_to_grid(self.overwrite_choice, sticky=W)
 
         self.label_counter_limit = Label(self.sidebar)
-        self.add_label(self.label_counter_limit, "Max # of files to compare")
+        self.add_label(self.label_counter_limit, "Max files to compare")
         self.set_counter_limit = self.new_entry()
         self.set_counter_limit.insert(0, str(self.config.file_counter_limit))
         self.apply_to_grid(self.set_counter_limit, sticky=W)
 
         self.label_inclusion_pattern = Label(self.sidebar)
-        self.add_label(self.label_inclusion_pattern, "Filter files by string in name")
+        self.add_label(self.label_inclusion_pattern, "Filter files by glob pattern")
         self.inclusion_pattern = tk.StringVar()
         self.set_inclusion_pattern = self.new_entry(self.inclusion_pattern)
         self.apply_to_grid(self.set_inclusion_pattern, sticky=W)
 
         self.label_sort_by = Label(self.sidebar)
-        self.add_label(self.label_sort_by, "Sort for files in browsing mode")
+        self.add_label(self.label_sort_by, "Browsing mode - Sort by")
         self.sort_by = tk.StringVar()
         self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by, self.config.sort_by.name,
                                          *SortBy.__members__.keys(), command=self.set_sort_by)
         self.apply_to_grid(self.sort_by_choice, sticky=W)
 
+        image_browse_recurse_var = tk.BooleanVar(value=self.config.image_browse_recursive)
+        self.image_browse_recurse = Checkbutton(self.sidebar, text='Browsing mode - Recursive',
+                                                variable=image_browse_recurse_var, command=self.toggle_image_browse_recursive)
+        self.apply_to_grid(self.image_browse_recurse, sticky=W)
+
         fill_canvas_var = tk.BooleanVar(value=App.fill_canvas)
         self.fill_canvas_choice = Checkbutton(self.sidebar, text='Image resize to full window',
                                               variable=fill_canvas_var, command=App.toggle_fill_canvas)
         self.apply_to_grid(self.fill_canvas_choice, sticky=W)
-
-        image_browse_recurse_var = tk.BooleanVar(value=self.config.image_browse_recursive)
-        self.image_browse_recurse = Checkbutton(self.sidebar, text='Image browsing recursive',
-                                                variable=image_browse_recurse_var, command=self.toggle_image_browse_recursive)
-        self.apply_to_grid(self.image_browse_recurse, sticky=W)
-
+        
+        search_return_closest_var = tk.BooleanVar(value=CompareEmbedding.SEARCH_RETURN_CLOSEST)
+        self.search_return_closest_choice = Checkbutton(self.sidebar, text='Embedding search return closest',
+                                              variable=search_return_closest_var, command=self.toggle_search_return_closest)
+        self.apply_to_grid(self.search_return_closest_choice, sticky=W)
 
         # Run context-aware UI elements
         self.progress_bar = None
@@ -392,6 +404,9 @@ class App():
         if App.mode == Mode.BROWSE:
             self.show_next_image()
 
+    def set_compare_mode(self, event):
+        App.compare_mode = CompareMode[self.compare_mode_var.get()]
+
     @classmethod
     def toggle_fill_canvas(cls):
         cls.fill_canvas = not cls.fill_canvas
@@ -400,6 +415,11 @@ class App():
         self.file_browser.toggle_recursive()
         if App.mode == Mode.BROWSE and App.img:
             self.show_next_image()
+
+    def toggle_search_return_closest(self):
+        if CompareMode.CLIP_EMBEDDING != App.compare_mode:
+            self.alert("Invalid mode", "Compare mode must be set to Clip Embedding to make use of this option.")
+        CompareEmbedding.SEARCH_RETURN_CLOSEST = not CompareEmbedding.SEARCH_RETURN_CLOSEST
 
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True):
         App.file_browser.refresh(refresh_cursor=refresh_cursor, file_check=file_check)
@@ -449,7 +469,7 @@ class App():
             self.show_prev_image()
 
     def get_image_details(self, event=None):
-        top_level = tk.Toplevel(self.master, bg=Style.BG_COLOR)
+        top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title("Image Details")
         top_level.geometry("600x300")
         try:
@@ -458,7 +478,7 @@ class App():
             self.alert("Image Details Error", str(e), kind="error")
 
     def get_help_and_config(self, event=None):
-        top_level = tk.Toplevel(self.master, bg=Style.BG_COLOR)
+        top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title("Help and Config")
         top_level.geometry("600x600")
         try:
@@ -539,14 +559,17 @@ class App():
                        "Counter limit must be an integer value.", kind="error")
             raise AssertionError("Counter limit must be an integer value.")
 
-    def get_color_diff_threshold(self) -> int | None:
-        color_diff_threshold_str = self.color_diff_threshold.get()
-        if color_diff_threshold_str == "":
+    def get_compare_threshold(self):
+        compare_threshold_str = self.compare_threshold.get()
+        if compare_threshold_str == "":
             return None
         try:
-            return int(color_diff_threshold_str)
+            return int(compare_threshold_str)
         except Exception:
-            return self.config.color_diff_threshold
+            if App.compare_mode == CompareMode.CLIP_EMBEDDING:
+                return self.config.embedding_similarity_threshold
+            else:
+                return self.config.color_diff_threshold
 
     def get_inclusion_pattern(self) -> str | None:
         inclusion_pattern = self.inclusion_pattern.get()
@@ -756,7 +779,7 @@ class App():
         if self.label_current_image_name is None:
             self.label_current_image_name = Label(self.sidebar)
             self.add_label(self.label_current_image_name, "", pady=30)
-        self.label_current_image_name.config(bg=Style.BG_COLOR, fg=Style.FG_COLOR)
+        self.label_current_image_name.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
         relative_filepath, basename = get_relative_dirpath_split(self.base_dir, image_path)
         App.img_path = image_path
         text = basename if relative_filepath == "" else relative_filepath + "\n" + basename
@@ -853,19 +876,19 @@ class App():
 
         start_thread(run_with_progress_async, use_asyncio=False, args=[self])
 
-    def run_compare(self, find_duplicates=False) -> None:
-        self.run_with_progress(self._run_compare, args=[find_duplicates])
+    def run_compare(self, find_duplicates=False, search_text=None) -> None:
+        self.run_with_progress(self._run_compare, args=[find_duplicates, search_text])
 
-    def _run_compare(self, find_duplicates=False) -> None:
+    def _run_compare(self, find_duplicates=False, search_text=None) -> None:
         '''
         Execute operations on the Compare object in any mode. Create a new
-        Compare object.
+        Compare object if needed.
         '''
         search_file_path = self.get_search_file_path()
         counter_limit = self.get_counter_limit()
         compare_faces = self.compare_faces.get()
         overwrite = self.overwrite.get()
-        color_diff_threshold = self.get_color_diff_threshold()
+        compare_threshold = self.get_compare_threshold()
         inclusion_pattern = self.get_inclusion_pattern()
         get_new_data = True
         App.current_group_index = 0
@@ -878,42 +901,58 @@ class App():
 
         if App.compare is None or App.compare.base_dir != self.get_base_dir():
             self.label_state["text"] = _wrap_text_to_fit_length(
-                "Gathering image data..."
-                + " setup may take a while depending on number"
-                + " of files involved.", 30)
-            App.compare = Compare(self.base_dir,
-                                  search_file_path=search_file_path,
-                                  counter_limit=counter_limit,
-                                  use_thumb=True,
-                                  compare_faces=compare_faces,
-                                  color_diff_threshold=color_diff_threshold,
-                                  inclusion_pattern=inclusion_pattern,
-                                  overwrite=overwrite,
-                                  verbose=True,
-                                  progress_listener=listener)
+                "Gathering image data... setup may take a while depending on number of files involved.", 30)
+            if App.compare_mode == CompareMode.CLIP_EMBEDDING:
+                App.compare = CompareEmbedding(
+                    self.base_dir,
+                    search_file_path=search_file_path,
+                    counter_limit=counter_limit,
+                    embedding_similarity_threshold=compare_threshold,
+                    compare_faces=compare_faces,
+                    inclusion_pattern=inclusion_pattern,
+                    overwrite=overwrite,
+                    verbose=True,
+                    progress_listener=listener
+                )
+            elif App.compare_mode == CompareMode.COLOR_MATCHING:
+                App.compare = Compare(
+                    self.base_dir,
+                    search_file_path=search_file_path,
+                    counter_limit=counter_limit,
+                    use_thumb=True,
+                    compare_faces=compare_faces,
+                    color_diff_threshold=compare_threshold,
+                    inclusion_pattern=inclusion_pattern,
+                    overwrite=overwrite,
+                    verbose=True,
+                    progress_listener=listener
+                )
         else:
             get_new_data = self.is_new_data_request_required(counter_limit,
-                                                             color_diff_threshold,
+                                                             compare_threshold,
                                                              inclusion_pattern,
                                                              overwrite)
             App.compare.set_search_file_path(search_file_path)
             App.compare.counter_limit = counter_limit
             App.compare.compare_faces = compare_faces
-            App.compare.color_diff_threshold = color_diff_threshold
             App.compare.inclusion_pattern = inclusion_pattern
             App.compare.overwrite = overwrite
+            if App.compare_mode == CompareMode.COLOR_MATCHING:
+                App.compare.color_diff_threshold = compare_threshold
+            else:
+                App.compare.embedding_similarity_threshold = compare_threshold
             App.compare.print_settings()
         
-        if App.compare.is_run_search:
+        if App.compare.is_run_search or search_text is not None:
             self.set_mode(Mode.SEARCH, do_update=False)
             if not App.is_toggled_view_matches:
                 App.is_toggled_view_matches = True
         else:
             if App.mode == Mode.SEARCH:
                 res = self.alert("Confirm group run",
-                                    "Search mode detected, please confirm switch to group mode before run. "
-                                    + "Group mode will take longer as all images in the base directory are compared.",
-                                    kind="warning")
+                                 "Search mode detected, please confirm switch to group mode before run. "
+                                 + "Group mode will take longer as all images in the base directory are compared.",
+                                 kind="warning")
                 if res != messagebox.YES:
                     return
             self.set_mode(Mode.GROUP, do_update=False)
@@ -925,13 +964,19 @@ class App():
 
         if App.compare.is_run_search:
             self.run_search()
+        elif search_text is not None:
+            self.run_search_text_embedding(search_text=search_text)
         else:
             self.run_group(find_duplicates=find_duplicates)
 
-    def is_new_data_request_required(self, counter_limit, color_diff_threshold,
+    def is_new_data_request_required(self, counter_limit, compare_threshold,
                                      inclusion_pattern, overwrite):
+        if App.compare_mode == CompareMode.COLOR_MATCHING:
+            if App.compare.color_diff_threshold != compare_threshold:
+                return True
+        elif App.compare.embedding_similarity_threshold != compare_threshold:
+            return True
         return (App.compare.counter_limit != counter_limit
-                or App.compare.color_diff_threshold != color_diff_threshold
                 or App.compare.inclusion_pattern != inclusion_pattern
                 or (not App.compare.overwrite and overwrite))
 
@@ -994,7 +1039,7 @@ class App():
         self.label_state["text"] = _wrap_text_to_fit_length(
             "Running image comparison with search file...", 30)
         App.files_grouped = App.compare.run_search()
-        
+
         if len(App.files_grouped) == 0:
             App.has_image_matches = False
             self.label_state["text"] = "Set a directory and search file."
@@ -1016,6 +1061,40 @@ class App():
 
     def find_duplicates(self):
         self.run_compare(find_duplicates=True)
+
+    def search_text_embedding(self, event=None):
+        if App.compare_mode != CompareMode.CLIP_EMBEDDING:
+            self.alert("Invalid action", "Compare mode must be set to Clip embedding to search text embeddings", kind="warning")
+            return
+        search_text = self.search_text.get()
+        if search_text.strip() == "":
+            self.alert("Invalid search text", "Search text must be set", kind="warning")
+            return
+        self.run_compare(search_text=search_text)
+
+    def run_search_text_embedding(self, search_text=""):
+        self.label_state["text"] = _wrap_text_to_fit_length(
+            "Running image comparison with search text...", 30)
+        App.files_grouped = App.compare.search_text(search_text)
+
+        if len(App.files_grouped) == 0:
+            App.has_image_matches = False
+            self.label_state["text"] = "Set a directory and search file or search text."
+            self.alert("No Match Found",
+                        "None of the files match the search text with current settings.",
+                        kind="info")
+            return
+
+        for f in App.files_grouped:
+            App.files_matched.append(f)
+
+        App.match_index = 0
+        App.has_image_matches = True
+        self.label_state["text"] = _wrap_text_to_fit_length(
+            str(len(App.files_matched)) + " possibly related images found.", 30)
+
+        self.add_buttons_for_mode()
+        self.create_image(App.files_matched[App.match_index])
 
     def set_group_state_label(self, group_number, size):
         if group_number is None:
@@ -1064,7 +1143,7 @@ class App():
         self._check_marks(min_mark_size=0)
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
-        top_level = tk.Toplevel(self.master, bg=Style.BG_COLOR)
+        top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title("Move Marked Files")
         top_level.geometry("600x300")
         try:
@@ -1279,18 +1358,18 @@ class App():
         y = 0
 
         # Create the toast on the top level
-        toast = tk.Toplevel(self.master, bg=Style.BG_COLOR)
+        toast = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         toast.geometry(f'{width}x{height}+{int(x)}+{int(y)}')
         self.container = tk.Frame(toast)
-        self.container.config(bg=Style.BG_COLOR)
+        self.container.config(bg=AppStyle.BG_COLOR)
         self.container.pack(fill=tk.BOTH, expand=tk.YES)
         label = tk.Label(
             self.container,
             text=message,
             anchor=tk.NW,
-            bg=Style.BG_COLOR,
-            fg=Style.FG_COLOR,
-            font=('Helvetica', 12)
+            bg=AppStyle.BG_COLOR,
+            fg=AppStyle.FG_COLOR,
+            font=('Helvetica', 10)
         )
         label.grid(row=1, column=1, sticky="NSEW", padx=10, pady=(0, 5))
         
@@ -1314,6 +1393,7 @@ class App():
 
     def add_label(self, label_ref, text, sticky=W, pady=0):
         label_ref['text'] = text
+        label_ref['font'] = fnt.Font(size=config.font_size)
         self.apply_to_grid(label_ref, sticky=sticky, pady=pady)
 
     def add_button(self, button_ref_name, text, command):
@@ -1324,7 +1404,7 @@ class App():
             self.apply_to_grid(button)
 
     def new_entry(self, text_variable=None, text=""):
-        return Entry(self.sidebar, text=text, textvariable=text_variable, width=30, font=fnt.Font(size=8))
+        return Entry(self.sidebar, text=text, textvariable=text_variable, width=30, font=fnt.Font(size=config.font_size))
 
 
     def destroy_grid_element(self, element_ref_name):

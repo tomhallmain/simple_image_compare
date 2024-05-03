@@ -3,7 +3,7 @@ from tkinter.font import Font
 from tkinter.ttk import Entry
 
 from config import config
-from style import Style
+from app_style import AppStyle
 
 
 # TODO config setting update fields and functions
@@ -18,7 +18,7 @@ class HelpAndConfig():
         self.frame.grid(column=0, row=0)
         self.frame.columnconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=9)
-        self.frame.config(bg=Style.BG_COLOR)
+        self.frame.config(bg=AppStyle.BG_COLOR)
         self.row_counter0 = 0
         self.row_counter1 = 0
         col_0_width = 250
@@ -90,7 +90,7 @@ class HelpAndConfig():
         self.label_config_title = Label(self.frame)
         self.label_config_title['text'] = "Config Settings"
         self.label_config_title.grid(row=self.row_counter0, columnspan=2)
-        self.label_config_title.config(bg=Style.BG_COLOR, fg=Style.FG_COLOR)
+        self.label_config_title.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
         self.row_counter0 += 1
         self.row_counter1 += 1
 
@@ -148,11 +148,11 @@ class HelpAndConfig():
 
     def add_label(self, label_ref, text, column=0, wraplength=500):
         label_ref['text'] = text
-        label_ref.config(wraplength=wraplength, justify=LEFT, bg=Style.BG_COLOR, fg=Style.FG_COLOR)
+        label_ref.config(wraplength=wraplength, justify=LEFT, bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
         self.apply_to_grid(label_ref, column=column)
 
     def add_checkbox(self, checkbox_ref):
-        checkbox_ref.config(bg=Style.BG_COLOR, fg=Style.FG_COLOR, selectcolor=Style.BG_COLOR)
+        checkbox_ref.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR, selectcolor=AppStyle.BG_COLOR)
         self.apply_to_grid(checkbox_ref, column=1)
 
     def new_entry(self, text_variable):

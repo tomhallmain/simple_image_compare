@@ -1,4 +1,8 @@
 {
+  "clip_model": "ViT-B/32",
+  "compare_mode": "CLIP_EMBEDDING",
+  "max_search_results": 50,
+  "embedding_similarity_threshold": 0.9,
   "color_diff_threshold": 15,
   "escape_backslash_filepaths": true,
   "file_counter_limit": 40000,
@@ -17,5 +21,11 @@
   "move_marks_overwrite_existing_file": false,
   "trash_folder": null,
   "sd_prompt_reader_loc": "{HOME}\\stable-diffusion-prompt-reader",
-  "tag_suggestions_file": "tag_suggestions.json"
+  "tag_suggestions_file": "tag_suggestions.json",
+  "file_types": [
+    ".jpg", ".jpeg", ".png", ".tiff", ".webp"
+  ],
+  "font_size": 8,
+  "threshold_potential_duplicate_color": 50,
+  "threshold_potential_duplicate_embedding": 0.99
 }

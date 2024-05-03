@@ -1,13 +1,13 @@
 
 # Simple Image Compare Tool
 
-Simple image comparison tool that detects color and face similarities.
+Simple image comparison tool that detects color and face similarities using CLIP embeddings (default) and color matching (separate optional mode).
 
 ## Usage
 
 Clone this repository and ensure Python 3 and the required packages are installed from requirements.txt.
 
-Run `app.py` to start the UI, or provide the location of the directory containing images for comparison to `compare.py` at runtime.
+Run `app.py` to start the UI, or provide the location of the directory containing images for comparison to `compare_embeddings.py` or `compare.py` at runtime.
 
 Useful for detecting duplicates or finding associations between large unstructured sets of image files. File management controls are available after the image analysis has completed.
 
@@ -15,11 +15,15 @@ Individual images can be passed to search against the full image data set by pas
 
 ## Image Browser
 
-After setting a directory before a comparison is run, the UI can be used as an image file browser. This is especially useful on Windows 11 as there is an option to auto-resize images to fill the screen as well as to auto-refresh the directory files, which the default Windows Photo Viewer application does not support. In addition, tests indicate that it supports quicker and smoother transitions between images as well as a faster load time for directories with many images in some cases.
+The UI can be used as an image file browser. This is especially useful on Windows 11 as there is an option to auto-resize images to fill the screen as well as to auto-refresh the directory files, which the default Windows Photo Viewer application does not support. In addition, tests indicate that it supports quicker and smoother transitions between images as well as a faster load time for directories with many images in some cases. You can also use this mode to mark groups of files and move them to various target directories.
 
-It is not implemented yet, but there will ultimately be zoom and drag functionality on this image browser, as well as when viewing grouped images after a comparison has been run.
+It is not implemented yet, but there will ultimately be zoom and drag functionality in browsing mode, as well as when viewing grouped images after a comparison has been run.
 
 ## Configuration
+
+Setting `clip_model` defines the CLIP model to use for generating embeddings.
+
+Setting `file_types` defines the allowed file extensions for gathering image files.
 
 Setting `file_check_interval_seconds` defines the interval between auto-updates to identify recent file changes.
 
@@ -28,6 +32,8 @@ Setting `sort_by` defines the default image browsing sort setting upon starting 
 Setting `trash_folder` defines the target folder for image deletion. If not set, deletion will send the image to your system's default trash folder.
 
 If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) then opening image details for an image with a stable diffusion prompt will give prompt information found in the image.
+
+Setting `tag_suggestions_file` should point to a JSON list that provides suggested tags for images for easy access in adding tags, if desired.
 
 ## UI Bindings
 
@@ -55,7 +61,8 @@ A directory with images must be set before most of the below bindings will have 
 
 ## Limitations
 
-This is a very simple app and can only detect fairly similar images based on colors and positioning. There is no neural net involved in the main comparison at this time. While unmatched dimensions are not an issue, similar images with highly varying perspectives (for example, if images are the same but one is turned sideways) will likely not generate a similar result.
+This is a very simple app. It is primarily meant for personal use but could be adapted for more intensive use cases.
 
-The face similarity measure is also very crude and only compares the number of faces in each image, so it is off by default. At a future time more complex comparison logic may be added. Even so, it can be fairly handy for quick comparison across large image sets.
+The face similarity measure in particular is very crude and only compares the number of faces in each image, so it is off by default. At a future time more complex face comparison logic may be added, but for now the embedding comparison is helpful in matching faces.
 
+GIFs are not currently supported, but may be at a future date.

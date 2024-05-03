@@ -1,7 +1,7 @@
 import json
 import os
 
-from constants import SortBy
+from constants import CompareMode, SortBy
 
 
 class Config:
@@ -9,6 +9,10 @@ class Config:
 
     def __init__(self):
         self.dict = {}
+        self.clip_model = "ViT-B/32"
+        self.compare_mode = CompareMode.CLIP_EMBEDDING
+        self.max_search_results = 50
+        self.embedding_similarity_threshold = 0.9
         self.color_diff_threshold = 15
         self.escape_backslash_filepaths = False
         self.file_counter_limit = 40000
@@ -27,33 +31,59 @@ class Config:
         self.move_marks_overwrite_existing_file = False
         self.trash_folder = None
         self.sd_prompt_reader_loc = None
+        self.file_types = [".jpg", ".jpeg", ".png", ".tiff", ".webp"]
+        self.font_size = 8
+        self.threshold_potential_duplicate_color = 50
+        self.threshold_potential_duplicate_embedding = 0.99
+
+        dict_set = False
 
         try:
             self.dict = json.load(open(Config.CONFIG_FILE_LOC, "r"))
-            self.color_diff_threshold = int(self.dict["color_diff_threshold"])
-            self.escape_backslash_filepaths = self.dict["escape_backslash_filepaths"]
-            self.file_counter_limit = int(self.dict["file_counter_limit"])
-            self.fill_canvas = self.dict["fill_canvas"]
-            self.image_browse_recursive = self.dict["image_browse_recursive"]
-            self.image_tagging_enabled = self.dict["image_tagging_enabled"]
-            self.print_settings = self.dict["print_settings"]
-            self.show_toasts = self.dict["show_toasts"]
-            self.slideshow_interval_seconds = int(self.dict["slideshow_interval_seconds"])
-            self.file_check_interval_seconds = int(self.dict["file_check_interval_seconds"])
-            self.file_check_skip_if_n_files_over = int(self.dict["file_check_skip_if_n_files_over"])
-            self.default_main_window_size = self.dict["default_main_window_size"]
-            self.toasts_persist_seconds = int(self.dict["toasts_persist_seconds"])
-            self.delete_instantly = self.dict["delete_instantly"]
-            self.move_marks_overwrite_existing_file = self.dict["move_marks_overwrite_existing_file"]
-            self.trash_folder = self.dict["trash_folder"]
+            dict_set = True
+        except Exception as e:
+            print(e)
+            print("Unable to load config. Ensure config.json file is located in the base directory of simple-image-comare.")
+
+        if dict_set:
+            self.set_values(None, "trash_folder")
+            self.set_values(list, "file_types")
+            self.set_values(str,
+                            "default_main_window_size",
+                            "clip_model")
+            self.set_values(bool,
+                            "image_browse_recursive",
+                            "image_tagging_enabled",
+                            "escape_backslash_filepaths",
+                            "fill_canvas",
+                            "print_settings",
+                            "show_toasts",
+                            "delete_instantly",
+                            "move_marks_overwrite_existing_file")
+            self.set_values(int,
+                            "max_search_results",
+                            "color_diff_threshold",
+                            "file_counter_limit",
+                            "slideshow_interval_seconds",
+                            "file_check_interval_seconds",
+                            "file_check_skip_if_n_files_over",
+                            "toasts_persist_seconds",
+                            "font_size",
+                            "threshold_potential_duplicate_color")
+            self.set_values(float,
+                            "embedding_similarity_threshold",
+                            "threshold_potential_duplicate_embedding")
             self.sd_prompt_reader_loc = self.validate_and_set_directory(key="sd_prompt_reader_loc")
+
+            try:
+                self.compare_mode = CompareMode[self.dict["compare_mode"]]
+            except Exception:
+                raise AssertionError("Invalid compare mode for compare_mode config setting. Must be one of CLIP_EMBEDDING, COLOR_MATCHING")
+
             try:
                 self.sort_by = SortBy[self.dict["sort_by"]]
             except Exception:
                 raise AssertionError("Invalid sort type for sort_by config setting. Must be one of NAME, FULL_PATH, CREATION_TIME, TYPE")
-        except Exception as e:
-            print(e)
-            print("Unable to load config. Ensure config.json file is located in the base directory of simple-image-comare.")
 
         if self.print_settings:
             self.print_config_settings()
@@ -67,6 +97,23 @@ class Config:
                 raise Exception(f"Invalid location provided for {key}: {loc}")
             return loc
         return None
+
+    def set_values(self, type, *names):
+        for name in names:
+            if type:
+                try:
+                    setattr(self, name, type(self.dict[name]))
+                except Exception as e:
+                    print(e)
+                    print(f"Failed to set {name} from config.json file. Ensure the value is set and of the correct type.")
+            else:
+                try:
+                    setattr(self, name, self.dict[name])
+                except Exception as e:
+                    print(e)
+                    print(f"Failed to set {name} from config.json file. Ensure the key is set.")
+
+
 
     def print_config_settings(self):
         print("Settings active:")

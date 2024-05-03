@@ -1,4 +1,3 @@
-from collections import Counter
 import getopt
 from glob import glob
 import os
@@ -7,15 +6,12 @@ import random
 import sys
 
 import cv2
-import imageio
-import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.cluster import KMeans
-from skimage.color import rgb2lab
 # from imutils import face_utils
 
 from config import config
 from constants import CompareMode
+from model import image_embeddings, text_embeddings, embedding_similarity
 
 
 def usage():
@@ -26,9 +22,8 @@ def usage():
     print("  -h, --help             Print help                                      ")
     print("      --include=pattern  File inclusion pattern                          ")
     print("      --search=filepath  Search for similar files to file         None   ")
-    print("      --use_thumb=bool   Set compare thumbs or color averages     True   ")
     print("  -o, --overwrite        Overwrite saved image data               False  ")
-    print("      --threshold=int    Color diff threshold                     15     ")
+    print("      --threshold=float  Embedding similarity threshold           0.9    ")
     print("  -v                     Verbose                                         ")
 
 
@@ -60,99 +55,6 @@ def round_up(number, to):
         return number - (number % to) + to
 
 
-def get_median_values(ndarray1d):
-    medians = []
-    for i in range(0, 3):
-        if len(ndarray1d) == 0:
-            return medians
-        medians.append(np.median(ndarray1d))
-        ndarray1d = np.take(ndarray1d, np.nonzero(ndarray1d != medians[i])[0])
-    return medians
-
-
-def RGB2HEX(color):
-    return "#{:02x}{:02x}{:02x}".format(
-        int(color[0]), int(color[1]), int(color[2]))
-
-
-def get_image_thumb_colors(image, thumb_dim):
-    '''
-    Normalize and reduce the size of the image array, and return the colors in LAB
-    '''
-    modified_image = cv2.resize(
-        image, (thumb_dim, thumb_dim), interpolation=cv2.INTER_AREA)
-    modified_image = modified_image.reshape(
-        modified_image.shape[0]*modified_image.shape[1], 3)
-    return rgb2lab(np.uint8(modified_image))
-
-
-def get_image_colors(image, clf, show_chart=False):
-    '''
-    Get the set of the most significant colors in the image array
-    '''
-    modified_image = cv2.resize(
-        image, (300, 300), interpolation=cv2.INTER_AREA)
-    modified_image = modified_image.reshape(
-        modified_image.shape[0]*modified_image.shape[1], 3)
-    labels = clf.fit_predict(modified_image)
-    counts = Counter(labels)
-    center_colors = clf.cluster_centers_
-    ordered_colors = [center_colors[i] for i in counts.keys()]
-    lab_colors = [rgb2lab(np.uint8(np.asarray(ordered_colors[i])))
-                  for i in counts.keys()]
-    if show_chart:
-        hex_colors = [RGB2HEX(ordered_colors[i]) for i in counts.keys()]
-        plt.figure(figsize=(8, 6))
-        plt.pie(counts.values(), labels=hex_colors, colors=hex_colors)
-    return lab_colors
-
-
-# TODO improve this comparison alg for non-thumb case
-
-
-def is_any_x_true_weighted(bool_list, x_threshold):
-    '''
-    Given a list of boolean values. return 1 (true) only if ... ?
-    '''
-    count_true = 1
-    _count = 0
-
-    for i in range(len(bool_list)):
-        if _count == x_threshold and count_true > x_threshold:
-            return 1
-        if _count > x_threshold and count_true + 1 > x_threshold:
-            return 1
-
-    return 0
-
-
-def is_any_x_true_consecutive(bool_list, x_threshold):
-    '''
-    Given a list of boolean values, return 1 (true) only if at least
-    x_threshold of them are consecutively true.
-    '''
-    count_true = 1
-    prior_bool = False
-    consecutive_count_true = 1
-    consecutive_runs_true = 0
-    consecutive_threshold = 10
-    consecutive_run_threshold = 10
-
-    for _bool in bool_list:
-        if _bool:
-            count_true += 1
-            if prior_bool:
-                consecutive_count_true += 1
-                if consecutive_count_true > consecutive_threshold:
-                    consecutive_runs_true += 1
-        prior_bool = _bool
-        if (count_true > x_threshold
-                and consecutive_runs_true > consecutive_run_threshold):
-            return 1
-
-    return 0
-
-
 def is_invalid_file(file_path, counter, run_search, inclusion_pattern):
     if file_path is None:
         return True
@@ -164,38 +66,24 @@ def is_invalid_file(file_path, counter, run_search, inclusion_pattern):
         return False
 
 
-def get_image_array(filepath):
-    '''
-    If this is a GIF file, return the array from the first frame only.
-
-    If the image is grayscale, raise a ValueError. If the image has more
-    dimensions than standard RGB, reshape it to RGB.
-    '''
-    image = imageio.imread(filepath)
-    image_shape = np.shape(image)
-    if (len(image_shape) < 3 or image_shape[0] < 1 or image_shape[1] < 1
-            or image_shape[2] < 1):
-        raise ValueError
-    if image_shape[2] > 3:
-        image = image[:, :, 0:3]
-    return image
 
 
-class Compare:
-    COMPARE_MODE = CompareMode.COLOR_MATCHING
+
+class CompareEmbedding:
+    COMPARE_MODE = CompareMode.CLIP_EMBEDDING
     SEARCH_OUTPUT_FILE = "simple_image_compare_search_output.txt"
     GROUPS_OUTPUT_FILE = "simple_image_compare_file_groups_output.txt"
     FACES_DATA = "image_faces.pkl"
-    THUMB_COLORS_DATA = "image_thumb_colors.pkl"
+    EMBEDDINGS_DATA = "image_embeddings.pkl"
     TOP_COLORS_DATA = "image_top_colors.pkl"
-    THRESHHOLD_POTENTIAL_DUPLICATE = 50
-    THRESHHOLD_GROUP_CUTOFF = 4500
+    THRESHHOLD_POTENTIAL_DUPLICATE = config.threshold_potential_duplicate_embedding
+    THRESHHOLD_GROUP_CUTOFF = 4500 # TODO fix this for Embedding case
+    SEARCH_RETURN_CLOSEST = False
 
     def __init__(self, base_dir=".", search_file_path=None, counter_limit=30000,
-                 use_thumb=True, compare_faces=False, color_diff_threshold=15,
+                 compare_faces=False, embedding_similarity_threshold=0.9,
                  inclusion_pattern=None, overwrite=False, verbose=False, gather_files_func=gather_files,
                  include_gifs=False, match_dims=False, progress_listener=None):
-        self.use_thumb = use_thumb
         self.files = []
         self.set_base_dir(base_dir)
         self.set_search_file_path(search_file_path)
@@ -208,28 +96,10 @@ class Compare:
         self.verbose = verbose
         self.progress_listener = progress_listener
         self._faceCascade = None
-        if self.use_thumb:
-            self.thumb_dim = 15
-            self.n_colors = self.thumb_dim ** 2
-            self.colors_below_threshold = int(self.n_colors / 2)
-            self.color_diff_threshold = color_diff_threshold
-            if self.color_diff_threshold is None:
-                self.color_diff_threshold = 15
-            self.modifier = self.thumb_dim
-            self.color_getter = get_image_thumb_colors
-            self.color_diff_alg = is_any_x_true_consecutive
-        else:
-            self.n_colors = 8
-            self.colors_below_threshold = int(self.n_colors * 4 / 8)
-            self.color_diff_threshold = color_diff_threshold
-            if self.color_diff_threshold is None:
-                self.color_diff_threshold = 15
-            self.modifier = KMeans(n_clusters=self.n_colors)
-            self.color_getter = get_image_colors
-            self.color_diff_alg = is_any_x_true_weighted
         if self.compare_faces:
             self._set_face_cascade()
-        self._file_colors = np.empty((0, self.n_colors, 3))
+        self.embedding_similarity_threshold = embedding_similarity_threshold
+        self._file_embeddings = np.empty((0, 512))
         self._file_faces = np.empty((0))
         self.settings_updated = False
         self.gather_files_func = gather_files_func
@@ -240,13 +110,10 @@ class Compare:
         Set the base directory and prepare cache file references.
         '''
         self.base_dir = base_dir
-        self.search_output_path = os.path.join(base_dir, Compare.SEARCH_OUTPUT_FILE)
-        self.groups_output_path = os.path.join(base_dir, Compare.GROUPS_OUTPUT_FILE)
-        self._file_faces_filepath = os.path.join(base_dir, Compare.FACES_DATA)
-        if self.use_thumb:
-            self._file_colors_filepath = os.path.join(base_dir, Compare.THUMB_COLORS_DATA)
-        else:
-            self._file_colors_filepath = os.path.join(base_dir, Compare.TOP_COLORS_DATA)
+        self.search_output_path = os.path.join(base_dir, CompareEmbedding.SEARCH_OUTPUT_FILE)
+        self.groups_output_path = os.path.join(base_dir, CompareEmbedding.GROUPS_OUTPUT_FILE)
+        self._file_faces_filepath = os.path.join(base_dir, CompareEmbedding.FACES_DATA)
+        self._file_embeddings_filepath = os.path.join(base_dir, CompareEmbedding.EMBEDDINGS_DATA)
 
     def set_search_file_path(self, search_file_path):
         '''
@@ -297,18 +164,12 @@ class Compare:
             print(f" search_file_path: {self.search_file_path}")
         print(f" comparison files base directory: {self.base_dir}")
         print(f" compare faces: {self.compare_faces}")
-        print(f" use thumb: {self.use_thumb}")
+        print(f" embedding similarity threshold: {self.embedding_similarity_threshold}")
         print(f" max file process limit: {self.counter_limit}")
         print(f" max files processable for base dir: {self.max_files_processed}")
         print(f" file glob pattern: {self.inclusion_pattern}")
         print(f" include gifs: {self.include_gifs}")
-        print(f" n colors: {self.n_colors}")
-        print(f" colors below threshold: {self.colors_below_threshold}")
-        print(f" color diff threshold: {self.color_diff_threshold}")
-        print(f" file colors filepath: {self._file_colors_filepath}")
-        print(f" modifier: {self.modifier}")
-        print(f" color getter: {self.color_getter}")
-        print(f" color diff alg: {self.color_diff_alg}")
+        print(f" file embeddings filepath: {self._file_embeddings_filepath}")
         print(f" overwrite image data: {self.overwrite}")
         print("|--------------------------------------------------------------------|\n\n")
 
@@ -336,17 +197,17 @@ class Compare:
         For all the found files in the base directory, either load the cached
         image data or extract new data and add it to the cache.
         '''
-        if self.overwrite or not os.path.exists(self._file_colors_filepath):
-            if not os.path.exists(self._file_colors_filepath):
+        if self.overwrite or not os.path.exists(self._file_embeddings_filepath):
+            if not os.path.exists(self._file_embeddings_filepath):
                 print("Image data not found so creating new cache"
                       + " - this may take a while.")
             elif self.overwrite:
                 print("Overwriting image data caches - this may take a while.")
-            self._file_colors_dict = {}
+            self._file_embeddings_dict = {}
             self._file_faces_dict = {}
         else:
-            with open(self._file_colors_filepath, "rb") as f:
-                self._file_colors_dict = pickle.load(f)
+            with open(self._file_embeddings_filepath, "rb") as f:
+                self._file_embeddings_dict = pickle.load(f)
             if self.compare_faces:
                 with open(self._file_faces_filepath, "rb") as f:
                     self._file_faces_dict = pickle.load(f)
@@ -369,13 +230,13 @@ class Compare:
             if counter > self.counter_limit:
                 break
 
-            if f in self._file_colors_dict:
-                colors = self._file_colors_dict[f]
+            if f in self._file_embeddings_dict:
+                embedding = self._file_embeddings_dict[f]
                 if self.compare_faces and f in self._file_faces_dict:
                     n_faces = self._file_faces_dict[f]
             else:
                 try:
-                    image = get_image_array(f)
+                    embedding = image_embeddings(f)
                 except OSError as e:
                     print(f"{f} - {e}")
                     continue
@@ -386,18 +247,7 @@ class Compare:
                         print(f"{f} - {e}")
                     # i.e. broken PNG file (bad header checksum in b'tEXt')
                     continue
-
-                if f in self._file_colors_dict:
-                    colors = self._file_colors_dict[f]
-                else:
-                    try:
-                        colors = self.color_getter(image, self.modifier)
-                    except ValueError as e:
-                        if self.verbose:
-                            print(e)
-                            print(f)
-                        continue
-                    self._file_colors_dict[f] = colors
+                self._file_embeddings_dict[f] = embedding
                 if self.compare_faces:
                     if f in self._file_faces_dict:
                         n_faces = self._file_faces_dict[f]
@@ -407,7 +257,7 @@ class Compare:
                 self.has_new_file_data = True
 
             counter += 1
-            self._file_colors = np.append(self._file_colors, [colors], 0)
+            self._file_embeddings = np.append(self._file_embeddings, [embedding], 0)
             if self.compare_faces:
                 self._file_faces = np.append(self._file_faces, [n_faces], 0)
             self._files_found.append(f)
@@ -415,7 +265,7 @@ class Compare:
             percent_complete = counter / self.max_files_processed_even * 100
             if percent_complete % 10 == 0:
                 if self.verbose:
-                    print(str(int(percent_complete)) + "% data gathered")
+                    print(f"{int(percent_complete)}% data gathered")
                 else:
                     print(".", end="", flush=True)
                 if self.progress_listener:
@@ -424,19 +274,19 @@ class Compare:
         # Save image file data
 
         if self.has_new_file_data or self.overwrite:
-            with open(self._file_colors_filepath, "wb") as store:
-                pickle.dump(self._file_colors_dict, store)
+            with open(self._file_embeddings_filepath, "wb") as store:
+                pickle.dump(self._file_embeddings_dict, store)
             if self._faceCascade:
                 with open(self._file_faces_filepath, "wb") as store:
                     pickle.dump(self._file_faces_dict, store)
-            self._file_colors_dict = None
+            self._file_embeddings_dict = None
             self._file_faces_dict = None
             if self.verbose:
                 if self.overwrite:
                     print("Overwrote any pre-existing image data at:")
                 else:
                     print("Updated image data saved to: ")
-                print(self._file_colors_filepath)
+                print(self._file_embeddings_filepath)
                 if self.compare_faces:
                     print(self._file_faces_filepath)
 
@@ -447,8 +297,7 @@ class Compare:
                                  + " current params - checked"
                                  + " in base dir = \"" + self.base_dir + "\"")
         elif self.verbose:
-            print("Data from " + str(self._n_files_found)
-                  + " files compiled for comparison.")
+            print(f"Data from {self._n_files_found} files compiled for comparison.")
 
     def _get_faces_count(self, filepath):
         '''
@@ -469,19 +318,20 @@ class Compare:
                 print(e)
         return n_faces
 
-    def _compute_color_diff(self, base_array, compare_array,
-                            return_diff_scores=False):
+    def _compute_embedding_diff(self, base_array, compare_array,
+                            return_diff_scores=False, threshold=None):
         '''
         Perform an elementwise diff between two image color arrays using the
         selected color difference algorithm.
         '''
-        lab_diff_squares = np.square(base_array - compare_array)
-        deltaE_cie76s = np.sqrt(np.sum(lab_diff_squares, 2)).astype(int)
-        similars = np.apply_along_axis(
-            self.color_diff_alg, 1, deltaE_cie76s < self.color_diff_threshold,
-            self.colors_below_threshold)
+        vectorized = np.vectorize(embedding_similarity, signature="(m),(n)->()")
+        simlarities = vectorized(base_array, compare_array)
+        if threshold is None:
+            similars = simlarities > self.embedding_similarity_threshold
+        else:
+            similars = simlarities > threshold
         if return_diff_scores:
-            return similars, np.sum(deltaE_cie76s, axis=1)
+            return similars, simlarities
         else:
             return similars
 
@@ -496,25 +346,36 @@ class Compare:
         if self.verbose:
             print("Identifying similar image files...")
         _files_found.pop(search_file_index)
-        search_file_colors = self._file_colors[search_file_index]
-        file_colors = np.delete(self._file_colors, search_file_index, 0)
-        color_similars = self._compute_color_diff(
-            file_colors, search_file_colors, True)
+        search_file_embedding = self._file_embeddings[search_file_index]
+        file_embeddings = np.delete(self._file_embeddings, search_file_index, 0)
+        embedding_similars = self._compute_embedding_diff(
+            file_embeddings, search_file_embedding, True)
 
         if self.compare_faces:
             search_file_faces = self._file_faces[search_file_index]
             file_faces = np.delete(self._file_faces, search_file_index)
             face_comparisons = file_faces - search_file_faces
             face_similars = face_comparisons == 0
-            similars = np.nonzero(color_similars[0] * face_similars)
+            similars = np.nonzero(embedding_similars[0] * face_similars)
         else:
-            similars = np.nonzero(color_similars[0])
+            similars = np.nonzero(embedding_similars[0])
 
-        for _index in similars[0]:
-            files_grouped[_files_found[_index]] = color_similars[1][_index]
-
-        # Sort results by increasing difference score
-        files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
+        if CompareEmbedding.SEARCH_RETURN_CLOSEST:
+            for _index in similars[0]:
+                files_grouped[_files_found[_index]] = embedding_similars[1][_index]
+            # Sort results by increasing difference score
+            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
+        else:
+            temp = {}
+            count = 0
+            for i in range(len(self._files_found)):
+                temp[self._files_found[i]] = embedding_similars[1][i]
+            for file, similarity in dict(sorted(temp.items(), key=lambda item: item[1])):
+                if count == config.max_search_results:
+                    break
+                files_grouped[file] = similarity
+                count += 1
+            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1], reverse=True))
 
         if len(files_grouped) > 0:
             with open(self.search_output_path, "w") as textfile:
@@ -523,15 +384,14 @@ class Compare:
                 if self.verbose:
                     print(header)
                 for f in files_grouped:
-                    diff_score = int(files_grouped[f])
+                    similarity = int(files_grouped[f])
                     if not f == search_path:
-                        if diff_score < Compare.THRESHHOLD_POTENTIAL_DUPLICATE:
+                        if similarity > CompareEmbedding.THRESHHOLD_POTENTIAL_DUPLICATE:
                             line = "DUPLICATE: " + f
-                        elif diff_score < 1000:
+                        elif similarity > 0.98:
                             line = "PROBABLE MATCH: " + f
                         else:
-                            similarity_score = str(round(1000/diff_score, 4))
-                            line = f + " - similarity: " + similarity_score
+                            line = f"{f} - similarity: {similarity}"
                         textfile.write(line + "\n")
                         if self.verbose:
                             print(line)
@@ -567,22 +427,15 @@ class Compare:
             if self.verbose:
                 print("Filepath not found in initial list - gathering new file data")
             try:
-                image = get_image_array(search_file_path)
+                embedding = image_embeddings(search_file_path)
             except OSError as e:
                 if self.verbose:
                     print(f"{search_file_path} - {e}")
                 raise AssertionError(
                     "Encountered an error accessing the provided file path in the file system.")
 
-            try:
-                colors = self.color_getter(image, self.modifier)
-            except ValueError as e:
-                if self.verbose:
-                    print(e)
-                raise AssertionError(
-                    "Encountered an error gathering colors from the file provided.")
             n_faces = self._get_faces_count(search_file_path)
-            self._file_colors = np.insert(self._file_colors, 0, [colors], 0)
+            self._file_embeddings = np.insert(self._file_embeddings, 0, [embedding], 0)
             self._file_faces = np.insert(self._file_faces, 0, [n_faces], 0)
             self._files_found.insert(0, search_file_path)
 
@@ -633,9 +486,9 @@ class Compare:
                 if self.progress_listener:
                     self.progress_listener.update("Image comparison", percent_complete)
 
-            compare_file_colors = np.roll(self._file_colors, i, 0)
-            color_similars = self._compute_color_diff(
-                self._file_colors, compare_file_colors, True)
+            compare_file_embeddings = np.roll(self._file_embeddings, i, 0)
+            color_similars = self._compute_embedding_diff(
+                self._file_embeddings, compare_file_embeddings, True)
 
             if self.compare_faces:
                 compare_file_faces = np.roll(self._file_faces, i, 0)
@@ -651,7 +504,7 @@ class Compare:
                 f1_grouped = base_index in files_grouped
                 f2_grouped = diff_index in files_grouped
 
-                if diff_score < Compare.THRESHHOLD_POTENTIAL_DUPLICATE:
+                if diff_score > CompareEmbedding.THRESHHOLD_POTENTIAL_DUPLICATE:
                     base_file = self._files_found[base_index]
                     diff_file = self._files_found[diff_index]
                     if ((base_file, diff_file) not in self._probable_duplicates
@@ -665,7 +518,7 @@ class Compare:
                     continue
                 elif f1_grouped:
                     existing_group_index, previous_diff_score = files_grouped[base_index]
-                    if previous_diff_score - Compare.THRESHHOLD_GROUP_CUTOFF > diff_score:
+                    if previous_diff_score - CompareEmbedding.THRESHHOLD_GROUP_CUTOFF > diff_score:
 #                        print(f"Previous: {previous_diff_score} , New: {diff_score}")
                         files_grouped[base_index] = (group_index, diff_score)
                         files_grouped[diff_index] = (group_index, diff_score)
@@ -675,7 +528,7 @@ class Compare:
                             existing_group_index, diff_score)
                 else:
                     existing_group_index, previous_diff_score = files_grouped[diff_index]
-                    if previous_diff_score - Compare.THRESHHOLD_GROUP_CUTOFF > diff_score:
+                    if previous_diff_score - CompareEmbedding.THRESHHOLD_GROUP_CUTOFF > diff_score:
 #                        print(f"Previous: {previous_diff_score} , New: {diff_score}")
                         files_grouped[base_index] = (group_index, diff_score)
                         files_grouped[diff_index] = (group_index, diff_score)
@@ -742,13 +595,92 @@ class Compare:
         else:
             return self.run_comparison()
 
+    def find_similars_to_text(self, search_text, text_embedding):
+        '''
+        Search the numpy array of all known image arrays for similar
+        characteristics to the provide image.
+        '''
+        files_grouped = {}
+        _files_found = list(self._files_found)
+
+        if self.verbose:
+            print("Identifying similar image files...")
+
+        # It is much less likely for text to match exactly
+        adjusted_threshold = self.embedding_similarity_threshold / 3
+        embedding_similars = self._compute_embedding_diff(
+            self._file_embeddings, text_embedding, True, threshold=adjusted_threshold)
+
+        if CompareEmbedding.SEARCH_RETURN_CLOSEST:
+            similars = np.nonzero(embedding_similars[0])
+            for _index in similars[0]:
+                files_grouped[_files_found[_index]] = embedding_similars[1][_index]
+            # Sort results by increasing difference score
+            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
+        else:
+            temp = {}
+            count = 0
+            for i in range(len(self._files_found)):
+                temp[self._files_found[i]] = embedding_similars[1][i]
+            for file, similarity in dict(sorted(temp.items(), key=lambda item: item[1], reverse=True)).items():
+                if count == config.max_search_results:
+                    break
+                files_grouped[file] = similarity
+                count += 1
+            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1], reverse=True))
+
+        if len(files_grouped) > 0:
+            with open(self.search_output_path, "w") as textfile:
+                header = f"Possibly related images to \"{search_text}\":\n"
+                textfile.write(header)
+                if self.verbose:
+                    print(header)
+                for f in files_grouped:
+                    similarity = files_grouped[f]
+                    if similarity > CompareEmbedding.THRESHHOLD_POTENTIAL_DUPLICATE:
+                        line = "DUPLICATE: " + f
+                    elif similarity > 0.98:
+                        line = "PROBABLE MATCH: " + f
+                    else:
+                        line = f"{f} - similarity: {similarity}"
+                    textfile.write(line + "\n")
+                    if self.verbose:
+                        print(line)
+            if self.verbose:
+                print("\nThis output data saved to file at "
+                      + self.search_output_path)
+        elif self.verbose:
+            print("No similar images to \"" + search_text
+                  + "\" identified with current params.")
+        return files_grouped
+
+    def search_text(self, search_text):
+        files_grouped = {}
+
+        '''
+        Prepare and begin a search for a provided image file path.
+        '''
+
+        if self.verbose:
+            print(f"Tokenizing search text: \"{search_text}\"")
+
+        try:
+            text_embedding = text_embeddings(search_text)
+        except OSError as e:
+            if self.verbose:
+                print(f"{search_text} - {e}")
+            raise AssertionError(
+                "Encountered an error generating token embedding for search text.")
+
+        files_grouped = self.find_similars_to_text(search_text, text_embedding)
+        return files_grouped
+
     def _sort_groups(self, file_groups):
         return sorted(file_groups,
                       key=lambda group_index: len(file_groups[group_index]))
 
     def get_probable_duplicates(self):
         return self._probable_duplicates
-
 
 if __name__ == "__main__":
     base_dir = "."
@@ -764,7 +696,7 @@ if __name__ == "__main__":
     use_thumb = True
     counter_limit = 10000
     inclusion_pattern = None
-    color_diff_threshold = None
+    embedding_similarity_threshold = None
     search_output_path = os.path.join(base_dir, search_output_path)
     groups_output_path = os.path.join(base_dir, groups_output_path)
 
@@ -810,7 +742,7 @@ if __name__ == "__main__":
                         + "\" is invalid - please ensure \"dir\" is passed first" \
                         + " if not providing full file path."
             elif o == "--threshold":
-                color_diff_threshold = int(a)
+                embedding_similarity_threshold = float(a)
             elif o == "--use_thumb":
                 use_thumb = a != "False" and a != "false" and a != "f"
             else:
@@ -821,15 +753,15 @@ if __name__ == "__main__":
             usage()
             exit(1)
 
-    compare = Compare(base_dir,
-                      search_file_path=search_file_path,
-                      counter_limit=counter_limit,
-                      use_thumb=use_thumb,
-                      compare_faces=compare_faces,
-                      color_diff_threshold=color_diff_threshold,
-                      inclusion_pattern=inclusion_pattern,
-                      overwrite=overwrite, verbose=verbose,
-                      include_gifs=include_gifs)
+    compare = CompareEmbedding(base_dir,
+                               search_file_path=search_file_path,
+                               counter_limit=counter_limit,
+                               embedding_similarity_threshold=embedding_similarity_threshold,
+                               compare_faces=compare_faces,
+                               inclusion_pattern=inclusion_pattern,
+                               overwrite=overwrite,
+                               verbose=verbose,
+                               include_gifs=include_gifs)
     compare.get_files()
     compare.get_data()
     compare.run()

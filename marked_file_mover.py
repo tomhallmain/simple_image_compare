@@ -6,7 +6,7 @@ from tkinter.ttk import Entry, Button
 
 from config import config
 from image_data_extractor import image_data_extractor
-from style import Style
+from app_style import AppStyle
 from utils import move_file
 
 
@@ -24,7 +24,7 @@ class MarkedFiles():
         self.frame.grid(column=0, row=0)
         self.frame.columnconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=9)
-        self.frame.config(bg=Style.BG_COLOR)
+        self.frame.config(bg=AppStyle.BG_COLOR)
         col_0_width = 600
 
         self.button_list = []  # Create the checkbutton list
@@ -93,7 +93,7 @@ class MarkedFiles():
     def add_label(self, label_ref, text, row=0, column=0, wraplength=500):
         label_ref['text'] = text
         label_ref.grid(column=column, row=row, sticky=W)
-        label_ref.config(wraplength=wraplength, justify=LEFT, bg=Style.BG_COLOR, fg=Style.FG_COLOR)
+        label_ref.config(wraplength=wraplength, justify=LEFT, bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
 
     def add_button(self, button_ref_name, text, command, row=0, column=0):
         if getattr(self, button_ref_name) is None:

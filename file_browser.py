@@ -22,6 +22,7 @@ class SortableFile:
     def get_tags(self):
         tags = []
 
+        # TODO
         try:
             pass
         except Exception:
@@ -207,7 +208,7 @@ class FileBrowser:
             return self._files
 
         files = []
-        allowed_extensions = [".jpg", ".jpeg", ".png", ".tiff", ".webp"]
+        allowed_extensions = config.file_types
 
         if self.filter and self.filter != "":
             pattern = "**/" + self.filter if self.recursive else self.filter
