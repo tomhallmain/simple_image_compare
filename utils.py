@@ -146,6 +146,12 @@ def move_file(existing_filepath, target_dir, overwrite_existing=False):
         raise Exception("File already exists: " + new_filepath)
     shutil.move(existing_filepath, new_filepath)
 
+def copy_file(existing_filepath, target_dir, overwrite_existing=False):
+    new_filepath = os.path.join(target_dir, os.path.basename(existing_filepath))
+    if not overwrite_existing and os.path.exists(new_filepath):
+        raise Exception("File already exists: " + new_filepath)
+    shutil.copy2(existing_filepath, new_filepath)
+
 
 def open_file_location(filepath):
     if sys.platform=='win32':

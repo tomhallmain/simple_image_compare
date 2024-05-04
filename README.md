@@ -13,27 +13,35 @@ Useful for detecting duplicates or finding associations between large unstructur
 
 Individual images can be passed to search against the full image data set by passing flag `--search` with the path of the search file, or setting a search file in the UI before running comparison.
 
+When using CLIP embedding compare mode, you can search your images by text. If there is a good CLIP signature for the search string it will likely return the images you are looking for, but be aware that it may take a while to load the first time as embeddings for all images will have to be generated.
+
 ## Image Browser
 
-The UI can be used as an image file browser. This is especially useful on Windows 11 as there is an option to auto-resize images to fill the screen as well as to auto-refresh the directory files, which the default Windows Photo Viewer application does not support. In addition, tests indicate that it supports quicker and smoother transitions between images as well as a faster load time for directories with many images in some cases. You can also use this mode to mark groups of files and move them to various target directories.
+The UI can be used as an image file browser. This especially useful on Windows as the following features are available which the default Windows Photo Viewer application does not support:
+- Auto-resize images to fill the screen
+- Auto-refresh directory files
+- Quicker and smoother transitions between images
+- Faster load time for directories with many images (in some cases)
+- Faster load times when switching between sort types
+- Mark groups of files to enable quick transitions and move or copy them to various target directories
 
 It is not implemented yet, but there will ultimately be zoom and drag functionality in browsing mode, as well as when viewing grouped images after a comparison has been run.
 
 ## Configuration
 
-Setting `clip_model` defines the CLIP model to use for generating embeddings.
+`clip_model` defines the CLIP model to use for generating embeddings.
 
-Setting `file_types` defines the allowed file extensions for gathering image files.
+`file_types` defines the allowed file extensions for gathering image files.
 
-Setting `file_check_interval_seconds` defines the interval between auto-updates to identify recent file changes.
+`file_check_interval_seconds` defines the interval between auto-updates to identify recent file changes.
 
-Setting `sort_by` defines the default image browsing sort setting upon starting the application.
+`sort_by` defines the default image browsing sort setting upon starting the application.
 
-Setting `trash_folder` defines the target folder for image deletion. If not set, deletion will send the image to your system's default trash folder.
+`trash_folder` defines the target folder for image deletion. If not set, deletion will send the image to your system's default trash folder.
 
 If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) then opening image details for an image with a stable diffusion prompt will give prompt information found in the image.
 
-Setting `tag_suggestions_file` should point to a JSON list that provides suggested tags for images for easy access in adding tags, if desired.
+`tag_suggestions_file` should point to a JSON list that provides suggested tags for images for easy access in adding tags, if desired.
 
 ## UI Bindings
 
