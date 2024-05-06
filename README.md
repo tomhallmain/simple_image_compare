@@ -17,7 +17,7 @@ When using CLIP embedding compare mode, you can search your images by text. If t
 
 ## Image Browser
 
-The UI can be used as an image file browser. This especially useful on Windows as the following features are available that the default Windows Photo Viewer application does not support:
+The UI can be used as an image file browser. This is especially useful on Windows as the following features are available that the default Windows Photo Viewer application does not support:
 - Auto-resize images to fill the screen
 - Auto-refresh directory files
 - Quicker and smoother transitions between images
