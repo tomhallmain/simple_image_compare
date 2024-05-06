@@ -176,6 +176,27 @@ class FileBrowser:
                 selected.extend(files[start_index:end_index+1])
         return selected
 
+    def find(self, search_text=None):
+        if not search_text or search_text.strip() == "":
+            raise Exception("Search text provided to file_browser.find() was invalid.")
+        search_text = search_text.lower()
+        # First try to match the string
+        files = self.get_files()
+        if search_text in files:
+            self.file_cursor = files.index(search_text)
+            return search_text
+        for i in range(len(files)):
+            filepath = files[i]
+            if filepath.lower().startswith(search_text):
+                self.file_cursor = i
+                return filepath
+        for i in range(len(files)):
+            filepath = files[i]
+            if search_text in filepath:
+                self.file_cursor = i
+                return filepath
+        return None
+
     def page_down(self):
         paging_length = self._get_paging_length()
         test_cursor = self.file_cursor + paging_length

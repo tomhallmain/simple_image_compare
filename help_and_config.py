@@ -53,11 +53,17 @@ class HelpAndConfig():
         self.label_14 = Label(self.frame)
         self._label_15 = Label(self.frame)
         self.label_15 = Label(self.frame)
+        self._label_16 = Label(self.frame)
+        self.label_16 = Label(self.frame)
+        self._label_17 = Label(self.frame)
+        self.label_17 = Label(self.frame)
 
         self.add_label(self._label_1, "Command", wraplength=col_0_width)
         self.add_label(self.label_1, "Description", column=1)
         self.add_label(self._label_2, "Shift+D", wraplength=col_0_width)
         self.add_label(self.label_2, "Show image details", column=1)
+        self.add_label(self._label_17, "Ctrl+G", wraplength=col_0_width)
+        self.add_label(self.label_17, "Open Go to file window", column=1)
         self.add_label(self._label_3, "Home", wraplength=col_0_width)
         self.add_label(self.label_3, "Reset image browser", column=1)
         self.add_label(self._label_4, "Page Up/Page Down", wraplength=col_0_width)
@@ -84,8 +90,8 @@ class HelpAndConfig():
         self.add_label(self.label_12, "Delete image", column=1)
         self.add_label(self._label_13, "F11", wraplength=col_0_width)
         self.add_label(self.label_13, "Toggle fullscreen", column=1)
-        self.add_label(self._label_14, "", wraplength=col_0_width)
-        self.add_label(self.label_14, "", column=1)
+        self.add_label(self._label_16, "", wraplength=col_0_width)
+        self.add_label(self.label_16, "", column=1)
 
         self.label_config_title = Label(self.frame)
         self.label_config_title['text'] = "Config Settings"

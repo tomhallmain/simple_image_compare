@@ -23,6 +23,7 @@ from compare_embeddings import CompareEmbedding
 from config import config
 from constants import Mode, CompareMode
 from file_browser import FileBrowser, SortBy
+from go_to_file import GoToFile
 from help_and_config import HelpAndConfig
 from image_details import ImageDetails # must import after config because of dynamic import
 from marked_file_mover import MarkedFiles
@@ -350,6 +351,7 @@ class App():
         self.master.bind("<Shift-M>", self.add_or_remove_mark_for_current_image)
         self.master.bind("<Shift-N>", self.add_all_marks_from_last)
         self.master.bind("<Shift-G>", self.go_to_mark)
+        self.master.bind("<Control-g>", self.open_go_to_file_window)
         self.master.bind("<Shift-C>", self.copy_marks_list)
         self.master.bind("<Control-m>", self.move_marks)
         self.master.bind("<Home>", self.home)
@@ -1145,21 +1147,39 @@ class App():
             self.add_or_remove_mark_for_current_image()
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title("Move Marked Files")
-        top_level.geometry("600x300")
+        top_level.geometry(MarkedFiles.get_geometry())
         try:
             marked_file_mover = MarkedFiles(top_level, self.toast, self.refresh, self.get_base_dir())
         except Exception as e:
             self.alert("Marked Files Window Error", str(e), kind="error")
 
-        
-
     def _check_marks(self, min_mark_size=1):
-        if not App.mode == Mode.BROWSE:
+        if App.mode != Mode.BROWSE:
             raise Exception("Marks currently only available in Browsing mode.")
         if len(MarkedFiles.file_marks) < min_mark_size:
             exception_text = f"{len(MarkedFiles.file_marks)} marks have been set (>={min_mark_size} expected).\nUse Shift+M to set a mark."
             self.toast(exception_text)
             raise Exception(exception_text)
+
+    def open_go_to_file_window(self, event=None):
+        if App.mode != Mode.BROWSE:
+            raise Exception("Go to file currently only available in Browsing mode.")
+        top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
+        top_level.title("Go To File")
+        top_level.geometry(GoToFile.get_geometry())
+        try:
+            go_to_file = GoToFile(top_level, self.go_to_file, self.toast)
+        except Exception as e:
+            self.alert("Go To File Window Error", str(e), kind="error")
+
+    def go_to_file(self, event=None, search_text="."):
+        file_search_text = "66825876_001_5365" # TODO remove once this has served its purpose
+        image_path = App.file_browser.find(search_text=search_text)
+        if not image_path:
+            self.alert("File not found", f"No file was found for the search text: \"{search_text}\"", kind="info")
+            return
+        self.create_image(image_path)
+        self.master.update()
 
     def home(self, event=None):
         if not App.mode == Mode.BROWSE:

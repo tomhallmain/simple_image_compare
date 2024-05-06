@@ -17,13 +17,15 @@ When using CLIP embedding compare mode, you can search your images by text. If t
 
 ## Image Browser
 
-The UI can be used as an image file browser. This especially useful on Windows as the following features are available which the default Windows Photo Viewer application does not support:
+The UI can be used as an image file browser. This especially useful on Windows as the following features are available that the default Windows Photo Viewer application does not support:
 - Auto-resize images to fill the screen
 - Auto-refresh directory files
 - Quicker and smoother transitions between images
 - Faster load time for directories with many images (in some cases)
 - Faster load times when switching between sort types
-- Mark groups of files to enable quick transitions and move or copy them to various target directories
+- Go to file by string search
+- Mark groups of files to enable quick transitions and comparisons
+- Move or copy marked file groups to directories
 
 It is not implemented yet, but there will ultimately be zoom and drag functionality in browsing mode, as well as when viewing grouped images after a comparison has been run.
 
@@ -50,7 +52,12 @@ A directory with images must be set before most of the below bindings will have 
 | Keys             | Mouse            | Effect               |
 |------------------|------------------|----------------------|
 | Shift-H          |                  | Show help window     |
+| Left Arrow       | Mouse Wheel Up   | Show previous image  |
+| Right Arrow      | Mouse Wheel Down | Show next image      |
+| Shift-Left       |                  | Show previous group  |
+| Shift-Right      |                  | Show next group      |
 | Shift-D          |                  | Show image details   |
+| Ctrl-G           |                  | Open go to file      |
 | Home             |                  | Reset image browser  |
 | Page Up          |                  | Page through images  |
 | Page Down        |                  | Page through images  |
@@ -59,10 +66,6 @@ A directory with images must be set before most of the below bindings will have 
 | Shift-G          |                  | Go to next mark      |
 | Shift-C          |                  | Copy marks list      |
 | Ctrl-M           |                  | Move marks to dir    |
-| Left Arrow       | Mouse Wheel Up   | Show previous image  |
-| Right Arrow      | Mouse Wheel Down | Show next image      |
-| Shift-Left       |                  | Show previous group  |
-| Shift-Right      |                  | Show next group      |
 | Shift-Enter      |                  | Open image location  |
 | Shift-Delete     | Mouse Wheel Click| Delete image         |
 | F11              |                  | Toggle fullscreen    |
