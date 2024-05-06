@@ -20,6 +20,7 @@ When using CLIP embedding compare mode, you can search your images by text. If t
 The UI can be used as an image file browser. This is especially useful on Windows as the following features are available that the default Windows Photo Viewer application does not support:
 - Auto-resize images to fill the screen
 - Auto-refresh directory files
+- Slideshow (customizable)
 - Quicker and smoother transitions between images
 - Faster load time for directories with many images (in some cases)
 - Faster load times when switching between sort types
@@ -36,6 +37,8 @@ It is not implemented yet, but there will ultimately be zoom and drag functional
 `file_types` defines the allowed file extensions for gathering image files.
 
 `file_check_interval_seconds` defines the interval between auto-updates to identify recent file changes.
+
+`slideshow_interval_seconds` defines the interval between slideshow transitions.
 
 `sort_by` defines the default image browsing sort setting upon starting the application.
 
