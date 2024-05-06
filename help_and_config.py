@@ -1,5 +1,4 @@
 from tkinter import Frame, Label, BooleanVar, StringVar, LEFT, W, E, Checkbutton
-from tkinter.font import Font
 from tkinter.ttk import Entry
 
 from config import config
@@ -87,7 +86,7 @@ class HelpAndConfig():
         self.add_label(self._label_11, "Shift-Enter", wraplength=col_0_width)
         self.add_label(self.label_11, "Open image location", column=1)
         self.add_label(self._label_12, "Shift-Delete / Mouse Wheel Click", wraplength=col_0_width)
-        self.add_label(self.label_12, "Delete image", column=1)
+        self.add_label(self.label_12, "Delete image (or marked file group)", column=1)
         self.add_label(self._label_13, "F11", wraplength=col_0_width)
         self.add_label(self.label_13, "Toggle fullscreen", column=1)
         self.add_label(self._label_16, "", wraplength=col_0_width)

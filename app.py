@@ -339,7 +339,7 @@ class App():
         self.master.bind('<Shift-Left>', self.show_prev_group)
         self.master.bind('<Shift-Right>', self.show_next_group)
         self.master.bind('<Shift-Enter>', self.open_image_location)
-        self.master.bind('<Shift-Delete>', self._delete_image)
+        self.master.bind('<Shift-Delete>', self.delete_image)
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Shift-F>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
@@ -347,13 +347,13 @@ class App():
         self.master.bind("<Shift-H>", self.get_help_and_config)
         self.master.bind("<Shift-S>", self.toggle_slideshow)
         self.master.bind("<MouseWheel>", self.handle_mousewheel)
-        self.master.bind("<Button-2>", self._delete_image)
+        self.master.bind("<Button-2>", self.delete_image)
         self.master.bind("<Shift-M>", self.add_or_remove_mark_for_current_image)
         self.master.bind("<Shift-N>", self.add_all_marks_from_last)
         self.master.bind("<Shift-G>", self.go_to_mark)
         self.master.bind("<Control-g>", self.open_go_to_file_window)
         self.master.bind("<Shift-C>", self.copy_marks_list)
-        self.master.bind("<Control-m>", self.move_marks)
+        self.master.bind("<Control-m>", self.open_move_marks_window)
         self.master.bind("<Home>", self.home)
         self.master.bind("<Prior>", self.page_up)
         self.master.bind("<Next>", self.page_down)
@@ -858,9 +858,9 @@ class App():
         if not base_dir_selected or base_dir_selected == "":
             res = self.alert("Confirm comparison",
                     "No base directory has been set, will use current base directory of " +
-                    str(self.base_dir) + "\n\nAre you sure you want to proceed?",
+                    f"{self.base_dir}\n\nAre you sure you want to proceed?",
                     kind="warning")
-            return res == messagebox.YES
+            return res == messagebox.OK
         return True
 
     def run_with_progress(self, exec_func, args=[]) -> None:
@@ -1141,7 +1141,7 @@ class App():
         self.master.clipboard_clear()
         self.master.clipboard_append(MarkedFiles.file_marks)
 
-    def move_marks(self, event=None):
+    def open_move_marks_window(self, event=None):
         self._check_marks(min_mark_size=0)
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
@@ -1149,12 +1149,13 @@ class App():
         top_level.title("Move Marked Files")
         top_level.geometry(MarkedFiles.get_geometry())
         try:
-            marked_file_mover = MarkedFiles(top_level, self.toast, self.refresh, self.get_base_dir())
+            marked_file_mover = MarkedFiles(top_level, self.toast, self.alert, self.refresh, self._handle_delete, base_dir=self.get_base_dir())
         except Exception as e:
             self.alert("Marked Files Window Error", str(e), kind="error")
 
     def _check_marks(self, min_mark_size=1):
         if App.mode != Mode.BROWSE:
+            self.alert("Invalid Action", "Marks currently only available in Browsing mode.")
             raise Exception("Marks currently only available in Browsing mode.")
         if len(MarkedFiles.file_marks) < min_mark_size:
             exception_text = f"{len(MarkedFiles.file_marks)} marks have been set (>={min_mark_size} expected).\nUse Shift+M to set a mark."
@@ -1232,10 +1233,7 @@ class App():
         self.master.clipboard_clear()
         self.master.clipboard_append(filepath)
 
-    def _delete_image(self, event):
-        self.delete_image()
-
-    def delete_image(self):
+    def delete_image(self, event=None):
         '''
         Delete the currently displayed image from the filesystem.
         '''
@@ -1269,8 +1267,11 @@ class App():
         else:
             self.alert("Error", "Failed to delete current file, unable to get valid filepath", kind="error")
 
-    def _handle_delete(self, filepath):
-        self.toast("Removing file: " + filepath)
+    def _handle_delete(self, filepath, toast=True):
+        if toast:
+            self.toast("Removing file: " + filepath)
+        else:
+            print("Removing file: " + filepath)
         if self.config.delete_instantly:
             os.remove(filepath)
             return

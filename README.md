@@ -26,7 +26,7 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Faster load times when switching between sort types
 - Go to file by string search
 - Mark groups of files to enable quick transitions and comparisons
-- Move or copy marked file groups to directories
+- Move, copy, and delete marked file groups
 
 It is not implemented yet, but there will ultimately be zoom and drag functionality in browsing mode, as well as when viewing grouped images after a comparison has been run.
 
@@ -70,7 +70,7 @@ A directory with images must be set before most of the below bindings will have 
 | Shift-C          |                  | Copy marks list      |
 | Ctrl-M           |                  | Move marks to dir    |
 | Shift-Enter      |                  | Open image location  |
-| Shift-Delete     | Mouse Wheel Click| Delete image         |
+| Shift-Delete     | Mouse Wheel Click| Delete image(s)      |
 | F11              |                  | Toggle fullscreen    |
 
 ## Limitations

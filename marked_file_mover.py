@@ -1,11 +1,9 @@
 import os
 
-from tkinter import Frame, Label, StringVar, filedialog, LEFT, W
-from tkinter.font import Font
-from tkinter.ttk import Entry, Button
+from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
+from tkinter.ttk import Button
 
 from config import config
-from image_data_extractor import image_data_extractor
 from app_style import AppStyle
 from utils import move_file, copy_file
 
@@ -39,10 +37,12 @@ class MarkedFiles():
             return 1
         return 0
 
-    def __init__(self, master, toast_callback, refresh_callback, base_dir="."):
+    def __init__(self, master, toast_callback, alert_callback, refresh_callback, delete_callback, base_dir="."):
         self.master = master
         self.toast_callback = toast_callback
+        self.alert_callback = alert_callback
         self.refresh_callback = refresh_callback
+        self.delete_callback = delete_callback
         self.base_dir = os.path.normpath(base_dir)
 
         # Use the last set target directory as a base if any directories have been set
@@ -82,12 +82,16 @@ class MarkedFiles():
             self.get_target_directory(move_func=copy_file)
         self.add_directory_copy_btn = None
         self.add_btn("add_directory_copy_btn", "COPY", copy_handler_new_dir, column=2)
+        self.delete_btn = None
+        self.add_btn("delete_btn", "DELETE", self.delete_marked_files, column=3)
         self.set_target_dirs_from_dir_btn = None
-        self.add_btn("set_target_dirs_from_dir_btn", "Add directories from parent", self.set_target_dirs_From_dir, column=3)
+        self.add_btn("set_target_dirs_from_dir_btn", "Add directories from parent", self.set_target_dirs_From_dir, column=4)
         self.clear_target_dirs_btn = None
-        self.add_btn("clear_target_dirs_btn", "Clear targets", self.clear_target_dirs, column=4)
+        self.add_btn("clear_target_dirs_btn", "Clear targets", self.clear_target_dirs, column=5)
 
         self.master.bind("<Shift-W>", self.close_windows)
+        self.master.bind('<Shift-Delete>', self.delete_marked_files)
+        self.master.bind("<Button-2>", self.delete_marked_files)
         self.frame.after(1, lambda: self.frame.focus_force())
 
 
@@ -211,6 +215,32 @@ class MarkedFiles():
         self.copy_btn_list = []
         self.label_list = []
 
+
+    def delete_marked_files(self, event=None):
+        res = self.alert_callback("Confirm Delete",
+                f"Deleting {len(MarkedFiles.file_marks)} marked files - Are you sure you want to proceed?",
+                kind="warning")
+        if res != messagebox.OK:
+            print(f"result was: {res}")
+            return
+
+        failed_to_delete = []
+        for filepath in MarkedFiles.file_marks:
+            try:
+                self.delete_callback(filepath)
+            except Exception as e:
+                if os.path.exists(filepath):
+                    failed_to_delete.append(filepath)
+
+        MarkedFiles.file_marks.clear()
+        if len(failed_to_delete) > 0:
+            MarkedFiles.file_marks.extend(failed_to_delete)
+            self.alert_callback("Delete Failed",
+                    f"Failed to delete {len(failed_to_delete)} files - check log for details.",
+                    kind="warning")
+
+        self.refresh_callback()
+        self.close_windows()
 
     def close_windows(self, event=None):
         self.master.destroy()

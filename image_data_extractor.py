@@ -1,6 +1,4 @@
-from copy import deepcopy
 from PIL import Image
-import glob
 import json
 import os
 import sys
