@@ -17,7 +17,7 @@ When using CLIP embedding compare mode, you can search your images by text. If t
 
 ## Image Browser
 
-The UI can be used as an image file browser. This is especially useful on Windows as the following features are available that the default Windows Photo Viewer application does not support:
+The UI can be used as an image file browser. This is especially useful on Windows as the following features are available that the default Windows Photo Viewer application either does not support or is hard to quickly reconfigure:
 - Auto-resize images to fill the screen
 - Auto-refresh directory files
 - Slideshow (customizable)
@@ -52,26 +52,28 @@ If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [
 
 A directory with images must be set before most of the below bindings will have any effect. The group bindings are only functional in GROUP mode after a comparison has been run.
 
-| Keys             | Mouse            | Effect               |
-|------------------|------------------|----------------------|
-| Shift-H          |                  | Show help window     |
-| Left Arrow       | Mouse Wheel Up   | Show previous image  |
-| Right Arrow      | Mouse Wheel Down | Show next image      |
-| Shift-Left       |                  | Show previous group  |
-| Shift-Right      |                  | Show next group      |
-| Shift-D          |                  | Show image details   |
-| Ctrl-G           |                  | Open go to file      |
-| Home             |                  | Reset image browser  |
-| Page Up          |                  | Page through images  |
-| Page Down        |                  | Page through images  |
-| Shift-M          |                  | Add/remove a mark    |
-| Shift-N          |                  | Add marks from last  |
-| Shift-G          |                  | Go to next mark      |
-| Shift-C          |                  | Copy marks list      |
-| Ctrl-M           |                  | Move marks to dir    |
-| Shift-Enter      |                  | Open image location  |
-| Shift-Delete     | Mouse Wheel Click| Delete image(s)      |
-| F11              |                  | Toggle fullscreen    |
+| Keys             | Mouse            | Effect                 |
+|------------------|------------------|------------------------|
+| Shift-H          |                  | Show help window       |
+| Left Arrow       | Mouse Wheel Up   | Show previous image    |
+| Right Arrow      | Mouse Wheel Down | Show next image        |
+| Shift-Left       |                  | Show previous group    |
+| Shift-Right      |                  | Show next group        |
+| Shift-D          |                  | Show image details     |
+| Ctrl-G           |                  | Open go to file        |
+| Home             |                  | Reset image browser    |
+| Page Up          |                  | Page through images    |
+| Page Down        |                  | Page through images    |
+| Shift-M          |                  | Add/remove a mark      |
+| Shift-N          |                  | Add marks from last    |
+| Shift-G          |                  | Go to next mark        |
+| Shift-C          |                  | Copy marks list        |
+| Ctrl-M           |                  | Move marks to dir      |
+| Ctrl-Z           |                  | Undo move marks        |
+| Ctrl-X           |                  | Modify last marks move |
+| Shift-Enter      |                  | Open image location    |
+| Shift-Delete     | Mouse Wheel Click| Delete image(s)        |
+| F11              |                  | Toggle fullscreen      |
 
 ## Limitations
 

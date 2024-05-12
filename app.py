@@ -354,6 +354,8 @@ class App():
         self.master.bind("<Control-g>", self.open_go_to_file_window)
         self.master.bind("<Shift-C>", self.copy_marks_list)
         self.master.bind("<Control-m>", self.open_move_marks_window)
+        self.master.bind("<Control-z>", self.revert_last_marks_change)
+        self.master.bind("<Control-x>", self.modify_last_marks_change)
         self.master.bind("<Home>", self.home)
         self.master.bind("<Prior>", self.page_up)
         self.master.bind("<Next>", self.page_down)
@@ -1162,6 +1164,12 @@ class App():
             self.toast(exception_text)
             raise Exception(exception_text)
 
+    def revert_last_marks_change(self, event=None):
+        MarkedFiles.undo_move_marks(self.get_base_dir(), self.toast, self.refresh)
+
+    def modify_last_marks_change(self, event=None):
+        MarkedFiles.undo_move_marks(None, self.toast, self.refresh)
+
     def open_go_to_file_window(self, event=None):
         if App.mode != Mode.BROWSE:
             raise Exception("Go to file currently only available in Browsing mode.")
@@ -1174,7 +1182,6 @@ class App():
             self.alert("Go To File Window Error", str(e), kind="error")
 
     def go_to_file(self, event=None, search_text="."):
-        file_search_text = "66825876_001_5365" # TODO remove once this has served its purpose
         image_path = App.file_browser.find(search_text=search_text)
         if not image_path:
             self.alert("File not found", f"No file was found for the search text: \"{search_text}\"", kind="info")

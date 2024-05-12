@@ -184,15 +184,18 @@ class FileBrowser:
         files = self.get_files()
         if search_text in files:
             self.file_cursor = files.index(search_text)
+            print(f"Index of {search_text}: {self.file_cursor}")
             return search_text
         for i in range(len(files)):
             filepath = files[i]
             if filepath.lower().startswith(search_text):
+                print(f"Index of {filepath}: {i}")
                 self.file_cursor = i
                 return filepath
         for i in range(len(files)):
             filepath = files[i]
             if search_text in filepath:
+                print(f"Index of {filepath}: {i}")
                 self.file_cursor = i
                 return filepath
         return None
