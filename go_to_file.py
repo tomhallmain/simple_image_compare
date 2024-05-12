@@ -36,6 +36,7 @@ class GoToFile:
 
         self.master.bind("<Shift-W>", self.close_windows)
         self.frame.after(1, lambda: self.frame.focus_force())
+        self.search_text_box.after(1, lambda: self.search_text_box.focus_force())
 
     def go_to_file(self, event=None):
         search_text = self.search_text.get()

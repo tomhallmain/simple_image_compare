@@ -1,5 +1,5 @@
-from enum import Enum
 import os
+import signal
 import sys
 import time
 
@@ -18,6 +18,7 @@ from tkinter.ttk import Button, Entry, Frame, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
+from app_info_cache import app_info_cache
 from compare import Compare, get_valid_file
 from compare_embeddings import CompareEmbedding
 from config import config
@@ -29,7 +30,7 @@ from image_details import ImageDetails # must import after config because of dyn
 from marked_file_mover import MarkedFiles
 from app_style import AppStyle
 from utils import (
-    _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, move_file, periodic, start_thread
+    _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, periodic, start_thread
 )
 
 
@@ -338,7 +339,7 @@ class App():
         self.master.bind('<Right>', self.show_next_image)
         self.master.bind('<Shift-Left>', self.show_prev_group)
         self.master.bind('<Shift-Right>', self.show_next_group)
-        self.master.bind('<Shift-Enter>', self.open_image_location)
+        self.master.bind('<Shift-O>', self.open_image_location)
         self.master.bind('<Shift-Delete>', self.delete_image)
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Shift-F>", self.toggle_fullscreen)
@@ -494,6 +495,7 @@ class App():
         '''
         Change the base directory to the value provided in the UI.
         '''
+        self.store_info_cache()
         base_dir = self.set_base_dir_box.get()
         if base_dir == "" or base_dir == "Add dirpath..." or self.base_dir == base_dir:
             base_dir = filedialog.askdirectory(
@@ -515,7 +517,12 @@ class App():
         App.file_browser.set_directory(self.base_dir)
         if App.compare is None and App.mode != Mode.SEARCH:
             self.set_mode(Mode.BROWSE)
-            self.show_next_image()
+            previous_file = app_info_cache.get(self.base_dir, "image_cursor")
+            if previous_file and previous_file != "":
+                if not self.go_to_file(None, previous_file):
+                    self.show_next_image()
+            else:
+                self.show_next_image()
             self.label_state["text"] = f"{App.file_browser.count()} image files found."
         self.master.update()
 
@@ -1185,9 +1192,10 @@ class App():
         image_path = App.file_browser.find(search_text=search_text)
         if not image_path:
             self.alert("File not found", f"No file was found for the search text: \"{search_text}\"", kind="info")
-            return
+            return False
         self.create_image(image_path)
         self.master.update()
+        return True
 
     def home(self, event=None):
         if not App.mode == Mode.BROWSE:
@@ -1366,6 +1374,12 @@ class App():
             self.master.update()
             self.create_image(App.files_matched[App.match_index])
 
+    def store_info_cache(self):
+        base_dir = self.get_base_dir()
+        if base_dir and base_dir != "" and App.img_path and App.img_path != "":
+            app_info_cache.set(base_dir, "image_cursor", os.path.basename(App.img_path))
+            app_info_cache.store()
+
     def alert(self, title, message, kind="info", hidemain=True) -> None:
         if kind not in ("error", "warning", "info"):
             raise ValueError("Unsupported alert kind.")
@@ -1457,6 +1471,23 @@ if __name__ == "__main__":
     root.columnconfigure(1, weight=9)
     root.rowconfigure(0, weight=1)
     app = App(root)
+
+    def on_closing():
+        app.store_info_cache()
+        root.destroy()
+
+    # Graceful shutdown handler
+    def graceful_shutdown(signum, frame):
+        print("Caught signal, shutting down gracefully...")
+        on_closing()
+        exit(0)
+
+    # Register the signal handlers for graceful shutdown
+    signal.signal(signal.SIGINT, graceful_shutdown)
+    signal.signal(signal.SIGTERM, graceful_shutdown)
+
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+
     try:
         root.mainloop()
     except KeyboardInterrupt:

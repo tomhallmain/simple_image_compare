@@ -22,11 +22,12 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Auto-refresh directory files
 - Slideshow (customizable)
 - Quicker and smoother transitions between images
-- Faster load time for directories with many images (in some cases)
+- Faster load time for directories with many images in some cases
 - Faster load times when switching between sort types
 - Go to file by string search
 - Mark groups of files to enable quick transitions and comparisons
 - Move, copy, and delete marked file groups
+- Stores session info about seen directories (useful for directories with many images)
 
 It is not implemented yet, but there will ultimately be zoom and drag functionality in browsing mode, as well as when viewing grouped images after a comparison has been run.
 
@@ -71,7 +72,7 @@ A directory with images must be set before most of the below bindings will have 
 | Ctrl-M           |                  | Move marks to dir      |
 | Ctrl-Z           |                  | Undo move marks        |
 | Ctrl-X           |                  | Modify last marks move |
-| Shift-Enter      |                  | Open image location    |
+| Shift-O          |                  | Open image location    |
 | Shift-Delete     | Mouse Wheel Click| Delete image(s)        |
 | F11              |                  | Toggle fullscreen      |
 

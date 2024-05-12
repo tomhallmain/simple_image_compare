@@ -89,7 +89,7 @@ class HelpAndConfig():
         self.add_label(self.label_9, "Show previous/next image", column=1)
         self.add_label(self._label_10, "Shift-Left/Right Arrow", wraplength=col_0_width)
         self.add_label(self.label_10, "Show previous/next group", column=1)
-        self.add_label(self._label_11, "Shift-Enter", wraplength=col_0_width)
+        self.add_label(self._label_11, "Shift-O", wraplength=col_0_width)
         self.add_label(self.label_11, "Open image location", column=1)
         self.add_label(self._label_12, "Shift-Delete / Mouse Wheel Click", wraplength=col_0_width)
         self.add_label(self.label_12, "Delete image (or marked file group if marks window selected)", column=1)

@@ -291,6 +291,8 @@ class MarkedFiles():
         shift_key_pressed = (event.state & 0x1) != 0 # Do not filter if shift key is down
         if shift_key_pressed:
             return
+        # TODO: figure out why above isn't working for single shift key
+        # TODO: if the key is up/down arrow key, roll the list up/down
         print(f"New filter char: {event.char}")
         if event.keysym == "BackSpace":
             if len(self.filter_text) > 0:
@@ -307,10 +309,17 @@ class MarkedFiles():
         else:
             print(f"Filtering by string: {self.filter_text}")
             temp = []
+            # First pass try to match directory name
             for target_dir in MarkedFiles.mark_target_dirs:
                 dirname = os.path.basename(os.path.normpath(target_dir))
-                if dirname.startswith(self.filter_text):
+                if dirname.lower().startswith(self.filter_text):
                     temp.append(target_dir)
+            # Second pass try to match parent directory name, so these will appear after
+            for target_dir in MarkedFiles.mark_target_dirs:
+                if not target_dir in temp:
+                    dirname = os.path.basename(os.path.dirname(os.path.normpath(target_dir)))
+                    if dirname and dirname.lower().startswith(self.filter_text):
+                        temp.append(target_dir)
             self.filtered_target_dirs = temp[:]
             print(f"Filtered target dirs: {self.filtered_target_dirs}")
 
@@ -329,14 +338,25 @@ class MarkedFiles():
 
         If shift key pressed, copy the files, but if not, just move them.
 
+        If control key pressed, ignore any marked dirs and set a new target directory.
+
+        The idea is the user can filter the directories using keypresses, then press enter to
+        do the action on the first filtered directory.
+
         TODO: handle case of multiple filtered directories better, instead of just selecting the first
         """
         shift_key_pressed = (event.state & 0x1) != 0
+        control_key_pressed = (event.state & 0x4) != 0
         move_func = copy_file if shift_key_pressed else move_file
-        if len(self.filtered_target_dirs) == 0:
+        if len(self.filtered_target_dirs) == 0 or control_key_pressed:
             self.handle_target_directory(move_func=move_func)
         else:
-            target_dir = self.filtered_target_dirs[0]
+            # TODO maybe sort the last target dir first in the list instead of this
+            # might be confusing otherwise
+            if len(self.filtered_target_dirs) == 1 or self.filter_text.strip() != "":
+                target_dir = self.filtered_target_dirs[0]
+            else:
+                target_dir = MarkedFiles.last_set_target_dir
             self.move_marks_to_dir(target_dir=target_dir, move_func=move_func)
 
 
