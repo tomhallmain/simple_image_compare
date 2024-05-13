@@ -244,8 +244,8 @@ class App():
         self.label_compare_mode = Label(self.sidebar)
         self.add_label(self.label_compare_mode, "Compare mode")
         self.compare_mode_var = tk.StringVar()
-        self.compare_mode_choice = OptionMenu(self.sidebar, self.compare_mode_var, App.compare_mode.name,
-                                              *CompareMode.__members__.keys(), command=self.set_compare_mode)
+        self.compare_mode_choice = OptionMenu(self.sidebar, self.compare_mode_var, str(App.compare_mode),
+                                              *CompareMode.members(), command=self.set_compare_mode)
         self.apply_to_grid(self.compare_mode_choice, sticky=W)
 
         self.label_compare_threshold = Label(self.sidebar)
@@ -282,8 +282,8 @@ class App():
         self.label_sort_by = Label(self.sidebar)
         self.add_label(self.label_sort_by, "Browsing mode - Sort by")
         self.sort_by = tk.StringVar()
-        self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by, self.config.sort_by.name,
-                                         *SortBy.__members__.keys(), command=self.set_sort_by)
+        self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by, str(self.config.sort_by),
+                                         *SortBy.members(), command=self.set_sort_by)
         self.apply_to_grid(self.sort_by_choice, sticky=W)
 
         image_browse_recurse_var = tk.BooleanVar(value=self.config.image_browse_recursive)
@@ -386,9 +386,9 @@ class App():
         Change the current mode of the application.
         '''
         App.mode = mode
-        self.label_mode['text'] = mode.readable_str()
+        self.label_mode['text'] = str(mode)
 
-        if mode == Mode.GROUP:
+        if mode == Mode.GROUP or mode == Mode.DUPLICATES:
             self.toggle_image_view_btn = None
             self.replace_current_image_btn = None
         if mode == Mode.SEARCH:
@@ -404,13 +404,22 @@ class App():
             self.master.update()
 
     def set_sort_by(self, event):
-        App.file_browser.set_sort_by(SortBy[self.sort_by.get()])
+        App.file_browser.set_sort_by(SortBy.get(self.sort_by.get()))
         App.file_browser.refresh()
         if App.mode == Mode.BROWSE:
             self.show_next_image()
 
     def set_compare_mode(self, event):
-        App.compare_mode = CompareMode[self.compare_mode_var.get()]
+        App.compare_mode = CompareMode.get(self.compare_mode_var.get())
+        self.label_compare_threshold["text"] = App.compare_mode.threshold_str()
+        if App.compare_mode == CompareMode.COLOR_MATCHING:
+            default_val = self.config.color_diff_threshold
+        else:
+            default_val = self.config.embedding_similarity_threshold
+        self.compare_threshold.set(str(default_val))
+        self.compare_threshold_choice = OptionMenu(self.sidebar, self.compare_threshold,
+                                                   str(default_val), *App.compare_mode.threshold_vals())
+        self.master.update()
 
     @classmethod
     def toggle_fill_canvas(cls):
@@ -474,11 +483,21 @@ class App():
             self.show_prev_image()
 
     def get_image_details(self, event=None):
+        if App.img_path is None or App.img_path == "":
+            return
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title("Image Details")
         top_level.geometry("600x300")
+        if App.mode == Mode.BROWSE:
+            index_text = App.file_browser.get_index_details(App.img_path)
+        elif App.mode == Mode.GROUP:
+            index_text = f"{App.match_index+1} of {len(App.files_matched)} (Group {App.current_group_index+1} of {len(App.file_groups)})"
+        elif App.mode == Mode.SEARCH and not App.is_toggled_view_matches:
+            index_text = f"{App.match_index+1} of {len(App.files_matched)}"
+        else:
+            index_text = ""
         try:
-            image_details = ImageDetails(top_level, App.img, App.img_path)
+            image_details = ImageDetails(top_level, App.img_path, index_text)
         except Exception as e:
             self.alert("Image Details Error", str(e), kind="error")
 
@@ -519,7 +538,7 @@ class App():
             self.set_mode(Mode.BROWSE)
             previous_file = app_info_cache.get(self.base_dir, "image_cursor")
             if previous_file and previous_file != "":
-                if not self.go_to_file(None, previous_file):
+                if not self.go_to_file(None, previous_file, retry_with_delay=1):
                     self.show_next_image()
             else:
                 self.show_next_image()
@@ -1188,8 +1207,8 @@ class App():
         except Exception as e:
             self.alert("Go To File Window Error", str(e), kind="error")
 
-    def go_to_file(self, event=None, search_text="."):
-        image_path = App.file_browser.find(search_text=search_text)
+    def go_to_file(self, event=None, search_text=".", retry_with_delay=0):
+        image_path = App.file_browser.find(search_text=search_text, retry_with_delay=retry_with_delay)
         if not image_path:
             self.alert("File not found", f"No file was found for the search text: \"{search_text}\"", kind="info")
             return False
@@ -1407,7 +1426,7 @@ class App():
         self.container.pack(fill=tk.BOTH, expand=tk.YES)
         label = tk.Label(
             self.container,
-            text=message,
+            text=message.strip(),
             anchor=tk.NW,
             bg=AppStyle.BG_COLOR,
             fg=AppStyle.FG_COLOR,

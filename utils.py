@@ -41,10 +41,10 @@ def periodic(run_obj, sleep_attr="", run_attr=None):
 def trace(frame, event, arg):
     if event == "call":
         filename = frame.f_code.co_filename
-        #if "simple_image_compare" in filename:
-        lineno = frame.f_lineno
-        # you can examine the frame, locals, etc too.
-        print("%s @ %s" % (filename, lineno))
+        if "file_browser" in filename:
+            lineno = frame.f_lineno
+            # you can examine the frame, locals, etc too.
+            print("%s @ %s" % (filename, lineno))
     return trace
 
 

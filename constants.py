@@ -2,30 +2,31 @@ from enum import Enum
 
 
 class Mode(Enum):
-    BROWSE = 1
-    SEARCH = 2
-    GROUP = 3
-    DUPLICATES = 4
+    BROWSE = "Browsing Mode"
+    SEARCH = "Searching Mode"
+    GROUP = "Group Comparison Mode"
+    DUPLICATES = "Duplicate Detection Mode"
 
-    def readable_str(self):
-        if self == Mode.BROWSE:
-            return "Browsing Mode"
-        if self == Mode.SEARCH:
-            return "Searching Mode"
-        if self == Mode.GROUP:
-            return "Group Comparison Mode"
-        if self == Mode.DUPLICATES:
-            return "Duplicate Detection Mode"
+    def __str__(self):
+        return self.value
 
 class CompareMode(Enum):
-    COLOR_MATCHING = 1
-    CLIP_EMBEDDING = 2
+    COLOR_MATCHING = "Color Matching"
+    CLIP_EMBEDDING = "CLIP Embedding"
 
-    def readable_str(self):
-        if self == CompareMode.COLOR_MATCHING:
-            return "Compare Colors"
-        if self == CompareMode.CLIP_EMBEDDING:
-            return "Compare CLIP"
+    def __str__(self):
+        return self.value
+
+    @staticmethod
+    def get(name):
+        for key, value in CompareMode.__members__.items():
+            if str(value) == name:
+                return value
+        raise Exception(f"Not a valid prompt mode: {name}")
+
+    @staticmethod
+    def members():
+        return [str(value) for key, value in CompareMode.__members__.items()]
 
     def threshold_str(self):
         if self == CompareMode.COLOR_MATCHING:
@@ -40,16 +41,34 @@ class CompareMode(Enum):
             return [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.925, 0.95, 0.98, 0.99]
 
 class SortBy(Enum):
-    NAME = 0
-    FULL_PATH = 1
-    CREATION_TIME = 2
-    TYPE = 3
-    SIZE = 4
-    RANDOMIZE = 5
+    NAME = "Name"
+    FULL_PATH = "Full Path"
+    CREATION_TIME = "Creation Time"
+    MODIFY_TIME = "Modify Time"
+    TYPE = "Type"
+    SIZE = "Size"
+    RANDOMIZE = "Random"
+
+    def __str__(self):
+        return self.value
+
+    @staticmethod
+    def get(name):
+        for key, value in SortBy.__members__.items():
+            if str(value) == name:
+                return value
+        raise Exception(f"Not a valid prompt mode: {name}")
+
+    @staticmethod
+    def members():
+        return [str(value) for key, value in SortBy.__members__.items()]
 
 class Sort(Enum):
-    ASC = 1
-    DESC = 2
-    RANDOM = 3
+    ASC = "ascending"
+    DESC = "descending"
+    RANDOM = "random"
+
+    def __str__(self):
+        return self.value
 
 

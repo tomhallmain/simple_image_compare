@@ -4,6 +4,7 @@ from typing import List
 import glob
 from random import shuffle
 import threading
+from time import sleep
 
 from config import config
 from constants import Sort, SortBy
@@ -15,18 +16,20 @@ class SortableFile:
         self.full_file_path = full_file_path
         self.basename = os.path.basename(full_file_path)
         self.root, self.extension = os.path.splitext(self.basename)
-        self.creation_time = datetime.fromtimestamp(os.path.getctime(full_file_path))
-        self.size = os.path.getsize(full_file_path)
+        stat_obj = os.stat(full_file_path)
+        self.ctime = datetime.fromtimestamp(stat_obj.st_ctime)
+        self.mtime = datetime.fromtimestamp(stat_obj.st_mtime)
+        self.size = stat_obj.st_size
         self.tags = self.get_tags()
 
     def get_tags(self):
         tags = []
 
         # TODO
-        try:
-            pass
-        except Exception:
-            pass
+        # try:
+        #     pass
+        # except Exception:
+        #     pass
 
         return tags
 
@@ -35,7 +38,8 @@ class SortableFile:
             return False
         return (
             self.full_file_path == other.full_file_path
-            and self.creation_time == other.creation_time
+            and self.ctime == other.ctime
+            and self.mtime == other.mtime
             and self.size == other.size
             )
 
@@ -43,7 +47,7 @@ class SortableFile:
         return not self.__eq__(other)
 
     def __hash__(self):
-        return hash((self.full_file_path, self.creation_time, self.size))
+        return hash((self.full_file_path, self.ctime, self.mtime, self.size))
 
 
 class FileBrowser:
@@ -159,6 +163,10 @@ class FileBrowser:
                 self.file_cursor = 0
             return files[self.file_cursor]
 
+    def get_index_details(self, filepath):
+        files = self.get_files()
+        return f"{self.file_cursor} out of {len(files)} files in directory, ordered by {self.sort_by} {self.sort}"
+
     def go_to_file(self, filepath):
         files = self.get_files()
         if filepath in files:
@@ -176,22 +184,24 @@ class FileBrowser:
                 selected.extend(files[start_index:end_index+1])
         return selected
 
-    def find(self, search_text=None):
+    def find(self, search_text=None, retry_with_delay=0):
         if not search_text or search_text.strip() == "":
             raise Exception("Search text provided to file_browser.find() was invalid.")
         search_text = search_text.lower()
-        # First try to match the string
-        files = self.get_files()
+        files = self.get_files_with_retry(retry_with_delay)
+        # First try to match filename
         if search_text in files:
             self.file_cursor = files.index(search_text)
             print(f"Index of {search_text}: {self.file_cursor}")
             return search_text
+        # If that fails, match string to the start of file name
         for i in range(len(files)):
             filepath = files[i]
             if filepath.lower().startswith(search_text):
                 print(f"Index of {filepath}: {i}")
                 self.file_cursor = i
                 return filepath
+        # Finally try to match string anywhere within file name
         for i in range(len(files)):
             filepath = files[i]
             if search_text in filepath:
@@ -259,6 +269,16 @@ class FileBrowser:
             self.filepaths = self.get_sorted_filepaths(self._files)
         return self.filepaths
 
+    def get_files_with_retry(self, retry_with_delay=0):
+        files = self.get_files()
+        if len(files) == 0 and retry_with_delay > 0:
+            if retry_with_delay > 3:
+                return files
+            print(f"No files found, sleeping for {retry_with_delay} seconds and trying again...")
+            sleep(retry_with_delay)
+            return self.get_files_with_retry(retry_with_delay=retry_with_delay+1)
+        return files
+
     def get_sorted_filepaths(self, sortable_files):
         if self.sort == Sort.RANDOM:
             shuffle(sortable_files) # TODO technically should be caching the random sort state somehow
@@ -274,9 +294,14 @@ class FileBrowser:
                 sortable_files = alphanumeric_sort(sortable_files, text_lambda=lambda sf: sf.basename.lower())
         elif self.sort_by == SortBy.CREATION_TIME:  
             if self.sort == Sort.DESC:
-                sortable_files.sort(key=lambda sf: sf.creation_time, reverse=True)
+                sortable_files.sort(key=lambda sf: sf.ctime, reverse=True)
             elif self.sort == Sort.ASC:
-                sortable_files.sort(key=lambda sf: sf.creation_time)  
+                sortable_files.sort(key=lambda sf: sf.ctime)
+        elif self.sort_by == SortBy.MODIFY_TIME:  
+            if self.sort == Sort.DESC:
+                sortable_files.sort(key=lambda sf: sf.mtime, reverse=True)
+            elif self.sort == Sort.ASC:
+                sortable_files.sort(key=lambda sf: sf.mtime)
         elif self.sort_by == SortBy.TYPE:
             # Sort by full path first, then by extension
             if self.sort == Sort.DESC:
@@ -286,7 +311,7 @@ class FileBrowser:
                 sortable_files.sort(key=lambda sf: sf.full_file_path.lower())
                 sortable_files.sort(key=lambda sf: sf.extension.lower())
         elif self.sort_by == SortBy.SIZE:
-            # Sort by full path first, then by extension
+            # Sort by full path first, then by size
             if self.sort == Sort.DESC:
                 sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=True)
                 sortable_files.sort(key=lambda sf: sf.size, reverse=True)

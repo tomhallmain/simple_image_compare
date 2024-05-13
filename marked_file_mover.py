@@ -8,6 +8,10 @@ from app_style import AppStyle
 from utils import move_file, copy_file
 
 
+# TODO preserve dictionary of all moved / copied files in a session along with their target directories.
+# TODO enable the main app to access this dictionary as groups and remove files if needed
+# TODO give statistics on how many files were moved / copied.
+
 class MarkedFiles():
     file_marks = []
     previous_marks = []
@@ -184,7 +188,7 @@ class MarkedFiles():
         action_part2 = "Moved" if is_moving else "Copied"
         MarkedFiles.previous_marks.clear()
         MarkedFiles.previous_action = move_func
-        print(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory:\n{target_dir}")
+        print(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}")
         exceptions = {}
         invalid_files = []
         for marked_file in MarkedFiles.file_marks:
@@ -288,12 +292,21 @@ class MarkedFiles():
         """
         Rebuild the filtered target directories list based on the filter string and update the UI.
         """
-        shift_key_pressed = (event.state & 0x1) != 0 # Do not filter if shift key is down
-        if shift_key_pressed:
+        modifier_key_pressed = (event.state & 0x1) != 0 or (event.state & 0x4) != 0 # Do not filter if modifier key is down
+        if modifier_key_pressed:
             return
-        # TODO: figure out why above isn't working for single shift key
-        # TODO: if the key is up/down arrow key, roll the list up/down
-        print(f"New filter char: {event.char}")
+        if len(event.keysym) > 1:
+            # If the key is up/down arrow key, roll the list up/down
+            if event.keysym == "Down" or event.keysym == "Up":
+                if event.keysym == "Down":
+                    self.filtered_target_dirs = self.filtered_target_dirs[1:] + [self.filtered_target_dirs[0]]
+                else:  # keysym == "Up"
+                    self.filtered_target_dirs = [self.filtered_target_dirs[-1]] + self.filtered_target_dirs[:-1]
+                self.clear_widget_lists()
+                self.add_target_dir_widgets()
+                self.master.update()
+            if event.keysym != "BackSpace":
+                return
         if event.keysym == "BackSpace":
             if len(self.filter_text) > 0:
                 self.filter_text = self.filter_text[:-1]
@@ -321,7 +334,6 @@ class MarkedFiles():
                     if dirname and dirname.lower().startswith(self.filter_text):
                         temp.append(target_dir)
             self.filtered_target_dirs = temp[:]
-            print(f"Filtered target dirs: {self.filtered_target_dirs}")
 
         self.clear_widget_lists()
         self.add_target_dir_widgets()
