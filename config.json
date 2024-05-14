@@ -27,5 +27,7 @@
   ],
   "font_size": 8,
   "threshold_potential_duplicate_color": 50,
-  "threshold_potential_duplicate_embedding": 0.99
+  "threshold_potential_duplicate_embedding": 0.99,
+  "use_file_paths_json": false,
+  "file_paths_json_path": "file_paths.json"
 }

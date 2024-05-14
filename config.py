@@ -35,6 +35,8 @@ class Config:
         self.font_size = 8
         self.threshold_potential_duplicate_color = 50
         self.threshold_potential_duplicate_embedding = 0.99
+        self.use_file_paths_json = False # TODO update the JSON for this
+        self.file_paths_json_path = "file_paths.json" # TODO update the JSON for this
 
         dict_set = False
 
@@ -50,7 +52,8 @@ class Config:
             self.set_values(list, "file_types")
             self.set_values(str,
                             "default_main_window_size",
-                            "clip_model")
+                            "clip_model",
+                            "file_paths_json_path")
             self.set_values(bool,
                             "image_browse_recursive",
                             "image_tagging_enabled",
@@ -59,7 +62,8 @@ class Config:
                             "print_settings",
                             "show_toasts",
                             "delete_instantly",
-                            "move_marks_overwrite_existing_file")
+                            "move_marks_overwrite_existing_file",
+                            "use_file_paths_json")
             self.set_values(int,
                             "max_search_results",
                             "color_diff_threshold",

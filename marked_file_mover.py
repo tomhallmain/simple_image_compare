@@ -210,7 +210,10 @@ class MarkedFiles():
             action_part3 = "move" if is_moving else "copy"
             raise Exception(f"Failed to {action_part3} some files: {exceptions}")
         MarkedFiles.last_set_target_dir = target_dir
-        self.refresh_callback()
+        if is_moving:
+            self.refresh_callback(removed_files=list(MarkedFiles.previous_marks))
+        else:
+            self.refresh_callback()
         self.close_windows()
 
     @staticmethod

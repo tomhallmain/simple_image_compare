@@ -1,10 +1,12 @@
 from datetime import datetime
-import os
-from typing import List
 import glob
+import json
+import os
 from random import shuffle
+import re
 import threading
 from time import sleep
+from typing import List
 
 from config import config
 from constants import Sort, SortBy
@@ -16,10 +18,15 @@ class SortableFile:
         self.full_file_path = full_file_path
         self.basename = os.path.basename(full_file_path)
         self.root, self.extension = os.path.splitext(self.basename)
-        stat_obj = os.stat(full_file_path)
-        self.ctime = datetime.fromtimestamp(stat_obj.st_ctime)
-        self.mtime = datetime.fromtimestamp(stat_obj.st_mtime)
-        self.size = stat_obj.st_size
+        try:
+            stat_obj = os.stat(full_file_path)
+            self.ctime = datetime.fromtimestamp(stat_obj.st_ctime)
+            self.mtime = datetime.fromtimestamp(stat_obj.st_mtime)
+            self.size = stat_obj.st_size
+        except Exception:
+            self.ctime = datetime.fromtimestamp(0)
+            self.mtime = datetime.fromtimestamp(0)
+            self.size = 0            
         self.tags = self.get_tags()
 
     def get_tags(self):
@@ -64,6 +71,7 @@ class FileBrowser:
         self.file_cursor = -1
         self.cursor_lock = threading.Lock()
         self.checking_files = False
+        self.use_file_paths_json = config.use_file_paths_json
 
     def has_files(self):
         return len(self._files) > 0
@@ -78,8 +86,10 @@ class FileBrowser:
     def toggle_recursive(self):
         self.set_recursive(not self.recursive)
 
-    def refresh(self, refresh_cursor=True, file_check=False):
+    def refresh(self, refresh_cursor=True, file_check=False, removed_files=[]):
         last_files = self.get_files() if file_check else []
+        if config.use_file_paths_json:
+            self.update_json_for_removed_files(removed_files)            
         if refresh_cursor:
             with self.cursor_lock:
                 self.file_cursor = -1
@@ -163,7 +173,24 @@ class FileBrowser:
                 self.file_cursor = 0
             return files[self.file_cursor]
 
-    def get_index_details(self, filepath):
+    def load_file_paths_json(self):
+        print("Loading external file paths from JSON: " + config.file_paths_json_path)
+        with open(config.file_paths_json_path, "r") as f:
+            return json.load(f)
+
+    def update_json_for_removed_files(self, removed_file_paths=[]):
+        if len(removed_file_paths) == 0:
+            return
+
+        files = list(self.get_files())
+        for removed_filepath in removed_file_paths:
+            files.remove(removed_filepath)
+
+        with open(config.file_paths_json_path,"w") as f:
+            json.dump(files, f, indent=4)
+            print("JSON file updated: " + config.file_paths_json_path)
+
+    def get_index_details(self):
         files = self.get_files()
         return f"{self.file_cursor} out of {len(files)} files in directory, ordered by {self.sort_by} {self.sort}"
 
@@ -238,25 +265,13 @@ class FileBrowser:
 
     def _get_sortable_files(self) -> List[SortableFile]:
         self._files = []
-        if not os.path.exists(self.directory):
+        if not os.path.exists(self.directory) and not self.use_file_paths_json:
             return self._files
 
         files = []
-        allowed_extensions = config.file_types
+        self._gather_files(files)
 
-        if self.filter and self.filter != "":
-            pattern = "**/" + self.filter if self.recursive else self.filter
-            filtered_files = glob.glob(os.path.join(self.directory, pattern), recursive=self.recursive)
-            for file in filtered_files:
-                for ext in allowed_extensions:
-                    if file.endswith(ext):
-                        files.append(file)
-        else:
-            _ = "**/" if self.recursive else ""
-            for ext in allowed_extensions:
-                files.extend(glob.glob(os.path.join(self.directory, _ + "*" + ext), recursive=self.recursive))
-
-        # NOTE using a cache may result in incorrect sorting if files were renamed to the same as a previous file
+        # NOTE using a cache may result in incorrect sorting on refresh if files were renamed to the same as a previous file
         def cache_fileinfo(f):
             sortable_file = SortableFile(f)
             self._files_cache[f] = sortable_file
@@ -323,3 +338,27 @@ class FileBrowser:
         # After sorting, extract the file path only
         filepaths = [sf.full_file_path for sf in sortable_files]
         return filepaths
+
+    def _gather_files(self, files):
+        allowed_extensions = config.file_types
+
+        if self.filter and self.filter != "":
+            if self.use_file_paths_json:
+                filepaths = self.load_file_paths_json()
+                filtered_files = [f for f in filepaths if re.search(self.filter, f)]
+            else:
+                pattern = "**/" + self.filter if self.recursive else self.filter
+                filtered_files = glob.glob(os.path.join(self.directory, pattern), recursive=self.recursive)
+            for file in filtered_files:
+                for ext in allowed_extensions:
+                    if file.endswith(ext):
+                        files.append(file)
+        else:
+            if self.use_file_paths_json:
+                filepaths = self.load_file_paths_json()
+            _ = "**/" if self.recursive else ""
+            for ext in allowed_extensions:
+                if self.use_file_paths_json:
+                    files.extend([f for f in filepaths if f.endswith(ext)])
+                else:
+                    files.extend(glob.glob(os.path.join(self.directory, _ + "*" + ext), recursive=self.recursive))

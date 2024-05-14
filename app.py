@@ -39,6 +39,7 @@ from utils import (
 ### TODO comfyui plugin for ipadapter/controlnet (maybe)
 ### TODO some type of plugin to filter the images using a filter function defined externally
 ### TODO recursive option for compare jobs
+### TODO enable comparison jobs on user-defined file list
 ### TODO compare option to restrict by matching image dimensions
 ### TODO compare option encoding size
 ### TODO add checkbox for include gif option
@@ -367,6 +368,9 @@ class App():
         self.toggle_theme()
         self.master.update()
 
+        if config.use_file_paths_json:
+            self.set_file_paths()
+
     def toggle_fullscreen(self, event=None):
         App.fullscreen = not App.fullscreen
         self.master.attributes("-fullscreen", App.fullscreen)
@@ -435,8 +439,8 @@ class App():
             self.alert("Invalid mode", "Compare mode must be set to Clip Embedding to make use of this option.")
         CompareEmbedding.SEARCH_RETURN_CLOSEST = not CompareEmbedding.SEARCH_RETURN_CLOSEST
 
-    def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True):
-        App.file_browser.refresh(refresh_cursor=refresh_cursor, file_check=file_check)
+    def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
+        App.file_browser.refresh(refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files)
         if App.file_browser.has_files():
             if show_new_images:
                 has_new_images = self.file_browser.update_cursor_to_new_images()
@@ -489,7 +493,7 @@ class App():
         top_level.title("Image Details")
         top_level.geometry("600x300")
         if App.mode == Mode.BROWSE:
-            index_text = App.file_browser.get_index_details(App.img_path)
+            index_text = App.file_browser.get_index_details()
         elif App.mode == Mode.GROUP:
             index_text = f"{App.match_index+1} of {len(App.files_matched)} (Group {App.current_group_index+1} of {len(App.file_groups)})"
         elif App.mode == Mode.SEARCH and not App.is_toggled_view_matches:
@@ -509,6 +513,18 @@ class App():
             help_and_config = HelpAndConfig(top_level)
         except Exception as e:
             self.alert("Image Details Error", str(e), kind="error")
+
+    def set_file_paths(self):
+        App.file_browser.refresh()
+        self.label_state["text"] = f"{App.file_browser.count()} image files found."
+        tries = 0
+        while tries < 10:
+            tries += 1
+            try:
+                if self.show_next_image():
+                    return
+            except Exception as e:
+                pass
 
     def set_base_dir(self) -> None:
         '''
@@ -546,8 +562,7 @@ class App():
         self.master.update()
 
     def get_base_dir(self) -> str:
-        return "." if (self.base_dir is None
-                       or self.base_dir == "") else self.base_dir
+        return "." if (self.base_dir is None or self.base_dir == "") else self.base_dir
 
     def get_search_dir(self) -> str:
         return self.get_base_dir() if self.search_dir is None else self.search_dir
@@ -657,23 +672,27 @@ class App():
             else:
                 self.alert("Error", "Somehow, the search file is invalid", kind="error")
 
-    def show_prev_image(self, event=None, show_alert=True) -> None:
+    def show_prev_image(self, event=None, show_alert=True) -> bool:
         '''
         If similar image results are present in any mode, display the previous
         in the list of matches.
         '''
         if App.mode == Mode.BROWSE:
             self.master.update()
-            self.create_image(App.file_browser.previous_file())
-            return
+            try:
+                self.create_image(App.file_browser.previous_file())
+                return True
+            except Exception as e:
+                self.alert("Exception", str(e))
+                return False
         if App.files_matched is None:
-            return
+            return False
         elif len(App.files_matched) == 0:
             if show_alert:
                 self.alert("Search required",
                            "No matches found. Search again to find potential matches.",
                            kind="info")
-            return
+            return False
 
         App.is_toggled_view_matches = True
         
@@ -684,8 +703,9 @@ class App():
         
         self.master.update()
         self.create_image(App.files_matched[App.match_index])
+        return True
 
-    def show_next_image(self, event=None, show_alert=True) -> None:
+    def show_next_image(self, event=None, show_alert=True) -> bool:
         '''
         If similar image results are present in any mode, display the next
         in the list of matches.
@@ -694,17 +714,18 @@ class App():
             self.master.update()
             try:
                 self.create_image(App.file_browser.next_file())
+                return True
             except Exception as e:
                 self.alert("Exception", str(e))
-            return
+                return False
         if App.files_matched is None:
-            return
+            return False
         elif len(App.files_matched) == 0:
             if show_alert:
                 self.alert("Search required",
                            "No matches found. Search again to find potential matches.",
                            kind="info")
-            return
+            return False
 
         App.is_toggled_view_matches = True
 
@@ -715,6 +736,7 @@ class App():
 
         self.master.update()
         self.create_image(App.files_matched[App.match_index])
+        return True
 
     def show_prev_group(self, event=None) -> None:
         '''
@@ -1191,7 +1213,8 @@ class App():
             raise Exception(exception_text)
 
     def revert_last_marks_change(self, event=None):
-        MarkedFiles.undo_move_marks(self.get_base_dir(), self.toast, self.refresh)
+        if not config.use_file_paths_json:
+            MarkedFiles.undo_move_marks(self.get_base_dir(), self.toast, self.refresh)
 
     def modify_last_marks_change(self, event=None):
         MarkedFiles.undo_move_marks(None, self.toast, self.refresh)
@@ -1280,7 +1303,7 @@ class App():
             filepath = App.file_browser.current_file()
             if filepath:
                 self._handle_delete(filepath)
-                App.file_browser.refresh(refresh_cursor=False)
+                App.file_browser.refresh(refresh_cursor=False, removed_files=[filepath])
                 self.show_next_image()
             return
 

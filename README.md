@@ -28,6 +28,7 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Mark groups of files to enable quick transitions and comparisons
 - Move, copy, and delete marked file groups
 - Stores session info about seen directories (useful for directories with many images)
+- Can be set up to run on user-defined list of files in place of a directory
 
 It is not implemented yet, but there will ultimately be zoom and drag functionality in browsing mode, as well as when viewing grouped images after a comparison has been run.
 
@@ -48,6 +49,8 @@ It is not implemented yet, but there will ultimately be zoom and drag functional
 If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) then opening image details for an image with a stable diffusion prompt will give prompt information found in the image.
 
 `tag_suggestions_file` should point to a JSON list that provides suggested tags for images for easy access in adding tags, if desired.
+
+`file_path_json_path` should be set to the path for the file path JSON, if setting `use_file_path_json` is set to true.
 
 ## UI Bindings
 
