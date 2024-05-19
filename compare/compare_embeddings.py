@@ -9,9 +9,9 @@ import cv2
 import numpy as np
 # from imutils import face_utils
 
-from config import config
-from constants import CompareMode
-from model import image_embeddings, text_embeddings, embedding_similarity
+from utils.config import config
+from utils.constants import CompareMode
+from compare.model import image_embeddings, text_embeddings, embedding_similarity
 
 
 def usage():

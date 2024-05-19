@@ -3,9 +3,9 @@ import os
 from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
-from config import config
-from app_style import AppStyle
-from utils import move_file, copy_file
+from utils.config import config
+from utils.app_style import AppStyle
+from utils.utils import move_file, copy_file
 
 
 # TODO preserve dictionary of all moved / copied files in a session along with their target directories.
@@ -172,6 +172,7 @@ class MarkedFiles():
         if target_was_valid and target_dir is not None:
             return target_dir
 
+        target_dir = os.path.normpath(target_dir)
         if not target_dir in MarkedFiles.mark_target_dirs:
             MarkedFiles.mark_target_dirs.append(target_dir)
             MarkedFiles.mark_target_dirs.sort()
@@ -280,7 +281,7 @@ class MarkedFiles():
             if not target_dir in MarkedFiles.mark_target_dirs:
                 dirpath = os.path.normpath(os.path.join(parent_dir, target_dir))
                 if dirpath != self.base_dir:
-                    MarkedFiles.mark_target_dirs.append(os.path.join(parent_dir, target_dir))
+                    MarkedFiles.mark_target_dirs.append(os.path.normpath(os.path.join(parent_dir, target_dir)))
 
         MarkedFiles.mark_target_dirs.sort()
         self.filtered_target_dirs = MarkedFiles.mark_target_dirs[:]

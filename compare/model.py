@@ -2,7 +2,7 @@ from PIL import Image
 import torch
 import clip
 
-from config import config
+from utils.config import config
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load(config.clip_model, device=device)

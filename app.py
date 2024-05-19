@@ -18,20 +18,20 @@ from tkinter.ttk import Button, Entry, Frame, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
-from app_info_cache import app_info_cache
-from compare import Compare, get_valid_file
-from compare_embeddings import CompareEmbedding
-from config import config
-from constants import Mode, CompareMode
-from file_browser import FileBrowser, SortBy
-from go_to_file import GoToFile
-from help_and_config import HelpAndConfig
-from image_details import ImageDetails # must import after config because of dynamic import
-from marked_file_mover import MarkedFiles
-from app_style import AppStyle
-from utils import (
+from compare.compare import Compare, get_valid_file
+from compare.compare_embeddings import CompareEmbedding
+from files.file_browser import FileBrowser, SortBy
+from files.go_to_file import GoToFile
+from files.marked_file_mover import MarkedFiles
+from utils.app_info_cache import app_info_cache
+from utils.app_style import AppStyle
+from utils.config import config
+from utils.constants import Mode, CompareMode
+from utils.help_and_config import HelpAndConfig
+from utils.utils import (
     _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, periodic, start_thread
 )
+from image.image_details import ImageDetails # must import after config because of dynamic import
 
 
 ### TODO image zoom feature
@@ -45,7 +45,8 @@ from utils import (
 ### TODO add checkbox for include gif option
 ### TODO tkVideoPlayer or tkVideoUtils for playing videos
 ### TODO custom frame class for sidebar to hold all the buttons
-
+### TODO compare window (only compare a set of images from directory, sorted by some logic)
+### TODO enable file mover in all modes
 
 
 class ResizingCanvas(Canvas):
@@ -762,7 +763,7 @@ class App():
 
         self.set_current_group()
 
-    def set_current_group(self) -> None:
+    def set_current_group(self, start_match_index=0) -> None:
         '''
         While in group mode, navigate between the groups.
         '''
@@ -775,7 +776,7 @@ class App():
 
         actual_group_index = App.group_indexes[App.current_group_index]
         App.current_group = App.file_groups[actual_group_index]
-        App.match_index = 0
+        App.match_index = start_match_index
         App.files_matched = []
 
         for f in sorted(App.current_group, key=lambda f: App.current_group[f]):
@@ -1220,8 +1221,6 @@ class App():
         MarkedFiles.undo_move_marks(None, self.toast, self.refresh)
 
     def open_go_to_file_window(self, event=None):
-        if App.mode != Mode.BROWSE:
-            raise Exception("Go to file currently only available in Browsing mode.")
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title("Go To File")
         top_level.geometry(GoToFile.get_geometry())
@@ -1231,13 +1230,38 @@ class App():
             self.alert("Go To File Window Error", str(e), kind="error")
 
     def go_to_file(self, event=None, search_text=".", retry_with_delay=0):
-        image_path = App.file_browser.find(search_text=search_text, retry_with_delay=retry_with_delay)
+        if App.mode == Mode.BROWSE:
+            image_path = App.file_browser.find(search_text=search_text, retry_with_delay=retry_with_delay)
+        else:
+            image_path, group_indexes = self.find_file_after_comparison(search_text)
+            if group_indexes:
+                App.current_group_index = group_indexes[0]
+                self.set_current_group(start_match_index=group_indexes[1])
+                return True
         if not image_path:
             self.alert("File not found", f"No file was found for the search text: \"{search_text}\"", kind="info")
             return False
         self.create_image(image_path)
         self.master.update()
         return True
+
+    def find_file_after_comparison(self, search_text="", exact_match=False):
+        if not search_text or search_text.strip() == "":
+            return None, None
+        file_group_map = self._get_file_group_map()
+        for file, group_indexes in file_group_map.items():
+            if search_text == file.lower():
+                return file, group_indexes
+        if exact_match:
+            return None, None
+        search_text = search_text.lower()
+        for file, group_indexes in file_group_map.items():
+            if file.lower().startswith(search_text):
+                return file, group_indexes
+        for file, group_indexes in file_group_map.items():
+            if search_text in file.lower():
+                return file, group_indexes
+        return None, None
 
     def home(self, event=None):
         if not App.mode == Mode.BROWSE:
@@ -1376,7 +1400,7 @@ class App():
         groups are disjoint.
         '''
         if len(App.files_matched) < 3:
-            if App.mode != Mode.GROUP:
+            if App.mode not in (Mode.GROUP, Mode.DUPLICATES):
                 return
 
             # remove this group as it will only have one file
@@ -1415,6 +1439,19 @@ class App():
 
             self.master.update()
             self.create_image(App.files_matched[App.match_index])
+
+    def _get_file_group_map(self):
+        if App.mode == Mode.BROWSE:
+            raise Exception("Cannot get file group map in BROWSE mode")
+        group_map = {}
+        for group_count in range(len(App.group_indexes)):
+            group_index = App.group_indexes[group_count]
+            group = App.file_groups[group_index]
+            group_file_count = 0
+            for f in sorted(group, key=lambda f: group[f]):                    
+                group_map[f] = (group_count, group_file_count)
+                group_file_count += 1
+        return group_map
 
     def store_info_cache(self):
         base_dir = self.get_base_dir()

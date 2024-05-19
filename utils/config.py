@@ -1,11 +1,11 @@
 import json
 import os
 
-from constants import CompareMode, SortBy
+from utils.constants import CompareMode, SortBy
 
 
 class Config:
-    CONFIG_FILE_LOC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+    CONFIG_FILE_LOC = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), "config.json")
 
     def __init__(self):
         self.dict = {}

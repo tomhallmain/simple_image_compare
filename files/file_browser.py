@@ -8,9 +8,9 @@ import threading
 from time import sleep
 from typing import List
 
-from config import config
-from constants import Sort, SortBy
-from utils import alphanumeric_sort
+from utils.config import config
+from utils.constants import Sort, SortBy
+from utils.utils import alphanumeric_sort
 
 
 class SortableFile:
@@ -214,13 +214,13 @@ class FileBrowser:
     def find(self, search_text=None, retry_with_delay=0):
         if not search_text or search_text.strip() == "":
             raise Exception("Search text provided to file_browser.find() was invalid.")
-        search_text = search_text.lower()
         files = self.get_files_with_retry(retry_with_delay)
         # First try to match filename
         if search_text in files:
             self.file_cursor = files.index(search_text)
             print(f"Index of {search_text}: {self.file_cursor}")
             return search_text
+        search_text = search_text.lower()
         # If that fails, match string to the start of file name
         for i in range(len(files)):
             filepath = files[i]

@@ -14,8 +14,8 @@ from sklearn.cluster import KMeans
 from skimage.color import rgb2lab
 # from imutils import face_utils
 
-from config import config
-from constants import CompareMode
+from utils.config import config
+from utils.constants import CompareMode
 
 
 def usage():

@@ -1,8 +1,8 @@
 from tkinter import Frame, Label, BooleanVar, StringVar, LEFT, W, E, Checkbutton
 from tkinter.ttk import Entry
 
-from config import config
-from app_style import AppStyle
+from utils.config import config
+from utils.app_style import AppStyle
 
 
 # TODO config setting update fields and functions

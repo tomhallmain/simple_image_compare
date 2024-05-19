@@ -3,10 +3,10 @@ from tkinter import Frame, Label, StringVar, filedialog, LEFT, W
 from tkinter.font import Font
 from tkinter.ttk import Entry, Button
 
-from config import config
-from image_data_extractor import image_data_extractor
-from app_style import AppStyle
-from utils import move_file, copy_file
+from utils.config import config
+from image.image_data_extractor import image_data_extractor
+from utils.app_style import AppStyle
+from utils.utils import move_file, copy_file
 
 
 class GoToFile:

@@ -6,9 +6,9 @@ from tkinter import Frame, Label, StringVar, LEFT, W
 from tkinter.font import Font
 from tkinter.ttk import Entry, Button
 
-from config import config
-from image_data_extractor import image_data_extractor
-from app_style import AppStyle
+from utils.config import config
+from image.image_data_extractor import image_data_extractor
+from utils.app_style import AppStyle
 
 
 # TODO: rename file
