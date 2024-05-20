@@ -72,7 +72,7 @@ class HelpAndConfig():
         self.add_label(self._label_5, "Shift+M", wraplength=col_0_width)
         self.add_label(self.label_5, "Add or remove a mark for current image", column=1)
         self.add_label(self._label_6, "Shift+N", wraplength=col_0_width)
-        self.add_label(self.label_6, "Add all marks between most recently set and current file", column=1)
+        self.add_label(self.label_6, "Add all marks between most recently set and current file, or all marks in current group", column=1)
         self.add_label(self._label_7, "Shift-G", wraplength=col_0_width)
         self.add_label(self.label_7, "Go to next mark", column=1)
         self.add_label(self._label_14, "Shift+C", wraplength=col_0_width)
@@ -151,7 +151,7 @@ class HelpAndConfig():
         self.add_label(self.label_escape_backslash_filepaths, "Escape Backslash Filepaths", wraplength=col_0_width)
         self.add_checkbox(self.checkbox_escape_backslash_filepaths)
 
-        self.master.bind("<Shift-W>", self.close_windows)
+        self.master.bind("<Escape>", self.close_windows)
         self.frame.after(1, lambda: self.frame.focus_force())
 
     def close_windows(self, event=None):

@@ -34,7 +34,7 @@ class GoToFile:
         self.search_files_btn = None
         self.add_btn("search_files_btn", "Go To", self.go_to_file, column=1)
 
-        self.master.bind("<Shift-W>", self.close_windows)
+        self.master.bind("<Escape>", self.close_windows)
         self.frame.after(1, lambda: self.frame.focus_force())
         self.search_text_box.after(1, lambda: self.search_text_box.focus_force())
 

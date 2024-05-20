@@ -93,7 +93,7 @@ class ImageDetails():
             self.update_tags_btn = None
             self.add_button("update_tags_btn", "Update Tags", self.update_tags, row=10)
 
-        self.master.bind("<Shift-W>", self.close_windows)
+        self.master.bind("<Escape>", self.close_windows)
         self.frame.after(1, lambda: self.frame.focus_force())
 
     def copy_prompt(self):

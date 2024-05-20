@@ -46,7 +46,8 @@ from image.image_details import ImageDetails # must import after config because 
 ### TODO tkVideoPlayer or tkVideoUtils for playing videos
 ### TODO custom frame class for sidebar to hold all the buttons
 ### TODO compare window (only compare a set of images from directory, sorted by some logic)
-### TODO enable file mover in all modes
+### TODO enable starting app with a directory or image path and auto-setting these on startup
+### TODO drag and drop images to auto-set directory and image
 
 
 class ResizingCanvas(Canvas):
@@ -352,10 +353,11 @@ class App():
         self.master.bind("<MouseWheel>", self.handle_mousewheel)
         self.master.bind("<Button-2>", self.delete_image)
         self.master.bind("<Shift-M>", self.add_or_remove_mark_for_current_image)
-        self.master.bind("<Shift-N>", self.add_all_marks_from_last)
+        self.master.bind("<Shift-N>", self.add_all_marks_from_last_or_current_group)
         self.master.bind("<Shift-G>", self.go_to_mark)
+        self.master.bind("<Shift-C>", self.clear_marks)
         self.master.bind("<Control-g>", self.open_go_to_file_window)
-        self.master.bind("<Shift-C>", self.copy_marks_list)
+        self.master.bind("<Control-C>", self.copy_marks_list)
         self.master.bind("<Control-m>", self.open_move_marks_window)
         self.master.bind("<Control-z>", self.revert_last_marks_change)
         self.master.bind("<Control-x>", self.modify_last_marks_change)
@@ -442,6 +444,8 @@ class App():
 
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
         App.file_browser.refresh(refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files)
+        if App.mode != Mode.BROWSE:
+            self._handle_remove_files_from_groups(removed_files)
         if App.file_browser.has_files():
             if show_new_images:
                 has_new_images = self.file_browser.update_cursor_to_new_images()
@@ -452,7 +456,7 @@ class App():
                 App.delete_lock = False
         else:
             self.clear_image()
-            self.alert("Warning", "No files found in direcftory after refresh.", kind="warning")
+            self.alert("Warning", "No files found in directory after refresh.", kind="warning")
         print("Refreshed files")
 
     @periodic(config.file_check_interval_seconds)
@@ -1168,15 +1172,22 @@ class App():
             MarkedFiles.file_marks.append(App.img_path)
             self.toast(f"Mark added. Total set: {len(MarkedFiles.file_marks)}")
 
-    def add_all_marks_from_last(self, event=None):
-        self._check_marks()
-        if App.img_path in MarkedFiles.file_marks:
-            return
-        files = App.file_browser.select_series(start_file=MarkedFiles.file_marks[-1], end_file=App.img_path)
+    def add_all_marks_from_last_or_current_group(self, event=None):
+        if App.mode == Mode.BROWSE:
+            if App.img_path in MarkedFiles.file_marks:
+                return
+            self._check_marks()
+            files = App.file_browser.select_series(start_file=MarkedFiles.file_marks[-1], end_file=App.img_path)
+        else:
+            files = list(App.files_matched)
         for _file in files:
             if not _file in MarkedFiles.file_marks:
                 MarkedFiles.file_marks.append(_file)
         self.toast(f"Marks added. Total set: {len(MarkedFiles.file_marks)}")
+
+    def clear_marks(self, event=None):
+        MarkedFiles.file_marks = []
+        self.toast(f"Marks cleared.")
 
     def go_to_mark(self, event=None):
         self._check_marks()
@@ -1184,9 +1195,12 @@ class App():
         if MarkedFiles.mark_cursor >= len(MarkedFiles.file_marks):
             MarkedFiles.mark_cursor = 0
         marked_file = MarkedFiles.file_marks[MarkedFiles.mark_cursor]
-        App.file_browser.go_to_file(marked_file)
-        self.create_image(marked_file)
-        self.master.update()
+        if App.mode == Mode.BROWSE:
+            App.file_browser.go_to_file(marked_file)
+            self.create_image(marked_file)
+            self.master.update()
+        else:
+            self.go_to_file(search_text=os.path.basename(marked_file), exact_match=True)
 
     def copy_marks_list(self, event=None):
         self.master.clipboard_clear()
@@ -1200,14 +1214,12 @@ class App():
         top_level.title("Move Marked Files")
         top_level.geometry(MarkedFiles.get_geometry())
         try:
-            marked_file_mover = MarkedFiles(top_level, self.toast, self.alert, self.refresh, self._handle_delete, base_dir=self.get_base_dir())
+            marked_file_mover = MarkedFiles(top_level, App.mode, self.toast, self.alert,
+                                            self.refresh, self._handle_delete, base_dir=self.get_base_dir())
         except Exception as e:
             self.alert("Marked Files Window Error", str(e), kind="error")
 
     def _check_marks(self, min_mark_size=1):
-        if App.mode != Mode.BROWSE:
-            self.alert("Invalid Action", "Marks currently only available in Browsing mode.")
-            raise Exception("Marks currently only available in Browsing mode.")
         if len(MarkedFiles.file_marks) < min_mark_size:
             exception_text = f"{len(MarkedFiles.file_marks)} marks have been set (>={min_mark_size} expected).\nUse Shift+M to set a mark."
             self.toast(exception_text)
@@ -1229,11 +1241,11 @@ class App():
         except Exception as e:
             self.alert("Go To File Window Error", str(e), kind="error")
 
-    def go_to_file(self, event=None, search_text=".", retry_with_delay=0):
+    def go_to_file(self, event=None, search_text="", retry_with_delay=0, exact_match=False):
         if App.mode == Mode.BROWSE:
-            image_path = App.file_browser.find(search_text=search_text, retry_with_delay=retry_with_delay)
+            image_path = App.file_browser.find(search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match)
         else:
-            image_path, group_indexes = self.find_file_after_comparison(search_text)
+            image_path, group_indexes = self.find_file_after_comparison(search_text, exact_match=exact_match)
             if group_indexes:
                 App.current_group_index = group_indexes[0]
                 self.set_current_group(start_match_index=group_indexes[1])
@@ -1250,16 +1262,16 @@ class App():
             return None, None
         file_group_map = self._get_file_group_map()
         for file, group_indexes in file_group_map.items():
-            if search_text == file.lower():
+            if search_text == os.path.basename(file):
                 return file, group_indexes
         if exact_match:
             return None, None
         search_text = search_text.lower()
         for file, group_indexes in file_group_map.items():
-            if file.lower().startswith(search_text):
+            if os.path.basename(file).lower().startswith(search_text):
                 return file, group_indexes
         for file, group_indexes in file_group_map.items():
-            if search_text in file.lower():
+            if search_text in os.path.basename(file).lower():
                 return file, group_indexes
         return None, None
 
@@ -1329,6 +1341,7 @@ class App():
                 self._handle_delete(filepath)
                 App.file_browser.refresh(refresh_cursor=False, removed_files=[filepath])
                 self.show_next_image()
+            App.file_browser.checking_files = True
             return
 
         is_toggle_search_image = self.is_toggled_search_image()
@@ -1344,7 +1357,7 @@ class App():
 
         if filepath is not None:
             self._handle_delete(filepath)
-            self.update_groups_for_removed_file()
+            self.update_groups_for_removed_file(App.current_group_index, App.match_index)
         else:
             self.alert("Error", "Failed to delete current file, unable to get valid filepath", kind="error")
 
@@ -1391,7 +1404,23 @@ class App():
         os.rename(App.search_image_full_path, filepath)
         self.toast("Moved search image to " + filepath)
 
-    def update_groups_for_removed_file(self):
+    def _handle_remove_files_from_groups(self, files):
+        '''
+        Remove the files from the groups.
+        '''
+        for filepath in files:
+            file_group_map = self._get_file_group_map()
+            try:
+                group_indexes = file_group_map[filepath]
+                group_index = group_indexes[0]
+                match_index = group_indexes[1]
+                print(f"Removing {filepath} index {match_index} from group {group_index}")
+                self.update_groups_for_removed_file(group_indexes[0], group_indexes[1], set_group=False)
+            except KeyError as e:
+                pass # The group may have been removed before update_groups_for_removed_file was called on the last file in it
+
+
+    def update_groups_for_removed_file(self, group_index, match_index, set_group=True):
         '''
         After a file has been removed, delete the cached image path for it and
         remove the group if only one file remains in that group.
@@ -1399,16 +1428,28 @@ class App():
         NOTE: This would be more complex if there was not a guarantee that
         groups are disjoint.
         '''
-        if len(App.files_matched) < 3:
+        actual_index = App.group_indexes[group_index]
+        if set_group or group_index == App.current_group_index:
+            files_matched = App.files_matched
+            set_group = True
+            print("setting group")
+        else:
+            files_matched = []
+            group = App.file_groups[actual_index]
+            for f in sorted(group, key=lambda f: group[f]):                    
+                files_matched.append(f)
+
+        if len(files_matched) < 3:
             if App.mode not in (Mode.GROUP, Mode.DUPLICATES):
                 return
 
             # remove this group as it will only have one file
             App.files_grouped = {
-                k: v for k, v in App.files_grouped.items() if v not in App.files_matched}
-            actual_index = App.group_indexes[App.current_group_index]
+                k: v for k, v in App.files_grouped.items() if v[0] != actual_index}
             del App.file_groups[actual_index]
-            del App.group_indexes[App.current_group_index]
+            del App.group_indexes[group_index]
+            if group_index < App.current_group_index:
+                App.current_group_index -= 1
 
             if len(App.file_groups) == 0:
                 self.alert("No More Groups",
@@ -1424,21 +1465,25 @@ class App():
                 self.label_state["text"] = "Set a directory to run comparison."
                 self.show_next_image()
                 return
-            elif App.current_group_index == len(App.file_groups):
+            elif group_index == len(App.file_groups):
                 App.current_group_index = 0
 
-            self.set_current_group()
+            if set_group:
+                self.set_current_group()
         else:
-            filepath = App.files_matched[App.match_index]
+            filepath = files_matched[match_index]
+            print(f"Filepath from update_groups: {filepath}")
             App.files_grouped = {
-                k: v for k, v in App.files_grouped.items() if v != filepath}
-            del App.files_matched[App.match_index]
+                k: v for k, v in App.files_grouped.items() if v[0] != actual_index}
+            del files_matched[match_index]
+            del App.file_groups[actual_index][filepath]
+            
+            if set_group:
+                if App.match_index == len(App.files_matched):
+                    App.match_index = 0
 
-            if App.match_index == len(App.files_matched):
-                App.match_index = 0
-
-            self.master.update()
-            self.create_image(App.files_matched[App.match_index])
+                self.master.update()
+                self.create_image(App.files_matched[App.match_index])
 
     def _get_file_group_map(self):
         if App.mode == Mode.BROWSE:

@@ -211,7 +211,7 @@ class FileBrowser:
                 selected.extend(files[start_index:end_index+1])
         return selected
 
-    def find(self, search_text=None, retry_with_delay=0):
+    def find(self, search_text=None, retry_with_delay=0, exact_match=False):
         if not search_text or search_text.strip() == "":
             raise Exception("Search text provided to file_browser.find() was invalid.")
         files = self.get_files_with_retry(retry_with_delay)
@@ -220,6 +220,8 @@ class FileBrowser:
             self.file_cursor = files.index(search_text)
             print(f"Index of {search_text}: {self.file_cursor}")
             return search_text
+        if exact_match:
+            return None
         search_text = search_text.lower()
         # If that fails, match string to the start of file name
         for i in range(len(files)):

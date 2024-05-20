@@ -4,6 +4,7 @@ from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
 from utils.config import config
+from utils.constants import Mode
 from utils.app_style import AppStyle
 from utils.utils import move_file, copy_file
 
@@ -43,8 +44,9 @@ class MarkedFiles():
             return 1
         return 0
 
-    def __init__(self, master, toast_callback, alert_callback, refresh_callback, delete_callback, base_dir="."):
+    def __init__(self, master, app_mode, toast_callback, alert_callback, refresh_callback, delete_callback, base_dir="."):
         self.master = master
+        self.app_mode = app_mode
         self.toast_callback = toast_callback
         self.alert_callback = alert_callback
         self.refresh_callback = refresh_callback
@@ -99,7 +101,7 @@ class MarkedFiles():
 
         self.master.bind("<Key>", self.filter_targets)
         self.master.bind("<Return>", self.do_action)
-        self.master.bind("<Shift-W>", self.close_windows)
+        self.master.bind("<Escape>", self.close_windows)
         self.master.bind('<Shift-Delete>', self.delete_marked_files)
         self.master.bind("<Button-2>", self.delete_marked_files)
         self.frame.after(1, lambda: self.frame.focus_force())
@@ -410,10 +412,12 @@ class MarkedFiles():
             print(f"result was: {res}")
             return
 
+        removed_files = []
         failed_to_delete = []
         for filepath in MarkedFiles.file_marks:
             try:
-                self.delete_callback(filepath)
+                self.delete_callback(filepath, manual_delete=False)
+                removed_files.append(filepath)
             except Exception as e:
                 if os.path.exists(filepath):
                     failed_to_delete.append(filepath)
@@ -425,7 +429,9 @@ class MarkedFiles():
                     f"Failed to delete {len(failed_to_delete)} files - check log for details.",
                     kind="warning")
 
-        self.refresh_callback()
+        # In the BROWSE case, the file removal should be recognized by the file browser
+        ## TODO it will not be handled in case of using file JSON. need to handle this case separately.        
+        self.refresh_callback(removed_files=(removed_files if self.app_mode != Mode.BROWSE else []))
         self.close_windows()
 
     def close_windows(self, event=None):
