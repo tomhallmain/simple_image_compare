@@ -25,10 +25,10 @@ class AppInfoCache:
             self._cache[directory] = {}
         self._cache[directory][key] = value
 
-    def get(self, directory, key):
+    def get(self, directory, key, default_val=None):
         directory = AppInfoCache.normalize_directory_key(directory)
         if not directory in self._cache or not key in self._cache[directory]:
-            return None
+            return default_val
         return self._cache[directory][key]
 
     @staticmethod

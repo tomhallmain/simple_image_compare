@@ -25,6 +25,10 @@ class MarkedFiles():
     col_0_width = 600
 
     @staticmethod
+    def set_target_dirs(target_dirs):
+        MarkedFiles.mark_target_dirs = target_dirs
+
+    @staticmethod
     def get_geometry():
         width = 600
         min_height = 300
@@ -331,13 +335,24 @@ class MarkedFiles():
             # First pass try to match directory name
             for target_dir in MarkedFiles.mark_target_dirs:
                 dirname = os.path.basename(os.path.normpath(target_dir))
-                if dirname.lower().startswith(self.filter_text):
+                if dirname.lower() == self.filter_text:
                     temp.append(target_dir)
+            for target_dir in MarkedFiles.mark_target_dirs:
+                dirname = os.path.basename(os.path.normpath(target_dir))
+                if not target_dir in temp:
+                    if dirname.lower().startswith(self.filter_text):
+                        temp.append(target_dir)
             # Second pass try to match parent directory name, so these will appear after
             for target_dir in MarkedFiles.mark_target_dirs:
                 if not target_dir in temp:
                     dirname = os.path.basename(os.path.dirname(os.path.normpath(target_dir)))
                     if dirname and dirname.lower().startswith(self.filter_text):
+                        temp.append(target_dir)
+            # Third pass try to match part of file name
+            for target_dir in MarkedFiles.mark_target_dirs:
+                if not target_dir in temp:
+                    dirname = os.path.basename(os.path.normpath(target_dir))
+                    if dirname and (f" {self.filter_text}" in dirname.lower() or f"_{self.filter_text}" in dirname.lower()):
                         temp.append(target_dir)
             self.filtered_target_dirs = temp[:]
 

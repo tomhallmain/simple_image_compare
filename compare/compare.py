@@ -541,7 +541,7 @@ class Compare:
         elif self.verbose:
             print("No similar images to \"" + self.search_file_path
                   + "\" identified with current params.")
-        return files_grouped
+        return {0: files_grouped}
 
     def _run_search_on_path(self, search_file_path):
         '''
@@ -748,6 +748,23 @@ class Compare:
 
     def get_probable_duplicates(self):
         return self._probable_duplicates
+    
+    def remove_from_groups(self, removed_files=[]):
+        # TODO technically it would be better to refresh the file and data lists every time a compare is done
+        remove_indexes = []
+        for f in removed_files:
+            if f in self._files_found:
+                remove_indexes.append(self._files_found.index(f))
+        remove_indexes.sort()
+
+        if len(self._file_colors) > 0:
+            self._file_colors = np.delete(self._file_colors, remove_indexes, axis=0)
+        if len(self._file_faces) > 0:
+            self._file_faces = np.delete(self._file_faces, remove_indexes, axis=0)
+
+        for f in removed_files:
+            if f in self._files_found:
+                self._files_found.remove(f)
 
 
 if __name__ == "__main__":

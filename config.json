@@ -1,7 +1,7 @@
 {
   "clip_model": "ViT-B/32",
   "compare_mode": "CLIP_EMBEDDING",
-  "max_search_results": 50,
+  "max_search_results": 100,
   "embedding_similarity_threshold": 0.9,
   "color_diff_threshold": 15,
   "escape_backslash_filepaths": true,

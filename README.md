@@ -65,7 +65,7 @@ A directory with images must be set before most of the below bindings will have 
 | Shift-Right      |                  | Show next group        |
 | Shift-D          |                  | Show image details     |
 | Ctrl-G           |                  | Open go to file        |
-| Home             |                  | Reset image browser    |
+| Home             |                  | Go to first image      |
 | Page Up          |                  | Page through images    |
 | Page Down        |                  | Page through images    |
 | Shift-M          |                  | Add/remove a mark      |

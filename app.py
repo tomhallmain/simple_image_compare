@@ -1,3 +1,4 @@
+from copy import deepcopy
 import os
 import signal
 import sys
@@ -48,6 +49,9 @@ from image.image_details import ImageDetails # must import after config because 
 ### TODO compare window (only compare a set of images from directory, sorted by some logic)
 ### TODO enable starting app with a directory or image path and auto-setting these on startup
 ### TODO drag and drop images to auto-set directory and image
+
+### TODO save sort by setting per directory in app info cache
+### TODO remove deleted files from compare if present
 
 
 class ResizingCanvas(Canvas):
@@ -373,6 +377,18 @@ class App():
 
         if config.use_file_paths_json:
             self.set_file_paths()
+        
+        self.load_info_cache()
+
+    def load_info_cache(self):
+        try:
+            MarkedFiles.set_target_dirs(app_info_cache.get("info", "marked_file_target_dirs", default_val=[]))
+            base_dir = app_info_cache.get("info", "base_dir")
+            if base_dir is not None and base_dir != "" and base_dir != "." and os.path.isdir(base_dir):
+                self.set_base_dir_box.insert(0, base_dir)
+                self.set_base_dir()
+        except Exception as e:
+            print(e)
 
     def toggle_fullscreen(self, event=None):
         App.fullscreen = not App.fullscreen
@@ -444,6 +460,8 @@ class App():
 
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
         App.file_browser.refresh(refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files)
+        if App.compare and len(removed_files) > 0:
+            App.compare.remove_from_groups(removed_files)
         if App.mode != Mode.BROWSE:
             self._handle_remove_files_from_groups(removed_files)
         if App.file_browser.has_files():
@@ -548,14 +566,10 @@ class App():
             App.compare = None
             self.set_group_state_label(None, 0)
             self.remove_all_mode_buttons()
-            if App.mode != Mode.SEARCH:
-                self.clear_image()
-            elif App.is_toggled_view_matches:
-                self.toggle_image_view()
         self.set_base_dir_box.delete(0, "end")
         self.set_base_dir_box.insert(0, self.base_dir)
         App.file_browser.set_directory(self.base_dir)
-        if App.compare is None and App.mode != Mode.SEARCH:
+        if App.compare is None:
             self.set_mode(Mode.BROWSE)
             previous_file = app_info_cache.get(self.base_dir, "image_cursor")
             if previous_file and previous_file != "":
@@ -1096,8 +1110,9 @@ class App():
         self.label_state["text"] = _wrap_text_to_fit_length(
             "Running image comparison with search file...", 30)
         App.files_grouped = App.compare.run_search()
+        App.file_groups = deepcopy(App.files_grouped)
 
-        if len(App.files_grouped) == 0:
+        if len(App.files_grouped[0]) == 0:
             App.has_image_matches = False
             self.label_state["text"] = "Set a directory and search file."
             self.alert("No Match Found",
@@ -1105,9 +1120,12 @@ class App():
                         kind="info")
             return
 
-        for f in sorted(App.files_grouped, key=lambda f: App.files_grouped[f]):
+        for f in sorted(App.files_grouped[0], key=lambda f: App.files_grouped[0][f]):
             App.files_matched.append(f)
 
+        App.group_indexes = [0]
+        App.current_group_index = 0
+        App.max_group_index = 0
         App.match_index = 0
         App.has_image_matches = True
         self.label_state["text"] = _wrap_text_to_fit_length(
@@ -1128,13 +1146,15 @@ class App():
             self.alert("Invalid search text", "Search text must be set", kind="warning")
             return
         self.run_compare(search_text=search_text)
+        self.master.focus()
 
     def run_search_text_embedding(self, search_text=""):
         self.label_state["text"] = _wrap_text_to_fit_length(
             "Running image comparison with search text...", 30)
         App.files_grouped = App.compare.search_text(search_text)
+        App.file_groups = deepcopy(App.files_grouped)
 
-        if len(App.files_grouped) == 0:
+        if len(App.file_groups[0]) == 0:
             App.has_image_matches = False
             self.label_state["text"] = "Set a directory and search file or search text."
             self.alert("No Match Found",
@@ -1142,9 +1162,12 @@ class App():
                         kind="info")
             return
 
-        for f in App.files_grouped:
+        for f in sorted(App.file_groups[0], key=lambda f: App.file_groups[0][f], reverse=True):
             App.files_matched.append(f)
 
+        App.group_indexes = [0]
+        App.current_group_index = 0
+        App.max_group_index = 0
         App.match_index = 0
         App.has_image_matches = True
         self.label_state["text"] = _wrap_text_to_fit_length(
@@ -1211,7 +1234,7 @@ class App():
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
-        top_level.title("Move Marked Files")
+        top_level.title(f"Move {len(MarkedFiles.file_marks)} Marked Files")
         top_level.geometry(MarkedFiles.get_geometry())
         try:
             marked_file_mover = MarkedFiles(top_level, App.mode, self.toast, self.alert,
@@ -1276,11 +1299,14 @@ class App():
         return None, None
 
     def home(self, event=None):
-        if not App.mode == Mode.BROWSE:
-            raise Exception("Action currently only available in Browsing mode.")
-        App.file_browser.refresh()
-        self.create_image(App.file_browser.next_file())
-        self.master.update()
+        if App.mode == Mode.BROWSE:
+            App.file_browser.refresh()
+            self.create_image(App.file_browser.next_file())
+            self.master.update()
+        elif App.compare is not None:
+            App.current_group_index = 0
+            App.match_index = 0
+            self.set_current_group()
 
     def page_up(self, event=None):
         if not App.mode == Mode.BROWSE:
@@ -1357,6 +1383,8 @@ class App():
 
         if filepath is not None:
             self._handle_delete(filepath)
+            if App.compare:
+                App.compare.remove_from_groups([filepath])
             self.update_groups_for_removed_file(App.current_group_index, App.match_index)
         else:
             self.alert("Error", "Failed to delete current file, unable to get valid filepath", kind="error")
@@ -1412,9 +1440,6 @@ class App():
             file_group_map = self._get_file_group_map()
             try:
                 group_indexes = file_group_map[filepath]
-                group_index = group_indexes[0]
-                match_index = group_indexes[1]
-                print(f"Removing {filepath} index {match_index} from group {group_index}")
                 self.update_groups_for_removed_file(group_indexes[0], group_indexes[1], set_group=False)
             except KeyError as e:
                 pass # The group may have been removed before update_groups_for_removed_file was called on the last file in it
@@ -1428,6 +1453,7 @@ class App():
         NOTE: This would be more complex if there was not a guarantee that
         groups are disjoint.
         '''
+        print(f"Updating groups for removed file {match_index} in group {group_index}")
         actual_index = App.group_indexes[group_index]
         if set_group or group_index == App.current_group_index:
             files_matched = App.files_matched
@@ -1436,7 +1462,7 @@ class App():
         else:
             files_matched = []
             group = App.file_groups[actual_index]
-            for f in sorted(group, key=lambda f: group[f]):                    
+            for f in self._get_sorted_file_matches(group):                    
                 files_matched.append(f)
 
         if len(files_matched) < 3:
@@ -1444,8 +1470,9 @@ class App():
                 return
 
             # remove this group as it will only have one file
-            App.files_grouped = {
-                k: v for k, v in App.files_grouped.items() if v[0] != actual_index}
+            if App.mode != Mode.SEARCH:
+                App.files_grouped = {
+                    k: v for k, v in App.files_grouped.items() if v[0] != actual_index}
             del App.file_groups[actual_index]
             del App.group_indexes[group_index]
             if group_index < App.current_group_index:
@@ -1472,12 +1499,13 @@ class App():
                 self.set_current_group()
         else:
             filepath = files_matched[match_index]
-            print(f"Filepath from update_groups: {filepath}")
-            App.files_grouped = {
-                k: v for k, v in App.files_grouped.items() if v[0] != actual_index}
+#            print(f"Filepath from update_groups: {filepath}")
+            if App.mode != Mode.SEARCH:
+                App.files_grouped = {
+                    k: v for k, v in App.files_grouped.items() if v[0] != actual_index}
             del files_matched[match_index]
             del App.file_groups[actual_index][filepath]
-            
+ 
             if set_group:
                 if App.match_index == len(App.files_matched):
                     App.match_index = 0
@@ -1493,16 +1521,25 @@ class App():
             group_index = App.group_indexes[group_count]
             group = App.file_groups[group_index]
             group_file_count = 0
-            for f in sorted(group, key=lambda f: group[f]):                    
+            for f in self._get_sorted_file_matches(group):
                 group_map[f] = (group_count, group_file_count)
                 group_file_count += 1
         return group_map
 
+    def _get_sorted_file_matches(self, group):
+        if App.mode == Mode.SEARCH and (App.search_file_path is None or App.search_file_path == ""):
+            return sorted(group, key=lambda f: group[f], reverse=True)
+        else:
+            return sorted(group, key=lambda f: group[f])
+
     def store_info_cache(self):
         base_dir = self.get_base_dir()
-        if base_dir and base_dir != "" and App.img_path and App.img_path != "":
-            app_info_cache.set(base_dir, "image_cursor", os.path.basename(App.img_path))
-            app_info_cache.store()
+        if base_dir and base_dir != "":
+            app_info_cache.set("info", "base_dir", base_dir)
+            if App.img_path and App.img_path != "":
+                app_info_cache.set(base_dir, "image_cursor", os.path.basename(App.img_path))
+        app_info_cache.set("info", "marked_file_target_dirs", MarkedFiles.mark_target_dirs)
+        app_info_cache.store()
 
     def alert(self, title, message, kind="info", hidemain=True) -> None:
         if kind not in ("error", "warning", "info"):
