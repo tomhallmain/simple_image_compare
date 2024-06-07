@@ -16,7 +16,10 @@ from utils.utils import move_file, copy_file
 class MarkedFiles():
     file_marks = []
     previous_marks = []
+    previous_mark_target = None
     previous_action = None
+    penultimate_mark_target = None
+    penultimate_action = None
     mark_target_dirs = []
     last_set_target_dir = None
     mark_cursor = -1
@@ -31,7 +34,25 @@ class MarkedFiles():
     @staticmethod
     def clear_previous_action():
         MarkedFiles.previous_action = None
+        MarkedFiles.previous_mark_target = None
         MarkedFiles.previous_marks.clear()
+
+    @staticmethod
+    def run_previous_action(toast_callback, refresh_callback):
+        if not MarkedFiles.previous_action or not MarkedFiles.previous_mark_target:
+            return
+        MarkedFiles.move_marks_to_dir_static(toast_callback, refresh_callback,
+                                             target_dir=MarkedFiles.previous_mark_target,
+                                             move_func=MarkedFiles.previous_action)
+
+
+    @staticmethod
+    def run_penultimate_action(toast_callback, refresh_callback):
+        if not MarkedFiles.penultimate_action or not MarkedFiles.penultimate_mark_target:
+            return        
+        MarkedFiles.move_marks_to_dir_static(toast_callback, refresh_callback,
+                                             target_dir=MarkedFiles.penultimate_mark_target,
+                                             move_func=MarkedFiles.penultimate_action)
 
     @staticmethod
     def get_geometry(is_gui=True):
@@ -57,7 +78,8 @@ class MarkedFiles():
             return 1
         return 0
 
-    def __init__(self, is_gui, quick_open, master, app_mode, toast_callback, alert_callback, refresh_callback, delete_callback, base_dir="."):
+    def __init__(self, master, is_gui, quick_open, app_mode,
+                 toast_callback, alert_callback, refresh_callback, delete_callback, base_dir="."):
         self.is_gui = is_gui
         self.quick_open = quick_open
         self.master = master
@@ -125,7 +147,6 @@ class MarkedFiles():
         self.master.bind("<Escape>", self.close_windows)
         self.master.bind('<Shift-Delete>', self.delete_marked_files)
         self.master.bind("<Button-2>", self.delete_marked_files)
-
 
     def add_target_dir_widgets(self):
         row = 0
@@ -199,17 +220,27 @@ class MarkedFiles():
             MarkedFiles.mark_target_dirs.sort()
         self.move_marks_to_dir(target_dir=target_dir, move_func=move_func)
 
-
     def move_marks_to_dir(self, event=None, target_dir=None, move_func=move_file):
+        target_dir = self.handle_target_directory(target_dir=target_dir)
+        some_files_already_present = MarkedFiles.move_marks_to_dir_static(
+            self.toast_callback, self.refresh_callback,
+            target_dir=target_dir, move_func=move_func)
+        self.close_windows()
+
+    @staticmethod
+    def move_marks_to_dir_static(toast_callback, refresh_callback, target_dir=None, move_func=move_file):
         """
         Move or copy the marked files to the target directory.
         """
-        target_dir = self.handle_target_directory(target_dir=target_dir)
+        some_files_already_present = False
         is_moving = move_func == move_file
         action_part1 = "Moving" if is_moving else "Copying"
         action_part2 = "Moved" if is_moving else "Copied"
         MarkedFiles.previous_marks.clear()
+        MarkedFiles.penultimate_action = MarkedFiles.previous_action
+        MarkedFiles.penultimate_mark_target = MarkedFiles.previous_mark_target
         MarkedFiles.previous_action = move_func
+        MarkedFiles.previous_mark_target = target_dir
         print(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}")
         exceptions = {}
         invalid_files = []
@@ -223,20 +254,25 @@ class MarkedFiles():
                 if not os.path.exists(marked_file):
                     invalid_files.append(marked_file)
         if len(exceptions) < len(MarkedFiles.file_marks):
-            self.toast_callback(f"{action_part2} {len(MarkedFiles.file_marks) - len(exceptions)} files to\n{target_dir}")
+            toast_callback(f"{action_part2} {len(MarkedFiles.file_marks) - len(exceptions)} files to\n{target_dir}")
         MarkedFiles.file_marks.clear()
         if len(exceptions) > 0:
             for marked_file in exceptions.keys():
                 if not marked_file in invalid_files:
                     MarkedFiles.file_marks.append(marked_file) # Just in case some of them failed to move for whatever reason.
+                    if exceptions[marked_file].startswith("File already exists"):
+                        some_files_already_present = True
+            if some_files_already_present:
+                toast_callback(f"Existing filenames match!")
             action_part3 = "move" if is_moving else "copy"
-            raise Exception(f"Failed to {action_part3} some files: {exceptions}")
-        MarkedFiles.last_set_target_dir = target_dir
-        if is_moving:
-            self.refresh_callback(removed_files=list(MarkedFiles.previous_marks))
-        else:
-            self.refresh_callback()
-        self.close_windows()
+            print(f"Failed to {action_part3} some files: {exceptions}")
+        if len(MarkedFiles.previous_marks) > 0:
+            MarkedFiles.last_set_target_dir = target_dir
+            if is_moving:
+                refresh_callback(removed_files=list(MarkedFiles.previous_marks))
+            else:
+                refresh_callback()
+        return some_files_already_present
 
     @staticmethod
     def undo_move_marks(base_dir, toast_callback, refresh_callback):
@@ -392,6 +428,8 @@ class MarkedFiles():
 
         If control key pressed, ignore any marked dirs and set a new target directory.
 
+        If alt key pressed, use the penultimate mark target dir as target directory.
+
         The idea is the user can filter the directories using keypresses, then press enter to
         do the action on the first filtered directory.
 
@@ -399,8 +437,11 @@ class MarkedFiles():
         """
         shift_key_pressed = (event.state & 0x1) != 0
         control_key_pressed = (event.state & 0x4) != 0
+        alt_key_pressed = (event.state & 0x20000) != 0
         move_func = copy_file if shift_key_pressed else move_file
-        if len(self.filtered_target_dirs) == 0 or control_key_pressed:
+        if alt_key_pressed:
+            self.move_marks_to_dir(target_dir=MarkedFiles.penultimate_mark_target, move_func=move_func)
+        elif len(self.filtered_target_dirs) == 0 or control_key_pressed:
             self.handle_target_directory(move_func=move_func)
         else:
             # TODO maybe sort the last target dir first in the list instead of this
@@ -450,9 +491,11 @@ class MarkedFiles():
         failed_to_delete = []
         for filepath in MarkedFiles.file_marks:
             try:
+                # NOTE since undo delete is not supported, the delete callback handles clearing the previous action
                 self.delete_callback(filepath, manual_delete=False)
                 removed_files.append(filepath)
             except Exception as e:
+                print(f"Failed to delete {filepath}: {e}")
                 if os.path.exists(filepath):
                     failed_to_delete.append(filepath)
 
@@ -462,6 +505,8 @@ class MarkedFiles():
             self.alert_callback("Delete Failed",
                     f"Failed to delete {len(failed_to_delete)} files - check log for details.",
                     kind="warning")
+        else:
+            self.toast_callback(f"Deleted {len(removed_files)} marked files.")
 
         # In the BROWSE case, the file removal should be recognized by the file browser
         ## TODO it will not be handled in case of using file JSON. need to handle this case separately.        
@@ -471,11 +516,11 @@ class MarkedFiles():
     def close_windows(self, event=None):
         self.master.destroy()
         if self.quick_open and len(MarkedFiles.file_marks) == 1:
-            # This implies the user has opened the marks window directly from a single image
-            # but has not taken any action on the marked file. It's possible that the
+            # This implies the user has opened the marks window directly from the current image
+            # but was unable to take any action on this marked file. It's possible that the
             # action the user requested was already taken, and an error was thrown preventing
             # it from being repeated and overwriting the file. If so the user likely doesn't want
-            # to take any more action on this file so we can forget about it.
+            # to take any more actions on this file so we can forget about it.
             MarkedFiles.file_marks.clear()
             self.toast_callback("Cleared marked file")
 

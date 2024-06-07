@@ -22,89 +22,38 @@ class HelpAndConfig():
         self.row_counter1 = 0
         col_0_width = 250
 
-        self._label_1 = Label(self.frame)
-        self.label_1 = Label(self.frame)
-        self._label_2 = Label(self.frame)
-        self.label_2 = Label(self.frame)
-        self._label_3 = Label(self.frame)
-        self.label_3 = Label(self.frame)
-        self._label_4 = Label(self.frame)
-        self.label_4 = Label(self.frame)
-        self._label_5 = Label(self.frame)
-        self.label_5 = Label(self.frame)
-        self._label_6 = Label(self.frame)
-        self.label_6 = Label(self.frame)
-        self._label_7 = Label(self.frame)
-        self.label_7 = Label(self.frame)
-        self._label_8 = Label(self.frame)
-        self.label_8 = Label(self.frame)
-        self._label_9 = Label(self.frame)
-        self.label_9 = Label(self.frame)
-        self._label_10 = Label(self.frame)
-        self.label_10 = Label(self.frame)
-        self._label_11 = Label(self.frame)
-        self.label_11 = Label(self.frame)
-        self._label_12 = Label(self.frame)
-        self.label_12 = Label(self.frame)
-        self._label_13 = Label(self.frame)
-        self.label_13 = Label(self.frame)
-        self._label_14 = Label(self.frame)
-        self.label_14 = Label(self.frame)
-        self._label_15 = Label(self.frame)
-        self.label_15 = Label(self.frame)
-        self._label_16 = Label(self.frame)
-        self.label_16 = Label(self.frame)
-        self._label_17 = Label(self.frame)
-        self.label_17 = Label(self.frame)
-        self._label_18 = Label(self.frame)
-        self.label_18 = Label(self.frame)
-        self._label_19 = Label(self.frame)
-        self.label_19 = Label(self.frame)
-        self._label_20 = Label(self.frame)
-        self.label_20 = Label(self.frame)
+        self.help_label_list = []
 
-        self.add_label(self._label_1, "Command", wraplength=col_0_width)
-        self.add_label(self.label_1, "Description", column=1)
-        self.add_label(self._label_2, "Shift+D", wraplength=col_0_width)
-        self.add_label(self.label_2, "Show image details", column=1)
-        self.add_label(self._label_17, "Ctrl+G", wraplength=col_0_width)
-        self.add_label(self.label_17, "Open Go to file window", column=1)
-        self.add_label(self._label_3, "Home", wraplength=col_0_width)
-        self.add_label(self.label_3, "Reset image browser", column=1)
-        self.add_label(self._label_4, "Page Up/Page Down", wraplength=col_0_width)
-        self.add_label(self.label_4, "Page through images", column=1)
-        self.add_label(self._label_5, "Shift+M", wraplength=col_0_width)
-        self.add_label(self.label_5, "Add or remove a mark for current image", column=1)
-        self.add_label(self._label_6, "Shift+N", wraplength=col_0_width)
-        self.add_label(self.label_6, "Add all marks between most recently set and current file, or all marks in current group", column=1)
-        self.add_label(self._label_7, "Shift-G", wraplength=col_0_width)
-        self.add_label(self.label_7, "Go to next mark", column=1)
-        self.add_label(self._label_20, "Shift+C", wraplength=col_0_width)
-        self.add_label(self.label_20, "Clear marks list", column=1)
-        self.add_label(self._label_14, "Ctrl+C", wraplength=col_0_width)
-        self.add_label(self.label_14, "Copy marks list", column=1)
-        self.add_label(self._label_15, "Ctrl+M", wraplength=col_0_width)
-        self.add_label(self.label_15, "Move marks to directory", column=1)
-        self.add_label(self._label_19, "Ctrl+K", wraplength=col_0_width)
-        self.add_label(self.label_19, "Move marks to directory (no GUI)", column=1)
-        self.add_label(self._label_17, "Ctrl+Z", wraplength=col_0_width)
-        self.add_label(self.label_17, "Undo previous marks move changes", column=1)
-        self.add_label(self._label_18, "Ctrl+X", wraplength=col_0_width)
-        self.add_label(self.label_18, "Move previous marks to different directory", column=1)
-        self.add_label(self._label_8, "Left/Right Arrow", wraplength=col_0_width)
-        self.add_label(self.label_8, "Show previous/next image", column=1)
-        self.add_label(self._label_9, "Mouse Wheel Up/Down", wraplength=col_0_width)
-        self.add_label(self.label_9, "Show previous/next image", column=1)
-        self.add_label(self._label_10, "Shift-Left/Right Arrow", wraplength=col_0_width)
-        self.add_label(self.label_10, "Show previous/next group", column=1)
-        self.add_label(self._label_11, "Shift-O", wraplength=col_0_width)
-        self.add_label(self.label_11, "Open image location", column=1)
-        self.add_label(self._label_12, "Shift-Delete / Mouse Wheel Click", wraplength=col_0_width)
-        self.add_label(self.label_12, "Delete image (or marked file group if marks window selected)", column=1)
-        self.add_label(self._label_13, "F11", wraplength=col_0_width)
-        self.add_label(self.label_13, "Toggle fullscreen", column=1)
-        self.add_label(self._label_16, "", wraplength=col_0_width)
-        self.add_label(self.label_16, "", column=1)
+        help_details = {
+            "Command": "Description",
+            "Shift+D": "Show image details",
+            "Ctrl+G": "Open Go to file window",
+            "Home": "Reset image browser",
+            "Page Up/Down": "Page through images",
+            "Shift+M": "Add or remove a mark for current image",
+            "Shift+N": "Add all marks between most recently set and current file, or all marks in current group",
+            "Shift+G": "Go to next mark",
+            "Shift+C": "Clear marks list",
+            "Ctrl+C": "Copy marks list",
+            "Ctrl+M": "Open marks window",
+            "Ctrl+K": "Open marks window (no GUI)",
+            "Ctrl+Z": "Undo previous marks changes",
+            "Ctrl+X": "Move previous marks to a different directory",
+            "Left/Right Arrow": "Show previous/next image",
+            "Mouse Wheel Up/Down": "Show previous/next image",
+            "Shift+Left/Right Arrow":  "Show previous/next group",
+            "Shift+O": "Open image location",
+            "Shift+Delete / Mouse Wheel Click": "Delete image (or marked file group if marks window selected)",
+            "F11": "Toggle fullscreen",
+        }
+
+        for key, value in help_details.items():
+            _label = Label(self.frame)
+            label = Label(self.frame)
+            self.add_label(_label, key, wraplength=col_0_width)
+            self.add_label(label, value, column=1)
+            self.help_label_list.append(_label)
+            self.help_label_list.append(label)
 
         self.label_config_title = Label(self.frame)
         self.label_config_title['text'] = "Config Settings"

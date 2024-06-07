@@ -364,6 +364,8 @@ class App():
         self.master.bind("<Control-C>", self.copy_marks_list)
         self.master.bind("<Control-m>", self.open_move_marks_window)
         self.master.bind("<Control-k>", self.open_move_marks_no_gui)
+        self.master.bind("<Control-r>", self.run_previous_marks_action)
+        self.master.bind("<Control-e>", self.run_penultimate_marks_action)
         self.master.bind("<Control-z>", self.revert_last_marks_change)
         self.master.bind("<Control-x>", self.modify_last_marks_change)
         self.master.bind("<Home>", self.home)
@@ -1181,17 +1183,19 @@ class App():
             self.label_state["text"] = _wrap_text_to_fit_length(
                 f"Group {group_number + 1} of {len(App.file_groups)}\nSize: {size}", 30)
 
-    def add_or_remove_mark_for_current_image(self, event=None):
+    def add_or_remove_mark_for_current_image(self, event=None, show_toast=True):
         self._check_marks(min_mark_size=0)
         if App.img_path in MarkedFiles.file_marks:
             MarkedFiles.file_marks.remove(App.img_path)
             remaining_marks_count = len(MarkedFiles.file_marks)
             if MarkedFiles.mark_cursor >= remaining_marks_count:
                 MarkedFiles.mark_cursor = -1
-            self.toast(f"Mark removed. Remaining: {remaining_marks_count}")
+            if show_toast:
+                self.toast(f"Mark removed. Remaining: {remaining_marks_count}")
         else:
             MarkedFiles.file_marks.append(App.img_path)
-            self.toast(f"Mark added. Total set: {len(MarkedFiles.file_marks)}")
+            if show_toast:
+                self.toast(f"Mark added. Total set: {len(MarkedFiles.file_marks)}")
 
     def add_all_marks_from_last_or_current_group(self, event=None):
         if App.mode == Mode.BROWSE:
@@ -1237,13 +1241,24 @@ class App():
         top_level.title(f"Move {len(MarkedFiles.file_marks)} Marked File(s)")
         top_level.geometry(MarkedFiles.get_geometry(is_gui=open_gui))
         try:
-            marked_file_mover = MarkedFiles(open_gui, quick_open, top_level, App.mode, self.toast, self.alert,
-                                            self.refresh, self._handle_delete, base_dir=self.get_base_dir())
+            marked_file_mover = MarkedFiles(top_level, open_gui, quick_open, App.mode,
+                                            self.toast, self.alert, self.refresh, self._handle_delete,
+                                            base_dir=self.get_base_dir())
         except Exception as e:
             self.alert("Marked Files Window Error", str(e), kind="error")
 
     def open_move_marks_no_gui(self, event=None):
         self.open_move_marks_window(event=event, open_gui=False)
+
+    def run_previous_marks_action(self, event=None):
+        if len(MarkedFiles.file_marks) == 0:
+            self.add_or_remove_mark_for_current_image(show_toast=False)
+        MarkedFiles.run_previous_action(self.toast, self.refresh)
+
+    def run_penultimate_marks_action(self, event=None):
+        if len(MarkedFiles.file_marks) == 0:
+            self.add_or_remove_mark_for_current_image(show_toast=False)
+        MarkedFiles.run_penultimate_action(self.toast, self.refresh)
 
     def _check_marks(self, min_mark_size=1):
         if len(MarkedFiles.file_marks) < min_mark_size:
@@ -1392,28 +1407,27 @@ class App():
         else:
             self.alert("Error", "Failed to delete current file, unable to get valid filepath", kind="error")
 
-    def _handle_delete(self, filepath, toast=True):
+    def _handle_delete(self, filepath, toast=True, manual_delete=True):
         MarkedFiles.clear_previous_action() # Undo deleting action is not supported
-        if toast:
+        if toast and manual_delete:
             self.toast("Removing file: " + filepath)
         else:
             print("Removing file: " + filepath)
         if self.config.delete_instantly:
             os.remove(filepath)
-            return
-        if self.config.trash_folder is not None: 
+        elif self.config.trash_folder is not None: 
             filepath = os.path.normpath(filepath)
             sep = "\\" if "\\" in filepath else "/"
             new_filepath = filepath[filepath.rfind(sep)+1:len(filepath)]
             new_filepath = os.path.normpath(os.path.join(self.config.trash_folder, new_filepath))
             os.rename(filepath, new_filepath)
-            return
-        try:
-            send2trash(os.path.normpath(filepath))
-        except Exception as e:
-            print(e)
-            print("Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json.")
-            os.remove(filepath)
+        else:
+            try:
+                send2trash(os.path.normpath(filepath))
+            except Exception as e:
+                print(e)
+                print("Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json.")
+                os.remove(filepath)
 
 
     def replace_current_image_with_search_image(self):
