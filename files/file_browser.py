@@ -192,7 +192,7 @@ class FileBrowser:
 
     def get_index_details(self):
         files = self.get_files()
-        return f"{self.file_cursor} out of {len(files)} files in directory, ordered by {self.sort_by} {self.sort}"
+        return f"{self.file_cursor+1} out of {len(files)} files in directory, ordered by {self.sort_by} {self.sort}"
 
     def go_to_file(self, filepath):
         files = self.get_files()

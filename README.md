@@ -71,8 +71,10 @@ A directory with images must be set before most of the below bindings will have 
 | Shift-M          |                  | Add/remove a mark      |
 | Shift-N          |                  | Add marks from last    |
 | Shift-G          |                  | Go to next mark        |
-| Shift-C          |                  | Copy marks list        |
+| Shift-C          |                  | Clear marks list       |
+| Ctrl-C           |                  | Copy marks list        |
 | Ctrl-M           |                  | Move marks to dir      |
+| Ctrl-M           |                  | Move marks (no GUI)    |
 | Ctrl-Z           |                  | Undo move marks        |
 | Ctrl-X           |                  | Modify last marks move |
 | Shift-O          |                  | Open image location    |

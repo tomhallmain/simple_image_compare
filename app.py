@@ -363,6 +363,7 @@ class App():
         self.master.bind("<Control-g>", self.open_go_to_file_window)
         self.master.bind("<Control-C>", self.copy_marks_list)
         self.master.bind("<Control-m>", self.open_move_marks_window)
+        self.master.bind("<Control-k>", self.open_move_marks_no_gui)
         self.master.bind("<Control-z>", self.revert_last_marks_change)
         self.master.bind("<Control-x>", self.modify_last_marks_change)
         self.master.bind("<Home>", self.home)
@@ -519,7 +520,7 @@ class App():
             index_text = App.file_browser.get_index_details()
         elif App.mode == Mode.GROUP:
             index_text = f"{App.match_index+1} of {len(App.files_matched)} (Group {App.current_group_index+1} of {len(App.file_groups)})"
-        elif App.mode == Mode.SEARCH and not App.is_toggled_view_matches:
+        elif App.mode == Mode.SEARCH and App.is_toggled_view_matches:
             index_text = f"{App.match_index+1} of {len(App.files_matched)}"
         else:
             index_text = ""
@@ -785,9 +786,6 @@ class App():
         '''
         While in group mode, navigate between the groups.
         '''
-        if App.mode == Mode.SEARCH:
-            self.alert("Error", "Invalid action, there should only be one group in search mode", kind="error")
-            return
         if App.file_groups is None or len(App.file_groups) == 0:
             self.toast("No groups found")
             return
@@ -1229,18 +1227,23 @@ class App():
         self.master.clipboard_clear()
         self.master.clipboard_append(MarkedFiles.file_marks)
 
-    def open_move_marks_window(self, event=None):
+    def open_move_marks_window(self, event=None, open_gui=True):
         self._check_marks(min_mark_size=0)
+        quick_open = False
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
+            quick_open = True
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
-        top_level.title(f"Move {len(MarkedFiles.file_marks)} Marked Files")
-        top_level.geometry(MarkedFiles.get_geometry())
+        top_level.title(f"Move {len(MarkedFiles.file_marks)} Marked File(s)")
+        top_level.geometry(MarkedFiles.get_geometry(is_gui=open_gui))
         try:
-            marked_file_mover = MarkedFiles(top_level, App.mode, self.toast, self.alert,
+            marked_file_mover = MarkedFiles(open_gui, quick_open, top_level, App.mode, self.toast, self.alert,
                                             self.refresh, self._handle_delete, base_dir=self.get_base_dir())
         except Exception as e:
             self.alert("Marked Files Window Error", str(e), kind="error")
+
+    def open_move_marks_no_gui(self, event=None):
+        self.open_move_marks_window(event=event, open_gui=False)
 
     def _check_marks(self, min_mark_size=1):
         if len(MarkedFiles.file_marks) < min_mark_size:
@@ -1390,6 +1393,7 @@ class App():
             self.alert("Error", "Failed to delete current file, unable to get valid filepath", kind="error")
 
     def _handle_delete(self, filepath, toast=True):
+        MarkedFiles.clear_previous_action() # Undo deleting action is not supported
         if toast:
             self.toast("Removing file: " + filepath)
         else:

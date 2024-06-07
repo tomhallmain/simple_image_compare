@@ -29,15 +29,24 @@ class MarkedFiles():
         MarkedFiles.mark_target_dirs = target_dirs
 
     @staticmethod
-    def get_geometry():
-        width = 600
-        min_height = 300
-        height = len(MarkedFiles.mark_target_dirs) * 22 + 20
-        if height > MarkedFiles.max_height:
-            height = MarkedFiles.max_height
-            width *= 2 if len(MarkedFiles.mark_target_dirs) < MarkedFiles.n_target_dirs_cutoff * 2 else 3
+    def clear_previous_action():
+        MarkedFiles.previous_action = None
+        MarkedFiles.previous_marks.clear()
+
+    @staticmethod
+    def get_geometry(is_gui=True):
+        if is_gui:
+            width = 600
+            min_height = 300
+            height = len(MarkedFiles.mark_target_dirs) * 22 + 20
+            if height > MarkedFiles.max_height:
+                height = MarkedFiles.max_height
+                width *= 2 if len(MarkedFiles.mark_target_dirs) < MarkedFiles.n_target_dirs_cutoff * 2 else 3
+            else:
+                height = max(height, min_height)
         else:
-            height = max(height, min_height)
+            width = 300
+            height = 100
         return f"{width}x{height}"
 
     @staticmethod
@@ -48,7 +57,9 @@ class MarkedFiles():
             return 1
         return 0
 
-    def __init__(self, master, app_mode, toast_callback, alert_callback, refresh_callback, delete_callback, base_dir="."):
+    def __init__(self, is_gui, quick_open, master, app_mode, toast_callback, alert_callback, refresh_callback, delete_callback, base_dir="."):
+        self.is_gui = is_gui
+        self.quick_open = quick_open
         self.master = master
         self.app_mode = app_mode
         self.toast_callback = toast_callback
@@ -64,52 +75,56 @@ class MarkedFiles():
             self.starting_target = MarkedFiles.last_set_target_dir
         else:
             self.starting_target = base_dir
-        self.frame = Frame(self.master)
-        self.frame.grid(column=0, row=0)
-        self.frame.columnconfigure(0, weight=9)
-        self.frame.columnconfigure(1, weight=1)
-        self.frame.columnconfigure(2, weight=1)
-
-        add_columns = MarkedFiles.add_columns()
-
-        if add_columns > 0:
-            self.frame.columnconfigure(3, weight=9)
-            self.frame.columnconfigure(4, weight=1)
-            self.frame.columnconfigure(5, weight=1)
-            if add_columns > 1:
-                self.frame.columnconfigure(6, weight=9)
-                self.frame.columnconfigure(7, weight=1)
-                self.frame.columnconfigure(8, weight=1)
-
-        self.frame.config(bg=AppStyle.BG_COLOR)
 
         self.move_btn_list = []
         self.copy_btn_list = []
         self.label_list = []
-        self.add_target_dir_widgets()
 
-        self._label_info = Label(self.frame)
-        self.add_label(self._label_info, "Set a new target directory", row=0, wraplength=MarkedFiles.col_0_width)
-        self.add_directory_move_btn = None
-        self.add_btn("add_directory_move_btn", "MOVE", self.handle_target_directory, column=1)
-        def copy_handler_new_dir(event=None, self=self):
-            self.handle_target_directory(move_func=copy_file)
-        self.add_directory_copy_btn = None
-        self.add_btn("add_directory_copy_btn", "COPY", copy_handler_new_dir, column=2)
-        self.delete_btn = None
-        self.add_btn("delete_btn", "DELETE", self.delete_marked_files, column=3)
-        self.set_target_dirs_from_dir_btn = None
-        self.add_btn("set_target_dirs_from_dir_btn", "Add directories from parent", self.set_target_dirs_From_dir, column=4)
-        self.clear_target_dirs_btn = None
-        self.add_btn("clear_target_dirs_btn", "Clear targets", self.clear_target_dirs, column=5)
+        if self.is_gui:
+            self.frame = Frame(self.master)
+            self.frame.grid(column=0, row=0)
+            self.frame.columnconfigure(0, weight=9)
+            self.frame.columnconfigure(1, weight=1)
+            self.frame.columnconfigure(2, weight=1)
+
+            add_columns = MarkedFiles.add_columns()
+
+            if add_columns > 0:
+                self.frame.columnconfigure(3, weight=9)
+                self.frame.columnconfigure(4, weight=1)
+                self.frame.columnconfigure(5, weight=1)
+                if add_columns > 1:
+                    self.frame.columnconfigure(6, weight=9)
+                    self.frame.columnconfigure(7, weight=1)
+                    self.frame.columnconfigure(8, weight=1)
+
+            self.frame.config(bg=AppStyle.BG_COLOR)
+
+            self.add_target_dir_widgets()
+
+            self._label_info = Label(self.frame)
+            self.add_label(self._label_info, "Set a new target directory", row=0, wraplength=MarkedFiles.col_0_width)
+            self.add_directory_move_btn = None
+            self.add_btn("add_directory_move_btn", "MOVE", self.handle_target_directory, column=1)
+            def copy_handler_new_dir(event=None, self=self):
+                self.handle_target_directory(move_func=copy_file)
+            self.add_directory_copy_btn = None
+            self.add_btn("add_directory_copy_btn", "COPY", copy_handler_new_dir, column=2)
+            self.delete_btn = None
+            self.add_btn("delete_btn", "DELETE", self.delete_marked_files, column=3)
+            self.set_target_dirs_from_dir_btn = None
+            self.add_btn("set_target_dirs_from_dir_btn", "Add directories from parent", self.set_target_dirs_From_dir, column=4)
+            self.clear_target_dirs_btn = None
+            self.add_btn("clear_target_dirs_btn", "Clear targets", self.clear_target_dirs, column=5)
+            self.frame.after(1, lambda: self.frame.focus_force())
+        else:
+            self.master.after(1, lambda: self.master.focus_force())
 
         self.master.bind("<Key>", self.filter_targets)
         self.master.bind("<Return>", self.do_action)
         self.master.bind("<Escape>", self.close_windows)
         self.master.bind('<Shift-Delete>', self.delete_marked_files)
         self.master.bind("<Button-2>", self.delete_marked_files)
-        self.frame.after(1, lambda: self.frame.focus_force())
-
 
 
     def add_target_dir_widgets(self):
@@ -239,6 +254,8 @@ class MarkedFiles():
         if base_dir is None:
             base_dir = filedialog.askdirectory(
                 initialdir=target_dir, title="Where should the marked files have gone?")
+        if base_dir is None or base_dir == "" or not os.path.isdir(base_dir):
+            raise Exception("Failed to get valid base directory for undo move marked files.")
         print(f"Undoing action: {action_part1} {len(MarkedFiles.previous_marks)} files from directory:\n{MarkedFiles.last_set_target_dir}")
         exceptions = {}
         invalid_files = []
@@ -312,9 +329,10 @@ class MarkedFiles():
                     self.filtered_target_dirs = self.filtered_target_dirs[1:] + [self.filtered_target_dirs[0]]
                 else:  # keysym == "Up"
                     self.filtered_target_dirs = [self.filtered_target_dirs[-1]] + self.filtered_target_dirs[:-1]
-                self.clear_widget_lists()
-                self.add_target_dir_widgets()
-                self.master.update()
+                if self.is_gui:
+                    self.clear_widget_lists()
+                    self.add_target_dir_widgets()
+                    self.master.update()
             if event.keysym != "BackSpace":
                 return
         if event.keysym == "BackSpace":
@@ -356,9 +374,10 @@ class MarkedFiles():
                         temp.append(target_dir)
             self.filtered_target_dirs = temp[:]
 
-        self.clear_widget_lists()
-        self.add_target_dir_widgets()
-        self.master.update()
+        if self.is_gui:
+            self.clear_widget_lists()
+            self.add_target_dir_widgets()
+            self.master.update()
 
 
     def do_action(self, event=None):
@@ -451,6 +470,14 @@ class MarkedFiles():
 
     def close_windows(self, event=None):
         self.master.destroy()
+        if self.quick_open and len(MarkedFiles.file_marks) == 1:
+            # This implies the user has opened the marks window directly from a single image
+            # but has not taken any action on the marked file. It's possible that the
+            # action the user requested was already taken, and an error was thrown preventing
+            # it from being repeated and overwriting the file. If so the user likely doesn't want
+            # to take any more action on this file so we can forget about it.
+            MarkedFiles.file_marks.clear()
+            self.toast_callback("Cleared marked file")
 
     def add_label(self, label_ref, text, row=0, column=0, wraplength=500):
         label_ref['text'] = text

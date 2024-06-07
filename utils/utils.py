@@ -140,6 +140,7 @@ def get_relative_dirpath_split(base_dir, filepath):
     return relative_dirpath, basename
 
 
+# NOTE: Maybe want to raise Exception if either existing filepath or target dir are not valid
 def move_file(existing_filepath, target_dir, overwrite_existing=False):
     new_filepath = os.path.join(target_dir, os.path.basename(existing_filepath))
     if not overwrite_existing and os.path.exists(new_filepath):
