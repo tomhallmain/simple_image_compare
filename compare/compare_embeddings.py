@@ -368,9 +368,9 @@ class CompareEmbedding:
         else:
             temp = {}
             count = 0
-            for i in range(len(self._files_found)):
-                temp[self._files_found[i]] = embedding_similars[1][i]
-            for file, similarity in dict(sorted(temp.items(), key=lambda item: item[1])):
+            for i in range(len(_files_found)):
+                temp[_files_found[i]] = embedding_similars[1][i]
+            for file, similarity in dict(sorted(temp.items(), key=lambda item: item[1], reverse=True)).items():
                 if count == config.max_search_results:
                     break
                 files_grouped[file] = similarity
@@ -606,7 +606,7 @@ class CompareEmbedding:
         if self.verbose:
             print("Identifying similar image files...")
 
-        # It is much less likely for text to match exactly
+        # NOTE It is much less likely for text to match exactly
         adjusted_threshold = self.embedding_similarity_threshold / 3
         embedding_similars = self._compute_embedding_diff(
             self._file_embeddings, text_embedding, True, threshold=adjusted_threshold)

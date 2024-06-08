@@ -73,9 +73,9 @@ A directory with images must be set before most of the below bindings will have 
 | Shift-G          |                  | Go to next mark        |
 | Shift-C          |                  | Clear marks list       |
 | Ctrl-C           |                  | Copy marks list        |
-| Ctrl-M           |                  | Move marks to dir      |
-| Ctrl-K           |                  | Move marks (no GUI)    |
-| Ctrl-R           |                  | Redo prev marks action |
+| Ctrl-M           |                  | Open marks window      |
+| Ctrl-K           |                  | Open marks window (no GUI)    |
+| Ctrl-R           |                  | Redo prev marks action        |
 | Ctrl-E           |                  | Redo penultimate marks action |
 | Ctrl-Z           |                  | Undo move marks        |
 | Ctrl-X           |                  | Modify last marks move |
@@ -85,7 +85,7 @@ A directory with images must be set before most of the below bindings will have 
 
 ## Move Marks Window Behavior
 
-When the move marks window is open -- with or without GUI -- marks can be moved to a target directory with the GUI elements if visible, or by pressing the Enter key. Upon doing this, a number of things can occur:
+When the move marks window is open -- with or without GUI -- marks can be moved to a target directory with the GUI elements if visible, or by pressing the Enter key. After pressing the Enter key, a number of things can occur:
 
 - If no target directories have been set, a folder picker window will open to set a new directory.
 
@@ -97,7 +97,7 @@ When the move marks window is open -- with or without GUI -- marks can be moved 
 
 - If control key is pressed, any previously marked directories will be ignored and a folder picker window will open to set a new target directory.
 
-- If alt key is pressed, the penultimate mark target dir will be used as target directory. This is useful when you want to move a bunch of files to one directory and then another, without having to re-filter each time.
+- If alt key is pressed, the penultimate mark target dir will be used as target directory. This is useful when you want to successively copy files to one directory and then move them to another, without having to re-filter each time.
 
 Simply typing letters while the mark window is open will filter the list of mark target directories, even if the GUI is not present. The backspace key will delete letters from the filter. You can scroll through the list of saved target directories using arrow keys.
 

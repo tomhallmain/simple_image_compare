@@ -22,6 +22,7 @@ class MarkedFiles():
     penultimate_action = None
     mark_target_dirs = []
     last_set_target_dir = None
+    delete_lock = False
     mark_cursor = -1
     max_height = 900
     n_target_dirs_cutoff = 30
@@ -32,10 +33,8 @@ class MarkedFiles():
         MarkedFiles.mark_target_dirs = target_dirs
 
     @staticmethod
-    def clear_previous_action():
-        MarkedFiles.previous_action = None
-        MarkedFiles.previous_mark_target = None
-        MarkedFiles.previous_marks.clear()
+    def set_delete_lock(delete_lock=True):
+        MarkedFiles.delete_lock = delete_lock
 
     @staticmethod
     def run_previous_action(toast_callback, refresh_callback):
@@ -237,8 +236,10 @@ class MarkedFiles():
         action_part1 = "Moving" if is_moving else "Copying"
         action_part2 = "Moved" if is_moving else "Copied"
         MarkedFiles.previous_marks.clear()
-        MarkedFiles.penultimate_action = MarkedFiles.previous_action
-        MarkedFiles.penultimate_mark_target = MarkedFiles.previous_mark_target
+        if MarkedFiles.previous_action is not None and MarkedFiles.previous_mark_target is not None \
+                and (move_func != MarkedFiles.previous_action or target_dir != MarkedFiles.previous_mark_target):
+            MarkedFiles.penultimate_action = MarkedFiles.previous_action
+            MarkedFiles.penultimate_mark_target = MarkedFiles.previous_mark_target
         MarkedFiles.previous_action = move_func
         MarkedFiles.previous_mark_target = target_dir
         print(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}")
@@ -255,6 +256,7 @@ class MarkedFiles():
                     invalid_files.append(marked_file)
         if len(exceptions) < len(MarkedFiles.file_marks):
             toast_callback(f"{action_part2} {len(MarkedFiles.file_marks) - len(exceptions)} files to\n{target_dir}")
+            MarkedFiles.delete_lock = False
         MarkedFiles.file_marks.clear()
         if len(exceptions) > 0:
             for marked_file in exceptions.keys():
@@ -279,7 +281,7 @@ class MarkedFiles():
         """
         Undo the previous move/copy operation.
         """
-        if MarkedFiles.previous_action is None:
+        if MarkedFiles.delete_lock:
             return
         is_moving_back = MarkedFiles.previous_action == move_file
         action_part1 = "Moving back" if is_moving_back else "Removing"
@@ -491,7 +493,7 @@ class MarkedFiles():
         failed_to_delete = []
         for filepath in MarkedFiles.file_marks:
             try:
-                # NOTE since undo delete is not supported, the delete callback handles clearing the previous action
+                # NOTE since undo delete is not supported, the delete callback handles setting a delete lock
                 self.delete_callback(filepath, manual_delete=False)
                 removed_files.append(filepath)
             except Exception as e:

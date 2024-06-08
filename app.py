@@ -463,11 +463,13 @@ class App():
 
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
         App.file_browser.refresh(refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files)
-        if App.compare and len(removed_files) > 0:
+        if App.compare is not None and len(removed_files) > 0:
             App.compare.remove_from_groups(removed_files)
         if App.mode != Mode.BROWSE:
             self._handle_remove_files_from_groups(removed_files)
         if App.file_browser.has_files():
+            if App.mode != Mode.BROWSE:
+                return
             if show_new_images:
                 has_new_images = self.file_browser.update_cursor_to_new_images()
             self.show_next_image()
@@ -1120,7 +1122,8 @@ class App():
                         kind="info")
             return
 
-        for f in sorted(App.files_grouped[0], key=lambda f: App.files_grouped[0][f]):
+        reverse = App.compare_mode == CompareMode.CLIP_EMBEDDING
+        for f in sorted(App.files_grouped[0], key=lambda f: App.files_grouped[0][f], reverse=reverse):
             App.files_matched.append(f)
 
         App.group_indexes = [0]
@@ -1408,7 +1411,7 @@ class App():
             self.alert("Error", "Failed to delete current file, unable to get valid filepath", kind="error")
 
     def _handle_delete(self, filepath, toast=True, manual_delete=True):
-        MarkedFiles.clear_previous_action() # Undo deleting action is not supported
+        MarkedFiles.set_delete_lock() # Undo deleting action is not supported
         if toast and manual_delete:
             self.toast("Removing file: " + filepath)
         else:
@@ -1545,7 +1548,7 @@ class App():
         return group_map
 
     def _get_sorted_file_matches(self, group):
-        if App.mode == Mode.SEARCH and (App.search_file_path is None or App.search_file_path == ""):
+        if App.mode == Mode.SEARCH and CompareMode.CLIP_EMBEDDING == App.compare_mode:
             return sorted(group, key=lambda f: group[f], reverse=True)
         else:
             return sorted(group, key=lambda f: group[f])
