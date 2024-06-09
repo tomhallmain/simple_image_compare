@@ -37,6 +37,16 @@ class MarkedFiles():
         MarkedFiles.delete_lock = delete_lock
 
     @staticmethod
+    def clear_file_marks(toast_callback):
+        MarkedFiles.file_marks = []
+        toast_callback(f"Marks cleared.")
+
+    @staticmethod
+    def set_current_marks_from_previous(toast_callback):
+        MarkedFiles.file_marks = list(MarkedFiles.previous_marks)
+        toast_callback(f"Set current marks from previous.\nTotal set: {len(MarkedFiles.file_marks)}")
+
+    @staticmethod
     def run_previous_action(toast_callback, refresh_callback):
         if not MarkedFiles.previous_action or not MarkedFiles.previous_mark_target:
             return
@@ -259,15 +269,16 @@ class MarkedFiles():
             MarkedFiles.delete_lock = False
         MarkedFiles.file_marks.clear()
         if len(exceptions) > 0:
-            for marked_file in exceptions.keys():
+            action_part3 = "move" if is_moving else "copy"
+            print(f"Failed to {action_part3} some files:")
+            for marked_file, exc in exceptions.items():
+                print(exc)
                 if not marked_file in invalid_files:
                     MarkedFiles.file_marks.append(marked_file) # Just in case some of them failed to move for whatever reason.
                     if exceptions[marked_file].startswith("File already exists"):
                         some_files_already_present = True
             if some_files_already_present:
                 toast_callback(f"Existing filenames match!")
-            action_part3 = "move" if is_moving else "copy"
-            print(f"Failed to {action_part3} some files: {exceptions}")
         if len(MarkedFiles.previous_marks) > 0:
             MarkedFiles.last_set_target_dir = target_dir
             if is_moving:

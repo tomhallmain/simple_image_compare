@@ -5,7 +5,7 @@ from utils.constants import CompareMode, SortBy
 
 
 class Config:
-    CONFIG_FILE_LOC = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), "config.json")
+    CONFIGS_DIR_LOC = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), "configs")
 
     def __init__(self):
         self.dict = {}
@@ -37,19 +37,33 @@ class Config:
         self.threshold_potential_duplicate_embedding = 0.99
         self.use_file_paths_json = False # TODO update the JSON for this
         self.file_paths_json_path = "file_paths.json" # TODO update the JSON for this
+        self.text_embedding_search_presets = []
+        self.text_embedding_search_preset_index = -1
 
         dict_set = False
+        configs =  [ f.path for f in os.scandir(Config.CONFIGS_DIR_LOC) if f.is_file() and f.path.endswith(".json") ]
+        self.config_path = None
+
+        for c in configs:
+            if os.path.basename(c) == "config.json":
+                self.config_path = c
+                break
+            elif os.path.basename(c) != "config_example.json":
+                self.config_path = c
+
+        if self.config_path is None:
+            self.config_path = os.path.join(Config.CONFIGS_DIR_LOC, "config_example.json")
 
         try:
-            self.dict = json.load(open(Config.CONFIG_FILE_LOC, "r"))
+            self.dict = json.load(open(self.config_path, "r"))
             dict_set = True
         except Exception as e:
             print(e)
-            print("Unable to load config. Ensure config.json file is located in the base directory of simple-image-comare.")
+            print("Unable to load config. Ensure config.json file is located in the configs directory of simple-image-comare.")
 
         if dict_set:
             self.set_values(None, "trash_folder")
-            self.set_values(list, "file_types")
+            self.set_values(list, "file_types", "text_embedding_search_presets")
             self.set_values(str,
                             "default_main_window_size",
                             "clip_model",
@@ -117,6 +131,14 @@ class Config:
                     print(e)
                     print(f"Failed to set {name} from config.json file. Ensure the key is set.")
 
+    def next_text_embedding_search_preset(self):
+        self.text_embedding_search_preset_index += 1
+        if self.text_embedding_search_preset_index >= len(self.text_embedding_search_presets):
+            self.text_embedding_search_preset_index = 0
+        if self.text_embedding_search_preset_index >= len(self.text_embedding_search_presets):
+            return None
+        else:
+            return str(self.text_embedding_search_presets[self.text_embedding_search_preset_index])
 
 
     def print_config_settings(self):

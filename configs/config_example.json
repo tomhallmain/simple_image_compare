@@ -29,5 +29,8 @@
   "threshold_potential_duplicate_color": 50,
   "threshold_potential_duplicate_embedding": 0.99,
   "use_file_paths_json": false,
-  "file_paths_json_path": "file_paths.json"
+  "file_paths_json_path": "file_paths.json",
+  "text_embedding_search_presets": [
+    "cute cat", "fine gentleman", "cool car"
+  ]
 }

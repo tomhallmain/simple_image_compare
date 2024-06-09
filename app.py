@@ -354,7 +354,7 @@ class App():
         self.master.bind("<Shift-D>", self.get_image_details)
         self.master.bind("<Shift-H>", self.get_help_and_config)
         self.master.bind("<Shift-S>", self.toggle_slideshow)
-        self.master.bind("<MouseWheel>", self.handle_mousewheel)
+        self.master.bind("<MouseWheel>", lambda event: self.show_next_image() if event.delta > 0 else self.show_prev_image())
         self.master.bind("<Button-2>", self.delete_image)
         self.master.bind("<Shift-M>", self.add_or_remove_mark_for_current_image)
         self.master.bind("<Shift-N>", self.add_all_marks_from_last_or_current_group)
@@ -363,11 +363,14 @@ class App():
         self.master.bind("<Control-g>", self.open_go_to_file_window)
         self.master.bind("<Control-C>", self.copy_marks_list)
         self.master.bind("<Control-m>", self.open_move_marks_window)
-        self.master.bind("<Control-k>", self.open_move_marks_no_gui)
+        self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
         self.master.bind("<Control-r>", self.run_previous_marks_action)
         self.master.bind("<Control-e>", self.run_penultimate_marks_action)
+        self.master.bind("<Control-d>", lambda event: MarkedFiles.set_current_marks_from_previous(self.toast))
         self.master.bind("<Control-z>", self.revert_last_marks_change)
-        self.master.bind("<Control-x>", self.modify_last_marks_change)
+        self.master.bind("<Control-x>", lambda event: MarkedFiles.undo_move_marks(None, self.toast, self.refresh))
+        self.master.bind("<Control-s>", self.next_text_embedding_preset)
+        self.master.bind("<Control-b>", self.return_to_browsing_mode)
         self.master.bind("<Home>", self.home)
         self.master.bind("<Prior>", self.page_up)
         self.master.bind("<Next>", self.page_down)
@@ -508,11 +511,13 @@ class App():
             message = "Slideshows ended"
         self.toast(message)
 
-    def handle_mousewheel(self, event):
-        if event.delta > 0:
-            self.show_next_image()
-        else:
-            self.show_prev_image()
+    def return_to_browsing_mode(self, event=None):
+        self.set_mode(Mode.BROWSE)
+        App.file_browser.refresh()
+        self.label_state["text"] = f"{App.file_browser.count()} image files found."
+        if not self.go_to_file(None, App.img_path, retry_with_delay=1):
+            self.home()
+        self.toast("Browsing mode set.")
 
     def get_image_details(self, event=None):
         if App.img_path is None or App.img_path == "":
@@ -1214,8 +1219,7 @@ class App():
         self.toast(f"Marks added. Total set: {len(MarkedFiles.file_marks)}")
 
     def clear_marks(self, event=None):
-        MarkedFiles.file_marks = []
-        self.toast(f"Marks cleared.")
+        MarkedFiles.clear_file_marks(self.toast)
 
     def go_to_mark(self, event=None):
         self._check_marks()
@@ -1250,9 +1254,6 @@ class App():
         except Exception as e:
             self.alert("Marked Files Window Error", str(e), kind="error")
 
-    def open_move_marks_no_gui(self, event=None):
-        self.open_move_marks_window(event=event, open_gui=False)
-
     def run_previous_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
@@ -1272,9 +1273,6 @@ class App():
     def revert_last_marks_change(self, event=None):
         if not config.use_file_paths_json:
             MarkedFiles.undo_move_marks(self.get_base_dir(), self.toast, self.refresh)
-
-    def modify_last_marks_change(self, event=None):
-        MarkedFiles.undo_move_marks(None, self.toast, self.refresh)
 
     def open_go_to_file_window(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
@@ -1318,6 +1316,17 @@ class App():
             if search_text in os.path.basename(file).lower():
                 return file, group_indexes
         return None, None
+
+    def next_text_embedding_preset(self, event=None):
+        next_text_embedding_search_preset = config.next_text_embedding_search_preset()
+        if next_text_embedding_search_preset is None:
+            self.alert("No Text Search Presets Found", "No text embedding search presets found. Set them in the config.json file.", kind="info")
+        else:
+            self.search_text_box.delete(0, "end")
+            self.search_text_box.insert(0, next_text_embedding_search_preset)
+            self.master.update()
+            self.search_text_embedding()
+
 
     def home(self, event=None):
         if App.mode == Mode.BROWSE:
@@ -1386,6 +1395,8 @@ class App():
             filepath = App.file_browser.current_file()
             if filepath:
                 self._handle_delete(filepath)
+                if filepath in MarkedFiles.file_marks:
+                    MarkedFiles.file_marks.remove(filepath)
                 App.file_browser.refresh(refresh_cursor=False, removed_files=[filepath])
                 self.show_next_image()
             App.file_browser.checking_files = True

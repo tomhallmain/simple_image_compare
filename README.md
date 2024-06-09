@@ -13,7 +13,7 @@ Useful for detecting duplicates or finding associations between large unstructur
 
 Individual images can be passed to search against the full image data set by passing flag `--search` with the path of the search file, or setting a search file in the UI before running comparison.
 
-When using CLIP embedding compare mode, you can search your images by text. If there is a good CLIP signature for the search string it will likely return the images you are looking for, but be aware that it may take a while to load the first time as embeddings for all images will have to be generated.
+When using CLIP embedding compare mode, you can search your images by text. If there is a good CLIP signature for the search string it will likely return the images you are looking for, but be aware that it may take a while to load the first time as embeddings for all images will have to be generated. You can also save a list of preset text searches in your config JSON and cycle between them with the dedicated shortcut found below.
 
 ## Image Browser
 
@@ -77,8 +77,11 @@ A directory with images must be set before most of the below bindings will have 
 | Ctrl-K           |                  | Open marks window (no GUI)    |
 | Ctrl-R           |                  | Redo prev marks action        |
 | Ctrl-E           |                  | Redo penultimate marks action |
-| Ctrl-Z           |                  | Undo move marks        |
-| Ctrl-X           |                  | Modify last marks move |
+| Ctrl-Z           |                  | Undo move marks               |
+| Ctrl-X           |                  | Modify last marks move        |
+| Ctrl-D           |                  | Set marks from previous marks |
+| Ctrl-B           |                  | Switch back to browsing mode  |
+| Ctrl-S           |                  | Run next text search preset   |
 | Shift-O          |                  | Open image location    |
 | Shift-Delete     | Mouse Wheel Click| Delete image(s)        |
 | F11              |                  | Toggle fullscreen      |
@@ -104,6 +107,8 @@ Simply typing letters while the mark window is open will filter the list of mark
 To bypass the move marks window, use the Ctrl+R or Ctrl+E shortcuts to immediately run the previous and penultimate actions respectively on the current selection.
 
 ## Limitations
+
+Importantly, it is not currently possible to undo a delete action, however unless the delete folder is explicitly set to null in the config it is likely the deleted items will be saved in a trash folder before being fully removed.
 
 This is a very simple app. It is primarily meant for personal use but could be adapted for more intensive use cases.
 
