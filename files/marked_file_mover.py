@@ -8,7 +8,7 @@ from utils.constants import Mode
 from utils.app_style import AppStyle
 from utils.utils import move_file, copy_file
 
-
+# TODO check hash of files in new directory instead of just filename
 # TODO preserve dictionary of all moved / copied files in a session along with their target directories.
 # TODO enable the main app to access this dictionary as groups and remove files if needed
 # TODO give statistics on how many files were moved / copied.
@@ -43,7 +43,9 @@ class MarkedFiles():
 
     @staticmethod
     def set_current_marks_from_previous(toast_callback):
-        MarkedFiles.file_marks = list(MarkedFiles.previous_marks)
+        for f in MarkedFiles.previous_marks:
+            if f not in MarkedFiles.file_marks and os.path.exists(f):
+                MarkedFiles.file_marks.append(f)
         toast_callback(f"Set current marks from previous.\nTotal set: {len(MarkedFiles.file_marks)}")
 
     @staticmethod
@@ -271,13 +273,19 @@ class MarkedFiles():
         if len(exceptions) > 0:
             action_part3 = "move" if is_moving else "copy"
             print(f"Failed to {action_part3} some files:")
+            names_are_short = False
             for marked_file, exc in exceptions.items():
                 print(exc)
                 if not marked_file in invalid_files:
                     MarkedFiles.file_marks.append(marked_file) # Just in case some of them failed to move for whatever reason.
                     if exceptions[marked_file].startswith("File already exists"):
+                        if len(marked_file) < 13 and not names_are_short:
+                            names_are_short = True
                         some_files_already_present = True
             if some_files_already_present:
+                warning = "Existing filenames match!"
+                if names_are_short:
+                    warning += "\nWARNING: Short filenames."
                 toast_callback(f"Existing filenames match!")
         if len(MarkedFiles.previous_marks) > 0:
             MarkedFiles.last_set_target_dir = target_dir

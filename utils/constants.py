@@ -47,6 +47,7 @@ class SortBy(Enum):
     MODIFY_TIME = "Modify Time"
     TYPE = "Type"
     SIZE = "Size"
+    NAME_LENGTH = "Name Length"
     RANDOMIZE = "Random"
 
     def __str__(self):

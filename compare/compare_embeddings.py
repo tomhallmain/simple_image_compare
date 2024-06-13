@@ -595,39 +595,75 @@ class CompareEmbedding:
         else:
             return self.run_comparison()
 
-    def find_similars_to_text(self, search_text, text_embedding):
+    def _compute_multiembedding_diff(self, positive_embeddings=[], negative_embeddings=[], threshold=0.0):
+        files_grouped = {}
+
+        if CompareEmbedding.SEARCH_RETURN_CLOSEST:
+            _files_found = list(self._files_found)
+            embedding_similars = self._compute_embedding_diff(
+                self._file_embeddings, positive_embeddings[0], True, threshold=threshold)
+            similars = np.nonzero(embedding_similars[0])
+            for _index in similars[0]:
+                files_grouped[_files_found[_index]] = embedding_similars[1][_index]
+            # Sort results by increasing difference score
+            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
+        
+        '''
+        Generate embedding_similars arrays for both positive and negative embedding
+        sets. For the positives, multiply the similarities together. For the negatives
+        successively divide the results from the positive multiplications. The end
+        result SHOULD reflect a combined similarity in the appropriate direction for
+        each set of requested text embeddings.
+        '''
+
+        combined_similars = None
+
+        for p_emb in positive_embeddings:
+            embedding_similars = self._compute_embedding_diff(
+                self._file_embeddings, p_emb, True, threshold=threshold)
+            normalized = embedding_similars[1] / min(embedding_similars[1])
+            if combined_similars is None:
+                combined_similars = normalized
+            else:
+                combined_similars = combined_similars * normalized
+
+        for n_emb in negative_embeddings:
+            embedding_similars = self._compute_embedding_diff(
+                self._file_embeddings, n_emb, True, threshold=threshold)
+            normalized = embedding_similars[1] / min(embedding_similars[1])
+            if combined_similars is None:
+                combined_similars = 1 / normalized
+            else:
+                combined_similars = combined_similars / normalized
+
+        if combined_similars is None:
+            raise Exception('No results found.')
+
+        temp = {}
+        count = 0
+        for i in range(len(self._files_found)):
+            temp[self._files_found[i]] = combined_similars[i]
+        for file, similarity in dict(sorted(temp.items(), key=lambda item: item[1], reverse=True)).items():
+            if count == config.max_search_results:
+                break
+            files_grouped[file] = similarity
+            count += 1
+        files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1], reverse=True))
+        return files_grouped
+
+    def find_similars_to_text(self, search_text, positive_embeddings, negative_embeddings):
         '''
         Search the numpy array of all known image arrays for similar
         characteristics to the provide image.
         '''
         files_grouped = {}
-        _files_found = list(self._files_found)
 
         if self.verbose:
             print("Identifying similar image files...")
 
         # NOTE It is much less likely for text to match exactly
         adjusted_threshold = self.embedding_similarity_threshold / 3
-        embedding_similars = self._compute_embedding_diff(
-            self._file_embeddings, text_embedding, True, threshold=adjusted_threshold)
-
-        if CompareEmbedding.SEARCH_RETURN_CLOSEST:
-            similars = np.nonzero(embedding_similars[0])
-            for _index in similars[0]:
-                files_grouped[_files_found[_index]] = embedding_similars[1][_index]
-            # Sort results by increasing difference score
-            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
-        else:
-            temp = {}
-            count = 0
-            for i in range(len(self._files_found)):
-                temp[self._files_found[i]] = embedding_similars[1][i]
-            for file, similarity in dict(sorted(temp.items(), key=lambda item: item[1], reverse=True)).items():
-                if count == config.max_search_results:
-                    break
-                files_grouped[file] = similarity
-                count += 1
-            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1], reverse=True))
+        files_grouped = self._compute_multiembedding_diff(positive_embeddings, negative_embeddings, adjusted_threshold)
 
         if len(files_grouped) > 0:
             with open(self.search_output_path, "w") as textfile:
@@ -654,25 +690,47 @@ class CompareEmbedding:
                   + "\" identified with current params.")
         return {0: files_grouped}
 
-    def search_text(self, search_text):
+    def search_text(self, search_text, search_text_negative=None):
+        '''
+        Prepare and begin a search for provided search text.
+        '''
+
         files_grouped = {}
+        positive_embeddings = []
+        negative_embeddings = []
 
-        '''
-        Prepare and begin a search for a provided image file path.
-        '''
+        if search_text is not None and search_text.strip() != "":
+            for text in search_text.split(","):
+                text = text.strip()
+                if self.verbose:
+                    print(f"Tokenizing positive search text: \"{text}\"")
+                try:
+                    text_embedding = text_embeddings(text)
+                    positive_embeddings.append(text_embedding)
+                except OSError as e:
+                    if self.verbose:
+                        print(f"{text} - {e}")
+                    raise AssertionError(
+                        "Encountered an error generating token embedding for search text.")
 
-        if self.verbose:
-            print(f"Tokenizing search text: \"{search_text}\"")
+        if search_text_negative is not None and search_text_negative.strip() != "":
+            for text in search_text_negative.split(","):
+                text = text.strip()
+                if self.verbose:
+                    print(f"Tokenizing negative search texts: \"{text}\"")
+                try:
+                    text_embedding = text_embeddings(text)
+                    negative_embeddings.append(text_embedding)
+                except OSError as e:
+                    if self.verbose:
+                        print(f"{text} - {e}")
+                    raise AssertionError(
+                        "Encountered an error generating token embedding for negative search text.")
 
-        try:
-            text_embedding = text_embeddings(search_text)
-        except OSError as e:
-            if self.verbose:
-                print(f"{search_text} - {e}")
-            raise AssertionError(
-                "Encountered an error generating token embedding for search text.")
-
-        files_grouped = self.find_similars_to_text(search_text, text_embedding)
+        if len(positive_embeddings) == 0 and len(negative_embeddings) == 0:
+            return {} # TODO better exception handling
+    
+        files_grouped = self.find_similars_to_text(search_text, positive_embeddings, negative_embeddings)
         return files_grouped
 
     def _sort_groups(self, file_groups):

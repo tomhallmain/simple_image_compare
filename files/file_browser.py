@@ -17,6 +17,7 @@ class SortableFile:
     def __init__(self, full_file_path):
         self.full_file_path = full_file_path
         self.basename = os.path.basename(full_file_path)
+        self.name_length = len(self.basename)
         self.root, self.extension = os.path.splitext(self.basename)
         try:
             stat_obj = os.stat(full_file_path)
@@ -123,6 +124,7 @@ class FileBrowser:
         self.directory = directory
         self.checking_files = True
         self._files_cache = {}
+        print(f"Setting base directory: {directory}")
         return self.refresh()
 
     def set_sort_by(self, sort_by):
@@ -299,42 +301,30 @@ class FileBrowser:
     def get_sorted_filepaths(self, sortable_files):
         if self.sort == Sort.RANDOM:
             shuffle(sortable_files) # TODO technically should be caching the random sort state somehow
-        elif self.sort_by == SortBy.FULL_PATH:
-            if self.sort == Sort.DESC:
-                sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=True)
-            elif self.sort == Sort.ASC:
-                sortable_files.sort(key=lambda sf: sf.full_file_path.lower())
+            return
+        
+        reverse = self.sort == Sort.DESC
+
+        if self.sort_by == SortBy.FULL_PATH:
+            sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=reverse)
         elif self.sort_by == SortBy.NAME:
-            if self.sort == Sort.DESC:
-                sortable_files = alphanumeric_sort(sortable_files, text_lambda=lambda sf: sf.basename.lower(), reverse=True)
-            elif self.sort == Sort.ASC:
-                sortable_files = alphanumeric_sort(sortable_files, text_lambda=lambda sf: sf.basename.lower())
+            sortable_files = alphanumeric_sort(sortable_files, text_lambda=lambda sf: sf.basename.lower(), reverse=reverse)
         elif self.sort_by == SortBy.CREATION_TIME:  
-            if self.sort == Sort.DESC:
-                sortable_files.sort(key=lambda sf: sf.ctime, reverse=True)
-            elif self.sort == Sort.ASC:
-                sortable_files.sort(key=lambda sf: sf.ctime)
+            sortable_files.sort(key=lambda sf: sf.ctime, reverse=reverse)
         elif self.sort_by == SortBy.MODIFY_TIME:  
-            if self.sort == Sort.DESC:
-                sortable_files.sort(key=lambda sf: sf.mtime, reverse=True)
-            elif self.sort == Sort.ASC:
-                sortable_files.sort(key=lambda sf: sf.mtime)
+            sortable_files.sort(key=lambda sf: sf.mtime, reverse=reverse)
         elif self.sort_by == SortBy.TYPE:
             # Sort by full path first, then by extension
-            if self.sort == Sort.DESC:
-                sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=True)
-                sortable_files.sort(key=lambda sf: sf.extension.lower(), reverse=True)
-            elif self.sort == Sort.ASC:
-                sortable_files.sort(key=lambda sf: sf.full_file_path.lower())
-                sortable_files.sort(key=lambda sf: sf.extension.lower())
+            sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=reverse)
+            sortable_files.sort(key=lambda sf: sf.extension.lower(), reverse=reverse)
         elif self.sort_by == SortBy.SIZE:
             # Sort by full path first, then by size
-            if self.sort == Sort.DESC:
-                sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=True)
-                sortable_files.sort(key=lambda sf: sf.size, reverse=True)
-            elif self.sort == Sort.ASC:
-                sortable_files.sort(key=lambda sf: sf.full_file_path.lower())
-                sortable_files.sort(key=lambda sf: sf.size)
+            sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=reverse)
+            sortable_files.sort(key=lambda sf: sf.size, reverse=reverse)
+        elif self.sort_by == SortBy.NAME_LENGTH:
+            # Sort by full path first, then by size
+            sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=reverse)
+            sortable_files.sort(key=lambda sf: sf.name_length, reverse=reverse)
 
 
         # After sorting, extract the file path only

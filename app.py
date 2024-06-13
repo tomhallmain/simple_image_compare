@@ -51,7 +51,9 @@ from image.image_details import ImageDetails # must import after config because 
 ### TODO drag and drop images to auto-set directory and image
 
 ### TODO save sort by setting per directory in app info cache
-### TODO remove deleted files from compare if present
+### TODO replace restored files to compare if present after previous deletion
+### TODO negative text embedding for tailoring search results from positive search text
+
 
 
 class ResizingCanvas(Canvas):
@@ -222,12 +224,10 @@ class App():
         # The top part is a label with info
         self.label_mode = Label(self.sidebar)
         self.label_state = Label(self.sidebar)
-        self.label1 = Label(self.sidebar)
         self.add_label(self.label_mode, "", sticky=tk.N)
         self.add_label(self.label_state, "Set a directory to run comparison.", pady=10)
 
-        # Settings UI
-        self.add_label(self.label1, "Controls & Settings", sticky=None, pady=10)
+        #################################### Settings UI
         self.toggle_theme_btn = None
         self.set_base_dir_btn = None
         self.set_search_btn = None
@@ -247,6 +247,10 @@ class App():
         self.search_text_box = self.new_entry(self.search_text)
         self.search_text_box.bind("<Return>", self.search_text_embedding)
         self.apply_to_grid(self.search_text_box, sticky=W)
+        self.search_text_negative = tk.StringVar()
+        self.search_text_negative_box = self.new_entry(self.search_text_negative)
+        self.search_text_negative_box.bind("<Return>", self.search_text_embedding)
+        self.apply_to_grid(self.search_text_negative_box, sticky=W)
 
         self.label_compare_mode = Label(self.sidebar)
         self.add_label(self.label_compare_mode, "Compare mode")
@@ -308,7 +312,7 @@ class App():
                                               variable=search_return_closest_var, command=self.toggle_search_return_closest)
         self.apply_to_grid(self.search_return_closest_choice, sticky=W)
 
-        # Run context-aware UI elements
+        ################################ Run context-aware UI elements
         self.progress_bar = None
         self.run_compare_btn = None
         self.add_button("run_compare_btn", "Run image compare", self.run_compare)
@@ -341,7 +345,7 @@ class App():
         # Default mode is BROWSE - GROUP and SEARCH are only valid modes when a compare is run
         self.set_mode(Mode.BROWSE)
 
-        # Key bindings
+        ################################ Key bindings
         self.master.bind('<Left>', self.show_prev_image)
         self.master.bind('<Right>', self.show_next_image)
         self.master.bind('<Shift-Left>', self.show_prev_group)
@@ -357,9 +361,9 @@ class App():
         self.master.bind("<MouseWheel>", lambda event: self.show_next_image() if event.delta > 0 else self.show_prev_image())
         self.master.bind("<Button-2>", self.delete_image)
         self.master.bind("<Shift-M>", self.add_or_remove_mark_for_current_image)
-        self.master.bind("<Shift-N>", self.add_all_marks_from_last_or_current_group)
+        self.master.bind("<Shift-N>", self._add_all_marks_from_last_or_current_group)
         self.master.bind("<Shift-G>", self.go_to_mark)
-        self.master.bind("<Shift-C>", self.clear_marks)
+        self.master.bind("<Shift-C>", lambda event: MarkedFiles.clear_file_marks(self.toast))
         self.master.bind("<Control-g>", self.open_go_to_file_window)
         self.master.bind("<Control-C>", self.copy_marks_list)
         self.master.bind("<Control-m>", self.open_move_marks_window)
@@ -403,12 +407,10 @@ class App():
             self.sidebar.grid_remove()
         else:
             self.sidebar.grid()
-        return "break"
 
     def end_fullscreen(self, event=None):
         if App.fullscreen:
             self.toggle_fullscreen()
-        return "break"
 
     def set_mode(self, mode, do_update=True):
         '''
@@ -417,17 +419,12 @@ class App():
         App.mode = mode
         self.label_mode['text'] = str(mode)
 
-        if mode == Mode.GROUP or mode == Mode.DUPLICATES:
-            self.toggle_image_view_btn = None
-            self.replace_current_image_btn = None
-        if mode == Mode.SEARCH:
-            self.prev_group_btn = None
-            self.next_group_btn = None
-        if mode == Mode.BROWSE:
-            self.toggle_image_view_btn = None
-            self.replace_current_image_btn = None
-            self.prev_group_btn = None
-            self.next_group_btn = None
+        if mode != Mode.SEARCH:
+            self.destroy_grid_element("toggle_image_view_btn")
+            self.destroy_grid_element("replace_current_image_btn")
+        if mode != Mode.GROUP and mode != Mode.DUPLICATES:
+            self.destroy_grid_element("prev_group_btn")
+            self.destroy_grid_element("next_group_btn")
 
         if do_update:
             self.master.update()
@@ -466,10 +463,13 @@ class App():
 
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
         App.file_browser.refresh(refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files)
-        if App.compare is not None and len(removed_files) > 0:
-            App.compare.remove_from_groups(removed_files)
-        if App.mode != Mode.BROWSE:
-            self._handle_remove_files_from_groups(removed_files)
+        if len(removed_files) > 0:
+            if App.mode == Mode.BROWSE:
+                self._set_label_state()
+            else:
+                self._handle_remove_files_from_groups(removed_files)
+            if App.compare is not None:
+                App.compare.remove_from_groups(removed_files)
         if App.file_browser.has_files():
             if App.mode != Mode.BROWSE:
                 return
@@ -482,6 +482,7 @@ class App():
                 App.delete_lock = False
         else:
             self.clear_image()
+            self._set_label_state()
             self.alert("Warning", "No files found in directory after refresh.", kind="warning")
         print("Refreshed files")
 
@@ -514,7 +515,7 @@ class App():
     def return_to_browsing_mode(self, event=None):
         self.set_mode(Mode.BROWSE)
         App.file_browser.refresh()
-        self.label_state["text"] = f"{App.file_browser.count()} image files found."
+        self._set_label_state()
         if not self.go_to_file(None, App.img_path, retry_with_delay=1):
             self.home()
         self.toast("Browsing mode set.")
@@ -530,7 +531,7 @@ class App():
         elif App.mode == Mode.GROUP:
             index_text = f"{App.match_index+1} of {len(App.files_matched)} (Group {App.current_group_index+1} of {len(App.file_groups)})"
         elif App.mode == Mode.SEARCH and App.is_toggled_view_matches:
-            index_text = f"{App.match_index+1} of {len(App.files_matched)}"
+            index_text = f"{App.match_index+1} of {len(App.files_matched)} ({App.file_browser.get_index_details()})"
         else:
             index_text = ""
         try:
@@ -549,7 +550,7 @@ class App():
 
     def set_file_paths(self):
         App.file_browser.refresh()
-        self.label_state["text"] = f"{App.file_browser.count()} image files found."
+        self._set_label_state()
         tries = 0
         while tries < 10:
             tries += 1
@@ -574,7 +575,7 @@ class App():
                 initialdir=self.get_base_dir(), title="Set image comparison directory")
         if App.compare is not None and self.base_dir != App.compare.base_dir:
             App.compare = None
-            self.set_group_state_label(None, 0)
+            self._set_label_state(group_number=None, size=0)
             self.remove_all_mode_buttons()
         self.set_base_dir_box.delete(0, "end")
         self.set_base_dir_box.insert(0, self.base_dir)
@@ -587,7 +588,7 @@ class App():
                     self.show_next_image()
             else:
                 self.show_next_image()
-            self.label_state["text"] = f"{App.file_browser.count()} image files found."
+            self._set_label_state()
         self.master.update()
 
     def get_base_dir(self) -> str:
@@ -600,30 +601,28 @@ class App():
         '''
         Get the search file path provided in the UI.
         '''
-        image_path = self.search_image.get()
+        image_path = self.search_image.get().strip()
         if image_path is None or image_path == "":
             App.search_image_full_path = None
             return None
 
-        search_file_str = App.search_image_full_path
-        if search_file_str == "":
-            return None
+        # search_file_str = App.search_image_full_path
+        # if search_file_str == "":
+        #     return None
 
         search_file = get_valid_file(self.get_base_dir(), image_path)
         if search_file is None:
-            search_file = get_valid_file(
-                self.get_search_dir(), image_path)
+            search_file = get_valid_file(self.get_search_dir(), image_path)
             if search_file is None:
                 self.alert("Invalid search file",
-                           "Search file is not a valid file for base dir.",
-                           kind="error")
+                           "Search file is not a valid file for base dir.", kind="error")
                 raise AssertionError(
-                    "Search file is not a valid file for base dir.")
+                    "Search file is not a valid file.")
 
         return search_file
 
     def get_counter_limit(self) -> int | None:
-        counter_limit_str = self.set_counter_limit.get()
+        counter_limit_str = self.set_counter_limit.get().strip()
         if counter_limit_str == "":
             return None
         try:
@@ -634,7 +633,7 @@ class App():
             raise AssertionError("Counter limit must be an integer value.")
 
     def get_compare_threshold(self):
-        compare_threshold_str = self.compare_threshold.get()
+        compare_threshold_str = self.compare_threshold.get().strip()
         if compare_threshold_str == "":
             return None
         try:
@@ -807,7 +806,7 @@ class App():
         for f in sorted(App.current_group, key=lambda f: App.current_group[f]):
             App.files_matched.append(f)
 
-        self.set_group_state_label(App.current_group_index, len(App.files_matched))
+        self._set_label_state(group_number=App.current_group_index, size=len(App.files_matched))
         self.master.update()
         self.create_image(App.files_matched[App.match_index])
 
@@ -925,11 +924,11 @@ class App():
             App.has_added_buttons_for_mode[App.mode] = True
 
     def display_progress(self, context, percent_complete):
-        self.label_state["text"] = _wrap_text_to_fit_length(
-                f"{context}: {int(percent_complete)}% complete", 30)
+        self._set_label_state(_wrap_text_to_fit_length(
+                f"{context}: {int(percent_complete)}% complete", 30))
         self.master.update()
 
-    def validate_run(self):
+    def _validate_run(self):
         base_dir_selected = self.set_base_dir_box.get()
         if not base_dir_selected or base_dir_selected == "":
             res = self.alert("Confirm comparison",
@@ -939,10 +938,7 @@ class App():
             return res == messagebox.OK
         return True
 
-    def run_with_progress(self, exec_func, args=[]) -> None:
-        if not self.validate_run():
-            return
-
+    def _run_with_progress(self, exec_func, args=[]) -> None:
         def run_with_progress_async(self) -> None:
             self.progress_bar = Progressbar(self.sidebar, orient=HORIZONTAL, length=100, mode='indeterminate')
             self.apply_to_grid(self.progress_bar)
@@ -954,10 +950,13 @@ class App():
 
         start_thread(run_with_progress_async, use_asyncio=False, args=[self])
 
-    def run_compare(self, find_duplicates=False, search_text=None) -> None:
-        self.run_with_progress(self._run_compare, args=[find_duplicates, search_text])
+    def run_compare(self, find_duplicates=False, search_text=None, search_text_negative=None) -> None:
+        if not self._validate_run():
+            return
 
-    def _run_compare(self, find_duplicates=False, search_text=None) -> None:
+        self._run_with_progress(self._run_compare, args=[find_duplicates, search_text, search_text_negative])
+
+    def _run_compare(self, find_duplicates=False, search_text=None, search_text_negative=None) -> None:
         '''
         Execute operations on the Compare object in any mode. Create a new
         Compare object if needed.
@@ -978,8 +977,8 @@ class App():
         listener = ProgressListener(update_func=self.display_progress)
 
         if App.compare is None or App.compare.base_dir != self.get_base_dir():
-            self.label_state["text"] = _wrap_text_to_fit_length(
-                "Gathering image data... setup may take a while depending on number of files involved.", 30)
+            self._set_label_state(_wrap_text_to_fit_length(
+                "Gathering image data... setup may take a while depending on number of files involved.", 30))
             if App.compare_mode == CompareMode.CLIP_EMBEDDING:
                 App.compare = CompareEmbedding(
                     self.base_dir,
@@ -1043,7 +1042,7 @@ class App():
         if App.compare.is_run_search:
             self.run_search()
         elif search_text is not None:
-            self.run_search_text_embedding(search_text=search_text)
+            self.run_search_text_embedding(search_text=search_text, search_text_negative=search_text_negative)
         else:
             self.run_group(find_duplicates=find_duplicates)
 
@@ -1059,13 +1058,13 @@ class App():
                 or (not App.compare.overwrite and overwrite))
 
     def run_group(self, find_duplicates=False) -> None:
-        self.label_state["text"] = _wrap_text_to_fit_length(
-            "Running image comparisons...", 30)
+        self._set_label_state(_wrap_text_to_fit_length(
+            "Running image comparisons...", 30))
         App.files_grouped, App.file_groups = App.compare.run()
         
         if len(App.files_grouped) == 0:
             App.has_image_matches = False
-            self.label_state["text"] = "Set a directory and search file."
+            self._set_label_state("Set a directory and search file.")
             self.alert("No Groups Found",
                         "None of the files can be grouped with current settings.",
                         kind="info")
@@ -1082,7 +1081,7 @@ class App():
             duplicates = App.compare.get_probable_duplicates()
             if len(duplicates) == 0:
                 App.has_image_matches = False
-                self.label_state["text"] = "Set a directory and search file."
+                self._set_label_state("Set a directory and search file.")
                 self.alert("No Duplicates Found",
                             "None of the files appear to be duplicates based on the current settings.",
                             kind="info")
@@ -1114,14 +1113,14 @@ class App():
                             kind="info")
 
     def run_search(self) -> None:
-        self.label_state["text"] = _wrap_text_to_fit_length(
-            "Running image comparison with search file...", 30)
+        self._set_label_state(_wrap_text_to_fit_length(
+            "Running image comparison with search file...", 30))
         App.files_grouped = App.compare.run_search()
         App.file_groups = deepcopy(App.files_grouped)
 
         if len(App.files_grouped[0]) == 0:
             App.has_image_matches = False
-            self.label_state["text"] = "Set a directory and search file."
+            self._set_label_state("Set a directory and search file.")
             self.alert("No Match Found",
                         "None of the files match the search file with current settings.",
                         kind="info")
@@ -1136,8 +1135,8 @@ class App():
         App.max_group_index = 0
         App.match_index = 0
         App.has_image_matches = True
-        self.label_state["text"] = _wrap_text_to_fit_length(
-            str(len(App.files_matched)) + " possibly related images found.", 30)
+        self._set_label_state(_wrap_text_to_fit_length(
+            str(len(App.files_matched)) + " possibly related images found.", 30))
 
         self.add_buttons_for_mode()
         self.create_image(App.files_matched[App.match_index])
@@ -1150,21 +1149,22 @@ class App():
             self.alert("Invalid action", "Compare mode must be set to Clip embedding to search text embeddings", kind="warning")
             return
         search_text = self.search_text.get()
-        if search_text.strip() == "":
+        search_text_negative = self.search_text_negative.get()
+        if search_text.strip() == "" and search_text_negative.strip() == "":
             self.alert("Invalid search text", "Search text must be set", kind="warning")
             return
-        self.run_compare(search_text=search_text)
+        self.run_compare(search_text=search_text, search_text_negative=search_text_negative)
         self.master.focus()
 
-    def run_search_text_embedding(self, search_text=""):
-        self.label_state["text"] = _wrap_text_to_fit_length(
-            "Running image comparison with search text...", 30)
-        App.files_grouped = App.compare.search_text(search_text)
+    def run_search_text_embedding(self, search_text="", search_text_negative=""):
+        self._set_label_state(_wrap_text_to_fit_length(
+            "Running image comparison with search text...", 30))
+        App.files_grouped = App.compare.search_text(search_text, search_text_negative)
         App.file_groups = deepcopy(App.files_grouped)
 
         if len(App.file_groups[0]) == 0:
             App.has_image_matches = False
-            self.label_state["text"] = "Set a directory and search file or search text."
+            self._set_label_state("Set a directory and search file or search text.")
             self.alert("No Match Found",
                         "None of the files match the search text with current settings.",
                         kind="info")
@@ -1178,18 +1178,11 @@ class App():
         App.max_group_index = 0
         App.match_index = 0
         App.has_image_matches = True
-        self.label_state["text"] = _wrap_text_to_fit_length(
-            str(len(App.files_matched)) + " possibly related images found.", 30)
+        self._set_label_state(_wrap_text_to_fit_length(
+            str(len(App.files_matched)) + " possibly related images found.", 30))
 
         self.add_buttons_for_mode()
         self.create_image(App.files_matched[App.match_index])
-
-    def set_group_state_label(self, group_number, size):
-        if group_number is None:
-            self.label_state["text"] = ""
-        else:
-            self.label_state["text"] = _wrap_text_to_fit_length(
-                f"Group {group_number + 1} of {len(App.file_groups)}\nSize: {size}", 30)
 
     def add_or_remove_mark_for_current_image(self, event=None, show_toast=True):
         self._check_marks(min_mark_size=0)
@@ -1205,7 +1198,7 @@ class App():
             if show_toast:
                 self.toast(f"Mark added. Total set: {len(MarkedFiles.file_marks)}")
 
-    def add_all_marks_from_last_or_current_group(self, event=None):
+    def _add_all_marks_from_last_or_current_group(self, event=None):
         if App.mode == Mode.BROWSE:
             if App.img_path in MarkedFiles.file_marks:
                 return
@@ -1217,9 +1210,6 @@ class App():
             if not _file in MarkedFiles.file_marks:
                 MarkedFiles.file_marks.append(_file)
         self.toast(f"Marks added. Total set: {len(MarkedFiles.file_marks)}")
-
-    def clear_marks(self, event=None):
-        MarkedFiles.clear_file_marks(self.toast)
 
     def go_to_mark(self, event=None):
         self._check_marks()
@@ -1247,6 +1237,8 @@ class App():
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title(f"Move {len(MarkedFiles.file_marks)} Marked File(s)")
         top_level.geometry(MarkedFiles.get_geometry(is_gui=open_gui))
+        if not open_gui:
+            top_level.attributes('-alpha', 0.3)
         try:
             marked_file_mover = MarkedFiles(top_level, open_gui, quick_open, App.mode,
                                             self.toast, self.alert, self.refresh, self._handle_delete,
@@ -1287,7 +1279,7 @@ class App():
         if App.mode == Mode.BROWSE:
             image_path = App.file_browser.find(search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match)
         else:
-            image_path, group_indexes = self.find_file_after_comparison(search_text, exact_match=exact_match)
+            image_path, group_indexes = self._find_file_after_comparison(search_text, exact_match=exact_match)
             if group_indexes:
                 App.current_group_index = group_indexes[0]
                 self.set_current_group(start_match_index=group_indexes[1])
@@ -1299,7 +1291,7 @@ class App():
         self.master.update()
         return True
 
-    def find_file_after_comparison(self, search_text="", exact_match=False):
+    def _find_file_after_comparison(self, search_text="", exact_match=False):
         if not search_text or search_text.strip() == "":
             return None, None
         file_group_map = self._get_file_group_map()
@@ -1414,10 +1406,12 @@ class App():
         filepath = self.get_active_image_filepath()
 
         if filepath is not None:
+            if filepath in MarkedFiles.file_marks:
+                MarkedFiles.file_marks.remove(filepath)
             self._handle_delete(filepath)
             if App.compare:
                 App.compare.remove_from_groups([filepath])
-            self.update_groups_for_removed_file(App.current_group_index, App.match_index)
+            self._update_groups_for_removed_file(App.current_group_index, App.match_index)
         else:
             self.alert("Error", "Failed to delete current file, unable to get valid filepath", kind="error")
 
@@ -1472,25 +1466,25 @@ class App():
             file_group_map = self._get_file_group_map()
             try:
                 group_indexes = file_group_map[filepath]
-                self.update_groups_for_removed_file(group_indexes[0], group_indexes[1], set_group=False)
+                self._update_groups_for_removed_file(group_indexes[0], group_indexes[1], set_group=False)
             except KeyError as e:
                 pass # The group may have been removed before update_groups_for_removed_file was called on the last file in it
 
 
-    def update_groups_for_removed_file(self, group_index, match_index, set_group=True):
+    def _update_groups_for_removed_file(self, group_index, match_index, set_group=True):
         '''
         After a file has been removed, delete the cached image path for it and
         remove the group if only one file remains in that group.
 
-        NOTE: This would be more complex if there was not a guarantee that
-        groups are disjoint.
+        NOTE: This would be more complex if there was not a guarantee groups are disjoint.
         '''
         print(f"Updating groups for removed file {match_index} in group {group_index}")
         actual_index = App.group_indexes[group_index]
         if set_group or group_index == App.current_group_index:
             files_matched = App.files_matched
             set_group = True
-            print("setting group")
+            if App.mode != Mode.SEARCH:
+                print("setting group")
         else:
             files_matched = []
             group = App.file_groups[actual_index]
@@ -1521,7 +1515,7 @@ class App():
                 App.files_matched = []
                 App.group_indexes = []
                 self.set_mode(Mode.BROWSE)
-                self.label_state["text"] = "Set a directory to run comparison."
+                self._set_label_state("Set a directory to run comparison.")
                 self.show_next_image()
                 return
             elif group_index == len(App.file_groups):
@@ -1619,6 +1613,23 @@ class App():
             toast.destroy()
         start_thread(self_destruct_after, use_asyncio=False, args=[self.config.toasts_persist_seconds])
 
+    def _set_label_state(self, text=None, group_number=None, size=-1):
+        if text is not None:
+            self.label_state["text"] = text
+        elif size > -1:
+            if group_number is None:
+                self.label_state["text"] = ""
+            else:
+                self.label_state["text"] = _wrap_text_to_fit_length(
+                    f"Group {group_number + 1} of {len(App.file_groups)}\nSize: {size}", 30)
+        else: # Set based on file count
+            file_count = App.file_browser.count()
+            if file_count == 0:
+                text = "No image files found"
+            else:
+                text = "1 image file found" if file_count == 1 else f"{file_count} image files found"
+            self.label_state["text"] = text
+
     def apply_to_grid(self, component, sticky=None, pady=0):
         if sticky is None:
             component.grid(column=0, row=self.row_counter, pady=pady)
@@ -1640,7 +1651,6 @@ class App():
 
     def new_entry(self, text_variable=None, text=""):
         return Entry(self.sidebar, text=text, textvariable=text_variable, width=30, font=fnt.Font(size=config.font_size))
-
 
     def destroy_grid_element(self, element_ref_name):
         element = getattr(self, element_ref_name)
