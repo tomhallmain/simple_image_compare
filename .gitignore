@@ -1,4 +1,5 @@
 *.pkl
+*.swp
 __pycache__/
 configs/*
 !configs/config_example.json

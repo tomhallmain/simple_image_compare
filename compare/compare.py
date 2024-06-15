@@ -47,7 +47,7 @@ def get_valid_file(base_dir, input_filepath):
         return None
     elif os.path.exists(input_filepath):
         return input_filepath
-    elif base_dir is not None and os.path.exists(base_dir + "/" + input_filepath):
+    elif base_dir is not None and os.path.exists(os.path.join(base_dir, input_filepath)):
         return base_dir + "/" + input_filepath
     else:
         return None

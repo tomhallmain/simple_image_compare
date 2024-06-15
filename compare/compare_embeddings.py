@@ -104,6 +104,7 @@ class CompareEmbedding:
         self.settings_updated = False
         self.gather_files_func = gather_files_func
         self._probable_duplicates = []
+        self.segregation_map = {}
 
     def set_base_dir(self, base_dir):
         '''
@@ -695,43 +696,82 @@ class CompareEmbedding:
         Prepare and begin a search for provided search text.
         '''
 
+        if config.text_embedding_search_presets_exclusive \
+                and search_text in config.text_embedding_search_presets:
+            return self.segregate_by_text_with_domain(search_text)
+
         files_grouped = {}
         positive_embeddings = []
         negative_embeddings = []
 
         if search_text is not None and search_text.strip() != "":
             for text in search_text.split(","):
-                text = text.strip()
-                if self.verbose:
-                    print(f"Tokenizing positive search text: \"{text}\"")
-                try:
-                    text_embedding = text_embeddings(text)
-                    positive_embeddings.append(text_embedding)
-                except OSError as e:
-                    if self.verbose:
-                        print(f"{text} - {e}")
-                    raise AssertionError(
-                        "Encountered an error generating token embedding for search text.")
+                self._tokenize_text(text.strip(), positive_embeddings, "positive search text")
 
         if search_text_negative is not None and search_text_negative.strip() != "":
             for text in search_text_negative.split(","):
-                text = text.strip()
-                if self.verbose:
-                    print(f"Tokenizing negative search texts: \"{text}\"")
-                try:
-                    text_embedding = text_embeddings(text)
-                    negative_embeddings.append(text_embedding)
-                except OSError as e:
-                    if self.verbose:
-                        print(f"{text} - {e}")
-                    raise AssertionError(
-                        "Encountered an error generating token embedding for negative search text.")
+                self._tokenize_text(text.strip(), negative_embeddings, "negative_search_text")
 
         if len(positive_embeddings) == 0 and len(negative_embeddings) == 0:
             return {} # TODO better exception handling
     
         files_grouped = self.find_similars_to_text(search_text, positive_embeddings, negative_embeddings)
         return files_grouped
+
+    def segregate_by_text_with_domain(self, search_text, search_text_negative=None, threshold=0.0):
+        #### TODO refactor this to work with negative search text
+        '''
+        Optionally we may want to find the matches that are most exclusive to the
+        search text within the domain of the provided search presets.
+        '''
+        files_grouped = {}
+        temp = {}
+        embeddings = []
+        search_text_index = config.text_embedding_search_presets.index(search_text)
+        count = 0
+
+        if len(self.segregation_map) == 0 or self.overwrite: # TODO different boolean for this cache
+            for preset in config.text_embedding_search_presets:
+                self._tokenize_text(preset, embeddings)
+
+            for f in self._files_found:
+                self.segregation_map[f] = []
+            
+            for embedding in embeddings:
+                embedding_similars = self._compute_embedding_diff(
+                    self._file_embeddings, embedding, True, threshold=threshold)
+                normalized = embedding_similars[1] / min(embedding_similars[1])
+                for i in range(len(normalized)):
+                    self.segregation_map[self._files_found[i]].append(normalized[i])
+
+        for f, similarities in self.segregation_map.items():
+            max_similarity_index = similarities.index(max(similarities))
+            if search_text_index == max_similarity_index:
+                temp[f] = similarities[max_similarity_index]
+
+        # TODO need some type of way to massage the results so that the clusters formed by the texts with
+        # strong signals don't cannibalize the results from the other search terms
+
+        for file, similarity in dict(sorted(temp.items(), key=lambda item: item[1], reverse=True)).items():
+            if count == config.max_search_results:
+                break
+            files_grouped[file] = similarity
+            count += 1
+        files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1], reverse=True))
+
+        return {0: files_grouped}
+
+    def _tokenize_text(self, text, embeddings=[], descriptor="search text"):
+        if self.verbose:
+            print(f"Tokenizing {descriptor}: \"{text}\"")
+        try:
+            text_embedding = text_embeddings(text)
+            embeddings.append(text_embedding)
+        except OSError as e:
+            if self.verbose:
+                print(f"{text} - {e}")
+            raise AssertionError(
+                f"Encountered an error generating token embedding for {descriptor}")
 
     def _sort_groups(self, file_groups):
         return sorted(file_groups,

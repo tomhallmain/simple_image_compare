@@ -8,7 +8,7 @@ from utils.constants import Mode
 from utils.app_style import AppStyle
 from utils.utils import move_file, copy_file
 
-# TODO check hash of files in new directory instead of just filename
+# TODO check hash of files in new directory instead of just filename, or even use a new compare instance to check for duplicates
 # TODO preserve dictionary of all moved / copied files in a session along with their target directories.
 # TODO enable the main app to access this dictionary as groups and remove files if needed
 # TODO give statistics on how many files were moved / copied.
@@ -233,6 +233,8 @@ class MarkedFiles():
 
     def move_marks_to_dir(self, event=None, target_dir=None, move_func=move_file):
         target_dir = self.handle_target_directory(target_dir=target_dir)
+        if self.filter_text is not None and self.filter_text.strip() != "":
+            print(f"Filtered by string: {self.filter_text}")
         some_files_already_present = MarkedFiles.move_marks_to_dir_static(
             self.toast_callback, self.refresh_callback,
             target_dir=target_dir, move_func=move_func)
@@ -254,13 +256,14 @@ class MarkedFiles():
             MarkedFiles.penultimate_mark_target = MarkedFiles.previous_mark_target
         MarkedFiles.previous_action = move_func
         MarkedFiles.previous_mark_target = target_dir
-        print(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}")
+        if len(MarkedFiles.file_marks) > 1:
+            print(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}")
         exceptions = {}
         invalid_files = []
         for marked_file in MarkedFiles.file_marks:
             try:
                 move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
-                print(f"{action_part2} file to {target_dir}: {os.path.basename(marked_file)}")
+                print(f"{action_part2} file to {os.path.join(target_dir, os.path.basename(marked_file))}")
                 MarkedFiles.previous_marks.append(marked_file)
             except Exception as e:
                 exceptions[marked_file] = str(e)
@@ -405,7 +408,6 @@ class MarkedFiles():
             self.filtered_target_dirs.clear()
             self.filtered_target_dirs = MarkedFiles.mark_target_dirs[:]
         else:
-            print(f"Filtering by string: {self.filter_text}")
             temp = []
             # First pass try to match directory name
             for target_dir in MarkedFiles.mark_target_dirs:

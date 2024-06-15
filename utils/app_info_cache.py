@@ -21,6 +21,8 @@ class AppInfoCache:
 
     def set(self, directory, key, value):
         directory = AppInfoCache.normalize_directory_key(directory)
+        if directory is None or directory.strip() == "":
+            raise Exception(f"Invalid directory provided to app_info_cache.set(). key={key} value={value}")
         if not directory in self._cache:
             self._cache[directory] = {}
         self._cache[directory][key] = value

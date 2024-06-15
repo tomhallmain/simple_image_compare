@@ -84,6 +84,9 @@ class FileBrowser:
         self.recursive = recursive
         self.refresh()
 
+    def is_recursive(self):
+        return self.recursive
+
     def toggle_recursive(self):
         self.set_recursive(not self.recursive)
 
@@ -127,10 +130,14 @@ class FileBrowser:
         print(f"Setting base directory: {directory}")
         return self.refresh()
 
+    def get_sort_by(self):
+        return self.sort_by
+
     def set_sort_by(self, sort_by):
         self.sort_by = sort_by
         if self.sort_by == SortBy.RANDOMIZE:
             self.sort = Sort.RANDOM
+        self.refresh()
         return self.get_files()
 
     def set_sort(self, sort):

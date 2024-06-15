@@ -31,6 +31,10 @@
   "use_file_paths_json": false,
   "file_paths_json_path": "file_paths.json",
   "text_embedding_search_presets": [
-    "cute cat", "fine gentleman", "cool car"
-  ]
+    "cute cat",
+    "fine gentleman",
+    "cool car",
+    {"positive": "masterpiece, artful", "negative": "ugly, deformed"}
+  ],
+  "text_embedding_search_presets_exclusive": false
 }

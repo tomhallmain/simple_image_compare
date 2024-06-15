@@ -297,9 +297,9 @@ class App():
                                          *SortBy.members(), command=self.set_sort_by)
         self.apply_to_grid(self.sort_by_choice, sticky=W)
 
-        image_browse_recurse_var = tk.BooleanVar(value=self.config.image_browse_recursive)
+        self.image_browse_recurse_var = tk.BooleanVar(value=self.config.image_browse_recursive)
         self.image_browse_recurse = Checkbutton(self.sidebar, text='Browsing mode - Recursive',
-                                                variable=image_browse_recurse_var, command=self.toggle_image_browse_recursive)
+                                                variable=self.image_browse_recurse_var, command=self.toggle_image_browse_recursive)
         self.apply_to_grid(self.image_browse_recurse, sticky=W)
 
         fill_canvas_var = tk.BooleanVar(value=App.fill_canvas)
@@ -452,7 +452,7 @@ class App():
         cls.fill_canvas = not cls.fill_canvas
 
     def toggle_image_browse_recursive(self):
-        self.file_browser.toggle_recursive()
+        App.file_browser.toggle_recursive()
         if App.mode == Mode.BROWSE and App.img:
             self.show_next_image()
 
@@ -474,7 +474,7 @@ class App():
             if App.mode != Mode.BROWSE:
                 return
             if show_new_images:
-                has_new_images = self.file_browser.update_cursor_to_new_images()
+                has_new_images = App.file_browser.update_cursor_to_new_images()
             self.show_next_image()
             if show_new_images and has_new_images:
                 App.delete_lock = True # User may have started delete just before the image changes, lock for a short period after to ensure no misdeletion
@@ -580,6 +580,16 @@ class App():
         self.set_base_dir_box.delete(0, "end")
         self.set_base_dir_box.insert(0, self.base_dir)
         App.file_browser.set_directory(self.base_dir)
+        if app_info_cache.get(base_dir, "recursive", default_val=False):
+            self.image_browse_recurse_var.set(True)
+            App.file_browser.toggle_recursive()
+        sort_by = app_info_cache.get(base_dir, "sort_by", default_val=str(self.config.sort_by))
+        try:
+            if sort_by != self.sort_by.get():
+                self.sort_by.set(sort_by)
+                App.file_browser.set_sort_by(SortBy.get(sort_by))
+        except Exception:
+            pass
         if App.compare is None:
             self.set_mode(Mode.BROWSE)
             previous_file = app_info_cache.get(self.base_dir, "image_cursor")
@@ -689,12 +699,11 @@ class App():
             self.set_mode(Mode.SEARCH)
 
         self.master.update()
-
-        if App.compare is not None:
-           self.run_compare()
+        self.run_compare()
 
     def show_searched_image(self) -> None:
-        if App.search_image_full_path is not None and App.search_image_full_path != "":
+        print(f"Search image full path: {App.search_image_full_path}")
+        if App.search_image_full_path is not None and App.search_image_full_path.strip() != "":
             if os.path.isfile(App.search_image_full_path):
                 self.create_image(App.search_image_full_path, extra_text="(search image)")
             else:
@@ -829,9 +838,11 @@ class App():
                            kind="info")
         filepath = self.get_active_image_filepath()
         if filepath:
-            self.search_image.set(os.path.basename(filepath))
-            self.master.update()
-            self.run_compare()
+            base_dir = self.get_base_dir()
+            if filepath.startswith(base_dir):
+                filepath = filepath[len(base_dir)+1:]
+            self.search_image.set(filepath)
+            self.set_search_image()
         else:
             self.alert("Error", "Failed to get active image filepath", kind="error")
 
@@ -908,9 +919,11 @@ class App():
     def add_buttons_for_mode(self) -> None:
         if not App.has_added_buttons_for_mode[App.mode]:
             if App.mode == Mode.SEARCH:
-                self.add_button("toggle_image_view_btn", "Toggle image view", self.toggle_image_view)
-                self.add_button("replace_current_image_btn", "Replace with search image",
-                                self.replace_current_image_with_search_image)
+                if App.search_image_full_path != None and App.search_image_full_path.strip() != "" \
+                        and self.toggle_image_view_btn is None:
+                    self.add_button("toggle_image_view_btn", "Toggle image view", self.toggle_image_view)
+                    self.add_button("replace_current_image_btn", "Replace with search image",
+                                    self.replace_current_image_with_search_image)
                 if not App.has_added_buttons_for_mode[Mode.GROUP]:
                     self.add_all_mode_buttons()
             elif App.mode == Mode.GROUP:
@@ -1315,7 +1328,17 @@ class App():
             self.alert("No Text Search Presets Found", "No text embedding search presets found. Set them in the config.json file.", kind="info")
         else:
             self.search_text_box.delete(0, "end")
-            self.search_text_box.insert(0, next_text_embedding_search_preset)
+
+            if isinstance(next_text_embedding_search_preset, dict):
+                self.search_text_box.delete(0, "end")
+                if "negative" in next_text_embedding_search_preset:
+                    self.search_text_negative_box.delete(0, "end")
+                    self.search_text_negative_box.insert(0, next_text_embedding_search_preset["negative"])
+                if "positive" in next_text_embedding_search_preset:
+                    self.search_text_box.insert(0, next_text_embedding_search_preset["positive"])
+            elif isinstance(next_text_embedding_search_preset, str):
+                self.search_text_box.insert(0, next_text_embedding_search_preset)
+
             self.master.update()
             self.search_text_embedding()
 
@@ -1366,7 +1389,7 @@ class App():
             self.alert("Error", "Failed to open location of current file, unable to get valid filepath", kind="error")
 
     def copy_image_path(self):
-        filepath = self.file_browser.current_file()
+        filepath = App.file_browser.current_file()
         if sys.platform == 'win32':
             filepath = os.path.normpath(filepath)
             if self.config.escape_backslash_filepaths:
@@ -1564,6 +1587,8 @@ class App():
             app_info_cache.set("info", "base_dir", base_dir)
             if App.img_path and App.img_path != "":
                 app_info_cache.set(base_dir, "image_cursor", os.path.basename(App.img_path))
+            app_info_cache.set(base_dir, "recursive", App.file_browser.is_recursive())
+            app_info_cache.set(base_dir, "sort_by", str(App.file_browser.get_sort_by()))
         app_info_cache.set("info", "marked_file_target_dirs", MarkedFiles.mark_target_dirs)
         app_info_cache.store()
 

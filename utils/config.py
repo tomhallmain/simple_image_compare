@@ -39,6 +39,7 @@ class Config:
         self.file_paths_json_path = "file_paths.json" # TODO update the JSON for this
         self.text_embedding_search_presets = []
         self.text_embedding_search_preset_index = -1
+        self.text_embedding_search_presets_exclusive = False
 
         dict_set = False
         configs =  [ f.path for f in os.scandir(Config.CONFIGS_DIR_LOC) if f.is_file() and f.path.endswith(".json") ]
@@ -77,7 +78,8 @@ class Config:
                             "show_toasts",
                             "delete_instantly",
                             "move_marks_overwrite_existing_file",
-                            "use_file_paths_json")
+                            "use_file_paths_json",
+                            "text_embedding_search_presets_exclusive")
             self.set_values(int,
                             "max_search_results",
                             "color_diff_threshold",
@@ -138,7 +140,7 @@ class Config:
         if self.text_embedding_search_preset_index >= len(self.text_embedding_search_presets):
             return None
         else:
-            return str(self.text_embedding_search_presets[self.text_embedding_search_preset_index])
+            return self.text_embedding_search_presets[self.text_embedding_search_preset_index]
 
 
     def print_config_settings(self):
