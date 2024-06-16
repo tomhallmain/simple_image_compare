@@ -370,6 +370,7 @@ class App():
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
         self.master.bind("<Control-r>", self.run_previous_marks_action)
         self.master.bind("<Control-e>", self.run_penultimate_marks_action)
+        self.master.bind("<Control-t>", self.run_permanent_marks_action)
         self.master.bind("<Control-d>", lambda event: MarkedFiles.set_current_marks_from_previous(self.toast))
         self.master.bind("<Control-z>", self.revert_last_marks_change)
         self.master.bind("<Control-x>", lambda event: MarkedFiles.undo_move_marks(None, self.toast, self.refresh))
@@ -392,8 +393,8 @@ class App():
 
     def load_info_cache(self):
         try:
-            MarkedFiles.set_target_dirs(app_info_cache.get("info", "marked_file_target_dirs", default_val=[]))
-            base_dir = app_info_cache.get("info", "base_dir")
+            MarkedFiles.set_target_dirs(app_info_cache.get_meta("marked_file_target_dirs", default_val=[]))
+            base_dir = app_info_cache.get_meta("base_dir")
             if base_dir is not None and base_dir != "" and base_dir != "." and os.path.isdir(base_dir):
                 self.set_base_dir_box.insert(0, base_dir)
                 self.set_base_dir()
@@ -452,7 +453,7 @@ class App():
         cls.fill_canvas = not cls.fill_canvas
 
     def toggle_image_browse_recursive(self):
-        App.file_browser.toggle_recursive()
+        App.file_browser.set_recursive(self.image_browse_recurse_var.get())
         if App.mode == Mode.BROWSE and App.img:
             self.show_next_image()
 
@@ -580,10 +581,11 @@ class App():
         self.set_base_dir_box.delete(0, "end")
         self.set_base_dir_box.insert(0, self.base_dir)
         App.file_browser.set_directory(self.base_dir)
-        if app_info_cache.get(base_dir, "recursive", default_val=False):
-            self.image_browse_recurse_var.set(True)
-            App.file_browser.toggle_recursive()
-        sort_by = app_info_cache.get(base_dir, "sort_by", default_val=str(self.config.sort_by))
+        recursive = app_info_cache.get(base_dir, "recursive", default_val=False)
+        sort_by = app_info_cache.get(base_dir, "sort_by", default_val=self.sort_by.get())
+        if recursive != self.image_browse_recurse_var.get():
+            self.image_browse_recurse_var.set(recursive)
+            App.file_browser.set_recursive(recursive)
         try:
             if sort_by != self.sort_by.get():
                 self.sort_by.set(sort_by)
@@ -726,9 +728,7 @@ class App():
             return False
         elif len(App.files_matched) == 0:
             if show_alert:
-                self.alert("Search required",
-                           "No matches found. Search again to find potential matches.",
-                           kind="info")
+                self.alert("Search required", "No matches found. Search again to find potential matches.")
             return False
 
         App.is_toggled_view_matches = True
@@ -759,9 +759,7 @@ class App():
             return False
         elif len(App.files_matched) == 0:
             if show_alert:
-                self.alert("Search required",
-                           "No matches found. Search again to find potential matches.",
-                           kind="info")
+                self.alert("Search required", "No matches found. Search again to find potential matches.")
             return False
 
         App.is_toggled_view_matches = True
@@ -825,17 +823,13 @@ class App():
         '''
         if App.mode != Mode.BROWSE:
             if not App.has_image_matches:
-                self.alert("Search required",
-                    "No matches found. Search again to find potential matches.",
-                    kind="info")
+                self.alert("Search required", "No matches found. Search again to find potential matches.")
                 return
             search_image_path = self.search_image.get()
             search_image_path = get_valid_file(
                 self.get_base_dir(), search_image_path)
             if (App.files_matched is None or search_image_path == App.files_matched[App.match_index]):
-                self.alert("Already set image",
-                           "Current image is already the search image.",
-                           kind="info")
+                self.alert("Already set image", "Current image is already the search image.")
         filepath = self.get_active_image_filepath()
         if filepath:
             base_dir = self.get_base_dir()
@@ -1078,9 +1072,7 @@ class App():
         if len(App.files_grouped) == 0:
             App.has_image_matches = False
             self._set_label_state("Set a directory and search file.")
-            self.alert("No Groups Found",
-                        "None of the files can be grouped with current settings.",
-                        kind="info")
+            self.alert("No Groups Found", "None of the files can be grouped with current settings.")
             return
 
         App.group_indexes = App.compare._sort_groups(App.file_groups)
@@ -1095,9 +1087,7 @@ class App():
             if len(duplicates) == 0:
                 App.has_image_matches = False
                 self._set_label_state("Set a directory and search file.")
-                self.alert("No Duplicates Found",
-                            "None of the files appear to be duplicates based on the current settings.",
-                            kind="info")
+                self.alert("No Duplicates Found", "None of the files appear to be duplicates based on the current settings.")
                 return
             self.set_mode(Mode.DUPLICATES, do_update=True)
             print("Probable duplicates:")
@@ -1121,9 +1111,7 @@ class App():
 
             self.set_current_group()
             if has_found_stranded_group_members:
-                self.alert("Stranded Group Members Found",
-                            "Some group members were left stranded by the grouping process.",
-                            kind="info")
+                self.alert("Stranded Group Members Found", "Some group members were left stranded by the grouping process.")
 
     def run_search(self) -> None:
         self._set_label_state(_wrap_text_to_fit_length(
@@ -1134,9 +1122,7 @@ class App():
         if len(App.files_grouped[0]) == 0:
             App.has_image_matches = False
             self._set_label_state("Set a directory and search file.")
-            self.alert("No Match Found",
-                        "None of the files match the search file with current settings.",
-                        kind="info")
+            self.alert("No Match Found", "None of the files match the search file with current settings.")
             return
 
         reverse = App.compare_mode == CompareMode.CLIP_EMBEDDING
@@ -1178,9 +1164,7 @@ class App():
         if len(App.file_groups[0]) == 0:
             App.has_image_matches = False
             self._set_label_state("Set a directory and search file or search text.")
-            self.alert("No Match Found",
-                        "None of the files match the search text with current settings.",
-                        kind="info")
+            self.alert("No Match Found", "None of the files match the search text with current settings.")
             return
 
         for f in sorted(App.file_groups[0], key=lambda f: App.file_groups[0][f], reverse=True):
@@ -1269,6 +1253,11 @@ class App():
             self.add_or_remove_mark_for_current_image(show_toast=False)
         MarkedFiles.run_penultimate_action(self.toast, self.refresh)
 
+    def run_permanent_marks_action(self, event=None):
+        if len(MarkedFiles.file_marks) == 0:
+            self.add_or_remove_mark_for_current_image(show_toast=False)
+        MarkedFiles.run_permanent_action(self.toast, self.refresh)
+
     def _check_marks(self, min_mark_size=1):
         if len(MarkedFiles.file_marks) < min_mark_size:
             exception_text = f"{len(MarkedFiles.file_marks)} marks have been set (>={min_mark_size} expected).\nUse Shift+M to set a mark."
@@ -1298,7 +1287,7 @@ class App():
                 self.set_current_group(start_match_index=group_indexes[1])
                 return True
         if not image_path:
-            self.alert("File not found", f"No file was found for the search text: \"{search_text}\"", kind="info")
+            self.alert("File not found", f"No file was found for the search text: \"{search_text}\"")
             return False
         self.create_image(image_path)
         self.master.update()
@@ -1325,14 +1314,13 @@ class App():
     def next_text_embedding_preset(self, event=None):
         next_text_embedding_search_preset = config.next_text_embedding_search_preset()
         if next_text_embedding_search_preset is None:
-            self.alert("No Text Search Presets Found", "No text embedding search presets found. Set them in the config.json file.", kind="info")
+            self.alert("No Text Search Presets Found", "No text embedding search presets found. Set them in the config.json file.")
         else:
             self.search_text_box.delete(0, "end")
+            self.search_text_negative_box.delete(0, "end")
 
             if isinstance(next_text_embedding_search_preset, dict):
-                self.search_text_box.delete(0, "end")
                 if "negative" in next_text_embedding_search_preset:
-                    self.search_text_negative_box.delete(0, "end")
                     self.search_text_negative_box.insert(0, next_text_embedding_search_preset["negative"])
                 if "positive" in next_text_embedding_search_preset:
                     self.search_text_box.insert(0, next_text_embedding_search_preset["positive"])
@@ -1529,8 +1517,7 @@ class App():
 
             if len(App.file_groups) == 0:
                 self.alert("No More Groups",
-                           "There are no more image groups remaining for this directory and current filter settings.",
-                           kind="info")
+                           "There are no more image groups remaining for this directory and current filter settings.")
                 App.current_group_index = 0
                 App.files_grouped = {}
                 App.file_groups = {}
@@ -1584,12 +1571,12 @@ class App():
     def store_info_cache(self):
         base_dir = self.get_base_dir()
         if base_dir and base_dir != "":
-            app_info_cache.set("info", "base_dir", base_dir)
+            app_info_cache.set_meta("base_dir", base_dir)
             if App.img_path and App.img_path != "":
                 app_info_cache.set(base_dir, "image_cursor", os.path.basename(App.img_path))
             app_info_cache.set(base_dir, "recursive", App.file_browser.is_recursive())
             app_info_cache.set(base_dir, "sort_by", str(App.file_browser.get_sort_by()))
-        app_info_cache.set("info", "marked_file_target_dirs", MarkedFiles.mark_target_dirs)
+        app_info_cache.set_meta("marked_file_target_dirs", MarkedFiles.mark_target_dirs)
         app_info_cache.store()
 
     def alert(self, title, message, kind="info", hidemain=True) -> None:

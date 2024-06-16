@@ -17,7 +17,7 @@ When using CLIP embedding compare mode, you can search your images by text - bot
 
 ## Image Browser
 
-The UI can be used as an image file browser. This is especially useful on Windows as the following features are available that the default Windows Photo Viewer application either does not support or is hard to quickly reconfigure:
+The UI can be used as an image file browser. This is especially useful on Windows as the following features are available that the default Windows Photo Viewer application either does not support or are hard to quickly reconfigure:
 - Auto-resize images to fill the screen
 - Auto-refresh directory files
 - Slideshow (customizable)
@@ -52,7 +52,7 @@ If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [
 
 `file_path_json_path` should be set to the path for the file path JSON, if setting `use_file_path_json` is set to true.
 
-`text_embedding_search_presets_exclusive` - If this option is selected, the search results returned by preset search texts will be exclusive of eachtother, to more accurately categorize and segregate the search results. Note that since some text embeddings have a much stronger signal than others clustering on those searches can occur, but there are measures taken to mitigate this.
+`text_embedding_search_presets_exclusive` - If this option is selected, the search results returned by preset search texts will be exclusive of eachother, to more accurately categorize and segregate the search results. Note that since some text embeddings have a much stronger signal than others clustering on those searches can occur.
 
 ## UI Bindings
 
@@ -76,14 +76,15 @@ A directory with images must be set before most of the below bindings will have 
 | Shift-C          |                  | Clear marks list       |
 | Ctrl-C           |                  | Copy marks list        |
 | Ctrl-M           |                  | Open marks window      |
-| Ctrl-K           |                  | Open marks window (no GUI)    |
-| Ctrl-R           |                  | Redo prev marks action        |
-| Ctrl-E           |                  | Redo penultimate marks action |
-| Ctrl-Z           |                  | Undo move marks               |
-| Ctrl-X           |                  | Modify last marks move        |
-| Ctrl-D           |                  | Set marks from previous marks |
-| Ctrl-B           |                  | Switch back to browsing mode  |
-| Ctrl-S           |                  | Run next text search preset   |
+| Ctrl-K           |                  | Open marks window (no GUI)   |
+| Ctrl-R           |                  | Run previous marks action    |
+| Ctrl-E           |                  | Run penultimate marks action |
+| Ctrl-T           |                  | Run permanent marks action   |
+| Ctrl-Z           |                  | Undo move marks              |
+| Ctrl-X           |                  | Modify last marks move       |
+| Ctrl-D           |                  | Set marks from previous      |
+| Ctrl-B           |                  | Switch back to browsing mode |
+| Ctrl-S           |                  | Run next text search preset  |
 | Shift-O          |                  | Open image location    |
 | Shift-Delete     | Mouse Wheel Click| Delete image(s)        |
 | F11              |                  | Toggle fullscreen      |
@@ -110,9 +111,9 @@ To bypass the move marks window, use the Ctrl+R or Ctrl+E shortcuts to immediate
 
 ## Limitations
 
-Importantly, it is not currently possible to undo a delete action, however unless the delete folder is explicitly set to null in the config it is likely the deleted items will be saved in a trash folder before being fully removed.
+**NOTE** - It is not currently possible to undo a delete action, however unless the delete folder is explicitly set to null in the config it is likely the deleted items will be saved in a trash folder before being fully removed.
 
-This is a very simple app. It is primarily meant for personal use but could be adapted for more intensive use cases.
+This is a simple app primarily meant for personal use but could be adapted for more intensive use cases.
 
 The face similarity measure in particular is very crude and only compares the number of faces in each image, so it is off by default. At a future time more complex face comparison logic may be added, but for now the embedding comparison is helpful in matching faces.
 

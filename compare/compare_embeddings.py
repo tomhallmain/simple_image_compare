@@ -435,9 +435,10 @@ class CompareEmbedding:
                 raise AssertionError(
                     "Encountered an error accessing the provided file path in the file system.")
 
-            n_faces = self._get_faces_count(search_file_path)
             self._file_embeddings = np.insert(self._file_embeddings, 0, [embedding], 0)
-            self._file_faces = np.insert(self._file_faces, 0, [n_faces], 0)
+            if self.compare_faces:
+                n_faces = self._get_faces_count(search_file_path)
+                self._file_faces = np.insert(self._file_faces, 0, [n_faces], 0)
             self._files_found.insert(0, search_file_path)
 
         files_grouped = self.find_similars_to_image(
@@ -653,6 +654,7 @@ class CompareEmbedding:
         return files_grouped
 
     def find_similars_to_text(self, search_text, positive_embeddings, negative_embeddings):
+        # TODO remove duplicate detection
         '''
         Search the numpy array of all known image arrays for similar
         characteristics to the provide image.
@@ -782,6 +784,7 @@ class CompareEmbedding:
     
     def remove_from_groups(self, removed_files=[]):
         # TODO technically it would be better to refresh the file and data lists every time a compare is done
+        # If not, will need to add a way to re-add the removed file data in case the remove action was undone
         remove_indexes = []
         for f in removed_files:
             if f in self._files_found:

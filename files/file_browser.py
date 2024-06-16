@@ -81,14 +81,12 @@ class FileBrowser:
         return len(self._files)
 
     def set_recursive(self, recursive):
+        print(f"File browser set recursive: {recursive}")
         self.recursive = recursive
         self.refresh()
 
     def is_recursive(self):
         return self.recursive
-
-    def toggle_recursive(self):
-        self.set_recursive(not self.recursive)
 
     def refresh(self, refresh_cursor=True, file_check=False, removed_files=[]):
         last_files = self.get_files() if file_check else []

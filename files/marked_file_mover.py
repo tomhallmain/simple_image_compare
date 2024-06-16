@@ -3,9 +3,10 @@ import os
 from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
+from utils.app_info_cache import app_info_cache
+from utils.app_style import AppStyle
 from utils.config import config
 from utils.constants import Mode
-from utils.app_style import AppStyle
 from utils.utils import move_file, copy_file
 
 # TODO check hash of files in new directory instead of just filename, or even use a new compare instance to check for duplicates
@@ -15,13 +16,26 @@ from utils.utils import move_file, copy_file
 
 class MarkedFiles():
     file_marks = []
+    mark_target_dirs = []
+
     previous_marks = []
+
+    last_set_target_dir = None
+
     previous_mark_target = None
     previous_action = None
     penultimate_mark_target = None
     penultimate_action = None
-    mark_target_dirs = []
-    last_set_target_dir = None
+
+    permanent_mark_target = app_info_cache.get_meta("permanent_mark_target")
+    permanent_action = app_info_cache.get_meta("permanent_action")
+    if permanent_action == "move_file":
+        permanent_action = move_file
+    elif permanent_action == "copy_file":
+        permanent_action = copy_file
+    else:
+        permanent_action = None
+
     delete_lock = False
     mark_cursor = -1
     max_height = 900
@@ -64,6 +78,41 @@ class MarkedFiles():
         MarkedFiles.move_marks_to_dir_static(toast_callback, refresh_callback,
                                              target_dir=MarkedFiles.penultimate_mark_target,
                                              move_func=MarkedFiles.penultimate_action)
+
+    @staticmethod
+    def run_permanent_action(toast_callback, refresh_callback):
+        if not MarkedFiles.permanent_action or not MarkedFiles.permanent_mark_target:
+            toast_callback(f"No permanent mark target set!\nSet with Ctrl+T on Marks window.")
+            return
+        MarkedFiles.move_marks_to_dir_static(toast_callback, refresh_callback,
+                                             target_dir=MarkedFiles.permanent_mark_target,
+                                             move_func=MarkedFiles.permanent_action)
+
+    @staticmethod
+    def set_permanent_action(target_dir, move_func, toast_callback):
+        MarkedFiles.permanent_action = move_func
+        MarkedFiles.permanent_mark_target = target_dir
+        app_info_cache.set_meta("permanent_action", move_func.__name__)
+        app_info_cache.set_meta("permanent_mark_target", target_dir)
+        toast_callback(f"Set permanent action:\n{move_func.__name__} to {target_dir}")
+
+    @staticmethod
+    def update_history(target_dir, move_func):
+        MarkedFiles.previous_marks.clear()
+
+        # Set the previous actions only if they have not been set or if they are not the permanent action
+
+        if MarkedFiles.previous_action is None or MarkedFiles.permanent_action != move_func \
+                or MarkedFiles.permanent_mark_target != target_dir:
+            MarkedFiles.previous_action = move_func
+            MarkedFiles.previous_mark_target = target_dir
+
+            if MarkedFiles.previous_action is not None and MarkedFiles.previous_mark_target is not None \
+                    and (move_func != MarkedFiles.previous_action or target_dir != MarkedFiles.previous_mark_target):
+                if MarkedFiles.permanent_action != MarkedFiles.previous_action \
+                        or MarkedFiles.permanent_mark_target != MarkedFiles.previous_mark_target:
+                    MarkedFiles.penultimate_action = MarkedFiles.previous_action
+                    MarkedFiles.penultimate_mark_target = MarkedFiles.previous_mark_target
 
     @staticmethod
     def get_geometry(is_gui=True):
@@ -109,6 +158,7 @@ class MarkedFiles():
         else:
             self.starting_target = base_dir
 
+        self.do_set_permanent_mark_target = False
         self.move_btn_list = []
         self.copy_btn_list = []
         self.label_list = []
@@ -158,6 +208,7 @@ class MarkedFiles():
         self.master.bind("<Escape>", self.close_windows)
         self.master.bind('<Shift-Delete>', self.delete_marked_files)
         self.master.bind("<Button-2>", self.delete_marked_files)
+        self.master.bind("<Control-t>", self.set_permanent_mark_target)
 
     def add_target_dir_widgets(self):
         row = 0
@@ -235,6 +286,9 @@ class MarkedFiles():
         target_dir = self.handle_target_directory(target_dir=target_dir)
         if self.filter_text is not None and self.filter_text.strip() != "":
             print(f"Filtered by string: {self.filter_text}")
+        if self.do_set_permanent_mark_target:
+            MarkedFiles.set_permanent_action(target_dir, move_func, self.toast_callback)
+            self.do_set_permanent_mark_target = False
         some_files_already_present = MarkedFiles.move_marks_to_dir_static(
             self.toast_callback, self.refresh_callback,
             target_dir=target_dir, move_func=move_func)
@@ -249,13 +303,7 @@ class MarkedFiles():
         is_moving = move_func == move_file
         action_part1 = "Moving" if is_moving else "Copying"
         action_part2 = "Moved" if is_moving else "Copied"
-        MarkedFiles.previous_marks.clear()
-        if MarkedFiles.previous_action is not None and MarkedFiles.previous_mark_target is not None \
-                and (move_func != MarkedFiles.previous_action or target_dir != MarkedFiles.previous_mark_target):
-            MarkedFiles.penultimate_action = MarkedFiles.previous_action
-            MarkedFiles.penultimate_mark_target = MarkedFiles.previous_mark_target
-        MarkedFiles.previous_action = move_func
-        MarkedFiles.previous_mark_target = target_dir
+        MarkedFiles.update_history(target_dir, move_func)
         if len(MarkedFiles.file_marks) > 1:
             print(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}")
         exceptions = {}
@@ -475,6 +523,9 @@ class MarkedFiles():
                 target_dir = MarkedFiles.last_set_target_dir
             self.move_marks_to_dir(target_dir=target_dir, move_func=move_func)
 
+    def set_permanent_mark_target(self, event=None):
+        self.do_set_permanent_mark_target = True
+        self.toast_callback("Recording next mark target and action.")
 
     def clear_target_dirs(self, event=None):
         self.clear_widget_lists()
