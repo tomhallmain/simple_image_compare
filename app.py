@@ -1227,17 +1227,17 @@ class App():
 
     def open_move_marks_window(self, event=None, open_gui=True):
         self._check_marks(min_mark_size=0)
-        quick_open = False
+        single_image = None
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
-            quick_open = True
+            single_image = self.get_active_image_filepath()
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title(f"Move {len(MarkedFiles.file_marks)} Marked File(s)")
         top_level.geometry(MarkedFiles.get_geometry(is_gui=open_gui))
         if not open_gui:
             top_level.attributes('-alpha', 0.3)
         try:
-            marked_file_mover = MarkedFiles(top_level, open_gui, quick_open, App.mode,
+            marked_file_mover = MarkedFiles(top_level, open_gui, single_image, App.mode, 
                                             self.toast, self.alert, self.refresh, self._handle_delete,
                                             base_dir=self.get_base_dir())
         except Exception as e:

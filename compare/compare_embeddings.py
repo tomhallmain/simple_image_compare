@@ -79,6 +79,7 @@ class CompareEmbedding:
     THRESHHOLD_POTENTIAL_DUPLICATE = config.threshold_potential_duplicate_embedding
     THRESHHOLD_GROUP_CUTOFF = 4500 # TODO fix this for Embedding case
     SEARCH_RETURN_CLOSEST = False
+    TEXT_EMBEDDING_CACHE = {}
 
     def __init__(self, base_dir=".", search_file_path=None, counter_limit=30000,
                  compare_faces=False, embedding_similarity_threshold=0.9,
@@ -702,7 +703,7 @@ class CompareEmbedding:
                 and search_text in config.text_embedding_search_presets:
             return self.segregate_by_text_with_domain(search_text)
 
-        files_grouped = {}
+        files_grouped = {0: {}}
         positive_embeddings = []
         negative_embeddings = []
 
@@ -715,7 +716,8 @@ class CompareEmbedding:
                 self._tokenize_text(text.strip(), negative_embeddings, "negative_search_text")
 
         if len(positive_embeddings) == 0 and len(negative_embeddings) == 0:
-            return {} # TODO better exception handling
+            print(f"Failed to generate embeddings from search texts. search text = {search_text}, search text negative = {search_text_negative}")
+            return files_grouped # TODO better exception handling
     
         files_grouped = self.find_similars_to_text(search_text, positive_embeddings, negative_embeddings)
         return files_grouped
@@ -764,11 +766,17 @@ class CompareEmbedding:
         return {0: files_grouped}
 
     def _tokenize_text(self, text, embeddings=[], descriptor="search text"):
+        if text in CompareEmbedding.TEXT_EMBEDDING_CACHE:
+            text_embedding = CompareEmbedding.TEXT_EMBEDDING_CACHE[text]
+            if text_embedding is not None:
+                embeddings.append(CompareEmbedding.TEXT_EMBEDDING_CACHE[text])
+                return
         if self.verbose:
             print(f"Tokenizing {descriptor}: \"{text}\"")
         try:
             text_embedding = text_embeddings(text)
             embeddings.append(text_embedding)
+            CompareEmbedding.TEXT_EMBEDDING_CACHE[text] = text_embedding
         except OSError as e:
             if self.verbose:
                 print(f"{text} - {e}")
@@ -799,6 +807,29 @@ class CompareEmbedding:
         for f in removed_files:
             if f in self._files_found:
                 self._files_found.remove(f)
+
+    @staticmethod
+    def single_text_compare(image_path, texts_dict):
+        print(f"Running text comparison for \"{image_path}\" - text = {texts_dict}")
+        similarities = {}
+        try:
+            image_embedding = image_embeddings(image_path)
+        except OSError as e:
+            print(f"{search_file_path} - {e}")
+            raise AssertionError(
+                "Encountered an error accessing the provided file path in the file system.")
+        for key, text in texts_dict.items():
+            if text in CompareEmbedding.TEXT_EMBEDDING_CACHE:
+                text_embedding = CompareEmbedding.TEXT_EMBEDDING_CACHE[text]
+            else:
+                try:
+                    text_embedding = text_embeddings(text)
+                    CompareEmbedding.TEXT_EMBEDDING_CACHE[text] = text_embedding
+                except OSError as e:
+                    print(f"{search_file_path} - {e}")
+                    raise AssertionError("Encountered an error accessing the provided file path in the file system.")
+            similarities[key] = embedding_similarity(image_embedding, text_embedding)
+        return similarities
 
 if __name__ == "__main__":
     base_dir = "."
