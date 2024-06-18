@@ -655,7 +655,6 @@ class CompareEmbedding:
         return files_grouped
 
     def find_similars_to_text(self, search_text, positive_embeddings, negative_embeddings):
-        # TODO remove duplicate detection
         '''
         Search the numpy array of all known image arrays for similar
         characteristics to the provide image.
@@ -677,12 +676,8 @@ class CompareEmbedding:
                     print(header)
                 for f in files_grouped:
                     similarity = files_grouped[f]
-                    if similarity > CompareEmbedding.THRESHHOLD_POTENTIAL_DUPLICATE:
-                        line = "DUPLICATE: " + f
-                    elif similarity > 0.98:
-                        line = "PROBABLE MATCH: " + f
-                    else:
-                        line = f"{f} - similarity: {similarity}"
+                    # Skip duplicate determination here because with text it is very unlikely for duplicates to appear
+                    line = f"{f} - similarity: {similarity}"
                     textfile.write(line + "\n")
                     if self.verbose:
                         print(line)

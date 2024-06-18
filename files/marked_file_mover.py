@@ -84,12 +84,14 @@ class MarkedFiles():
     def get_history_action(start_index=0):
         # Get a previous action that is not equivalent to the permanent action if possible.
         action = None
+        seen_actions = []
         for i in range(len(MarkedFiles.action_history)):
             action = MarkedFiles.action_history[i]
             is_returnable_action = action != MarkedFiles.permanent_action
-            if not is_returnable_action:
+            if not is_returnable_action or action in seen_actions:
                 start_index += 1
-            print(f"i={i}, start_index={start_index}, action={action}")
+            seen_actions.append(action)
+#            print(f"i={i}, start_index={start_index}, action={action}")
             if i < start_index:
                 continue
             if is_returnable_action:
@@ -360,14 +362,14 @@ class MarkedFiles():
                 if not marked_file in invalid_files:
                     MarkedFiles.file_marks.append(marked_file) # Just in case some of them failed to move for whatever reason.
                     if exceptions[marked_file].startswith("File already exists"):
-                        if len(marked_file) < 13 and not names_are_short:
+                        if len(os.path.basename(marked_file)) < 13 and not names_are_short:
                             names_are_short = True
                         some_files_already_present = True
             if some_files_already_present:
                 warning = "Existing filenames match!"
                 if names_are_short:
                     warning += "\nWARNING: Short filenames."
-                toast_callback(f"Existing filenames match!")
+                toast_callback(warning)
         if len(MarkedFiles.previous_marks) > 0:
             MarkedFiles.last_set_target_dir = target_dir
             if is_moving:

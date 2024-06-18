@@ -4,8 +4,6 @@ import signal
 import sys
 import time
 
-import pprint
-
 try:
     from send2trash import send2trash
 except Exception:
@@ -21,6 +19,7 @@ from PIL import ImageTk, Image
 
 from compare.compare import Compare, get_valid_file
 from compare.compare_embeddings import CompareEmbedding
+from compare.compare_wrapper import CompareWrapper
 from files.file_browser import FileBrowser, SortBy
 from files.go_to_file import GoToFile
 from files.marked_file_mover import MarkedFiles
@@ -154,26 +153,14 @@ class App():
     UI for comparing image files and making related file changes.
     '''
 
-    compare = None
     file_browser = FileBrowser(recursive=config.image_browse_recursive, sort_by=config.sort_by)
     mode = Mode.BROWSE
-    compare_mode = config.compare_mode
     fill_canvas = config.fill_canvas
     fullscreen = False
     delete_lock = False
     search_file_path = ""
     img = None
     img_path = None
-    files_grouped = {}
-    file_groups = {}
-    files_matched = []
-    search_image_full_path = None
-    has_image_matches = False
-    current_group = None
-    current_group_index = 0
-    match_index = 0
-    group_indexes = []
-    max_group_index = 0
     is_toggled_view_matches = True
     has_added_buttons_for_mode = {
         Mode.BROWSE: False,
@@ -215,6 +202,9 @@ class App():
         self.base_dir = get_user_dir()
         self.search_dir = get_user_dir()
 
+        self.compare_wrapper = CompareWrapper(master, config.compare_mode, self.add_buttons_for_mode, self.create_image, self.show_next_image,
+                                              self._set_label_state, self.alert, self.toast, self.set_mode, self.set_toggled_view_matches)
+
         # Sidebar
         self.sidebar = Sidebar(self.master)
         self.sidebar.columnconfigure(0, weight=1)
@@ -255,19 +245,19 @@ class App():
         self.label_compare_mode = Label(self.sidebar)
         self.add_label(self.label_compare_mode, "Compare mode")
         self.compare_mode_var = tk.StringVar()
-        self.compare_mode_choice = OptionMenu(self.sidebar, self.compare_mode_var, str(App.compare_mode),
+        self.compare_mode_choice = OptionMenu(self.sidebar, self.compare_mode_var, str(self.compare_wrapper.compare_mode),
                                               *CompareMode.members(), command=self.set_compare_mode)
         self.apply_to_grid(self.compare_mode_choice, sticky=W)
 
         self.label_compare_threshold = Label(self.sidebar)
-        self.add_label(self.label_compare_threshold, App.compare_mode.threshold_str())
+        self.add_label(self.label_compare_threshold, self.compare_wrapper.compare_mode.threshold_str())
         self.compare_threshold = tk.StringVar()
-        if App.compare_mode == CompareMode.COLOR_MATCHING:
+        if self.compare_wrapper.compare_mode == CompareMode.COLOR_MATCHING:
             default_val = self.config.color_diff_threshold
         else:
             default_val = self.config.embedding_similarity_threshold
         self.compare_threshold_choice = OptionMenu(self.sidebar, self.compare_threshold,
-                                                   str(default_val), *App.compare_mode.threshold_vals())
+                                                   str(default_val), *self.compare_wrapper.compare_mode.threshold_vals())
         self.apply_to_grid(self.compare_threshold_choice, sticky=W)
 
         self.compare_faces = tk.BooleanVar(value=False)
@@ -309,7 +299,7 @@ class App():
         
         search_return_closest_var = tk.BooleanVar(value=CompareEmbedding.SEARCH_RETURN_CLOSEST)
         self.search_return_closest_choice = Checkbutton(self.sidebar, text='Embedding search return closest',
-                                              variable=search_return_closest_var, command=self.toggle_search_return_closest)
+                                              variable=search_return_closest_var, command=self.compare_wrapper.toggle_search_return_closest)
         self.apply_to_grid(self.search_return_closest_choice, sticky=W)
 
         ################################ Run context-aware UI elements
@@ -348,8 +338,8 @@ class App():
         ################################ Key bindings
         self.master.bind('<Left>', self.show_prev_image)
         self.master.bind('<Right>', self.show_next_image)
-        self.master.bind('<Shift-Left>', self.show_prev_group)
-        self.master.bind('<Shift-Right>', self.show_next_group)
+        self.master.bind('<Shift-Left>', self.compare_wrapper.show_prev_group)
+        self.master.bind('<Shift-Right>', self.compare_wrapper.show_next_group)
         self.master.bind('<Shift-O>', self.open_image_location)
         self.master.bind('<Shift-Delete>', self.delete_image)
         self.master.bind("<F11>", self.toggle_fullscreen)
@@ -437,15 +427,17 @@ class App():
             self.show_next_image()
 
     def set_compare_mode(self, event):
-        App.compare_mode = CompareMode.get(self.compare_mode_var.get())
-        self.label_compare_threshold["text"] = App.compare_mode.threshold_str()
-        if App.compare_mode == CompareMode.COLOR_MATCHING:
+        self.compare_wrapper.compare_mode = CompareMode.get(self.compare_mode_var.get())
+        self.label_compare_threshold["text"] = self.compare_wrapper.compare_mode.threshold_str()
+        if self.compare_wrapper.compare_mode == CompareMode.COLOR_MATCHING:
             default_val = self.config.color_diff_threshold
         else:
             default_val = self.config.embedding_similarity_threshold
         self.compare_threshold.set(str(default_val))
+        self.destroy_grid_element("compare_threshold_choice", decrement_row_counter=False)
         self.compare_threshold_choice = OptionMenu(self.sidebar, self.compare_threshold,
-                                                   str(default_val), *App.compare_mode.threshold_vals())
+                                                   str(default_val), *self.compare_wrapper.compare_mode.threshold_vals())
+        self.apply_to_grid(self.compare_threshold_choice, sticky=W, specific_row=13)
         self.master.update()
 
     @classmethod
@@ -457,11 +449,6 @@ class App():
         if App.mode == Mode.BROWSE and App.img:
             self.show_next_image()
 
-    def toggle_search_return_closest(self):
-        if CompareMode.CLIP_EMBEDDING != App.compare_mode:
-            self.alert("Invalid mode", "Compare mode must be set to Clip Embedding to make use of this option.")
-        CompareEmbedding.SEARCH_RETURN_CLOSEST = not CompareEmbedding.SEARCH_RETURN_CLOSEST
-
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
         App.file_browser.refresh(refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files)
         if len(removed_files) > 0:
@@ -469,8 +456,8 @@ class App():
                 self._set_label_state()
             else:
                 self._handle_remove_files_from_groups(removed_files)
-            if App.compare is not None:
-                App.compare.remove_from_groups(removed_files)
+            if self.compare_wrapper.has_compare():
+                self.compare_wrapper.compare().remove_from_groups(removed_files)
         if App.file_browser.has_files():
             if App.mode != Mode.BROWSE:
                 return
@@ -517,6 +504,7 @@ class App():
         self.set_mode(Mode.BROWSE)
         App.file_browser.refresh()
         self._set_label_state()
+        assert App.img_path is not None
         if not self.go_to_file(None, App.img_path, retry_with_delay=1):
             self.home()
         self.toast("Browsing mode set.")
@@ -529,12 +517,17 @@ class App():
         top_level.geometry("600x300")
         if App.mode == Mode.BROWSE:
             index_text = App.file_browser.get_index_details()
-        elif App.mode == Mode.GROUP:
-            index_text = f"{App.match_index+1} of {len(App.files_matched)} (Group {App.current_group_index+1} of {len(App.file_groups)})"
-        elif App.mode == Mode.SEARCH and App.is_toggled_view_matches:
-            index_text = f"{App.match_index+1} of {len(App.files_matched)} ({App.file_browser.get_index_details()})"
         else:
-            index_text = ""
+            _index = self.compare_wrapper.match_index + 1
+            len_files_matched = len(self.compare_wrapper.files_matched)
+            if App.mode == Mode.GROUP:
+                len_file_groups = len(self.compare_wrapper.file_groups)
+                group_index = self.compare_wrapper.current_group_index + 1
+                index_text = f"{_index} of {len_files_matched} (Group {group_index} of {len_file_groups})"
+            elif App.mode == Mode.SEARCH and App.is_toggled_view_matches:
+                index_text = f"{_index} of {len_files_matched} ({App.file_browser.get_index_details()})"
+            else:
+                index_text = "" # shouldn't happen
         try:
             image_details = ImageDetails(top_level, App.img_path, index_text)
         except Exception as e:
@@ -574,8 +567,8 @@ class App():
         if self.base_dir is None:
             self.base_dir = filedialog.askdirectory(
                 initialdir=self.get_base_dir(), title="Set image comparison directory")
-        if App.compare is not None and self.base_dir != App.compare.base_dir:
-            App.compare = None
+        if self.compare_wrapper.has_compare() and self.base_dir != self.compare_wrapper.compare().base_dir:
+            self.compare_wrapper._compare = None
             self._set_label_state(group_number=None, size=0)
             self.remove_all_mode_buttons()
         self.set_base_dir_box.delete(0, "end")
@@ -592,7 +585,7 @@ class App():
                 App.file_browser.set_sort_by(SortBy.get(sort_by))
         except Exception:
             pass
-        if App.compare is None:
+        if not self.compare_wrapper.has_compare():
             self.set_mode(Mode.BROWSE)
             previous_file = app_info_cache.get(self.base_dir, "image_cursor")
             if previous_file and previous_file != "":
@@ -615,13 +608,8 @@ class App():
         '''
         image_path = self.search_image.get().strip()
         if image_path is None or image_path == "":
-            App.search_image_full_path = None
+            self.compare_wrapper.search_image_full_path = None
             return None
-
-        # search_file_str = App.search_image_full_path
-        # if search_file_str == "":
-        #     return None
-
         search_file = get_valid_file(self.get_base_dir(), image_path)
         if search_file is None:
             search_file = get_valid_file(self.get_search_dir(), image_path)
@@ -630,7 +618,6 @@ class App():
                            "Search file is not a valid file for base dir.", kind="error")
                 raise AssertionError(
                     "Search file is not a valid file.")
-
         return search_file
 
     def get_counter_limit(self) -> int | None:
@@ -651,7 +638,7 @@ class App():
         try:
             return int(compare_threshold_str)
         except Exception:
-            if App.compare_mode == CompareMode.CLIP_EMBEDDING:
+            if self.compare_wrapper.compare_mode == CompareMode.CLIP_EMBEDDING:
                 return self.config.embedding_similarity_threshold
             else:
                 return self.config.color_diff_threshold
@@ -682,8 +669,8 @@ class App():
         '''
         image_path = self.get_search_file_path()
 
-        if image_path is None or (App.search_image_full_path is not None
-                                  and image_path == App.search_image_full_path):
+        if image_path is None or (self.compare_wrapper.search_image_full_path is not None
+                                  and image_path == self.compare_wrapper.search_image_full_path):
             image_path = filedialog.askopenfilename(
                 initialdir=self.get_search_dir(), title="Select image file",
                 filetypes=[("Image files", "*.jpg *.jpeg *.png *.tiff *.gif")])
@@ -694,7 +681,7 @@ class App():
             App.search_image_full_path = image_path
             self.show_searched_image()
 
-        if App.search_image_full_path is None or App.search_image_full_path == "":
+        if self.compare_wrapper.search_image_full_path is None or self.compare_wrapper.search_image_full_path == "":
             if self.mode != Mode.BROWSE:
                 self.set_mode(Mode.GROUP)
         else:
@@ -704,10 +691,10 @@ class App():
         self.run_compare()
 
     def show_searched_image(self) -> None:
-        print(f"Search image full path: {App.search_image_full_path}")
-        if App.search_image_full_path is not None and App.search_image_full_path.strip() != "":
-            if os.path.isfile(App.search_image_full_path):
-                self.create_image(App.search_image_full_path, extra_text="(search image)")
+        print(f"Search image full path: {self.compare_wrapper.search_image_full_path}")
+        if self.compare_wrapper.search_image_full_path is not None and self.compare_wrapper.search_image_full_path.strip() != "":
+            if os.path.isfile(self.compare_wrapper.search_image_full_path):
+                self.create_image(self.compare_wrapper.search_image_full_path, extra_text="(search image)")
             else:
                 self.alert("Error", "Somehow, the search file is invalid", kind="error")
 
@@ -724,23 +711,7 @@ class App():
             except Exception as e:
                 self.alert("Exception", str(e))
                 return False
-        if App.files_matched is None:
-            return False
-        elif len(App.files_matched) == 0:
-            if show_alert:
-                self.alert("Search required", "No matches found. Search again to find potential matches.")
-            return False
-
-        App.is_toggled_view_matches = True
-        
-        if App.match_index > 0:
-            App.match_index -= 1
-        else:
-            App.match_index = len(App.files_matched) - 1
-        
-        self.master.update()
-        self.create_image(App.files_matched[App.match_index])
-        return True
+        return self.compare_wrapper.show_prev_image(show_alert=show_alert)
 
     def show_next_image(self, event=None, show_alert=True) -> bool:
         '''
@@ -755,80 +726,20 @@ class App():
             except Exception as e:
                 self.alert("Exception", str(e))
                 return False
-        if App.files_matched is None:
-            return False
-        elif len(App.files_matched) == 0:
-            if show_alert:
-                self.alert("Search required", "No matches found. Search again to find potential matches.")
-            return False
-
-        App.is_toggled_view_matches = True
-
-        if len(App.files_matched) > App.match_index + 1:
-            App.match_index += 1
-        else:
-            App.match_index = 0
-
-        self.master.update()
-        self.create_image(App.files_matched[App.match_index])
-        return True
-
-    def show_prev_group(self, event=None) -> None:
-        '''
-        While in group mode, navigate to the previous group.
-        '''
-        if (App.file_groups is None or len(App.group_indexes) == 0
-                or App.current_group_index == max(App.group_indexes)):
-            App.current_group_index = 0
-        else:
-            App.current_group_index -= 1
-
-        self.set_current_group()
-
-    def show_next_group(self, event=None) -> None:
-        '''
-        While in group mode, navigate to the next group.
-        '''
-        if (App.file_groups is None or len(App.group_indexes) == 0
-                or App.current_group_index + 1 == len(App.group_indexes)):
-            App.current_group_index = 0
-        else:
-            App.current_group_index += 1
-
-        self.set_current_group()
-
-    def set_current_group(self, start_match_index=0) -> None:
-        '''
-        While in group mode, navigate between the groups.
-        '''
-        if App.file_groups is None or len(App.file_groups) == 0:
-            self.toast("No groups found")
-            return
-
-        actual_group_index = App.group_indexes[App.current_group_index]
-        App.current_group = App.file_groups[actual_group_index]
-        App.match_index = start_match_index
-        App.files_matched = []
-
-        for f in sorted(App.current_group, key=lambda f: App.current_group[f]):
-            App.files_matched.append(f)
-
-        self._set_label_state(group_number=App.current_group_index, size=len(App.files_matched))
-        self.master.update()
-        self.create_image(App.files_matched[App.match_index])
+        return self.compare_wrapper.show_next_image(show_alert=show_alert)
 
     def set_current_image_run_search(self) -> None:
         '''
         Execute a new image search from the provided search image.
         '''
         if App.mode != Mode.BROWSE:
-            if not App.has_image_matches:
+            if not self.compare_wrapper.has_image_matches:
                 self.alert("Search required", "No matches found. Search again to find potential matches.")
                 return
             search_image_path = self.search_image.get()
             search_image_path = get_valid_file(
                 self.get_base_dir(), search_image_path)
-            if (App.files_matched is None or search_image_path == App.files_matched[App.match_index]):
+            if (self.compare_wrapper.files_matched is None or search_image_path == self.compare_wrapper.current_match()):
                 self.alert("Already set image", "Current image is already the search image.")
         filepath = self.get_active_image_filepath()
         if filepath:
@@ -889,7 +800,7 @@ class App():
         if App.is_toggled_view_matches:
             self.show_searched_image()
         else:
-            self.create_image(App.files_matched[App.match_index])
+            self.create_image(self.compare_wrapper.current_match())
 
         App.is_toggled_view_matches = not App.is_toggled_view_matches
 
@@ -913,7 +824,8 @@ class App():
     def add_buttons_for_mode(self) -> None:
         if not App.has_added_buttons_for_mode[App.mode]:
             if App.mode == Mode.SEARCH:
-                if App.search_image_full_path != None and App.search_image_full_path.strip() != "" \
+                if self.compare_wrapper.search_image_full_path != None \
+                        and self.compare_wrapper.search_image_full_path.strip() != "" \
                         and self.toggle_image_view_btn is None:
                     self.add_button("toggle_image_view_btn", "Toggle image view", self.toggle_image_view)
                     self.add_button("replace_current_image_btn", "Replace with search image",
@@ -921,8 +833,8 @@ class App():
                 if not App.has_added_buttons_for_mode[Mode.GROUP]:
                     self.add_all_mode_buttons()
             elif App.mode == Mode.GROUP:
-                self.add_button("prev_group_btn", "Previous group", self.show_prev_group)
-                self.add_button("next_group_btn", "Next group", self.show_next_group)
+                self.add_button("prev_group_btn", "Previous group", self.compare_wrapper.show_prev_group)
+                self.add_button("next_group_btn", "Next group", self.compare_wrapper.show_next_group)
                 if not App.has_added_buttons_for_mode[Mode.SEARCH]:
                     self.add_all_mode_buttons()
             elif App.mode == Mode.DUPLICATES:
@@ -945,6 +857,11 @@ class App():
             return res == messagebox.OK
         return True
 
+    def run_compare(self, find_duplicates=False, search_text=None, search_text_negative=None) -> None:
+        if not self._validate_run():
+            return
+        self._run_with_progress(self._run_compare, args=[find_duplicates, search_text, search_text_negative])
+
     def _run_with_progress(self, exec_func, args=[]) -> None:
         def run_with_progress_async(self) -> None:
             self.progress_bar = Progressbar(self.sidebar, orient=HORIZONTAL, length=100, mode='indeterminate')
@@ -957,12 +874,6 @@ class App():
 
         start_thread(run_with_progress_async, use_asyncio=False, args=[self])
 
-    def run_compare(self, find_duplicates=False, search_text=None, search_text_negative=None) -> None:
-        if not self._validate_run():
-            return
-
-        self._run_with_progress(self._run_compare, args=[find_duplicates, search_text, search_text_negative])
-
     def _run_compare(self, find_duplicates=False, search_text=None, search_text_negative=None) -> None:
         '''
         Execute operations on the Compare object in any mode. Create a new
@@ -974,179 +885,19 @@ class App():
         overwrite = self.overwrite.get()
         compare_threshold = self.get_compare_threshold()
         inclusion_pattern = self.get_inclusion_pattern()
-        get_new_data = True
-        App.current_group_index = 0
-        App.current_group = None
-        App.max_group_index = 0
-        App.group_indexes = []
-        App.files_matched = []
-        App.match_index = 0
         listener = ProgressListener(update_func=self.display_progress)
+        self.compare_wrapper.run(self.get_base_dir(), App.mode, search_file_path, search_text, search_text_negative,
+                                 find_duplicates, counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener)
 
-        if App.compare is None or App.compare.base_dir != self.get_base_dir():
-            self._set_label_state(_wrap_text_to_fit_length(
-                "Gathering image data... setup may take a while depending on number of files involved.", 30))
-            if App.compare_mode == CompareMode.CLIP_EMBEDDING:
-                App.compare = CompareEmbedding(
-                    self.base_dir,
-                    search_file_path=search_file_path,
-                    counter_limit=counter_limit,
-                    embedding_similarity_threshold=compare_threshold,
-                    compare_faces=compare_faces,
-                    inclusion_pattern=inclusion_pattern,
-                    overwrite=overwrite,
-                    verbose=True,
-                    progress_listener=listener
-                )
-            elif App.compare_mode == CompareMode.COLOR_MATCHING:
-                App.compare = Compare(
-                    self.base_dir,
-                    search_file_path=search_file_path,
-                    counter_limit=counter_limit,
-                    use_thumb=True,
-                    compare_faces=compare_faces,
-                    color_diff_threshold=compare_threshold,
-                    inclusion_pattern=inclusion_pattern,
-                    overwrite=overwrite,
-                    verbose=True,
-                    progress_listener=listener
-                )
-        else:
-            get_new_data = self.is_new_data_request_required(counter_limit,
-                                                             compare_threshold,
-                                                             inclusion_pattern,
-                                                             overwrite)
-            App.compare.set_search_file_path(search_file_path)
-            App.compare.counter_limit = counter_limit
-            App.compare.compare_faces = compare_faces
-            App.compare.inclusion_pattern = inclusion_pattern
-            App.compare.overwrite = overwrite
-            if App.compare_mode == CompareMode.COLOR_MATCHING:
-                App.compare.color_diff_threshold = compare_threshold
-            else:
-                App.compare.embedding_similarity_threshold = compare_threshold
-            App.compare.print_settings()
-        
-        if App.compare.is_run_search or search_text is not None:
-            self.set_mode(Mode.SEARCH, do_update=False)
-            if not App.is_toggled_view_matches:
-                App.is_toggled_view_matches = True
-        else:
-            if App.mode == Mode.SEARCH:
-                res = self.alert("Confirm group run",
-                                 "Search mode detected, please confirm switch to group mode before run. "
-                                 + "Group mode will take longer as all images in the base directory are compared.",
-                                 kind="warning")
-                if res != messagebox.YES:
-                    return
-            self.set_mode(Mode.GROUP, do_update=False)
-
-        if get_new_data:
-            self.toast("Gathering image data for comparison")
-            App.compare.get_files()
-            App.compare.get_data()
-
-        if App.compare.is_run_search:
-            self.run_search()
-        elif search_text is not None:
-            self.run_search_text_embedding(search_text=search_text, search_text_negative=search_text_negative)
-        else:
-            self.run_group(find_duplicates=find_duplicates)
-
-    def is_new_data_request_required(self, counter_limit, compare_threshold,
-                                     inclusion_pattern, overwrite):
-        if App.compare_mode == CompareMode.COLOR_MATCHING:
-            if App.compare.color_diff_threshold != compare_threshold:
-                return True
-        elif App.compare.embedding_similarity_threshold != compare_threshold:
-            return True
-        return (App.compare.counter_limit != counter_limit
-                or App.compare.inclusion_pattern != inclusion_pattern
-                or (not App.compare.overwrite and overwrite))
-
-    def run_group(self, find_duplicates=False) -> None:
-        self._set_label_state(_wrap_text_to_fit_length(
-            "Running image comparisons...", 30))
-        App.files_grouped, App.file_groups = App.compare.run()
-        
-        if len(App.files_grouped) == 0:
-            App.has_image_matches = False
-            self._set_label_state("Set a directory and search file.")
-            self.alert("No Groups Found", "None of the files can be grouped with current settings.")
-            return
-
-        App.group_indexes = App.compare._sort_groups(App.file_groups)
-        App.max_group_index = max(App.file_groups.keys())
-        self.add_buttons_for_mode()
-        App.current_group_index = 0
-
-        if find_duplicates:
-            App.file_groups = {}
-            App.group_indexes = {}
-            duplicates = App.compare.get_probable_duplicates()
-            if len(duplicates) == 0:
-                App.has_image_matches = False
-                self._set_label_state("Set a directory and search file.")
-                self.alert("No Duplicates Found", "None of the files appear to be duplicates based on the current settings.")
-                return
-            self.set_mode(Mode.DUPLICATES, do_update=True)
-            print("Probable duplicates:")
-            pprint.pprint(duplicates, width=160)
-            duplicate_group_count = 0
-            for file1, file2 in duplicates:
-                App.file_groups[duplicate_group_count] = {
-                    file1: 0,
-                    file2: 0
-                }
-                App.group_indexes[duplicate_group_count] = duplicate_group_count
-                duplicate_group_count += 1
-            App.max_group_index = duplicate_group_count
-            self.set_current_group()
-        else:
-            has_found_stranded_group_members = False
-
-            while len(App.file_groups[App.group_indexes[App.current_group_index]]) == 1:
-                has_found_stranded_group_members = True
-                App.current_group_index += 1
-
-            self.set_current_group()
-            if has_found_stranded_group_members:
-                self.alert("Stranded Group Members Found", "Some group members were left stranded by the grouping process.")
-
-    def run_search(self) -> None:
-        self._set_label_state(_wrap_text_to_fit_length(
-            "Running image comparison with search file...", 30))
-        App.files_grouped = App.compare.run_search()
-        App.file_groups = deepcopy(App.files_grouped)
-
-        if len(App.files_grouped[0]) == 0:
-            App.has_image_matches = False
-            self._set_label_state("Set a directory and search file.")
-            self.alert("No Match Found", "None of the files match the search file with current settings.")
-            return
-
-        reverse = App.compare_mode == CompareMode.CLIP_EMBEDDING
-        for f in sorted(App.files_grouped[0], key=lambda f: App.files_grouped[0][f], reverse=reverse):
-            App.files_matched.append(f)
-
-        App.group_indexes = [0]
-        App.current_group_index = 0
-        App.max_group_index = 0
-        App.match_index = 0
-        App.has_image_matches = True
-        self._set_label_state(_wrap_text_to_fit_length(
-            str(len(App.files_matched)) + " possibly related images found.", 30))
-
-        self.add_buttons_for_mode()
-        self.create_image(App.files_matched[App.match_index])
+    def set_toggled_view_matches(self):
+        if not App.is_toggled_view_matches:
+            App.is_toggled_view_matches = True
 
     def find_duplicates(self):
         self.run_compare(find_duplicates=True)
 
     def search_text_embedding(self, event=None):
-        if App.compare_mode != CompareMode.CLIP_EMBEDDING:
-            self.alert("Invalid action", "Compare mode must be set to Clip embedding to search text embeddings", kind="warning")
-            return
+        self.compare_wrapper.validate_compare_mode(CompareMode.CLIP_EMBEDDING, "Compare mode must be set to Clip embedding to search text embeddings")
         search_text = self.search_text.get()
         search_text_negative = self.search_text_negative.get()
         if search_text.strip() == "" and search_text_negative.strip() == "":
@@ -1154,32 +905,6 @@ class App():
             return
         self.run_compare(search_text=search_text, search_text_negative=search_text_negative)
         self.master.focus()
-
-    def run_search_text_embedding(self, search_text="", search_text_negative=""):
-        self._set_label_state(_wrap_text_to_fit_length(
-            "Running image comparison with search text...", 30))
-        App.files_grouped = App.compare.search_text(search_text, search_text_negative)
-        App.file_groups = deepcopy(App.files_grouped)
-
-        if len(App.file_groups[0]) == 0:
-            App.has_image_matches = False
-            self._set_label_state("Set a directory and search file or search text.")
-            self.alert("No Match Found", "None of the files match the search text with current settings.")
-            return
-
-        for f in sorted(App.file_groups[0], key=lambda f: App.file_groups[0][f], reverse=True):
-            App.files_matched.append(f)
-
-        App.group_indexes = [0]
-        App.current_group_index = 0
-        App.max_group_index = 0
-        App.match_index = 0
-        App.has_image_matches = True
-        self._set_label_state(_wrap_text_to_fit_length(
-            str(len(App.files_matched)) + " possibly related images found.", 30))
-
-        self.add_buttons_for_mode()
-        self.create_image(App.files_matched[App.match_index])
 
     def add_or_remove_mark_for_current_image(self, event=None, show_toast=True):
         self._check_marks(min_mark_size=0)
@@ -1202,7 +927,7 @@ class App():
             self._check_marks()
             files = App.file_browser.select_series(start_file=MarkedFiles.file_marks[-1], end_file=App.img_path)
         else:
-            files = list(App.files_matched)
+            files = list(self.compare_wrapper.files_matched)
         for _file in files:
             if not _file in MarkedFiles.file_marks:
                 MarkedFiles.file_marks.append(_file)
@@ -1281,10 +1006,10 @@ class App():
         if App.mode == Mode.BROWSE:
             image_path = App.file_browser.find(search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match)
         else:
-            image_path, group_indexes = self._find_file_after_comparison(search_text, exact_match=exact_match)
+            image_path, group_indexes = self.compare_wrapper.find_file_after_comparison(search_text, exact_match=exact_match)
             if group_indexes:
-                App.current_group_index = group_indexes[0]
-                self.set_current_group(start_match_index=group_indexes[1])
+                self.compare_wrapper.current_group_index = group_indexes[0]
+                self.compare_wrapper.set_current_group(start_match_index=group_indexes[1])
                 return True
         if not image_path:
             self.alert("File not found", f"No file was found for the search text: \"{search_text}\"")
@@ -1293,29 +1018,12 @@ class App():
         self.master.update()
         return True
 
-    def _find_file_after_comparison(self, search_text="", exact_match=False):
-        if not search_text or search_text.strip() == "":
-            return None, None
-        file_group_map = self._get_file_group_map()
-        for file, group_indexes in file_group_map.items():
-            if search_text == os.path.basename(file):
-                return file, group_indexes
-        if exact_match:
-            return None, None
-        search_text = search_text.lower()
-        for file, group_indexes in file_group_map.items():
-            if os.path.basename(file).lower().startswith(search_text):
-                return file, group_indexes
-        for file, group_indexes in file_group_map.items():
-            if search_text in os.path.basename(file).lower():
-                return file, group_indexes
-        return None, None
-
     def next_text_embedding_preset(self, event=None):
         next_text_embedding_search_preset = config.next_text_embedding_search_preset()
         if next_text_embedding_search_preset is None:
             self.alert("No Text Search Presets Found", "No text embedding search presets found. Set them in the config.json file.")
         else:
+            self.search_img_path_box.delete(0, "end")
             self.search_text_box.delete(0, "end")
             self.search_text_negative_box.delete(0, "end")
 
@@ -1336,10 +1044,10 @@ class App():
             App.file_browser.refresh()
             self.create_image(App.file_browser.next_file())
             self.master.update()
-        elif App.compare is not None:
-            App.current_group_index = 0
+        elif self.compare_wrapper.has_compare():
+            self.compare_wrapper.current_group_index = 0
             App.match_index = 0
-            self.set_current_group()
+            self.compare_wrapper.set_current_group()
 
     def page_up(self, event=None):
         if not App.mode == Mode.BROWSE:
@@ -1364,7 +1072,7 @@ class App():
         if self.is_toggled_search_image():
             filepath = App.search_image_full_path
         else:
-            filepath = App.files_matched[App.match_index]
+            filepath = self.compare_wrapper.current_match()
         return get_valid_file(self.get_base_dir(), filepath)
 
     def open_image_location(self, event=None):
@@ -1407,7 +1115,7 @@ class App():
 
         is_toggle_search_image = self.is_toggled_search_image()
 
-        if len(App.files_matched) == 0 and not is_toggle_search_image:
+        if len(self.compare_wrapper.files_matched) == 0 and not is_toggle_search_image:
             self.toast("Invalid action, the button should not be present if no files are available")
             return
         elif is_toggle_search_image and (App.search_image_full_path is None or App.search_image_full_path == ""):
@@ -1420,9 +1128,9 @@ class App():
             if filepath in MarkedFiles.file_marks:
                 MarkedFiles.file_marks.remove(filepath)
             self._handle_delete(filepath)
-            if App.compare:
-                App.compare.remove_from_groups([filepath])
-            self._update_groups_for_removed_file(App.current_group_index, App.match_index)
+            if self.compare_wrapper._compare:
+                self.compare_wrapper.compare().remove_from_groups([filepath])
+            self.compare_wrapper._update_groups_for_removed_file(App.mode, self.compare_wrapper.current_group_index, self.compare_wrapper.match_index)
         else:
             self.alert("Error", "Failed to delete current file, unable to get valid filepath", kind="error")
 
@@ -1455,18 +1163,18 @@ class App():
         search image.
         '''
         if (App.mode != Mode.SEARCH
-                or len(App.files_matched) == 0
+                or len(self.compare_wrapper.files_matched) == 0
                 or not os.path.exists(App.search_image_full_path)):
             return
 
-        _filepath = App.files_matched[App.match_index]
+        _filepath = self.compare_wrapper.current_match()
         filepath = get_valid_file(self.get_base_dir(), _filepath)
 
         if filepath is None:
             self.alert("Error", "Invalid target filepath for replacement: " + _filepath, kind="error")
             return
 
-        os.rename(App.search_image_full_path, filepath)
+        os.rename(self.compare_wrapper.search_image_full_path, filepath)
         self.toast("Moved search image to " + filepath)
 
     def _handle_remove_files_from_groups(self, files):
@@ -1474,99 +1182,12 @@ class App():
         Remove the files from the groups.
         '''
         for filepath in files:
-            file_group_map = self._get_file_group_map()
+            file_group_map = self.compare_wrapper._get_file_group_map(App.mode)
             try:
                 group_indexes = file_group_map[filepath]
-                self._update_groups_for_removed_file(group_indexes[0], group_indexes[1], set_group=False)
+                self.compare_wrapper._update_groups_for_removed_file(App.mode, group_indexes[0], group_indexes[1], set_group=False)
             except KeyError as e:
                 pass # The group may have been removed before update_groups_for_removed_file was called on the last file in it
-
-
-    def _update_groups_for_removed_file(self, group_index, match_index, set_group=True):
-        '''
-        After a file has been removed, delete the cached image path for it and
-        remove the group if only one file remains in that group.
-
-        NOTE: This would be more complex if there was not a guarantee groups are disjoint.
-        '''
-        print(f"Updating groups for removed file {match_index} in group {group_index}")
-        actual_index = App.group_indexes[group_index]
-        if set_group or group_index == App.current_group_index:
-            files_matched = App.files_matched
-            set_group = True
-            if App.mode != Mode.SEARCH:
-                print("setting group")
-        else:
-            files_matched = []
-            group = App.file_groups[actual_index]
-            for f in self._get_sorted_file_matches(group):                    
-                files_matched.append(f)
-
-        if len(files_matched) < 3:
-            if App.mode not in (Mode.GROUP, Mode.DUPLICATES):
-                return
-
-            # remove this group as it will only have one file
-            if App.mode != Mode.SEARCH:
-                App.files_grouped = {
-                    k: v for k, v in App.files_grouped.items() if v[0] != actual_index}
-            del App.file_groups[actual_index]
-            del App.group_indexes[group_index]
-            if group_index < App.current_group_index:
-                App.current_group_index -= 1
-
-            if len(App.file_groups) == 0:
-                self.alert("No More Groups",
-                           "There are no more image groups remaining for this directory and current filter settings.")
-                App.current_group_index = 0
-                App.files_grouped = {}
-                App.file_groups = {}
-                App.match_index = 0
-                App.files_matched = []
-                App.group_indexes = []
-                self.set_mode(Mode.BROWSE)
-                self._set_label_state("Set a directory to run comparison.")
-                self.show_next_image()
-                return
-            elif group_index == len(App.file_groups):
-                App.current_group_index = 0
-
-            if set_group:
-                self.set_current_group()
-        else:
-            filepath = files_matched[match_index]
-#            print(f"Filepath from update_groups: {filepath}")
-            if App.mode != Mode.SEARCH:
-                App.files_grouped = {
-                    k: v for k, v in App.files_grouped.items() if v[0] != actual_index}
-            del files_matched[match_index]
-            del App.file_groups[actual_index][filepath]
- 
-            if set_group:
-                if App.match_index == len(App.files_matched):
-                    App.match_index = 0
-
-                self.master.update()
-                self.create_image(App.files_matched[App.match_index])
-
-    def _get_file_group_map(self):
-        if App.mode == Mode.BROWSE:
-            raise Exception("Cannot get file group map in BROWSE mode")
-        group_map = {}
-        for group_count in range(len(App.group_indexes)):
-            group_index = App.group_indexes[group_count]
-            group = App.file_groups[group_index]
-            group_file_count = 0
-            for f in self._get_sorted_file_matches(group):
-                group_map[f] = (group_count, group_file_count)
-                group_file_count += 1
-        return group_map
-
-    def _get_sorted_file_matches(self, group):
-        if App.mode == Mode.SEARCH and CompareMode.CLIP_EMBEDDING == App.compare_mode:
-            return sorted(group, key=lambda f: group[f], reverse=True)
-        else:
-            return sorted(group, key=lambda f: group[f])
 
     def store_info_cache(self):
         base_dir = self.get_base_dir()
@@ -1633,7 +1254,7 @@ class App():
                 self.label_state["text"] = ""
             else:
                 self.label_state["text"] = _wrap_text_to_fit_length(
-                    f"Group {group_number + 1} of {len(App.file_groups)}\nSize: {size}", 30)
+                    f"Group {group_number + 1} of {len(self.compare_wrapper.file_groups)}\nSize: {size}", 30)
         else: # Set based on file count
             file_count = App.file_browser.count()
             if file_count == 0:
@@ -1642,12 +1263,14 @@ class App():
                 text = "1 image file found" if file_count == 1 else f"{file_count} image files found"
             self.label_state["text"] = text
 
-    def apply_to_grid(self, component, sticky=None, pady=0):
+    def apply_to_grid(self, component, sticky=None, pady=0, specific_row=None):
+        row = self.row_counter if specific_row is None else specific_row
         if sticky is None:
-            component.grid(column=0, row=self.row_counter, pady=pady)
+            component.grid(column=0, row=row, pady=pady)
         else:
-            component.grid(column=0, row=self.row_counter, sticky=sticky, pady=pady)
-        self.row_counter += 1
+            component.grid(column=0, row=row, sticky=sticky, pady=pady)
+        if specific_row is None:
+            self.row_counter += 1
 
     def add_label(self, label_ref, text, sticky=W, pady=0):
         label_ref['text'] = text
@@ -1664,12 +1287,13 @@ class App():
     def new_entry(self, text_variable=None, text=""):
         return Entry(self.sidebar, text=text, textvariable=text_variable, width=30, font=fnt.Font(size=config.font_size))
 
-    def destroy_grid_element(self, element_ref_name):
+    def destroy_grid_element(self, element_ref_name, decrement_row_counter=True):
         element = getattr(self, element_ref_name)
         if element is not None:
             element.destroy()
             setattr(self, element_ref_name, None)
-            self.row_counter -= 1
+            if decrement_row_counter:
+                self.row_counter -= 1
 
 
 if __name__ == "__main__":
