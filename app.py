@@ -3,6 +3,7 @@ import os
 import signal
 import sys
 import time
+import traceback
 
 try:
     from send2trash import send2trash
@@ -17,7 +18,7 @@ from tkinter.ttk import Button, Entry, Frame, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
-from compare.compare import Compare, get_valid_file
+from compare.compare import get_valid_file
 from compare.compare_embeddings import CompareEmbedding
 from compare.compare_wrapper import CompareWrapper
 from files.file_browser import FileBrowser, SortBy
@@ -49,9 +50,7 @@ from image.image_details import ImageDetails # must import after config because 
 ### TODO enable starting app with a directory or image path and auto-setting these on startup
 ### TODO drag and drop images to auto-set directory and image
 
-### TODO save sort by setting per directory in app info cache
 ### TODO replace restored files to compare if present after previous deletion
-### TODO negative text embedding for tailoring search results from positive search text
 
 
 
@@ -732,7 +731,7 @@ class App():
         '''
         Execute a new image search from the provided search image.
         '''
-        if App.mode != Mode.BROWSE:
+        if App.mode == Mode.SEARCH:
             if not self.compare_wrapper.has_image_matches:
                 self.alert("Search required", "No matches found. Search again to find potential matches.")
                 return
@@ -857,24 +856,27 @@ class App():
             return res == messagebox.OK
         return True
 
-    def run_compare(self, find_duplicates=False, search_text=None, search_text_negative=None) -> None:
+    def run_compare(self, find_duplicates=False, searching_image=False, search_text=None, search_text_negative=None) -> None:
         if not self._validate_run():
             return
-        self._run_with_progress(self._run_compare, args=[find_duplicates, search_text, search_text_negative])
+        self._run_with_progress(self._run_compare, args=[find_duplicates, searching_image, search_text, search_text_negative])
 
     def _run_with_progress(self, exec_func, args=[]) -> None:
         def run_with_progress_async(self) -> None:
             self.progress_bar = Progressbar(self.sidebar, orient=HORIZONTAL, length=100, mode='indeterminate')
             self.apply_to_grid(self.progress_bar)
             self.progress_bar.start()
-            exec_func(*args)
+            try:
+                exec_func(*args)
+            except Exception:
+                traceback.print_exc()            
             self.progress_bar.stop()
             self.progress_bar.grid_forget()
             self.destroy_grid_element("progress_bar")
 
         start_thread(run_with_progress_async, use_asyncio=False, args=[self])
 
-    def _run_compare(self, find_duplicates=False, search_text=None, search_text_negative=None) -> None:
+    def _run_compare(self, find_duplicates=False, searching_image=False, search_text=None, search_text_negative=None) -> None:
         '''
         Execute operations on the Compare object in any mode. Create a new
         Compare object if needed.
@@ -886,7 +888,7 @@ class App():
         compare_threshold = self.get_compare_threshold()
         inclusion_pattern = self.get_inclusion_pattern()
         listener = ProgressListener(update_func=self.display_progress)
-        self.compare_wrapper.run(self.get_base_dir(), App.mode, search_file_path, search_text, search_text_negative,
+        self.compare_wrapper.run(self.get_base_dir(), App.mode, searching_image, search_file_path, search_text, search_text_negative,
                                  find_duplicates, counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener)
 
     def set_toggled_view_matches(self):
@@ -1023,7 +1025,6 @@ class App():
         if next_text_embedding_search_preset is None:
             self.alert("No Text Search Presets Found", "No text embedding search presets found. Set them in the config.json file.")
         else:
-            self.search_img_path_box.delete(0, "end")
             self.search_text_box.delete(0, "end")
             self.search_text_negative_box.delete(0, "end")
 
@@ -1070,7 +1071,7 @@ class App():
         if App.mode == Mode.BROWSE:
             return App.file_browser.current_file()
         if self.is_toggled_search_image():
-            filepath = App.search_image_full_path
+            filepath = self.compare_wrapper.search_image_full_path
         else:
             filepath = self.compare_wrapper.current_match()
         return get_valid_file(self.get_base_dir(), filepath)

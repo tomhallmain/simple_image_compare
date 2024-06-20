@@ -217,7 +217,8 @@ class ImageDataExtractor:
                         positive = image_data.positive
                         negative = image_data.negative
             except Exception as e:
-                print(e)
+#                print(e)
+                pass
 
         return positive, negative
 

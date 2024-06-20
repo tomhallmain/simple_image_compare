@@ -164,7 +164,7 @@ class CompareWrapper:
                 or self._compare.inclusion_pattern != inclusion_pattern
                 or (not self._compare.overwrite and overwrite))
 
-    def run(self, base_dir, app_mode, search_file_path, search_text, search_text_negative, find_duplicates,
+    def run(self, base_dir, app_mode, searching_image, search_file_path, search_text, search_text_negative, find_duplicates,
             counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener):
         get_new_data = True
         self.current_group_index = 0
@@ -218,7 +218,9 @@ class CompareWrapper:
             self._compare.get_files()
             self._compare.get_data()
 
-        if self._compare.is_run_search:
+        if searching_image:
+            if not self._compare.is_run_search:
+                raise Exception("Search mode not enabled but searching_image was set to True")
             self.run_search()
         elif search_text is not None:
             self.run_search_text_embedding(search_text=search_text, search_text_negative=search_text_negative)

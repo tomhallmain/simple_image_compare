@@ -13,7 +13,9 @@ Useful for detecting duplicates or finding associations between large unstructur
 
 Individual images can be passed to search against the full image data set by passing flag `--search` with the path of the search file, or setting a search file in the UI before running comparison.
 
-When using CLIP embedding compare mode, you can search your images by text - both positive and negative. Commas will break the texts to search into multiple parts, to be combined in a final set of results. If there is a good CLIP signal for the search texts it will likely return the images you are looking for, but be aware that it may take a while to load the first time as embeddings for all images will have to be generated.  Also, if a list of preset text searches is defined in your config JSON, you can cycle between the searches with the dedicated shortcut found below.
+The color matching compare mode is faster than CLIP embedding but less robust. When using CLIP embedding compare mode, you can search your images by text - both positive and negative. Commas will break the texts to search into multiple parts, to be combined in a final set of results.
+
+If there is a good CLIP signal for the search texts it will likely return the images you are looking for, but be aware that it may take a while to load the first time as embeddings for all images will have to be generated.  Also, if a list of preset text searches is defined in your config JSON, you can cycle between the searches with the dedicated shortcut found below.
 
 ## Image Browser
 
