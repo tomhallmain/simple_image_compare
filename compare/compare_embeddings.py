@@ -9,9 +9,10 @@ import cv2
 import numpy as np
 # from imutils import face_utils
 
+from compare.compare import gather_files, get_valid_file, round_up, is_invalid_file, safe_write
+from compare.model import image_embeddings, text_embeddings, embedding_similarity
 from utils.config import config
 from utils.constants import CompareMode
-from compare.model import image_embeddings, text_embeddings, embedding_similarity
 
 
 def usage():
@@ -25,47 +26,6 @@ def usage():
     print("  -o, --overwrite        Overwrite saved image data               False  ")
     print("      --threshold=float  Embedding similarity threshold           0.9    ")
     print("  -v                     Verbose                                         ")
-
-
-def gather_files(base_dir=".", recursive=True, exts=config.file_types):
-    files = []
-    recursive_str = "**/" if recursive else ""
-    for ext in exts:
-        pattern = os.path.join(base_dir, recursive_str + "*" + ext)
-        files.extend(glob(pattern, recursive=recursive))
-    return files
-
-
-def get_valid_file(base_dir, input_filepath):
-    if (not isinstance(input_filepath, str) or input_filepath is None
-            or input_filepath == ""):
-        return None
-    elif os.path.exists(input_filepath):
-        return input_filepath
-    elif base_dir is not None and os.path.exists(base_dir + "/" + input_filepath):
-        return base_dir + "/" + input_filepath
-    else:
-        return None
-
-
-def round_up(number, to):
-    if number % to == 0:
-        return number
-    else:
-        return number - (number % to) + to
-
-
-def is_invalid_file(file_path, counter, run_search, inclusion_pattern):
-    if file_path is None:
-        return True
-    elif run_search and counter == 0:
-        return False
-    elif inclusion_pattern is not None:
-        return inclusion_pattern not in file_path
-    else:
-        return False
-
-
 
 
 
@@ -394,7 +354,7 @@ class CompareEmbedding:
                             line = "PROBABLE MATCH: " + f
                         else:
                             line = f"{f} - similarity: {similarity}"
-                        textfile.write(line + "\n")
+                        safe_write(textfile, line + "\n")
                         if self.verbose:
                             print(line)
             if self.verbose:
@@ -575,8 +535,7 @@ class CompareEmbedding:
                         print("(etc.)")
                         to_print_etc = False
                     for f in sorted(group, key=lambda f: group[f]):
-                        textfile.write(f)
-                        textfile.write("\n")
+                        safe_write(textfile, f + "\n")
                         if group_counter <= group_print_cutoff:
                             print(f)
 
@@ -678,7 +637,7 @@ class CompareEmbedding:
                     similarity = files_grouped[f]
                     # Skip duplicate determination here because with text it is very unlikely for duplicates to appear
                     line = f"{f} - similarity: {similarity}"
-                    textfile.write(line + "\n")
+                    safe_write(textfile, line + "\n")
                     if self.verbose:
                         print(line)
             if self.verbose:

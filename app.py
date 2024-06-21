@@ -306,7 +306,7 @@ class App():
         self.run_compare_btn = None
         self.add_button("run_compare_btn", "Run image compare", self.run_compare)
         self.find_duplicates_btn = None
-        self.add_button("find_duplicates_btn", "Find duplicates", self.find_duplicates)
+        self.add_button("find_duplicates_btn", "Find duplicates", lambda: self.run_compare(find_duplicates=True))
         self.image_details_btn = None
         self.add_button("image_details_btn", "Image details", self.get_image_details)
         self.prev_image_match_btn = None
@@ -528,7 +528,7 @@ class App():
             else:
                 index_text = "" # shouldn't happen
         try:
-            image_details = ImageDetails(top_level, App.img_path, index_text)
+            image_details = ImageDetails(top_level, App.img_path, index_text, self.refresh, self.go_to_file)
         except Exception as e:
             self.alert("Image Details Error", str(e), kind="error")
 
@@ -643,11 +643,8 @@ class App():
                 return self.config.color_diff_threshold
 
     def get_inclusion_pattern(self) -> str | None:
-        inclusion_pattern = self.inclusion_pattern.get()
-        if inclusion_pattern == "":
-            return None
-        else:
-            return inclusion_pattern
+        inclusion_pattern = self.inclusion_pattern.get().strip()
+        return None if inclusion_pattern == "" else inclusion_pattern
 
     def get_image_to_fit(self, filename) -> ImageTk.PhotoImage:
         '''
@@ -687,7 +684,7 @@ class App():
             self.set_mode(Mode.SEARCH)
 
         self.master.update()
-        self.run_compare()
+        self.run_compare(searching_image=True)
 
     def show_searched_image(self) -> None:
         print(f"Search image full path: {self.compare_wrapper.search_image_full_path}")
@@ -881,7 +878,7 @@ class App():
         Execute operations on the Compare object in any mode. Create a new
         Compare object if needed.
         '''
-        search_file_path = self.get_search_file_path()
+        search_file_path = self.get_search_file_path() if searching_image else None
         counter_limit = self.get_counter_limit()
         compare_faces = self.compare_faces.get()
         overwrite = self.overwrite.get()
@@ -892,11 +889,7 @@ class App():
                                  find_duplicates, counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener)
 
     def set_toggled_view_matches(self):
-        if not App.is_toggled_view_matches:
-            App.is_toggled_view_matches = True
-
-    def find_duplicates(self):
-        self.run_compare(find_duplicates=True)
+        App.is_toggled_view_matches = True
 
     def search_text_embedding(self, event=None):
         self.compare_wrapper.validate_compare_mode(CompareMode.CLIP_EMBEDDING, "Compare mode must be set to Clip embedding to search text embeddings")
@@ -1131,7 +1124,8 @@ class App():
             self._handle_delete(filepath)
             if self.compare_wrapper._compare:
                 self.compare_wrapper.compare().remove_from_groups([filepath])
-            self.compare_wrapper._update_groups_for_removed_file(App.mode, self.compare_wrapper.current_group_index, self.compare_wrapper.match_index)
+            self.compare_wrapper._update_groups_for_removed_file(App.mode,
+                        self.compare_wrapper.current_group_index, self.compare_wrapper.match_index, show_next_image=True)
         else:
             self.alert("Error", "Failed to delete current file, unable to get valid filepath", kind="error")
 
@@ -1182,11 +1176,15 @@ class App():
         '''
         Remove the files from the groups.
         '''
+        # NOTE cannot use get_active_image_filepath here because file should have been removed by this point.
+        current_image = self.compare_wrapper.current_match()
         for filepath in files:
+            show_next_image = current_image == filepath
             file_group_map = self.compare_wrapper._get_file_group_map(App.mode)
             try:
                 group_indexes = file_group_map[filepath]
-                self.compare_wrapper._update_groups_for_removed_file(App.mode, group_indexes[0], group_indexes[1], set_group=False)
+                self.compare_wrapper._update_groups_for_removed_file(App.mode,
+                        group_indexes[0], group_indexes[1], set_group=False, show_next_image=show_next_image)
             except KeyError as e:
                 pass # The group may have been removed before update_groups_for_removed_file was called on the last file in it
 

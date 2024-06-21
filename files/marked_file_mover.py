@@ -1,3 +1,4 @@
+import hashlib
 import os
 import re
 
@@ -15,6 +16,16 @@ from utils.utils import move_file, copy_file
 # TODO preserve dictionary of all moved / copied files in a session along with their target directories.
 # TODO enable the main app to access this dictionary as groups and remove files if needed
 # TODO give statistics on how many files were moved / copied.
+
+def _calculate_hash(filepath):
+    with open(filepath, 'rb') as f:
+        sha256 = hashlib.sha256()
+        while True:
+            data = f.read(65536)
+            if not data: break
+            sha256.update(f.read())
+    return sha256.hexdigest()
+
 
 class Action():
     def __init__(self, action, target):
@@ -341,12 +352,13 @@ class MarkedFiles():
         exceptions = {}
         invalid_files = []
         for marked_file in MarkedFiles.file_marks:
+            new_filename = os.path.join(target_dir, os.path.basename(marked_file))
             try:
                 move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
-                print(f"{action_part2} file to {os.path.join(target_dir, os.path.basename(marked_file))}")
+                print(f"{action_part2} file to {new_filename}")
                 MarkedFiles.previous_marks.append(marked_file)
             except Exception as e:
-                exceptions[marked_file] = str(e)
+                exceptions[marked_file] = (str(e), new_filename)
                 if not os.path.exists(marked_file):
                     invalid_files.append(marked_file)
         if len(exceptions) < len(MarkedFiles.file_marks):
@@ -357,16 +369,22 @@ class MarkedFiles():
             action_part3 = "move" if is_moving else "copy"
             print(f"Failed to {action_part3} some files:")
             names_are_short = False
-            for marked_file, exc in exceptions.items():
-                print(exc)
+            matching_files = False
+            for marked_file, exc_tuple in exceptions.items():
+                print(exc_tuple[0])
                 if not marked_file in invalid_files:
                     MarkedFiles.file_marks.append(marked_file) # Just in case some of them failed to move for whatever reason.
-                    if exceptions[marked_file].startswith("File already exists"):
-                        if len(os.path.basename(marked_file)) < 13 and not names_are_short:
+                    if exc_tuple[0].startswith("File already exists"):
+                        if _calculate_hash(marked_file) == _calculate_hash(exc_tuple[1]):
+                            matching_files = True
+                            print(f"File hashes match: {marked_file} <> {exc_tuple[1]}")
+                        elif len(os.path.basename(marked_file)) < 13 and not names_are_short:
                             names_are_short = True
                         some_files_already_present = True
             if some_files_already_present:
                 warning = "Existing filenames match!"
+                if matching_files:
+                    warning += "\nWARNING: Exact file match."
                 if names_are_short:
                     warning += "\nWARNING: Short filenames."
                 toast_callback(warning)

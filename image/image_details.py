@@ -6,8 +6,9 @@ from tkinter import Frame, Label, StringVar, LEFT, W
 from tkinter.font import Font
 from tkinter.ttk import Entry, Button
 
-from utils.config import config
 from image.image_data_extractor import image_data_extractor
+from image.rotation import rotate_image
+from utils.config import config
 from utils.app_style import AppStyle
 
 
@@ -23,9 +24,11 @@ def get_readable_file_size(path):
         return str(round(size/(1024*1024), 1)) + " MB"
 
 class ImageDetails():
-    def __init__(self, master, image_path, index_text):
+    def __init__(self, master, image_path, index_text, refresh_callback, go_to_file_callback):
         self.master = master
         self.image_path = image_path
+        self.refresh_callback = refresh_callback
+        self.go_to_file_callback = go_to_file_callback
         self.frame = Frame(self.master)
         self.frame.grid(column=0, row=0)
         self.frame.columnconfigure(0, weight=1)
@@ -80,6 +83,10 @@ class ImageDetails():
         self.add_button("copy_prompt_btn", "Copy Prompt", self.copy_prompt, row=8)
         self.add_button("copy_prompt_no_break_btn", "Copy Prompt No BREAK", self.copy_prompt_no_break, row=8, column=1)
 
+        self.rotate_left_btn = None
+        self.rotate_right_btn = None
+        self.add_button("rotate_left_btn", "Rotate Image Left", lambda: self.rotate_image(right=False), row=9, column=0)
+        self.add_button("rotate_right_btn", "Rotate Image Right", lambda: self.rotate_image(right=True), row=9, column=1)
 
         if config.image_tagging_enabled:
             self.add_label(self._label_tags, "Tags", row=9, wraplength=col_0_width)
@@ -88,7 +95,7 @@ class ImageDetails():
             tags_str = ", ".join(self.tags) if self.tags else ""
             self.tags_str = StringVar(self.master, value=tags_str)
             self.tags_entry = Entry(self.frame, textvariable=self.tags_str, width=30, font=Font(size=8))
-            self.tags_entry.grid(row=9, column=1)
+            self.tags_entry.grid(row=10, column=1)
 
             self.update_tags_btn = None
             self.add_button("update_tags_btn", "Update Tags", self.update_tags, row=10)
@@ -108,6 +115,13 @@ class ImageDetails():
             positive = positive[positive.index("BREAK")+6:]
         self.master.clipboard_clear()
         self.master.clipboard_append(positive)
+
+    def rotate_image(self, right=False):
+        rotate_image(self.image_path, right)
+        self.close_windows()
+        self.refresh_callback()
+        # TODO properly set the file info on the rotated file instead of having to use this callback
+        self.go_to_file_callback(search_text=os.path.basename(self.image_path), exact_match=True)
 
     def update_tags(self):
         print(f"Updating tags for {self.image_path}")

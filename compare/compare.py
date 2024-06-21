@@ -106,6 +106,11 @@ def get_image_colors(image, clf, show_chart=False):
         plt.pie(counts.values(), labels=hex_colors, colors=hex_colors)
     return lab_colors
 
+def safe_write(textfile, data):
+    try:
+        textfile.write(data)
+    except UnicodeEncodeError as e:
+        print(e)
 
 # TODO improve this comparison alg for non-thumb case
 
@@ -532,7 +537,7 @@ class Compare:
                         else:
                             similarity_score = str(round(1000/diff_score, 4))
                             line = f + " - similarity: " + similarity_score
-                        textfile.write(line + "\n")
+                        safe_write(textfile, line + "\n")
                         if self.verbose:
                             print(line)
             if self.verbose:
@@ -719,8 +724,7 @@ class Compare:
                         print("(etc.)")
                         to_print_etc = False
                     for f in sorted(group, key=lambda f: group[f]):
-                        textfile.write(f)
-                        textfile.write("\n")
+                        safe_write(textfile, f + "\n")
                         if group_counter <= group_print_cutoff:
                             print(f)
 

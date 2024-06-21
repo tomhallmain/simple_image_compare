@@ -107,7 +107,6 @@ class CompareWrapper:
             self.current_group_index = 0
         else:
             self.current_group_index -= 1
-
         self.set_current_group()
 
     def show_next_group(self, event=None) -> None:
@@ -119,7 +118,6 @@ class CompareWrapper:
             self.current_group_index = 0
         else:
             self.current_group_index += 1
-
         self.set_current_group()        
 
     def set_current_group(self, start_match_index=0) -> None:
@@ -328,7 +326,7 @@ class CompareWrapper:
 
         if find_duplicates:
             self.file_groups = {}
-            self.group_indexes = {}
+            self.group_indexes = []
             duplicates = self._compare.get_probable_duplicates()
             if len(duplicates) == 0:
                 self.has_image_matches = False
@@ -344,7 +342,7 @@ class CompareWrapper:
                     file1: 0,
                     file2: 0
                 }
-                self.group_indexes[duplicate_group_count] = duplicate_group_count
+                self.group_indexes.append(duplicate_group_count)
                 duplicate_group_count += 1
             self.max_group_index = duplicate_group_count
             self.set_current_group()
@@ -377,7 +375,7 @@ class CompareWrapper:
                 return file, group_indexes
         return None, None
 
-    def _update_groups_for_removed_file(self, app_mode, group_index, match_index, set_group=True):
+    def _update_groups_for_removed_file(self, app_mode, group_index, match_index, set_group=True, show_next_image=False):
         '''
         After a file has been removed, delete the cached image path for it and
         remove the group if only one file remains in that group.
@@ -440,9 +438,12 @@ class CompareWrapper:
             if set_group:
                 if self.match_index == len(self.files_matched):
                     self.match_index = 0
+                elif self.match_index > match_index:
+                    self.match_index -= 1
 
-                self._master.update()
-                self.create_image_callback(self.current_match())
+                if show_next_image:
+                    self._master.update()
+                    self.create_image_callback(self.current_match())
 
     def _get_file_group_map(self, app_mode):
         if app_mode == Mode.BROWSE:
