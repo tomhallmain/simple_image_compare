@@ -463,6 +463,7 @@ class App():
             if show_new_images:
                 has_new_images = App.file_browser.update_cursor_to_new_images()
             self.show_next_image()
+            self._set_label_state()
             if show_new_images and has_new_images:
                 App.delete_lock = True # User may have started delete just before the image changes, lock for a short period after to ensure no misdeletion
                 time.sleep(1)
@@ -902,6 +903,10 @@ class App():
         self.master.focus()
 
     def add_or_remove_mark_for_current_image(self, event=None, show_toast=True):
+        if App.delete_lock:
+            warning = "Delete lock after slideshow\ntransition prevented adding mark"
+            self.toast(warning)
+            raise Exception(warning) # Have to raise exception to in some cases prevent downstream events from happening with no marks
         self._check_marks(min_mark_size=0)
         if App.img_path in MarkedFiles.file_marks:
             MarkedFiles.file_marks.remove(App.img_path)
@@ -1014,6 +1019,11 @@ class App():
         return True
 
     def next_text_embedding_preset(self, event=None):
+        # TODO enable this function to also accept a directory, and if this is
+        # the case find the next file in the directory and search that against
+        # the current base directory. This way typing in the name of the file
+        # or selecting it is avoided. Probably want to use another file_browser
+        # object to accomplish this.
         next_text_embedding_search_preset = config.next_text_embedding_search_preset()
         if next_text_embedding_search_preset is None:
             self.alert("No Text Search Presets Found", "No text embedding search presets found. Set them in the config.json file.")
@@ -1044,15 +1054,13 @@ class App():
             self.compare_wrapper.set_current_group()
 
     def page_up(self, event=None):
-        if not App.mode == Mode.BROWSE:
-            raise Exception("Page up/down currently only available in Browsing mode.")
-        self.create_image(App.file_browser.page_up())
+        next_file = App.file_browser.page_up() if App.mode == Mode.BROWSE else self.compare_wrapper.page_up()
+        self.create_image(next_file)
         self.master.update()
 
     def page_down(self, event=None):
-        if not App.mode == Mode.BROWSE:
-            raise Exception("Page up/down currently only available in Browsing mode.")
-        self.create_image(App.file_browser.page_down())
+        next_file = App.file_browser.page_down() if App.mode == Mode.BROWSE else self.compare_wrapper.page_down()
+        self.create_image(next_file)
         self.master.update()
 
     def is_toggled_search_image(self):

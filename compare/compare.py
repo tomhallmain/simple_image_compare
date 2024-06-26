@@ -599,7 +599,7 @@ class Compare:
     def run_search(self):
         return self._run_search_on_path(self.search_file_path)
 
-    def run_comparison(self):
+    def run_comparison(self, store_checkpoints=False):
         '''
         Compare all found image arrays to each other by starting with the
         base numpy array containing all image data and moving each array to
@@ -737,14 +737,14 @@ class Compare:
             print("No similar images identified with current params.")
         return (files_grouped, file_groups)
 
-    def run(self):
+    def run(self, store_checkpoints=False):
         '''
         Runs the specified operation on this Compare.
         '''
         if self.is_run_search:
             return self.run_search()
         else:
-            return self.run_comparison()
+            return self.run_comparison(store_checkpoints=store_checkpoints)
 
     def _sort_groups(self, file_groups):
         return sorted(file_groups,

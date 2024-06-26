@@ -1,61 +1,108 @@
+import os
+import sys
 from typing import Tuple, Union
+
 from PIL import ImageChops
 from PIL import Image
 from PIL.Image import Image as PilImage
 
 
+debug = False
+
+
 def is_in_color_range(px: Tuple[int, int, int], minimal_color: int) -> bool:
     return px[0] >= minimal_color and px[1] >= minimal_color and px[2] >= minimal_color
 
-def is_line_color_range(im: PilImage, y: int, minimal_color: int) -> bool:
+def is_close_color(px: Tuple[int, int, int], color: Tuple[int, int, int], tolerance=5) -> bool:
+    return abs(px[0] - color[0]) <= tolerance and \
+            abs(px[1] - color[1]) <= tolerance and \
+            abs(px[2] - color[2]) <= tolerance
+
+def is_line_color(im: PilImage, y: int, color: Tuple[int, int, int]) -> bool:
     width, _ = im.size
-
-    for x in range(0, width-1):
+    print_counts = 0
+    if debug:
+        print("Comparison for line: " + str(y))
+    for x in range(0, width - 1):
         px = im.getpixel((x,y))
-        print(f"{x} {y} {px}")
-        if not is_in_color_range(px, minimal_color):
+        if not is_close_color(px, color):
+            if debug:
+                print(f"{px} <> {color} (unmatched on x {x})")
             return False
-
+        if debug and print_counts < 5:
+            print(f"{px} <> {color}")
+            print_counts += 1
     return True
 
-def is_column_color_range(im: PilImage, x: int, minimal_color: int) -> bool:
+def is_column_color(im: PilImage, x: int, color: Tuple[int, int, int]) -> bool:
     _, height = im.size
-
+    print_counts = 0
+    if debug:
+        print("Comparison for column: " + str(x))
     for y in range(0, height-1):
         px = im.getpixel((x,y))
-        print(px)
-        if not is_in_color_range(px, minimal_color):
+        if not is_close_color(px, color):
+            if debug:
+                print(f"{px} <> {color} (unmatched on y {y})")
             return False
-    
+        if debug and print_counts < 5:
+            print(f"{px} <> {color}")
+            print_counts += 1
     return True
 
-def remove_bars(im: PilImage, minimal_color: int) -> Tuple[PilImage, bool]:
+def detect_perfectly_vertical_division(im: PilImage) -> int:
+    # Some images have borders that use gradient colors, making a simple
+    # check for the presence of a vertical line not matching the color
+    # invalid. This function detects the presence of such a vertical division.
+    # Need to find the average difference between left and right pixels
+    return -1
+
+def detect_perfectly_horizontal_division(im: PilImage) -> int:
+    # Some images have borders that use gradient colors, making a simple
+    # check for the presence of a vertical line not matching the color
+    # invalid. This function detects the presence of such a horizontal division.
+    # These are somewhat less common in practice.
+    # Need to find the average difference between left and right pixels
+    return -1
+
+
+def remove_bars(im: PilImage) -> Tuple[PilImage, bool]:
     width, height = im.size
+    left = 0
     top = 0
+    right = width - 1
     bottom = height - 1
+    top_left_color = im.getpixel((0, 0))
+#    top_right_color = im.getpixel((width - 1, 0))
+#    bottom_left_color = im.getpixel((0, height - 1))
+#    bottom_right_color = im.getpixel((width - 1, height - 1))
 
-    # if left border if same color -- skip, because we have no bars TODO 
-    if not is_column_color_range(im, 0, minimal_color):
-        print('skip left border')
-        return im, False
-
-    # calc white pixel rows from the top
-    while top < width and not is_line_color_range(im, top, minimal_color):
-        print(f"{top} {width}")
+    while left < right and is_column_color(im, left, top_left_color):
+        if debug:
+            print(f"LEFT: {left} RIGHT: {right}")
+        left += 1
+    while right > left and is_column_color(im, right, top_left_color):
+        if debug:
+            print(f"RIGHT: {right} LEFT: {left}")
+        right -= 1
+    while top < bottom and is_line_color(im, top, top_left_color):
+        if debug:
+            print(f"TOP: {top} BOTTOM: {bottom}")
         top += 1
-    
-    # calc white pixel rows from the bottom
-    while bottom > 0 and not is_line_color_range(im, bottom, minimal_color):
+    while bottom > top and is_line_color(im, bottom, top_left_color):
+        if debug:
+            print(f"BOTTOM: {bottom} TOP: {top}")
         bottom -= 1
-    
-    # no white bars detected
-    if top == 0 or bottom == height - 1:
-        print('no white bars detected')
+
+    if top == 0 and left == 0 and right == width - 1 and bottom == height - 1:
+        print('no bars detected')
         return im, False
-    
+
     # crop based on bars
-    bbox = (0, top, width, bottom)
-    print(f"0, {top}, {width}, {bottom}")
+    bbox = (left, top, right, bottom)
+    if debug:
+        print(f"ORIGINAL IMAGE BOX: 0, 0, {width}, {height}")
+        print(f"CROPPED IMAGE BOX: {left}, {top}, {right}, {bottom}")
     return im.crop(bbox), True
 
 
@@ -141,12 +188,43 @@ def expand(m1: int, m2: int, value: int, max_size: int) -> Tuple[int, int]:
     
     return m1, m2
 
-
-if __name__ == '__main__':
-
-    im = Image.open('')
-    cropped = remove_bars(im, 255)
+def smart_crop(image_path: str, new_filename: str) -> None:
+    dirname = os.path.dirname(image_path)
+    if new_filename is None or new_filename == "":
+        basename = os.path.basename(image_path)
+        filename_part, ext = os.path.splitext(basename)
+        new_filename = filename_part + "_cropped" + ext
+    new_filepath = os.path.join(dirname, new_filename)
+    if os.path.exists(new_filepath):
+        print("Skipping crop already run: " + new_filepath)
+        return
+    im = Image.open(image_path)
+    cropped = remove_bars(im)
     if cropped[1]:
-        cropped[0].save('test.jpg')
+        cropped[0].save(new_filepath)
+        cropped[0].close()
+        print(f"Cropped image: " + new_filename)
     else:
         print("No cropping")
+    im.close()
+
+
+if __name__ == '__main__':
+    extensions = [".jpg", ".jpeg", ".png", ".webp", ".tiff"]
+    directory_to_process = sys.argv[1]
+    if not os.path.isdir(directory_to_process):
+        print('not a directory: "' + directory_to_process + '"')
+        exit()
+    files_to_crop = []
+    for f in os.listdir(directory_to_process):
+        for ext in extensions:
+            if f[-len(ext):] == ext:
+                files_to_crop.append(os.path.join(directory_to_process, f))
+
+    for f in files_to_crop:
+        try:
+            smart_crop(f, "")
+        except Exception as e:
+            print("Error processing file " + f)
+            print(e)
+

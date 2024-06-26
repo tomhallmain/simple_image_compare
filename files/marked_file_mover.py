@@ -116,7 +116,8 @@ class MarkedFiles():
             return
         MarkedFiles.move_marks_to_dir_static(toast_callback, refresh_callback,
                                              target_dir=previous_action.target,
-                                             move_func=previous_action.action)
+                                             move_func=previous_action.action,
+                                             single_image=(len(MarkedFiles.file_marks)==1))
 
     @staticmethod
     def run_penultimate_action(toast_callback, refresh_callback):
@@ -125,7 +126,8 @@ class MarkedFiles():
             return
         MarkedFiles.move_marks_to_dir_static(toast_callback, refresh_callback,
                                              target_dir=penultimate_action.target,
-                                             move_func=penultimate_action.action)
+                                             move_func=penultimate_action.action,
+                                             single_image=(len(MarkedFiles.file_marks)==1))
 
     @staticmethod
     def run_permanent_action(toast_callback, refresh_callback):
@@ -134,7 +136,8 @@ class MarkedFiles():
             return
         MarkedFiles.move_marks_to_dir_static(toast_callback, refresh_callback,
                                              target_dir=MarkedFiles.permanent_action.target,
-                                             move_func=MarkedFiles.permanent_action.action)
+                                             move_func=MarkedFiles.permanent_action.action,
+                                             single_image=(len(MarkedFiles.file_marks)==1))
 
     @staticmethod
     def set_permanent_action(target_dir, move_func, toast_callback):
@@ -334,11 +337,12 @@ class MarkedFiles():
             self.do_set_permanent_mark_target = False
         some_files_already_present = MarkedFiles.move_marks_to_dir_static(
             self.toast_callback, self.refresh_callback,
-            target_dir=target_dir, move_func=move_func)
+            target_dir=target_dir, move_func=move_func, single_image=self.single_image)
         self.close_windows()
 
     @staticmethod
-    def move_marks_to_dir_static(toast_callback, refresh_callback, target_dir=None, move_func=move_file):
+    def move_marks_to_dir_static(toast_callback, refresh_callback, target_dir=None,
+                                 move_func=move_file, single_image=False):
         """
         Move or copy the marked files to the target directory.
         """
@@ -373,7 +377,9 @@ class MarkedFiles():
             for marked_file, exc_tuple in exceptions.items():
                 print(exc_tuple[0])
                 if not marked_file in invalid_files:
-                    MarkedFiles.file_marks.append(marked_file) # Just in case some of them failed to move for whatever reason.
+                    if not config.clear_marks_with_errors_after_move and not single_image:
+                        # Just in case some of them failed to move for whatever reason.
+                        MarkedFiles.file_marks.append(marked_file)
                     if exc_tuple[0].startswith("File already exists"):
                         if _calculate_hash(marked_file) == _calculate_hash(exc_tuple[1]):
                             matching_files = True
@@ -382,6 +388,8 @@ class MarkedFiles():
                             names_are_short = True
                         some_files_already_present = True
             if some_files_already_present:
+                if config.clear_marks_with_errors_after_move and not single_image:
+                    print("Cleared invalid marks by config option")
                 warning = "Existing filenames match!"
                 if matching_files:
                     warning += "\nWARNING: Exact file match."

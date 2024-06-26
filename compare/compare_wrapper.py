@@ -139,6 +139,30 @@ class CompareWrapper:
         self.set_label_callback(group_number=self.current_group_index, size=len(self.files_matched))
         self._master.update()
         self.create_image_callback(self.current_match())
+    
+    def page_down(self):
+        paging_length = self._get_paging_length()
+        test_cursor = self.match_index + paging_length
+        if test_cursor >= len(self.files_matched):
+            test_cursor = 0
+        self.match_index = test_cursor
+        return self.current_match()
+
+    def page_up(self):
+        paging_length = self._get_paging_length()
+        test_cursor = self.match_index - paging_length
+        if test_cursor < 0:
+            test_cursor = -1
+        self.match_index = test_cursor
+        return self.current_match()
+
+    def _get_paging_length(self):
+        tenth_of_total_count = int(len(self.files_matched) / 10)
+        if tenth_of_total_count > 200:
+            return 200
+        if tenth_of_total_count == 0:
+            return 1
+        return tenth_of_total_count
 
     def _requires_new_compare(self, base_dir):
         if not self.has_compare() or self._compare.base_dir != base_dir:

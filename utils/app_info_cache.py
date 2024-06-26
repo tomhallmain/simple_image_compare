@@ -2,7 +2,7 @@ import json
 import os
 
 class AppInfoCache:
-    CACHE_LOC = "app_info_cache.json"
+    CACHE_LOC = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), "app_info_cache.json")
     META_INFO_KEY = "info"
     DIRECTORIES_KEY = "directories"
 
@@ -12,12 +12,12 @@ class AppInfoCache:
         self.validate()
 
     def store(self):
-        with open(self.CACHE_LOC, "w") as f:
+        with open(AppInfoCache.CACHE_LOC, "w") as f:
             json.dump(self._cache, f, indent=4)
 
     def load(self):
         try:
-            with open(self.CACHE_LOC, "r") as f:
+            with open(AppInfoCache.CACHE_LOC, "r") as f:
                 self._cache = json.load(f)
         except FileNotFoundError:
             pass

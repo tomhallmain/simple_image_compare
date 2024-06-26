@@ -28,6 +28,7 @@ class Config:
         self.sort_by = SortBy.NAME
         self.toasts_persist_seconds = 2
         self.delete_instantly = False
+        self.clear_marks_with_errors_after_move = False
         self.move_marks_overwrite_existing_file = False
         self.trash_folder = None
         self.sd_prompt_reader_loc = None
@@ -77,6 +78,7 @@ class Config:
                             "print_settings",
                             "show_toasts",
                             "delete_instantly",
+                            "clear_marks_with_errors_after_move",
                             "move_marks_overwrite_existing_file",
                             "use_file_paths_json",
                             "text_embedding_search_presets_exclusive")
