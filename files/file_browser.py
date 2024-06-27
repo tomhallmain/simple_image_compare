@@ -81,7 +81,8 @@ class FileBrowser:
         return len(self._files)
 
     def set_recursive(self, recursive):
-        print(f"File browser set recursive: {recursive}")
+        if config.debug:
+            print(f"File browser set recursive: {recursive}")
         self.recursive = recursive
         self.refresh()
 
@@ -225,12 +226,14 @@ class FileBrowser:
         # First try to match filename
         if search_text in files:
             self.file_cursor = files.index(search_text)
-            print(f"Index of {search_text}: {self.file_cursor}")
+            if config.debug:
+                print(f"Index of {search_text}: {self.file_cursor}")
             return search_text
         filenames = [os.path.basename(f) for f in files]
         if search_text in filenames:
             self.file_cursor = filenames.index(search_text)
-            print(f"Index of {search_text}: {self.file_cursor}")
+            if config.debug:
+                print(f"Index of {search_text}: {self.file_cursor}")
             return files[self.file_cursor]
         if exact_match:
             return None
@@ -239,14 +242,16 @@ class FileBrowser:
         for i in range(len(filenames)):
             filename = filenames[i]
             if filename.lower().startswith(search_text):
-                print(f"Index of {filename}: {i}")
+                if config.debug:
+                    print(f"Index of {filename}: {i}")
                 self.file_cursor = i
                 return files[self.file_cursor]
         # Finally try to match string anywhere within file name
         for i in range(len(filenames)):
             filename = files[i]
             if search_text in filename:
-                print(f"Index of {filename}: {i}")
+                if config.debug:
+                    print(f"Index of {filename}: {i}")
                 self.file_cursor = i
                 return files[self.file_cursor]
         return None

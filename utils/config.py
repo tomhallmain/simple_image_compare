@@ -9,6 +9,8 @@ class Config:
 
     def __init__(self):
         self.dict = {}
+        self.debug = False
+        self.log_level = "info"
         self.clip_model = "ViT-B/32"
         self.compare_mode = CompareMode.CLIP_EMBEDDING
         self.max_search_results = 50
@@ -67,6 +69,7 @@ class Config:
             self.set_values(None, "trash_folder")
             self.set_values(list, "file_types", "text_embedding_search_presets")
             self.set_values(str,
+                            "log_level",
                             "default_main_window_size",
                             "clip_model",
                             "file_paths_json_path")
@@ -106,6 +109,8 @@ class Config:
                 self.sort_by = SortBy[self.dict["sort_by"]]
             except Exception:
                 raise AssertionError("Invalid sort type for sort_by config setting. Must be one of NAME, FULL_PATH, CREATION_TIME, TYPE")
+
+        self.debug = self.log_level and self.log_level.lower() == "debug"
 
         if self.print_settings:
             self.print_config_settings()

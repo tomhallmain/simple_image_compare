@@ -8,6 +8,7 @@ from tkinter.ttk import Entry, Button
 
 from image.image_data_extractor import image_data_extractor
 from image.rotation import rotate_image
+from image.smart_crop import Cropper
 from utils.config import config
 from utils.app_style import AppStyle
 
@@ -88,6 +89,10 @@ class ImageDetails():
         self.add_button("rotate_left_btn", "Rotate Image Left", lambda: self.rotate_image(right=False), row=9, column=0)
         self.add_button("rotate_right_btn", "Rotate Image Right", lambda: self.rotate_image(right=True), row=9, column=1)
 
+        self.crop_image_btn = None
+        self.add_button("crop_image_btn", "Crop Image", lambda: self.crop_image(), row=10, column=0)
+
+
         if config.image_tagging_enabled:
             self.add_label(self._label_tags, "Tags", row=9, wraplength=col_0_width)
 
@@ -95,10 +100,10 @@ class ImageDetails():
             tags_str = ", ".join(self.tags) if self.tags else ""
             self.tags_str = StringVar(self.master, value=tags_str)
             self.tags_entry = Entry(self.frame, textvariable=self.tags_str, width=30, font=Font(size=8))
-            self.tags_entry.grid(row=10, column=1)
+            self.tags_entry.grid(row=11, column=1)
 
             self.update_tags_btn = None
-            self.add_button("update_tags_btn", "Update Tags", self.update_tags, row=10)
+            self.add_button("update_tags_btn", "Update Tags", self.update_tags, row=11)
 
         self.master.bind("<Escape>", self.close_windows)
         self.frame.after(1, lambda: self.frame.focus_force())
@@ -122,6 +127,12 @@ class ImageDetails():
         self.refresh_callback()
         # TODO properly set the file info on the rotated file instead of having to use this callback
         self.go_to_file_callback(search_text=os.path.basename(self.image_path), exact_match=True)
+
+    def crop_image(self):
+        Cropper.smart_crop_multi_detect(self.image_path, "")
+        self.close_windows()
+        self.refresh_callback()
+        # TODO actually go to the cropped file. In this case we don't want to replace the original because there may be errors in some cases.
 
     def update_tags(self):
         print(f"Updating tags for {self.image_path}")

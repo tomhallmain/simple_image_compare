@@ -13,9 +13,9 @@ Useful for detecting duplicates or finding associations between large unstructur
 
 Individual images can be passed to search against the full image data set by passing flag `--search` with the path of the search file, or setting a search file in the UI before running comparison.
 
-The color matching compare mode is faster than CLIP embedding but less robust. When using CLIP embedding compare mode, you can search your images by text - both positive and negative. Commas will break the texts to search into multiple parts, to be combined in a final set of results.
+The color matching compare mode is faster than CLIP embedding but less robust. In the group comparison case, since every image must be compared to every other image the time complexity is $\mathcal{O}(n^2)$. To remedy this issue for large image sets, set the `store_checkpoints` config setting to enable process caching to close and pick up where you left off previously.
 
-If there is a good CLIP signal for the search texts it will likely return the images you are looking for, but be aware that it may take a while to load the first time as embeddings for all images will have to be generated.  Also, if a list of preset text searches is defined in your config JSON, you can cycle between the searches with the dedicated shortcut found below.
+When using CLIP embedding compare mode, you can search your images by text - both positive and negative. Commas will break the texts to search into multiple parts, to be combined in a final set of results. If there is a good CLIP signal for the search texts it will likely return the images you are looking for. It will take a while to load the first time as embeddings need to be generated. If a list of preset text searches is defined in your config JSON, you can cycle between them with the dedicated shortcut found below.
 
 ## Image Browser
 
@@ -54,7 +54,9 @@ If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [
 
 `file_path_json_path` should be set to the path for the file path JSON, if setting `use_file_path_json` is set to true.
 
-`text_embedding_search_presets_exclusive` - If this option is selected, the search results returned by preset search texts will be exclusive of eachother, to more accurately categorize and segregate the search results. Note that since some text embeddings have a much stronger signal than others clustering on those searches can occur.
+`text_embedding_search_presets_exclusive` enables the search results returned by preset search texts to be exclusive of eachother to more accurately categorize. Note that since some text embeddings have a much stronger signal than others clustering on those searches can occur.
+
+`store_checkpoints` will cache a group comparison process at certain checkpoints for later restart.
 
 ## UI Bindings
 

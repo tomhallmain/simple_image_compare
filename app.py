@@ -472,7 +472,8 @@ class App():
             self.clear_image()
             self._set_label_state()
             self.alert("Warning", "No files found in directory after refresh.", kind="warning")
-        print("Refreshed files")
+        if config.debug:
+            print("Refreshed files")
 
     @periodic(config.file_check_interval_seconds)
     async def check_files(self, **kwargs):
@@ -484,7 +485,8 @@ class App():
     @periodic(SlideshowConfig, sleep_attr="interval_seconds", run_attr="slideshow_running")
     async def do_slideshow(self, **kwargs):
         if SlideshowConfig.slideshow_running and App.mode == Mode.BROWSE:
-            print("Slideshow next image")
+            if config.debug:
+                print("Slideshow next image")
             base_dir = self.set_base_dir_box.get()
             if base_dir and base_dir != "":
                 self.show_next_image()
@@ -688,7 +690,8 @@ class App():
         self.run_compare(searching_image=True)
 
     def show_searched_image(self) -> None:
-        print(f"Search image full path: {self.compare_wrapper.search_image_full_path}")
+        if config.debug:
+            print(f"Search image full path: {self.compare_wrapper.search_image_full_path}")
         if self.compare_wrapper.search_image_full_path is not None and self.compare_wrapper.search_image_full_path.strip() != "":
             if os.path.isfile(self.compare_wrapper.search_image_full_path):
                 self.create_image(self.compare_wrapper.search_image_full_path, extra_text="(search image)")

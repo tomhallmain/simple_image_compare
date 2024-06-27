@@ -1,4 +1,5 @@
 {
+  "log_level": "info",
   "clip_model": "ViT-B/32",
   "compare_mode": "CLIP_EMBEDDING",
   "max_search_results": 200,
@@ -18,6 +19,7 @@
   "sort_by": "CREATION_TIME",
   "toasts_persist_seconds": 2,
   "delete_instantly": false,
+  "clear_marks_with_errors_after_move": false,
   "move_marks_overwrite_existing_file": false,
   "trash_folder": null,
   "sd_prompt_reader_loc": "{HOME}\\stable-diffusion-prompt-reader",

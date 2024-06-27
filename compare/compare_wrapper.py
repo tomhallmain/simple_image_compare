@@ -7,6 +7,7 @@ import pprint
 
 from compare.compare import Compare, get_valid_file
 from compare.compare_embeddings import CompareEmbedding
+from utils.config import config
 from utils.constants import Mode, CompareMode
 from utils.utils import _wrap_text_to_fit_length
 
@@ -406,12 +407,13 @@ class CompareWrapper:
 
         NOTE: This would be more complex if there was not a guarantee groups are disjoint.
         '''
-        print(f"Updating groups for removed file {match_index} in group {group_index}")
+        if config.debug:
+            print(f"Updating groups for removed file {match_index} in group {group_index}")
         actual_index = self.group_indexes[group_index]
         if set_group or group_index == self.current_group_index:
             files_matched = self.files_matched
             set_group = True
-            if app_mode != Mode.SEARCH:
+            if config.debug and app_mode != Mode.SEARCH:
                 print("setting group")
         else:
             files_matched = []

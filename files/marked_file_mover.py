@@ -330,7 +330,7 @@ class MarkedFiles():
 
     def move_marks_to_dir(self, event=None, target_dir=None, move_func=move_file):
         target_dir = self.handle_target_directory(target_dir=target_dir)
-        if self.filter_text is not None and self.filter_text.strip() != "":
+        if config.debug and self.filter_text is not None and self.filter_text.strip() != "":
             print(f"Filtered by string: {self.filter_text}")
         if self.do_set_permanent_mark_target:
             MarkedFiles.set_permanent_action(target_dir, move_func, self.toast_callback)
@@ -509,7 +509,8 @@ class MarkedFiles():
         else:
             return
         if self.filter_text.strip() == "":
-            print("Filter unset")
+            if config.debug:
+                print("Filter unset")
             # Restore the list of target directories to the full list
             self.filtered_target_dirs.clear()
             self.filtered_target_dirs = MarkedFiles.mark_target_dirs[:]
@@ -641,7 +642,8 @@ class MarkedFiles():
                 f"Deleting {len(MarkedFiles.file_marks)} marked files - Are you sure you want to proceed?",
                 kind="warning")
         if res != messagebox.OK:
-            print(f"result was: {res}")
+            if config.debug:
+                print(f"result was: {res}")
             return
 
         removed_files = []
