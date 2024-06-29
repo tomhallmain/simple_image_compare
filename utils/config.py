@@ -14,6 +14,7 @@ class Config:
         self.clip_model = "ViT-B/32"
         self.compare_mode = CompareMode.CLIP_EMBEDDING
         self.max_search_results = 50
+        self.store_checkpoints = False
         self.embedding_similarity_threshold = 0.9
         self.color_diff_threshold = 15
         self.escape_backslash_filepaths = False
@@ -84,7 +85,8 @@ class Config:
                             "clear_marks_with_errors_after_move",
                             "move_marks_overwrite_existing_file",
                             "use_file_paths_json",
-                            "text_embedding_search_presets_exclusive")
+                            "text_embedding_search_presets_exclusive",
+                            "store_checkpoints")
             self.set_values(int,
                             "max_search_results",
                             "color_diff_threshold",

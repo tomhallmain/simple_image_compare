@@ -188,7 +188,7 @@ class CompareWrapper:
                 or (not self._compare.overwrite and overwrite))
 
     def run(self, base_dir, app_mode, searching_image, search_file_path, search_text, search_text_negative, find_duplicates,
-            counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener):
+            counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener, store_checkpoints=False):
         get_new_data = True
         self.current_group_index = 0
         self.current_group = None
@@ -196,6 +196,7 @@ class CompareWrapper:
         self.group_indexes = []
         self.files_matched = []
         self.match_index = 0
+        self.search_image_full_path = search_file_path
 
         if self._requires_new_compare(base_dir):
             self.set_label_callback(_wrap_text_to_fit_length(
@@ -248,7 +249,7 @@ class CompareWrapper:
         elif search_text is not None:
             self.run_search_text_embedding(search_text=search_text, search_text_negative=search_text_negative)
         else:
-            self.run_group(find_duplicates=find_duplicates)
+            self.run_group(find_duplicates=find_duplicates, store_checkpoints=store_checkpoints)
 
     def new_compare(self, base_dir, search_file_path, counter_limit, compare_threshold,
                     compare_faces, inclusion_pattern, overwrite, listener):
@@ -332,11 +333,11 @@ class CompareWrapper:
         self.add_buttons_for_mode_callback()
         self.create_image_callback(self.current_match())
 
-    def run_group(self, find_duplicates=False) -> None:
+    def run_group(self, find_duplicates=False, store_checkpoints=False) -> None:
         assert self._compare is not None
         self.set_label_callback(_wrap_text_to_fit_length(
             "Running image comparisons...", 30))
-        self.files_grouped, self.file_groups = self._compare.run()
+        self.files_grouped, self.file_groups = self._compare.run(store_checkpoints=store_checkpoints)
         
         if len(self.files_grouped) == 0:
             self.has_image_matches = False

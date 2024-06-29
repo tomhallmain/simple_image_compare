@@ -105,7 +105,7 @@ class HelpAndConfig():
         self.add_label(self.label_file_check_interval_seconds, "File Check Interval (sec)", wraplength=col_0_width)
         self.apply_to_grid(self.entry_file_check_interval_seconds, sticky=W, column=1)
         self.add_label(self.label_max_search_results, "Max Search Results", wraplength=col_0_width)
-        self.apply_to_grid(self.max_search_results, sticky=W, column=1)
+        self.apply_to_grid(self.entry_max_search_results, sticky=W, column=1)
         self.add_label(self.label_sort_by, "Sort By", wraplength=col_0_width)
         self.add_label(self.sort_by, str(config.sort_by), column=1)
         self.add_label(self.label_toasts_persist_seconds, "Toasts Persist (sec)", wraplength=col_0_width)

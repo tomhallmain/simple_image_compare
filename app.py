@@ -157,9 +157,9 @@ class App():
     fill_canvas = config.fill_canvas
     fullscreen = False
     delete_lock = False
-    search_file_path = ""
     img = None
     img_path = None
+    prev_img_path = None
     is_toggled_view_matches = True
     has_added_buttons_for_mode = {
         Mode.BROWSE: False,
@@ -201,7 +201,7 @@ class App():
         self.base_dir = get_user_dir()
         self.search_dir = get_user_dir()
 
-        self.compare_wrapper = CompareWrapper(master, config.compare_mode, self.add_buttons_for_mode, self.create_image, self.show_next_image,
+        self.compare_wrapper = CompareWrapper(master, config.compare_mode, self._add_buttons_for_mode, self.create_image, self.show_next_image,
                                               self._set_label_state, self.alert, self.toast, self.set_mode, self.set_toggled_view_matches)
 
         # Sidebar
@@ -229,6 +229,7 @@ class App():
         self.add_button("set_search_btn", "Set search file", self.set_search_image)
         self.search_image = tk.StringVar()
         self.search_img_path_box = self.new_entry(self.search_image)
+        self.search_img_path_box.bind("<Return>", self.set_search_image)
         self.apply_to_grid(self.search_img_path_box, sticky=W)
 
         self.add_button("search_text_btn", "Search text (embedding mode)", self.search_text_embedding)
@@ -266,6 +267,10 @@ class App():
         self.overwrite = tk.BooleanVar(value=False)
         self.overwrite_choice = Checkbutton(self.sidebar, text='Overwrite cache', variable=self.overwrite)
         self.apply_to_grid(self.overwrite_choice, sticky=W)
+
+        self.store_checkpoints = tk.BooleanVar(value=self.config.store_checkpoints)
+        self.store_checkpoints_choice = Checkbutton(self.sidebar, text='Store checkpoints', variable=self.store_checkpoints)
+        self.apply_to_grid(self.store_checkpoints_choice, sticky=W)
 
         self.label_counter_limit = Label(self.sidebar)
         self.add_label(self.label_counter_limit, "Max files to compare")
@@ -309,8 +314,6 @@ class App():
         self.add_button("find_duplicates_btn", "Find duplicates", lambda: self.run_compare(find_duplicates=True))
         self.image_details_btn = None
         self.add_button("image_details_btn", "Image details", self.get_image_details)
-        self.prev_image_match_btn = None
-        self.next_image_match_btn = None
         self.prev_group_btn = None
         self.next_group_btn = None
         self.toggle_image_view_btn = None
@@ -337,6 +340,7 @@ class App():
         ################################ Key bindings
         self.master.bind('<Left>', self.show_prev_image)
         self.master.bind('<Right>', self.show_next_image)
+        self.master.bind('<Shift-BackSpace>', self.go_to_previous_image)
         self.master.bind('<Shift-Left>', self.compare_wrapper.show_prev_group)
         self.master.bind('<Shift-Right>', self.compare_wrapper.show_next_group)
         self.master.bind('<Shift-O>', self.open_image_location)
@@ -393,10 +397,7 @@ class App():
     def toggle_fullscreen(self, event=None):
         App.fullscreen = not App.fullscreen
         self.master.attributes("-fullscreen", App.fullscreen)
-        if App.fullscreen:
-            self.sidebar.grid_remove()
-        else:
-            self.sidebar.grid()
+        self.sidebar.grid_remove() if App.fullscreen else self.sidebar.grid()
 
     def end_fullscreen(self, event=None):
         if App.fullscreen:
@@ -408,14 +409,12 @@ class App():
         '''
         App.mode = mode
         self.label_mode['text'] = str(mode)
-
         if mode != Mode.SEARCH:
             self.destroy_grid_element("toggle_image_view_btn")
             self.destroy_grid_element("replace_current_image_btn")
         if mode != Mode.GROUP and mode != Mode.DUPLICATES:
             self.destroy_grid_element("prev_group_btn")
             self.destroy_grid_element("next_group_btn")
-
         if do_update:
             self.master.update()
 
@@ -538,7 +537,7 @@ class App():
     def get_help_and_config(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title("Help and Config")
-        top_level.geometry("600x600")
+        top_level.geometry("900x600")
         try:
             help_and_config = HelpAndConfig(top_level)
         except Exception as e:
@@ -572,10 +571,11 @@ class App():
         if self.compare_wrapper.has_compare() and self.base_dir != self.compare_wrapper.compare().base_dir:
             self.compare_wrapper._compare = None
             self._set_label_state(group_number=None, size=0)
-            self.remove_all_mode_buttons()
+            self._remove_all_mode_buttons()
         self.set_base_dir_box.delete(0, "end")
         self.set_base_dir_box.insert(0, self.base_dir)
         App.file_browser.set_directory(self.base_dir)
+        # Update settings to those last set for this directory, if found
         recursive = app_info_cache.get(base_dir, "recursive", default_val=False)
         sort_by = app_info_cache.get(base_dir, "sort_by", default_val=self.sort_by.get())
         if recursive != self.image_browse_recurse_var.get():
@@ -624,10 +624,8 @@ class App():
 
     def get_counter_limit(self) -> int | None:
         counter_limit_str = self.set_counter_limit.get().strip()
-        if counter_limit_str == "":
-            return None
         try:
-            return int(counter_limit_str)
+            return None if counter_limit_str == "" else int(counter_limit_str)
         except Exception:
             self.alert("Invalid Setting",
                        "Counter limit must be an integer value.", kind="error")
@@ -635,10 +633,8 @@ class App():
 
     def get_compare_threshold(self):
         compare_threshold_str = self.compare_threshold.get().strip()
-        if compare_threshold_str == "":
-            return None
         try:
-            return int(compare_threshold_str)
+            return None if compare_threshold_str == "" else int(compare_threshold_str)
         except Exception:
             if self.compare_wrapper.compare_mode == CompareMode.CLIP_EMBEDDING:
                 return self.config.embedding_similarity_threshold
@@ -661,7 +657,7 @@ class App():
         img = img.resize(fit_dims)
         return ImageTk.PhotoImage(img)
 
-    def set_search_image(self) -> None:
+    def set_search_image(self, event=None) -> None:
         '''
         Set the search image using the provided UI value, or prompt the
         user for selection. Set the mode based on the result.
@@ -774,6 +770,7 @@ class App():
             self.add_label(self.label_current_image_name, "", pady=30)
         self.label_current_image_name.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
         relative_filepath, basename = get_relative_dirpath_split(self.base_dir, image_path)
+        App.prev_img_path = App.img_path
         App.img_path = image_path
         text = basename if relative_filepath == "" else relative_filepath + "\n" + basename
         text = _wrap_text_to_fit_length(text, 30)
@@ -804,15 +801,9 @@ class App():
 
         App.is_toggled_view_matches = not App.is_toggled_view_matches
 
-    def add_all_mode_buttons(self) -> None:
-        self.add_button("prev_image_match_btn", "Previous image match", self.show_prev_image)
-        self.add_button("next_image_match_btn", "Next image match", self.show_next_image)
-
-    def remove_all_mode_buttons(self) -> None:
+    def _remove_all_mode_buttons(self) -> None:
         self.destroy_grid_element("prev_group_btn")
         self.destroy_grid_element("next_group_btn")
-        self.destroy_grid_element("prev_image_match_btn")
-        self.destroy_grid_element("next_image_match_btn")
         # self.destroy_grid_element("search_current_image_btn")
         # self.destroy_grid_element("open_image_location_btn")
         # self.destroy_grid_element("copy_image_path")
@@ -821,7 +812,7 @@ class App():
             App.has_added_buttons_for_mode[mode] = False
         self.master.update()
 
-    def add_buttons_for_mode(self) -> None:
+    def _add_buttons_for_mode(self) -> None:
         if not App.has_added_buttons_for_mode[App.mode]:
             if App.mode == Mode.SEARCH:
                 if self.compare_wrapper.search_image_full_path != None \
@@ -830,13 +821,13 @@ class App():
                     self.add_button("toggle_image_view_btn", "Toggle image view", self.toggle_image_view)
                     self.add_button("replace_current_image_btn", "Replace with search image",
                                     self.replace_current_image_with_search_image)
-                if not App.has_added_buttons_for_mode[Mode.GROUP]:
-                    self.add_all_mode_buttons()
+#                if not App.has_added_buttons_for_mode[Mode.GROUP]:
+#                    self.add_all_mode_buttons()
             elif App.mode == Mode.GROUP:
                 self.add_button("prev_group_btn", "Previous group", self.compare_wrapper.show_prev_group)
                 self.add_button("next_group_btn", "Next group", self.compare_wrapper.show_next_group)
-                if not App.has_added_buttons_for_mode[Mode.SEARCH]:
-                    self.add_all_mode_buttons()
+#                if not App.has_added_buttons_for_mode[Mode.SEARCH]:
+#                    self.add_all_mode_buttons()
             elif App.mode == Mode.DUPLICATES:
                 pass
 
@@ -888,9 +879,10 @@ class App():
         overwrite = self.overwrite.get()
         compare_threshold = self.get_compare_threshold()
         inclusion_pattern = self.get_inclusion_pattern()
+        store_checkpoints = self.store_checkpoints.get()
         listener = ProgressListener(update_func=self.display_progress)
         self.compare_wrapper.run(self.get_base_dir(), App.mode, searching_image, search_file_path, search_text, search_text_negative,
-                                 find_duplicates, counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener)
+                                 find_duplicates, counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener, store_checkpoints)
 
     def set_toggled_view_matches(self):
         App.is_toggled_view_matches = True
@@ -1021,6 +1013,10 @@ class App():
         self.master.update()
         return True
 
+    def go_to_previous_image(self, event=None):
+        if App.prev_img_path is not None:
+            self.go_to_file(event=event, search_text=App.prev_img_path, exact_match=True)
+
     def next_text_embedding_preset(self, event=None):
         # TODO enable this function to also accept a directory, and if this is
         # the case find the next file in the directory and search that against
@@ -1121,7 +1117,7 @@ class App():
         is_toggle_search_image = self.is_toggled_search_image()
 
         if len(self.compare_wrapper.files_matched) == 0 and not is_toggle_search_image:
-            self.toast("Invalid action, the button should not be present if no files are available")
+            self.toast("Invalid action, no files found to delete")
             return
         elif is_toggle_search_image and (App.search_image_full_path is None or App.search_image_full_path == ""):
             self.toast("Invalid action, search image not found")
@@ -1170,7 +1166,7 @@ class App():
         '''
         if (App.mode != Mode.SEARCH
                 or len(self.compare_wrapper.files_matched) == 0
-                or not os.path.exists(App.search_image_full_path)):
+                or not os.path.exists(str(self.compare_wrapper.search_image_full_path))):
             return
 
         _filepath = self.compare_wrapper.current_match()
@@ -1180,7 +1176,7 @@ class App():
             self.alert("Error", "Invalid target filepath for replacement: " + _filepath, kind="error")
             return
 
-        os.rename(self.compare_wrapper.search_image_full_path, filepath)
+        os.rename(str(self.compare_wrapper.search_image_full_path), filepath)
         self.toast("Moved search image to " + filepath)
 
     def _handle_remove_files_from_groups(self, files):
@@ -1219,7 +1215,7 @@ class App():
         return show_method(title, message)
 
     def toast(self, message):
-        print("Toast message: " + message)
+        print("Toast message: " + message.replace("\n", " "))
         if not self.config.show_toasts:
             return
 

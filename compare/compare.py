@@ -14,6 +14,7 @@ from sklearn.cluster import KMeans
 from skimage.color import rgb2lab
 # from imutils import face_utils
 
+from compare.compare_result import CompareResult
 from utils.config import config
 from utils.constants import CompareMode
 
@@ -43,9 +44,13 @@ def gather_files(base_dir=".", recursive=True, exts=config.file_types):
 
 def get_valid_file(base_dir, input_filepath):
     if (not isinstance(input_filepath, str) or input_filepath is None
-            or input_filepath == ""):
+            or input_filepath.strip() == ""):
         return None
-    elif os.path.exists(input_filepath):
+    if input_filepath.startswith('"') and input_filepath.endswith('"'):
+        input_filepath = input_filepath[1:-1]
+    elif input_filepath.startswith("'") and input_filepath.endswith("'"):
+        input_filepath = input_filepath[1:-1]
+    if os.path.exists(input_filepath):
         return input_filepath
     elif base_dir is not None and os.path.exists(os.path.join(base_dir, input_filepath)):
         return base_dir + "/" + input_filepath
@@ -613,9 +618,10 @@ class Compare:
         files_grouped - Keys are the file indexes, values are tuple of the group index and diff score.
         file_groups - Keys are the group indexes, values are dicts with keys as the file in the group, values the diff score
         '''
-        files_grouped = {}
-        group_index = 0
-        file_groups = {}
+        overwrite = self.overwrite or not store_checkpoints
+        compare_result = CompareResult.load(self.base_dir, self._files_found, overwrite=overwrite)
+        if compare_result.is_complete:
+            return (compare_result.files_grouped, compare_result.file_groups)
         n_files_found_even = round_up(self._n_files_found, 5)
 
         if self._n_files_found > 5000:
@@ -629,6 +635,12 @@ class Compare:
         for i in range(len(self._files_found)):
             if i == 0:  # At this roll index the data would compare to itself
                 continue
+            if store_checkpoints:
+                if i < compare_result.i:
+                    continue
+                if i % 250 == 0 and i != len(self._files_found) and i > compare_result.i:
+                    compare_result.store()
+                compare_result.i = i
             percent_complete = (i / n_files_found_even) * 100
             if percent_complete % 10 == 0:
                 if self.verbose:
@@ -653,8 +665,8 @@ class Compare:
             for base_index in similars[0]:
                 diff_index = ((base_index - i) % self._n_files_found)
                 diff_score = color_similars[1][base_index]
-                f1_grouped = base_index in files_grouped
-                f2_grouped = diff_index in files_grouped
+                f1_grouped = base_index in compare_result.files_grouped
+                f2_grouped = diff_index in compare_result.files_grouped
 
                 if diff_score < Compare.THRESHHOLD_POTENTIAL_DUPLICATE:
                     base_file = self._files_found[base_index]
@@ -664,39 +676,39 @@ class Compare:
                         self._probable_duplicates.append((base_file, diff_file))
 
                 if not f1_grouped and not f2_grouped:
-                    files_grouped[base_index] = (group_index, diff_score)
-                    files_grouped[diff_index] = (group_index, diff_score)
-                    group_index += 1
+                    compare_result.files_grouped[base_index] = (compare_result.group_index, diff_score)
+                    compare_result.files_grouped[diff_index] = (compare_result.group_index, diff_score)
+                    compare_result.group_index += 1
                     continue
                 elif f1_grouped:
-                    existing_group_index, previous_diff_score = files_grouped[base_index]
+                    existing_group_index, previous_diff_score = compare_result.files_grouped[base_index]
                     if previous_diff_score - Compare.THRESHHOLD_GROUP_CUTOFF > diff_score:
 #                        print(f"Previous: {previous_diff_score} , New: {diff_score}")
-                        files_grouped[base_index] = (group_index, diff_score)
-                        files_grouped[diff_index] = (group_index, diff_score)
-                        group_index += 1
+                        compare_result.files_grouped[base_index] = (compare_result.group_index, diff_score)
+                        compare_result.files_grouped[diff_index] = (compare_result.group_index, diff_score)
+                        compare_result.group_index += 1
                     else:
-                        files_grouped[diff_index] = (
+                        compare_result.files_grouped[diff_index] = (
                             existing_group_index, diff_score)
                 else:
-                    existing_group_index, previous_diff_score = files_grouped[diff_index]
+                    existing_group_index, previous_diff_score = compare_result.files_grouped[diff_index]
                     if previous_diff_score - Compare.THRESHHOLD_GROUP_CUTOFF > diff_score:
 #                        print(f"Previous: {previous_diff_score} , New: {diff_score}")
-                        files_grouped[base_index] = (group_index, diff_score)
-                        files_grouped[diff_index] = (group_index, diff_score)
-                        group_index += 1
+                        compare_result.files_grouped[base_index] = (compare_result.group_index, diff_score)
+                        compare_result.files_grouped[diff_index] = (compare_result.group_index, diff_score)
+                        compare_result.group_index += 1
                     else:
-                        files_grouped[base_index] = (existing_group_index, diff_score)
+                        compare_result.files_grouped[base_index] = (existing_group_index, diff_score)
 
-        for file_index in files_grouped:
+        for file_index in compare_result.files_grouped:
             _file = self._files_found[file_index]
-            group_index, diff_score = files_grouped[file_index]
-            if group_index in file_groups:
-                file_group = file_groups[group_index]
+            group_index, diff_score = compare_result.files_grouped[file_index]
+            if group_index in compare_result.file_groups:
+                file_group = compare_result.file_groups[group_index]
             else:
                 file_group = {}
             file_group[_file] = diff_score
-            file_groups[group_index] = file_group
+            compare_result.file_groups[group_index] = file_group
 
         if not self.verbose:
             print("")
@@ -704,14 +716,14 @@ class Compare:
         group_print_cutoff = 5
         to_print_etc = True
 
-        if len(files_grouped) > 0:
+        if len(compare_result.files_grouped) > 0:
             print("")
 
             # TODO calculate group similarities and mark duplicates separately in this case
 
             with open(self.groups_output_path, "w") as textfile:
-                for group_index in self._sort_groups(file_groups):
-                    group = file_groups[group_index]
+                for group_index in self._sort_groups(compare_result.file_groups):
+                    group = compare_result.file_groups[group_index]
                     if len(group) < 2:
                         continue
                         # Technically this means losing some possible associations.
@@ -733,9 +745,12 @@ class Compare:
             print("\nPrinted up to first " + str(group_print_cutoff)
                   + " groups identified. All group data saved to file at "
                   + self.groups_output_path)
+            if store_checkpoints:
+                compare_result.is_complete = True
+                compare_result.store()
         else:
             print("No similar images identified with current params.")
-        return (files_grouped, file_groups)
+        return (compare_result.files_grouped, compare_result.file_groups)
 
     def run(self, store_checkpoints=False):
         '''
