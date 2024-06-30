@@ -10,6 +10,7 @@ from image.image_data_extractor import image_data_extractor
 from image.image_enhancer import enhance_image
 from image.rotation import rotate_image
 from image.smart_crop import Cropper
+from image.temp_image_canvas import TempImageCanvas
 from utils.config import config
 from utils.app_style import AppStyle
 
@@ -26,11 +27,17 @@ def get_readable_file_size(path):
         return str(round(size/(1024*1024), 1)) + " MB"
 
 class ImageDetails():
-    def __init__(self, master, image_path, index_text, refresh_callback, go_to_file_callback):
+    related_image_canvas = None
+    related_image_saved_node_id = "LoadImage"
+
+    def __init__(self, parent_master, master, image_path, index_text,
+                 refresh_callback, go_to_file_callback, open_move_marks_window_callback):
+        self.parent_master = parent_master
         self.master = master
         self.image_path = image_path
         self.refresh_callback = refresh_callback
         self.go_to_file_callback = go_to_file_callback
+        self.open_move_marks_window_callback = open_move_marks_window_callback
         self.frame = Frame(self.master)
         self.frame.grid(column=0, row=0)
         self.frame.columnconfigure(0, weight=1)
@@ -95,18 +102,24 @@ class ImageDetails():
         self.add_button("crop_image_btn", "Crop Image (Smart Detect)", lambda: self.crop_image(), row=10, column=0)
         self.add_button("enhance_image_btn", "Enhance Image", lambda: self.enhance_image(), row=10, column=1)
 
+        self.open_related_image_btn = None
+        self.add_button("open_related_image_btn", "Open Related Image", self.open_related_image, row=11)
+        self.related_image_node_id = StringVar(self.master, value=ImageDetails.related_image_saved_node_id)
+        self.related_image_node_id_entry = Entry(self.frame, textvariable=self.related_image_node_id, width=30, font=Font(size=8))
+        self.related_image_node_id_entry.bind("<Return>", self.open_related_image)
+        self.related_image_node_id_entry.grid(row=11, column=1, sticky="w")
 
         if config.image_tagging_enabled:
-            self.add_label(self._label_tags, "Tags", row=11, wraplength=col_0_width)
+            self.add_label(self._label_tags, "Tags", row=12, wraplength=col_0_width)
 
             self.tags = image_data_extractor.extract_tags(self.image_path)
             tags_str = ", ".join(self.tags) if self.tags else ""
             self.tags_str = StringVar(self.master, value=tags_str)
             self.tags_entry = Entry(self.frame, textvariable=self.tags_str, width=30, font=Font(size=8))
-            self.tags_entry.grid(row=11, column=1)
+            self.tags_entry.grid(row=12, column=1)
 
             self.update_tags_btn = None
-            self.add_button("update_tags_btn", "Update Tags", self.update_tags, row=12)
+            self.add_button("update_tags_btn", "Update Tags", self.update_tags, row=13)
 
         self.master.bind("<Escape>", self.close_windows)
         self.frame.after(1, lambda: self.frame.focus_force())
@@ -142,6 +155,57 @@ class ImageDetails():
         self.close_windows()
         self.refresh_callback()
         # TODO actually go to the new file. In this case we don't want to replace the original because there may be errors in some cases.
+
+    def open_related_image(self, event=None):
+        node_id = self.related_image_node_id.get().strip()
+        if node_id == "":
+            print("No node id given")
+        else:
+            ImageDetails.related_image_saved_node_id = node_id
+            ImageDetails.show_related_image(self.parent_master, node_id, self.image_path, self.open_move_marks_window_callback)
+
+    @staticmethod
+    def show_related_image(master=None, node_id=None, image_path="", open_move_marks_window_callback=None):
+        if master is None or image_path == "":
+            raise Exception("No master or image path given")
+        if node_id is None or node_id == "":
+            node_id = ImageDetails.related_image_saved_node_id
+        use_class_type = True
+        try:
+            int(node_id)
+            use_class_type = False
+        except ValueError:
+            pass
+        if use_class_type:
+            related_image_path = image_data_extractor.get_input_by_class_type(image_path, node_id, "image")
+        else:
+            related_image_path = image_data_extractor.get_input_by_node_id(image_path, node_id, "image")
+        if related_image_path is None or related_image_path == "":
+            print(f"{image_path} - No related image found for node id {node_id}")
+            return
+        elif not os.path.isfile(related_image_path):
+            print(f"{image_path} - Related image {related_image_path} not found")
+            return
+        if ImageDetails.related_image_canvas is None:
+            ImageDetails.set_related_image_canvas(master, related_image_path, open_move_marks_window_callback)
+        try:
+            ImageDetails.related_image_canvas.create_image(related_image_path)
+            print(f"Related image: {related_image_path}")
+        except Exception as e:
+            if "invalid command name" in str(e):
+                ImageDetails.set_related_image_canvas(master, related_image_path, open_move_marks_window_callback)
+                ImageDetails.related_image_canvas.create_image(related_image_path)
+            else:
+                raise e
+
+    @staticmethod
+    def set_related_image_canvas(master, related_image_path, open_move_marks_window_callback):
+        image = Image.open(related_image_path)
+        width = min(700, image.size[0])
+        height = int(image.size[1] * width / image.size[0])
+        ImageDetails.related_image_canvas = TempImageCanvas(master, title=related_image_path,
+                dimensions=f"{width}x{height}", open_move_marks_window_callback=open_move_marks_window_callback)
+
 
     def update_tags(self):
         print(f"Updating tags for {self.image_path}")

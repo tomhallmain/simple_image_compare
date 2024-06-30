@@ -86,6 +86,21 @@ class ImageDataExtractor:
             print("Exif data not found: " + image_path)
         return None
 
+    def get_input_by_node_id(self, image_path, node_id, input_name):
+        prompt = self.extract_prompt(image_path)
+        if not prompt or node_id not in prompt:
+            return None
+        return prompt[node_id]["inputs"][input_name]
+
+    def get_input_by_class_type(self, image_path, class_type, input_name):
+        prompt = self.extract_prompt(image_path)
+        if not prompt:
+            return None
+        for node_id, node in prompt.items():
+            if "class_type" in node and class_type == node["class_type"]:
+                return node["inputs"][input_name]
+        raise Exception("Could not find node with class type " + class_type)
+
     def extract_tags(self, image_path):
         info = Image.open(image_path).info
         if isinstance(info, dict):

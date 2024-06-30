@@ -349,6 +349,7 @@ class App():
         self.master.bind("<Shift-F>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.master.bind("<Shift-D>", self.get_image_details)
+        self.master.bind("<Shift-R>", lambda event: ImageDetails.show_related_image(master=self.master, image_path=App.img_path, open_move_marks_window_callback=self.open_move_marks_window))
         self.master.bind("<Shift-H>", self.get_help_and_config)
         self.master.bind("<Shift-S>", self.toggle_slideshow)
         self.master.bind("<MouseWheel>", lambda event: self.show_next_image() if event.delta > 0 else self.show_prev_image())
@@ -515,7 +516,7 @@ class App():
             return
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title("Image Details")
-        top_level.geometry("600x300")
+        top_level.geometry("600x400")
         if App.mode == Mode.BROWSE:
             index_text = App.file_browser.get_index_details()
         else:
@@ -530,7 +531,8 @@ class App():
             else:
                 index_text = "" # shouldn't happen
         try:
-            image_details = ImageDetails(top_level, App.img_path, index_text, self.refresh, self.go_to_file)
+            image_details = ImageDetails(self.master, top_level, App.img_path, index_text,
+                                         self.refresh, self.go_to_file, self.open_move_marks_window)
         except Exception as e:
             self.alert("Image Details Error", str(e), kind="error")
 
@@ -692,6 +694,7 @@ class App():
             if os.path.isfile(self.compare_wrapper.search_image_full_path):
                 self.create_image(self.compare_wrapper.search_image_full_path, extra_text="(search image)")
             else:
+                print(self.compare_wrapper.search_image_full_path)
                 self.alert("Error", "Somehow, the search file is invalid", kind="error")
 
     def show_prev_image(self, event=None, show_alert=True) -> bool:
@@ -945,8 +948,11 @@ class App():
         self.master.clipboard_clear()
         self.master.clipboard_append(MarkedFiles.file_marks)
 
-    def open_move_marks_window(self, event=None, open_gui=True):
+    def open_move_marks_window(self, event=None, open_gui=True, override_marks=[]):
         self._check_marks(min_mark_size=0)
+        if len(override_marks) > 0:
+            print(f"Including marks: {override_marks}")
+            MarkedFiles.file_marks.extend(override_marks)
         single_image = None
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
