@@ -30,14 +30,11 @@ class ImageDetails():
     related_image_canvas = None
     related_image_saved_node_id = "LoadImage"
 
-    def __init__(self, parent_master, master, image_path, index_text,
-                 refresh_callback, go_to_file_callback, open_move_marks_window_callback):
+    def __init__(self, parent_master, master, image_path, index_text, app_actions):
         self.parent_master = parent_master
         self.master = master
         self.image_path = image_path
-        self.refresh_callback = refresh_callback
-        self.go_to_file_callback = go_to_file_callback
-        self.open_move_marks_window_callback = open_move_marks_window_callback
+        self.app_actions = app_actions
         self.frame = Frame(self.master)
         self.frame.grid(column=0, row=0)
         self.frame.columnconfigure(0, weight=1)
@@ -140,20 +137,20 @@ class ImageDetails():
     def rotate_image(self, right=False):
         rotate_image(self.image_path, right)
         self.close_windows()
-        self.refresh_callback()
+        self.app_actions.refresh()
         # TODO properly set the file info on the rotated file instead of having to use this callback
-        self.go_to_file_callback(search_text=os.path.basename(self.image_path), exact_match=True)
+        self.app_actions.go_to_file(search_text=os.path.basename(self.image_path), exact_match=True)
 
     def crop_image(self):
         Cropper.smart_crop_multi_detect(self.image_path, "")
         self.close_windows()
-        self.refresh_callback()
+        self.app_actions.refresh()
         # TODO actually go to the new file. In this case we don't want to replace the original because there may be errors in some cases.
 
     def enhance_image(self):
         enhance_image(self.image_path)
         self.close_windows()
-        self.refresh_callback()
+        self.app_actions.refresh()
         # TODO actually go to the new file. In this case we don't want to replace the original because there may be errors in some cases.
 
     def open_related_image(self, event=None):
@@ -162,10 +159,10 @@ class ImageDetails():
             print("No node id given")
         else:
             ImageDetails.related_image_saved_node_id = node_id
-            ImageDetails.show_related_image(self.parent_master, node_id, self.image_path, self.open_move_marks_window_callback)
+            ImageDetails.show_related_image(self.parent_master, node_id, self.image_path, self.app_actions)
 
     @staticmethod
-    def show_related_image(master=None, node_id=None, image_path="", open_move_marks_window_callback=None):
+    def show_related_image(master=None, node_id=None, image_path="", app_actions=None):
         if master is None or image_path == "":
             raise Exception("No master or image path given")
         if node_id is None or node_id == "":
@@ -187,24 +184,24 @@ class ImageDetails():
             print(f"{image_path} - Related image {related_image_path} not found")
             return
         if ImageDetails.related_image_canvas is None:
-            ImageDetails.set_related_image_canvas(master, related_image_path, open_move_marks_window_callback)
+            ImageDetails.set_related_image_canvas(master, related_image_path, app_actions)
         try:
             ImageDetails.related_image_canvas.create_image(related_image_path)
             print(f"Related image: {related_image_path}")
         except Exception as e:
             if "invalid command name" in str(e):
-                ImageDetails.set_related_image_canvas(master, related_image_path, open_move_marks_window_callback)
+                ImageDetails.set_related_image_canvas(master, related_image_path, app_actions)
                 ImageDetails.related_image_canvas.create_image(related_image_path)
             else:
                 raise e
 
     @staticmethod
-    def set_related_image_canvas(master, related_image_path, open_move_marks_window_callback):
+    def set_related_image_canvas(master, related_image_path, app_actions):
         image = Image.open(related_image_path)
         width = min(700, image.size[0])
         height = int(image.size[1] * width / image.size[0])
         ImageDetails.related_image_canvas = TempImageCanvas(master, title=related_image_path,
-                dimensions=f"{width}x{height}", open_move_marks_window_callback=open_move_marks_window_callback)
+                dimensions=f"{width}x{height}", app_actions=app_actions)
 
 
     def update_tags(self):

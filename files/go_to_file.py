@@ -17,10 +17,9 @@ class GoToFile:
         height = 100
         return f"{width}x{height}"
 
-    def __init__(self, master, search_callback, toast_callback):
+    def __init__(self, master, app_actions):
         self.master = master
-        self.search_callback = search_callback
-        self.toast_callback = toast_callback
+        self.app_actions = app_actions
         self.frame = Frame(self.master)
         self.frame.grid(column=0, row=0)
         self.frame.columnconfigure(0, weight=9)
@@ -41,9 +40,9 @@ class GoToFile:
     def go_to_file(self, event=None):
         search_text = self.search_text.get()
         if search_text.strip() == "":
-            self.toast_callback("Invalid search string, please enter some text.")
+            self.app_actions.toast("Invalid search string, please enter some text.")
             return
-        self.search_callback(search_text=search_text)
+        self.app_actions.go_to_file(search_text=search_text)
         self.close_windows()
 
     def close_windows(self, event=None):

@@ -198,11 +198,14 @@ class App():
         self.config = config
         Style().configure(".", font=('Helvetica', config.font_size))
 
+        self.app_actions = App.AppActions(self.toast, self.alert, self.refresh, self.refocus, self.set_mode, self.create_image,
+                                          self.show_next_image, self.go_to_file, self.get_base_dir, self._handle_delete, self.open_move_marks_window,
+                                          self._set_toggled_view_matches, self._set_label_state, self._add_buttons_for_mode)
+
         self.base_dir = get_user_dir()
         self.search_dir = get_user_dir()
 
-        self.compare_wrapper = CompareWrapper(master, config.compare_mode, self._add_buttons_for_mode, self.create_image, self.show_next_image,
-                                              self._set_label_state, self.alert, self.toast, self.set_mode, self.set_toggled_view_matches)
+        self.compare_wrapper = CompareWrapper(master, config.compare_mode, self.app_actions)
 
         # Sidebar
         self.sidebar = Sidebar(self.master)
@@ -349,7 +352,7 @@ class App():
         self.master.bind("<Shift-F>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.master.bind("<Shift-D>", self.get_image_details)
-        self.master.bind("<Shift-R>", lambda event: ImageDetails.show_related_image(master=self.master, image_path=App.img_path, open_move_marks_window_callback=self.open_move_marks_window))
+        self.master.bind("<Shift-R>", self.show_related_image)
         self.master.bind("<Shift-H>", self.get_help_and_config)
         self.master.bind("<Shift-S>", self.toggle_slideshow)
         self.master.bind("<MouseWheel>", lambda event: self.show_next_image() if event.delta > 0 else self.show_prev_image())
@@ -367,7 +370,7 @@ class App():
         self.master.bind("<Control-t>", self.run_permanent_marks_action)
         self.master.bind("<Control-d>", lambda event: MarkedFiles.set_current_marks_from_previous(self.toast))
         self.master.bind("<Control-z>", self.revert_last_marks_change)
-        self.master.bind("<Control-x>", lambda event: MarkedFiles.undo_move_marks(None, self.toast, self.refresh))
+        self.master.bind("<Control-x>", lambda event: MarkedFiles.undo_move_marks(None, self.app_actions))
         self.master.bind("<Control-s>", self.next_text_embedding_preset)
         self.master.bind("<Control-b>", self.return_to_browsing_mode)
         self.master.bind("<Home>", self.home)
@@ -394,6 +397,24 @@ class App():
                 self.set_base_dir()
         except Exception as e:
             print(e)
+
+    class AppActions:
+        def __init__(self, toast, alert, refresh, refocus, set_mode, create_image, show_next_image, go_to_file, get_base_dir, delete,
+                     open_move_marks_window, _add_buttons_for_mode, _set_label_state, _set_toggled_view_matches):
+            self.toast = toast
+            self.alert = alert
+            self.refresh = refresh
+            self.refocus = refocus
+            self.set_mode = set_mode
+            self.create_image = create_image
+            self.show_next_image = show_next_image
+            self.get_base_dir = get_base_dir
+            self.go_to_file = go_to_file
+            self.delete = delete
+            self.open_move_marks_window = open_move_marks_window
+            self._add_buttons_for_mode = _add_buttons_for_mode
+            self._set_label_state = _set_label_state
+            self._set_toggled_view_matches = _set_toggled_view_matches
 
     def toggle_fullscreen(self, event=None):
         App.fullscreen = not App.fullscreen
@@ -447,6 +468,11 @@ class App():
         App.file_browser.set_recursive(self.image_browse_recurse_var.get())
         if App.mode == Mode.BROWSE and App.img:
             self.show_next_image()
+
+    def refocus(self, event=None):
+        self.sidebar.after(1, lambda: self.sidebar.focus_force())
+        if config.debug:
+            print("Refocused main window")
 
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
         App.file_browser.refresh(refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files)
@@ -531,10 +557,12 @@ class App():
             else:
                 index_text = "" # shouldn't happen
         try:
-            image_details = ImageDetails(self.master, top_level, App.img_path, index_text,
-                                         self.refresh, self.go_to_file, self.open_move_marks_window)
+            image_details = ImageDetails(self.master, top_level, App.img_path, index_text, self.app_actions)
         except Exception as e:
             self.alert("Image Details Error", str(e), kind="error")
+
+    def show_related_image(self, event=None):
+        ImageDetails.show_related_image(master=self.master, image_path=App.img_path, app_actions=self.app_actions)
 
     def get_help_and_config(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
@@ -887,7 +915,7 @@ class App():
         self.compare_wrapper.run(self.get_base_dir(), App.mode, searching_image, search_file_path, search_text, search_text_negative,
                                  find_duplicates, counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener, store_checkpoints)
 
-    def set_toggled_view_matches(self):
+    def _set_toggled_view_matches(self):
         App.is_toggled_view_matches = True
 
     def search_text_embedding(self, event=None):
@@ -964,25 +992,24 @@ class App():
             top_level.attributes('-alpha', 0.3)
         try:
             marked_file_mover = MarkedFiles(top_level, open_gui, single_image, App.mode, 
-                                            self.toast, self.alert, self.refresh, self._handle_delete,
-                                            base_dir=self.get_base_dir())
+                                            self.app_actions, base_dir=self.get_base_dir())
         except Exception as e:
             self.alert("Marked Files Window Error", str(e), kind="error")
 
     def run_previous_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
-        MarkedFiles.run_previous_action(self.toast, self.refresh)
+        MarkedFiles.run_previous_action(self.app_actions)
 
     def run_penultimate_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
-        MarkedFiles.run_penultimate_action(self.toast, self.refresh)
+        MarkedFiles.run_penultimate_action(self.app_actions)
 
     def run_permanent_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
-        MarkedFiles.run_permanent_action(self.toast, self.refresh)
+        MarkedFiles.run_permanent_action(self.app_actions)
 
     def _check_marks(self, min_mark_size=1):
         if len(MarkedFiles.file_marks) < min_mark_size:
@@ -992,14 +1019,14 @@ class App():
 
     def revert_last_marks_change(self, event=None):
         if not config.use_file_paths_json:
-            MarkedFiles.undo_move_marks(self.get_base_dir(), self.toast, self.refresh)
+            MarkedFiles.undo_move_marks(self.get_base_dir(), self.app_actions)
 
     def open_go_to_file_window(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title("Go To File")
         top_level.geometry(GoToFile.get_geometry())
         try:
-            go_to_file = GoToFile(top_level, self.go_to_file, self.toast)
+            go_to_file = GoToFile(top_level, self.app_actions)
         except Exception as e:
             self.alert("Go To File Window Error", str(e), kind="error")
 

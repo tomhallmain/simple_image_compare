@@ -12,19 +12,11 @@ from utils.constants import Mode, CompareMode
 from utils.utils import _wrap_text_to_fit_length
 
 class CompareWrapper:
-    def __init__(self, master, compare_mode, add_buttons_for_mode_callback, create_image_callback, show_next_image_callback,
-                 set_label_callback, alert_callback, toast_callback, set_mode_callback, set_toggled_view_matches_callback):
+    def __init__(self, master, compare_mode, app_actions):
         self._master = master
         self._compare = None
         self.compare_mode = compare_mode
-        self.add_buttons_for_mode_callback = add_buttons_for_mode_callback
-        self.create_image_callback = create_image_callback
-        self.show_next_image_callback = show_next_image_callback
-        self.set_label_callback = set_label_callback
-        self.alert_callback = alert_callback
-        self.set_mode_callback = set_mode_callback
-        self.toast_callback = toast_callback
-        self.set_toggled_view_matches_callback = set_toggled_view_matches_callback
+        self._app_actions = app_actions
 
         self.files_grouped = {}
         self.file_groups = {}
@@ -51,7 +43,7 @@ class CompareWrapper:
 
     def validate_compare_mode(self, required_compare_mode, error_text):
         if required_compare_mode != self.compare_mode:
-            self.alert_callback("Invalid mode", error_text, kind="warning")
+            self._app_actions.alert("Invalid mode", error_text, kind="warning")
             raise Exception(f"Invalid mode: {self.compare_mode}")
 
     def current_match(self):
@@ -65,10 +57,10 @@ class CompareWrapper:
             return False
         elif len(self.files_matched) == 0:
             if show_alert:
-                self.alert_callback("Search required", "No matches found. Search again to find potential matches.")
+                self._app_actions.alert("Search required", "No matches found. Search again to find potential matches.")
             return False
 
-        self.set_toggled_view_matches_callback()
+        self._app_actions._set_toggled_view_matches()
         
         if self.match_index > 0:
             self.match_index -= 1
@@ -76,7 +68,7 @@ class CompareWrapper:
             self.match_index = len(self.files_matched) - 1
         
         self._master.update()
-        self.create_image_callback(self.current_match())
+        self._app_actions.create_image(self.current_match())
         return True
 
     def show_next_image(self, show_alert=True):
@@ -84,10 +76,10 @@ class CompareWrapper:
             return False
         elif len(self.files_matched) == 0:
             if show_alert:
-                self.alert_callback("Search required", "No matches found. Search again to find potential matches.")
+                self._app_actions.alert("Search required", "No matches found. Search again to find potential matches.")
             return False
 
-        self.set_toggled_view_matches_callback()
+        self._app_actions._set_toggled_view_matches()
 
         if len(self.files_matched) > self.match_index + 1:
             self.match_index += 1
@@ -95,7 +87,7 @@ class CompareWrapper:
             self.match_index = 0
 
         self._master.update()
-        self.create_image_callback(self.current_match())
+        self._app_actions.create_image(self.current_match())
         return True
 
 
@@ -126,7 +118,7 @@ class CompareWrapper:
         While in group mode, navigate between the groups.
         '''
         if self.file_groups is None or len(self.file_groups) == 0:
-            self.toast_callback("No groups found")
+            self._app_actions.toast("No groups found")
             return
 
         actual_group_index = self.actual_group_index()
@@ -137,9 +129,9 @@ class CompareWrapper:
         for f in sorted(self.current_group, key=lambda f: self.current_group[f]):
             self.files_matched.append(f)
 
-        self.set_label_callback(group_number=self.current_group_index, size=len(self.files_matched))
+        self._app_actions._set_label_state(group_number=self.current_group_index, size=len(self.files_matched))
         self._master.update()
-        self.create_image_callback(self.current_match())
+        self._app_actions.create_image(self.current_match())
     
     def page_down(self):
         paging_length = self._get_paging_length()
@@ -199,7 +191,7 @@ class CompareWrapper:
         self.search_image_full_path = search_file_path
 
         if self._requires_new_compare(base_dir):
-            self.set_label_callback(_wrap_text_to_fit_length(
+            self._app_actions._set_label_state(_wrap_text_to_fit_length(
                 "Gathering image data... setup may take a while depending on number of files involved.", 30))
             self.new_compare(
                 base_dir, search_file_path, counter_limit, compare_threshold,
@@ -225,20 +217,20 @@ class CompareWrapper:
             raise Exception("No compare object created")
 
         if self._compare.is_run_search or search_text is not None:
-            self.set_mode_callback(Mode.SEARCH, do_update=False)
-            self.set_toggled_view_matches_callback()
+            self._app_actions.set_mode(Mode.SEARCH, do_update=False)
+            self._app_actions._set_toggled_view_matches()
         else:
             if app_mode == Mode.SEARCH:
-                res = self.alert_callback("Confirm group run",
+                res = self._app_actions.alert("Confirm group run",
                                  "Search mode detected, please confirm switch to group mode before run. "
                                  + "Group mode will take longer as all images in the base directory are compared.",
                                  kind="warning")
                 if res != messagebox.OK:
                     return
-            self.set_mode_callback(Mode.GROUP, do_update=False)
+            self._app_actions.set_mode(Mode.GROUP, do_update=False)
 
         if get_new_data:
-            self.toast_callback("Gathering image data for comparison")
+            self._app_actions.toast("Gathering image data for comparison")
             self._compare.get_files()
             self._compare.get_data()
 
@@ -281,15 +273,15 @@ class CompareWrapper:
 
     def run_search(self) -> None:
         assert self._compare is not None
-        self.set_label_callback(_wrap_text_to_fit_length(
+        self._app_actions._set_label_state(_wrap_text_to_fit_length(
             "Running image comparison with search file...", 30))
         self.files_grouped = self._compare.run_search()
         self.file_groups = deepcopy(self.files_grouped)
 
         if len(self.files_grouped[0]) == 0:
             self.has_image_matches = False
-            self.set_label_callback("Set a directory and search file.")
-            self.alert_callback("No Match Found", "None of the files match the search file with current settings.")
+            self._app_actions._set_label_state("Set a directory and search file.")
+            self._app_actions.alert("No Match Found", "None of the files match the search file with current settings.")
             return
 
         reverse = self.compare_mode == CompareMode.CLIP_EMBEDDING
@@ -301,23 +293,23 @@ class CompareWrapper:
         self.max_group_index = 0
         self.match_index = 0
         self.has_image_matches = True
-        self.set_label_callback(_wrap_text_to_fit_length(
+        self._app_actions._set_label_state(_wrap_text_to_fit_length(
             str(len(self.files_matched)) + " possibly related images found.", 30))
 
-        self.add_buttons_for_mode_callback()
-        self.create_image_callback(self.files_matched[self.match_index])
+        self._app_actions._add_buttons_for_mode()
+        self._app_actions.create_image(self.files_matched[self.match_index])
 
     def run_search_text_embedding(self, search_text, search_text_negative):
         assert self._compare is not None
-        self.set_label_callback(_wrap_text_to_fit_length(
+        self._app_actions._set_label_state(_wrap_text_to_fit_length(
             "Running image comparison with search text...", 30))
         self.files_grouped = self._compare.search_text(search_text, search_text_negative)
         self.file_groups = deepcopy(self.files_grouped)
 
         if len(self.file_groups[0]) == 0:
             self.has_image_matches = False
-            self.set_label_callback("Set a directory and search file or search text.")
-            self.alert_callback("No Match Found", "None of the files match the search text with current settings.")
+            self._app_actions._set_label_state("Set a directory and search file or search text.")
+            self._app_actions.alert("No Match Found", "None of the files match the search text with current settings.")
             return False
 
         for f in sorted(self.file_groups[0], key=lambda f: self.file_groups[0][f], reverse=True):
@@ -328,26 +320,26 @@ class CompareWrapper:
         self.max_group_index = 0
         self.match_index = 0
         self.has_image_matches = True
-        self.set_label_callback(_wrap_text_to_fit_length(
+        self._app_actions._set_label_state(_wrap_text_to_fit_length(
             str(len(self.files_matched)) + " possibly related images found.", 30))
-        self.add_buttons_for_mode_callback()
-        self.create_image_callback(self.current_match())
+        self._app_actions._add_buttons_for_mode()
+        self._app_actions.create_image(self.current_match())
 
     def run_group(self, find_duplicates=False, store_checkpoints=False) -> None:
         assert self._compare is not None
-        self.set_label_callback(_wrap_text_to_fit_length(
+        self._app_actions._set_label_state(_wrap_text_to_fit_length(
             "Running image comparisons...", 30))
         self.files_grouped, self.file_groups = self._compare.run(store_checkpoints=store_checkpoints)
         
         if len(self.files_grouped) == 0:
             self.has_image_matches = False
-            self.set_label_callback("Set a directory and search file.")
-            self.alert_callback("No Groups Found", "None of the files can be grouped with current settings.")
+            self._app_actions._set_label_state("Set a directory and search file.")
+            self._app_actions.alert("No Groups Found", "None of the files can be grouped with current settings.")
             return
 
         self.group_indexes = self._compare._sort_groups(self.file_groups)
         self.max_group_index = max(self.file_groups.keys())
-        self.add_buttons_for_mode_callback()
+        self._app_actions._add_buttons_for_mode()
         self.current_group_index = 0
 
         if find_duplicates:
@@ -356,10 +348,10 @@ class CompareWrapper:
             duplicates = self._compare.get_probable_duplicates()
             if len(duplicates) == 0:
                 self.has_image_matches = False
-                self.set_label_callback("Set a directory and search file.")
-                self.alert_callback("No Duplicates Found", "None of the files appear to be duplicates based on the current settings.")
+                self._app_actions._set_label_state("Set a directory and search file.")
+                self._app_actions.alert("No Duplicates Found", "None of the files appear to be duplicates based on the current settings.")
                 return
-            self.set_mode_callback(Mode.DUPLICATES, do_update=True)
+            self._app_actions.set_mode(Mode.DUPLICATES, do_update=True)
             print("Probable duplicates:")
             pprint.pprint(duplicates, width=160)
             duplicate_group_count = 0
@@ -381,7 +373,7 @@ class CompareWrapper:
 
             self.set_current_group()
             if has_found_stranded_group_members:
-                self.alert_callback("Stranded Group Members Found", "Some group members were left stranded by the grouping process.")
+                self._app_actions.alert("Stranded Group Members Found", "Some group members were left stranded by the grouping process.")
 
     def find_file_after_comparison(self, app_mode, search_text="", exact_match=False):
         if not search_text or search_text.strip() == "":
@@ -436,7 +428,7 @@ class CompareWrapper:
                 self.current_group_index -= 1
 
             if len(self.file_groups) == 0:
-                self.alert_callback("No More Groups",
+                self._app_actions.alert("No More Groups",
                            "There are no more image groups remaining for this directory and current filter settings.")
                 self.current_group_index = 0
                 self.files_grouped = {}
@@ -444,9 +436,9 @@ class CompareWrapper:
                 self.match_index = 0
                 self.files_matched = []
                 self.group_indexes = []
-                self.set_mode_callback(Mode.BROWSE)
-                self.set_label_callback("Set a directory to run comparison.")
-                self.show_next_image_callback()
+                self._app_actions.set_mode(Mode.BROWSE)
+                self._app_actions._set_label_state("Set a directory to run comparison.")
+                self._app_actions.show_next_image()
                 return
             elif group_index == len(self.file_groups):
                 self.current_group_index = 0
@@ -470,7 +462,7 @@ class CompareWrapper:
 
                 if show_next_image:
                     self._master.update()
-                    self.create_image_callback(self.current_match())
+                    self._app_actions.create_image(self.current_match())
 
     def _get_file_group_map(self, app_mode):
         if app_mode == Mode.BROWSE:

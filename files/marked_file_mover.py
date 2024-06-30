@@ -60,6 +60,8 @@ class MarkedFiles():
     mark_target_dirs = []
     previous_marks = []
     last_set_target_dir = None
+    is_performing_action = False
+    is_cancelled_action = False
 
     permanent_action = setup_permanent_action()
     action_history = []
@@ -110,31 +112,31 @@ class MarkedFiles():
         return action
 
     @staticmethod
-    def run_previous_action(toast_callback, refresh_callback):
+    def run_previous_action(app_actions):
         previous_action = MarkedFiles.get_history_action(start_index=0)
         if previous_action is None:
-            return
-        MarkedFiles.move_marks_to_dir_static(toast_callback, refresh_callback,
+            return False, False
+        return MarkedFiles.move_marks_to_dir_static(app_actions,
                                              target_dir=previous_action.target,
                                              move_func=previous_action.action,
                                              single_image=(len(MarkedFiles.file_marks)==1))
 
     @staticmethod
-    def run_penultimate_action(toast_callback, refresh_callback):
+    def run_penultimate_action(app_actions):
         penultimate_action = MarkedFiles.get_history_action(start_index=1)
         if penultimate_action is None:
-            return
-        MarkedFiles.move_marks_to_dir_static(toast_callback, refresh_callback,
+            return False, False
+        return MarkedFiles.move_marks_to_dir_static(app_actions,
                                              target_dir=penultimate_action.target,
                                              move_func=penultimate_action.action,
                                              single_image=(len(MarkedFiles.file_marks)==1))
 
     @staticmethod
-    def run_permanent_action(toast_callback, refresh_callback):
+    def run_permanent_action(app_actions):
         if not MarkedFiles.permanent_action:
-            toast_callback(f"No permanent mark target set!\nSet with Ctrl+T on Marks window.")
-            return
-        MarkedFiles.move_marks_to_dir_static(toast_callback, refresh_callback,
+            app_actions.toast(f"No permanent mark target set!\nSet with Ctrl+T on Marks window.")
+            return False, False
+        return MarkedFiles.move_marks_to_dir_static(app_actions,
                                              target_dir=MarkedFiles.permanent_action.target,
                                              move_func=MarkedFiles.permanent_action.action,
                                              single_image=(len(MarkedFiles.file_marks)==1))
@@ -181,18 +183,14 @@ class MarkedFiles():
             return 1
         return 0
 
-    def __init__(self, master, is_gui, single_image, app_mode,
-                 toast_callback, alert_callback, refresh_callback, delete_callback, base_dir="."):
+    def __init__(self, master, is_gui, single_image, app_mode, app_actions, base_dir="."):
         self.is_gui = is_gui
         self.single_image = single_image
         self.master = master
         self.app_mode = app_mode
         self.compare = None
         self.is_sorted_by_embedding = False
-        self.toast_callback = toast_callback
-        self.alert_callback = alert_callback
-        self.refresh_callback = refresh_callback
-        self.delete_callback = delete_callback
+        self.app_actions = app_actions
         self.base_dir = os.path.normpath(base_dir)
         self.filter_text = ""
         self.filtered_target_dirs = MarkedFiles.mark_target_dirs[:]
@@ -315,7 +313,7 @@ class MarkedFiles():
         Also in this case, this function will call itself by calling
         move_marks_to_target_dir(), just this time with the directory set.
         """
-        target_dir, target_was_valid = MarkedFiles.get_target_directory(target_dir, self.starting_target, self.toast_callback)
+        target_dir, target_was_valid = MarkedFiles.get_target_directory(target_dir, self.starting_target, self.app_actions.toast)
         if not os.path.isdir(target_dir):
             self.close_windows()
             raise Exception("Failed to set target directory to receive marked files.")
@@ -333,19 +331,19 @@ class MarkedFiles():
         if config.debug and self.filter_text is not None and self.filter_text.strip() != "":
             print(f"Filtered by string: {self.filter_text}")
         if self.do_set_permanent_mark_target:
-            MarkedFiles.set_permanent_action(target_dir, move_func, self.toast_callback)
+            MarkedFiles.set_permanent_action(target_dir, move_func, self.app_actions.toast)
             self.do_set_permanent_mark_target = False
-        some_files_already_present = MarkedFiles.move_marks_to_dir_static(
-            self.toast_callback, self.refresh_callback,
-            target_dir=target_dir, move_func=move_func, single_image=self.single_image)
+        some_files_already_present, exceptions_present = MarkedFiles.move_marks_to_dir_static(
+            self.app_actions, target_dir=target_dir, move_func=move_func, single_image=self.single_image)
         self.close_windows()
 
     @staticmethod
-    def move_marks_to_dir_static(toast_callback, refresh_callback, target_dir=None,
+    def move_marks_to_dir_static(app_actions, target_dir=None,
                                  move_func=move_file, single_image=False):
         """
         Move or copy the marked files to the target directory.
         """
+        MarkedFiles.is_performing_action = True
         some_files_already_present = False
         is_moving = move_func == move_file
         action_part1 = "Moving" if is_moving else "Copying"
@@ -356,20 +354,31 @@ class MarkedFiles():
         exceptions = {}
         invalid_files = []
         for marked_file in MarkedFiles.file_marks:
+            if MarkedFiles.is_cancelled_action:
+                break
             new_filename = os.path.join(target_dir, os.path.basename(marked_file))
             try:
                 move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
                 print(f"{action_part2} file to {new_filename}")
                 MarkedFiles.previous_marks.append(marked_file)
+                has_moved_one_file = True
             except Exception as e:
                 exceptions[marked_file] = (str(e), new_filename)
                 if not os.path.exists(marked_file):
                     invalid_files.append(marked_file)
+        if MarkedFiles.is_cancelled_action:
+            MarkedFiles.is_cancelled_action = False
+            MarkedFiles.is_performing_action = False
+            print(f"Cancelled {action_part1} to {target_dir}")
+            if len(MarkedFiles.previous_marks) > 0:
+                MarkedFiles.undo_move_marks(app_actions.get_base_dir(), app_actions)
+            return False, False
         if len(exceptions) < len(MarkedFiles.file_marks):
-            toast_callback(f"{action_part2} {len(MarkedFiles.file_marks) - len(exceptions)} files to\n{target_dir}")
+            app_actions.toast(f"{action_part2} {len(MarkedFiles.file_marks) - len(exceptions)} files to\n{target_dir}")
             MarkedFiles.delete_lock = False
         MarkedFiles.file_marks.clear()
-        if len(exceptions) > 0:
+        exceptions_present = len(exceptions) > 0
+        if exceptions_present:
             action_part3 = "move" if is_moving else "copy"
             print(f"Failed to {action_part3} some files:")
             names_are_short = False
@@ -395,26 +404,32 @@ class MarkedFiles():
                     warning += "\nWARNING: Exact file match."
                 if names_are_short:
                     warning += "\nWARNING: Short filenames."
-                toast_callback(warning)
+                app_actions.toast(warning)
+        MarkedFiles.is_performing_action = False
         if len(MarkedFiles.previous_marks) > 0:
             MarkedFiles.last_set_target_dir = target_dir
             if is_moving:
-                refresh_callback(removed_files=list(MarkedFiles.previous_marks))
+                app_actions.refresh(removed_files=list(MarkedFiles.previous_marks))
             else:
-                refresh_callback()
-        return some_files_already_present
+                app_actions.refresh()
+            if not exceptions_present:
+                app_actions.refocus()
+        return some_files_already_present, exceptions_present
 
     @staticmethod
-    def undo_move_marks(base_dir, toast_callback, refresh_callback):
+    def undo_move_marks(base_dir, app_actions):
         """
         Undo the previous move/copy operation.
         """
+        if MarkedFiles.is_performing_action:
+            MarkedFiles.is_cancelled_action = True
+            return
         if MarkedFiles.delete_lock:
             return
         is_moving_back = MarkedFiles.action_history[0].action == move_file
         action_part1 = "Moving back" if is_moving_back else "Removing"
         action_part2 = "Moved back" if is_moving_back else "Removed"
-        target_dir, target_was_valid = MarkedFiles.get_target_directory(MarkedFiles.last_set_target_dir, None, toast_callback)
+        target_dir, target_was_valid = MarkedFiles.get_target_directory(MarkedFiles.last_set_target_dir, None, app_actions.toast)
         if not target_was_valid:
             raise Exception(f"{action_part1} previously marked files failed, somehow previous target directory invalid:  {target_dir}")
         if base_dir is None:
@@ -443,7 +458,7 @@ class MarkedFiles():
                 elif os.path.exists(expected_new_filepath):
                     invalid_files.append(expected_new_filepath)
         if len(exceptions) < len(MarkedFiles.previous_marks):
-            toast_callback(f"{action_part2} {len(MarkedFiles.previous_marks) - len(exceptions)} files from\n{target_dir}")
+            app_actions.toast(f"{action_part2} {len(MarkedFiles.previous_marks) - len(exceptions)} files from\n{target_dir}")
         MarkedFiles.previous_marks.clear()
         if len(exceptions) > 0:
             for marked_file in exceptions.keys():
@@ -451,7 +466,7 @@ class MarkedFiles():
                     MarkedFiles.previous_marks.append(marked_file) # Just in case some of them failed to move for whatever reason.
             action_part3 = "move" if is_moving_back else "copy"
             raise Exception(f"Failed to {action_part3} some files: {exceptions}")
-        refresh_callback()
+        app_actions.refresh()
 
     def set_target_dirs_From_dir(self, event=None):
         """
@@ -570,7 +585,9 @@ class MarkedFiles():
         alt_key_pressed = (event.state & 0x20000) != 0
         move_func = copy_file if shift_key_pressed else move_file
         if alt_key_pressed:
-            self.move_marks_to_dir(target_dir=MarkedFiles.penultimate_mark_target, move_func=move_func)
+            penultimate_action = MarkedFiles.get_history_action(start_index=1)
+            if penultimate_action is not None and os.path.isdir(penultimate_action.target):
+                self.move_marks_to_dir(target_dir=penultimate_action.target, move_func=move_func)
         elif len(self.filtered_target_dirs) == 0 or control_key_pressed:
             self.handle_target_directory(move_func=move_func)
         else:
@@ -584,7 +601,7 @@ class MarkedFiles():
 
     def set_permanent_mark_target(self, event=None):
         self.do_set_permanent_mark_target = True
-        self.toast_callback("Recording next mark target and action.")
+        self.app_actions.toast("Recording next mark target and action.")
 
     def clear_target_dirs(self, event=None):
         self.clear_widget_lists()
@@ -617,7 +634,7 @@ class MarkedFiles():
             self.clear_widget_lists()
             self.add_target_dir_widgets()
             self.master.update()
-        self.toast_callback("Sorted directories by embedding comparison.")
+        self.app_actions.toast("Sorted directories by embedding comparison.")
 
     def clear_widget_lists(self):
         for btn in self.move_btn_list:
@@ -638,7 +655,7 @@ class MarkedFiles():
         Unfortunately, since there are challenges with restoring files from trash folder
         an undo operation is not implemented.
         """
-        res = self.alert_callback("Confirm Delete",
+        res = self.app_actions.alert("Confirm Delete",
                 f"Deleting {len(MarkedFiles.file_marks)} marked files - Are you sure you want to proceed?",
                 kind="warning")
         if res != messagebox.OK:
@@ -651,7 +668,7 @@ class MarkedFiles():
         for filepath in MarkedFiles.file_marks:
             try:
                 # NOTE since undo delete is not supported, the delete callback handles setting a delete lock
-                self.delete_callback(filepath, manual_delete=False)
+                self.app_actions.delete(filepath, manual_delete=False)
                 removed_files.append(filepath)
             except Exception as e:
                 print(f"Failed to delete {filepath}: {e}")
@@ -661,15 +678,15 @@ class MarkedFiles():
         MarkedFiles.file_marks.clear()
         if len(failed_to_delete) > 0:
             MarkedFiles.file_marks.extend(failed_to_delete)
-            self.alert_callback("Delete Failed",
+            self.app_actions.alert("Delete Failed",
                     f"Failed to delete {len(failed_to_delete)} files - check log for details.",
                     kind="warning")
         else:
-            self.toast_callback(f"Deleted {len(removed_files)} marked files.")
+            self.app_actions.toast(f"Deleted {len(removed_files)} marked files.")
 
         # In the BROWSE case, the file removal should be recognized by the file browser
         ## TODO it will not be handled in case of using file JSON. need to handle this case separately.        
-        self.refresh_callback(removed_files=(removed_files if self.app_mode != Mode.BROWSE else []))
+        self.app_actions.refresh(removed_files=(removed_files if self.app_mode != Mode.BROWSE else []))
         self.close_windows()
 
     def close_windows(self, event=None):
@@ -681,7 +698,7 @@ class MarkedFiles():
             # being repeated and overwriting the file. If so the user likely doesn't want to 
             # take any more actions on this file so we can forget about it.
             MarkedFiles.file_marks.clear()
-            self.toast_callback("Cleared marked file")
+            self.app_actions.toast("Cleared marked file")
 
     def add_label(self, label_ref, text, row=0, column=0, wraplength=500):
         label_ref['text'] = text

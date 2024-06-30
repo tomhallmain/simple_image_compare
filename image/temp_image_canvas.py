@@ -3,6 +3,7 @@ import os
 from PIL import Image, ImageTk
 from tkinter import Toplevel, Frame, Canvas, Label
 
+from files.marked_file_mover import MarkedFiles
 from utils.app_style import AppStyle
 from utils.utils import scale_dims
 
@@ -45,7 +46,7 @@ class TempImageCanvas:
     top_level = None
     image = None
 
-    def __init__(self, master, title="Temp Image Canvas", dimensions="600x600", open_move_marks_window_callback=None):
+    def __init__(self, master, title="Temp Image Canvas", dimensions="600x600", app_actions=None):
         TempImageCanvas.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
         TempImageCanvas.top_level.geometry(dimensions)
         self.master = TempImageCanvas.top_level
@@ -59,14 +60,17 @@ class TempImageCanvas:
         self.canvas.grid(column=0, row=0)
         self.canvas.config(bg=AppStyle.BG_COLOR)
         self.image_path = None
-        self.open_move_marks_window_callback = open_move_marks_window_callback
+        self.app_actions = app_actions
+        assert self.app_actions is not None
 
-        self.master.bind("<Escape>", self.close_windows)
+        self.master.bind("<Escape>", self.app_actions.refocus)
         self.master.bind("<Control-m>", self.open_move_marks_window)
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
+        self.master.bind("<Control-r>", self.run_previous_marks_action)
+        self.master.bind("<Control-e>", self.run_penultimate_marks_action)
+        self.master.bind("<Control-t>", self.run_permanent_marks_action)
         self.master.update()
-        self.master.after(1, lambda: self.master.focus_force())
-    
+
     def close_windows(self, event=None):
         self.master.destroy()
 
@@ -77,6 +81,11 @@ class TempImageCanvas:
         self.canvas.create_image_center(TempImageCanvas.image)
         TempImageCanvas.top_level.title(image_path)
         self.master.update()
+        self.master.after(1, lambda: self.master.focus_force())
+
+    def clear_image(self):
+        self.canvas.clear_image()
+        self.image_path = None
 
     def get_image_to_fit(self, filename) -> ImageTk.PhotoImage:
         '''
@@ -88,9 +97,32 @@ class TempImageCanvas:
         return ImageTk.PhotoImage(img)
 
     def open_move_marks_window(self, event=None, open_gui=True):
-        assert self.open_move_marks_window_callback is not None, "No callback provided to open move marks window."
         if self.image_path is None or not os.path.isfile(self.image_path):
             raise ValueError("No image loaded.")
-        self.open_move_marks_window_callback(open_gui=open_gui, override_marks=[self.image_path])
-        self.close_windows()
+        self.app_actions.open_move_marks_window(open_gui=open_gui, override_marks=[self.image_path])
+        self.clear_image()
+
+    def run_previous_marks_action(self, event=None):
+        if self.image_path is None or not os.path.isfile(self.image_path):
+            raise ValueError("No image loaded.")
+        MarkedFiles.file_marks.append(self.image_path)
+        some_files_already_present, exceptions_present = MarkedFiles.run_previous_action(self.app_actions)
+        if not exceptions_present:
+            self.clear_image()
+
+    def run_penultimate_marks_action(self, event=None):
+        if self.image_path is None or not os.path.isfile(self.image_path):
+            raise ValueError("No image loaded.")
+        MarkedFiles.file_marks.append(self.image_path)
+        some_files_already_present, exceptions_present = MarkedFiles.run_penultimate_action(self.app_actions)
+        if not exceptions_present:
+            self.clear_image()
+
+    def run_permanent_marks_action(self, event=None):
+        if self.image_path is None or not os.path.isfile(self.image_path):
+            raise ValueError("No image loaded.")
+        MarkedFiles.file_marks.append(self.image_path)
+        some_files_already_present, exceptions_present = MarkedFiles.run_permanent_action(self.app_actions)
+        if not exceptions_present:
+            self.clear_image()
 
