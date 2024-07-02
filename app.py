@@ -303,10 +303,10 @@ class App():
         self.fill_canvas_choice = Checkbutton(self.sidebar, text='Image resize to full window',
                                               variable=fill_canvas_var, command=App.toggle_fill_canvas)
         self.apply_to_grid(self.fill_canvas_choice, sticky=W)
-        
-        search_return_closest_var = tk.BooleanVar(value=CompareEmbedding.SEARCH_RETURN_CLOSEST)
-        self.search_return_closest_choice = Checkbutton(self.sidebar, text='Embedding search return closest',
-                                              variable=search_return_closest_var, command=self.compare_wrapper.toggle_search_return_closest)
+
+        search_return_closest_var = tk.BooleanVar(value=config.search_only_return_closest)
+        self.search_return_closest_choice = Checkbutton(self.sidebar, text='Search only return closest',
+                                              variable=search_return_closest_var, command=self.compare_wrapper.toggle_search_only_return_closest)
         self.apply_to_grid(self.search_return_closest_choice, sticky=W)
 
         ################################ Run context-aware UI elements
@@ -694,16 +694,17 @@ class App():
         '''
         image_path = self.get_search_file_path()
 
-        if image_path is None or (self.compare_wrapper.search_image_full_path is not None
-                                  and image_path == self.compare_wrapper.search_image_full_path):
+        if image_path is None or not os.path.isfile(image_path):
+                    #(self.compare_wrapper.search_image_full_path is not None
+                    #   and image_path == self.compare_wrapper.search_image_full_path):
             image_path = filedialog.askopenfilename(
                 initialdir=self.get_search_dir(), title="Select image file",
                 filetypes=[("Image files", "*.jpg *.jpeg *.png *.tiff *.gif")])
 
-        if image_path is not None and image_path != "":
+        if image_path is not None and image_path.strip() != "":
             self.search_image.set(os.path.basename(image_path))
             self.search_dir = os.path.dirname(image_path)
-            App.search_image_full_path = image_path
+            self.compare_wrapper.search_image_full_path = image_path
             self.show_searched_image()
 
         if self.compare_wrapper.search_image_full_path is None or self.compare_wrapper.search_image_full_path == "":
@@ -1152,7 +1153,7 @@ class App():
         if len(self.compare_wrapper.files_matched) == 0 and not is_toggle_search_image:
             self.toast("Invalid action, no files found to delete")
             return
-        elif is_toggle_search_image and (App.search_image_full_path is None or App.search_image_full_path == ""):
+        elif is_toggle_search_image and (self.compare_wrapper.search_image_full_path is None or self.compare_wrapper.search_image_full_path == ""):
             self.toast("Invalid action, search image not found")
             return
 
@@ -1161,6 +1162,8 @@ class App():
         if filepath is not None:
             if filepath in MarkedFiles.file_marks:
                 MarkedFiles.file_marks.remove(filepath)
+            if filepath == self.compare_wrapper.search_image_full_path:
+                self.compare_wrapper.search_image_full_path = None
             self._handle_delete(filepath)
             if self.compare_wrapper._compare:
                 self.compare_wrapper.compare().remove_from_groups([filepath])
@@ -1219,6 +1222,8 @@ class App():
         # NOTE cannot use get_active_image_filepath here because file should have been removed by this point.
         current_image = self.compare_wrapper.current_match()
         for filepath in files:
+            if filepath == self.compare_wrapper.search_image_full_path:
+                self.compare_wrapper.search_image_full_path = None
             show_next_image = current_image == filepath
             file_group_map = self.compare_wrapper._get_file_group_map(App.mode)
             try:

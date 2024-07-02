@@ -520,8 +520,20 @@ class Compare:
         else:
             similars = np.nonzero(color_similars[0])
 
-        for _index in similars[0]:
-            files_grouped[_files_found[_index]] = color_similars[1][_index]
+        if config.search_only_return_closest:
+            for _index in similars[0]:
+                files_grouped[_files_found[_index]] = color_similars[1][_index]
+        else:
+            temp = {}
+            count = 0
+            for i in range(len(_files_found)):
+                temp[_files_found[i]] = color_similars[1][i]
+            for file, difference in dict(sorted(temp.items(), key=lambda item: item[1])).items():
+                if count == config.max_search_results:
+                    break
+                files_grouped[file] = difference
+                count += 1
+            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
 
         # Sort results by increasing difference score
         files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))

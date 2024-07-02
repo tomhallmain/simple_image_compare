@@ -37,9 +37,8 @@ class CompareWrapper:
             raise Exception("No compare object created")
         return self._compare
 
-    def toggle_search_return_closest(self):
-        self.validate_compare_mode(CompareMode.CLIP_EMBEDDING, "Compare mode must be set to Clip Embedding to make use of this option.")
-        CompareEmbedding.SEARCH_RETURN_CLOSEST = not CompareEmbedding.SEARCH_RETURN_CLOSEST
+    def toggle_search_only_return_closest(self):
+        config.search_only_return_closest = not config.search_only_return_closest
 
     def validate_compare_mode(self, required_compare_mode, error_text):
         if required_compare_mode != self.compare_mode:

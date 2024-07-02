@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 from tkinter import Toplevel, Frame, Canvas, Label
 
 from files.marked_file_mover import MarkedFiles
+from utils.config import config
 from utils.app_style import AppStyle
 from utils.utils import scale_dims
 
@@ -68,6 +69,7 @@ class TempImageCanvas:
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
         self.master.bind("<Control-r>", self.run_previous_marks_action)
         self.master.bind("<Control-e>", self.run_penultimate_marks_action)
+        self.master.bind("<Control-c>", self.copy_image_path)
         self.master.bind("<Control-t>", self.run_permanent_marks_action)
         self.master.update()
 
@@ -86,6 +88,7 @@ class TempImageCanvas:
     def clear_image(self):
         self.canvas.clear_image()
         self.image_path = None
+        TempImageCanvas.top_level.title("Open a new related image with Shift+R on main window")
 
     def get_image_to_fit(self, filename) -> ImageTk.PhotoImage:
         '''
@@ -125,4 +128,16 @@ class TempImageCanvas:
         some_files_already_present, exceptions_present = MarkedFiles.run_permanent_action(self.app_actions)
         if not exceptions_present:
             self.clear_image()
+
+    def copy_image_path(self, event=None):
+        if self.image_path is None or not os.path.isfile(self.image_path):
+            raise ValueError("No image loaded.")
+        filepath = str(self.image_path)
+        if sys.platform == 'win32':
+            filepath = os.path.normpath(filepath)
+            if config.escape_backslash_filepaths:
+                filepath = filepath.replace("\\", "\\\\")
+        self.master.clipboard_clear()
+        self.master.clipboard_append(filepath)
+
 

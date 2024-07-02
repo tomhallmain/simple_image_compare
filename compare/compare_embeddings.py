@@ -39,7 +39,6 @@ class CompareEmbedding:
     TOP_COLORS_DATA = "image_top_colors.pkl"
     THRESHHOLD_POTENTIAL_DUPLICATE = config.threshold_potential_duplicate_embedding
     THRESHHOLD_GROUP_CUTOFF = 4500 # TODO fix this for Embedding case
-    SEARCH_RETURN_CLOSEST = False
     TEXT_EMBEDDING_CACHE = {}
 
     def __init__(self, base_dir=".", search_file_path=None, counter_limit=30000,
@@ -323,7 +322,7 @@ class CompareEmbedding:
         else:
             similars = np.nonzero(embedding_similars[0])
 
-        if CompareEmbedding.SEARCH_RETURN_CLOSEST:
+        if config.search_only_return_closest:
             for _index in similars[0]:
                 files_grouped[_files_found[_index]] = embedding_similars[1][_index]
             # Sort results by increasing difference score
@@ -347,7 +346,7 @@ class CompareEmbedding:
                 if self.verbose:
                     print(header)
                 for f in files_grouped:
-                    similarity = int(files_grouped[f])
+                    similarity = files_grouped[f]
                     if not f == search_path:
                         if similarity > CompareEmbedding.THRESHHOLD_POTENTIAL_DUPLICATE:
                             line = "DUPLICATE: " + f
@@ -569,7 +568,7 @@ class CompareEmbedding:
     def _compute_multiembedding_diff(self, positive_embeddings=[], negative_embeddings=[], threshold=0.0):
         files_grouped = {}
 
-        if CompareEmbedding.SEARCH_RETURN_CLOSEST:
+        if config.search_only_return_closest:
             _files_found = list(self._files_found)
             embedding_similars = self._compute_embedding_diff(
                 self._file_embeddings, positive_embeddings[0], True, threshold=threshold)

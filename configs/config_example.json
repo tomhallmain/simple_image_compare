@@ -3,6 +3,7 @@
   "clip_model": "ViT-B/32",
   "compare_mode": "CLIP_EMBEDDING",
   "max_search_results": 200,
+  "search_only_return_closest": false,
   "store_checkpoints": false,
   "embedding_similarity_threshold": 0.9,
   "color_diff_threshold": 15,
