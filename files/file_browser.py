@@ -80,6 +80,11 @@ class FileBrowser:
     def count(self):
         return len(self._files)
 
+    def set_filter(self, filter):
+        if config.debug:
+            print(f"File browser set filter: {filter}")
+        self.filter = filter
+
     def set_recursive(self, recursive):
         if config.debug:
             print(f"File browser set recursive: {recursive}")
@@ -348,13 +353,16 @@ class FileBrowser:
     def _gather_files(self, files):
         allowed_extensions = config.file_types
 
-        if self.filter and self.filter != "":
+        if self.filter is not None and self.filter != "":
             if self.use_file_paths_json:
                 filepaths = self.load_file_paths_json()
                 filtered_files = [f for f in filepaths if re.search(self.filter, f)]
             else:
                 pattern = "**/" + self.filter if self.recursive else self.filter
-                filtered_files = glob.glob(os.path.join(self.directory, pattern), recursive=self.recursive)
+                if not "*" in pattern or (pattern.startswith("**") and not pattern.endswith("*")):
+                    pattern += "*"
+                recursive = self.recursive or self.filter.startswith("**/")
+                filtered_files = glob.glob(os.path.join(self.directory, pattern), recursive=recursive)
             for file in filtered_files:
                 for ext in allowed_extensions:
                     if file.endswith(ext):

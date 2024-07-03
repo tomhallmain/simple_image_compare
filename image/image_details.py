@@ -60,11 +60,7 @@ class ImageDetails():
         self.label_negative = Label(self.frame)
         self._label_tags = Label(self.frame)
 
-        image = Image.open(self.image_path)
-        image_mode = str(image.mode)
-        image_dims = f"{image.size[0]}x{image.size[1]}"
-        creation_time = datetime.fromtimestamp(os.path.getmtime(self.image_path)).strftime("%Y-%m-%d %H:%M")
-        image.close()
+        image_mode, image_dims, mod_time, file_size = self._get_image_info()
         positive, negative = image_data_extractor.get_image_prompts(self.image_path)
 
         self.add_label(self._label_path, "Image Path", row=0, wraplength=col_0_width)
@@ -76,9 +72,9 @@ class ImageDetails():
         self.add_label(self._label_dims, "Dimensions", row=3, wraplength=col_0_width)
         self.add_label(self.label_dims, image_dims, row=3, column=1)
         self.add_label(self._label_size, "Size", row=4, wraplength=col_0_width)
-        self.add_label(self.label_size, get_readable_file_size(self.image_path), row=4, column=1)
+        self.add_label(self.label_size, file_size, row=4, column=1)
         self.add_label(self._label_mtime, "Modification Time", row=5, wraplength=col_0_width)
-        self.add_label(self.label_mtime, creation_time, row=5, column=1)
+        self.add_label(self.label_mtime, mod_time, row=5, column=1)
         self.add_label(self._label_positive, "Positive", row=6, wraplength=col_0_width)
         self.add_label(self.label_positive, positive, row=6, column=1)
         self.add_label(self._label_negative, "Negative", row=7, wraplength=col_0_width)
@@ -119,7 +115,31 @@ class ImageDetails():
             self.add_button("update_tags_btn", "Update Tags", self.update_tags, row=13)
 
         self.master.bind("<Escape>", self.close_windows)
+        self.master.protocol("WM_DELETE_WINDOW", self.close_windows)
         self.frame.after(1, lambda: self.frame.focus_force())
+
+    def _get_image_info(self):
+        image = Image.open(self.image_path)
+        image_mode = str(image.mode)
+        image_dims = f"{image.size[0]}x{image.size[1]}"
+        mod_time = datetime.fromtimestamp(os.path.getmtime(self.image_path)).strftime("%Y-%m-%d %H:%M")
+        image.close()
+        file_size = get_readable_file_size(self.image_path)
+        return image_mode, image_dims, mod_time, file_size
+
+    def update_image_details(self, image_path, index_text):
+        self.image_path = image_path
+        image_mode, image_dims, mod_time, file_size = self._get_image_info()
+        positive, negative = image_data_extractor.get_image_prompts(self.image_path)
+        self.label_path["text"] = image_path
+        self.label_index["text"] = index_text
+        self.label_mode["text"] = image_mode
+        self.label_dims["text"] = image_dims
+        self.label_mtime["text"] = mod_time
+        self.label_size["text"] = file_size
+        self.label_positive["text"] = positive
+        self.label_negative["text"] = negative
+        self.master.update()
 
     def copy_prompt(self):
         positive = self.label_positive["text"]
@@ -217,6 +237,7 @@ class ImageDetails():
         print("Updated tags for " + self.image_path) # TODO toast
 
     def close_windows(self, event=None):
+        self.app_actions.image_details_window = None
         self.master.destroy()
 
     def add_label(self, label_ref, text, row=0, column=0, wraplength=500):

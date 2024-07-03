@@ -146,6 +146,14 @@ class SlideshowConfig:
         else:
             SlideshowConfig.slideshow_running = True
 
+    @staticmethod
+    def end_slideshows():
+        if SlideshowConfig.slideshow_running or SlideshowConfig.show_new_images:
+            SlideshowConfig.slideshow_running = False
+            SlideshowConfig.show_new_images = False
+            return True
+        return False
+
 
 class App():
     '''
@@ -285,6 +293,7 @@ class App():
         self.add_label(self.label_inclusion_pattern, "Filter files by glob pattern")
         self.inclusion_pattern = tk.StringVar()
         self.set_inclusion_pattern = self.new_entry(self.inclusion_pattern)
+        self.set_inclusion_pattern.bind("<Return>", self.set_file_filter)
         self.apply_to_grid(self.set_inclusion_pattern, sticky=W)
 
         self.label_sort_by = Label(self.sidebar)
@@ -415,7 +424,8 @@ class App():
             self._add_buttons_for_mode = _add_buttons_for_mode
             self._set_label_state = _set_label_state
             self._set_toggled_view_matches = _set_toggled_view_matches
-
+            self.image_details_window = None
+        
     def toggle_fullscreen(self, event=None):
         App.fullscreen = not App.fullscreen
         self.master.attributes("-fullscreen", App.fullscreen)
@@ -459,6 +469,12 @@ class App():
                                                    str(default_val), *self.compare_wrapper.compare_mode.threshold_vals())
         self.apply_to_grid(self.compare_threshold_choice, sticky=W, specific_row=13)
         self.master.update()
+
+    def set_file_filter(self, event=None):
+        if SlideshowConfig.end_slideshows():
+            self.toast("Ended slideshows")
+        App.file_browser.set_filter(self.inclusion_pattern.get())
+        self.refresh(file_check=False)
 
     @classmethod
     def toggle_fill_canvas(cls):
@@ -540,9 +556,6 @@ class App():
     def get_image_details(self, event=None):
         if App.img_path is None or App.img_path == "":
             return
-        top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
-        top_level.title("Image Details")
-        top_level.geometry("600x400")
         if App.mode == Mode.BROWSE:
             index_text = App.file_browser.get_index_details()
         else:
@@ -556,10 +569,17 @@ class App():
                 index_text = f"{_index} of {len_files_matched} ({App.file_browser.get_index_details()})"
             else:
                 index_text = "" # shouldn't happen
-        try:
-            image_details = ImageDetails(self.master, top_level, App.img_path, index_text, self.app_actions)
-        except Exception as e:
-            self.alert("Image Details Error", str(e), kind="error")
+        if self.app_actions.image_details_window is not None:
+            self.app_actions.image_details_window.update_image_details(App.img_path, index_text)
+        else:
+            top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
+            top_level.title("Image Details")
+            top_level.geometry("600x400")
+            try:
+                image_details_window = ImageDetails(self.master, top_level, App.img_path, index_text, self.app_actions)
+                self.app_actions.image_details_window = image_details_window
+            except Exception as e:
+                self.alert("Image Details Error", str(e), kind="error")
 
     def show_related_image(self, event=None):
         ImageDetails.show_related_image(master=self.master, image_path=App.img_path, app_actions=self.app_actions)
@@ -809,6 +829,9 @@ class App():
         if extra_text is not None:
             text += "\n" + extra_text
         self.label_current_image_name["text"] = text
+        if self.app_actions.image_details_window is not None:
+            print(f"image details window: {self.app_actions.image_details_window}")
+            self.get_image_details()
 
     def clear_image(self) -> None:
         if App.img is not None and self.canvas is not None:
@@ -1305,6 +1328,8 @@ class App():
                 text = "No image files found"
             else:
                 text = "1 image file found" if file_count == 1 else f"{file_count} image files found"
+            if self.inclusion_pattern.get() != "":
+                text += f"\n(filtered)"
             self.label_state["text"] = text
 
     def apply_to_grid(self, component, sticky=None, pady=0, specific_row=None):

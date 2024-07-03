@@ -249,6 +249,7 @@ class MarkedFiles():
         self.master.bind("<Key>", self.filter_targets)
         self.master.bind("<Return>", self.do_action)
         self.master.bind("<Escape>", self.close_windows)
+        self.master.protocol("WM_DELETE_WINDOW", self.close_windows)
         self.master.bind('<Shift-Delete>', self.delete_marked_files)
         self.master.bind("<Button-2>", self.delete_marked_files)
         self.master.bind("<Control-t>", self.set_permanent_mark_target)
