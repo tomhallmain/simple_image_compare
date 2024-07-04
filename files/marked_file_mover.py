@@ -239,7 +239,7 @@ class MarkedFiles():
             self.delete_btn = None
             self.add_btn("delete_btn", "DELETE", self.delete_marked_files, column=3)
             self.set_target_dirs_from_dir_btn = None
-            self.add_btn("set_target_dirs_from_dir_btn", "Add directories from parent", self.set_target_dirs_From_dir, column=4)
+            self.add_btn("set_target_dirs_from_dir_btn", "Add directories from parent", self.set_target_dirs_from_dir, column=4)
             self.clear_target_dirs_btn = None
             self.add_btn("clear_target_dirs_btn", "Clear targets", self.clear_target_dirs, column=5)
             self.frame.after(1, lambda: self.frame.focus_force())
@@ -469,7 +469,7 @@ class MarkedFiles():
             raise Exception(f"Failed to {action_part3} some files: {exceptions}")
         app_actions.refresh()
 
-    def set_target_dirs_From_dir(self, event=None):
+    def set_target_dirs_from_dir(self, event=None):
         """
         Gather all first-level child directories from the selected directory and
         add them as target directories, updating the window when complete.
@@ -486,7 +486,7 @@ class MarkedFiles():
             if not target_dir in MarkedFiles.mark_target_dirs:
                 dirpath = os.path.normpath(os.path.join(parent_dir, target_dir))
                 if dirpath != self.base_dir:
-                    MarkedFiles.mark_target_dirs.append(os.path.normpath(os.path.join(parent_dir, target_dir)))
+                    MarkedFiles.mark_target_dirs.append(dirpath)
 
         MarkedFiles.mark_target_dirs.sort()
         self.filtered_target_dirs = MarkedFiles.mark_target_dirs[:]
@@ -548,7 +548,6 @@ class MarkedFiles():
                     dirname = os.path.basename(os.path.dirname(os.path.normpath(target_dir)))
                     if dirname and dirname.lower().startswith(self.filter_text):
                         temp.append(target_dir)
-            # Third pass try to match part of file name
             for target_dir in MarkedFiles.mark_target_dirs:
                 if not target_dir in temp:
                     dirname = os.path.basename(os.path.normpath(target_dir))

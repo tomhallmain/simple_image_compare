@@ -19,11 +19,11 @@ from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
 from compare.compare import get_valid_file
-from compare.compare_embeddings import CompareEmbedding
 from compare.compare_wrapper import CompareWrapper
 from files.file_browser import FileBrowser, SortBy
 from files.go_to_file import GoToFile
 from files.marked_file_mover import MarkedFiles
+from files.recent_directory_window import RecentDirectoryWindow
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
@@ -207,8 +207,8 @@ class App():
         Style().configure(".", font=('Helvetica', config.font_size))
 
         self.app_actions = App.AppActions(self.toast, self.alert, self.refresh, self.refocus, self.set_mode, self.create_image,
-                                          self.show_next_image, self.go_to_file, self.get_base_dir, self._handle_delete, self.open_move_marks_window,
-                                          self._set_toggled_view_matches, self._set_label_state, self._add_buttons_for_mode)
+                                          self.show_next_image, self.go_to_file, self.set_base_dir, self.get_base_dir, self._handle_delete,
+                                          self.open_move_marks_window, self._set_toggled_view_matches, self._set_label_state, self._add_buttons_for_mode)
 
         self.base_dir = get_user_dir()
         self.search_dir = get_user_dir()
@@ -400,15 +400,16 @@ class App():
     def load_info_cache(self):
         try:
             MarkedFiles.set_target_dirs(app_info_cache.get_meta("marked_file_target_dirs", default_val=[]))
+            RecentDirectoryWindow.set_recent_directories(app_info_cache.get_meta("recent_directories", default_val=[]))
             base_dir = app_info_cache.get_meta("base_dir")
             if base_dir is not None and base_dir != "" and base_dir != "." and os.path.isdir(base_dir):
                 self.set_base_dir_box.insert(0, base_dir)
-                self.set_base_dir()
+                self.set_base_dir(base_dir_from_dir_window=base_dir)
         except Exception as e:
             print(e)
 
     class AppActions:
-        def __init__(self, toast, alert, refresh, refocus, set_mode, create_image, show_next_image, go_to_file, get_base_dir, delete,
+        def __init__(self, toast, alert, refresh, refocus, set_mode, create_image, show_next_image, go_to_file, set_base_dir, get_base_dir, delete,
                      open_move_marks_window, _add_buttons_for_mode, _set_label_state, _set_toggled_view_matches):
             self.toast = toast
             self.alert = alert
@@ -417,6 +418,7 @@ class App():
             self.set_mode = set_mode
             self.create_image = create_image
             self.show_next_image = show_next_image
+            self.set_base_dir = set_base_dir
             self.get_base_dir = get_base_dir
             self.go_to_file = go_to_file
             self.delete = delete
@@ -605,19 +607,24 @@ class App():
             except Exception as e:
                 pass
 
-    def set_base_dir(self) -> None:
+    def set_base_dir(self, base_dir_from_dir_window=None) -> None:
         '''
         Change the base directory to the value provided in the UI.
         '''
         self.store_info_cache()
         base_dir = self.set_base_dir_box.get()
-        if base_dir == "" or base_dir == "Add dirpath..." or self.base_dir == base_dir:
+        if base_dir_from_dir_window is not None:
+            self.base_dir = base_dir_from_dir_window  # assume this directory is valid
+        elif (base_dir == "" or base_dir == "Add dirpath..." or self.base_dir == base_dir) and len(RecentDirectoryWindow.recent_directories) == 0:
             base_dir = filedialog.askdirectory(
                 initialdir=self.get_base_dir(), title="Set image comparison directory")
-        self.base_dir = get_valid_file(self.base_dir, base_dir)
-        if self.base_dir is None:
-            self.base_dir = filedialog.askdirectory(
-                initialdir=self.get_base_dir(), title="Set image comparison directory")
+            self.base_dir = get_valid_file(self.base_dir, base_dir)
+            if self.base_dir is None:
+                raise Exception("Failed to set image comparison directory")
+            RecentDirectoryWindow.recent_directories.append(self.base_dir)
+        else:
+            self.open_recent_directory_window()
+            return
         if self.compare_wrapper.has_compare() and self.base_dir != self.compare_wrapper.compare().base_dir:
             self.compare_wrapper._compare = None
             self._set_label_state(group_number=None, size=0)
@@ -647,6 +654,18 @@ class App():
                 self.show_next_image()
             self._set_label_state()
         self.master.update()
+
+    def open_recent_directory_window(self, event=None, open_gui=True):
+        top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
+        top_level.title(f"Set Image Comparison Directory")
+        top_level.geometry(RecentDirectoryWindow.get_geometry(is_gui=open_gui))
+        if not open_gui:
+            top_level.attributes('-alpha', 0.3)
+        try:
+            recent_directory_window = RecentDirectoryWindow(
+                top_level, open_gui, self.app_actions, base_dir=self.get_base_dir())
+        except Exception as e:
+            self.alert("Recent Directory Window Error", str(e), kind="error")
 
     def get_base_dir(self) -> str:
         return "." if (self.base_dir is None or self.base_dir == "") else self.base_dir
@@ -1264,6 +1283,7 @@ class App():
                 app_info_cache.set(base_dir, "image_cursor", os.path.basename(App.img_path))
             app_info_cache.set(base_dir, "recursive", App.file_browser.is_recursive())
             app_info_cache.set(base_dir, "sort_by", str(App.file_browser.get_sort_by()))
+        app_info_cache.set_meta("recent_directories", RecentDirectoryWindow.recent_directories)
         app_info_cache.set_meta("marked_file_target_dirs", MarkedFiles.mark_target_dirs)
         app_info_cache.store()
 
