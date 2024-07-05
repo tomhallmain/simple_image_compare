@@ -69,9 +69,9 @@ class MarkedFiles():
 
     delete_lock = False
     mark_cursor = -1
-    max_height = 900
-    n_target_dirs_cutoff = 30
-    col_0_width = 600
+    MAX_HEIGHT = 900
+    N_TARGET_DIRS_CUTOFF = 30
+    COL_0_WIDTH = 600
 
     @staticmethod
     def set_target_dirs(target_dirs):
@@ -165,9 +165,9 @@ class MarkedFiles():
             width = 600
             min_height = 300
             height = len(MarkedFiles.mark_target_dirs) * 22 + 20
-            if height > MarkedFiles.max_height:
-                height = MarkedFiles.max_height
-                width *= 2 if len(MarkedFiles.mark_target_dirs) < MarkedFiles.n_target_dirs_cutoff * 2 else 3
+            if height > MarkedFiles.MAX_HEIGHT:
+                height = MarkedFiles.MAX_HEIGHT
+                width *= 2 if len(MarkedFiles.mark_target_dirs) < MarkedFiles.N_TARGET_DIRS_CUTOFF * 2 else 3
             else:
                 height = max(height, min_height)
         else:
@@ -177,8 +177,8 @@ class MarkedFiles():
 
     @staticmethod
     def add_columns():
-        if len(MarkedFiles.mark_target_dirs) > MarkedFiles.n_target_dirs_cutoff:
-            if len(MarkedFiles.mark_target_dirs) > MarkedFiles.n_target_dirs_cutoff * 2:
+        if len(MarkedFiles.mark_target_dirs) > MarkedFiles.N_TARGET_DIRS_CUTOFF:
+            if len(MarkedFiles.mark_target_dirs) > MarkedFiles.N_TARGET_DIRS_CUTOFF * 2:
                 return 2
             return 1
         return 0
@@ -229,7 +229,7 @@ class MarkedFiles():
             self.add_target_dir_widgets()
 
             self._label_info = Label(self.frame)
-            self.add_label(self._label_info, "Set a new target directory", row=0, wraplength=MarkedFiles.col_0_width)
+            self.add_label(self._label_info, "Set a new target directory", row=0, wraplength=MarkedFiles.COL_0_WIDTH)
             self.add_directory_move_btn = None
             self.add_btn("add_directory_move_btn", "MOVE", self.handle_target_directory, column=1)
             def copy_handler_new_dir(event=None, self=self):
@@ -259,18 +259,18 @@ class MarkedFiles():
         row = 0
         base_col = 0
         for i in range(len(self.filtered_target_dirs)):
-            if i >= MarkedFiles.n_target_dirs_cutoff * 2:
-                row = i-MarkedFiles.n_target_dirs_cutoff*2+1
+            if i >= MarkedFiles.N_TARGET_DIRS_CUTOFF * 2:
+                row = i-MarkedFiles.N_TARGET_DIRS_CUTOFF*2+1
                 base_col = 6
-            elif i >= MarkedFiles.n_target_dirs_cutoff:
-                row = i-MarkedFiles.n_target_dirs_cutoff+1
+            elif i >= MarkedFiles.N_TARGET_DIRS_CUTOFF:
+                row = i-MarkedFiles.N_TARGET_DIRS_CUTOFF+1
                 base_col = 3
             else:
                 row = i+1
             target_dir = self.filtered_target_dirs[i]
             self._label_info = Label(self.frame)
             self.label_list.append(self._label_info)
-            self.add_label(self._label_info, target_dir, row=row, column=base_col, wraplength=MarkedFiles.col_0_width)
+            self.add_label(self._label_info, target_dir, row=row, column=base_col, wraplength=MarkedFiles.COL_0_WIDTH)
 
             move_btn = Button(self.frame, text="Move")
             self.move_btn_list.append(move_btn)

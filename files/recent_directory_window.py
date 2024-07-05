@@ -3,9 +3,17 @@ import os
 from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
-from utils.app_info_cache import app_info_cache
+#from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
+
+
+class RecentDirectories:
+    directories = []
+
+    @staticmethod
+    def set_recent_directories(directories):
+        RecentDirectories.directories = list(directories)
 
 
 class RecentDirectoryWindow():
@@ -13,15 +21,15 @@ class RecentDirectoryWindow():
     last_set_directory = None
 
     directory_history = []
-    MAX_ACTIONS = 50
+    MAX_DIRECTORIES = 50
 
-    max_height = 900
-    n_recent_directories_cutoff = 30
-    col_0_width = 600
+    MAX_HEIGHT = 900
+    N_DIRECTORIES_CUTOFF = 30
+    COL_0_WIDTH = 600
 
     @staticmethod
     def set_recent_directories(recent_directories):
-        RecentDirectoryWindow.recent_directories = recent_directories
+        RecentDirectories.directories = recent_directories
 
     @staticmethod
     def get_history_directory(start_index=0):
@@ -40,7 +48,7 @@ class RecentDirectoryWindow():
                 _dir == RecentDirectoryWindow.directory_history[0]:
             return
         RecentDirectoryWindow.directory_history.insert(0, _dir)
-        if len(RecentDirectoryWindow.directory_history) > RecentDirectoryWindow.MAX_ACTIONS:
+        if len(RecentDirectoryWindow.directory_history) > RecentDirectoryWindow.MAX_DIRECTORIES:
             del RecentDirectoryWindow.directory_history[-1]
 
     @staticmethod
@@ -48,10 +56,10 @@ class RecentDirectoryWindow():
         if is_gui:
             width = 600
             min_height = 300
-            height = len(RecentDirectoryWindow.recent_directories) * 22 + 20
-            if height > RecentDirectoryWindow.max_height:
-                height = RecentDirectoryWindow.max_height
-                width *= 2 if len(RecentDirectoryWindow.recent_directories) < RecentDirectoryWindow.n_recent_directories_cutoff * 2 else 3
+            height = len(RecentDirectories.directories) * 22 + 20
+            if height > RecentDirectoryWindow.MAX_HEIGHT:
+                height = RecentDirectoryWindow.MAX_HEIGHT
+                width *= 2 if len(RecentDirectories.directories) < RecentDirectoryWindow.N_DIRECTORIES_CUTOFF * 2 else 3
             else:
                 height = max(height, min_height)
         else:
@@ -61,27 +69,30 @@ class RecentDirectoryWindow():
 
     @staticmethod
     def add_columns():
-        if len(RecentDirectoryWindow.recent_directories) > RecentDirectoryWindow.n_recent_directories_cutoff:
-            if len(RecentDirectoryWindow.recent_directories) > RecentDirectoryWindow.n_recent_directories_cutoff * 2:
+        if len(RecentDirectories.directories) > RecentDirectoryWindow.N_DIRECTORIES_CUTOFF:
+            if len(RecentDirectories.directories) > RecentDirectoryWindow.N_DIRECTORIES_CUTOFF * 2:
                 return 2
             return 1
         return 0
 
-    def __init__(self, master, is_gui, app_actions, base_dir="."):
+    def __init__(self, master, app_master, is_gui, app_actions, base_dir=".", run_compare_image=None):
         self.is_gui = is_gui
         self.master = master
-        self.compare = None
+        self.app_master = app_master
+        self.run_compare_image = run_compare_image
         self.app_actions = app_actions
         self.base_dir = os.path.normpath(base_dir)
         self.filter_text = ""
 
         # Use the last set target directory as a base if any directories have been set
-        if len(RecentDirectoryWindow.recent_directories) > 0 and os.path.isdir(RecentDirectoryWindow.recent_directories[0]):
-            self.starting_target = RecentDirectoryWindow.recent_directories[0]
+        if len(RecentDirectories.directories) > 0 and os.path.isdir(RecentDirectories.directories[0]):
+            self.starting_target = RecentDirectories.directories[0]
+            print("Starting target recent directory: " + self.starting_target)
         else:
             self.starting_target = base_dir
+            print("Starting target base dir: " + self.starting_target)
 
-        self.filtered_recent_directories = RecentDirectoryWindow.recent_directories[:]
+        self.filtered_recent_directories = RecentDirectories.directories[:]
         self.set_dir_btn_list = []
         self.label_list = []
 
@@ -105,7 +116,7 @@ class RecentDirectoryWindow():
             self.add_dir_widgets()
 
             self._label_info = Label(self.frame)
-            self.add_label(self._label_info, "Set a new target directory", row=0, wraplength=RecentDirectoryWindow.col_0_width)
+            self.add_label(self._label_info, "Set a new target directory", row=0, wraplength=RecentDirectoryWindow.COL_0_WIDTH)
             self.add_directory_move_btn = None
             self.add_btn("add_directory_move_btn", "Add directory", self.handle_directory, column=1)
             self.set_recent_directories_from_dir_btn = None
@@ -125,18 +136,18 @@ class RecentDirectoryWindow():
         row = 0
         base_col = 0
         for i in range(len(self.filtered_recent_directories)):
-            if i >= RecentDirectoryWindow.n_recent_directories_cutoff * 2:
-                row = i-RecentDirectoryWindow.n_recent_directories_cutoff*2+1
+            if i >= RecentDirectoryWindow.N_DIRECTORIES_CUTOFF * 2:
+                row = i-RecentDirectoryWindow.N_DIRECTORIES_CUTOFF*2+1
                 base_col = 4
-            elif i >= RecentDirectoryWindow.n_recent_directories_cutoff:
-                row = i-RecentDirectoryWindow.n_recent_directories_cutoff+1
+            elif i >= RecentDirectoryWindow.N_DIRECTORIES_CUTOFF:
+                row = i-RecentDirectoryWindow.N_DIRECTORIES_CUTOFF+1
                 base_col = 2
             else:
                 row = i+1
             _dir = self.filtered_recent_directories[i]
             self._label_info = Label(self.frame)
             self.label_list.append(self._label_info)
-            self.add_label(self._label_info, _dir, row=row, column=base_col, wraplength=RecentDirectoryWindow.col_0_width)
+            self.add_label(self._label_info, _dir, row=row, column=base_col, wraplength=RecentDirectoryWindow.COL_0_WIDTH)
             set_dir_btn = Button(self.frame, text="Set")
             self.set_dir_btn_list.append(set_dir_btn)
             set_dir_btn.grid(row=row, column=base_col+1)
@@ -153,8 +164,8 @@ class RecentDirectoryWindow():
             if os.path.isdir(_dir):
                 return _dir, True
             else:
-                if _dir in RecentDirectoryWindow.recent_directories:
-                    RecentDirectoryWindow.recent_directories.remove(_dir)
+                if _dir in RecentDirectories.directories:
+                    RecentDirectories.directories.remove(_dir)
                 toast_callback(f"Invalid directory: {_dir}")
         _dir = filedialog.askdirectory(
                 initialdir=starting_target, title="Set image comparison directory")
@@ -178,9 +189,9 @@ class RecentDirectoryWindow():
             return _dir
 
         _dir = os.path.normpath(_dir)
-        if not _dir in RecentDirectoryWindow.recent_directories:
-            RecentDirectoryWindow.recent_directories.append(_dir)
-            RecentDirectoryWindow.recent_directories.sort()
+        if not _dir in RecentDirectories.directories:
+            RecentDirectories.directories.append(_dir)
+            RecentDirectories.directories.sort()
         self.set_directory(_dir=_dir)
 
     def set_directory(self, event=None, _dir=None):
@@ -188,7 +199,10 @@ class RecentDirectoryWindow():
         if config.debug and self.filter_text is not None and self.filter_text.strip() != "":
             print(f"Filtered by string: {self.filter_text}")
         RecentDirectoryWindow.update_history(_dir)
-        self.app_actions.set_base_dir(base_dir_from_dir_window=_dir)
+        if self.run_compare_image is None:
+            self.app_actions.set_base_dir(base_dir_from_dir_window=_dir)
+        else:
+            self.app_actions.new_window(master=self.app_master, base_dir=_dir, search_image=self.run_compare_image)
         RecentDirectoryWindow.last_set_directory = _dir
         self.close_windows()
 
@@ -206,13 +220,13 @@ class RecentDirectoryWindow():
             if os.path.isdir(os.path.join(parent_dir, name))]
 
         for _dir in recent_directories_to_add:
-            if not _dir in RecentDirectoryWindow.recent_directories:
+            if not _dir in RecentDirectories.directories:
                 dirpath = os.path.normpath(os.path.join(parent_dir, _dir))
                 if dirpath != self.base_dir:
-                    RecentDirectoryWindow.recent_directories.append(dirpath)
+                    RecentDirectories.directories.append(dirpath)
 
-        RecentDirectoryWindow.recent_directories.sort()
-        self.filtered_recent_directories = RecentDirectoryWindow.recent_directories[:]
+        RecentDirectories.directories.sort()
+        self.filtered_recent_directories = RecentDirectories.directories[:]
         self.filter_text = "" # Clear the filter to ensure all new directories are shown
         self.clear_widget_lists()
         self.add_dir_widgets()
@@ -251,26 +265,26 @@ class RecentDirectoryWindow():
                 print("Filter unset")
             # Restore the list of target directories to the full list
             self.filtered_recent_directories.clear()
-            self.filtered_recent_directories = RecentDirectoryWindow.recent_directories[:]
+            self.filtered_recent_directories = RecentDirectories.directories[:]
         else:
             temp = []
             # First pass try to match directory name
-            for _dir in RecentDirectoryWindow.recent_directories:
+            for _dir in RecentDirectories.directories:
                 dirname = os.path.basename(os.path.normpath(_dir))
                 if dirname.lower() == self.filter_text:
                     temp.append(_dir)
-            for _dir in RecentDirectoryWindow.recent_directories:
+            for _dir in RecentDirectories.directories:
                 dirname = os.path.basename(os.path.normpath(_dir))
                 if not _dir in temp:
                     if dirname.lower().startswith(self.filter_text):
                         temp.append(_dir)
             # Second pass try to match parent directory name, so these will appear after
-            for _dir in RecentDirectoryWindow.recent_directories:
+            for _dir in RecentDirectories.directories:
                 if not _dir in temp:
                     dirname = os.path.basename(os.path.dirname(os.path.normpath(_dir)))
                     if dirname and dirname.lower().startswith(self.filter_text):
                         temp.append(_dir)
-            for _dir in RecentDirectoryWindow.recent_directories:
+            for _dir in RecentDirectories.directories:
                 if not _dir in temp:
                     dirname = os.path.basename(os.path.normpath(_dir))
                     if dirname and (f" {self.filter_text}" in dirname.lower() or f"_{self.filter_text}" in dirname.lower()):
@@ -316,7 +330,7 @@ class RecentDirectoryWindow():
 
     def clear_recent_directories(self, event=None):
         self.clear_widget_lists()
-        RecentDirectoryWindow.recent_directories.clear()
+        RecentDirectories.directories.clear()
         self.filtered_recent_directories.clear()
         self.add_dir_widgets()
         self.master.update()

@@ -22,6 +22,7 @@ class Config:
         self.file_counter_limit = 40000
         self.fill_canvas = False
         self.image_browse_recursive = False
+        self.sidebar_visible = True
         self.image_tagging_enabled = True
         self.print_settings = True
         self.show_toasts = True
@@ -29,6 +30,7 @@ class Config:
         self.file_check_interval_seconds = 10
         self.file_check_skip_if_n_files_over = 5000
         self.default_main_window_size = "1400x950"
+        self.default_secondary_window_size = "600x700"
         self.sort_by = SortBy.NAME
         self.toasts_persist_seconds = 2
         self.delete_instantly = False
@@ -73,6 +75,7 @@ class Config:
             self.set_values(str,
                             "log_level",
                             "default_main_window_size",
+                            "default_secondary_window_size",
                             "clip_model",
                             "file_paths_json_path")
             self.set_values(bool,
@@ -88,7 +91,8 @@ class Config:
                             "use_file_paths_json",
                             "text_embedding_search_presets_exclusive",
                             "store_checkpoints",
-                            "search_only_return_closest")
+                            "search_only_return_closest",
+                            "sidebar_visible")
             self.set_values(int,
                             "max_search_results",
                             "color_diff_threshold",
