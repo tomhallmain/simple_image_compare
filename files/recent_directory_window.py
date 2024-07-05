@@ -87,10 +87,8 @@ class RecentDirectoryWindow():
         # Use the last set target directory as a base if any directories have been set
         if len(RecentDirectories.directories) > 0 and os.path.isdir(RecentDirectories.directories[0]):
             self.starting_target = RecentDirectories.directories[0]
-            print("Starting target recent directory: " + self.starting_target)
         else:
             self.starting_target = base_dir
-            print("Starting target base dir: " + self.starting_target)
 
         self.filtered_recent_directories = RecentDirectories.directories[:]
         self.set_dir_btn_list = []
@@ -189,9 +187,10 @@ class RecentDirectoryWindow():
             return _dir
 
         _dir = os.path.normpath(_dir)
-        if not _dir in RecentDirectories.directories:
-            RecentDirectories.directories.append(_dir)
-            RecentDirectories.directories.sort()
+        # NOTE don't want to sort here, instead keep the most recent directories at the top
+        if _dir in RecentDirectories.directories:
+            RecentDirectories.directories.remove(_dir)
+        RecentDirectories.directories.insert(0, _dir)
         self.set_directory(_dir=_dir)
 
     def set_directory(self, event=None, _dir=None):
@@ -201,6 +200,8 @@ class RecentDirectoryWindow():
         RecentDirectoryWindow.update_history(_dir)
         if self.run_compare_image is None:
             self.app_actions.set_base_dir(base_dir_from_dir_window=_dir)
+        elif self.run_compare_image == "":
+            self.app_actions.new_window(master=self.app_master, base_dir=_dir)
         else:
             self.app_actions.new_window(master=self.app_master, base_dir=_dir, search_image=self.run_compare_image)
         RecentDirectoryWindow.last_set_directory = _dir
@@ -218,14 +219,15 @@ class RecentDirectoryWindow():
 
         recent_directories_to_add = [name for name in os.listdir(parent_dir)
             if os.path.isdir(os.path.join(parent_dir, name))]
+        recent_directories_to_add.sort(reverse=True)
 
         for _dir in recent_directories_to_add:
-            if not _dir in RecentDirectories.directories:
-                dirpath = os.path.normpath(os.path.join(parent_dir, _dir))
-                if dirpath != self.base_dir:
-                    RecentDirectories.directories.append(dirpath)
+            dirpath = os.path.normpath(os.path.join(parent_dir, _dir))
+            if dirpath in RecentDirectories.directories:
+                RecentDirectories.directories.remove(dirpath)
+            if dirpath != self.base_dir:
+                RecentDirectories.directories.insert(0, dirpath)
 
-        RecentDirectories.directories.sort()
         self.filtered_recent_directories = RecentDirectories.directories[:]
         self.filter_text = "" # Clear the filter to ensure all new directories are shown
         self.clear_widget_lists()
@@ -268,15 +270,15 @@ class RecentDirectoryWindow():
             self.filtered_recent_directories = RecentDirectories.directories[:]
         else:
             temp = []
-            # First pass try to match directory name
+            # First pass try to match directory basename
             for _dir in RecentDirectories.directories:
-                dirname = os.path.basename(os.path.normpath(_dir))
-                if dirname.lower() == self.filter_text:
+                basename = os.path.basename(os.path.normpath(_dir))
+                if basename.lower() == self.filter_text:
                     temp.append(_dir)
             for _dir in RecentDirectories.directories:
-                dirname = os.path.basename(os.path.normpath(_dir))
+                basename = os.path.basename(os.path.normpath(_dir))
                 if not _dir in temp:
-                    if dirname.lower().startswith(self.filter_text):
+                    if basename.lower().startswith(self.filter_text):
                         temp.append(_dir)
             # Second pass try to match parent directory name, so these will appear after
             for _dir in RecentDirectories.directories:
@@ -284,10 +286,11 @@ class RecentDirectoryWindow():
                     dirname = os.path.basename(os.path.dirname(os.path.normpath(_dir)))
                     if dirname and dirname.lower().startswith(self.filter_text):
                         temp.append(_dir)
+            # Third pass try to match part of the basename
             for _dir in RecentDirectories.directories:
                 if not _dir in temp:
-                    dirname = os.path.basename(os.path.normpath(_dir))
-                    if dirname and (f" {self.filter_text}" in dirname.lower() or f"_{self.filter_text}" in dirname.lower()):
+                    basename = os.path.basename(os.path.normpath(_dir))
+                    if basename and (f" {self.filter_text}" in basename.lower() or f"_{self.filter_text}" in basename.lower()):
                         temp.append(_dir)
             self.filtered_recent_directories = temp[:]
 

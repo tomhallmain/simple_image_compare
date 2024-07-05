@@ -164,7 +164,7 @@ class App():
     secondary_top_levels = {}
 
     @staticmethod
-    def add_secondary_window(master, base_dir, search_image):
+    def add_secondary_window(master, base_dir, search_image=None):
         top_level = tk.Toplevel(master)
         top_level.title(" Simple Image Compare ")
         top_level.geometry(config.default_secondary_window_size)
@@ -406,7 +406,8 @@ class App():
         self.master.bind("<Shift-N>", self._add_all_marks_from_last_or_current_group)
         self.master.bind("<Shift-G>", self.go_to_mark)
         self.master.bind("<Shift-C>", lambda event: MarkedFiles.clear_file_marks(self.toast))
-        self.master.bind("<Control-a>", self.open_secondary_compare_window)
+        self.master.bind("<Control-w>", self.open_secondary_compare_window)
+        self.master.bind("<Control-a>", lambda event: self.open_secondary_compare_window(run_compare_image=self.img_path))
         self.master.bind("<Control-g>", self.open_go_to_file_window)
         self.master.bind("<Control-h>", self.toggle_sidebar)
         self.master.bind("<Control-C>", self.copy_marks_list)
@@ -1134,8 +1135,10 @@ class App():
         if self.prev_img_path is not None:
             self.go_to_file(event=event, search_text=self.prev_img_path, exact_match=True)
 
-    def open_secondary_compare_window(self, event=None):
-        if self.img_path is None:
+    def open_secondary_compare_window(self, event=None, run_compare_image=None):
+        if run_compare_image is None:
+            self.open_recent_directory_window(run_compare_image="")
+        elif not os.path.isfile(run_compare_image):
             self.alert("No image selected", "No image was selected for comparison")
         else:
             self.open_recent_directory_window(run_compare_image=self.img_path)

@@ -483,8 +483,8 @@ class MarkedFiles():
             if os.path.isdir(os.path.join(parent_dir, name))]
 
         for target_dir in target_dirs_to_add:
-            if not target_dir in MarkedFiles.mark_target_dirs:
-                dirpath = os.path.normpath(os.path.join(parent_dir, target_dir))
+            dirpath = os.path.normpath(os.path.join(parent_dir, target_dir))
+            if not dirpath in MarkedFiles.mark_target_dirs:
                 if dirpath != self.base_dir:
                     MarkedFiles.mark_target_dirs.append(dirpath)
 
@@ -532,15 +532,15 @@ class MarkedFiles():
             self.filtered_target_dirs = MarkedFiles.mark_target_dirs[:]
         else:
             temp = []
-            # First pass try to match directory name
+            # First pass try to match directory basename
             for target_dir in MarkedFiles.mark_target_dirs:
-                dirname = os.path.basename(os.path.normpath(target_dir))
-                if dirname.lower() == self.filter_text:
+                basename = os.path.basename(os.path.normpath(target_dir))
+                if basename.lower() == self.filter_text:
                     temp.append(target_dir)
             for target_dir in MarkedFiles.mark_target_dirs:
-                dirname = os.path.basename(os.path.normpath(target_dir))
+                basename = os.path.basename(os.path.normpath(target_dir))
                 if not target_dir in temp:
-                    if dirname.lower().startswith(self.filter_text):
+                    if basename.lower().startswith(self.filter_text):
                         temp.append(target_dir)
             # Second pass try to match parent directory name, so these will appear after
             for target_dir in MarkedFiles.mark_target_dirs:
@@ -548,10 +548,11 @@ class MarkedFiles():
                     dirname = os.path.basename(os.path.dirname(os.path.normpath(target_dir)))
                     if dirname and dirname.lower().startswith(self.filter_text):
                         temp.append(target_dir)
+            # Third pass try to match part of the basename
             for target_dir in MarkedFiles.mark_target_dirs:
                 if not target_dir in temp:
-                    dirname = os.path.basename(os.path.normpath(target_dir))
-                    if dirname and (f" {self.filter_text}" in dirname.lower() or f"_{self.filter_text}" in dirname.lower()):
+                    basename = os.path.basename(os.path.normpath(target_dir))
+                    if basename and (f" {self.filter_text}" in basename.lower() or f"_{self.filter_text}" in basename.lower()):
                         temp.append(target_dir)
             self.filtered_target_dirs = temp[:]
 

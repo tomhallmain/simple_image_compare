@@ -58,7 +58,9 @@ If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [
 
 `store_checkpoints` will cache a group comparison process at certain checkpoints for later restart.
 
-## UI Bindings
+## Key and Mouse Bindings
+
+While the UI elements support normal usage in most cases, there are many bindings that enable extended functionality, mostly to minimize UI content unrelated to image viewers.
 
 A directory with images must be set before most of the below bindings will have any effect. The group bindings are only functional in GROUP mode after a comparison has been run.
 
@@ -79,6 +81,7 @@ A directory with images must be set before most of the below bindings will have 
 | Shift-G          |                  | Go to next mark        |
 | Shift-C          |                  | Clear marks list       |
 | Ctrl-C           |                  | Copy marks list        |
+| Ctrl-H           |                  | Hide/show sidebar      |
 | Ctrl-M           |                  | Open marks window      |
 | Ctrl-K           |                  | Open marks window (no GUI)   |
 | Ctrl-R           |                  | Run previous marks action    |
@@ -89,6 +92,9 @@ A directory with images must be set before most of the below bindings will have 
 | Ctrl-D           |                  | Set marks from previous      |
 | Ctrl-B           |                  | Switch back to browsing mode |
 | Ctrl-S           |                  | Run next text search preset  |
+| Ctrl-W           |                  | Open new compare window      |
+| Ctrl-A           |                  | Search current image in new window    |
+| Shift-R          |                  | View related image (controlnet, etc.) |
 | Shift-O          |                  | Open image location    |
 | Shift-Delete     | Mouse Wheel Click| Delete image(s)        |
 | F11              |                  | Toggle fullscreen      |
