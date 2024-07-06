@@ -21,6 +21,7 @@ from PIL import ImageTk, Image
 
 from compare.compare import get_valid_file
 from compare.compare_wrapper import CompareWrapper
+from extensions.sd_runner_client import SDRunnerClient
 from files.file_browser import FileBrowser, SortBy
 from files.go_to_file import GoToFile
 from files.marked_file_mover import MarkedFiles
@@ -39,9 +40,7 @@ from image.image_details import ImageDetails # must import after config because 
 
 ### TODO image zoom feature
 ### TODO copy/cut image using hotkey (pywin32 ? win32com? IDataPobject?)
-### TODO comfyui plugin for ipadapter/controlnet (maybe)
 ### TODO some type of plugin to filter the images using a filter function defined externally
-### TODO recursive option for compare jobs
 ### TODO enable comparison jobs on user-defined file list
 ### TODO compare option to restrict by matching image dimensions
 ### TODO compare option encoding size
@@ -49,7 +48,6 @@ from image.image_details import ImageDetails # must import after config because 
 ### TODO tkVideoPlayer or tkVideoUtils for playing videos
 ### TODO custom frame class for sidebar to hold all the buttons
 ### TODO compare window (only compare a set of images from directory, sorted by some logic)
-### TODO enable starting app with a directory or image path and auto-setting these on startup
 ### TODO drag and drop images to auto-set directory and image
 
 ### TODO replace restored files to compare if present after previous deletion
@@ -248,6 +246,7 @@ class App():
         self.search_dir = get_user_dir()
 
         self.compare_wrapper = CompareWrapper(master, config.compare_mode, self.app_actions)
+        self.sd_runner_client = SDRunnerClient()
 
         # Sidebar
         self.sidebar = Sidebar(self.master)
@@ -340,7 +339,7 @@ class App():
         self.apply_to_grid(self.sort_by_choice, sticky=W)
 
         self.image_browse_recurse_var = tk.BooleanVar(value=config.image_browse_recursive)
-        self.image_browse_recurse = Checkbutton(self.sidebar, text='Browsing mode - Recursive',
+        self.image_browse_recurse = Checkbutton(self.sidebar, text='Recurse subdirectories',
                                                 variable=self.image_browse_recurse_var, command=self.toggle_image_browse_recursive)
         self.apply_to_grid(self.image_browse_recurse, sticky=W)
 
@@ -405,6 +404,10 @@ class App():
         self.master.bind("<Shift-M>", self.add_or_remove_mark_for_current_image)
         self.master.bind("<Shift-N>", self._add_all_marks_from_last_or_current_group)
         self.master.bind("<Shift-G>", self.go_to_mark)
+        self.master.bind("<Shift-A>", self.set_current_image_run_search)
+        self.master.bind("<Shift-Y>", lambda event: self.run_image_generation(_type=SDRunnerClient.TYPE_RENOISER))
+        self.master.bind("<Shift-U>", lambda event: self.run_image_generation(_type=SDRunnerClient.TYPE_CONTROL_NET))
+        self.master.bind("<Shift-I>", lambda event: self.run_image_generation(_type=SDRunnerClient.TYPE_IP_ADAPTER))
         self.master.bind("<Shift-C>", lambda event: MarkedFiles.clear_file_marks(self.toast))
         self.master.bind("<Control-w>", self.open_secondary_compare_window)
         self.master.bind("<Control-a>", lambda event: self.open_secondary_compare_window(run_compare_image=self.img_path))
@@ -837,7 +840,7 @@ class App():
                 return False
         return self.compare_wrapper.show_next_image(show_alert=show_alert)
 
-    def set_current_image_run_search(self) -> None:
+    def set_current_image_run_search(self, event=None) -> None:
         '''
         Execute a new image search from the provided search image.
         '''
@@ -891,7 +894,6 @@ class App():
             text += "\n" + extra_text
         self.label_current_image_name["text"] = text
         if self.app_actions.image_details_window is not None:
-            print(f"image details window: {self.app_actions.image_details_window}")
             self.get_image_details()
 
     def clear_image(self) -> None:
@@ -989,6 +991,7 @@ class App():
         Execute operations on the Compare object in any mode. Create a new
         Compare object if needed.
         '''
+        recursive = self.file_browser.recursive
         search_file_path = self.get_search_file_path() if searching_image else None
         counter_limit = self.get_counter_limit()
         compare_faces = self.compare_faces.get()
@@ -997,7 +1000,7 @@ class App():
         inclusion_pattern = self.get_inclusion_pattern()
         store_checkpoints = self.store_checkpoints.get()
         listener = ProgressListener(update_func=self.display_progress)
-        self.compare_wrapper.run(self.get_base_dir(), self.mode, searching_image, search_file_path, search_text, search_text_negative,
+        self.compare_wrapper.run(self.get_base_dir(), self.mode, recursive, searching_image, search_file_path, search_text, search_text_negative,
                                  find_duplicates, counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener, store_checkpoints)
 
     def _set_toggled_view_matches(self):
@@ -1324,6 +1327,11 @@ class App():
                         group_indexes[0], group_indexes[1], set_group=False, show_next_image=show_next_image)
             except KeyError as e:
                 pass # The group may have been removed before update_groups_for_removed_file was called on the last file in it
+
+    def run_image_generation(self, _type=None):
+        self.sd_runner_client.start()
+        self.sd_runner_client.run(_type, self.img_path)
+        self.toast(f"Running image gen: {_type}")
 
     def store_info_cache(self):
         base_dir = self.get_base_dir()

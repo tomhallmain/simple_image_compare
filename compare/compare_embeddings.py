@@ -41,11 +41,12 @@ class CompareEmbedding:
     THRESHHOLD_GROUP_CUTOFF = 4500 # TODO fix this for Embedding case
     TEXT_EMBEDDING_CACHE = {}
 
-    def __init__(self, base_dir=".", search_file_path=None, counter_limit=30000,
+    def __init__(self, base_dir=".", recursive=True, search_file_path=None, counter_limit=30000,
                  compare_faces=False, embedding_similarity_threshold=0.9,
                  inclusion_pattern=None, overwrite=False, verbose=False, gather_files_func=gather_files,
                  include_gifs=False, match_dims=False, progress_listener=None):
         self.files = []
+        self.recursive = recursive
         self.set_base_dir(base_dir)
         self.set_search_file_path(search_file_path)
         self.counter_limit = counter_limit
@@ -129,6 +130,7 @@ class CompareEmbedding:
         print(f" embedding similarity threshold: {self.embedding_similarity_threshold}")
         print(f" max file process limit: {self.counter_limit}")
         print(f" max files processable for base dir: {self.max_files_processed}")
+        print(f" recursive: {self.recursive}")
         print(f" file glob pattern: {self.inclusion_pattern}")
         print(f" include gifs: {self.include_gifs}")
         print(f" file embeddings filepath: {self._file_embeddings_filepath}")

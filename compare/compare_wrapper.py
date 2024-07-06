@@ -167,7 +167,7 @@ class CompareWrapper:
         raise Exception(f"Unknown Compare class {current_compare_class}")
 
     def _is_new_data_request_required(self, counter_limit, compare_threshold,
-                                     inclusion_pattern, overwrite):
+                                     inclusion_pattern, recursive, overwrite):
         assert self._compare is not None
         if self.compare_mode == CompareMode.COLOR_MATCHING:
             if self._compare.color_diff_threshold != compare_threshold:
@@ -176,9 +176,10 @@ class CompareWrapper:
             return True
         return (self._compare.counter_limit != counter_limit
                 or self._compare.inclusion_pattern != inclusion_pattern
+                or self._compare.recursive != recursive
                 or (not self._compare.overwrite and overwrite))
 
-    def run(self, base_dir, app_mode, searching_image, search_file_path, search_text, search_text_negative, find_duplicates,
+    def run(self, base_dir, app_mode, recursive, searching_image, search_file_path, search_text, search_text_negative, find_duplicates,
             counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener, store_checkpoints=False):
         get_new_data = True
         self.current_group_index = 0
@@ -193,14 +194,12 @@ class CompareWrapper:
             self._app_actions._set_label_state(_wrap_text_to_fit_length(
                 "Gathering image data... setup may take a while depending on number of files involved.", 30))
             self.new_compare(
-                base_dir, search_file_path, counter_limit, compare_threshold,
+                base_dir, recursive, search_file_path, counter_limit, compare_threshold,
                 compare_faces, inclusion_pattern, overwrite, listener)
         else:
             assert self._compare is not None
-            get_new_data = self._is_new_data_request_required(counter_limit,
-                                                             compare_threshold,
-                                                             inclusion_pattern,
-                                                             overwrite)
+            get_new_data = self._is_new_data_request_required(counter_limit, compare_threshold,
+                                                             inclusion_pattern, recursive, overwrite)
             self._compare.set_search_file_path(search_file_path)
             self._compare.counter_limit = counter_limit
             self._compare.compare_faces = compare_faces
@@ -242,11 +241,12 @@ class CompareWrapper:
         else:
             self.run_group(find_duplicates=find_duplicates, store_checkpoints=store_checkpoints)
 
-    def new_compare(self, base_dir, search_file_path, counter_limit, compare_threshold,
+    def new_compare(self, base_dir, recursive, search_file_path, counter_limit, compare_threshold,
                     compare_faces, inclusion_pattern, overwrite, listener):
         if self.compare_mode == CompareMode.CLIP_EMBEDDING:
             self._compare = CompareEmbedding(
                 base_dir,
+                recursive=recursive,
                 search_file_path=search_file_path,
                 counter_limit=counter_limit,
                 embedding_similarity_threshold=compare_threshold,
@@ -259,6 +259,7 @@ class CompareWrapper:
         elif self.compare_mode == CompareMode.COLOR_MATCHING:
             self._compare = Compare(
                 base_dir,
+                recursive=recursive,
                 search_file_path=search_file_path,
                 counter_limit=counter_limit,
                 use_thumb=True,

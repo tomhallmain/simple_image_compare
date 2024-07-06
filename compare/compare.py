@@ -33,7 +33,7 @@ def usage():
     print("  -v                     Verbose                                         ")
 
 
-def gather_files(base_dir=".", recursive=True, exts=config.file_types):
+def gather_files(base_dir=".", exts=config.file_types, recursive=True):
     files = []
     recursive_str = "**/" if recursive else ""
     for ext in exts:
@@ -201,12 +201,13 @@ class Compare:
     THRESHHOLD_POTENTIAL_DUPLICATE = 50
     THRESHHOLD_GROUP_CUTOFF = 4500
 
-    def __init__(self, base_dir=".", search_file_path=None, counter_limit=30000,
+    def __init__(self, base_dir=".", recursive=True, search_file_path=None, counter_limit=30000,
                  use_thumb=True, compare_faces=False, color_diff_threshold=15,
                  inclusion_pattern=None, overwrite=False, verbose=False, gather_files_func=gather_files,
                  include_gifs=False, match_dims=False, progress_listener=None):
         self.use_thumb = use_thumb
         self.files = []
+        self.recursive = recursive
         self.set_base_dir(base_dir)
         self.set_search_file_path(search_file_path)
         self.counter_limit = counter_limit
@@ -282,7 +283,7 @@ class Compare:
             exts = config.file_types
             if self.include_gifs:
                 exts.append(".gif")
-            self.files = self.gather_files_func(base_dir=self.base_dir, exts=exts)
+            self.files = self.gather_files_func(base_dir=self.base_dir, exts=exts, recursive=self.recursive)
         else:
             raise Exception("No gather files function found.")
         self.files.sort()
@@ -310,6 +311,7 @@ class Compare:
         print(f" use thumb: {self.use_thumb}")
         print(f" max file process limit: {self.counter_limit}")
         print(f" max files processable for base dir: {self.max_files_processed}")
+        print(f" recursive: {self.recursive}")
         print(f" file glob pattern: {self.inclusion_pattern}")
         print(f" include gifs: {self.include_gifs}")
         print(f" n colors: {self.n_colors}")

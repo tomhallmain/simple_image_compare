@@ -184,6 +184,9 @@ class RecentDirectoryWindow():
             self.close_windows()
             raise Exception("Failed to set target directory to receive marked files.")
         if target_was_valid and _dir is not None:
+            if _dir in RecentDirectories.directories:
+                RecentDirectories.directories.remove(_dir)
+            RecentDirectories.directories.insert(0, _dir)
             return _dir
 
         _dir = os.path.normpath(_dir)
