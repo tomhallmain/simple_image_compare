@@ -26,6 +26,7 @@
   "clear_marks_with_errors_after_move": false,
   "move_marks_overwrite_existing_file": false,
   "trash_folder": null,
+  "always_open_new_windows": false,
   "sd_prompt_reader_loc": "{HOME}\\stable-diffusion-prompt-reader",
   "tag_suggestions_file": "tag_suggestions.json",
   "file_types": [

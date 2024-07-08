@@ -3,7 +3,7 @@ import os
 import cv2 
 import numpy as np
 
-from utils.utils import move_file
+from utils.utils import Utils
 
 def rotate_image(image_path, right=False):
 	try:
@@ -18,7 +18,7 @@ def rotate_image(image_path, right=False):
 		current_extension = os.path.splitext(image_path)[-1]
 		temp_filepath = os.path.join(os.path.dirname(image_path), 'temp' + current_extension)
 		cv2.imwrite(temp_filepath, rotated)
-		move_file(temp_filepath, image_path, overwrite_existing=True)
+		Utils.move_file(temp_filepath, image_path, overwrite_existing=True)
 	except Exception as e:
 		print(f'Error in rotate image: {e}')
 

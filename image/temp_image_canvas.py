@@ -1,4 +1,5 @@
 import os
+import sys
 
 from PIL import Image, ImageTk
 from tkinter import Toplevel, Frame, Canvas, Label
@@ -7,7 +8,7 @@ from extensions.sd_runner_client import SDRunnerClient
 from files.marked_file_mover import MarkedFiles
 from utils.config import config
 from utils.app_style import AppStyle
-from utils.utils import scale_dims
+from utils.utils import Utils
 
 class ResizingCanvas(Canvas):
     '''
@@ -52,6 +53,7 @@ class TempImageCanvas:
         TempImageCanvas.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
         TempImageCanvas.top_level.geometry(dimensions)
         self.master = TempImageCanvas.top_level
+        self.app_master = master
         self.frame = Frame(master)
         self.label = Label(self.frame)
         self.master.rowconfigure(0, weight=1)
@@ -66,6 +68,7 @@ class TempImageCanvas:
         assert self.app_actions is not None
 
         self.master.bind("<Escape>", self.app_actions.refocus)
+        self.master.bind("<Shift-Escape>", self.close_windows)
         self.master.bind("<Shift-D>", lambda event: self.app_actions.get_image_details(image_path=self.image_path))
         self.master.bind("<Shift-U>", lambda event: self.app_actions.run_image_generation(event=event, _type=SDRunnerClient.TYPE_CONTROL_NET))
         self.master.bind("<Shift-I>", lambda event: self.app_actions.run_image_generation(event=event, _type=SDRunnerClient.TYPE_IP_ADAPTER))
@@ -76,6 +79,7 @@ class TempImageCanvas:
         self.master.bind("<Control-e>", self.run_penultimate_marks_action)
         self.master.bind("<Control-c>", self.copy_image_path)
         self.master.bind("<Control-t>", self.run_permanent_marks_action)
+        self.master.bind("<Control-w>", self.new_full_window_with_image)
         self.master.update()
 
     def close_windows(self, event=None):
@@ -100,7 +104,7 @@ class TempImageCanvas:
         Get the object required to display the image in the UI.
         '''
         img = Image.open(filename)
-        fit_dims = scale_dims((img.width, img.height), self.canvas.get_size(), maximize=True)
+        fit_dims = Utils.scale_dims((img.width, img.height), self.canvas.get_size(), maximize=True)
         img = img.resize(fit_dims)
         return ImageTk.PhotoImage(img)
 
@@ -145,4 +149,10 @@ class TempImageCanvas:
         self.master.clipboard_clear()
         self.master.clipboard_append(filepath)
 
+    def new_full_window_with_image(self, event=None):
+        if self.image_path is None or not os.path.isfile(self.image_path):
+            raise ValueError("No image loaded.")
+        base_dir = os.path.dirname(self.image_path)
+        self.app_actions.new_window(master=self.app_master, base_dir=base_dir, image_path=self.image_path)
+        self.close_windows()
 

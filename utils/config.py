@@ -39,6 +39,7 @@ class Config:
         self.move_marks_overwrite_existing_file = False
         self.trash_folder = None
         self.sd_prompt_reader_loc = None
+        self.always_open_new_windows = False
         self.file_types = [".jpg", ".jpeg", ".png", ".tiff", ".webp"]
         self.directories_to_search_for_related_images = []
         self.font_size = 8
@@ -100,7 +101,8 @@ class Config:
                             "text_embedding_search_presets_exclusive",
                             "store_checkpoints",
                             "search_only_return_closest",
-                            "sidebar_visible")
+                            "sidebar_visible",
+                            "always_open_new_windows")
             self.set_values(int,
                             "max_search_results",
                             "color_diff_threshold",

@@ -10,7 +10,7 @@ from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
 from utils.constants import Mode
-from utils.utils import move_file, copy_file
+from utils.utils import Utils
 
 # TODO check hash of files in new directory instead of just filename, or even use a new compare instance to check for duplicates
 # TODO preserve dictionary of all moved / copied files in a session along with their target directories.
@@ -48,9 +48,9 @@ def setup_permanent_action():
     permanent_mark_target = app_info_cache.get_meta("permanent_mark_target")
     permanent_action = app_info_cache.get_meta("permanent_action")
     if permanent_action == "move_file":
-        return Action(move_file, permanent_mark_target)
+        return Action(Utils.move_file, permanent_mark_target)
     elif permanent_action == "copy_file":
-        return Action(copy_file, permanent_mark_target)
+        return Action(Utils.copy_file, permanent_mark_target)
     else:
         return None
 
@@ -233,7 +233,7 @@ class MarkedFiles():
             self.add_directory_move_btn = None
             self.add_btn("add_directory_move_btn", "MOVE", self.handle_target_directory, column=1)
             def copy_handler_new_dir(event=None, self=self):
-                self.handle_target_directory(move_func=copy_file)
+                self.handle_target_directory(move_func=Utils.copy_file)
             self.add_directory_copy_btn = None
             self.add_btn("add_directory_copy_btn", "COPY", copy_handler_new_dir, column=2)
             self.delete_btn = None
@@ -283,7 +283,7 @@ class MarkedFiles():
             self.copy_btn_list.append(copy_btn)
             copy_btn.grid(row=row, column=base_col+2)
             def copy_handler(event, self=self, target_dir=target_dir):
-                return self.move_marks_to_dir(event, target_dir, move_func=copy_file)
+                return self.move_marks_to_dir(event, target_dir, move_func=Utils.copy_file)
             copy_btn.bind("<Button-1>", copy_handler)
 
 
@@ -304,7 +304,7 @@ class MarkedFiles():
         return target_dir, False
 
 
-    def handle_target_directory(self, event=None, target_dir=None, move_func=move_file):
+    def handle_target_directory(self, event=None, target_dir=None, move_func=Utils.move_file):
         """
         Have to call this when user is setting a new target directory as well,
         in which case target_dir will be None.
@@ -327,7 +327,7 @@ class MarkedFiles():
             MarkedFiles.mark_target_dirs.sort()
         self.move_marks_to_dir(target_dir=target_dir, move_func=move_func)
 
-    def move_marks_to_dir(self, event=None, target_dir=None, move_func=move_file):
+    def move_marks_to_dir(self, event=None, target_dir=None, move_func=Utils.move_file):
         target_dir = self.handle_target_directory(target_dir=target_dir)
         if config.debug and self.filter_text is not None and self.filter_text.strip() != "":
             print(f"Filtered by string: {self.filter_text}")
@@ -340,13 +340,13 @@ class MarkedFiles():
 
     @staticmethod
     def move_marks_to_dir_static(app_actions, target_dir=None,
-                                 move_func=move_file, single_image=False):
+                                 move_func=Utils.move_file, single_image=False):
         """
         Move or copy the marked files to the target directory.
         """
         MarkedFiles.is_performing_action = True
         some_files_already_present = False
-        is_moving = move_func == move_file
+        is_moving = move_func == Utils.move_file
         action_part1 = "Moving" if is_moving else "Copying"
         action_part2 = "Moved" if is_moving else "Copied"
         MarkedFiles.update_history(target_dir, move_func)
@@ -427,7 +427,7 @@ class MarkedFiles():
             return
         if MarkedFiles.delete_lock:
             return
-        is_moving_back = MarkedFiles.action_history[0].action == move_file
+        is_moving_back = MarkedFiles.action_history[0].action == Utils.move_file
         action_part1 = "Moving back" if is_moving_back else "Removing"
         action_part2 = "Moved back" if is_moving_back else "Removed"
         target_dir, target_was_valid = MarkedFiles.get_target_directory(MarkedFiles.last_set_target_dir, None, app_actions.toast)
@@ -446,7 +446,7 @@ class MarkedFiles():
             try:
                 if is_moving_back:
                     # Move the file back to its original place.
-                    move_file(expected_new_filepath, base_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
+                    Utils.move_file(expected_new_filepath, base_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
                 else:
                     # Remove the file.
                     os.remove(expected_new_filepath)
@@ -584,7 +584,7 @@ class MarkedFiles():
         shift_key_pressed = (event.state & 0x1) != 0
         control_key_pressed = (event.state & 0x4) != 0
         alt_key_pressed = (event.state & 0x20000) != 0
-        move_func = copy_file if shift_key_pressed else move_file
+        move_func = Utils.copy_file if shift_key_pressed else Utils.move_file
         if alt_key_pressed:
             penultimate_action = MarkedFiles.get_history_action(start_index=1)
             if penultimate_action is not None and os.path.isdir(penultimate_action.target):

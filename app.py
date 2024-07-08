@@ -1,4 +1,3 @@
-from copy import deepcopy
 import os
 import random
 import signal
@@ -33,9 +32,7 @@ from utils.config import config, FileCheckConfig, SlideshowConfig
 from utils.constants import Mode, CompareMode
 from utils.help_and_config import HelpAndConfig
 from utils.running_tasks_registry import periodic, start_thread
-from utils.utils import (
-    _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, open_file_in_gimp
-)
+from utils.utils import Utils
 from image.image_details import ImageDetails # must import after config because of dynamic import
 
 
@@ -139,15 +136,29 @@ class App():
     UI for comparing image files and making related file changes.
     '''
     secondary_top_levels = {}
+    open_windows = []
 
     @staticmethod
-    def add_secondary_window(master, base_dir, search_image=None):
+    def add_secondary_window(master, base_dir, image_path=None, do_search=False):
+        if not config.always_open_new_windows:
+            for _app in App.open_windows:
+                if _app.base_dir == base_dir:
+                    if image_path is not None and image_path != "":
+                        if do_search:
+                            _app.search_img_path_box.insert(0, image_path)
+                            _app.set_search_image()
+                        else:
+                            _app.go_to_file(search_text=image_path)
+                    _app.canvas.after(1, lambda: _app.canvas.focus_force())
+                    return
         top_level = tk.Toplevel(master)
         top_level.title(" Simple Image Compare ")
         top_level.geometry(config.default_secondary_window_size)
         window_id = random.randint(1000000000,9999999999)
         App.secondary_top_levels[window_id] = top_level # Keep reference to avoid gc
-        app = App(top_level, base_dir=base_dir, search_image=search_image, grid_sidebar=False, window_id=window_id)
+        if do_search and (image_path is None or image_path == ""):
+            do_search = False
+        _app = App(top_level, base_dir=base_dir, image_path=image_path, grid_sidebar=False, do_search=do_search, window_id=window_id)
 
     def toggle_theme(self, to_theme=None, do_toast=True):
         if (to_theme is None and AppStyle.IS_DEFAULT_THEME) or to_theme == AppStyle.LIGHT_THEME:
@@ -174,7 +185,7 @@ class App():
             self.toast(f"Theme switched to {AppStyle.get_theme_name()}.")
 
 
-    def __init__(self, master, base_dir=None, search_image=None, grid_sidebar=config.sidebar_visible, window_id=0):
+    def __init__(self, master, base_dir=None, image_path=None, grid_sidebar=config.sidebar_visible, do_search=False, window_id=0):
         self.master = master
         self.master.resizable(1, 1)
         self.master.columnconfigure(0, weight=1)
@@ -225,8 +236,8 @@ class App():
         }
         self.app_actions = AppActions(actions=app_actions)
 
-        self.base_dir = get_user_dir() if base_dir is None else base_dir
-        self.search_dir = get_user_dir()
+        self.base_dir = Utils.get_user_dir() if base_dir is None else base_dir
+        self.search_dir = Utils.get_user_dir()
 
         self.compare_wrapper = CompareWrapper(master, config.compare_mode, self.app_actions)
         self.sd_runner_client = SDRunnerClient()
@@ -256,8 +267,8 @@ class App():
         self.add_button("set_search_btn", "Set search file", self.set_search_image)
         self.search_image = tk.StringVar()
         self.search_img_path_box = self.new_entry(self.search_image)
-        if search_image:
-            self.search_img_path_box.insert(0, search_image)
+        if do_search and image_path is not None:
+            self.search_img_path_box.insert(0, image_path)
         self.search_img_path_box.bind("<Return>", self.set_search_image)
         self.apply_to_grid(self.search_img_path_box, sticky=W)
 
@@ -381,6 +392,8 @@ class App():
         self.master.bind("<Escape>", self.end_fullscreen)
         self.master.bind("<Shift-D>", self.get_image_details)
         self.master.bind("<Shift-R>", self.show_related_image)
+        self.master.bind("<Shift-T>", self.find_related_images_in_open_window)
+        self.master.bind("<Shift-Y>", self.set_marks_from_downstream_related_images)
         self.master.bind("<Shift-H>", self.get_help_and_config)
         self.master.bind("<Shift-S>", self.toggle_slideshow)
         self.master.bind("<MouseWheel>", lambda event: self.show_next_image() if event.delta > 0 else self.show_prev_image())
@@ -431,10 +444,15 @@ class App():
         
         self.canvas.after(1, lambda: self.canvas.focus_force())
 
-        if search_image is not None:
-            # Search image should be set above in search image box in this case.
-            # Search for matches to given image immediately upon opening.
-            self.set_search_image()
+        if image_path is not None:
+            if do_search:
+                # Search image should be set above in search image box in this case.
+                # Search for matches to given image immediately upon opening.
+                self.set_search_image()
+            else:
+                self.go_to_file(search_text=image_path)
+        
+        App.open_windows.append(self)
 
     def is_secondary(self):
         return self.window_id > 0
@@ -442,6 +460,10 @@ class App():
     def on_closing(self):
         self.store_info_cache()
         if self.is_secondary():
+            for i in range(len(App.open_windows)):
+                if App.open_windows[i].window_id == self.window_id:
+                    del App.open_windows[i]
+                    break
             del App.secondary_top_levels[self.window_id]
             self.file_check_config.end_filecheck()
             self.slideshow_config.end_slideshows()
@@ -503,7 +525,7 @@ class App():
         self.master.update()
 
     def set_file_filter(self, event=None):
-        if SlideshowConfig.end_slideshows():
+        if self.slideshow_config.end_slideshows():
             self.toast("Ended slideshows")
         self.file_browser.set_filter(self.inclusion_pattern.get())
         self.refresh(file_check=False)
@@ -622,6 +644,34 @@ class App():
 
     def show_related_image(self, event=None):
         ImageDetails.show_related_image(master=self.master, image_path=self.img_path, app_actions=self.app_actions)
+
+    def find_related_images_in_open_window(self, event=None):
+        window = self.get_other_window_or_self()
+        image_to_use = self.img_path if len(MarkedFiles.file_marks) != 1 else MarkedFiles.file_marks[0]
+        next_related_image = ImageDetails.next_downstream_related_image(image_to_use, window.file_browser, self.app_actions)
+        if next_related_image is not None:
+            window.go_to_file(search_text=next_related_image)
+            window.canvas.after(1, window.canvas.focus_force())
+        else:
+            self.toast(f"No downstream related image(s) found in {window.base_dir}")
+
+    def set_marks_from_downstream_related_images(self, event=None):
+        window = self.get_other_window_or_self()
+        image_to_use = self.img_path if len(MarkedFiles.file_marks) != 1 else MarkedFiles.file_marks[0]
+        downstream_related_images = ImageDetails.get_downstream_related_images(image_to_use, window.file_browser, self.app_actions)
+        if downstream_related_images is not None:
+            MarkedFiles.file_marks = downstream_related_images
+            self.toast(f"{len(downstream_related_images)} file marks set")
+
+    def get_other_window_or_self(self):
+        if len(App.secondary_top_levels) == 0:
+            window = self # should be main window in this case
+        else:
+            for _app in App.open_windows:
+                if _app is not None and _app.window_id != self.window_id and os.path.isdir(_app.base_dir):
+                    window = _app
+                    break
+        return window
 
     def get_help_and_config(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
@@ -759,7 +809,7 @@ class App():
             return GifImageUI(filename)
 
         img = Image.open(filename)
-        fit_dims = scale_dims((img.width, img.height), self.canvas.get_size(), maximize=self.fill_canvas)
+        fit_dims = Utils.scale_dims((img.width, img.height), self.canvas.get_size(), maximize=self.fill_canvas)
         img = img.resize(fit_dims)
         return ImageTk.PhotoImage(img)
 
@@ -877,11 +927,11 @@ class App():
             self.label_current_image_name = Label(self.sidebar)
             self.add_label(self.label_current_image_name, "", pady=30)
         self.label_current_image_name.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
-        relative_filepath, basename = get_relative_dirpath_split(self.base_dir, image_path)
+        relative_filepath, basename = Utils.get_relative_dirpath_split(self.base_dir, image_path)
         self.prev_img_path = self.img_path
         self.img_path = image_path
         text = basename if relative_filepath == "" else relative_filepath + "\n" + basename
-        text = _wrap_text_to_fit_length(text, 30)
+        text = Utils._wrap_text_to_fit_length(text, 30)
         if extra_text is not None:
             text += "\n" + extra_text
         self.label_current_image_name["text"] = text
@@ -944,7 +994,7 @@ class App():
             self.has_added_buttons_for_mode[self.mode] = True
 
     def display_progress(self, context, percent_complete):
-        self._set_label_state(_wrap_text_to_fit_length(
+        self._set_label_state(Utils._wrap_text_to_fit_length(
                 f"{context}: {int(percent_complete)}% complete", 30))
         self.master.update()
 
@@ -1202,7 +1252,7 @@ class App():
 
         if filepath is not None:
             self.toast("Opening file location: " + filepath)
-            open_file_location(filepath)
+            Utils.open_file_location(filepath)
         else:
             self.alert("Error", "Failed to open location of current file, unable to get valid filepath", kind="error")
 
@@ -1210,7 +1260,7 @@ class App():
         filepath = self.get_active_image_filepath()
         if filepath is not None:
             self.toast("Opening file in GIMP: " + filepath)
-            open_file_in_gimp(filepath)
+            Utils.open_file_in_gimp(filepath)
         else:
             self.alert("Error", "Failed to open current file in GIMP, unable to get valid filepath", kind="error")
 
@@ -1401,7 +1451,7 @@ class App():
             if group_number is None:
                 self.label_state["text"] = ""
             else:
-                self.label_state["text"] = _wrap_text_to_fit_length(
+                self.label_state["text"] = Utils._wrap_text_to_fit_length(
                     f"Group {group_number + 1} of {len(self.compare_wrapper.file_groups)}\nSize: {size}", 30)
         else: # Set based on file count
             file_count = self.file_browser.count()

@@ -10,7 +10,7 @@ from typing import List
 
 from utils.config import config
 from utils.constants import Sort, SortBy
-from utils.utils import alphanumeric_sort
+from utils.utils import Utils
 
 
 class SortableFile:
@@ -328,7 +328,7 @@ class FileBrowser:
             if self.sort_by == SortBy.FULL_PATH:
                 sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=reverse)
             elif self.sort_by == SortBy.NAME:
-                sortable_files = alphanumeric_sort(sortable_files, text_lambda=lambda sf: sf.basename.lower(), reverse=reverse)
+                sortable_files = Utils.alphanumeric_sort(sortable_files, text_lambda=lambda sf: sf.basename.lower(), reverse=reverse)
             elif self.sort_by == SortBy.CREATION_TIME:  
                 sortable_files.sort(key=lambda sf: sf.ctime, reverse=reverse)
             elif self.sort_by == SortBy.MODIFY_TIME:  

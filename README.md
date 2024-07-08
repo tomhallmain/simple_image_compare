@@ -19,7 +19,7 @@ When using CLIP embedding compare mode, you can search your images by text - bot
 
 ## Image Browser
 
-The UI can be used as an image file browser. This is especially useful on Windows as the following features are available that the default Windows Photo Viewer application either does not support or are hard to quickly reconfigure:
+The UI can be used as an image file browser. This is especially useful on Windows as the following features are available that the default Windows Photo Viewer application either does not support or makes hard to quickly reconfigure:
 - Auto-resize images to fill the screen
 - Auto-refresh directory files
 - Slideshow (customizable)
@@ -31,6 +31,8 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Move, copy, and delete marked file groups
 - Stores session info about seen directories (useful for directories with many images)
 - Can be set up to run on user-defined list of files in place of a directory
+- Extension with [sd-runner](https://github.com/tomhallmain/sd-runner) for image generation
+- Find related images from embedded ComfyUI workflows
 
 It is not implemented yet, but there will ultimately be zoom and drag functionality in browsing mode, as well as when viewing grouped images after a comparison has been run.
 

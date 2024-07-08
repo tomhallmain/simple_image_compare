@@ -9,7 +9,7 @@ from compare.compare import Compare, get_valid_file
 from compare.compare_embeddings import CompareEmbedding
 from utils.config import config
 from utils.constants import Mode, CompareMode
-from utils.utils import _wrap_text_to_fit_length
+from utils.utils import Utils
 
 class CompareWrapper:
     def __init__(self, master, compare_mode, app_actions):
@@ -191,7 +191,7 @@ class CompareWrapper:
         self.search_image_full_path = search_file_path
 
         if self._requires_new_compare(base_dir):
-            self._app_actions._set_label_state(_wrap_text_to_fit_length(
+            self._app_actions._set_label_state(Utils._wrap_text_to_fit_length(
                 "Gathering image data... setup may take a while depending on number of files involved.", 30))
             self.new_compare(
                 base_dir, recursive, search_file_path, counter_limit, compare_threshold,
@@ -273,7 +273,7 @@ class CompareWrapper:
 
     def run_search(self) -> None:
         assert self._compare is not None
-        self._app_actions._set_label_state(_wrap_text_to_fit_length(
+        self._app_actions._set_label_state(Utils._wrap_text_to_fit_length(
             "Running image comparison with search file...", 30))
         self.files_grouped = self._compare.run_search()
         self.file_groups = deepcopy(self.files_grouped)
@@ -293,7 +293,7 @@ class CompareWrapper:
         self.max_group_index = 0
         self.match_index = 0
         self.has_image_matches = True
-        self._app_actions._set_label_state(_wrap_text_to_fit_length(
+        self._app_actions._set_label_state(Utils._wrap_text_to_fit_length(
             str(len(self.files_matched)) + " possibly related images found.", 30))
 
         self._app_actions._add_buttons_for_mode()
@@ -301,7 +301,7 @@ class CompareWrapper:
 
     def run_search_text_embedding(self, search_text, search_text_negative):
         assert self._compare is not None
-        self._app_actions._set_label_state(_wrap_text_to_fit_length(
+        self._app_actions._set_label_state(Utils._wrap_text_to_fit_length(
             "Running image comparison with search text...", 30))
         self.files_grouped = self._compare.search_text(search_text, search_text_negative)
         self.file_groups = deepcopy(self.files_grouped)
@@ -320,14 +320,14 @@ class CompareWrapper:
         self.max_group_index = 0
         self.match_index = 0
         self.has_image_matches = True
-        self._app_actions._set_label_state(_wrap_text_to_fit_length(
+        self._app_actions._set_label_state(Utils._wrap_text_to_fit_length(
             str(len(self.files_matched)) + " possibly related images found.", 30))
         self._app_actions._add_buttons_for_mode()
         self._app_actions.create_image(self.current_match())
 
     def run_group(self, find_duplicates=False, store_checkpoints=False) -> None:
         assert self._compare is not None
-        self._app_actions._set_label_state(_wrap_text_to_fit_length(
+        self._app_actions._set_label_state(Utils._wrap_text_to_fit_length(
             "Running image comparisons...", 30))
         self.files_grouped, self.file_groups = self._compare.run(store_checkpoints=store_checkpoints)
         

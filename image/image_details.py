@@ -16,7 +16,7 @@ from utils.config import config
 from utils.constants import ImageGenerationType
 from utils.app_style import AppStyle
 
-# TODO: image generation mode selection here
+# TODO: fix image generation mode selection widget
 # TODO: rename file
 
 def get_readable_file_size(path):
@@ -31,6 +31,8 @@ def get_readable_file_size(path):
 class ImageDetails():
     related_image_canvas = None
     related_image_saved_node_id = "LoadImage"
+    downstream_related_image_index = 0
+    downstream_related_images_cache = {}
     image_generation_mode = ImageGenerationType.CONTROL_NET
 
     def __init__(self, parent_master, master, image_path, index_text, app_actions, do_refresh=True):
@@ -205,9 +207,7 @@ class ImageDetails():
             ImageDetails.show_related_image(self.parent_master, node_id, self.image_path, self.app_actions)
 
     @staticmethod
-    def show_related_image(master=None, node_id=None, image_path="", app_actions=None):
-        if master is None or image_path == "":
-            raise Exception("No master or image path given")
+    def get_related_image_path(image_path, node_id=None):
         if node_id is None or node_id == "":
             node_id = ImageDetails.related_image_saved_node_id
         use_class_type = True
@@ -216,10 +216,20 @@ class ImageDetails():
             use_class_type = False
         except ValueError:
             pass
-        if use_class_type:
-            related_image_path = image_data_extractor.get_input_by_class_type(image_path, node_id, "image")
-        else:
-            related_image_path = image_data_extractor.get_input_by_node_id(image_path, node_id, "image")
+        try:
+            if use_class_type:
+                related_image_path = image_data_extractor.get_input_by_class_type(image_path, node_id, "image")
+            else:
+                related_image_path = image_data_extractor.get_input_by_node_id(image_path, node_id, "image")
+        except Exception:
+            related_image_path = None
+        return related_image_path
+
+    @staticmethod
+    def show_related_image(master=None, node_id=None, image_path="", app_actions=None):
+        if master is None or image_path == "":
+            raise Exception("No master or image path given")
+        related_image_path = ImageDetails.get_related_image_path(image_path, node_id)
         if related_image_path is None or related_image_path == "":
             print(f"{image_path} - No related image found for node id {node_id}")
             return
@@ -263,6 +273,53 @@ class ImageDetails():
         height = int(image.size[1] * width / image.size[0])
         ImageDetails.related_image_canvas = TempImageCanvas(master, title=related_image_path,
                 dimensions=f"{width}x{height}", app_actions=app_actions)
+
+    @staticmethod
+    def refresh_downstream_related_image_cache(key, image_path, other_base_dir_file_browser):
+        downstream_related_images = []
+        files = other_base_dir_file_browser.get_files()[:]
+        for path in files:
+            if path == image_path:
+                continue
+            related_image_path = ImageDetails.get_related_image_path(path)
+            if related_image_path is not None and related_image_path == image_path:
+                downstream_related_images.append(path)
+        ImageDetails.downstream_related_images_cache[key] = downstream_related_images
+
+    @staticmethod
+    def get_downstream_related_images(image_path, other_base_dir_file_browser, app_actions):
+        key = image_path + "/" + other_base_dir_file_browser.directory
+        if not key in ImageDetails.downstream_related_images_cache:
+            ImageDetails.refresh_downstream_related_image_cache(key, image_path, other_base_dir_file_browser)
+            downstream_related_images = ImageDetails.downstream_related_images_cache[key]
+            toast_text = f"{len(downstream_related_images)} downstream image(s) found."
+        else:
+            downstream_related_images = ImageDetails.downstream_related_images_cache[key]
+            toast_text = f"{len(downstream_related_images)} (cached) downstream image(s) found."
+            if ImageDetails.downstream_related_image_index >= len(downstream_related_images):
+                ImageDetails.refresh_downstream_related_image_cache(key, image_path, other_base_dir_file_browser)
+                downstream_related_images = ImageDetails.downstream_related_images_cache[key]
+                toast_text = f"{len(downstream_related_images)} downstream image(s) found."
+        if len(downstream_related_images) == 0:
+            app_actions.toast(f"No downstream related image(s) found in {other_base_dir_file_browser.directory}")
+            return None
+        app_actions.toast(toast_text)
+        return downstream_related_images
+
+    @staticmethod
+    def next_downstream_related_image(image_path, other_base_dir_file_browser, app_actions):
+        '''
+        In this case, find the next image that has been created from the given image.
+        '''
+        downstream_related_images = ImageDetails.get_downstream_related_images(image_path, other_base_dir_file_browser, app_actions)
+        if downstream_related_images is None:
+            return None
+        if ImageDetails.downstream_related_image_index >= len(downstream_related_images):
+            ImageDetails.downstream_related_image_index = 0
+        downstream_related_image_path = downstream_related_images[ImageDetails.downstream_related_image_index]
+        ImageDetails.downstream_related_image_index += 1
+        return downstream_related_image_path
+
 
     def set_image_generation_mode(self, event=None):
         ImageDetails.image_generation_mode = ImageGenerationType.get(self.image_generation_mode_var.get())

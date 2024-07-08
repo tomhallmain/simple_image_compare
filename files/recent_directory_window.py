@@ -206,7 +206,7 @@ class RecentDirectoryWindow():
         elif self.run_compare_image == "":
             self.app_actions.new_window(master=self.app_master, base_dir=_dir)
         else:
-            self.app_actions.new_window(master=self.app_master, base_dir=_dir, search_image=self.run_compare_image)
+            self.app_actions.new_window(master=self.app_master, base_dir=_dir, image_path=self.run_compare_image, do_search=True)
         RecentDirectoryWindow.last_set_directory = _dir
         self.close_windows()
 
