@@ -2,6 +2,7 @@ import json
 import os
 
 from utils.constants import CompareMode, SortBy
+from utils.running_tasks_registry import running_tasks_registry
 
 
 class Config:
@@ -196,38 +197,54 @@ class Config:
 config = Config()
 
 
-# class FileCheckConfig:
-#     file_check_running = 
+class FileCheckConfig:
+    interval_seconds = config.file_check_interval_seconds
 
-#     @staticmethod
-#     def toggle_filecheck(window_id):
-#         FileCheckConfig.file_check_running = not FileCheckConfig.file_check_running
+    def __init__(self, window_id):
+        self.window_id = window_id
+        self.registry_id = f"{window_id}_file_check"
+        self.is_running = False
+        running_tasks_registry.add(self.registry_id, FileCheckConfig.interval_seconds, f"File Check (window {self.window_id})")
 
-#     @staticmethod
-#     def end_filecheck():
-#         FileCheckConfig.file_check_running = False
+    def toggle_filecheck(self):
+        FileCheckConfig.is_running = not FileCheckConfig.is_running
+        if self.is_running:
+            running_tasks_registry.add(self.registry_id, FileCheckConfig.interval_seconds, f"File Check (window {self.window_id})")
+        else:
+            running_tasks_registry.remove(self.registry_id)
+
+    def end_filecheck(self):
+        FileCheckConfig.is_running = False
+        running_tasks_registry.remove(self.registry_id)
 
 
 class SlideshowConfig:
-    slideshow_running = False
-    show_new_images = False
+    '''
+    There are two modes, one is simple slideshow, the other is a slideshow that shows newly added images only.
+    '''
     interval_seconds = config.slideshow_interval_seconds
 
-    @staticmethod
-    def toggle_slideshow():
-        if SlideshowConfig.show_new_images:
-            SlideshowConfig.show_new_images = False
-        elif SlideshowConfig.slideshow_running:
-            SlideshowConfig.show_new_images = True
-            SlideshowConfig.slideshow_running = False
-        else:
-            SlideshowConfig.slideshow_running = True
+    def __init__(self, window_id):
+        self.window_id = window_id
+        self.registry_id = f"{window_id}_slideshow"
+        self.slideshow_running = False
+        self.show_new_images = False
 
-    @staticmethod
-    def end_slideshows():
-        if SlideshowConfig.slideshow_running or SlideshowConfig.show_new_images:
-            SlideshowConfig.slideshow_running = False
-            SlideshowConfig.show_new_images = False
+    def toggle_slideshow(self):
+        if self.show_new_images:
+            self.show_new_images = False
+            running_tasks_registry.remove(self.registry_id)
+        elif self.slideshow_running:
+            self.show_new_images = True
+            self.slideshow_running = False
+        else:
+            self.slideshow_running = True
+            running_tasks_registry.add(self.registry_id, SlideshowConfig.interval_seconds, f"Slideshow (window {self.window_id})")
+
+    def end_slideshows(self):
+        if self.slideshow_running or self.show_new_images:
+            self.slideshow_running = False
+            self.show_new_images = False
             return True
         return False
 

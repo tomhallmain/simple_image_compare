@@ -29,11 +29,12 @@ from files.recent_directory_window import RecentDirectories, RecentDirectoryWind
 from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
-from utils.config import config, SlideshowConfig
+from utils.config import config, FileCheckConfig, SlideshowConfig
 from utils.constants import Mode, CompareMode
 from utils.help_and_config import HelpAndConfig
+from utils.running_tasks_registry import periodic, start_thread
 from utils.utils import (
-    _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, open_file_in_gimp, periodic, start_thread
+    _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, open_file_in_gimp
 )
 from image.image_details import ImageDetails # must import after config because of dynamic import
 
@@ -183,6 +184,8 @@ class App():
 
         self.window_id = window_id
         self.file_browser = FileBrowser(recursive=config.image_browse_recursive, sort_by=config.sort_by)
+        self.file_check_config = FileCheckConfig(self.window_id)
+        self.slideshow_config = SlideshowConfig(self.window_id)
         self.mode = Mode.BROWSE
         self.fill_canvas = config.fill_canvas
         self.fullscreen = False
@@ -437,9 +440,11 @@ class App():
         return self.window_id > 0
 
     def on_closing(self):
-        app.store_info_cache()
+        self.store_info_cache()
         if self.is_secondary():
             del App.secondary_top_levels[self.window_id]
+            self.file_check_config.end_filecheck()
+            self.slideshow_config.end_slideshows()
         self.master.destroy()
 
     def load_info_cache(self):
@@ -543,16 +548,16 @@ class App():
         if config.debug:
             print("Refreshed files")
 
-    @periodic(config.file_check_interval_seconds)
+    @periodic(registry_attr_name="file_check_config")
     async def check_files(self, **kwargs):
         if self.file_browser.checking_files and self.mode == Mode.BROWSE:
             base_dir = self.set_base_dir_box.get()
             if base_dir and base_dir != "":
-                self.refresh(show_new_images=SlideshowConfig.show_new_images)
+                self.refresh(show_new_images=self.slideshow_config.show_new_images)
 
-    @periodic(SlideshowConfig, sleep_attr="interval_seconds", run_attr="slideshow_running")
+    @periodic(registry_attr_name="slideshow_config")
     async def do_slideshow(self, **kwargs):
-        if SlideshowConfig.slideshow_running and self.mode == Mode.BROWSE:
+        if self.slideshow_config.slideshow_running and self.mode == Mode.BROWSE:
             if config.debug:
                 print("Slideshow next image")
             base_dir = self.set_base_dir_box.get()
@@ -560,10 +565,10 @@ class App():
                 self.show_next_image()
 
     def toggle_slideshow(self, event=None):
-        SlideshowConfig.toggle_slideshow()
-        if SlideshowConfig.show_new_images:
+        self.slideshow_config.toggle_slideshow()
+        if self.slideshow_config.show_new_images:
             message = "Slideshow for new images started"
-        elif SlideshowConfig.slideshow_running:
+        elif self.slideshow_config.slideshow_running:
             message = "Slideshow started"
             start_thread(self.do_slideshow)
         else:
