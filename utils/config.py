@@ -39,6 +39,7 @@ class Config:
         self.trash_folder = None
         self.sd_prompt_reader_loc = None
         self.file_types = [".jpg", ".jpeg", ".png", ".tiff", ".webp"]
+        self.directories_to_search_for_related_images = []
         self.font_size = 8
         self.threshold_potential_duplicate_color = 50
         self.threshold_potential_duplicate_embedding = 0.99
@@ -73,14 +74,17 @@ class Config:
 
         if dict_set:
             self.set_values(None, "trash_folder")
-            self.set_values(list, "file_types", "text_embedding_search_presets")
+            self.set_values(list,
+                            "file_types",
+                            "text_embedding_search_presets",
+                            "directories_to_search_for_related_images")
             self.set_values(str,
                             "log_level",
                             "default_main_window_size",
                             "default_secondary_window_size",
                             "clip_model",
                             "file_paths_json_path",
-                            "client_password")
+                            "sd_runner_client_password")
             self.set_values(bool,
                             "image_browse_recursive",
                             "image_tagging_enabled",
@@ -106,7 +110,7 @@ class Config:
                             "toasts_persist_seconds",
                             "font_size",
                             "threshold_potential_duplicate_color",
-                            "client_port")
+                            "sd_runner_client_port")
             self.set_values(float,
                             "embedding_similarity_threshold",
                             "threshold_potential_duplicate_embedding")
@@ -123,6 +127,13 @@ class Config:
                 raise AssertionError("Invalid sort type for sort_by config setting. Must be one of NAME, FULL_PATH, CREATION_TIME, TYPE")
 
         self.debug = self.log_level and self.log_level.lower() == "debug"
+
+        if len(self.directories_to_search_for_related_images) > 0:
+            temp = self.directories_to_search_for_related_images[:]
+            for _dir in temp:
+                if not os.path.isdir(_dir):
+                    print(f"Invalid directory to search for related images: {_dir}")
+                    self.directories_to_search_for_related_images.remove(_dir)
 
         if self.print_settings:
             self.print_config_settings()
@@ -183,3 +194,40 @@ class Config:
         print(f" - Max files per compare: {self.file_counter_limit}")
 
 config = Config()
+
+
+# class FileCheckConfig:
+#     file_check_running = 
+
+#     @staticmethod
+#     def toggle_filecheck(window_id):
+#         FileCheckConfig.file_check_running = not FileCheckConfig.file_check_running
+
+#     @staticmethod
+#     def end_filecheck():
+#         FileCheckConfig.file_check_running = False
+
+
+class SlideshowConfig:
+    slideshow_running = False
+    show_new_images = False
+    interval_seconds = config.slideshow_interval_seconds
+
+    @staticmethod
+    def toggle_slideshow():
+        if SlideshowConfig.show_new_images:
+            SlideshowConfig.show_new_images = False
+        elif SlideshowConfig.slideshow_running:
+            SlideshowConfig.show_new_images = True
+            SlideshowConfig.slideshow_running = False
+        else:
+            SlideshowConfig.slideshow_running = True
+
+    @staticmethod
+    def end_slideshows():
+        if SlideshowConfig.slideshow_running or SlideshowConfig.show_new_images:
+            SlideshowConfig.slideshow_running = False
+            SlideshowConfig.show_new_images = False
+            return True
+        return False
+

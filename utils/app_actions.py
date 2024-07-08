@@ -9,6 +9,8 @@ class AppActions:
         self.set_mode = actions["set_mode"]
         self.create_image = actions["create_image"]
         self.show_next_image = actions["show_next_image"]
+        self.get_image_details = actions["get_image_details"]
+        self.run_image_generation = actions["run_image_generation"]
         self.set_base_dir = actions["set_base_dir"]
         self.get_base_dir = actions["get_base_dir"]
         self.go_to_file = actions["go_to_file"]

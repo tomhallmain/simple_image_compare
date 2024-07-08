@@ -29,11 +29,11 @@ from files.recent_directory_window import RecentDirectories, RecentDirectoryWind
 from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
-from utils.config import config
+from utils.config import config, SlideshowConfig
 from utils.constants import Mode, CompareMode
 from utils.help_and_config import HelpAndConfig
 from utils.utils import (
-    _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, periodic, start_thread
+    _wrap_text_to_fit_length, get_user_dir, scale_dims, get_relative_dirpath_split, open_file_location, open_file_in_gimp, periodic, start_thread
 )
 from image.image_details import ImageDetails # must import after config because of dynamic import
 
@@ -131,28 +131,6 @@ class ProgressListener:
         self.update_func(context, percent_complete)
 
 
-class SlideshowConfig:
-    slideshow_running = False
-    show_new_images = False
-    interval_seconds = config.slideshow_interval_seconds
-
-    @staticmethod
-    def toggle_slideshow():
-        if SlideshowConfig.show_new_images:
-            SlideshowConfig.show_new_images = False
-        elif SlideshowConfig.slideshow_running:
-            SlideshowConfig.show_new_images = True
-            SlideshowConfig.slideshow_running = False
-        else:
-            SlideshowConfig.slideshow_running = True
-
-    @staticmethod
-    def end_slideshows():
-        if SlideshowConfig.slideshow_running or SlideshowConfig.show_new_images:
-            SlideshowConfig.slideshow_running = False
-            SlideshowConfig.show_new_images = False
-            return True
-        return False
 
 
 class App():
@@ -231,6 +209,8 @@ class App():
             "set_mode": self.set_mode,
             "create_image": self.create_image,
             "show_next_image": self.show_next_image,
+            "get_image_details": self.get_image_details,
+            "run_image_generation": self.run_image_generation,
             "go_to_file": self.go_to_file,
             "set_base_dir": self.set_base_dir,
             "get_base_dir": self.get_base_dir,
@@ -391,6 +371,7 @@ class App():
         self.master.bind('<Shift-Left>', self.compare_wrapper.show_prev_group)
         self.master.bind('<Shift-Right>', self.compare_wrapper.show_next_group)
         self.master.bind('<Shift-O>', self.open_image_location)
+        self.master.bind('<Shift-P>', self.open_image_in_gimp)
         self.master.bind('<Shift-Delete>', self.delete_image)
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Shift-F>", self.toggle_fullscreen)
@@ -405,9 +386,7 @@ class App():
         self.master.bind("<Shift-N>", self._add_all_marks_from_last_or_current_group)
         self.master.bind("<Shift-G>", self.go_to_mark)
         self.master.bind("<Shift-A>", self.set_current_image_run_search)
-        self.master.bind("<Shift-Y>", lambda event: self.run_image_generation(_type=SDRunnerClient.TYPE_RENOISER))
-        self.master.bind("<Shift-U>", lambda event: self.run_image_generation(_type=SDRunnerClient.TYPE_CONTROL_NET))
-        self.master.bind("<Shift-I>", lambda event: self.run_image_generation(_type=SDRunnerClient.TYPE_IP_ADAPTER))
+        self.master.bind("<Shift-I>", lambda event: ImageDetails.run_image_generation_static(self.app_actions))
         self.master.bind("<Shift-C>", lambda event: MarkedFiles.clear_file_marks(self.toast))
         self.master.bind("<Control-w>", self.open_secondary_compare_window)
         self.master.bind("<Control-a>", lambda event: self.open_secondary_compare_window(run_compare_image=self.img_path))
@@ -600,10 +579,16 @@ class App():
             self.home()
         self.toast("Browsing mode set.")
 
-    def get_image_details(self, event=None):
-        if self.img_path is None or self.img_path == "":
+    def get_image_details(self, event=None, image_path=None):
+        preset_image_path = True
+        if image_path is None:
+            image_path = self.img_path
+            preset_image_path = False
+        if image_path is None or image_path == "":
             return
-        if self.mode == Mode.BROWSE:
+        if preset_image_path:
+            index_text = "(Open this image as part of a directory to see index details.)"
+        elif self.mode == Mode.BROWSE:
             index_text = self.file_browser.get_index_details()
         else:
             _index = self.compare_wrapper.match_index + 1
@@ -617,13 +602,15 @@ class App():
             else:
                 index_text = "" # shouldn't happen
         if self.app_actions.image_details_window is not None:
-            self.app_actions.image_details_window.update_image_details(self.img_path, index_text)
+            if self.app_actions.image_details_window.do_refresh:
+                self.app_actions.image_details_window.update_image_details(image_path, index_text)
         else:
             top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
             top_level.title("Image Details")
             top_level.geometry("600x400")
             try:
-                image_details_window = ImageDetails(self.master, top_level, self.img_path, index_text, self.app_actions)
+                image_details_window = ImageDetails(self.master, top_level, image_path, index_text,
+                                                    self.app_actions, do_refresh=not preset_image_path)
                 self.app_actions.image_details_window = image_details_window
             except Exception as e:
                 self.alert("Image Details Error", str(e), kind="error")
@@ -1214,6 +1201,14 @@ class App():
         else:
             self.alert("Error", "Failed to open location of current file, unable to get valid filepath", kind="error")
 
+    def open_image_in_gimp(self, event=None):
+        filepath = self.get_active_image_filepath()
+        if filepath is not None:
+            self.toast("Opening file in GIMP: " + filepath)
+            open_file_in_gimp(filepath)
+        else:
+            self.alert("Error", "Failed to open current file in GIMP, unable to get valid filepath", kind="error")
+
     def copy_image_path(self):
         filepath = self.file_browser.current_file()
         if sys.platform == 'win32':
@@ -1328,18 +1323,20 @@ class App():
             except KeyError as e:
                 pass # The group may have been removed before update_groups_for_removed_file was called on the last file in it
 
-    def run_image_generation(self, _type=None):
+    def run_image_generation(self, event=None, _type=None):
         self.sd_runner_client.start()
         self.sd_runner_client.run(_type, self.img_path)
         self.toast(f"Running image gen: {_type}")
 
     def store_info_cache(self):
         base_dir = self.get_base_dir()
+#        print(f"Base dir for store_info_cache: {base_dir}")
         if base_dir and base_dir != "":
             if not self.is_secondary():
                 app_info_cache.set_meta("base_dir", base_dir)
             if self.img_path and self.img_path != "":
                 app_info_cache.set(base_dir, "image_cursor", os.path.basename(self.img_path))
+#                print(f"Stored image cursor: {os.path.basename(self.img_path)}") # TODO remove
             app_info_cache.set(base_dir, "recursive", self.file_browser.is_recursive())
             app_info_cache.set(base_dir, "sort_by", str(self.file_browser.get_sort_by()))
         app_info_cache.set_meta("recent_directories", RecentDirectories.directories)

@@ -73,3 +73,22 @@ class Sort(Enum):
         return self.value
 
 
+
+class ImageGenerationType(Enum):
+    CONTROL_NET = "control_net"
+    IP_ADAPTER = "ip_adapter"
+    RENOISER = "renoiser"
+
+    def __str__(self):
+        return self.value
+
+    @staticmethod
+    def get(name):
+        for key, value in ImageGenerationType.__members__.items():
+            if str(value) == name:
+                return value
+        raise Exception(f"Not a valid prompt mode: {name}")
+
+    @staticmethod
+    def members():
+        return [str(value) for key, value in ImageGenerationType.__members__.items()]

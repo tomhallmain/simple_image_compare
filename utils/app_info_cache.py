@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 class AppInfoCache:
     CACHE_LOC = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), "app_info_cache.json")
@@ -27,6 +28,11 @@ class AppInfoCache:
         directories = list(directory_info.keys())
         for d in directories:
             if not os.path.isdir(d):
+                # The external drive this reference is pointing to may not be mounted, might still be valid
+                if sys.platform == "win32" and not d.startswith("C:\\"):
+                    base_dir = os.path.split("\\")[0] + "\\"
+                    if not os.path.isdir(base_dir):
+                        continue
                 del directory_info[d]
                 print(f"Removed stale directory reference: {d}")
 

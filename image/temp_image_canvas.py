@@ -3,6 +3,7 @@ import os
 from PIL import Image, ImageTk
 from tkinter import Toplevel, Frame, Canvas, Label
 
+from extensions.sd_runner_client import SDRunnerClient
 from files.marked_file_mover import MarkedFiles
 from utils.config import config
 from utils.app_style import AppStyle
@@ -65,6 +66,10 @@ class TempImageCanvas:
         assert self.app_actions is not None
 
         self.master.bind("<Escape>", self.app_actions.refocus)
+        self.master.bind("<Shift-D>", lambda event: self.app_actions.get_image_details(image_path=self.image_path))
+        self.master.bind("<Shift-U>", lambda event: self.app_actions.run_image_generation(event=event, _type=SDRunnerClient.TYPE_CONTROL_NET))
+        self.master.bind("<Shift-I>", lambda event: self.app_actions.run_image_generation(event=event, _type=SDRunnerClient.TYPE_IP_ADAPTER))
+        self.master.bind("<Shift-Y>", lambda event: self.app_actions.run_image_generation(event=event, _type=SDRunnerClient.TYPE_RENOISER))
         self.master.bind("<Control-m>", self.open_move_marks_window)
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
         self.master.bind("<Control-r>", self.run_previous_marks_action)

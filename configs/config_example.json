@@ -31,6 +31,8 @@
   "file_types": [
     ".jpg", ".jpeg", ".png", ".tiff", ".webp"
   ],
+  "directories_to_search_for_related_images": [    
+  ],
   "font_size": 8,
   "threshold_potential_duplicate_color": 50,
   "threshold_potential_duplicate_embedding": 0.99,

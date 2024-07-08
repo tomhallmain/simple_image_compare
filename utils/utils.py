@@ -2,6 +2,7 @@ import asyncio
 import re
 import os
 import shutil
+import subprocess
 import sys
 import threading
 
@@ -166,3 +167,11 @@ def open_file_location(filepath):
             # er, think of something else to try
             # xdg-open *should* be supported by recent Gnome, KDE, Xfce
             raise Exception("Unsupported distribution for opening file location.")
+
+def open_file_in_gimp(filepath):
+    def gimp_process():
+        command = ["gimp-2.10", filepath]
+        process = subprocess.call(command, shell=True)
+        if process!=0:
+            raise Exception("Could not open file in GIMP")
+    start_thread(gimp_process)

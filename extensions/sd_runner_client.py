@@ -1,14 +1,12 @@
 from multiprocessing.connection import Client
 
 from utils.config import config
+from utils.constants import ImageGenerationType
 
 class SDRunnerClient:
     COMMAND_CLOSE_SERVER = 'close server'
     COMMAND_CLOSE_CONNECTION = 'close connection'
     COMMAND_VALIDATE = 'validate'
-    TYPE_RENOISER = 'renoiser'
-    TYPE_CONTROL_NET = 'control_net'
-    TYPE_IP_ADAPTER = 'ip_adapter'
 
     def __init__(self, host='localhost', port=config.sd_runner_client_port):
         self._host = host
@@ -50,9 +48,11 @@ class SDRunnerClient:
             raise Exception(f'Failed to connect to SD Runner: {e}')
 
     def run(self, _type, base_image):
+        if not isinstance(_type, ImageGenerationType):
+            raise TypeError(f'{_type} is not a valid ImageGenerationType')
         self.validate_connection()
         try:
-            command  = {'command': 'run', 'type': _type, 'args': [base_image]}
+            command  = {'command': 'run', 'type': _type.value, 'args': [base_image]}
             resp = self.send(command)
             if "error" in resp:
                 raise Exception(f'SD Runner failed to start run {_type} on file {base_image}\n{resp["error"]}: {resp["data"]}')

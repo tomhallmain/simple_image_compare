@@ -1,8 +1,9 @@
 from datetime import datetime
+import glob
 import os
 
 from PIL import Image
-from tkinter import Frame, Label, StringVar, LEFT, W
+from tkinter import Frame, Label, OptionMenu, StringVar, LEFT, W
 from tkinter.font import Font
 from tkinter.ttk import Entry, Button
 
@@ -12,9 +13,10 @@ from image.rotation import rotate_image
 from image.smart_crop import Cropper
 from image.temp_image_canvas import TempImageCanvas
 from utils.config import config
+from utils.constants import ImageGenerationType
 from utils.app_style import AppStyle
 
-
+# TODO: image generation mode selection here
 # TODO: rename file
 
 def get_readable_file_size(path):
@@ -29,8 +31,9 @@ def get_readable_file_size(path):
 class ImageDetails():
     related_image_canvas = None
     related_image_saved_node_id = "LoadImage"
+    image_generation_mode = ImageGenerationType.CONTROL_NET
 
-    def __init__(self, parent_master, master, image_path, index_text, app_actions):
+    def __init__(self, parent_master, master, image_path, index_text, app_actions, do_refresh=True):
         self.parent_master = parent_master
         self.master = master
         self.image_path = image_path
@@ -40,7 +43,10 @@ class ImageDetails():
         self.frame.columnconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=9)
         self.frame.config(bg=AppStyle.BG_COLOR)
+        self.do_refresh = do_refresh
         col_0_width = 100
+        self.row_count0 = 0
+        self.row_count1 = 0
 
         self._label_path = Label(self.frame)
         self.label_path = Label(self.frame)
@@ -63,58 +69,75 @@ class ImageDetails():
         image_mode, image_dims, mod_time, file_size = self._get_image_info()
         positive, negative = image_data_extractor.get_image_prompts(self.image_path)
 
-        self.add_label(self._label_path, "Image Path", row=0, wraplength=col_0_width)
-        self.add_label(self.label_path, self.image_path, row=0, column=1)
-        self.add_label(self._label_index, "File Index", row=1, wraplength=col_0_width)
-        self.add_label(self.label_index, index_text, row=1, column=1)
-        self.add_label(self._label_mode, "Color Mode", row=2, wraplength=col_0_width)
-        self.add_label(self.label_mode, image_mode, row=2, column=1)
-        self.add_label(self._label_dims, "Dimensions", row=3, wraplength=col_0_width)
-        self.add_label(self.label_dims, image_dims, row=3, column=1)
-        self.add_label(self._label_size, "Size", row=4, wraplength=col_0_width)
-        self.add_label(self.label_size, file_size, row=4, column=1)
-        self.add_label(self._label_mtime, "Modification Time", row=5, wraplength=col_0_width)
-        self.add_label(self.label_mtime, mod_time, row=5, column=1)
-        self.add_label(self._label_positive, "Positive", row=6, wraplength=col_0_width)
-        self.add_label(self.label_positive, positive, row=6, column=1)
-        self.add_label(self._label_negative, "Negative", row=7, wraplength=col_0_width)
-        self.add_label(self.label_negative, negative, row=7, column=1)
+        self.add_label(self._label_path, "Image Path", wraplength=col_0_width)
+        self.add_label(self.label_path, self.image_path, column=1)
+        self.add_label(self._label_index, "File Index", wraplength=col_0_width)
+        self.add_label(self.label_index, index_text, column=1)
+        self.add_label(self._label_mode, "Color Mode", wraplength=col_0_width)
+        self.add_label(self.label_mode, image_mode, column=1)
+        self.add_label(self._label_dims, "Dimensions", wraplength=col_0_width)
+        self.add_label(self.label_dims, image_dims, column=1)
+        self.add_label(self._label_size, "Size", wraplength=col_0_width)
+        self.add_label(self.label_size, file_size, column=1)
+        self.add_label(self._label_mtime, "Modification Time", wraplength=col_0_width)
+        self.add_label(self.label_mtime, mod_time, column=1)
+        self.add_label(self._label_positive, "Positive", wraplength=col_0_width)
+        self.add_label(self.label_positive, positive, column=1)
+        self.add_label(self._label_negative, "Negative", wraplength=col_0_width)
+        self.add_label(self.label_negative, negative, column=1)
 
         self.copy_prompt_btn = None
         self.copy_prompt_no_break_btn = None
-        self.add_button("copy_prompt_btn", "Copy Prompt", self.copy_prompt, row=8)
-        self.add_button("copy_prompt_no_break_btn", "Copy Prompt No BREAK", self.copy_prompt_no_break, row=8, column=1)
+        self.add_button("copy_prompt_btn", "Copy Prompt", self.copy_prompt, column=0)
+        self.add_button("copy_prompt_no_break_btn", "Copy Prompt No BREAK", self.copy_prompt_no_break, column=1)
 
         self.rotate_left_btn = None
         self.rotate_right_btn = None
-        self.add_button("rotate_left_btn", "Rotate Image Left", lambda: self.rotate_image(right=False), row=9, column=0)
-        self.add_button("rotate_right_btn", "Rotate Image Right", lambda: self.rotate_image(right=True), row=9, column=1)
+        self.add_button("rotate_left_btn", "Rotate Image Left", lambda: self.rotate_image(right=False), column=0)
+        self.add_button("rotate_right_btn", "Rotate Image Right", lambda: self.rotate_image(right=True), column=1)
 
         self.crop_image_btn = None
         self.enhance_image_btn = None
-        self.add_button("crop_image_btn", "Crop Image (Smart Detect)", lambda: self.crop_image(), row=10, column=0)
-        self.add_button("enhance_image_btn", "Enhance Image", lambda: self.enhance_image(), row=10, column=1)
+        self.add_button("crop_image_btn", "Crop Image (Smart Detect)", lambda: self.crop_image(), column=0)
+        self.add_button("enhance_image_btn", "Enhance Image", lambda: self.enhance_image(), column=1)
 
         self.open_related_image_btn = None
-        self.add_button("open_related_image_btn", "Open Related Image", self.open_related_image, row=11)
+        self.add_button("open_related_image_btn", "Open Related Image", self.open_related_image)
         self.related_image_node_id = StringVar(self.master, value=ImageDetails.related_image_saved_node_id)
         self.related_image_node_id_entry = Entry(self.frame, textvariable=self.related_image_node_id, width=30, font=Font(size=8))
         self.related_image_node_id_entry.bind("<Return>", self.open_related_image)
-        self.related_image_node_id_entry.grid(row=11, column=1, sticky="w")
+        self.related_image_node_id_entry.grid(row=self.row_count1, column=1, sticky="w")
+        self.row_count1 += 1
+
+        self.label_image_generation = Label(self.frame)
+        self.add_label(self.label_image_generation, "Image Generation")
+        self.image_generation_mode_var = StringVar()
+        self.image_generation_mode_choice = OptionMenu(self.frame, self.image_generation_mode_var, ImageDetails.image_generation_mode.value,
+                                                   *ImageGenerationType.members(), command=self.set_image_generation_mode)
+        self.image_generation_mode_choice.grid(row=self.row_count1, column=1, sticky="W")
+        self.row_count1 += 1
+
+        self.run_image_generation_button = None
+        self.add_button("run_image_generation_button", "Run Image Generation", self.run_image_generation, column=0)
+        self.label_help = Label(self.frame)
+        self.add_label(self.label_help, "Press Shift+I on a main app window to run this", column=1)
 
         if config.image_tagging_enabled:
-            self.add_label(self._label_tags, "Tags", row=12, wraplength=col_0_width)
+            self.add_label(self._label_tags, "Tags", wraplength=col_0_width)
 
             self.tags = image_data_extractor.extract_tags(self.image_path)
             tags_str = ", ".join(self.tags) if self.tags else ""
             self.tags_str = StringVar(self.master, value=tags_str)
             self.tags_entry = Entry(self.frame, textvariable=self.tags_str, width=30, font=Font(size=8))
-            self.tags_entry.grid(row=12, column=1)
+            self.tags_entry.grid(row=self.row_count1, column=1)
+            self.row_count1 += 1
 
             self.update_tags_btn = None
-            self.add_button("update_tags_btn", "Update Tags", self.update_tags, row=13)
+            self.add_button("update_tags_btn", "Update Tags", self.update_tags)
+            self.row_count1 += 1
 
         self.master.bind("<Escape>", self.close_windows)
+        self.master.bind("<Shift-C>", self.crop_image)
         self.master.protocol("WM_DELETE_WINDOW", self.close_windows)
         self.frame.after(1, lambda: self.frame.focus_force())
 
@@ -161,7 +184,7 @@ class ImageDetails():
         # TODO properly set the file info on the rotated file instead of having to use this callback
         self.app_actions.go_to_file(search_text=os.path.basename(self.image_path), exact_match=True)
 
-    def crop_image(self):
+    def crop_image(self, event=None):
         Cropper.smart_crop_multi_detect(self.image_path, "")
         self.close_windows()
         self.app_actions.refresh()
@@ -202,7 +225,25 @@ class ImageDetails():
             return
         elif not os.path.isfile(related_image_path):
             print(f"{image_path} - Related image {related_image_path} not found")
-            return
+            basename = os.path.basename(related_image_path)
+            if len(config.directories_to_search_for_related_images) > 0:
+                related_image_path_found = False
+                for directory in config.directories_to_search_for_related_images:
+                    dir_files = glob.glob(os.path.join(directory, "**/*"), recursive=True)
+                    for _file in dir_files:
+                        if _file == related_image_path:
+                            continue
+                        if _file.endswith(basename):
+                            file_basename = os.path.basename(_file)
+                            if basename == file_basename:
+                                related_image_path = _file
+                                related_image_path_found = True
+                                break
+                    if related_image_path_found:
+                        break
+            if not related_image_path_found or not os.path.isfile(related_image_path):
+                return
+            print(f"{image_path} - Possibly related image {related_image_path} found")
         if ImageDetails.related_image_canvas is None:
             ImageDetails.set_related_image_canvas(master, related_image_path, app_actions)
         try:
@@ -223,6 +264,16 @@ class ImageDetails():
         ImageDetails.related_image_canvas = TempImageCanvas(master, title=related_image_path,
                 dimensions=f"{width}x{height}", app_actions=app_actions)
 
+    def set_image_generation_mode(self, event=None):
+        ImageDetails.image_generation_mode = ImageGenerationType.get(self.image_generation_mode_var.get())
+
+    def run_image_generation(self, event=None):
+        ImageDetails.run_image_generation_static(self.app_actions)
+
+    @staticmethod
+    def run_image_generation_static(app_actions):
+        app_actions.run_image_generation(_type=ImageDetails.image_generation_mode)
+
 
     def update_tags(self):
         print(f"Updating tags for {self.image_path}")
@@ -240,15 +291,31 @@ class ImageDetails():
         self.app_actions.image_details_window = None
         self.master.destroy()
 
-    def add_label(self, label_ref, text, row=0, column=0, wraplength=500):
+    def add_label(self, label_ref, text, row=None, column=0, wraplength=500):
+        increment_row_counter = row == None
+        if increment_row_counter:
+            row = self.row_count0 if column == 0 else self.row_count1
         label_ref['text'] = text
         label_ref.grid(column=column, row=row, sticky=W)
         label_ref.config(wraplength=wraplength, justify=LEFT, bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        if increment_row_counter:
+            if column == 0:
+                self.row_count0 += 1
+            else:
+                self.row_count1 += 1
 
-    def add_button(self, button_ref_name, text, command, row=0, column=0):
+    def add_button(self, button_ref_name, text, command, row=None, column=0):
+        increment_row_counter = row == None
+        if increment_row_counter:
+            row = self.row_count0 if column == 0 else self.row_count1
         if getattr(self, button_ref_name) is None:
             button = Button(master=self.frame, text=text, command=command)
             setattr(self, button_ref_name, button)
             button # for some reason this is necessary to maintain the reference?
             button.grid(row=row, column=column)
+        if increment_row_counter:
+            if column == 0:
+                self.row_count0 += 1
+            else:
+                self.row_count1 += 1
 

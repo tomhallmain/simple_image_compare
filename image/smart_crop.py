@@ -225,11 +225,11 @@ class Cropper:
         subimage_count = 0
         while i < len(subimages):
             subimage = subimages[i]
-            if Cropper.is_low_entropy(subimage):
-                print(f"Subimage {subimage_count} is invalid due to low entropy.")
-                del subimages[i]
-            elif Cropper.is_small(subimage):
+            if Cropper.is_small(subimage):
                 print(f"Subimage {subimage_count} is invalid due to being too small.")
+                del subimages[i]
+            elif Cropper.is_low_entropy(subimage):
+                print(f"Subimage {subimage_count} is invalid due to low entropy.")
                 del subimages[i]
             else:
                 i += 1
@@ -450,7 +450,7 @@ class Cropper:
     def consolidate_close_diffs(_max, diffs, tolerance=10):
         '''
         Consolidate the diffs dict by merging close entries. Identifies which 
-        entries are close enough to each other and then select the most likely
+        entries are close enough to each other and then selects the most likely
         candidate based on its proximity to the edges of the image (the max).
         If the diff position is close to 0, select the higher value, and if it's
         close to the max, select the lower value -- We only want to preserve 

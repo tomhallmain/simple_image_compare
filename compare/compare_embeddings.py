@@ -102,7 +102,7 @@ class CompareEmbedding:
             exts = config.file_types
             if self.include_gifs:
                 exts.append(".gif")
-            self.files = self.gather_files_func(base_dir=self.base_dir, exts=exts)
+            self.files = self.gather_files_func(base_dir=self.base_dir, exts=exts, recursive=self.recursive)
         else:
             raise Exception("No gather files function found.")
         self.files.sort()

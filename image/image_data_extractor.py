@@ -133,17 +133,21 @@ class ImageDataExtractor:
         node_inputs = {}
         prompt = self.extract_prompt(image_path)
 
+
         if prompt is not None:
             for k, v in prompt.items():
                 if ImageDataExtractor.CLASS_TYPE in v and ImageDataExtractor.INPUTS in v:
-                    #print(v[ImageDataExtractor.CLASS_TYPE])
+                    # print(v[ImageDataExtractor.CLASS_TYPE])
                     if v[ImageDataExtractor.CLASS_TYPE] == "CLIPTextEncode":
                         prompt_dicts[k] = v[ImageDataExtractor.INPUTS]["text"]
+                    elif v[ImageDataExtractor.CLASS_TYPE] == "ImpactWildcardProcessor":
+                        positive = v[ImageDataExtractor.INPUTS]["populated_text"]
                     elif v[ImageDataExtractor.CLASS_TYPE] == "KSampler":
                         node_inputs[ImageDataExtractor.POSITIVE] = v[ImageDataExtractor.INPUTS][ImageDataExtractor.POSITIVE][0]
                         node_inputs[ImageDataExtractor.NEGATIVE] = v[ImageDataExtractor.INPUTS][ImageDataExtractor.NEGATIVE][0]
 
-            positive = prompt_dicts.get(node_inputs[ImageDataExtractor.POSITIVE], "")
+            if positive == "":
+                positive = prompt_dicts.get(node_inputs[ImageDataExtractor.POSITIVE], "")
             negative = prompt_dicts.get(node_inputs[ImageDataExtractor.NEGATIVE], "")
             print(f"Positive: \"{positive}\"")
             print(f"Negative: \"{negative}\"")
@@ -231,6 +235,13 @@ class ImageDataExtractor:
                     else:
                         positive = image_data.positive
                         negative = image_data.negative
+                    if not positive or positive.strip() == "":
+                        try:
+                            positive, negative = self.extract(image_path)
+                        except Exception as e:
+                           pass
+                        if not positive or positive.strip() == "":
+                            positive = "(No prompt found for this file.)"
             except Exception as e:
 #                print(e)
                 pass
