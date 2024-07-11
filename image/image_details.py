@@ -1,12 +1,15 @@
 from datetime import datetime
-import glob
 import os
+
+import gettext
+_ = gettext.gettext
 
 from PIL import Image
 from tkinter import Frame, Label, OptionMenu, StringVar, LEFT, W
 from tkinter.font import Font
 from tkinter.ttk import Entry, Button
 
+from files.file_browser import FileBrowser
 from image.image_data_extractor import image_data_extractor
 from image.image_enhancer import enhance_image
 from image.rotation import rotate_image
@@ -33,6 +36,7 @@ class ImageDetails():
     related_image_saved_node_id = "LoadImage"
     downstream_related_image_index = 0
     downstream_related_images_cache = {}
+    downstream_related_image_browser = FileBrowser()
     image_generation_mode = ImageGenerationType.CONTROL_NET
 
     def __init__(self, parent_master, master, image_path, index_text, app_actions, do_refresh=True):
@@ -71,40 +75,40 @@ class ImageDetails():
         image_mode, image_dims, mod_time, file_size = self._get_image_info()
         positive, negative = image_data_extractor.get_image_prompts(self.image_path)
 
-        self.add_label(self._label_path, "Image Path", wraplength=col_0_width)
+        self.add_label(self._label_path, _("Image Path"), wraplength=col_0_width)
         self.add_label(self.label_path, self.image_path, column=1)
-        self.add_label(self._label_index, "File Index", wraplength=col_0_width)
+        self.add_label(self._label_index, _("File Index"), wraplength=col_0_width)
         self.add_label(self.label_index, index_text, column=1)
-        self.add_label(self._label_mode, "Color Mode", wraplength=col_0_width)
+        self.add_label(self._label_mode, _("Color Mode"), wraplength=col_0_width)
         self.add_label(self.label_mode, image_mode, column=1)
-        self.add_label(self._label_dims, "Dimensions", wraplength=col_0_width)
+        self.add_label(self._label_dims, _("Dimensions"), wraplength=col_0_width)
         self.add_label(self.label_dims, image_dims, column=1)
-        self.add_label(self._label_size, "Size", wraplength=col_0_width)
+        self.add_label(self._label_size, _("Size"), wraplength=col_0_width)
         self.add_label(self.label_size, file_size, column=1)
-        self.add_label(self._label_mtime, "Modification Time", wraplength=col_0_width)
+        self.add_label(self._label_mtime, _("Modification Time"), wraplength=col_0_width)
         self.add_label(self.label_mtime, mod_time, column=1)
-        self.add_label(self._label_positive, "Positive", wraplength=col_0_width)
+        self.add_label(self._label_positive, _("Positive"), wraplength=col_0_width)
         self.add_label(self.label_positive, positive, column=1)
-        self.add_label(self._label_negative, "Negative", wraplength=col_0_width)
+        self.add_label(self._label_negative, _("Negative"), wraplength=col_0_width)
         self.add_label(self.label_negative, negative, column=1)
 
         self.copy_prompt_btn = None
         self.copy_prompt_no_break_btn = None
-        self.add_button("copy_prompt_btn", "Copy Prompt", self.copy_prompt, column=0)
-        self.add_button("copy_prompt_no_break_btn", "Copy Prompt No BREAK", self.copy_prompt_no_break, column=1)
+        self.add_button("copy_prompt_btn", _("Copy Prompt"), self.copy_prompt, column=0)
+        self.add_button("copy_prompt_no_break_btn", _("Copy Prompt No BREAK"), self.copy_prompt_no_break, column=1)
 
         self.rotate_left_btn = None
         self.rotate_right_btn = None
-        self.add_button("rotate_left_btn", "Rotate Image Left", lambda: self.rotate_image(right=False), column=0)
-        self.add_button("rotate_right_btn", "Rotate Image Right", lambda: self.rotate_image(right=True), column=1)
+        self.add_button("rotate_left_btn", _("Rotate Image Left"), lambda: self.rotate_image(right=False), column=0)
+        self.add_button("rotate_right_btn", _("Rotate Image Right"), lambda: self.rotate_image(right=True), column=1)
 
         self.crop_image_btn = None
         self.enhance_image_btn = None
-        self.add_button("crop_image_btn", "Crop Image (Smart Detect)", lambda: self.crop_image(), column=0)
-        self.add_button("enhance_image_btn", "Enhance Image", lambda: self.enhance_image(), column=1)
+        self.add_button("crop_image_btn", _("Crop Image (Smart Detect)"), lambda: self.crop_image(), column=0)
+        self.add_button("enhance_image_btn", _("Enhance Image"), lambda: self.enhance_image(), column=1)
 
         self.open_related_image_btn = None
-        self.add_button("open_related_image_btn", "Open Related Image", self.open_related_image)
+        self.add_button("open_related_image_btn", _("Open Related Image"), self.open_related_image)
         self.related_image_node_id = StringVar(self.master, value=ImageDetails.related_image_saved_node_id)
         self.related_image_node_id_entry = Entry(self.frame, textvariable=self.related_image_node_id, width=30, font=Font(size=8))
         self.related_image_node_id_entry.bind("<Return>", self.open_related_image)
@@ -112,20 +116,20 @@ class ImageDetails():
         self.row_count1 += 1
 
         self.label_image_generation = Label(self.frame)
-        self.add_label(self.label_image_generation, "Image Generation")
+        self.add_label(self.label_image_generation, _("Image Generation"))
         self.image_generation_mode_var = StringVar()
-        self.image_generation_mode_choice = OptionMenu(self.frame, self.image_generation_mode_var, ImageDetails.image_generation_mode.value,
+        self.image_generation_mode_choice = OptionMenu(self.frame, self.image_generation_mode_var,
                                                    *ImageGenerationType.members(), command=self.set_image_generation_mode)
         self.image_generation_mode_choice.grid(row=self.row_count1, column=1, sticky="W")
         self.row_count1 += 1
 
         self.run_image_generation_button = None
-        self.add_button("run_image_generation_button", "Run Image Generation", self.run_image_generation, column=0)
+        self.add_button("run_image_generation_button", _("Run Image Generation"), self.run_image_generation, column=0)
         self.label_help = Label(self.frame)
-        self.add_label(self.label_help, "Press Shift+I on a main app window to run this", column=1)
+        self.add_label(self.label_help, _("Press Shift+I on a main app window to run this"), column=1)
 
         if config.image_tagging_enabled:
-            self.add_label(self._label_tags, "Tags", wraplength=col_0_width)
+            self.add_label(self._label_tags, _("Tags"), wraplength=col_0_width)
 
             self.tags = image_data_extractor.extract_tags(self.image_path)
             tags_str = ", ".join(self.tags) if self.tags else ""
@@ -135,7 +139,7 @@ class ImageDetails():
             self.row_count1 += 1
 
             self.update_tags_btn = None
-            self.add_button("update_tags_btn", "Update Tags", self.update_tags)
+            self.add_button("update_tags_btn", _("Update Tags"), self.update_tags)
             self.row_count1 += 1
 
         self.master.bind("<Escape>", self.close_windows)
@@ -210,20 +214,7 @@ class ImageDetails():
     def get_related_image_path(image_path, node_id=None):
         if node_id is None or node_id == "":
             node_id = ImageDetails.related_image_saved_node_id
-        use_class_type = True
-        try:
-            int(node_id)
-            use_class_type = False
-        except ValueError:
-            pass
-        try:
-            if use_class_type:
-                related_image_path = image_data_extractor.get_input_by_class_type(image_path, node_id, "image")
-            else:
-                related_image_path = image_data_extractor.get_input_by_node_id(image_path, node_id, "image")
-        except Exception:
-            related_image_path = None
-        return related_image_path
+        return image_data_extractor.get_related_image_path(image_path, node_id)
 
     @staticmethod
     def show_related_image(master=None, node_id=None, image_path="", app_actions=None):
@@ -275,43 +266,53 @@ class ImageDetails():
                 dimensions=f"{width}x{height}", app_actions=app_actions)
 
     @staticmethod
-    def refresh_downstream_related_image_cache(key, image_path, other_base_dir_file_browser):
+    def refresh_downstream_related_image_cache(key, image_path, other_base_dir):
         downstream_related_images = []
-        files = other_base_dir_file_browser.get_files()[:]
-        for path in files:
+        image_basename = os.path.basename(image_path)
+        if ImageDetails.downstream_related_image_browser.directory != other_base_dir:
+            ImageDetails.downstream_related_image_browser = FileBrowser(directory=other_base_dir)
+        ImageDetails.downstream_related_image_browser._gather_files()
+        for path in ImageDetails.downstream_related_image_browser.filepaths:
             if path == image_path:
                 continue
             related_image_path = ImageDetails.get_related_image_path(path)
-            if related_image_path is not None and related_image_path == image_path:
-                downstream_related_images.append(path)
+            if related_image_path is not None:
+                if related_image_path == image_path:
+                    downstream_related_images.append(path)
+                else:
+                    file_basename = os.path.basename(related_image_path)
+                    if len(file_basename) > 10 and image_basename == file_basename:
+                        # NOTE this relation criteria is flimsy but it's better to have false positives than
+                        # potentially miss valid files that have been moved since this search is happening
+                        downstream_related_images.append(path)
         ImageDetails.downstream_related_images_cache[key] = downstream_related_images
 
     @staticmethod
-    def get_downstream_related_images(image_path, other_base_dir_file_browser, app_actions):
-        key = image_path + "/" + other_base_dir_file_browser.directory
-        if not key in ImageDetails.downstream_related_images_cache:
-            ImageDetails.refresh_downstream_related_image_cache(key, image_path, other_base_dir_file_browser)
+    def get_downstream_related_images(image_path, other_base_dir, app_actions, force_refresh=False):
+        key = image_path + "/" + other_base_dir
+        if force_refresh or not key in ImageDetails.downstream_related_images_cache:
+            ImageDetails.refresh_downstream_related_image_cache(key, image_path, other_base_dir)
             downstream_related_images = ImageDetails.downstream_related_images_cache[key]
-            toast_text = f"{len(downstream_related_images)} downstream image(s) found."
+            toast_text = _(f"{len(downstream_related_images)} downstream image(s) found.")
         else:
             downstream_related_images = ImageDetails.downstream_related_images_cache[key]
-            toast_text = f"{len(downstream_related_images)} (cached) downstream image(s) found."
+            toast_text = _(f"{len(downstream_related_images)} (cached) downstream image(s) found.")
             if ImageDetails.downstream_related_image_index >= len(downstream_related_images):
-                ImageDetails.refresh_downstream_related_image_cache(key, image_path, other_base_dir_file_browser)
+                ImageDetails.refresh_downstream_related_image_cache(key, image_path, other_base_dir)
                 downstream_related_images = ImageDetails.downstream_related_images_cache[key]
-                toast_text = f"{len(downstream_related_images)} downstream image(s) found."
+                toast_text = _(f"{len(downstream_related_images)} downstream image(s) found.")
         if len(downstream_related_images) == 0:
-            app_actions.toast(f"No downstream related image(s) found in {other_base_dir_file_browser.directory}")
+            app_actions.toast(_(f"No downstream related images found in\n{other_base_dir}"))
             return None
         app_actions.toast(toast_text)
         return downstream_related_images
 
     @staticmethod
-    def next_downstream_related_image(image_path, other_base_dir_file_browser, app_actions):
+    def next_downstream_related_image(image_path, other_base_dir, app_actions):
         '''
         In this case, find the next image that has been created from the given image.
         '''
-        downstream_related_images = ImageDetails.get_downstream_related_images(image_path, other_base_dir_file_browser, app_actions)
+        downstream_related_images = ImageDetails.get_downstream_related_images(image_path, other_base_dir, app_actions)
         if downstream_related_images is None:
             return None
         if ImageDetails.downstream_related_image_index >= len(downstream_related_images):
@@ -342,7 +343,8 @@ class ImageDetails():
             for i in range(len(self.tags)):
                 self.tags[i] = self.tags[i].strip()
         image_data_extractor.set_tags(self.image_path, self.tags)
-        print("Updated tags for " + self.image_path) # TODO toast
+        print("Updated tags for " + self.image_path)
+        self.app_actions.toast(_(f"Updated tags for {self.image_path}"))
 
     def close_windows(self, event=None):
         self.app_actions.image_details_window = None

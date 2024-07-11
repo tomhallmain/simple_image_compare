@@ -5,6 +5,9 @@ import sys
 import time
 import traceback
 
+import gettext
+_ = gettext.gettext
+
 try:
     from send2trash import send2trash
 except Exception:
@@ -137,9 +140,11 @@ class App():
     '''
     secondary_top_levels = {}
     open_windows = []
+    window_index = 0
+    true_master = None
 
     @staticmethod
-    def add_secondary_window(master, base_dir, image_path=None, do_search=False):
+    def add_secondary_window(base_dir, image_path=None, do_search=False, master=None):
         if not config.always_open_new_windows:
             for _app in App.open_windows:
                 if _app.base_dir == base_dir:
@@ -151,6 +156,10 @@ class App():
                             _app.go_to_file(search_text=image_path)
                     _app.canvas.after(1, lambda: _app.canvas.focus_force())
                     return
+        if master is None:
+            # Usually want to do this because if a secondary window is the source of another secondary window and that initial secondary window
+            # is closed, the second secondary window will also be closed because its master has been destroyed.
+            master = App.true_master
         top_level = tk.Toplevel(master)
         top_level.title(" Simple Image Compare ")
         top_level.geometry(config.default_secondary_window_size)
@@ -159,6 +168,13 @@ class App():
         if do_search and (image_path is None or image_path == ""):
             do_search = False
         _app = App(top_level, base_dir=base_dir, image_path=image_path, grid_sidebar=False, do_search=do_search, window_id=window_id)
+
+    @staticmethod
+    def get_window(window_id=None, base_dir=None):
+        for _app in App.open_windows:
+            if _app.window_id == window_id or _app.base_dir == base_dir:
+                return _app
+        return None #raise Exception(f"No window found for window id {window_id} or base dir {base_dir}")
 
     def toggle_theme(self, to_theme=None, do_toast=True):
         if (to_theme is None and AppStyle.IS_DEFAULT_THEME) or to_theme == AppStyle.LIGHT_THEME:
@@ -187,6 +203,8 @@ class App():
 
     def __init__(self, master, base_dir=None, image_path=None, grid_sidebar=config.sidebar_visible, do_search=False, window_id=0):
         self.master = master
+        if window_id == 0:
+            App.true_master = master
         self.master.resizable(1, 1)
         self.master.columnconfigure(0, weight=1)
         self.master.columnconfigure(1, weight=9)
@@ -252,19 +270,19 @@ class App():
         self.label_mode = Label(self.sidebar)
         self.label_state = Label(self.sidebar)
         self.add_label(self.label_mode, "", sticky=tk.N)
-        self.add_label(self.label_state, "Set a directory to run comparison.", pady=10)
+        self.add_label(self.label_state, _("Set a directory to run comparison."), pady=10)
 
         #################################### Settings UI
         self.toggle_theme_btn = None
         self.set_base_dir_btn = None
         self.set_search_btn = None
         self.search_text_btn = None
-        self.add_button("toggle_theme_btn", "Toggle theme", self.toggle_theme)
-        self.add_button("set_base_dir_btn", "Set directory", self.set_base_dir)
-        self.set_base_dir_box = self.new_entry(text="Add dirpath...")
+        self.add_button("toggle_theme_btn", _("Toggle theme"), self.toggle_theme)
+        self.add_button("set_base_dir_btn", _("Set directory"), self.set_base_dir)
+        self.set_base_dir_box = self.new_entry(text=_("Add dirpath..."))
         self.apply_to_grid(self.set_base_dir_box)
 
-        self.add_button("set_search_btn", "Set search file", self.set_search_image)
+        self.add_button("set_search_btn", _("Set search file"), self.set_search_image)
         self.search_image = tk.StringVar()
         self.search_img_path_box = self.new_entry(self.search_image)
         if do_search and image_path is not None:
@@ -272,7 +290,7 @@ class App():
         self.search_img_path_box.bind("<Return>", self.set_search_image)
         self.apply_to_grid(self.search_img_path_box, sticky=W)
 
-        self.add_button("search_text_btn", "Search text (embedding mode)", self.search_text_embedding)
+        self.add_button("search_text_btn", _("Search text (embedding mode)"), self.search_text_embedding)
         self.search_text = tk.StringVar()
         self.search_text_box = self.new_entry(self.search_text)
         self.search_text_box.bind("<Return>", self.search_text_embedding)
@@ -283,7 +301,7 @@ class App():
         self.apply_to_grid(self.search_text_negative_box, sticky=W)
 
         self.label_compare_mode = Label(self.sidebar)
-        self.add_label(self.label_compare_mode, "Compare mode")
+        self.add_label(self.label_compare_mode, _("Compare mode"))
         self.compare_mode_var = tk.StringVar()
         self.compare_mode_choice = OptionMenu(self.sidebar, self.compare_mode_var, str(self.compare_wrapper.compare_mode),
                                               *CompareMode.members(), command=self.set_compare_mode)
@@ -301,60 +319,60 @@ class App():
         self.apply_to_grid(self.compare_threshold_choice, sticky=W)
 
         self.compare_faces = tk.BooleanVar(value=False)
-        self.compare_faces_choice = Checkbutton(self.sidebar, text='Compare faces', variable=self.compare_faces)
+        self.compare_faces_choice = Checkbutton(self.sidebar, text=_('Compare faces'), variable=self.compare_faces)
         self.apply_to_grid(self.compare_faces_choice, sticky=W)
 
         self.overwrite = tk.BooleanVar(value=False)
-        self.overwrite_choice = Checkbutton(self.sidebar, text='Overwrite cache', variable=self.overwrite)
+        self.overwrite_choice = Checkbutton(self.sidebar, text=_('Overwrite cache'), variable=self.overwrite)
         self.apply_to_grid(self.overwrite_choice, sticky=W)
 
         self.store_checkpoints = tk.BooleanVar(value=config.store_checkpoints)
-        self.store_checkpoints_choice = Checkbutton(self.sidebar, text='Store checkpoints', variable=self.store_checkpoints)
+        self.store_checkpoints_choice = Checkbutton(self.sidebar, text=_('Store checkpoints'), variable=self.store_checkpoints)
         self.apply_to_grid(self.store_checkpoints_choice, sticky=W)
 
         self.label_counter_limit = Label(self.sidebar)
-        self.add_label(self.label_counter_limit, "Max files to compare")
+        self.add_label(self.label_counter_limit, _("Max files to compare"))
         self.set_counter_limit = self.new_entry()
         self.set_counter_limit.insert(0, str(config.file_counter_limit))
         self.apply_to_grid(self.set_counter_limit, sticky=W)
 
         self.label_inclusion_pattern = Label(self.sidebar)
-        self.add_label(self.label_inclusion_pattern, "Filter files by glob pattern")
+        self.add_label(self.label_inclusion_pattern, _("Filter files by glob pattern"))
         self.inclusion_pattern = tk.StringVar()
         self.set_inclusion_pattern = self.new_entry(self.inclusion_pattern)
         self.set_inclusion_pattern.bind("<Return>", self.set_file_filter)
         self.apply_to_grid(self.set_inclusion_pattern, sticky=W)
 
         self.label_sort_by = Label(self.sidebar)
-        self.add_label(self.label_sort_by, "Browsing mode - Sort by")
+        self.add_label(self.label_sort_by, _("Browsing mode - Sort by"))
         self.sort_by = tk.StringVar()
         self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by, str(config.sort_by),
                                          *SortBy.members(), command=self.set_sort_by)
         self.apply_to_grid(self.sort_by_choice, sticky=W)
 
         self.image_browse_recurse_var = tk.BooleanVar(value=config.image_browse_recursive)
-        self.image_browse_recurse = Checkbutton(self.sidebar, text='Recurse subdirectories',
+        self.image_browse_recurse = Checkbutton(self.sidebar, text=_('Recurse subdirectories'),
                                                 variable=self.image_browse_recurse_var, command=self.toggle_image_browse_recursive)
         self.apply_to_grid(self.image_browse_recurse, sticky=W)
 
         fill_canvas_var = tk.BooleanVar(value=self.fill_canvas)
-        self.fill_canvas_choice = Checkbutton(self.sidebar, text='Image resize to full window',
+        self.fill_canvas_choice = Checkbutton(self.sidebar, text=_('Image resize to full window'),
                                               variable=fill_canvas_var, command=self.toggle_fill_canvas)
         self.apply_to_grid(self.fill_canvas_choice, sticky=W)
 
         search_return_closest_var = tk.BooleanVar(value=config.search_only_return_closest)
-        self.search_return_closest_choice = Checkbutton(self.sidebar, text='Search only return closest',
+        self.search_return_closest_choice = Checkbutton(self.sidebar, text=_('Search only return closest'),
                                               variable=search_return_closest_var, command=self.compare_wrapper.toggle_search_only_return_closest)
         self.apply_to_grid(self.search_return_closest_choice, sticky=W)
 
         ################################ Run context-aware UI elements
         self.progress_bar = None
         self.run_compare_btn = None
-        self.add_button("run_compare_btn", "Run image compare", self.run_compare)
+        self.add_button("run_compare_btn", _("Run image compare"), self.run_compare)
         self.find_duplicates_btn = None
-        self.add_button("find_duplicates_btn", "Find duplicates", lambda: self.run_compare(find_duplicates=True))
+        self.add_button("find_duplicates_btn", _("Find duplicates"), lambda: self.run_compare(find_duplicates=True))
         self.image_details_btn = None
-        self.add_button("image_details_btn", "Image details", self.get_image_details)
+        self.add_button("image_details_btn", _("Image details"), self.get_image_details)
         self.prev_group_btn = None
         self.next_group_btn = None
         self.toggle_image_view_btn = None
@@ -365,10 +383,10 @@ class App():
         self.delete_image_btn = None
         self.open_image_location_btn = None
         self.copy_image_path_btn = None
-        self.add_button("search_current_image_btn", "Search current image", self.set_current_image_run_search)
-        self.add_button("open_image_location_btn", "Open image location", self.open_image_location)
-        self.add_button("copy_image_path_btn", "Copy image path", self.copy_image_path)
-        self.add_button("delete_image_btn", "---- DELETE ----", self.delete_image)
+        self.add_button("search_current_image_btn", _("Search current image"), self.set_current_image_run_search)
+        self.add_button("open_image_location_btn", _("Open image location"), self.open_image_location)
+        self.add_button("copy_image_path_btn", _("Copy image path"), self.copy_image_path)
+        self.add_button("delete_image_btn", _("---- DELETE ----"), self.delete_image)
 
         # Image panel and state management
         self.master.update()
@@ -382,8 +400,8 @@ class App():
         self.master.bind('<Left>', self.show_prev_image)
         self.master.bind('<Right>', self.show_next_image)
         self.master.bind('<Shift-BackSpace>', self.go_to_previous_image)
-        self.master.bind('<Shift-Left>', self.compare_wrapper.show_prev_group)
-        self.master.bind('<Shift-Right>', self.compare_wrapper.show_next_group)
+        self.master.bind('<Shift-Left>', lambda event: self.compare_wrapper.show_prev_group(file_browser=(self.file_browser if self.mode == Mode.BROWSE else None)))
+        self.master.bind('<Shift-Right>', lambda event: self.compare_wrapper.show_next_group(file_browser=(self.file_browser if self.mode == Mode.BROWSE else None)))
         self.master.bind('<Shift-O>', self.open_image_location)
         self.master.bind('<Shift-P>', self.open_image_in_gimp)
         self.master.bind('<Shift-Delete>', self.delete_image)
@@ -398,12 +416,16 @@ class App():
         self.master.bind("<Shift-S>", self.toggle_slideshow)
         self.master.bind("<MouseWheel>", lambda event: self.show_next_image() if event.delta > 0 else self.show_prev_image())
         self.master.bind("<Button-2>", self.delete_image)
+        self.master.bind("<Button-3>", lambda event: ImageDetails.run_image_generation_static(self.app_actions))
         self.master.bind("<Shift-M>", self.add_or_remove_mark_for_current_image)
         self.master.bind("<Shift-N>", self._add_all_marks_from_last_or_current_group)
         self.master.bind("<Shift-G>", self.go_to_mark)
         self.master.bind("<Shift-A>", self.set_current_image_run_search)
         self.master.bind("<Shift-I>", lambda event: ImageDetails.run_image_generation_static(self.app_actions))
         self.master.bind("<Shift-C>", lambda event: MarkedFiles.clear_file_marks(self.toast))
+        self.master.bind("<Control-Tab>", self.cycle_windows)
+        self.master.bind("<Shift-Escape>", lambda event: self.on_closing() if self.is_secondary() else None)
+        self.master.bind("<Control-q>", self.quit)
         self.master.bind("<Control-w>", self.open_secondary_compare_window)
         self.master.bind("<Control-a>", lambda event: self.open_secondary_compare_window(run_compare_image=self.img_path))
         self.master.bind("<Control-g>", self.open_go_to_file_window)
@@ -439,9 +461,10 @@ class App():
             base_dir = self.load_info_cache()
 
         if base_dir is not None and base_dir != "" and base_dir != "." and os.path.isdir(base_dir):
+#            print(f"Setting base dir to {base_dir} on window ID {self.window_id} before self.set_base_dir")
             self.set_base_dir_box.insert(0, base_dir)
             self.set_base_dir(base_dir_from_dir_window=base_dir)
-        
+
         self.canvas.after(1, lambda: self.canvas.focus_force())
 
         if image_path is not None:
@@ -468,6 +491,14 @@ class App():
             self.file_check_config.end_filecheck()
             self.slideshow_config.end_slideshows()
         self.master.destroy()
+
+    def quit(self, event=None):
+        res = self.alert(_("Confirm Quit"), _("Would you like to quit the application?"), kind="askokcancel")
+        if res == messagebox.OK or res == True:
+            print("Exiting application")
+            for window in App.open_windows:
+                if window.window_id == 0:
+                    window.on_closing()
 
     def load_info_cache(self):
         try:
@@ -526,7 +557,7 @@ class App():
 
     def set_file_filter(self, event=None):
         if self.slideshow_config.end_slideshows():
-            self.toast("Ended slideshows")
+            self.toast(_("Ended slideshows"))
         self.file_browser.set_filter(self.inclusion_pattern.get())
         self.refresh(file_check=False)
 
@@ -566,7 +597,7 @@ class App():
         else:
             self.clear_image()
             self._set_label_state()
-            self.alert("Warning", "No files found in directory after refresh.", kind="warning")
+            self.alert(_("Warning"), _("No files found in directory after refresh."), kind="warning")
         if config.debug:
             print("Refreshed files")
 
@@ -604,7 +635,7 @@ class App():
         assert self.img_path is not None
         if not self.go_to_file(None, self.img_path, retry_with_delay=1):
             self.home()
-        self.toast("Browsing mode set.")
+        self.toast(_("Browsing mode set."))
 
     def get_image_details(self, event=None, image_path=None):
         preset_image_path = True
@@ -614,7 +645,7 @@ class App():
         if image_path is None or image_path == "":
             return
         if preset_image_path:
-            index_text = "(Open this image as part of a directory to see index details.)"
+            index_text = _("(Open this image as part of a directory to see index details.)")
         elif self.mode == Mode.BROWSE:
             index_text = self.file_browser.get_index_details()
         else:
@@ -645,37 +676,74 @@ class App():
     def show_related_image(self, event=None):
         ImageDetails.show_related_image(master=self.master, image_path=self.img_path, app_actions=self.app_actions)
 
-    def find_related_images_in_open_window(self, event=None):
-        window = self.get_other_window_or_self()
+    def check_many_files(self, window, action="do this action", threshold=2000):
+        if window.file_browser.is_slow_total_files(threshold=threshold):
+            res = self.alert(_("Many Files"), f"There are a lot of files in {window.base_dir} and it may take a while" +
+                             f" to {action}.\n\nWould you like to proceed?", kind="askokcancel")
+            return res != messagebox.OK and res != True
+        return False
+
+    def find_related_images_in_open_window(self, event=None, base_dir=None):
+        if base_dir is None:
+            window, dirs = self.get_other_window_or_self_dir()
+            if window is None:
+                self.open_recent_directory_window(extra_callback_args=(self.find_related_images_in_open_window, dirs))
+                return
+            base_dir = dirs[0]
+        else:
+            window = App.get_window(base_dir=base_dir)
         image_to_use = self.img_path if len(MarkedFiles.file_marks) != 1 else MarkedFiles.file_marks[0]
-        next_related_image = ImageDetails.next_downstream_related_image(image_to_use, window.file_browser, self.app_actions)
+        if self.check_many_files(window, action="find related images"):
+            return
+        next_related_image = ImageDetails.next_downstream_related_image(image_to_use, base_dir, self.app_actions)
         if next_related_image is not None:
             window.go_to_file(search_text=next_related_image)
             window.canvas.after(1, window.canvas.focus_force())
         else:
-            self.toast(f"No downstream related image(s) found in {window.base_dir}")
+            self.toast(_(f"No downstream related image(s) found in {window.base_dir}"))
 
-    def set_marks_from_downstream_related_images(self, event=None):
-        window = self.get_other_window_or_self()
+    def set_marks_from_downstream_related_images(self, event=None, base_dir=None):
+        if base_dir is None:
+            window, dirs = self.get_other_window_or_self_dir()
+            if window is None:
+                self.open_recent_directory_window(extra_callback_args=(self.set_marks_from_downstream_related_images, dirs))
+                return
+            base_dir = dirs[0]
+        else:
+            window = App.get_window(base_dir=base_dir)
         image_to_use = self.img_path if len(MarkedFiles.file_marks) != 1 else MarkedFiles.file_marks[0]
-        downstream_related_images = ImageDetails.get_downstream_related_images(image_to_use, window.file_browser, self.app_actions)
+        if self.check_many_files(window, action="find related images"):
+            return
+        downstream_related_images = ImageDetails.get_downstream_related_images(image_to_use, base_dir, self.app_actions, force_refresh=True)
         if downstream_related_images is not None:
             MarkedFiles.file_marks = downstream_related_images
-            self.toast(f"{len(downstream_related_images)} file marks set")
+            self.toast(_(f"{len(downstream_related_images)} file marks set"))
+            window.go_to_mark()
+            window.canvas.after(1, window.canvas.focus_force())
 
-    def get_other_window_or_self(self):
+    def get_other_window_or_self_dir(self):
+        if RecentDirectoryWindow.last_downstream_comparison_directory is not None \
+                and os.path.isdir(RecentDirectoryWindow.last_downstream_comparison_directory):
+            window = App.get_window(base_dir=RecentDirectoryWindow.last_downstream_comparison_directory)
+            if window is not None:
+                return window, [window.base_dir]
+            else:
+                RecentDirectoryWindow.last_downstream_comparison_directory = None
         if len(App.secondary_top_levels) == 0:
-            window = self # should be main window in this case
-        else:
-            for _app in App.open_windows:
-                if _app is not None and _app.window_id != self.window_id and os.path.isdir(_app.base_dir):
-                    window = _app
-                    break
-        return window
+            return self, [self.base_dir] # should be main window in this case
+        window = None
+        other_dirs = []
+        for _app in App.open_windows:
+            if _app is not None and _app.window_id != self.window_id and os.path.isdir(_app.base_dir):
+                window = _app
+                other_dirs.append(_app.base_dir)
+        if len(other_dirs) == 1:
+            return window, other_dirs
+        return None, other_dirs
 
     def get_help_and_config(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
-        top_level.title("Help and Config")
+        top_level.title(_("Help and Config"))
         top_level.geometry("900x600")
         try:
             help_and_config = HelpAndConfig(top_level)
@@ -700,6 +768,7 @@ class App():
         '''
         self.store_info_cache()
         base_dir = self.set_base_dir_box.get()
+#        print(f"Got base dir: {base_dir}")
         if base_dir_from_dir_window is not None:
             self.base_dir = base_dir_from_dir_window  # assume this directory is valid
         elif (base_dir == "" or base_dir == "Add dirpath..." or self.base_dir == base_dir) and len(RecentDirectories.directories) == 0:
@@ -716,6 +785,7 @@ class App():
             self.compare_wrapper._compare = None
             self._set_label_state(group_number=None, size=0)
             self._remove_all_mode_buttons()
+#        print(f"Setting base dir to {self.base_dir} on window ID {self.window_id} in self.set_base_dir")
         self.set_base_dir_box.delete(0, "end")
         self.set_base_dir_box.insert(0, self.base_dir)
         self.file_browser.set_directory(self.base_dir)
@@ -742,15 +812,16 @@ class App():
             self._set_label_state()
         self.master.update()
 
-    def open_recent_directory_window(self, event=None, open_gui=True, run_compare_image=None):
+    def open_recent_directory_window(self, event=None, open_gui=True, run_compare_image=None, extra_callback_args=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
-        top_level.title(f"Set Image Comparison Directory")
+        top_level.title(_("Set Image Comparison Directory"))
         top_level.geometry(RecentDirectoryWindow.get_geometry(is_gui=open_gui))
         if not open_gui:
             top_level.attributes('-alpha', 0.3)
         try:
             recent_directory_window = RecentDirectoryWindow(
-                top_level, self.master, open_gui, self.app_actions, base_dir=self.get_base_dir(), run_compare_image=run_compare_image)
+                top_level, self.master, open_gui, self.app_actions, base_dir=self.get_base_dir(),
+                run_compare_image=run_compare_image, extra_callback_args=extra_callback_args)
         except Exception as e:
             self.alert("Recent Directory Window Error", str(e), kind="error")
 
@@ -783,8 +854,7 @@ class App():
         try:
             return None if counter_limit_str == "" else int(counter_limit_str)
         except Exception:
-            self.alert("Invalid Setting",
-                       "Counter limit must be an integer value.", kind="error")
+            self.alert(_("Invalid Setting"), _("Counter limit must be an integer value."), kind="error")
             raise AssertionError("Counter limit must be an integer value.")
 
     def get_compare_threshold(self):
@@ -824,7 +894,7 @@ class App():
                     #(self.compare_wrapper.search_image_full_path is not None
                     #   and image_path == self.compare_wrapper.search_image_full_path):
             image_path = filedialog.askopenfilename(
-                initialdir=self.get_search_dir(), title="Select image file",
+                initialdir=self.get_search_dir(), title=_("Select image file"),
                 filetypes=[("Image files", "*.jpg *.jpeg *.png *.tiff *.gif")])
 
         if image_path is not None and image_path.strip() != "":
@@ -850,7 +920,7 @@ class App():
                 self.create_image(self.compare_wrapper.search_image_full_path, extra_text="(search image)")
             else:
                 print(self.compare_wrapper.search_image_full_path)
-                self.alert("Error", "Somehow, the search file is invalid", kind="error")
+                self.alert(_("Error"), _("Somehow, the search file is invalid"), kind="error")
 
     def show_prev_image(self, event=None, show_alert=True) -> bool:
         '''
@@ -888,13 +958,13 @@ class App():
         '''
         if self.mode == Mode.SEARCH:
             if not self.compare_wrapper.has_image_matches:
-                self.alert("Search required", "No matches found. Search again to find potential matches.")
+                self.alert(_("Search required"), _("No matches found. Search again to find potential matches."))
                 return
             search_image_path = self.search_image.get()
             search_image_path = get_valid_file(
                 self.get_base_dir(), search_image_path)
             if (self.compare_wrapper.files_matched is None or search_image_path == self.compare_wrapper.current_match()):
-                self.alert("Already set image", "Current image is already the search image.")
+                self.alert(_("Already set image"), _("Current image is already the search image."))
         filepath = self.get_active_image_filepath()
         if filepath:
             base_dir = self.get_base_dir()
@@ -903,7 +973,7 @@ class App():
             self.search_image.set(filepath)
             self.set_search_image()
         else:
-            self.alert("Error", "Failed to get active image filepath", kind="error")
+            self.alert(_("Error"), _("Failed to get active image filepath"), kind="error")
 
     def create_image(self, image_path, extra_text=None) -> None:
         '''
@@ -1001,11 +1071,11 @@ class App():
     def _validate_run(self):
         base_dir_selected = self.set_base_dir_box.get()
         if not base_dir_selected or base_dir_selected == "":
-            res = self.alert("Confirm comparison",
-                    "No base directory has been set, will use current base directory of " +
-                    f"{self.base_dir}\n\nAre you sure you want to proceed?",
-                    kind="warning")
-            return res == messagebox.OK
+            res = self.alert(_("Confirm comparison"),
+                    _("No base directory has been set, will use current base directory of " +
+                    f"{self.base_dir}\n\nAre you sure you want to proceed?"),
+                    kind="askokcancel")
+            return res == messagebox.OK or res == True
         return True
 
     def run_compare(self, find_duplicates=False, searching_image=False, search_text=None, search_text_negative=None) -> None:
@@ -1049,18 +1119,18 @@ class App():
         self.is_toggled_view_matches = True
 
     def search_text_embedding(self, event=None):
-        self.compare_wrapper.validate_compare_mode(CompareMode.CLIP_EMBEDDING, "Compare mode must be set to Clip embedding to search text embeddings")
+        self.compare_wrapper.validate_compare_mode(CompareMode.CLIP_EMBEDDING, _("Compare mode must be set to Clip embedding to search text embeddings"))
         search_text = self.search_text.get()
         search_text_negative = self.search_text_negative.get()
         if search_text.strip() == "" and search_text_negative.strip() == "":
-            self.alert("Invalid search text", "Search text must be set", kind="warning")
+            self.alert(_("Invalid search text"), _("Search text must be set"), kind="warning")
             return
         self.run_compare(search_text=search_text, search_text_negative=search_text_negative)
         self.master.focus()
 
     def add_or_remove_mark_for_current_image(self, event=None, show_toast=True):
         if self.delete_lock:
-            warning = "Delete lock after slideshow\ntransition prevented adding mark"
+            warning = _("Delete lock after slideshow\ntransition prevented adding mark")
             self.toast(warning)
             raise Exception(warning) # Have to raise exception to in some cases prevent downstream events from happening with no marks
         self._check_marks(min_mark_size=0)
@@ -1070,11 +1140,11 @@ class App():
             if MarkedFiles.mark_cursor >= remaining_marks_count:
                 MarkedFiles.mark_cursor = -1
             if show_toast:
-                self.toast(f"Mark removed. Remaining: {remaining_marks_count}")
+                self.toast(_(f"Mark removed. Remaining: {remaining_marks_count}"))
         else:
             MarkedFiles.file_marks.append(self.img_path)
             if show_toast:
-                self.toast(f"Mark added. Total set: {len(MarkedFiles.file_marks)}")
+                self.toast(_(f"Mark added. Total set: {len(MarkedFiles.file_marks)}"))
 
     def _add_all_marks_from_last_or_current_group(self, event=None):
         if self.mode == Mode.BROWSE:
@@ -1087,7 +1157,7 @@ class App():
         for _file in files:
             if not _file in MarkedFiles.file_marks:
                 MarkedFiles.file_marks.append(_file)
-        self.toast(f"Marks added. Total set: {len(MarkedFiles.file_marks)}")
+        self.toast(_(f"Marks added. Total set: {len(MarkedFiles.file_marks)}"))
 
     def go_to_mark(self, event=None):
         self._check_marks()
@@ -1109,14 +1179,14 @@ class App():
     def open_move_marks_window(self, event=None, open_gui=True, override_marks=[]):
         self._check_marks(min_mark_size=0)
         if len(override_marks) > 0:
-            print(f"Including marks: {override_marks}")
+            print(_(f"Including marks: {override_marks}"))
             MarkedFiles.file_marks.extend(override_marks)
         single_image = None
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
             single_image = self.get_active_image_filepath()
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
-        top_level.title(f"Move {len(MarkedFiles.file_marks)} Marked File(s)")
+        top_level.title(_(f"Move {len(MarkedFiles.file_marks)} Marked File(s)"))
         top_level.geometry(MarkedFiles.get_geometry(is_gui=open_gui))
         if not open_gui:
             top_level.attributes('-alpha', 0.3)
@@ -1143,7 +1213,7 @@ class App():
 
     def _check_marks(self, min_mark_size=1):
         if len(MarkedFiles.file_marks) < min_mark_size:
-            exception_text = f"{len(MarkedFiles.file_marks)} marks have been set (>={min_mark_size} expected).\nUse Shift+M to set a mark."
+            exception_text = _(f"{len(MarkedFiles.file_marks)} marks have been set (>={min_mark_size} expected).\nUse Shift+M to set a mark.")
             self.toast(exception_text)
             raise Exception(exception_text)
 
@@ -1153,7 +1223,7 @@ class App():
 
     def open_go_to_file_window(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
-        top_level.title("Go To File")
+        top_level.title(_("Go To File"))
         top_level.geometry(GoToFile.get_geometry())
         try:
             go_to_file = GoToFile(top_level, self.app_actions)
@@ -1170,7 +1240,7 @@ class App():
                 self.compare_wrapper.set_current_group(start_match_index=group_indexes[1])
                 return True
         if not image_path:
-            self.alert("File not found", f"No file was found for the search text: \"{search_text}\"")
+            self.alert(_("File not found"), _(f"No file was found for the search text: \"{search_text}\""))
             return False
         self.create_image(image_path)
         self.master.update()
@@ -1184,7 +1254,7 @@ class App():
         if run_compare_image is None:
             self.open_recent_directory_window(run_compare_image="")
         elif not os.path.isfile(run_compare_image):
-            self.alert("No image selected", "No image was selected for comparison")
+            self.alert(_("No image selected"), _("No image was selected for comparison"))
         else:
             self.open_recent_directory_window(run_compare_image=self.img_path)
 
@@ -1196,7 +1266,7 @@ class App():
         # object to accomplish this.
         next_text_embedding_search_preset = config.next_text_embedding_search_preset()
         if next_text_embedding_search_preset is None:
-            self.alert("No Text Search Presets Found", "No text embedding search presets found. Set them in the config.json file.")
+            self.alert(_("No Text Search Presets Found"), _("No text embedding search presets found. Set them in the config.json file."))
         else:
             self.search_text_box.delete(0, "end")
             self.search_text_negative_box.delete(0, "end")
@@ -1212,6 +1282,16 @@ class App():
             self.master.update()
             self.search_text_embedding()
 
+    def cycle_windows(self, event=None):
+        if App.window_index >= len(App.open_windows):
+            App.window_index = 0
+        _app = App.open_windows[App.window_index]
+        if _app.window_id == self.window_id:
+            App.window_index += 1
+        if App.window_index >= len(App.open_windows):
+            App.window_index = 0
+        _app.canvas.after(1, _app.canvas.focus_force())
+        App.window_index += 1
 
     def home(self, event=None):
         if self.mode == Mode.BROWSE:
@@ -1254,7 +1334,7 @@ class App():
             self.toast("Opening file location: " + filepath)
             Utils.open_file_location(filepath)
         else:
-            self.alert("Error", "Failed to open location of current file, unable to get valid filepath", kind="error")
+            self.alert(_("Error"), _("Failed to open location of current file, unable to get valid filepath"), kind="error")
 
     def open_image_in_gimp(self, event=None):
         filepath = self.get_active_image_filepath()
@@ -1262,7 +1342,7 @@ class App():
             self.toast("Opening file in GIMP: " + filepath)
             Utils.open_file_in_gimp(filepath)
         else:
-            self.alert("Error", "Failed to open current file in GIMP, unable to get valid filepath", kind="error")
+            self.alert(_("Error"), _("Failed to open current file in GIMP, unable to get valid filepath"), kind="error")
 
     def copy_image_path(self):
         filepath = self.file_browser.current_file()
@@ -1278,7 +1358,7 @@ class App():
         Delete the currently displayed image from the filesystem.
         '''
         if self.delete_lock:
-            self.toast("Delete lock after slideshow\ntransition prevented deletion")
+            self.toast(_("Delete lock after slideshow\ntransition prevented deletion"))
             return
 
         if self.mode == Mode.BROWSE:
@@ -1286,8 +1366,7 @@ class App():
             filepath = self.file_browser.current_file()
             if filepath:
                 self._handle_delete(filepath)
-                if filepath in MarkedFiles.file_marks:
-                    MarkedFiles.file_marks.remove(filepath)
+                MarkedFiles.handle_file_removal(filepath)
                 self.file_browser.refresh(refresh_cursor=False, removed_files=[filepath])
                 self.show_next_image()
             self.file_browser.checking_files = True
@@ -1296,17 +1375,16 @@ class App():
         is_toggle_search_image = self.is_toggled_search_image()
 
         if len(self.compare_wrapper.files_matched) == 0 and not is_toggle_search_image:
-            self.toast("Invalid action, no files found to delete")
+            self.toast(_("Invalid action, no files found to delete"))
             return
         elif is_toggle_search_image and (self.compare_wrapper.search_image_full_path is None or self.compare_wrapper.search_image_full_path == ""):
-            self.toast("Invalid action, search image not found")
+            self.toast(_("Invalid action, search image not found"))
             return
 
         filepath = self.get_active_image_filepath()
 
         if filepath is not None:
-            if filepath in MarkedFiles.file_marks:
-                MarkedFiles.file_marks.remove(filepath)
+            MarkedFiles.handle_file_removal(filepath)
             if filepath == self.compare_wrapper.search_image_full_path:
                 self.compare_wrapper.search_image_full_path = None
             self._handle_delete(filepath)
@@ -1315,12 +1393,12 @@ class App():
             self.compare_wrapper._update_groups_for_removed_file(self.mode,
                         self.compare_wrapper.current_group_index, self.compare_wrapper.match_index, show_next_image=True)
         else:
-            self.alert("Error", "Failed to delete current file, unable to get valid filepath", kind="error")
+            self.alert(_("Error"), _("Failed to delete current file, unable to get valid filepath"), kind="error")
 
     def _handle_delete(self, filepath, toast=True, manual_delete=True):
         MarkedFiles.set_delete_lock() # Undo deleting action is not supported
         if toast and manual_delete:
-            self.toast("Removing file: " + filepath)
+            self.toast(_("Removing file: " + filepath))
         else:
             print("Removing file: " + filepath)
         if config.delete_instantly:
@@ -1354,11 +1432,11 @@ class App():
         filepath = get_valid_file(self.get_base_dir(), _filepath)
 
         if filepath is None:
-            self.alert("Error", "Invalid target filepath for replacement: " + _filepath, kind="error")
+            self.alert(_("Error"), _("Invalid target filepath for replacement: " + _filepath), kind="error")
             return
 
         os.rename(str(self.compare_wrapper.search_image_full_path), filepath)
-        self.toast("Moved search image to " + filepath)
+        self.toast(_("Moved search image to " + filepath))
 
     def _handle_remove_files_from_groups(self, files):
         '''
@@ -1381,7 +1459,7 @@ class App():
     def run_image_generation(self, event=None, _type=None):
         self.sd_runner_client.start()
         self.sd_runner_client.run(_type, self.img_path)
-        self.toast(f"Running image gen: {_type}")
+        self.toast(_(f"Running image gen: {_type}"))
 
     def store_info_cache(self):
         base_dir = self.get_base_dir()
@@ -1399,12 +1477,15 @@ class App():
         app_info_cache.store()
 
     def alert(self, title, message, kind="info", hidemain=True) -> None:
-        if kind not in ("error", "warning", "info"):
+        if kind not in ("error", "warning", "info", "askokcancel"):
             raise ValueError("Unsupported alert kind.")
 
         print(f"Alert - Title: \"{title}\" Message: {message}")
-        show_method = getattr(messagebox, "show{}".format(kind))
-        return show_method(title, message)
+        if kind == "askokcancel":
+            alert_method = getattr(messagebox, kind)
+        else:
+            alert_method = getattr(messagebox, f"show{kind}")
+        return alert_method(title, message)
 
     def toast(self, message):
         print("Toast message: " + message.replace("\n", " "))
@@ -1452,15 +1533,15 @@ class App():
                 self.label_state["text"] = ""
             else:
                 self.label_state["text"] = Utils._wrap_text_to_fit_length(
-                    f"Group {group_number + 1} of {len(self.compare_wrapper.file_groups)}\nSize: {size}", 30)
+                    _(f"Group {group_number + 1} of {len(self.compare_wrapper.file_groups)}\nSize: {size}"), 30)
         else: # Set based on file count
             file_count = self.file_browser.count()
             if file_count == 0:
-                text = "No image files found"
+                text = _("No image files found")
             else:
-                text = "1 image file found" if file_count == 1 else f"{file_count} image files found"
+                text = _("1 image file found") if file_count == 1 else _(f"{file_count} image files found")
             if self.inclusion_pattern.get() != "":
-                text += f"\n(filtered)"
+                text += _("\n(filtered)")
             self.label_state["text"] = text
 
     def apply_to_grid(self, component, sticky=None, pady=0, specific_row=None):
@@ -1499,7 +1580,7 @@ class App():
 if __name__ == "__main__":
     assets = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets")
     root = ThemedTk(theme="black", themebg="black")
-    root.title(" Simple Image Compare ")
+    root.title(_(" Simple Image Compare "))
     #root.iconbitmap(bitmap=r"icon.ico")
     icon = PhotoImage(file=os.path.join(assets, "icon.png"))
     root.iconphoto(False, icon)

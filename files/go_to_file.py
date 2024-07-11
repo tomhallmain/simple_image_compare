@@ -1,3 +1,5 @@
+import gettext
+_ = gettext.gettext
 
 from tkinter import Frame, Label, StringVar, filedialog, LEFT, W
 from tkinter.ttk import Entry, Button
@@ -36,7 +38,7 @@ class GoToFile:
     def go_to_file(self, event=None):
         search_text = self.search_text.get()
         if search_text.strip() == "":
-            self.app_actions.toast("Invalid search string, please enter some text.")
+            self.app_actions.toast(_("Invalid search string, please enter some text."))
             return
         self.app_actions.go_to_file(search_text=search_text)
         self.close_windows()

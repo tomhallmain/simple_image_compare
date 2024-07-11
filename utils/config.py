@@ -209,14 +209,14 @@ class FileCheckConfig:
         running_tasks_registry.add(self.registry_id, FileCheckConfig.interval_seconds, f"File Check (window {self.window_id})")
 
     def toggle_filecheck(self):
-        FileCheckConfig.is_running = not FileCheckConfig.is_running
+        self.is_running = not self.is_running
         if self.is_running:
             running_tasks_registry.add(self.registry_id, FileCheckConfig.interval_seconds, f"File Check (window {self.window_id})")
         else:
             running_tasks_registry.remove(self.registry_id)
 
     def end_filecheck(self):
-        FileCheckConfig.is_running = False
+        self.is_running = False
         running_tasks_registry.remove(self.registry_id)
 
 

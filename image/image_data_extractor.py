@@ -248,5 +248,21 @@ class ImageDataExtractor:
 
         return positive, negative
 
+    def get_related_image_path(self, image_path, node_id="LoadImage"):
+        use_class_type = True
+        try:
+            int(node_id)
+            use_class_type = False
+        except ValueError:
+            pass
+        try:
+            if use_class_type:
+                related_image_path = image_data_extractor.get_input_by_class_type(image_path, node_id, "image")
+            else:
+                related_image_path = image_data_extractor.get_input_by_node_id(image_path, node_id, "image")
+        except Exception:
+            related_image_path = None
+        return related_image_path
+
 
 image_data_extractor = ImageDataExtractor()

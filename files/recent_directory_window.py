@@ -1,5 +1,8 @@
 import os
 
+import gettext
+_ = gettext.gettext
+
 from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
@@ -19,6 +22,7 @@ class RecentDirectories:
 class RecentDirectoryWindow():
     recent_directories = []
     last_set_directory = None
+    last_downstream_comparison_directory = None
 
     directory_history = []
     MAX_DIRECTORIES = 50
@@ -75,14 +79,25 @@ class RecentDirectoryWindow():
             return 1
         return 0
 
-    def __init__(self, master, app_master, is_gui, app_actions, base_dir=".", run_compare_image=None):
+    def __init__(self, master, app_master, is_gui, app_actions, base_dir=".", run_compare_image=None, extra_callback_args=(None, None)):
         self.is_gui = is_gui
         self.master = master
-        self.app_master = app_master
+#        self.app_master = master
         self.run_compare_image = run_compare_image
+        if extra_callback_args is None or extra_callback_args[0] is None:
+            self.downstream_callback = None
+            directories_to_add_and_sort_first = []
+        else:
+            self.downstream_callback, directories_to_add_and_sort_first = extra_callback_args
         self.app_actions = app_actions
         self.base_dir = os.path.normpath(base_dir)
         self.filter_text = ""
+
+        for _dir in directories_to_add_and_sort_first:
+            if _dir in RecentDirectories.directories:
+                RecentDirectories.directories.remove(_dir)
+        for _dir in sorted(directories_to_add_and_sort_first, reverse=True):
+            RecentDirectories.directories.insert(0, _dir)
 
         # Use the last set target directory as a base if any directories have been set
         if len(RecentDirectories.directories) > 0 and os.path.isdir(RecentDirectories.directories[0]):
@@ -114,13 +129,13 @@ class RecentDirectoryWindow():
             self.add_dir_widgets()
 
             self._label_info = Label(self.frame)
-            self.add_label(self._label_info, "Set a new target directory", row=0, wraplength=RecentDirectoryWindow.COL_0_WIDTH)
+            self.add_label(self._label_info, _("Set a new target directory"), row=0, wraplength=RecentDirectoryWindow.COL_0_WIDTH)
             self.add_directory_move_btn = None
-            self.add_btn("add_directory_move_btn", "Add directory", self.handle_directory, column=1)
+            self.add_btn("add_directory_move_btn", _("Add directory"), self.handle_directory, column=1)
             self.set_recent_directories_from_dir_btn = None
-            self.add_btn("set_recent_directories_from_dir_btn", "Add directories from parent", self.set_recent_directories_from_dir, column=2)
+            self.add_btn("set_recent_directories_from_dir_btn", _("Add directories from parent"), self.set_recent_directories_from_dir, column=2)
             self.clear_recent_directories_btn = None
-            self.add_btn("clear_recent_directories_btn", "Clear targets", self.clear_recent_directories, column=3)
+            self.add_btn("clear_recent_directories_btn", _("Clear targets"), self.clear_recent_directories, column=3)
             self.frame.after(1, lambda: self.frame.focus_force())
         else:
             self.master.after(1, lambda: self.master.focus_force())
@@ -164,9 +179,9 @@ class RecentDirectoryWindow():
             else:
                 if _dir in RecentDirectories.directories:
                     RecentDirectories.directories.remove(_dir)
-                toast_callback(f"Invalid directory: {_dir}")
+                toast_callback(_(f"Invalid directory: {_dir}"))
         _dir = filedialog.askdirectory(
-                initialdir=starting_target, title="Set image comparison directory")
+                initialdir=starting_target, title=_("Set image comparison directory"))
         return _dir, False
 
 
@@ -201,12 +216,15 @@ class RecentDirectoryWindow():
         if config.debug and self.filter_text is not None and self.filter_text.strip() != "":
             print(f"Filtered by string: {self.filter_text}")
         RecentDirectoryWindow.update_history(_dir)
-        if self.run_compare_image is None:
+        if self.downstream_callback is not None:
+            self.downstream_callback(base_dir=_dir)
+            RecentDirectoryWindow.last_downstream_comparison_directory = _dir
+        elif self.run_compare_image is None:
             self.app_actions.set_base_dir(base_dir_from_dir_window=_dir)
         elif self.run_compare_image == "":
-            self.app_actions.new_window(master=self.app_master, base_dir=_dir)
+            self.app_actions.new_window(base_dir=_dir)
         else:
-            self.app_actions.new_window(master=self.app_master, base_dir=_dir, image_path=self.run_compare_image, do_search=True)
+            self.app_actions.new_window(base_dir=_dir, image_path=self.run_compare_image, do_search=True)
         RecentDirectoryWindow.last_set_directory = _dir
         self.close_windows()
 

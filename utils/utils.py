@@ -7,7 +7,6 @@ import sys
 
 from utils.running_tasks_registry import start_thread
 
-
 class Utils:
     @staticmethod
     def trace(frame, event, arg):
@@ -151,3 +150,11 @@ class Utils:
             if process!=0:
                 raise Exception("Could not open file in GIMP")
         start_thread(gimp_process)
+
+    @staticmethod
+    def is_external_drive(filepath):
+        if sys.platform=='win32':
+            return os.path.splitdrive(filepath)[0]!='C:'
+        else:
+            # TODO figure out how to detect external drives on other platforms
+            return False

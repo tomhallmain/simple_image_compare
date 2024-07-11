@@ -779,9 +779,9 @@ class CompareEmbedding:
         try:
             image_embedding = image_embeddings(image_path)
         except OSError as e:
-            print(f"{search_file_path} - {e}")
+            print(f"{image_path} - {e}")
             raise AssertionError(
-                "Encountered an error accessing the provided file path in the file system.")
+                f"Encountered an error accessing the provided file path {image_embeddings} in the file system.")
         for key, text in texts_dict.items():
             if text in CompareEmbedding.TEXT_EMBEDDING_CACHE:
                 text_embedding = CompareEmbedding.TEXT_EMBEDDING_CACHE[text]
@@ -790,10 +790,22 @@ class CompareEmbedding:
                     text_embedding = text_embeddings(text)
                     CompareEmbedding.TEXT_EMBEDDING_CACHE[text] = text_embedding
                 except OSError as e:
-                    print(f"{search_file_path} - {e}")
+                    print(f"{text} - {e}")
                     raise AssertionError("Encountered an error accessing the provided file path in the file system.")
             similarities[key] = embedding_similarity(image_embedding, text_embedding)
         return similarities
+
+    @staticmethod
+    def is_related(image1, image2):
+        try:
+            emb1 = image_embeddings(image1)
+            emb2 = image_embeddings(image2)
+        except OSError as e:
+            print(f"{search_file_path} - {e}")
+            raise AssertionError(
+                "Encountered an error accessing the provided file paths in the file system.")
+        similarity = embedding_similarity(emb1, emb2)[0]
+        return similarity > 0.8
 
 if __name__ == "__main__":
     base_dir = "."

@@ -1,3 +1,6 @@
+import gettext
+_ = gettext.gettext
+
 from tkinter import Frame, Label, BooleanVar, StringVar, LEFT, W, E, Checkbutton
 from tkinter.ttk import Entry
 
@@ -24,6 +27,7 @@ class HelpAndConfig():
 
         self.help_label_list = []
 
+        # TODO i18n
         help_details = {
             "Command": "Description",
             "Shift+D": "Show image details",
@@ -98,25 +102,25 @@ class HelpAndConfig():
         self.escape_backslash_filepaths = BooleanVar(value=config.escape_backslash_filepaths)
         self.checkbox_escape_backslash_filepaths = Checkbutton(self.frame, variable=self.escape_backslash_filepaths)
 
-        self.add_label(self.label_show_toasts, "Show Toasts", wraplength=col_0_width)
+        self.add_label(self.label_show_toasts, _("Show Toasts"), wraplength=col_0_width)
         self.add_checkbox(self.checkbox_show_toasts)
-        self.add_label(self.label_slideshow_interval_seconds, "Slideshow Interval (sec)", wraplength=col_0_width)
+        self.add_label(self.label_slideshow_interval_seconds, _("Slideshow Interval (sec)"), wraplength=col_0_width)
         self.apply_to_grid(self.entry_slideshow_interval_seconds, sticky=W, column=1)
-        self.add_label(self.label_file_check_interval_seconds, "File Check Interval (sec)", wraplength=col_0_width)
+        self.add_label(self.label_file_check_interval_seconds, _("File Check Interval (sec)"), wraplength=col_0_width)
         self.apply_to_grid(self.entry_file_check_interval_seconds, sticky=W, column=1)
-        self.add_label(self.label_max_search_results, "Max Search Results", wraplength=col_0_width)
+        self.add_label(self.label_max_search_results, _("Max Search Results"), wraplength=col_0_width)
         self.apply_to_grid(self.entry_max_search_results, sticky=W, column=1)
-        self.add_label(self.label_sort_by, "Sort By", wraplength=col_0_width)
+        self.add_label(self.label_sort_by, _("Sort By"), wraplength=col_0_width)
         self.add_label(self.sort_by, str(config.sort_by), column=1)
-        self.add_label(self.label_toasts_persist_seconds, "Toasts Persist (sec)", wraplength=col_0_width)
+        self.add_label(self.label_toasts_persist_seconds, _("Toasts Persist (sec)"), wraplength=col_0_width)
         self.apply_to_grid(self.entry_toasts_persist_seconds, sticky=W, column=1)
-        self.add_label(self.label_delete_instantly, "Delete Instantly", wraplength=col_0_width)
+        self.add_label(self.label_delete_instantly, _("Delete Instantly"), wraplength=col_0_width)
         self.add_checkbox(self.checkbox_delete_instantly)
-        self.add_label(self.label_trash_folder, "Trash Folder", wraplength=col_0_width)
+        self.add_label(self.label_trash_folder, _("Trash Folder"), wraplength=col_0_width)
         self.apply_to_grid(self.entry_trash_folder, sticky=W, column=1)
-        self.add_label(self.label_image_tagging_enabled, "Image Tagging Enabled", wraplength=col_0_width)
+        self.add_label(self.label_image_tagging_enabled, _("Image Tagging Enabled"), wraplength=col_0_width)
         self.add_checkbox(self.checkbox_image_tagging_enabled)
-        self.add_label(self.label_escape_backslash_filepaths, "Escape Backslash Filepaths", wraplength=col_0_width)
+        self.add_label(self.label_escape_backslash_filepaths, _("Escape Backslash Filepaths"), wraplength=col_0_width)
         self.add_checkbox(self.checkbox_escape_backslash_filepaths)
 
         self.master.bind("<Escape>", self.close_windows)

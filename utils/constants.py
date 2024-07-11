@@ -75,6 +75,7 @@ class Sort(Enum):
 
 
 class ImageGenerationType(Enum):
+    REDO_PROMPT= "redo_prompt"
     CONTROL_NET = "control_net"
     IP_ADAPTER = "ip_adapter"
     RENOISER = "renoiser"

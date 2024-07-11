@@ -1,11 +1,18 @@
 import hashlib
 import os
 import re
+from typing import Tuple
+
+import gettext
+_ = gettext.gettext
 
 from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
 from compare.compare_embeddings import CompareEmbedding
+from files.file_actions_window import FileActionsWindow
+from files.file_browser import FileBrowser
+from image.image_data_extractor import image_data_extractor
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
@@ -27,48 +34,23 @@ def _calculate_hash(filepath):
     return sha256.hexdigest()
 
 
-class Action():
-    def __init__(self, action, target):
-        self.action = action
-        self.target = target
-        self.marks = []
-
-    def __eq__(self, other):
-        if not isinstance(other, Action):
-            return False
-        return self.action == other.action and self.target == other.target
-    
-    def __hash__(self):
-        return hash((self.action, self.target))
-
-    def __str__(self):
-        return self.action.__name__ + " to " + self.target
-
-def setup_permanent_action():
-    permanent_mark_target = app_info_cache.get_meta("permanent_mark_target")
-    permanent_action = app_info_cache.get_meta("permanent_action")
-    if permanent_action == "move_file":
-        return Action(Utils.move_file, permanent_mark_target)
-    elif permanent_action == "copy_file":
-        return Action(Utils.copy_file, permanent_mark_target)
-    else:
-        return None
-
 
 class MarkedFiles():
     file_marks = []
+    mark_cursor = -1
     mark_target_dirs = []
     previous_marks = []
     last_set_target_dir = None
+    file_browser = None # a file browser for test_is_in_directory
+
+    # For file operations that take a while because they involve many files, pressing Ctrl+Z while they are 
+    # running should not attempt to undo the action before the currently running one.
     is_performing_action = False
     is_cancelled_action = False
 
-    permanent_action = setup_permanent_action()
-    action_history = []
-    MAX_ACTIONS = 50
-
+    # Unable to undo a delete action.
     delete_lock = False
-    mark_cursor = -1
+
     MAX_HEIGHT = 900
     N_TARGET_DIRS_CUTOFF = 30
     COL_0_WIDTH = 600
@@ -84,36 +66,18 @@ class MarkedFiles():
     @staticmethod
     def clear_file_marks(toast_callback):
         MarkedFiles.file_marks = []
-        toast_callback(f"Marks cleared.")
+        toast_callback(_("Marks cleared."))
 
     @staticmethod
     def set_current_marks_from_previous(toast_callback):
         for f in MarkedFiles.previous_marks:
             if f not in MarkedFiles.file_marks and os.path.exists(f):
                 MarkedFiles.file_marks.append(f)
-        toast_callback(f"Set current marks from previous.\nTotal set: {len(MarkedFiles.file_marks)}")
-
-    @staticmethod
-    def get_history_action(start_index=0):
-        # Get a previous action that is not equivalent to the permanent action if possible.
-        action = None
-        seen_actions = []
-        for i in range(len(MarkedFiles.action_history)):
-            action = MarkedFiles.action_history[i]
-            is_returnable_action = action != MarkedFiles.permanent_action
-            if not is_returnable_action or action in seen_actions:
-                start_index += 1
-            seen_actions.append(action)
-#            print(f"i={i}, start_index={start_index}, action={action}")
-            if i < start_index:
-                continue
-            if is_returnable_action:
-                break
-        return action
+        toast_callback(_(f"Set current marks from previous.\nTotal set: {len(MarkedFiles.file_marks)}"))
 
     @staticmethod
     def run_previous_action(app_actions):
-        previous_action = MarkedFiles.get_history_action(start_index=0)
+        previous_action = FileActionsWindow.get_history_action(start_index=0)
         if previous_action is None:
             return False, False
         return MarkedFiles.move_marks_to_dir_static(app_actions,
@@ -123,7 +87,7 @@ class MarkedFiles():
 
     @staticmethod
     def run_penultimate_action(app_actions):
-        penultimate_action = MarkedFiles.get_history_action(start_index=1)
+        penultimate_action = FileActionsWindow.get_history_action(start_index=1)
         if penultimate_action is None:
             return False, False
         return MarkedFiles.move_marks_to_dir_static(app_actions,
@@ -133,31 +97,13 @@ class MarkedFiles():
 
     @staticmethod
     def run_permanent_action(app_actions):
-        if not MarkedFiles.permanent_action:
-            app_actions.toast(f"No permanent mark target set!\nSet with Ctrl+T on Marks window.")
+        if not FileActionsWindow.permanent_action:
+            app_actions.toast(_("No permanent mark target set!\nSet with Ctrl+T on Marks window."))
             return False, False
         return MarkedFiles.move_marks_to_dir_static(app_actions,
-                                             target_dir=MarkedFiles.permanent_action.target,
-                                             move_func=MarkedFiles.permanent_action.action,
+                                             target_dir=FileActionsWindow.permanent_action.target,
+                                             move_func=FileActionsWindow.permanent_action.action,
                                              single_image=(len(MarkedFiles.file_marks)==1))
-
-    @staticmethod
-    def set_permanent_action(target_dir, move_func, toast_callback):
-        MarkedFiles.permanent_action = Action(move_func, target_dir)
-        app_info_cache.set_meta("permanent_action", move_func.__name__)
-        app_info_cache.set_meta("permanent_mark_target", target_dir)
-        toast_callback(f"Set permanent action:\n{move_func.__name__} to {target_dir}")
-
-    @staticmethod
-    def update_history(target_dir, move_func):
-        MarkedFiles.previous_marks.clear()
-        latest_action = Action(move_func, target_dir)
-        if len(MarkedFiles.action_history) > 0 and \
-                latest_action == MarkedFiles.action_history[0]:
-            return
-        MarkedFiles.action_history.insert(0, latest_action)
-        if len(MarkedFiles.action_history) > MarkedFiles.MAX_ACTIONS:
-            del MarkedFiles.action_history[-1]
 
     @staticmethod
     def get_geometry(is_gui=True):
@@ -188,7 +134,6 @@ class MarkedFiles():
         self.single_image = single_image
         self.master = master
         self.app_mode = app_mode
-        self.compare = None
         self.is_sorted_by_embedding = False
         self.app_actions = app_actions
         self.base_dir = os.path.normpath(base_dir)
@@ -229,19 +174,19 @@ class MarkedFiles():
             self.add_target_dir_widgets()
 
             self._label_info = Label(self.frame)
-            self.add_label(self._label_info, "Set a new target directory", row=0, wraplength=MarkedFiles.COL_0_WIDTH)
+            self.add_label(self._label_info, _("Set a new target directory"), row=0, wraplength=MarkedFiles.COL_0_WIDTH)
             self.add_directory_move_btn = None
-            self.add_btn("add_directory_move_btn", "MOVE", self.handle_target_directory, column=1)
+            self.add_btn("add_directory_move_btn", _("MOVE"), self.handle_target_directory, column=1)
             def copy_handler_new_dir(event=None, self=self):
                 self.handle_target_directory(move_func=Utils.copy_file)
             self.add_directory_copy_btn = None
-            self.add_btn("add_directory_copy_btn", "COPY", copy_handler_new_dir, column=2)
+            self.add_btn("add_directory_copy_btn", _("COPY"), copy_handler_new_dir, column=2)
             self.delete_btn = None
             self.add_btn("delete_btn", "DELETE", self.delete_marked_files, column=3)
             self.set_target_dirs_from_dir_btn = None
-            self.add_btn("set_target_dirs_from_dir_btn", "Add directories from parent", self.set_target_dirs_from_dir, column=4)
+            self.add_btn("set_target_dirs_from_dir_btn", _("Add directories from parent"), self.set_target_dirs_from_dir, column=4)
             self.clear_target_dirs_btn = None
-            self.add_btn("clear_target_dirs_btn", "Clear targets", self.clear_target_dirs, column=5)
+            self.add_btn("clear_target_dirs_btn", _("Clear targets"), self.clear_target_dirs, column=5)
             self.frame.after(1, lambda: self.frame.focus_force())
         else:
             self.master.after(1, lambda: self.master.focus_force())
@@ -252,6 +197,7 @@ class MarkedFiles():
         self.master.protocol("WM_DELETE_WINDOW", self.close_windows)
         self.master.bind('<Shift-Delete>', self.delete_marked_files)
         self.master.bind("<Button-2>", self.delete_marked_files)
+        self.master.bind("<Button-3>", self.do_action_test_is_in_directory)
         self.master.bind("<Control-t>", self.set_permanent_mark_target)
         self.master.bind("<Control-s>", self.sort_target_dirs_by_embedding)
 
@@ -272,14 +218,14 @@ class MarkedFiles():
             self.label_list.append(self._label_info)
             self.add_label(self._label_info, target_dir, row=row, column=base_col, wraplength=MarkedFiles.COL_0_WIDTH)
 
-            move_btn = Button(self.frame, text="Move")
+            move_btn = Button(self.frame, text=_("Move"))
             self.move_btn_list.append(move_btn)
             move_btn.grid(row=row, column=base_col+1)
             def move_handler(event, self=self, target_dir=target_dir):
                 return self.move_marks_to_dir(event, target_dir)
             move_btn.bind("<Button-1>", move_handler)
 
-            copy_btn = Button(self.frame, text="Copy")
+            copy_btn = Button(self.frame, text=_("Copy"))
             self.copy_btn_list.append(copy_btn)
             copy_btn.grid(row=row, column=base_col+2)
             def copy_handler(event, self=self, target_dir=target_dir):
@@ -298,9 +244,9 @@ class MarkedFiles():
             else:
                 if target_dir in MarkedFiles.mark_target_dirs:
                     MarkedFiles.mark_target_dirs.remove(target_dir)
-                toast_callback(f"Invalid directory: {target_dir}")
+                toast_callback(_(f"Invalid directory: {target_dir}"))
         target_dir = filedialog.askdirectory(
-                initialdir=starting_target, title="Select target directory for marked files")
+                initialdir=starting_target, title=_("Select target directory for marked files"))
         return target_dir, False
 
 
@@ -325,14 +271,17 @@ class MarkedFiles():
         if not target_dir in MarkedFiles.mark_target_dirs:
             MarkedFiles.mark_target_dirs.append(target_dir)
             MarkedFiles.mark_target_dirs.sort()
-        self.move_marks_to_dir(target_dir=target_dir, move_func=move_func)
+        if move_func is not None:
+            self.move_marks_to_dir(target_dir=target_dir, move_func=move_func)
+        else:
+            self.test_is_in_directory(event=event, target_dir=target_dir)
 
     def move_marks_to_dir(self, event=None, target_dir=None, move_func=Utils.move_file):
         target_dir = self.handle_target_directory(target_dir=target_dir)
         if config.debug and self.filter_text is not None and self.filter_text.strip() != "":
             print(f"Filtered by string: {self.filter_text}")
         if self.do_set_permanent_mark_target:
-            MarkedFiles.set_permanent_action(target_dir, move_func, self.app_actions.toast)
+            FileActionsWindow.set_permanent_action(target_dir, move_func, self.app_actions.toast)
             self.do_set_permanent_mark_target = False
         some_files_already_present, exceptions_present = MarkedFiles.move_marks_to_dir_static(
             self.app_actions, target_dir=target_dir, move_func=move_func, single_image=self.single_image)
@@ -340,18 +289,19 @@ class MarkedFiles():
 
     @staticmethod
     def move_marks_to_dir_static(app_actions, target_dir=None,
-                                 move_func=Utils.move_file, single_image=False):
+                                 move_func=Utils.move_file, single_image=False) -> Tuple[bool, bool]:
         """
         Move or copy the marked files to the target directory.
         """
         MarkedFiles.is_performing_action = True
         some_files_already_present = False
         is_moving = move_func == Utils.move_file
-        action_part1 = "Moving" if is_moving else "Copying"
-        action_part2 = "Moved" if is_moving else "Copied"
-        MarkedFiles.update_history(target_dir, move_func)
+        action_part1 = _("Moving") if is_moving else _("Copying")
+        action_part2 = _("Moved") if is_moving else _("Copied")
+        MarkedFiles.previous_marks.clear()
+        FileActionsWindow.update_history(target_dir, move_func, MarkedFiles.file_marks)
         if len(MarkedFiles.file_marks) > 1:
-            print(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}")
+            print(_(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}"))
         exceptions = {}
         invalid_files = []
         for marked_file in MarkedFiles.file_marks:
@@ -375,7 +325,7 @@ class MarkedFiles():
                 MarkedFiles.undo_move_marks(app_actions.get_base_dir(), app_actions)
             return False, False
         if len(exceptions) < len(MarkedFiles.file_marks):
-            app_actions.toast(f"{action_part2} {len(MarkedFiles.file_marks) - len(exceptions)} files to\n{target_dir}")
+            app_actions.toast(_(f"{action_part2} {len(MarkedFiles.file_marks) - len(exceptions)} files to\n{target_dir}"))
             MarkedFiles.delete_lock = False
         MarkedFiles.file_marks.clear()
         exceptions_present = len(exceptions) > 0
@@ -400,11 +350,11 @@ class MarkedFiles():
             if some_files_already_present:
                 if config.clear_marks_with_errors_after_move and not single_image:
                     print("Cleared invalid marks by config option")
-                warning = "Existing filenames match!"
+                warning = _("Existing filenames match!")
                 if matching_files:
-                    warning += "\nWARNING: Exact file match."
+                    warning += _("\nWARNING: Exact file match.")
                 if names_are_short:
-                    warning += "\nWARNING: Short filenames."
+                    warning += _("\nWARNING: Short filenames.")
                 app_actions.toast(warning)
         MarkedFiles.is_performing_action = False
         if len(MarkedFiles.previous_marks) > 0:
@@ -427,15 +377,15 @@ class MarkedFiles():
             return
         if MarkedFiles.delete_lock:
             return
-        is_moving_back = MarkedFiles.action_history[0].action == Utils.move_file
-        action_part1 = "Moving back" if is_moving_back else "Removing"
-        action_part2 = "Moved back" if is_moving_back else "Removed"
+        is_moving_back = FileActionsWindow.action_history[0].action == Utils.move_file
+        action_part1 = _("Moving back") if is_moving_back else _("Removing")
+        action_part2 = _("Moved back") if is_moving_back else _("Removed")
         target_dir, target_was_valid = MarkedFiles.get_target_directory(MarkedFiles.last_set_target_dir, None, app_actions.toast)
         if not target_was_valid:
             raise Exception(f"{action_part1} previously marked files failed, somehow previous target directory invalid:  {target_dir}")
         if base_dir is None:
             base_dir = filedialog.askdirectory(
-                initialdir=target_dir, title="Where should the marked files have gone?")
+                initialdir=target_dir, title=_("Where should the marked files have gone?"))
         if base_dir is None or base_dir == "" or not os.path.isdir(base_dir):
             raise Exception("Failed to get valid base directory for undo move marked files.")
         print(f"Undoing action: {action_part1} {len(MarkedFiles.previous_marks)} files from directory:\n{MarkedFiles.last_set_target_dir}")
@@ -459,7 +409,7 @@ class MarkedFiles():
                 elif os.path.exists(expected_new_filepath):
                     invalid_files.append(expected_new_filepath)
         if len(exceptions) < len(MarkedFiles.previous_marks):
-            app_actions.toast(f"{action_part2} {len(MarkedFiles.previous_marks) - len(exceptions)} files from\n{target_dir}")
+            app_actions.toast(_(f"{action_part2} {len(MarkedFiles.previous_marks) - len(exceptions)} files from\n{target_dir}"))
         MarkedFiles.previous_marks.clear()
         if len(exceptions) > 0:
             for marked_file in exceptions.keys():
@@ -475,7 +425,7 @@ class MarkedFiles():
         add them as target directories, updating the window when complete.
         """
         parent_dir = filedialog.askdirectory(
-                initialdir=self.starting_target, title="Select parent directory for target directories")
+                initialdir=self.starting_target, title=_("Select parent directory for target directories"))
         if not os.path.isdir(parent_dir):
             raise Exception("Failed to set target directory to receive marked files.")
 
@@ -562,7 +512,7 @@ class MarkedFiles():
             self.master.update()
 
 
-    def do_action(self, event=None):
+    def do_action(self, event):
         """
         The user has requested to do something with the marked files. Based on the context, figure out what to do.
 
@@ -586,7 +536,7 @@ class MarkedFiles():
         alt_key_pressed = (event.state & 0x20000) != 0
         move_func = Utils.copy_file if shift_key_pressed else Utils.move_file
         if alt_key_pressed:
-            penultimate_action = MarkedFiles.get_history_action(start_index=1)
+            penultimate_action = FileActionsWindow.get_history_action(start_index=1)
             if penultimate_action is not None and os.path.isdir(penultimate_action.target):
                 self.move_marks_to_dir(target_dir=penultimate_action.target, move_func=move_func)
         elif len(self.filtered_target_dirs) == 0 or control_key_pressed:
@@ -602,7 +552,7 @@ class MarkedFiles():
 
     def set_permanent_mark_target(self, event=None):
         self.do_set_permanent_mark_target = True
-        self.app_actions.toast("Recording next mark target and action.")
+        self.app_actions.toast(_("Recording next mark target and action."))
 
     def clear_target_dirs(self, event=None):
         self.clear_widget_lists()
@@ -635,7 +585,7 @@ class MarkedFiles():
             self.clear_widget_lists()
             self.add_target_dir_widgets()
             self.master.update()
-        self.app_actions.toast("Sorted directories by embedding comparison.")
+        self.app_actions.toast(_("Sorted directories by embedding comparison."))
 
     def clear_widget_lists(self):
         for btn in self.move_btn_list:
@@ -656,12 +606,10 @@ class MarkedFiles():
         Unfortunately, since there are challenges with restoring files from trash folder
         an undo operation is not implemented.
         """
-        res = self.app_actions.alert("Confirm Delete",
-                f"Deleting {len(MarkedFiles.file_marks)} marked files - Are you sure you want to proceed?",
-                kind="warning")
-        if res != messagebox.OK:
-            if config.debug:
-                print(f"result was: {res}")
+        res = self.app_actions.alert(_("Confirm Delete"),
+                _(f"Deleting {len(MarkedFiles.file_marks)} marked files - Are you sure you want to proceed?"),
+                kind="askokcancel")
+        if res != messagebox.OK and res != True:
             return
 
         removed_files = []
@@ -679,16 +627,116 @@ class MarkedFiles():
         MarkedFiles.file_marks.clear()
         if len(failed_to_delete) > 0:
             MarkedFiles.file_marks.extend(failed_to_delete)
-            self.app_actions.alert("Delete Failed",
-                    f"Failed to delete {len(failed_to_delete)} files - check log for details.",
+            self.app_actions.alert(_("Delete Failed"),
+                    _(f"Failed to delete {len(failed_to_delete)} files - check log for details."),
                     kind="warning")
         else:
-            self.app_actions.toast(f"Deleted {len(removed_files)} marked files.")
+            self.app_actions.toast(_(f"Deleted {len(removed_files)} marked files."))
 
         # In the BROWSE case, the file removal should be recognized by the file browser
         ## TODO it will not be handled in case of using file JSON. need to handle this case separately.        
         self.app_actions.refresh(removed_files=(removed_files if self.app_mode != Mode.BROWSE else []))
         self.close_windows()
+
+
+    def do_action_test_is_in_directory(self, event):
+        control_key_pressed = (event.state & 0x4) != 0
+        alt_key_pressed = (event.state & 0x20000) != 0
+        target_dir = None
+        if alt_key_pressed:
+            penultimate_action = FileActionsWindow.get_history_action(start_index=1)
+            if penultimate_action is not None and os.path.isdir(penultimate_action.target):
+                target_dir = penultimate_action.target
+        elif len(self.filtered_target_dirs) == 0 or control_key_pressed:
+            self.handle_target_directory(event=event, move_func=None)
+            return
+        else:
+            if len(self.filtered_target_dirs) == 1 or self.filter_text.strip() != "" or self.is_sorted_by_embedding:
+                target_dir = self.filtered_target_dirs[0]
+            else:
+                target_dir = MarkedFiles.last_set_target_dir
+
+        if target_dir is None:
+            self.handle_target_directory(event=event, move_func=None)
+        else:
+            self.test_is_in_directory(event=event, target_dir=target_dir)
+
+    def test_is_in_directory(self, event=None, target_dir=None):
+        target_dir = self.handle_target_directory(target_dir=target_dir)
+        if config.debug and self.filter_text is not None and self.filter_text.strip() != "":
+            print(f"Filtered by string: {self.filter_text}")
+        shift_key_pressed = (event.state & 0x1) != 0
+        if shift_key_pressed:
+            self.find_is_downstream_related_image_in_directory(target_dir=target_dir)
+        else:
+            some_files_already_present = MarkedFiles.test_in_directory_static(self.app_actions, target_dir=target_dir, single_image=self.single_image)
+        self.close_windows()
+
+    @staticmethod
+    def test_in_directory_static(app_actions, target_dir=None, single_image=False) -> bool:
+        """
+        Check if the marked files are in the target directory.
+        """
+        MarkedFiles.is_performing_action = True
+        if len(MarkedFiles.file_marks) > 1:
+            print(f"Checking if {len(MarkedFiles.file_marks)} files are in directory: {target_dir}")
+        found_files = []
+        for marked_file in MarkedFiles.file_marks:
+            new_filename = os.path.join(target_dir, os.path.basename(marked_file))
+            if os.path.isfile(new_filename):
+                print(f"{marked_file} is already present in {new_filename}")
+                found_files.append((marked_file, new_filename))
+#        MarkedFiles.file_marks.clear() MAYBE use if not config.clear_marks_with_errors_after_move and not single_image
+        names_are_short = False
+        matching_files = 0
+        for marked_file, new_filename in found_files:
+            if _calculate_hash(marked_file) == _calculate_hash(new_filename):
+                matching_files += 1
+                print(f"File hashes match: {marked_file} <> {new_filename}")
+            elif len(os.path.basename(marked_file)) < 13 and not names_are_short:
+                names_are_short = True
+        if len(found_files) > 0:
+            # if config.clear_marks_with_errors_after_move and not single_image:
+            #     print("Cleared invalid marks by config option")
+            warning = _("Existing filenames found!")
+            if matching_files == len(MarkedFiles.file_marks):
+                warning += _("\nWARNING: All file hashes match.")
+            elif matching_files > 0:
+                warning += _(f"\nWARNING: {matching_files} of {len(MarkedFiles.file_marks)} file hashes match.")
+            if names_are_short:
+                warning += _("\nWARNING: Short filenames.")
+            app_actions.toast(warning)
+#            MarkedFiles.last_set_target_dir = target_dir
+        app_actions.refocus()
+        return len(found_files) > 0
+
+    def find_is_downstream_related_image_in_directory(self, target_dir):
+        if MarkedFiles.file_browser is None or MarkedFiles.file_browser.directory != target_dir or not MarkedFiles.file_browser.recursive:
+            MarkedFiles.file_browser = FileBrowser(directory=target_dir, recursive=True)
+        MarkedFiles.file_browser._gather_files(files=None)
+        marked_file_basenames = []
+        for marked_file in MarkedFiles.file_marks:
+            marked_file_basenames.append(os.path.basename(marked_file))
+        downstream_related_images = []
+        for path in MarkedFiles.file_browser.filepaths:
+            if path in MarkedFiles.file_marks:
+                continue
+            related_image_path = image_data_extractor.get_related_image_path(path)
+            if related_image_path is not None:
+                if related_image_path in MarkedFiles.file_marks:
+                    downstream_related_images.append(path)
+                else:
+                    file_basename = os.path.basename(related_image_path)
+                    if len(file_basename) > 10 and file_basename in marked_file_basenames:
+                        # NOTE this relation criteria is flimsy but it's better to have false positives than
+                        # potentially miss valid files that have been moved since this search is happening
+                        downstream_related_images.append(path)
+        if len(downstream_related_images) > 0:
+            for image in downstream_related_images:
+                print(f"Downstream related image found: {image}")
+            self.app_actions.toast(_(f"Found {len(downstream_related_images)} downstream related images"))
+        else:
+            self.app_actions.toast(_("No downstream related images found"))
 
     def close_windows(self, event=None):
         self.master.destroy()
@@ -712,4 +760,14 @@ class MarkedFiles():
             setattr(self, button_ref_name, button)
             button # for some reason this is necessary to maintain the reference?
             button.grid(row=row, column=column)
+
+    @staticmethod
+    def handle_file_removal(filepath):
+        if filepath in MarkedFiles.file_marks:
+            filepath_index = MarkedFiles.file_marks.index(filepath)
+            if filepath_index < MarkedFiles.mark_cursor:
+                MarkedFiles.mark_cursor -= 1
+            elif filepath_index == len(MarkedFiles.file_marks) - 1:
+                MarkedFiles.mark_cursor = 0
+            MarkedFiles.file_marks.remove(filepath)
 

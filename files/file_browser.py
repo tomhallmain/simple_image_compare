@@ -8,6 +8,9 @@ import threading
 from time import sleep
 from typing import List
 
+import gettext
+_ = gettext.gettext
+
 from utils.config import config
 from utils.constants import Sort, SortBy
 from utils.utils import Utils
@@ -79,6 +82,10 @@ class FileBrowser:
 
     def count(self):
         return len(self._files)
+
+    def is_slow_total_files(self, threshold=2000):
+        factor = 5 if Utils.is_external_drive(self.directory) else 1
+        return factor * len(self._files) > threshold
 
     def set_filter(self, filter):
         if config.debug:
@@ -165,8 +172,8 @@ class FileBrowser:
     def previous_file(self):
         files = self.get_files()
         if len(files) == 0:
-            recursive_str = "" if self.recursive else " (try setting recursive to True)"
-            raise Exception("No files found for current browsing settings." + recursive_str)
+            recursive_str = "" if self.recursive else _(" (try setting recursive to True)")
+            raise Exception(_("No files found for current browsing settings.") + recursive_str)
         with self.cursor_lock:
             if self.file_cursor == 0:
                 self.file_cursor = len(files) - 1
@@ -205,6 +212,7 @@ class FileBrowser:
 
     def get_index_details(self):
         files = self.get_files()
+        _("Index details")
         return f"{self.file_cursor+1} out of {len(files)} files in directory, ordered by {self.sort_by} {self.sort}"
 
     def go_to_file(self, filepath):
@@ -289,7 +297,7 @@ class FileBrowser:
 
     def _get_sortable_files(self) -> List[SortableFile]:
         self._files = []
-        if not os.path.exists(self.directory) and not self.use_file_paths_json:
+        if not self.use_file_paths_json and not os.path.exists(self.directory):
             return self._files
 
         files = []
@@ -350,8 +358,11 @@ class FileBrowser:
         filepaths = [sf.full_file_path for sf in sortable_files]
         return filepaths
 
-    def _gather_files(self, files):
+    def _gather_files(self, files=None):
         allowed_extensions = config.file_types
+        if files is None: # This is not the standard use case, only used in methods where we don't care about sorting
+            self.filepaths.clear()
+            files = self.filepaths
 
         if self.filter is not None and self.filter != "":
             if self.use_file_paths_json:
