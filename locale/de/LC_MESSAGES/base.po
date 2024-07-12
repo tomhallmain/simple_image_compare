@@ -1,0 +1,855 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2024-07-11 15:22-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Deutsch <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp1252\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: .\app.py:164 .\app.py:1586
+msgid " Simple Image Compare "
+msgstr " Einfacher Bildvergleich "
+
+#: .\app.py:273 .\compare\compare_wrapper.py:470
+msgid "Set a directory to run comparison."
+msgstr "Legen Sie ein Verzeichnis f\u00fcr den Vergleich fest."
+
+#: .\app.py:280
+msgid "Toggle theme"
+msgstr "Thema umschalten"
+
+#: .\app.py:281
+msgid "Set directory"
+msgstr "Verzeichnis einstellen"
+
+#: .\app.py:282
+msgid "Add dirpath..."
+msgstr "Dirpfad hinzuf\u00fcgen..."
+
+#: .\app.py:285
+msgid "Set search file"
+msgstr "Suchdatei einstellen"
+
+#: .\app.py:293
+msgid "Search text (embedding mode)"
+msgstr "Suchtext (Einbettungsmodus)"
+
+#: .\app.py:304
+msgid "Compare mode"
+msgstr "Modus vergleichen"
+
+#: .\app.py:322
+msgid "Compare faces"
+msgstr "Gesichter vergleichen"
+
+#: .\app.py:326
+msgid "Overwrite cache"
+msgstr "Cache \u00fcberschreiben"
+
+#: .\app.py:330
+msgid "Store checkpoints"
+msgstr "Kontrollpunkte speichern"
+
+#: .\app.py:334
+msgid "Max files to compare"
+msgstr "Maximal zu vergleichende Dateien"
+
+#: .\app.py:340
+msgid "Filter files by glob pattern"
+msgstr "Dateien nach glob-Muster filtern"
+
+#: .\app.py:347
+msgid "Browsing mode - Sort by"
+msgstr "Browsing-Modus - Sortieren"
+
+#: .\app.py:354
+msgid "Recurse subdirectories"
+msgstr "Unterverzeichnisse rekursieren"
+
+#: .\app.py:359
+msgid "Image resize to full window"
+msgstr "Bildgr\u00f6\u00dfe auf ganzes Fenster \u00e4ndern"
+
+#: .\app.py:364
+msgid "Search only return closest"
+msgstr "Suche liefert nur die n\u00e4chstgelegenen"
+
+#: .\app.py:371
+msgid "Run image compare"
+msgstr "Bildvergleich durchf\u00fchren"
+
+#: .\app.py:373
+msgid "Find duplicates"
+msgstr "Duplikate finden"
+
+#: .\app.py:375
+msgid "Image details"
+msgstr "Bild-Details"
+
+#: .\app.py:386
+msgid "Search current image"
+msgstr "Aktuelles Bild suchen"
+
+#: .\app.py:387
+msgid "Open image location"
+msgstr "Bildstandort \u00f6ffnen"
+
+#: .\app.py:388
+msgid "Copy image path"
+msgstr "Bildpfad kopieren"
+
+#: .\app.py:389
+msgid "---- DELETE ----"
+msgstr "---- L\u00d6SCHEN ----"
+
+#: .\app.py:496
+msgid "Confirm Quit"
+msgstr "Beenden best\u00e4tigen"
+
+#: .\app.py:496
+msgid "Would you like to quit the application?"
+msgstr "M\u00f6chten Sie die Anwendung beenden?"
+
+#: .\app.py:560
+msgid "Ended slideshows"
+msgstr "Beendete Diashows"
+
+#: .\app.py:600
+msgid "No files found in directory after refresh."
+msgstr "Keine Dateien im Verzeichnis nach Aktualisierung gefunden."
+
+#: .\app.py:600 app.py:1418
+msgid "Warning"
+msgstr "Warnung"
+
+#: .\app.py:638
+msgid "Browsing mode set."
+msgstr "Browsing-Modus eingestellt."
+
+#: .\app.py:648
+msgid "(Open this image as part of a directory to see index details.)"
+msgstr "(\u00d6ffnen Sie dieses Bild als Teil eines Verzeichnisses, um Indexdetails zu sehen)."
+
+#: .\app.py:681
+msgid "Many Files"
+msgstr "Viele Dateien"
+
+#: .\app.py:703
+msgid "No downstream related image(s) found in {0}"
+msgstr "Keine stromabw\u00e4rts gerichtete(n) Bilder im {0} gefunden"
+
+#: .\app.py:720
+msgid "{0} file marks set"
+msgstr "{0} Feilenmarkens\u00e4tze"
+
+#: .\app.py:746
+msgid "Help and Config"
+msgstr "Hilfe und Konfig"
+
+#: .\app.py:817
+msgid "Set Image Comparison Directory"
+msgstr "Bildvergleichsverzeichnis festlegen"
+
+#: .\app.py:857
+msgid "Counter limit must be an integer value."
+msgstr "Die Z\u00e4hlergrenze muss ein ganzzahliger Wert sein."
+
+#: .\app.py:857
+msgid "Invalid Setting"
+msgstr "Ung\u00fcltige Einstellung"
+
+#: .\app.py:897
+msgid "Select image file"
+msgstr "Bilddatei ausw\u00e4hlen"
+
+#: .\app.py:923
+msgid "Somehow, the search file is invalid"
+msgstr "Irgendwie ist die Suchdatei ung\u00fcltig"
+
+#:.\ app.py:923 .\app.py:976 .\app.py:1338 .\app.py:1346 .\app.py:1397 .\app.py:1437
+msgid "Error"
+msgstr "Fehler"
+
+#: .\app.py:961
+msgid "No matches found. Search again to find potential matches."
+msgstr "Keine \u00dcbereinstimmungen gefunden. Suchen Sie erneut, um m\u00f6gliche \u00dcbereinstimmungen zu finden."
+
+#: .\app.py:961
+msgid "Search required"
+msgstr "Suche erforderlich"
+
+#: .\app.py:967
+msgid "Already set image"
+msgstr "Bereits eingestelltes Bild"
+
+#: .\app.py:967
+msgid "Current image is already the search image."
+msgstr "Das aktuelle Bild ist bereits das Suchbild."
+
+#: .\app.py:976
+msgid "Failed to get active image filepath"
+msgstr "Dateipfad des aktiven Bildes konnte nicht ermittelt werden"
+
+#: .\app.py:1074
+msgid "Confirm comparison"
+msgstr "Vergleich bestätigen"
+
+#: .\app.py:1075
+msgid "No base directory has been set, will use current base directory of "
+msgstr "Es wurde kein Basisverzeichnis festgelegt, es wird das aktuelle Basisverzeichnis von "
+
+#: .\app.py:1076
+msgid "Are you sure you want to proceed?"
+msgstr "Sind Sie sicher, dass Sie fortfahren wollen?"
+
+#: .\app.py:1122
+msgid "Compare mode must be set to Clip embedding to search text embeddings"
+msgstr "Der Vergleichsmodus muss auf Clip-Einbettung eingestellt sein, um Texteinbettungen zu suchen."
+
+#: .\app.py:1126
+msgid "Invalid search text"
+msgstr "Ungültiger Suchtext"
+
+#: .\app.py:1126
+msgid "Search text must be set"
+msgstr "Suchtext muss eingestellt werden"
+
+#: .\app.py:1133
+msgid "DELETE_LOCK_MARK_STOP"
+msgstr ""
+"Sperre nach Diashow-\u00dcbergang l\u00f6schen\n"
+"verhinderte das Hinzuf\u00fcgen einer Markierung"
+
+#: .\app.py:1143
+msgid "Mark removed. Remaining: {0}"
+msgstr "Markierung entfernt. Verbleibend: {0}"
+
+#: .\app.py:1147
+msgid "Mark added. Total set: {0}"
+msgstr "Mark hinzugef\u00fcgt. Gesamtmenge: {0}"
+
+#: .\app.py:1160
+msgid "Marks added. Total set: {0}"
+msgstr "Markierungen hinzugef\u00fcgt. Gesamtmenge: {0}"
+
+#: .\app.py:1183
+msgid "Including marks: {0}"
+msgstr "Einschließlich Markierungen: {0}"
+
+#: .\app.py:1190
+msgid "Move {0} Marked File(s)"
+msgstr "{0} Markierte Datei(en) verschieben"
+
+#: .\app.py:1217
+msgid "NO_MARKS_SET"
+msgstr ""
+"Es wurden {0} Markierungen gesetzt (>={1} erwartet).\n"
+"Verwenden Sie Shift+M, um eine Markierung zu setzen."
+
+#: .\app.py:1227
+msgid "Go To File"
+msgstr "Gehe zu Datei"
+
+#: .\app.py:1244
+msgid "File not found"
+msgstr "Datei nicht gefunden"
+
+#: .\app.py:1244
+msgid "No file was found for the search text: \"{0}\""
+msgstr "Es wurde keine Datei f\u00fcr den Suchtext gefunden: \"{0}\""
+
+#: .\app.py:1258
+msgid "No image selected"
+msgstr "Kein Bild ausgewählt"
+
+#: .\app.py:1258
+msgid "No image was selected for comparison"
+msgstr "Es wurde kein Bild zum Vergleich ausgewählt"
+
+#: .\app.py:1270
+msgid "No Text Search Presets Found"
+msgstr "Keine Textsuchvoreinstellungen gefunden"
+
+#: .\app.py:1270
+msgid "No text embedding search presets found. Set them in the config.json file."
+msgstr "Keine Suchvorgaben f\u00fcr die Texteinbettung gefunden. Legen Sie sie in der Datei config.json fest."
+
+#: .\app.py:1338
+msgid "Failed to open location of current file, unable to get valid filepath"
+msgstr "Der Speicherort der aktuellen Datei konnte nicht geöffnet werden, da kein gültiger Dateipfad ermittelt werden konnte"
+
+#: .\app.py:1346
+msgid "Failed to open current file in GIMP, unable to get valid filepath"
+msgstr "Die aktuelle Datei konnte in GIMP nicht geöffnet werden, da kein gültiger Dateipfad ermittelt werden konnte"
+
+#: .\app.py:1362
+msgid "DELETE_LOCK"
+msgstr ""
+"L\u00f6schsperre nach Diashow-\u00dcbergang\n"
+"verhinderte L\u00f6schung"
+
+#: .\app.py:1379
+msgid "Invalid action, no files found to delete"
+msgstr "Ung\u00fcltige Aktion, keine Dateien zum Löschen gefunden"
+
+#: .\app.py:1382
+msgid "Invalid action, search image not found"
+msgstr "Ung\u00fcltige Aktion, Suchbild nicht gefunden"
+
+#: .\app.py:1397
+msgid "Failed to delete current file, unable to get valid filepath"
+msgstr "Aktuelle Datei konnte nicht gel\u00f6scht werden, da kein gültiger Dateipfad ermittelt werden konnte"
+
+#: .\app.py:1402
+msgid "Removing file: {0}"
+msgstr "Die Datei wird entfernt: {0}"
+
+#: .\app.py:1419
+msgid "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."
+msgstr "Die Datei konnte nicht in den Papierkorb gesendet werden, daher wird sie gel\u00f6scht. Entweder pip installiert send2trash oder setzt einen bestimmten Papierkorbordner in config.json."
+
+#: .\app.py:1437
+msgid "Invalid target filepath for replacement: "
+msgstr "Ung\u00fcltiger Zieldateipfad f\u00fcr Ersetzung: "
+
+#: .\app.py:1441
+msgid "Moved search image to "
+msgstr "Suchbild verschoben nach "
+
+#: .\app.py:1464
+msgid "Running image gen: "
+msgstr "Laufendes Bild gen: "
+
+#: .\app.py:1539
+msgid "GROUP_DETAILS"
+msgstr ""
+"Gruppe {0} von {1}\n"
+"Größe: {2}"
+
+#: .\pp.py:1542
+msgid "No image files found"
+msgstr "Keine Bilddateien gefunden"
+
+#: .\app.py:1544
+msgid "1 image file found"
+msgstr "1 Bilddatei gefunden"
+
+#: .\app.py:1545
+msgid "{0} image files found"
+msgstr "{0} Bilddateien gefunden"
+
+#: .\app.py:1547
+msgid "(filtered)"
+msgstr "(gefiltert)"
+
+#: .\compare\compare_wrapper.py:48
+msgid "Invalid mode"
+msgstr "Ung\u00fcltiger Modus"
+
+#: .\compare\compare_wrapper.py:109
+msgid "Skipped %s images."
+msgstr "{0} Bilder wurden \u00fcbersprungen."
+
+#: .\compare\compare_wrapper.py:115
+msgid "No Unrelated Images"
+msgstr "Keine unzusammenh\u00e4ngenden Bilder"
+
+#: .\compare\compare_wrapper.py:115
+msgid "No unrelated images found."
+msgstr "Keine unverbundenen Bilder gefunden."
+
+#: .\compare\compare_wrapper.py:151 .\compare\compare_wrapper.py:367
+msgid "No Groups Found"
+msgstr "Keine Gruppen gefunden"
+
+#: .\compare\compare_wrapper.py:226
+msgid "Gathering image data... setup may take a while depending on number of files involved."
+msgstr "Sammeln von Bilddaten... Die Einrichtung kann je nach Anzahl der Dateien eine Weile dauern."
+
+#: .\compare\compare_wrapper.py:253
+msgid "Confirm group run"
+msgstr "Gruppenlauf best\u00e4tigen"
+
+#: .\compare\compare_wrapper.py:254
+msgid "Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."
+msgstr "Suchmodus erkannt, bitte best\u00e4tigen Sie den Wechsel in den Gruppenmodus vor der Ausf\u00fchrung. Der Gruppenmodus dauert l\u00e4nger, da alle Bilder im Basisverzeichnis verglichen werd."
+
+#: .\compare\compare_wrapper.py:261
+msgid "Gathering image data for comparison"
+msgstr "Sammeln von Bilddaten f\u00fcr den Vergleich"
+
+#: .\compare\compare_wrapper.py:307
+msgid "Running image comparison with search file..."
+msgstr "Laufender Bildvergleich mit Suchdatei..."
+
+#: .\compare\compare_wrapper.py:313 .\compare\compare_wrapper.py:366
+#: .\compare\compare_wrapper.py:381
+msgid "Set a directory and search file."
+msgstr "Legen Sie ein Verzeichnis und eine Suchdatei fest."
+
+#: .\compare\compare_wrapper.py:314
+msgid "None of the files match the search file with current settings."
+msgstr "Keine der Dateien entspricht der Suchdatei mit den aktuellen Einstellungen."
+
+#: .\compare\compare_wrapper.py:314 .\compare\compare_wrapper.py:342
+msgid "No Match Found"
+msgstr "Keine \u00dcbereinstimmung gefunden"
+
+#: .\compare\compare_wrapper.py:327 .\compare\compare_wrapper.py:354
+msgid "%s possibly related images found."
+msgstr "{0} m\u00f6glicherweise zugeh\u00f6rige Bilder gefunden."
+
+#: .\compare\compare_wrapper.py:335
+msgid "Running image comparison with search text..."
+msgstr "Laufender Bildvergleich mit Suchtext..."
+
+#: .\compare\compare_wrapper.py:341
+msgid "Set a directory and search file or search text."
+msgstr "Legen Sie ein Verzeichnis und eine Suchdatei oder einen Suchtext fest."
+
+#: .\compare\compare_wrapper.py:342
+msgid "None of the files match the search text with current settings."
+msgstr "Keine der Dateien stimmt mit den aktuellen Einstellungen mit dem Suchtext \u00fcberein."
+
+#: .\compare\compare_wrapper.py:361
+msgid "Running image comparisons..."
+msgstr "Bildvergleiche durchf\u00fchren..."
+
+#: .\compare\compare_wrapper.py:367
+msgid "None of the files can be grouped with current settings."
+msgstr "Keine der Dateien kann mit den aktuellen Einstellungen gruppiert werden."
+
+#: .\compare\compare_wrapper.py:382
+msgid "No Duplicates Found"
+msgstr "Keine Duplikate gefunden"
+
+#: .\compare\compare_wrapper.py:382
+msgid "None of the files appear to be duplicates based on the current settings."
+msgstr "Bei den aktuellen Einstellungen scheint keine der Dateien doppelt vorhanden zu sein."
+
+#: .\compare\compare_wrapper.py:406
+msgid "Some group members were left stranded by the grouping process."
+msgstr "Einige Gruppenmitglieder wurden von der Gruppenbildung ausgeschlossen."
+
+#: .\compare\compare_wrapper.py:406
+msgid "Stranded Group Members Found"
+msgstr "Gestrandete Gruppenmitglieder gefunden"
+
+#: .\compare\compare_wrapper.py:461
+msgid "No More Groups"
+msgstr "Keine Gruppen mehr"
+
+#: .\compare\compare_wrapper.py:462
+msgid "There are no more image groups remaining for this directory and current filter settings."
+msgstr "F\u00fcr dieses Verzeichnis und die aktuellen Filtereinstellungen sind keine Bildgruppen mehr vorhanden."
+
+#: .\files\file_browser.py:175
+msgid " (try setting recursive to True)"
+msgstr " (versuchen Sie, rekursiv auf True zu setzen)"
+
+#: .\files\file_browser.py:176
+msgid "No files found for current browsing settings."
+msgstr "Es wurden keine Dateien f\u00fcr die aktuellen Browsing-Einstellungen gefunden."
+
+#: .\files\file_browser.py:215
+msgid "FILE_BROWSER_INDEX_DETAILS"
+msgstr "Details zum Index"
+
+#: .\files\go_to_file.py:41
+msgid "Invalid search string, please enter some text."
+msgstr "Ung\u00fcltiger Suchbegriff, bitte geben Sie einen Text ein."
+
+#: .\files\marked_file_mover.py:69
+msgid "Marks cleared."
+msgstr "Markierungen gel\u00f6scht."
+
+#: .\files\marked_file_mover.py:76
+msgid "Set current marks from previous."
+msgstr "Setzen Sie die aktuelle Markierung von der vorherigen ab."
+
+#: .\files\marked_file_mover.py:76
+msgid "_Total set: %s"
+msgstr "Gesamtmenge: {0}"
+
+#: .\files\marked_file_mover.py:101
+msgid "NO_MARK_TARGET_SET"
+msgstr ""
+"Kein dauerhaftes Markierungsziel gesetzt!"
+"Mit Strg+T im Fenster Markierungen setzen."
+
+#: .\files\marked_file_mover.py:177 .\files\recent_directory_window.py:132
+msgid "Set a new target directory"
+msgstr "Ein neues Zielverzeichnis festlegen"
+
+#: .\files\marked_file_mover.py:179
+msgid "MOVE"
+msgstr "BEWEGEN"
+
+#: .\files\marked_file_mover.py:183
+msgid "COPY"
+msgstr "KOPIE"
+
+#: .\files\marked_file_mover.py:187 .\files\recent_directory_window.py:136
+msgid "Add directories from parent"
+msgstr "Verzeichnisse aus \u00fcbergeordneten Verzeichnissen hinzuf\u00fcgen"
+
+#: .\files\marked_file_mover.py:189 .\files\recent_directory_window.py:138
+msgid "Clear targets"
+msgstr "Klare Ziele"
+
+#: .\files\marked_file_mover.py:221
+msgid "Move"
+msgstr "Bewegen"
+
+#: .\files\marked_file_mover.py:228
+msgid "Copy"
+msgstr "Kopie"
+
+#: .\files\marked_file_mover.py:247 .\files\recent_directory_window.py:182
+msgid "Invalid directory: %s"
+msgstr "Ung\u00fcltiges Verzeichnis: {0}"
+
+#: .\files\marked_file_mover.py:249
+msgid "Select target directory for marked files"
+msgstr "Zielverzeichnis f\u00fcr markierte Dateien ausw\u00e4hlen"
+
+#: .\files\marked_file_mover.py:299
+msgid "Copying"
+msgstr "Kopieren"
+
+#: .\files\marked_file_mover.py:299
+msgid "Moving"
+msgstr "Verschiebe"
+
+#: .\files\marked_file_mover.py:300
+msgid "Copied"
+msgstr "Kopiert"
+
+#: .\files\marked_file_mover.py:300
+msgid "Moved"
+msgstr "Verschiebt"
+
+#: .\files\marked_file_mover.py:328
+msgid " %s files to"
+msgstr " {0} Dateien nach"
+
+#: .\files\marked_file_mover.py:354
+msgid "Existing filenames match!"
+msgstr "Bestehende Dateinamen stimmen \u00fcberein!"
+
+#: .\files\marked_file_mover.py:356
+msgid "WARNING: Exact file match."
+msgstr "WARNUNG: Genaue Übereinstimmung mit der Datei."
+
+#: .\files\marked_file_mover.py:358 .\files\marked_file_mover.py:709
+msgid "WARNING: Short filenames."
+msgstr "WARNUNG: Kurze Dateinamen."
+
+#: .\files\marked_file_mover.py:382
+msgid "Moving back"
+msgstr "Zur\u00fcckgehen"
+
+#: .\files\marked_file_mover.py:382
+msgid "Removing"
+msgstr "Entfernen von"
+
+#: .\files\marked_file_mover.py:383
+msgid "Moved back"
+msgstr "Zur\u00fcckgezogen"
+
+#: .\files\marked_file_mover.py:383
+msgid "Removed"
+msgstr "Entfernt"
+
+#: .\files\marked_file_mover.py:389
+msgid "Where should the marked files have gone?"
+msgstr "Wo sollen die markierten Dateien hin?"
+
+#: .\files\marked_file_mover.py:413
+msgid " %s files from"
+msgstr " {0} Dateien von"
+
+#: .\files\marked_file_mover.py:430
+msgid "Select parent directory for target directories"
+msgstr "\u00dcbergeordnetes Verzeichnis f\u00fcr Zielverzeichnisse ausw\u00e4hlen"
+
+#: .\files\marked_file_mover.py:557
+msgid "Recording next mark target and action."
+msgstr "Aufzeichnung des n\u00e4chsten Markierungsziels und der n\u00e4chsten Aktion."
+
+#: .\files\marked_file_mover.py:590
+msgid "Sorted directories by embedding comparison."
+msgstr "Sortierte Verzeichnisse durch Einbettungsvergleich."
+
+#: .\files\marked_file_mover.py:611
+msgid "Confirm Delete"
+msgstr "Best\u00e4tigen L\u00f6schen"
+
+#: .\files\marked_file_mover.py:612
+msgid "Deleting %s marked files - Are you sure you want to proceed?"
+msgstr "L\u00f6schen von {0} markierten Dateien - Sind Sie sicher, dass Sie fortfahren m\u00f6chten?"
+
+#: .\files\marked_file_mover.py:632
+msgid "Delete Failed"
+msgstr "L\u00f6schen fehlgeschlagen"
+
+#: .\files\marked_file_mover.py:633
+msgid "Failed to delete %s files - check log for details."
+msgstr "Das L\u00f6schen von {0}-Dateien ist fehlgeschlagen - pr\u00fcfen Sie das Protokoll f\u00fcr Details."
+
+#: .\files\marked_file_mover.py:636
+msgid "Deleted %s marked files."
+msgstr "Gel\u00f6schte {0} markierte Dateien."
+
+#: .\files\marked_file_mover.py:703
+msgid "Existing filenames found!"
+msgstr "Bestehende Dateinamen gefunden!"
+
+#: .\files\marked_file_mover.py:705
+msgid "WARNING: All file hashes match."
+msgstr "WARNUNG: Alle Datei-Hashes stimmen \u00fcberein."
+
+#: .\files\marked_file_mover.py:707
+msgid "WARNING: %s of %s file hashes match."
+msgstr "WARNUNG: {0} von {1} Datei-Hashes stimmen \u00fcberein."
+
+#: .\files\marked_file_mover.py:713
+msgid "No existing filenames found."
+msgstr "Keine vorhandenen Dateinamen gefunden."
+
+#: .\files\marked_file_mover.py:741
+msgid "Found %s downstream related images"
+msgstr "{0} stromabw\u00e4rts gerichtete Bilder gefunden"
+
+#: .\files\marked_file_mover.py:743
+msgid "No downstream related images found"
+msgstr "Keine stromabw\u00e4rts gerichteten Bilder gefunden"
+
+#: .\files\marked_file_mover.py:754
+msgid "Cleared marked file"
+msgstr "Gel\u00f6schte markierte Datei"
+
+#: .\files\recent_directory_window.py:134
+msgid "Add directory"
+msgstr "Verzeichnis hinzuf\u00fcgen"
+
+#: .\files\recent_directory_window.py:184
+msgid "Set image comparison directory"
+msgstr "Verzeichnis f\u00fcr den Bildvergleich festlegen"
+
+#: .\image\image_details.py:78
+msgid "Image Path"
+msgstr "Bild Pfad"
+
+#: .\image\image_details.py:80
+msgid "File Index"
+msgstr "Datei-Index"
+
+#: .\image\image_details.py:82
+msgid "Color Mode"
+msgstr "Farbmodus"
+
+#: .\image\image_details.py:84
+msgid "Dimensions"
+msgstr "Abmessungen"
+
+#: .\image\image_details.py:86 .\utils\constants.py:54
+msgid "Size"
+msgstr "Gr\u00f6\u00dfe"
+
+#: .\image\image_details.py:88
+msgid "Modification Time"
+msgstr "\u00c4nderung der Zeit"
+
+#: .\image\image_details.py:90
+msgid "Positive"
+msgstr "Positiv"
+
+#: .\image\image_details.py:92
+msgid "Negative"
+msgstr "Negativ"
+
+#: .\image\image_details.py:97
+msgid "Copy Prompt"
+msgstr "Kopieraufforderung"
+
+#: .\image\image_details.py:98
+msgid "Copy Prompt No BREAK"
+msgstr "Kopieraufforderung Kein \"BREAK\""
+
+#: .\image\image_details.py:102
+msgid "Rotate Image Left"
+msgstr "Bild nach links drehen"
+
+#: .\image\image_details.py:103
+msgid "Rotate Image Right"
+msgstr "Bild nach rechts drehen"
+
+#: .\image\image_details.py:107
+msgid "Crop Image (Smart Detect)"
+msgstr "Bild zuschneiden (Klug erkennen)"
+
+#: .\image\image_details.py:108
+msgid "Enhance Image"
+msgstr "Bild verbessern"
+
+#: .\image\image_details.py:111
+msgid "Open Related Image"
+msgstr "Verwandtes Bild \u00f6ffnen"
+
+#: .\image\image_details.py:119
+msgid "Image Generation"
+msgstr "Bilderzeugung"
+
+#: .\image\image_details.py:127
+msgid "Run Image Generation"
+msgstr "Bilderzeugung ausf\u00fchren"
+
+#: .\image\image_details.py:129
+msgid "Press Shift+I on a main app window to run this"
+msgstr "Dr\u00fccken Sie Umschalt+I in einem Hauptanwendungsfenster, um dies auszuf\u00fchren"
+
+#: .\image\image_details.py:132
+msgid "Tags"
+msgstr "Tags"
+
+#: .\image\image_details.py:142
+msgid "Update Tags"
+msgstr "Update-Tags"
+
+#: .\image\image_details.py:296 .\image\image_details.py:303
+msgid "%s downstream image(s) found."
+msgstr "{0} nachgeschaltete(s) Bild(er) gefunden."
+
+#: .\image\image_details.py:299
+msgid "%s (cached) downstream image(s) found."
+msgstr "{0} (zwischengespeicherte) nachgelagerte Bilder gefunden."
+
+#: .\image\image_details.py:305
+msgid "No downstream related images found in"
+msgstr "Keine stromabw\u00e4rts gerichteten Bilder im Verzeichnis gefunden:"
+
+#: .\image\image_details.py:347
+msgid "Updated tags for %s"
+msgstr "Aktualisierte Tags f\u00fcr {0}"
+
+#: .\utils\constants.py:10
+msgid "Browsing Mode"
+msgstr "Browsing-Modus"
+
+#: .\utils\constants.py:11
+msgid "Searching Mode"
+msgstr "Suchmodus"
+
+#: .\utils\constants.py:12
+msgid "Group Comparison Mode"
+msgstr "Gruppenvergleichsmodus"
+
+#: .\utils\constants.py:13
+msgid "Duplicate Detection Mode"
+msgstr "Modus zur Erkennung von Duplikaten"
+
+#: .\utils\constants.py:19
+msgid "Color Matching"
+msgstr "Farbanpassung"
+
+#: .\utils\constants.py:20
+msgid "CLIP Embedding"
+msgstr "CLIP-Einbettung"
+
+#: .\utils\constants.py:38
+msgid "Color diff threshold"
+msgstr "Farbdifferenzschwelle"
+
+#: .\utils\constants.py:40
+msgid "Embedding similarity threshold"
+msgstr "\u00c4hnlichkeitsschwelle f\u00fcr die Einbettung"
+
+#: .\utils\constants.py:49
+msgid "Name"
+msgstr "Name"
+
+#: .\utils\constants.py:50
+msgid "Full Path"
+msgstr "Vollst\u00e4ndiger Pfad"
+
+#: .\utils\constants.py:51
+msgid "Creation Time"
+msgstr "Sch\u00f6pfungszeit"
+
+#: .\utils\constants.py:52
+msgid "Modify Time"
+msgstr "Zeit \u00e4ndern"
+
+#: .\utils\constants.py:53
+msgid "Type"
+msgstr "Typ"
+
+#: .\utils\constants.py:55
+msgid "Name Length"
+msgstr "Name L\u00e4nge"
+
+#: .\utils\constants.py:56
+msgid "Random"
+msgstr "Zuf\u00e4llig"
+
+#: .\utils\constants.py:71
+msgid "ascending"
+msgstr "aufsteigend"
+
+#: .\utils\constants.py:71
+msgid "descending"
+msgstr "absteigend"
+
+#: .\utils\constants.py:71
+msgid "random"
+msgstr "zuf\u00e4llig"
+
+#: .\utils\help_and_config.py:105
+msgid "Show Toasts"
+msgstr "Toasts anzeigen"
+
+#: .\utils\help_and_config.py:107
+msgid "Slideshow Interval (sec)"
+msgstr "Diashow-Intervall (Sek.)"
+
+#: .\utils\help_and_config.py:109
+msgid "File Check Interval (sec)"
+msgstr "Datei-Prüfintervall (sec)"
+
+#: .\utils\help_and_config.py:111
+msgid "Max Search Results"
+msgstr "Max Suchergebnisse"
+
+#: .\utils\help_and_config.py:113
+msgid "Sort By"
+msgstr "Sortieren nach"
+
+#: .\utils\help_and_config.py:115
+msgid "Toasts Persist (sec)"
+msgstr "Toasts bleiben bestehen (sec)"
+
+#: .\utils\help_and_config.py:117
+msgid "Delete Instantly"
+msgstr "Sofortiges Löschen"
+
+#: .\utils\help_and_config.py:119
+msgid "Trash Folder"
+msgstr "Ordner Papierkorb"
+
+#: .\utils\help_and_config.py:121
+msgid "Image Tagging Enabled"
+msgstr "Bild-Tagging aktiviert"
+
+#: .\utils\help_and_config.py:123
+msgid "Escape Backslash Filepaths"
+msgstr "Escape Backslash-Dateipfade"

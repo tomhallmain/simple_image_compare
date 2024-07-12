@@ -8,12 +8,12 @@ import threading
 from time import sleep
 from typing import List
 
-import gettext
-_ = gettext.gettext
-
 from utils.config import config
 from utils.constants import Sort, SortBy
+from utils.translations import I18N
 from utils.utils import Utils
+
+_ = I18N._
 
 
 class SortableFile:
@@ -212,7 +212,7 @@ class FileBrowser:
 
     def get_index_details(self):
         files = self.get_files()
-        _("Index details")
+        _("FILE_BROWSER_INDEX_DETAILS")
         return f"{self.file_cursor+1} out of {len(files)} files in directory, ordered by {self.sort_by} {self.sort}"
 
     def go_to_file(self, filepath):

@@ -1,9 +1,6 @@
 from copy import deepcopy
 import os
 
-import gettext
-_ = gettext.gettext
-
 from tkinter import messagebox
 
 import pprint
@@ -12,7 +9,10 @@ from compare.compare import Compare, get_valid_file
 from compare.compare_embeddings import CompareEmbedding
 from utils.config import config
 from utils.constants import Mode, CompareMode
+from utils.translations import I18N
 from utils.utils import Utils
+
+_ = I18N._
 
 class CompareWrapper:
     def __init__(self, master, compare_mode, app_actions):
@@ -106,7 +106,7 @@ class CompareWrapper:
                     (self.compare_mode == CompareMode.CLIP_EMBEDDING and not CompareEmbedding.is_related(previous_image, next_image)):
                 found_unrelated_image = True
                 self._app_actions.create_image(next_image)
-                self._app_actions.toast(_(f"Skipped {skip_count} images."))
+                self._app_actions.toast(_("Skipped %s images.").format(skip_count))
                 return
             skip_count += 1
             previous_image = str(next_image)
@@ -148,7 +148,7 @@ class CompareWrapper:
         While in group mode, navigate between the groups.
         '''
         if self.file_groups is None or len(self.file_groups) == 0:
-            self._app_actions.toast(_("No groups found"))
+            self._app_actions.toast(_("No Groups Found"))
             return
 
         actual_group_index = self.actual_group_index()
@@ -251,8 +251,7 @@ class CompareWrapper:
         else:
             if app_mode == Mode.SEARCH:
                 res = self._app_actions.alert(_("Confirm group run"),
-                                 _("Search mode detected, please confirm switch to group mode before run. "
-                                 + "Group mode will take longer as all images in the base directory are compared."),
+                                 _("Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."),
                                  kind="askokcancel")
                 if res != messagebox.OK and res != True:
                     return
@@ -325,7 +324,7 @@ class CompareWrapper:
         self.match_index = 0
         self.has_image_matches = True
         self._app_actions._set_label_state(Utils._wrap_text_to_fit_length(
-            _(f"{len(self.files_matched)} possibly related images found."), 30))
+            _("%s possibly related images found.").format(str(len(self.files_matched))), 30))
 
         self._app_actions._add_buttons_for_mode()
         self._app_actions.create_image(self.files_matched[self.match_index])
@@ -352,7 +351,7 @@ class CompareWrapper:
         self.match_index = 0
         self.has_image_matches = True
         self._app_actions._set_label_state(Utils._wrap_text_to_fit_length(
-            _(f"{len(self.files_matched)} possibly related images found."), 30))
+            _("%s possibly related images found.").format(str(len(self.files_matched))), 30))
         self._app_actions._add_buttons_for_mode()
         self._app_actions.create_image(self.current_match())
 

@@ -1,10 +1,10 @@
-import gettext
-_ = gettext.gettext
-
 from tkinter import Frame, Label, StringVar, filedialog, LEFT, W
 from tkinter.ttk import Entry, Button
 
 from utils.app_style import AppStyle
+from utils.translations import I18N
+
+_ = I18N._
 
 
 class GoToFile:

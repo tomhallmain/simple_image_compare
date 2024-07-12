@@ -799,6 +799,11 @@ class Compare:
             if f in self._files_found:
                 self._files_found.remove(f)
 
+    @staticmethod
+    def is_related(image1, image2):
+        # TODO implement this method for this compare mode
+        return False
+
 
 if __name__ == "__main__":
     base_dir = "."

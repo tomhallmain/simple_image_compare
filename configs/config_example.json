@@ -1,4 +1,5 @@
 {
+  "locale": "en",
   "log_level": "info",
   "clip_model": "ViT-B/32",
   "compare_mode": "CLIP_EMBEDDING",

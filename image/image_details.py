@@ -1,8 +1,6 @@
 from datetime import datetime
+import glob
 import os
-
-import gettext
-_ = gettext.gettext
 
 from PIL import Image
 from tkinter import Frame, Label, OptionMenu, StringVar, LEFT, W
@@ -18,6 +16,9 @@ from image.temp_image_canvas import TempImageCanvas
 from utils.config import config
 from utils.constants import ImageGenerationType
 from utils.app_style import AppStyle
+from utils.translations import I18N
+
+_ = I18N._
 
 # TODO: fix image generation mode selection widget
 # TODO: rename file
@@ -293,16 +294,16 @@ class ImageDetails():
         if force_refresh or not key in ImageDetails.downstream_related_images_cache:
             ImageDetails.refresh_downstream_related_image_cache(key, image_path, other_base_dir)
             downstream_related_images = ImageDetails.downstream_related_images_cache[key]
-            toast_text = _(f"{len(downstream_related_images)} downstream image(s) found.")
+            toast_text = _("%s downstream image(s) found.").format(len(downstream_related_images))
         else:
             downstream_related_images = ImageDetails.downstream_related_images_cache[key]
-            toast_text = _(f"{len(downstream_related_images)} (cached) downstream image(s) found.")
+            toast_text = _("%s (cached) downstream image(s) found.").format(len(downstream_related_images))
             if ImageDetails.downstream_related_image_index >= len(downstream_related_images):
                 ImageDetails.refresh_downstream_related_image_cache(key, image_path, other_base_dir)
                 downstream_related_images = ImageDetails.downstream_related_images_cache[key]
-                toast_text = _(f"{len(downstream_related_images)} downstream image(s) found.")
+                toast_text = _("%s downstream image(s) found.").format(len(downstream_related_images))
         if len(downstream_related_images) == 0:
-            app_actions.toast(_(f"No downstream related images found in\n{other_base_dir}"))
+            app_actions.toast(_("No downstream related images found in") + f"\n{other_base_dir}")
             return None
         app_actions.toast(toast_text)
         return downstream_related_images
@@ -344,7 +345,7 @@ class ImageDetails():
                 self.tags[i] = self.tags[i].strip()
         image_data_extractor.set_tags(self.image_path, self.tags)
         print("Updated tags for " + self.image_path)
-        self.app_actions.toast(_(f"Updated tags for {self.image_path}"))
+        self.app_actions.toast(_("Updated tags for %s").format(self.image_path))
 
     def close_windows(self, event=None):
         self.app_actions.image_details_window = None

@@ -5,8 +5,6 @@ import sys
 import time
 import traceback
 
-import gettext
-_ = gettext.gettext
 
 try:
     from send2trash import send2trash
@@ -35,9 +33,11 @@ from utils.config import config, FileCheckConfig, SlideshowConfig
 from utils.constants import Mode, CompareMode
 from utils.help_and_config import HelpAndConfig
 from utils.running_tasks_registry import periodic, start_thread
+from utils.translations import I18N
 from utils.utils import Utils
 from image.image_details import ImageDetails # must import after config because of dynamic import
 
+_ = I18N._
 
 ### TODO image zoom feature
 ### TODO copy/cut image using hotkey (pywin32 ? win32com? IDataPobject?)
@@ -161,7 +161,7 @@ class App():
             # is closed, the second secondary window will also be closed because its master has been destroyed.
             master = App.true_master
         top_level = tk.Toplevel(master)
-        top_level.title(" Simple Image Compare ")
+        top_level.title(_(" Simple Image Compare "))
         top_level.geometry(config.default_secondary_window_size)
         window_id = random.randint(1000000000,9999999999)
         App.secondary_top_levels[window_id] = top_level # Keep reference to avoid gc
@@ -346,7 +346,7 @@ class App():
         self.label_sort_by = Label(self.sidebar)
         self.add_label(self.label_sort_by, _("Browsing mode - Sort by"))
         self.sort_by = tk.StringVar()
-        self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by, str(config.sort_by),
+        self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by, config.sort_by.value,
                                          *SortBy.members(), command=self.set_sort_by)
         self.apply_to_grid(self.sort_by_choice, sticky=W)
 
@@ -700,7 +700,7 @@ class App():
             window.go_to_file(search_text=next_related_image)
             window.canvas.after(1, window.canvas.focus_force())
         else:
-            self.toast(_(f"No downstream related image(s) found in {window.base_dir}"))
+            self.toast(_("No downstream related image(s) found in {0}").format(base_dir))
 
     def set_marks_from_downstream_related_images(self, event=None, base_dir=None):
         if base_dir is None:
@@ -717,7 +717,7 @@ class App():
         downstream_related_images = ImageDetails.get_downstream_related_images(image_to_use, base_dir, self.app_actions, force_refresh=True)
         if downstream_related_images is not None:
             MarkedFiles.file_marks = downstream_related_images
-            self.toast(_(f"{len(downstream_related_images)} file marks set"))
+            self.toast(_("{0} file marks set").format(len(downstream_related_images)))
             window.go_to_mark()
             window.canvas.after(1, window.canvas.focus_force())
 
@@ -1072,8 +1072,8 @@ class App():
         base_dir_selected = self.set_base_dir_box.get()
         if not base_dir_selected or base_dir_selected == "":
             res = self.alert(_("Confirm comparison"),
-                    _("No base directory has been set, will use current base directory of " +
-                    f"{self.base_dir}\n\nAre you sure you want to proceed?"),
+                    _("No base directory has been set, will use current base directory of ") +
+                    f"{self.base_dir}\n\n" + _("Are you sure you want to proceed?"),
                     kind="askokcancel")
             return res == messagebox.OK or res == True
         return True
@@ -1130,7 +1130,7 @@ class App():
 
     def add_or_remove_mark_for_current_image(self, event=None, show_toast=True):
         if self.delete_lock:
-            warning = _("Delete lock after slideshow\ntransition prevented adding mark")
+            warning = _("DELETE_LOCK_MARK_STOP")
             self.toast(warning)
             raise Exception(warning) # Have to raise exception to in some cases prevent downstream events from happening with no marks
         self._check_marks(min_mark_size=0)
@@ -1140,11 +1140,11 @@ class App():
             if MarkedFiles.mark_cursor >= remaining_marks_count:
                 MarkedFiles.mark_cursor = -1
             if show_toast:
-                self.toast(_(f"Mark removed. Remaining: {remaining_marks_count}"))
+                self.toast(_("Mark removed. Remaining: {0}").format(remaining_marks_count))
         else:
             MarkedFiles.file_marks.append(self.img_path)
             if show_toast:
-                self.toast(_(f"Mark added. Total set: {len(MarkedFiles.file_marks)}"))
+                self.toast(_("Mark added. Total set: {0}").format(len(MarkedFiles.file_marks)))
 
     def _add_all_marks_from_last_or_current_group(self, event=None):
         if self.mode == Mode.BROWSE:
@@ -1157,11 +1157,12 @@ class App():
         for _file in files:
             if not _file in MarkedFiles.file_marks:
                 MarkedFiles.file_marks.append(_file)
-        self.toast(_(f"Marks added. Total set: {len(MarkedFiles.file_marks)}"))
+        self.toast(_("Marks added. Total set: {0}").format(len(MarkedFiles.file_marks)))
 
     def go_to_mark(self, event=None):
         self._check_marks()
-        MarkedFiles.mark_cursor += 1
+        alt_key_pressed = event and (event.state & 0x20000) != 0
+        MarkedFiles.mark_cursor += -1 if alt_key_pressed else 1
         if MarkedFiles.mark_cursor >= len(MarkedFiles.file_marks):
             MarkedFiles.mark_cursor = 0
         marked_file = MarkedFiles.file_marks[MarkedFiles.mark_cursor]
@@ -1179,14 +1180,14 @@ class App():
     def open_move_marks_window(self, event=None, open_gui=True, override_marks=[]):
         self._check_marks(min_mark_size=0)
         if len(override_marks) > 0:
-            print(_(f"Including marks: {override_marks}"))
+            print(_("Including marks: {0}").format(override_marks))
             MarkedFiles.file_marks.extend(override_marks)
         single_image = None
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
             single_image = self.get_active_image_filepath()
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
-        top_level.title(_(f"Move {len(MarkedFiles.file_marks)} Marked File(s)"))
+        top_level.title(_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)))
         top_level.geometry(MarkedFiles.get_geometry(is_gui=open_gui))
         if not open_gui:
             top_level.attributes('-alpha', 0.3)
@@ -1213,7 +1214,7 @@ class App():
 
     def _check_marks(self, min_mark_size=1):
         if len(MarkedFiles.file_marks) < min_mark_size:
-            exception_text = _(f"{len(MarkedFiles.file_marks)} marks have been set (>={min_mark_size} expected).\nUse Shift+M to set a mark.")
+            exception_text = _("NO_MARKS_SET").format(len(MarkedFiles.file_marks), min_mark_size)
             self.toast(exception_text)
             raise Exception(exception_text)
 
@@ -1240,7 +1241,7 @@ class App():
                 self.compare_wrapper.set_current_group(start_match_index=group_indexes[1])
                 return True
         if not image_path:
-            self.alert(_("File not found"), _(f"No file was found for the search text: \"{search_text}\""))
+            self.alert(_("File not found"), _("No file was found for the search text: \"{0}\"").format(search_text))
             return False
         self.create_image(image_path)
         self.master.update()
@@ -1358,7 +1359,7 @@ class App():
         Delete the currently displayed image from the filesystem.
         '''
         if self.delete_lock:
-            self.toast(_("Delete lock after slideshow\ntransition prevented deletion"))
+            self.toast(_("DELETE_LOCK"))
             return
 
         if self.mode == Mode.BROWSE:
@@ -1398,7 +1399,7 @@ class App():
     def _handle_delete(self, filepath, toast=True, manual_delete=True):
         MarkedFiles.set_delete_lock() # Undo deleting action is not supported
         if toast and manual_delete:
-            self.toast(_("Removing file: " + filepath))
+            self.toast(_("Removing file: {0}").format(filepath))
         else:
             print("Removing file: " + filepath)
         if config.delete_instantly:
@@ -1414,7 +1415,8 @@ class App():
                 send2trash(os.path.normpath(filepath))
             except Exception as e:
                 print(e)
-                print("Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json.")
+                self.alert(_("Warning"),
+                           _("Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."))
                 os.remove(filepath)
 
 
@@ -1432,11 +1434,11 @@ class App():
         filepath = get_valid_file(self.get_base_dir(), _filepath)
 
         if filepath is None:
-            self.alert(_("Error"), _("Invalid target filepath for replacement: " + _filepath), kind="error")
+            self.alert(_("Error"), _("Invalid target filepath for replacement: ") + _filepath, kind="error")
             return
 
         os.rename(str(self.compare_wrapper.search_image_full_path), filepath)
-        self.toast(_("Moved search image to " + filepath))
+        self.toast(_("Moved search image to ") + filepath)
 
     def _handle_remove_files_from_groups(self, files):
         '''
@@ -1459,7 +1461,7 @@ class App():
     def run_image_generation(self, event=None, _type=None):
         self.sd_runner_client.start()
         self.sd_runner_client.run(_type, self.img_path)
-        self.toast(_(f"Running image gen: {_type}"))
+        self.toast(_("Running image gen: ") + str(_type))
 
     def store_info_cache(self):
         base_dir = self.get_base_dir()
@@ -1532,16 +1534,17 @@ class App():
             if group_number is None:
                 self.label_state["text"] = ""
             else:
+                args = (group_number + 1, len(self.compare_wrapper.file_groups), size)
                 self.label_state["text"] = Utils._wrap_text_to_fit_length(
-                    _(f"Group {group_number + 1} of {len(self.compare_wrapper.file_groups)}\nSize: {size}"), 30)
+                    _("GROUP_DETAILS").format(*args), 30)
         else: # Set based on file count
             file_count = self.file_browser.count()
             if file_count == 0:
                 text = _("No image files found")
             else:
-                text = _("1 image file found") if file_count == 1 else _(f"{file_count} image files found")
+                text = _("1 image file found") if file_count == 1 else _("{0} image files found").format(file_count)
             if self.inclusion_pattern.get() != "":
-                text += _("\n(filtered)")
+                text += "\n" + _("(filtered)")
             self.label_state["text"] = text
 
     def apply_to_grid(self, component, sticky=None, pady=0, specific_row=None):

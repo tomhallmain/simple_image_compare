@@ -3,6 +3,7 @@ import os
 
 from utils.constants import CompareMode, SortBy
 from utils.running_tasks_registry import running_tasks_registry
+from utils.utils import Utils
 
 
 class Config:
@@ -10,6 +11,7 @@ class Config:
 
     def __init__(self):
         self.dict = {}
+        self.locale = Utils.get_default_user_language()
         self.debug = False
         self.log_level = "info"
         self.clip_model = "ViT-B/32"
@@ -81,6 +83,7 @@ class Config:
                             "text_embedding_search_presets",
                             "directories_to_search_for_related_images")
             self.set_values(str,
+                            "locale",
                             "log_level",
                             "default_main_window_size",
                             "default_secondary_window_size",
@@ -140,6 +143,11 @@ class Config:
 
         if self.print_settings:
             self.print_config_settings()
+
+        if self.locale is None or self.locale == "":
+            print(f"No locale set for config file.")
+            self.locale = Utils.get_default_user_language()
+        os.environ["LANG"] = self.locale # TODO figure out a way to install the config lang despite the circular import reference
 
     def validate_and_set_directory(self, key):
         loc = self.dict[key]

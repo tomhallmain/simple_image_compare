@@ -1,18 +1,21 @@
 from enum import Enum
 
+from utils.translations import I18N
+_ = I18N._
+
 
 class Mode(Enum):
-    BROWSE = "Browsing Mode"
-    SEARCH = "Searching Mode"
-    GROUP = "Group Comparison Mode"
-    DUPLICATES = "Duplicate Detection Mode"
+    BROWSE = _("Browsing Mode")
+    SEARCH = _("Searching Mode")
+    GROUP = _("Group Comparison Mode")
+    DUPLICATES = _("Duplicate Detection Mode")
 
     def __str__(self):
         return self.value
 
 class CompareMode(Enum):
-    COLOR_MATCHING = "Color Matching"
-    CLIP_EMBEDDING = "CLIP Embedding"
+    COLOR_MATCHING = _("Color Matching")
+    CLIP_EMBEDDING = _("CLIP Embedding")
 
     def __str__(self):
         return self.value
@@ -30,9 +33,9 @@ class CompareMode(Enum):
 
     def threshold_str(self):
         if self == CompareMode.COLOR_MATCHING:
-            return "Color diff threshold"
+            return _("Color diff threshold")
         if self == CompareMode.CLIP_EMBEDDING:
-            return "Embedding similarity threshold"
+            return _("Embedding similarity threshold")
     
     def threshold_vals(self):
         if self == CompareMode.COLOR_MATCHING:
@@ -41,14 +44,14 @@ class CompareMode(Enum):
             return [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.925, 0.95, 0.98, 0.99]
 
 class SortBy(Enum):
-    NAME = "Name"
-    FULL_PATH = "Full Path"
-    CREATION_TIME = "Creation Time"
-    MODIFY_TIME = "Modify Time"
-    TYPE = "Type"
-    SIZE = "Size"
-    NAME_LENGTH = "Name Length"
-    RANDOMIZE = "Random"
+    NAME = _("Name")
+    FULL_PATH = _("Full Path")
+    CREATION_TIME = _("Creation Time")
+    MODIFY_TIME = _("Modify Time")
+    TYPE = _("Type")
+    SIZE = _("Size")
+    NAME_LENGTH = _("Name Length")
+    RANDOMIZE = _("Random")
 
     def __str__(self):
         return self.value
@@ -65,9 +68,9 @@ class SortBy(Enum):
         return [str(value) for key, value in SortBy.__members__.items()]
 
 class Sort(Enum):
-    ASC = "ascending"
-    DESC = "descending"
-    RANDOM = "random"
+    ASC = _("ascending")
+    DESC = _("descending")
+    RANDOM = _("random")
 
     def __str__(self):
         return self.value

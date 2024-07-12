@@ -3,9 +3,6 @@ import os
 import re
 from typing import Tuple
 
-import gettext
-_ = gettext.gettext
-
 from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
@@ -13,11 +10,13 @@ from compare.compare_embeddings import CompareEmbedding
 from files.file_actions_window import FileActionsWindow
 from files.file_browser import FileBrowser
 from image.image_data_extractor import image_data_extractor
-from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
 from utils.constants import Mode
+from utils.translations import I18N
 from utils.utils import Utils
+
+_ = I18N._
 
 # TODO check hash of files in new directory instead of just filename, or even use a new compare instance to check for duplicates
 # TODO preserve dictionary of all moved / copied files in a session along with their target directories.
@@ -32,7 +31,6 @@ def _calculate_hash(filepath):
             if not data: break
             sha256.update(f.read())
     return sha256.hexdigest()
-
 
 
 class MarkedFiles():
@@ -73,7 +71,7 @@ class MarkedFiles():
         for f in MarkedFiles.previous_marks:
             if f not in MarkedFiles.file_marks and os.path.exists(f):
                 MarkedFiles.file_marks.append(f)
-        toast_callback(_(f"Set current marks from previous.\nTotal set: {len(MarkedFiles.file_marks)}"))
+        toast_callback(_("Set current marks from previous.") + "\n" + _("_Total set: %s").format(len(MarkedFiles.file_marks)))
 
     @staticmethod
     def run_previous_action(app_actions):
@@ -98,7 +96,7 @@ class MarkedFiles():
     @staticmethod
     def run_permanent_action(app_actions):
         if not FileActionsWindow.permanent_action:
-            app_actions.toast(_("No permanent mark target set!\nSet with Ctrl+T on Marks window."))
+            app_actions.toast(_("NO_MARK_TARGET_SET"))
             return False, False
         return MarkedFiles.move_marks_to_dir_static(app_actions,
                                              target_dir=FileActionsWindow.permanent_action.target,
@@ -130,6 +128,7 @@ class MarkedFiles():
         return 0
 
     def __init__(self, master, is_gui, single_image, app_mode, app_actions, base_dir="."):
+        print(_("NO_MARK_TARGET_SET"))
         self.is_gui = is_gui
         self.single_image = single_image
         self.master = master
@@ -244,7 +243,7 @@ class MarkedFiles():
             else:
                 if target_dir in MarkedFiles.mark_target_dirs:
                     MarkedFiles.mark_target_dirs.remove(target_dir)
-                toast_callback(_(f"Invalid directory: {target_dir}"))
+                toast_callback(_("Invalid directory: %s").format(target_dir))
         target_dir = filedialog.askdirectory(
                 initialdir=starting_target, title=_("Select target directory for marked files"))
         return target_dir, False
@@ -301,7 +300,7 @@ class MarkedFiles():
         MarkedFiles.previous_marks.clear()
         FileActionsWindow.update_history(target_dir, move_func, MarkedFiles.file_marks)
         if len(MarkedFiles.file_marks) > 1:
-            print(_(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}"))
+            print(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}")
         exceptions = {}
         invalid_files = []
         for marked_file in MarkedFiles.file_marks:
@@ -325,7 +324,8 @@ class MarkedFiles():
                 MarkedFiles.undo_move_marks(app_actions.get_base_dir(), app_actions)
             return False, False
         if len(exceptions) < len(MarkedFiles.file_marks):
-            app_actions.toast(_(f"{action_part2} {len(MarkedFiles.file_marks) - len(exceptions)} files to\n{target_dir}"))
+            message = action_part2 + _(" %s files to").format(len(MarkedFiles.file_marks) - len(exceptions)) + f"\n{target_dir}"
+            app_actions.toast(message)
             MarkedFiles.delete_lock = False
         MarkedFiles.file_marks.clear()
         exceptions_present = len(exceptions) > 0
@@ -352,9 +352,9 @@ class MarkedFiles():
                     print("Cleared invalid marks by config option")
                 warning = _("Existing filenames match!")
                 if matching_files:
-                    warning += _("\nWARNING: Exact file match.")
+                    warning += "\n" + _("WARNING: Exact file match.")
                 if names_are_short:
-                    warning += _("\nWARNING: Short filenames.")
+                    warning += "\n" + _("WARNING: Short filenames.")
                 app_actions.toast(warning)
         MarkedFiles.is_performing_action = False
         if len(MarkedFiles.previous_marks) > 0:
@@ -409,7 +409,8 @@ class MarkedFiles():
                 elif os.path.exists(expected_new_filepath):
                     invalid_files.append(expected_new_filepath)
         if len(exceptions) < len(MarkedFiles.previous_marks):
-            app_actions.toast(_(f"{action_part2} {len(MarkedFiles.previous_marks) - len(exceptions)} files from\n{target_dir}"))
+            message = action_part2 + _(" %s files from").format(len(MarkedFiles.previous_marks) - len(exceptions)) + f"\n{target_dir}"
+            app_actions.toast(message)
         MarkedFiles.previous_marks.clear()
         if len(exceptions) > 0:
             for marked_file in exceptions.keys():
@@ -607,7 +608,7 @@ class MarkedFiles():
         an undo operation is not implemented.
         """
         res = self.app_actions.alert(_("Confirm Delete"),
-                _(f"Deleting {len(MarkedFiles.file_marks)} marked files - Are you sure you want to proceed?"),
+                _("Deleting %s marked files - Are you sure you want to proceed?").format(len(MarkedFiles.file_marks)),
                 kind="askokcancel")
         if res != messagebox.OK and res != True:
             return
@@ -628,10 +629,10 @@ class MarkedFiles():
         if len(failed_to_delete) > 0:
             MarkedFiles.file_marks.extend(failed_to_delete)
             self.app_actions.alert(_("Delete Failed"),
-                    _(f"Failed to delete {len(failed_to_delete)} files - check log for details."),
+                    _("Failed to delete %s files - check log for details.").format(len(failed_to_delete)),
                     kind="warning")
         else:
-            self.app_actions.toast(_(f"Deleted {len(removed_files)} marked files."))
+            self.app_actions.toast(_("Deleted %s marked files.").format(len(removed_files)))
 
         # In the BROWSE case, the file removal should be recognized by the file browser
         ## TODO it will not be handled in case of using file JSON. need to handle this case separately.        
@@ -700,13 +701,15 @@ class MarkedFiles():
             #     print("Cleared invalid marks by config option")
             warning = _("Existing filenames found!")
             if matching_files == len(MarkedFiles.file_marks):
-                warning += _("\nWARNING: All file hashes match.")
+                warning += "\n" + _("WARNING: All file hashes match.")
             elif matching_files > 0:
-                warning += _(f"\nWARNING: {matching_files} of {len(MarkedFiles.file_marks)} file hashes match.")
+                warning += "\n" + _("WARNING: %s of %s file hashes match.").format(matching_files, len(MarkedFiles.file_marks))
             if names_are_short:
-                warning += _("\nWARNING: Short filenames.")
+                warning += "\n" + _("WARNING: Short filenames.")
             app_actions.toast(warning)
 #            MarkedFiles.last_set_target_dir = target_dir
+        else:
+            app_actions.toast(_("No existing filenames found."))
         app_actions.refocus()
         return len(found_files) > 0
 
@@ -734,7 +737,7 @@ class MarkedFiles():
         if len(downstream_related_images) > 0:
             for image in downstream_related_images:
                 print(f"Downstream related image found: {image}")
-            self.app_actions.toast(_(f"Found {len(downstream_related_images)} downstream related images"))
+            self.app_actions.toast(_("Found %s downstream related images").format(len(downstream_related_images)))
         else:
             self.app_actions.toast(_("No downstream related images found"))
 
@@ -747,7 +750,7 @@ class MarkedFiles():
             # being repeated and overwriting the file. If so the user likely doesn't want to 
             # take any more actions on this file so we can forget about it.
             MarkedFiles.file_marks.clear()
-            self.app_actions.toast("Cleared marked file")
+            self.app_actions.toast(_("Cleared marked file"))
 
     def add_label(self, label_ref, text, row=0, column=0, wraplength=500):
         label_ref['text'] = text

@@ -1,11 +1,11 @@
-import gettext
-_ = gettext.gettext
-
 from tkinter import Frame, Label, BooleanVar, StringVar, LEFT, W, E, Checkbutton
 from tkinter.ttk import Entry
 
 from utils.config import config
 from utils.app_style import AppStyle
+from utils.translations import I18N
+
+_ = I18N._
 
 
 # TODO config setting update fields and functions

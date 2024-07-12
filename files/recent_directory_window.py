@@ -1,14 +1,14 @@
 import os
 
-import gettext
-_ = gettext.gettext
-
 from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
 #from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
+from utils.translations import I18N
+
+_ = I18N._
 
 
 class RecentDirectories:
@@ -179,7 +179,7 @@ class RecentDirectoryWindow():
             else:
                 if _dir in RecentDirectories.directories:
                     RecentDirectories.directories.remove(_dir)
-                toast_callback(_(f"Invalid directory: {_dir}"))
+                toast_callback(_("Invalid directory: %s").format(_dir))
         _dir = filedialog.askdirectory(
                 initialdir=starting_target, title=_("Set image comparison directory"))
         return _dir, False
