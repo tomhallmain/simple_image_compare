@@ -54,6 +54,8 @@ class Config:
         self.text_embedding_search_presets_exclusive = False
         self.sd_runner_client_port = 6000
         self.sd_runner_client_password = "<PASSWORD>"
+        self.refacdir_client_port = 6001
+        self.refacdir_client_password = "<PASSWORD>"
 
         dict_set = False
         configs =  [ f.path for f in os.scandir(Config.CONFIGS_DIR_LOC) if f.is_file() and f.path.endswith(".json") ]
@@ -89,7 +91,8 @@ class Config:
                             "default_secondary_window_size",
                             "clip_model",
                             "file_paths_json_path",
-                            "sd_runner_client_password")
+                            "sd_runner_client_password",
+                            "refacdir_client_password")
             self.set_values(bool,
                             "image_browse_recursive",
                             "image_tagging_enabled",
@@ -116,11 +119,15 @@ class Config:
                             "toasts_persist_seconds",
                             "font_size",
                             "threshold_potential_duplicate_color",
-                            "sd_runner_client_port")
+                            "sd_runner_client_port",
+                            "refacdir_client_port")
             self.set_values(float,
                             "embedding_similarity_threshold",
                             "threshold_potential_duplicate_embedding")
-            self.sd_prompt_reader_loc = self.validate_and_set_directory(key="sd_prompt_reader_loc")
+            try:
+                self.sd_prompt_reader_loc = self.validate_and_set_directory(key="sd_prompt_reader_loc")
+            except Exception as e:
+                print(e)
 
             try:
                 self.compare_mode = CompareMode[self.dict["compare_mode"]]

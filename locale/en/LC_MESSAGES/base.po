@@ -131,6 +131,18 @@ msgstr "No files found in directory after refresh."
 msgid "Warning"
 msgstr "Warning"
 
+#: .\app.py:623
+msgid "Slideshow for new images started"
+msgstr "Slideshow for new images started"
+
+#: .\app.py:625
+msgid "Slideshow started"
+msgstr "Slideshow started"
+
+#: .\app.py:628
+msgid "Slideshows ended"
+msgstr "Slideshows ended"
+
 #: .\app.py:638
 msgid "Browsing mode set."
 msgstr "Browsing mode set."

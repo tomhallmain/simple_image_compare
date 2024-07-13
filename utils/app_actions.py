@@ -2,6 +2,7 @@
 class AppActions:
     def __init__(self, actions={}):
         self.new_window = actions["new_window"]
+        self.get_window = actions["get_window"]
         self.toast = actions["toast"]
         self.alert = actions["alert"]
         self.refresh = actions["refresh"]

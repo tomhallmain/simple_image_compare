@@ -32,6 +32,7 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Stores session info about seen directories (useful for directories with many images)
 - Can be set up to run on user-defined list of files in place of a directory
 - Extension with [sd-runner](https://github.com/tomhallmain/sd-runner) for image generation
+- Extension with [refacdir](https://github.com/tomhallmain/refacdir) for file operations
 - Find related images from embedded ComfyUI workflows
 
 It is not implemented yet, but there will ultimately be zoom and drag functionality in browsing mode, as well as when viewing grouped images after a comparison has been run.

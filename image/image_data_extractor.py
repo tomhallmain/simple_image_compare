@@ -9,9 +9,10 @@ from utils.config import config
 
 has_imported_sd_prompt_reader = False
 try:
-    sys.path.insert(0, config.sd_prompt_reader_loc)
-    from sd_prompt_reader.image_data_reader import ImageDataReader
-    has_imported_sd_prompt_reader = True
+    if config.sd_prompt_reader_loc is not None and os.path.isdir(config.sd_prompt_reader_loc):
+        sys.path.insert(0, config.sd_prompt_reader_loc)
+        from sd_prompt_reader.image_data_reader import ImageDataReader
+        has_imported_sd_prompt_reader = True
 except Exception as e:
     print(e)
     print("Failed to import SD Prompt Reader!")

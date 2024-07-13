@@ -175,6 +175,7 @@ class ImageDetails():
         positive = self.label_positive["text"]
         self.master.clipboard_clear()
         self.master.clipboard_append(positive)
+        self.app_actions.toast("Copied prompt") # TODO i18n
 
     # Remove pony prompt massaging
     def copy_prompt_no_break(self):
@@ -183,6 +184,7 @@ class ImageDetails():
             positive = positive[positive.index("BREAK")+6:]
         self.master.clipboard_clear()
         self.master.clipboard_append(positive)
+        self.app_actions.toast("Copied prompt without BREAK") # TODO i18n
 
     def rotate_image(self, right=False):
         rotate_image(self.image_path, right)
@@ -190,18 +192,25 @@ class ImageDetails():
         self.app_actions.refresh()
         # TODO properly set the file info on the rotated file instead of having to use this callback
         self.app_actions.go_to_file(search_text=os.path.basename(self.image_path), exact_match=True)
+        right_text = "right" if right else "left" # TODO i18n
+        self.app_actions.toast("Rotated image " + right_text) # TODO i18n
 
     def crop_image(self, event=None):
-        Cropper.smart_crop_multi_detect(self.image_path, "")
-        self.close_windows()
-        self.app_actions.refresh()
-        # TODO actually go to the new file. In this case we don't want to replace the original because there may be errors in some cases.
+        saved_files = Cropper.smart_crop_multi_detect(self.image_path, "")
+        if len(saved_files) > 0:
+            self.close_windows()
+            self.app_actions.refresh()
+            # TODO actually go to the new file. In this case we don't want to replace the original because there may be errors in some cases.
+            self.app_actions.toast("Cropped image") # TODO i18n
+        else:
+            self.app_actions.toast("No crops found")  # TODO i18n
 
     def enhance_image(self):
         enhance_image(self.image_path)
         self.close_windows()
         self.app_actions.refresh()
         # TODO actually go to the new file. In this case we don't want to replace the original because there may be errors in some cases.
+        self.app_actions.toast("Enhanced image") # TODO i18n
 
     def open_related_image(self, event=None):
         node_id = self.related_image_node_id.get().strip()
@@ -246,6 +255,9 @@ class ImageDetails():
             if not related_image_path_found or not os.path.isfile(related_image_path):
                 return
             print(f"{image_path} - Possibly related image {related_image_path} found")
+        base_dir = os.path.dirname(related_image_path)
+        if app_actions.get_window(base_dir=base_dir, img_path=related_image_path, refocus=True) is not None:
+            return
         if ImageDetails.related_image_canvas is None:
             ImageDetails.set_related_image_canvas(master, related_image_path, app_actions)
         try:

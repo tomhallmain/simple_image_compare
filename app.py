@@ -21,6 +21,7 @@ from PIL import ImageTk, Image
 
 from compare.compare import get_valid_file
 from compare.compare_wrapper import CompareWrapper
+from extensions.refacdir_client import RefacDirClient
 from extensions.sd_runner_client import SDRunnerClient
 from files.file_browser import FileBrowser, SortBy
 from files.go_to_file import GoToFile
@@ -170,9 +171,15 @@ class App():
         _app = App(top_level, base_dir=base_dir, image_path=image_path, grid_sidebar=False, do_search=do_search, window_id=window_id)
 
     @staticmethod
-    def get_window(window_id=None, base_dir=None):
+    def get_window(window_id=None, base_dir=None, img_path=None, refocus=False):
         for _app in App.open_windows:
-            if _app.window_id == window_id or _app.base_dir == base_dir:
+            if _app.window_id == window_id or \
+                    (base_dir is not None and _app.base_dir == base_dir) or \
+                    (img_path is not None and _app.img_path == img_path):
+                if img_path is not None:
+                    _app.go_to_file(search_text=os.path.basename(img_path), exact_match=True)
+                if refocus:
+                    _app.refocus()
                 return _app
         return None #raise Exception(f"No window found for window id {window_id} or base dir {base_dir}")
 
@@ -234,6 +241,7 @@ class App():
 
         app_actions = {
             "new_window": App.add_secondary_window,
+            "get_window": App.get_window,
             "toast": self.toast,
             "alert": self.alert,
             "refresh": self.refresh,
@@ -259,6 +267,7 @@ class App():
 
         self.compare_wrapper = CompareWrapper(master, config.compare_mode, self.app_actions)
         self.sd_runner_client = SDRunnerClient()
+        self.refacdir_client = RefacDirClient()
 
         # Sidebar
         self.sidebar = Sidebar(self.master)
@@ -421,6 +430,7 @@ class App():
         self.master.bind("<Shift-N>", self._add_all_marks_from_last_or_current_group)
         self.master.bind("<Shift-G>", self.go_to_mark)
         self.master.bind("<Shift-A>", self.set_current_image_run_search)
+        self.master.bind("<Shift-U>", self.run_refacdir)
         self.master.bind("<Shift-I>", lambda event: ImageDetails.run_image_generation_static(self.app_actions))
         self.master.bind("<Shift-C>", lambda event: MarkedFiles.clear_file_marks(self.toast))
         self.master.bind("<Control-Tab>", self.cycle_windows)
@@ -483,6 +493,7 @@ class App():
     def on_closing(self):
         self.store_info_cache()
         if self.is_secondary():
+            MarkedFiles.remove_marks_for_base_dir(self.base_dir, self.app_actions)
             for i in range(len(App.open_windows)):
                 if App.open_windows[i].window_id == self.window_id:
                     del App.open_windows[i]
@@ -570,7 +581,7 @@ class App():
             self.show_next_image()
 
     def refocus(self, event=None):
-        self.sidebar.after(1, lambda: self.sidebar.focus_force())
+        self.canvas.after(1, lambda: self.canvas.focus_force())
         if config.debug:
             print("Refocused main window")
 
@@ -620,12 +631,12 @@ class App():
     def toggle_slideshow(self, event=None):
         self.slideshow_config.toggle_slideshow()
         if self.slideshow_config.show_new_images:
-            message = "Slideshow for new images started"
+            message = _("Slideshow for new images started")
         elif self.slideshow_config.slideshow_running:
-            message = "Slideshow started"
+            message = _("Slideshow started")
             start_thread(self.do_slideshow)
         else:
-            message = "Slideshows ended"
+            message = _("Slideshows ended")
         self.toast(message)
 
     def return_to_browsing_mode(self, event=None):
@@ -956,6 +967,12 @@ class App():
         '''
         Execute a new image search from the provided search image.
         '''
+        if self.mode == Mode.BROWSE:
+            alt_key_pressed = event and (event.state & 0x20000) != 0
+            if alt_key_pressed:
+                random_image = self.file_browser.random_file()
+                if os.path.isfile(random_image):
+                    self.create_image(random_image) # sets current image first
         if self.mode == Mode.SEARCH:
             if not self.compare_wrapper.has_image_matches:
                 self.alert(_("Search required"), _("No matches found. Search again to find potential matches."))
@@ -1170,6 +1187,8 @@ class App():
             self.file_browser.go_to_file(marked_file)
             self.create_image(marked_file)
             self.master.update()
+            if len(MarkedFiles.file_marks) == 1:
+                self.toast("Only one marked file set.") # TODO i18n
         else:
             self.go_to_file(search_text=os.path.basename(marked_file), exact_match=True)
 
@@ -1462,6 +1481,13 @@ class App():
         self.sd_runner_client.start()
         self.sd_runner_client.run(_type, self.img_path)
         self.toast(_("Running image gen: ") + str(_type))
+
+
+    def run_refacdir(self, event=None):
+        self.refacdir_client.start()
+        self.refacdir_client.run(self.img_path)
+        self.toast(_("Running refacdir"))
+
 
     def store_info_cache(self):
         base_dir = self.get_base_dir()

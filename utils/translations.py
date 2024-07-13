@@ -3,7 +3,7 @@ import os
 
 from utils.utils import Utils
 
-_locale = os.environ['LANG']
+_locale = os.environ['LANG'] if "LANG" in os.environ else None
 if not _locale or _locale == '':
     _locale = Utils.get_default_user_language()
 elif _locale is not None and "_" in _locale:
@@ -22,7 +22,10 @@ class I18N:
     @staticmethod
     def _(s):
 #        return gettext.gettext(s)
-        return I18N.translate.gettext(s)
+        try:
+            return I18N.translate.gettext(s)
+        except KeyError:
+            return s
 
     '''
     NOTE when gathering the translation strings, set _() == to gettext.gettext() instead of the above, and run:

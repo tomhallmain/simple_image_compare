@@ -291,6 +291,8 @@ class MarkedFiles():
                                  move_func=Utils.move_file, single_image=False) -> Tuple[bool, bool]:
         """
         Move or copy the marked files to the target directory.
+
+        TODO fix i18n for this method
         """
         MarkedFiles.is_performing_action = True
         some_files_already_present = False
@@ -371,6 +373,8 @@ class MarkedFiles():
     def undo_move_marks(base_dir, app_actions):
         """
         Undo the previous move/copy operation.
+
+        TODO fix i18n for this method
         """
         if MarkedFiles.is_performing_action:
             MarkedFiles.is_cancelled_action = True
@@ -773,4 +777,26 @@ class MarkedFiles():
             elif filepath_index == len(MarkedFiles.file_marks) - 1:
                 MarkedFiles.mark_cursor = 0
             MarkedFiles.file_marks.remove(filepath)
+
+    @staticmethod
+    def remove_marks_for_base_dir(base_dir, app_actions):
+        if len(MarkedFiles.file_marks) > 0 and base_dir and base_dir != "":
+            removed_count = 0
+            i = 0
+            while i < len(MarkedFiles.file_marks):
+                marked_file = MarkedFiles.file_marks[i]
+                # NOTE we don't necessarily want to remove files that are in subdirectories of the base dir here
+                if os.path.dirname(marked_file) == base_dir:
+                    MarkedFiles.file_marks.remove(marked_file)
+                    removed_count += 1
+                    if MarkedFiles.mark_cursor >= len(MarkedFiles.file_marks):
+                        MarkedFiles.mark_cursor = 0
+                    elif MarkedFiles.mark_cursor > i:
+                        MarkedFiles.mark_cursor -= 1
+                else:
+                    i += 1
+            if len(MarkedFiles.file_marks) == 0:
+                app_actions.toast(_("Marks cleared"))
+            elif removed_count > 0:
+                app_actions.toast("Removed {0} marks".format(removed_count)) # TODO i18n
 

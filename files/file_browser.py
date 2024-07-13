@@ -2,7 +2,7 @@ from datetime import datetime
 import glob
 import json
 import os
-from random import shuffle
+from random import shuffle, choice
 import re
 import threading
 from time import sleep
@@ -212,13 +212,18 @@ class FileBrowser:
 
     def get_index_details(self):
         files = self.get_files()
-        _("FILE_BROWSER_INDEX_DETAILS")
-        return f"{self.file_cursor+1} out of {len(files)} files in directory, ordered by {self.sort_by} {self.sort}"
+        return _("FILE_BROWSER_INDEX_DETAILS").format(self.file_cursor+1, len(files), self.sort_by, self.sort)
 
     def go_to_file(self, filepath):
         files = self.get_files()
         if filepath in files:
             self.file_cursor = files.index(filepath)
+
+    def random_file(self):
+        files = self.get_files()
+        random_file = choice(files)
+        self.file_cursor = files.index(random_file)
+        return random_file
 
     def select_series(self, start_file, end_file):
         files = self.get_files()

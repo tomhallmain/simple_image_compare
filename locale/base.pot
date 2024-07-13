@@ -131,6 +131,18 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
+#: .\app.py:623
+msgid "Slideshow for new images started"
+msgstr ""
+
+#: .\app.py:625
+msgid "Slideshow started"
+msgstr ""
+
+#: .\app.py:628
+msgid "Slideshows ended"
+msgstr ""
+
 #: .\app.py:638
 msgid "Browsing mode set."
 msgstr ""
@@ -457,7 +469,7 @@ msgstr ""
 
 #: .\files\file_browser.py:215
 msgid "FILE_BROWSER_INDEX_DETAILS"
-msgstr "{0} von {1} Dateien im Verzeichnis, {3} sortiert nach {2}"
+msgstr ""
 
 #: .\files\go_to_file.py:41
 msgid "Invalid search string, please enter some text."

@@ -131,6 +131,18 @@ msgstr "Keine Dateien im Verzeichnis nach Aktualisierung gefunden."
 msgid "Warning"
 msgstr "Warnung"
 
+#: .\app.py:623
+msgid "Slideshow for new images started"
+msgstr "Diashow f\u00fcr neue Bilder gestartet"
+
+#: .\app.py:625
+msgid "Slideshow started"
+msgstr "Diashow gestartet"
+
+#: .\app.py:628
+msgid "Slideshows ended"
+msgstr "Diashows beendet"
+
 #: .\app.py:638
 msgid "Browsing mode set."
 msgstr "Browsing-Modus eingestellt."
@@ -462,7 +474,7 @@ msgstr "Es wurden keine Dateien f\u00fcr die aktuellen Browsing-Einstellungen ge
 
 #: .\files\file_browser.py:215
 msgid "FILE_BROWSER_INDEX_DETAILS"
-msgstr "Details zum Index"
+msgstr "{0} von {1} Dateien im Verzeichnis, {3} sortiert nach {2}"
 
 #: .\files\go_to_file.py:41
 msgid "Invalid search string, please enter some text."

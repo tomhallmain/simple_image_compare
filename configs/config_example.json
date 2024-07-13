@@ -48,5 +48,7 @@
   ],
   "text_embedding_search_presets_exclusive": false,
   "sd_runner_client_port": 6000,
-  "sd_runner_client_password": "<PASSWORD>"
+  "sd_runner_client_password": "<PASSWORD>",
+  "refacdir_client_port": 6001,
+  "refacdir_client_password": "<PASSWORD>"
 }
