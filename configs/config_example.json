@@ -1,4 +1,6 @@
 {
+  "foreground_color": "white",
+  "background_color": "#26242f",
   "locale": "en",
   "log_level": "info",
   "clip_model": "ViT-B/32",

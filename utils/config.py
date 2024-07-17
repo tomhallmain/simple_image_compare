@@ -12,6 +12,8 @@ class Config:
     def __init__(self):
         self.dict = {}
         self.locale = Utils.get_default_user_language()
+        self.foreground_color = None
+        self.background_color = None
         self.debug = False
         self.log_level = "info"
         self.clip_model = "ViT-B/32"
@@ -85,6 +87,8 @@ class Config:
                             "text_embedding_search_presets",
                             "directories_to_search_for_related_images")
             self.set_values(str,
+                            "foreground_color",
+                            "background_color",
                             "locale",
                             "log_level",
                             "default_main_window_size",

@@ -192,8 +192,8 @@ class App():
         else:
             if to_theme is None:
                 self.master.set_theme("black", themebg="black") # Changes the window to dark theme
-            AppStyle.BG_COLOR = "#26242f"
-            AppStyle.FG_COLOR = "white"
+            AppStyle.BG_COLOR = config.background_color if config.background_color and config.background_color != "" else "#26242f"
+            AppStyle.FG_COLOR = config.foreground_color if config.foreground_color and config.foreground_color != "" else "white"
         AppStyle.IS_DEFAULT_THEME = (not AppStyle.IS_DEFAULT_THEME or to_theme == AppStyle.DARK_THEME) and to_theme != AppStyle.LIGHT_THEME
         self.master.config(bg=AppStyle.BG_COLOR)
         self.sidebar.config(bg=AppStyle.BG_COLOR)
@@ -586,6 +586,7 @@ class App():
             print("Refocused main window")
 
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
+        # TODO if some removed files are in a different window than self, find the window and refresh it as well with those files removed.
         self.file_browser.refresh(refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files)
         if len(removed_files) > 0:
             if self.mode == Mode.BROWSE:
@@ -714,6 +715,7 @@ class App():
             self.toast(_("No downstream related image(s) found in {0}").format(base_dir))
 
     def set_marks_from_downstream_related_images(self, event=None, base_dir=None):
+        # TODO some way to tell if the current mark is invalid based on whether the window has been switched, and if so clear it and use the current image instead
         if base_dir is None:
             window, dirs = self.get_other_window_or_self_dir()
             if window is None:
@@ -954,9 +956,12 @@ class App():
         in the list of matches.
         '''
         if self.mode == Mode.BROWSE:
+            next_file = self.file_browser.next_file()
+            if self.img_path == next_file:
+                return True # NOTE self.refresh() is calling this method in this case
             self.master.update()
             try:
-                self.create_image(self.file_browser.next_file())
+                self.create_image(next_file)
                 return True
             except Exception as e:
                 self.alert("Exception", str(e))
@@ -1182,13 +1187,15 @@ class App():
         MarkedFiles.mark_cursor += -1 if alt_key_pressed else 1
         if MarkedFiles.mark_cursor >= len(MarkedFiles.file_marks):
             MarkedFiles.mark_cursor = 0
+            if len(MarkedFiles.file_marks) > 1:
+                self.toast(_("First sorted mark"))
         marked_file = MarkedFiles.file_marks[MarkedFiles.mark_cursor]
         if self.mode == Mode.BROWSE:
             self.file_browser.go_to_file(marked_file)
             self.create_image(marked_file)
             self.master.update()
             if len(MarkedFiles.file_marks) == 1:
-                self.toast("Only one marked file set.") # TODO i18n
+                self.toast(_("Only one marked file set."))
         else:
             self.go_to_file(search_text=os.path.basename(marked_file), exact_match=True)
 
@@ -1315,8 +1322,12 @@ class App():
 
     def home(self, event=None):
         if self.mode == Mode.BROWSE:
+            shift_key_pressed = event and (event.state & 0x1) != 0
             self.file_browser.refresh()
-            self.create_image(self.file_browser.next_file())
+            if shift_key_pressed:
+                self.create_image(self.file_browser.last_file())
+            else:
+                self.create_image(self.file_browser.next_file())
             self.master.update()
         elif self.compare_wrapper.has_compare():
             self.compare_wrapper.current_group_index = 0
@@ -1324,12 +1335,14 @@ class App():
             self.compare_wrapper.set_current_group()
 
     def page_up(self, event=None):
-        next_file = self.file_browser.page_up() if self.mode == Mode.BROWSE else self.compare_wrapper.page_up()
+        shift_key_pressed = event is not None and (event.state & 0x1) != 0
+        next_file = self.file_browser.page_up(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_up(half_length=shift_key_pressed)
         self.create_image(next_file)
         self.master.update()
 
     def page_down(self, event=None):
-        next_file = self.file_browser.page_down() if self.mode == Mode.BROWSE else self.compare_wrapper.page_down()
+        shift_key_pressed = event is not None and (event.state & 0x1) != 0
+        next_file = self.file_browser.page_down(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_down(half_length=shift_key_pressed)
         self.create_image(next_file)
         self.master.update()
 
@@ -1479,15 +1492,16 @@ class App():
 
     def run_image_generation(self, event=None, _type=None):
         self.sd_runner_client.start()
-        self.sd_runner_client.run(_type, self.img_path)
-        self.toast(_("Running image gen: ") + str(_type))
-
+        try:
+            self.sd_runner_client.run(_type, self.img_path)
+            self.toast(_("Running image gen: ") + str(_type))
+        except Exception as e:
+            self.alert(_("Warning"), _("Error running image generation:\n") + str(e), kind="error")
 
     def run_refacdir(self, event=None):
         self.refacdir_client.start()
         self.refacdir_client.run(self.img_path)
         self.toast(_("Running refacdir"))
-
 
     def store_info_cache(self):
         base_dir = self.get_base_dir()

@@ -1,7 +1,11 @@
 from multiprocessing.connection import Client
 
+from image.image_data_extractor import image_data_extractor
 from utils.config import config
 from utils.constants import ImageGenerationType
+from utils.translations import I18N
+
+_ = I18N._
 
 class SDRunnerClient:
     COMMAND_CLOSE_SERVER = 'close server'
@@ -47,14 +51,22 @@ class SDRunnerClient:
             self.close()
             raise Exception(f'Failed to connect to SD Runner: {e}')
 
+    def validate_image_for_type(self, _type, base_image):
+        if _type == ImageGenerationType.REDO_PROMPT:
+            if image_data_extractor.extract_prompt(base_image) is None:
+                self.close()
+                raise Exception(_('Image does not contain a prompt to redo!'))
+
     def run(self, _type, base_image):
         if not isinstance(_type, ImageGenerationType):
             raise TypeError(f'{_type} is not a valid ImageGenerationType')
+        self.validate_image_for_type(_type, base_image)
         self.validate_connection()
         try:
             command  = {'command': 'run', 'type': _type.value, 'args': [base_image]}
             resp = self.send(command)
             if "error" in resp:
+                self.close()
                 raise Exception(f'SD Runner failed to start run {_type} on file {base_image}\n{resp["error"]}: {resp["data"]}')
             print(f"SD Runner started run {_type} on file {base_image}")
             self.close()

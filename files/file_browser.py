@@ -121,7 +121,7 @@ class FileBrowser:
             self._new_files = list(set(files) - set(last_files))
         elif not refresh_cursor:
             with self.cursor_lock:
-                if len(files) - 1 <= self.file_cursor:
+                if len(files) - 1 < self.file_cursor:
                     self.file_cursor = -1
                 else:
                     self.file_cursor -= 1
@@ -184,14 +184,20 @@ class FileBrowser:
     def next_file(self):
         files = self.get_files()
         if len(files) == 0:
-            recursive_str = "" if self.recursive else " (try setting recursive to True)"
-            raise Exception("No files found for current browsing settings." + recursive_str)
+            recursive_str = "" if self.recursive else _(" (try setting recursive to True)")
+            raise Exception(_("No files found for current browsing settings.") + recursive_str)
         with self.cursor_lock:
             if len(files) > self.file_cursor + 1:
                 self.file_cursor += 1
             else:
                 self.file_cursor = 0
-            return files[self.file_cursor]
+        return files[self.file_cursor]
+
+    def last_file(self):
+        files = self.get_files()
+        with self.cursor_lock:
+            self.file_cursor = len(files) - 1
+        return files[self.file_cursor]
 
     def load_file_paths_json(self):
         print("Loading external file paths from JSON: " + config.file_paths_json_path)
@@ -239,7 +245,7 @@ class FileBrowser:
 
     def find(self, search_text=None, retry_with_delay=0, exact_match=False):
         if not search_text or search_text.strip() == "":
-            raise Exception("Search text provided to file_browser.find() was invalid.")
+            raise Exception(_("Search text provided to file_browser.find() was invalid."))
         files = self.get_files_with_retry(retry_with_delay)
         # First try to match filename
         if search_text in files:
@@ -274,8 +280,8 @@ class FileBrowser:
                 return files[self.file_cursor]
         return None
 
-    def page_down(self):
-        paging_length = self._get_paging_length()
+    def page_down(self, half_length=False):
+        paging_length = self._get_paging_length(half_length=half_length)
         test_cursor = self.file_cursor + paging_length
         if test_cursor > len(self._files):
             test_cursor = 1
@@ -283,8 +289,8 @@ class FileBrowser:
             self.file_cursor = test_cursor - 1
         return self.next_file()
 
-    def page_up(self):
-        paging_length = self._get_paging_length()
+    def page_up(self, half_length=False):
+        paging_length = self._get_paging_length(half_length=half_length)
         test_cursor = self.file_cursor - paging_length
         if test_cursor < 0:
             test_cursor = -1
@@ -292,13 +298,14 @@ class FileBrowser:
             self.file_cursor = test_cursor + 1
         return self.previous_file()
 
-    def _get_paging_length(self):
-        tenth_of_total_count = int(len(self._files) / 10)
-        if tenth_of_total_count > 200:
+    def _get_paging_length(self, half_length=False):
+        divisor = 20 if half_length else 10
+        paging_length = int(len(self._files) / divisor)
+        if paging_length > 200:
             return 200
-        if tenth_of_total_count == 0:
+        if paging_length == 0:
             return 1
-        return tenth_of_total_count
+        return paging_length
 
     def _get_sortable_files(self) -> List[SortableFile]:
         self._files = []

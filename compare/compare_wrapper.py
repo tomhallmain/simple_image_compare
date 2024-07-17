@@ -163,29 +163,30 @@ class CompareWrapper:
         self._master.update()
         self._app_actions.create_image(self.current_match())
     
-    def page_down(self):
-        paging_length = self._get_paging_length()
+    def page_down(self, half_length=False):
+        paging_length = self._get_paging_length(half_length=half_length)
         test_cursor = self.match_index + paging_length
         if test_cursor >= len(self.files_matched):
             test_cursor = 0
         self.match_index = test_cursor
         return self.current_match()
 
-    def page_up(self):
-        paging_length = self._get_paging_length()
+    def page_up(self, half_length=False):
+        paging_length = self._get_paging_length(half_length=half_length)
         test_cursor = self.match_index - paging_length
         if test_cursor < 0:
             test_cursor = -1
         self.match_index = test_cursor
         return self.current_match()
 
-    def _get_paging_length(self):
-        tenth_of_total_count = int(len(self.files_matched) / 10)
-        if tenth_of_total_count > 200:
+    def _get_paging_length(self, half_length=False):
+        divisor = 20 if half_length else 10
+        paging_length = int(len(self.files_matched) / divisor)
+        if paging_length > 200:
             return 200
-        if tenth_of_total_count == 0:
+        if paging_length == 0:
             return 1
-        return tenth_of_total_count
+        return paging_length
 
     def _requires_new_compare(self, base_dir):
         if not self.has_compare() or self._compare.base_dir != base_dir:

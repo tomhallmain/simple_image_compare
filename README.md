@@ -29,11 +29,12 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Go to file by string search
 - Mark groups of files to enable quick transitions and comparisons
 - Move, copy, and delete marked file groups
+- Quickly find directories via recent directory picker window
 - Stores session info about seen directories (useful for directories with many images)
 - Can be set up to run on user-defined list of files in place of a directory
 - Extension with [sd-runner](https://github.com/tomhallmain/sd-runner) for image generation
 - Extension with [refacdir](https://github.com/tomhallmain/refacdir) for file operations
-- Find related images from embedded ComfyUI workflows
+- Find related images and prompts from embedded ComfyUI workflows
 
 It is not implemented yet, but there will ultimately be zoom and drag functionality in browsing mode, as well as when viewing grouped images after a comparison has been run.
 
@@ -74,8 +75,12 @@ A directory with images must be set before most of the below bindings will have 
 | Right Arrow      | Mouse Wheel Down | Show next image        |
 | Shift-Left       |                  | Show previous group    |
 | Shift-Right      |                  | Show next group        |
+| Shift-S          |                  | Toggle slideshow       |
 | Shift-D          |                  | Show image details     |
-| Ctrl-G           |                  | Open go to file        |
+| Shift-I          | Right Click      | Run image generation   |
+| Shift-U          |                  | Run refacdir           |
+| Shift-P          |                  | Open image in GIMP     |
+| Ctrl-G           |                  | Open filename search   |
 | Home             |                  | Go to first image      |
 | Page Up          |                  | Page through images    |
 | Page Down        |                  | Page through images    |

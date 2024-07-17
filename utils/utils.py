@@ -145,7 +145,7 @@ class Utils:
     @staticmethod
     def open_file_in_gimp(filepath):
         def gimp_process():
-            command = ["gimp-2.10", filepath]
+            command = ["set", "LANG=en", "&&", "gimp-2.10", filepath]
             process = subprocess.call(command, shell=True)
             if process!=0:
                 raise Exception("Could not open file in GIMP")

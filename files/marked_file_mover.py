@@ -195,6 +195,7 @@ class MarkedFiles():
         self.master.bind("<Escape>", self.close_windows)
         self.master.protocol("WM_DELETE_WINDOW", self.close_windows)
         self.master.bind('<Shift-Delete>', self.delete_marked_files)
+        self.master.bind('<Shift-C>', self.clear_marks)
         self.master.bind("<Button-2>", self.delete_marked_files)
         self.master.bind("<Button-3>", self.do_action_test_is_in_directory)
         self.master.bind("<Control-t>", self.set_permanent_mark_target)
@@ -231,6 +232,9 @@ class MarkedFiles():
                 return self.move_marks_to_dir(event, target_dir, move_func=Utils.copy_file)
             copy_btn.bind("<Button-1>", copy_handler)
 
+    def clear_marks(self):
+        MarkedFiles.clear_file_marks(self.app_actions.toast)
+        self.close_windows()
 
     @staticmethod
     def get_target_directory(target_dir, starting_target, toast_callback):
@@ -796,7 +800,7 @@ class MarkedFiles():
                 else:
                     i += 1
             if len(MarkedFiles.file_marks) == 0:
-                app_actions.toast(_("Marks cleared"))
+                app_actions.toast(_("Marks cleared."))
             elif removed_count > 0:
-                app_actions.toast("Removed {0} marks".format(removed_count)) # TODO i18n
+                app_actions.toast(_("Removed {0} marks").format(removed_count))
 
