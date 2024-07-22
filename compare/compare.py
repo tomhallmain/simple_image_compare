@@ -14,6 +14,7 @@ from sklearn.cluster import KMeans
 from skimage.color import rgb2lab
 # from imutils import face_utils
 
+from compare.compare_args import CompareArgs
 from compare.compare_result import CompareResult
 from utils.config import config
 from utils.constants import CompareMode
@@ -201,29 +202,22 @@ class Compare:
     THRESHHOLD_POTENTIAL_DUPLICATE = 50
     THRESHHOLD_GROUP_CUTOFF = 4500
 
-    def __init__(self, base_dir=".", recursive=True, search_file_path=None, counter_limit=30000,
-                 use_thumb=True, compare_faces=False, color_diff_threshold=15,
-                 inclusion_pattern=None, overwrite=False, verbose=False, gather_files_func=gather_files,
-                 include_gifs=False, match_dims=False, progress_listener=None):
+    def __init__(self, args=CompareArgs(), use_thumb=True, gather_files_func=gather_files):
+        self.args = args
         self.use_thumb = use_thumb
         self.files = []
-        self.recursive = recursive
         self.set_base_dir(base_dir)
         self.set_search_file_path(search_file_path)
-        self.counter_limit = counter_limit
-        self.compare_faces = compare_faces
-        self.inclusion_pattern = inclusion_pattern
-        self.include_gifs = include_gifs
-        self.match_dims = match_dims
-        self.overwrite = overwrite
-        self.verbose = verbose
-        self.progress_listener = progress_listener
+        self.compare_faces = self.args.compare_faces
+#        self.match_dims = match_dims
+        self.verbose = self.args.verbose
+        self.progress_listener = self.args.listener
         self._faceCascade = None
         if self.use_thumb:
             self.thumb_dim = 15
             self.n_colors = self.thumb_dim ** 2
             self.colors_below_threshold = int(self.n_colors / 2)
-            self.color_diff_threshold = color_diff_threshold
+            self.color_diff_threshold = self.args.threshold
             if self.color_diff_threshold is None:
                 self.color_diff_threshold = 15
             self.modifier = self.thumb_dim
@@ -232,7 +226,7 @@ class Compare:
         else:
             self.n_colors = 8
             self.colors_below_threshold = int(self.n_colors * 4 / 8)
-            self.color_diff_threshold = color_diff_threshold
+            self.color_diff_threshold = self.args.threshold
             if self.color_diff_threshold is None:
                 self.color_diff_threshold = 15
             self.modifier = KMeans(n_clusters=self.n_colors)
@@ -281,14 +275,14 @@ class Compare:
         self._files_found = []
         if self.gather_files_func:
             exts = config.file_types
-            if self.include_gifs:
+            if self.args.include_gifs:
                 exts.append(".gif")
-            self.files = self.gather_files_func(base_dir=self.base_dir, exts=exts, recursive=self.recursive)
+            self.files = self.gather_files_func(base_dir=self.base_dir, exts=exts, recursive=self.args.recursive)
         else:
             raise Exception("No gather files function found.")
         self.files.sort()
         self.has_new_file_data = False
-        self.max_files_processed = min(self.counter_limit, len(self.files))
+        self.max_files_processed = min(self.args.counter_limit, len(self.files))
         self.max_files_processed_even = round_up(self.max_files_processed, 200)
 
         if self.is_run_search:
@@ -309,11 +303,11 @@ class Compare:
         print(f" comparison files base directory: {self.base_dir}")
         print(f" compare faces: {self.compare_faces}")
         print(f" use thumb: {self.use_thumb}")
-        print(f" max file process limit: {self.counter_limit}")
+        print(f" max file process limit: {self.args.counter_limit}")
         print(f" max files processable for base dir: {self.max_files_processed}")
-        print(f" recursive: {self.recursive}")
-        print(f" file glob pattern: {self.inclusion_pattern}")
-        print(f" include gifs: {self.include_gifs}")
+        print(f" recursive: {self.args.recursive}")
+        print(f" file glob pattern: {self.args.inclusion_pattern}")
+        print(f" include gifs: {self.args.include_gifs}")
         print(f" n colors: {self.n_colors}")
         print(f" colors below threshold: {self.colors_below_threshold}")
         print(f" color diff threshold: {self.color_diff_threshold}")
@@ -321,7 +315,7 @@ class Compare:
         print(f" modifier: {self.modifier}")
         print(f" color getter: {self.color_getter}")
         print(f" color diff alg: {self.color_diff_alg}")
-        print(f" overwrite image data: {self.overwrite}")
+        print(f" overwrite image data: {self.args.overwrite}")
         print("|--------------------------------------------------------------------|\n\n")
 
     def _set_face_cascade(self):
@@ -348,11 +342,11 @@ class Compare:
         For all the found files in the base directory, either load the cached
         image data or extract new data and add it to the cache.
         '''
-        if self.overwrite or not os.path.exists(self._file_colors_filepath):
+        if self.args.overwrite or not os.path.exists(self._file_colors_filepath):
             if not os.path.exists(self._file_colors_filepath):
                 print("Image data not found so creating new cache"
                       + " - this may take a while.")
-            elif self.overwrite:
+            elif self.args.overwrite:
                 print("Overwriting image data caches - this may take a while.")
             self._file_colors_dict = {}
             self._file_faces_dict = {}
@@ -375,10 +369,10 @@ class Compare:
         counter = 0
 
         for f in self.files:
-            if is_invalid_file(f, counter, self.is_run_search, self.inclusion_pattern):
+            if is_invalid_file(f, counter, self.is_run_search, self.args.inclusion_pattern):
                 continue
 
-            if counter > self.counter_limit:
+            if counter > self.args.counter_limit:
                 break
 
             if f in self._file_colors_dict:
@@ -435,7 +429,7 @@ class Compare:
 
         # Save image file data
 
-        if self.has_new_file_data or self.overwrite:
+        if self.has_new_file_data or self.args.overwrite:
             with open(self._file_colors_filepath, "wb") as store:
                 pickle.dump(self._file_colors_dict, store)
             if self._faceCascade:
@@ -444,7 +438,7 @@ class Compare:
             self._file_colors_dict = None
             self._file_faces_dict = None
             if self.verbose:
-                if self.overwrite:
+                if self.args.overwrite:
                     print("Overwrote any pre-existing image data at:")
                 else:
                     print("Updated image data saved to: ")
@@ -632,7 +626,7 @@ class Compare:
         files_grouped - Keys are the file indexes, values are tuple of the group index and diff score.
         file_groups - Keys are the group indexes, values are dicts with keys as the file in the group, values the diff score
         '''
-        overwrite = self.overwrite or not store_checkpoints
+        overwrite = self.args.overwrite or not store_checkpoints
         compare_result = CompareResult.load(self.base_dir, self._files_found, overwrite=overwrite)
         if compare_result.is_complete:
             return (compare_result.files_grouped, compare_result.file_groups)

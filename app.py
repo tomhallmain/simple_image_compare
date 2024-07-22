@@ -184,6 +184,12 @@ class App():
                 return _app
         return None #raise Exception(f"No window found for window id {window_id} or base dir {base_dir}")
 
+    @staticmethod
+    def find_window_with_compare():
+        for _app in App.open_windows:
+            if _app.compare_wrapper.has_compare():
+                return _app
+
     def toggle_theme(self, to_theme=None, do_toast=True):
         if (to_theme is None and AppStyle.IS_DEFAULT_THEME) or to_theme == AppStyle.LIGHT_THEME:
             if to_theme is None:
@@ -293,12 +299,12 @@ class App():
         self.set_base_dir_box = self.new_entry(text=_("Add dirpath..."))
         self.apply_to_grid(self.set_base_dir_box)
 
-        self.add_button("set_search_btn", _("Set search file"), self.set_search_image)
+        self.add_button("set_search_btn", _("Set search file"), self.set_search)
         self.search_image = tk.StringVar()
         self.search_img_path_box = self.new_entry(self.search_image)
         if do_search and image_path is not None:
             self.search_img_path_box.insert(0, image_path)
-        self.search_img_path_box.bind("<Return>", self.set_search_image)
+        self.search_img_path_box.bind("<Return>", self.set_search)
         self.apply_to_grid(self.search_img_path_box, sticky=W)
 
         self.add_button("search_text_btn", _("Search text (embedding mode)"), self.search_text_embedding)
@@ -488,7 +494,7 @@ class App():
             if do_search:
                 # Search image should be set above in search image box in this case.
                 # Search for matches to given image immediately upon opening.
-                self.set_search_image()
+                self.set_search()
             else:
                 self.go_to_file(search_text=image_path)
         
@@ -907,9 +913,9 @@ class App():
         img = img.resize(fit_dims)
         return ImageTk.PhotoImage(img)
 
-    def set_search_image(self, event=None) -> None:
+    def set_search(self, event=None) -> None:
         '''
-        Set the search image using the provided UI value, or prompt the
+        Set the search image or text using the provided UI values, or prompt the
         user for selection. Set the mode based on the result.
         '''
         image_path = self.get_search_file_path()
@@ -934,7 +940,7 @@ class App():
             self.set_mode(Mode.SEARCH)
 
         self.master.update()
-        self.run_compare(searching_image=True)
+        self.run_compare(compare_args=CompareArgs(searching_image=True))
 
     def show_searched_image(self) -> None:
         if config.debug:
@@ -1003,18 +1009,25 @@ class App():
             if filepath.startswith(base_dir):
                 filepath = filepath[len(base_dir)+1:]
             self.search_image.set(filepath)
-            self.set_search_image()
+            self.set_search()
         else:
             self.alert(_("Error"), _("Failed to get active image filepath"), kind="error")
 
     def add_current_image_to_negative_search(self, event=None):
         filepath = self.get_active_image_filepath()
         if filepath:
-            base_dir = self.get_base_dir()
-            if filepath.startswith(base_dir):
-                filepath = filepath[len(base_dir)+1:]
+            window = App.find_window_with_compare()
+            if window:
+                window.negative_image_search(filepath)
+            else:
+                self.negative_image_search(filepath)
         else:
             self.alert(_("Error"), _("Failed to get active image filepath"), kind="error")
+
+    def negative_image_search(self, filepath):
+        args = self.compare_wrapper.get_args()
+        args.negative_search_file_paths = filepath
+        # TODO finish this once search consolidation is implemented
 
     def create_image(self, image_path, extra_text=None) -> None:
         '''
@@ -1119,10 +1132,11 @@ class App():
             return res == messagebox.OK or res == True
         return True
 
-    def run_compare(self, find_duplicates=False, searching_image=False, search_text=None, search_text_negative=None) -> None:
+    def run_compare(self, compare_args=CompareArgs(), find_duplicates=False) -> None:
         if not self._validate_run():
             return
-        self._run_with_progress(self._run_compare, args=[find_duplicates, searching_image, search_text, search_text_negative])
+        compare_args.find_duplicates = find_duplicates
+        self._run_with_progress(self._run_compare, args=[compare_args])
 
     def _run_with_progress(self, exec_func, args=[]) -> None:
         def run_with_progress_async(self) -> None:
@@ -1139,22 +1153,23 @@ class App():
 
         start_thread(run_with_progress_async, use_asyncio=False, args=[self])
 
-    def _run_compare(self, find_duplicates=False, searching_image=False, search_text=None, search_text_negative=None) -> None:
+    def _run_compare(self, args=CompareArgs()) -> None:
         '''
         Execute operations on the Compare object in any mode. Create a new Compare object if needed.
         '''
-        args = CompareArgs(self.get_base_dir(), self.mode, recursive=self.file_browser.recursive, searching_image=searching_image)
-        if searching_image:
+        args.base_dir = self.get_base_dir()
+        args.mode = self.mode
+        args.recursive = self.file_browser.recursive
+        if args.searching_image:
             args.search_file_path = self.get_search_file_path()
         args.counter_limit = self.get_counter_limit()
         args.compare_faces = self.compare_faces.get()
         args.overwrite = self.overwrite.get()
-        args.compare_threshold = self.get_compare_threshold()
+        args.threshold = self.get_compare_threshold()
         args.inclusion_pattern = self.get_inclusion_pattern()
         args.store_checkpoints = self.store_checkpoints.get()
-        listener = ProgressListener(update_func=self.display_progress)
-        self.compare_wrapper.run(self.get_base_dir(), self.mode, args.recursive, searching_image, args.search_file_path, search_text, search_text_negative,
-                                 find_duplicates, args.counter_limit, args.compare_threshold, args.compare_faces, args.inclusion_pattern, args.overwrite, listener, args.store_checkpoints)
+        args.listener = ProgressListener(update_func=self.display_progress)
+        self.compare_wrapper.run(args)
 
     def _set_toggled_view_matches(self):
         self.is_toggled_view_matches = True
@@ -1166,7 +1181,7 @@ class App():
         if search_text.strip() == "" and search_text_negative.strip() == "":
             self.alert(_("Invalid search text"), _("Search text must be set"), kind="warning")
             return
-        self.run_compare(search_text=search_text, search_text_negative=search_text_negative)
+        self.run_compare(compare_args=CompareArgs(search_text=search_text, search_text_negative=search_text_negative))
         self.master.focus()
 
     def add_or_remove_mark_for_current_image(self, event=None, show_toast=True):

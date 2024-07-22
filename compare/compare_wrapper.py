@@ -5,7 +5,8 @@ from tkinter import messagebox
 
 import pprint
 
-from compare.compare import Compare, get_valid_file
+from compare.compare import Compare
+from compare.compare_args import CompareArgs
 from compare.compare_embeddings import CompareEmbedding
 from utils.config import config
 from utils.constants import Mode, CompareMode
@@ -25,6 +26,7 @@ class CompareWrapper:
         self.file_groups = {}
         self.files_matched = []
         self.search_image_full_path = None
+        self.negative_search_image_full_path = None
         self.has_image_matches = False
         self.current_group = None
         self.current_group_index = 0
@@ -34,6 +36,11 @@ class CompareWrapper:
 
     def has_compare(self):
         return self._compare is not None
+
+    def get_args(self):
+        if self.has_compare():
+            return deepcopy(self._compare.args)
+        return CompareArgs()
 
     def compare(self):
         if self._compare is None:
@@ -211,21 +218,7 @@ class CompareWrapper:
             return self.compare_mode != CompareMode.CLIP_EMBEDDING
         raise Exception(f"Unknown Compare class {current_compare_class}")
 
-    def _is_new_data_request_required(self, counter_limit, compare_threshold,
-                                     inclusion_pattern, recursive, overwrite):
-        assert self._compare is not None
-        if self.compare_mode == CompareMode.COLOR_MATCHING:
-            if self._compare.color_diff_threshold != compare_threshold:
-                return True
-        elif self._compare.embedding_similarity_threshold != compare_threshold:
-            return True
-        return (self._compare.counter_limit != counter_limit
-                or self._compare.inclusion_pattern != inclusion_pattern
-                or self._compare.recursive != recursive
-                or (not self._compare.overwrite and overwrite))
-
-    def run(self, base_dir, app_mode, recursive, searching_image, search_file_path, search_text, search_text_negative, find_duplicates,
-            counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener, store_checkpoints=False):
+    def run(self, args=CompareArgs()):
         get_new_data = True
         self.current_group_index = 0
         self.current_group = None
@@ -233,37 +226,32 @@ class CompareWrapper:
         self.group_indexes = []
         self.files_matched = []
         self.match_index = 0
-        self.search_image_full_path = search_file_path
+        self.search_image_full_path = args.search_file_path
 
-        if self._requires_new_compare(base_dir):
+        if self._requires_new_compare(args.base_dir):
             self._app_actions._set_label_state(Utils._wrap_text_to_fit_length(
                 _("Gathering image data... setup may take a while depending on number of files involved."), 30))
-            self.new_compare(
-                base_dir, recursive, search_file_path, counter_limit, compare_threshold,
-                compare_faces, inclusion_pattern, overwrite, listener)
+            self.new_compare(args)
         else:
             assert self._compare is not None
-            get_new_data = self._is_new_data_request_required(counter_limit, compare_threshold,
-                                                             inclusion_pattern, recursive, overwrite)
-            self._compare.set_search_file_path(search_file_path)
-            self._compare.counter_limit = counter_limit
-            self._compare.compare_faces = compare_faces
-            self._compare.inclusion_pattern = inclusion_pattern
-            self._compare.overwrite = overwrite
+            get_new_data = self._compare.args._is_new_data_request_required(args)
+            self._compare.args = args
+            self._compare.set_search_file_path(args.search_file_path)
+            self._compare.compare_faces = args.compare_faces
             if self.compare_mode == CompareMode.COLOR_MATCHING:
-                self._compare.color_diff_threshold = compare_threshold
+                self._compare.color_diff_threshold = args.threshold
             else:
-                self._compare.embedding_similarity_threshold = compare_threshold
+                self._compare.embedding_similarity_threshold = args.threshold
             self._compare.print_settings()
-        
+
         if self._compare is None:
             raise Exception("No compare object created")
 
-        if self._compare.is_run_search or search_text is not None:
+        if self._compare.is_run_search or args.search_text is not None:
             self._app_actions.set_mode(Mode.SEARCH, do_update=False)
             self._app_actions._set_toggled_view_matches()
         else:
-            if app_mode == Mode.SEARCH:
+            if args.mode == Mode.SEARCH:
                 res = self._app_actions.alert(_("Confirm group run"),
                                  _("Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."),
                                  kind="askokcancel")
@@ -276,44 +264,20 @@ class CompareWrapper:
             self._compare.get_files()
             self._compare.get_data()
 
-        if searching_image:
+        if args.searching_image:
             if not self._compare.is_run_search:
                 raise Exception("Search mode not enabled but searching_image was set to True")
             self.run_search()
-        elif search_text is not None:
-            self.run_search_text_embedding(search_text=search_text, search_text_negative=search_text_negative)
+        elif args.search_text is not None:
+            self.run_search_text_embedding(search_text=args.search_text, search_text_negative=args.search_text_negative)
         else:
-            self.run_group(find_duplicates=find_duplicates, store_checkpoints=store_checkpoints)
+            self.run_group(find_duplicates=args.find_duplicates, store_checkpoints=args.store_checkpoints)
 
-    def new_compare(self, base_dir, recursive, search_file_path, counter_limit, compare_threshold,
-                    compare_faces, inclusion_pattern, overwrite, listener):
+    def new_compare(self, args):
         if self.compare_mode == CompareMode.CLIP_EMBEDDING:
-            self._compare = CompareEmbedding(
-                base_dir,
-                recursive=recursive,
-                search_file_path=search_file_path,
-                counter_limit=counter_limit,
-                embedding_similarity_threshold=compare_threshold,
-                compare_faces=compare_faces,
-                inclusion_pattern=inclusion_pattern,
-                overwrite=overwrite,
-                verbose=True,
-                progress_listener=listener
-            )
+            self._compare = CompareEmbedding(args)
         elif self.compare_mode == CompareMode.COLOR_MATCHING:
-            self._compare = Compare(
-                base_dir,
-                recursive=recursive,
-                search_file_path=search_file_path,
-                counter_limit=counter_limit,
-                use_thumb=True,
-                compare_faces=compare_faces,
-                color_diff_threshold=compare_threshold,
-                inclusion_pattern=inclusion_pattern,
-                overwrite=overwrite,
-                verbose=True,
-                progress_listener=listener
-            )
+            self._compare = Compare(args, use_thumb=True)
 
     def run_search(self) -> None:
         assert self._compare is not None
@@ -344,7 +308,7 @@ class CompareWrapper:
         self._app_actions.create_image(self.files_matched[self.match_index])
 
     def run_search_text_embedding(self, search_text, search_text_negative):
-        assert self._compare is not None
+        assert self._compare is not None and isinstance(self._compare, CompareEmbedding)
         self._app_actions._set_label_state(Utils._wrap_text_to_fit_length(
             _("Running image comparison with search text..."), 30))
         self.files_grouped = self._compare.search_text(search_text, search_text_negative)

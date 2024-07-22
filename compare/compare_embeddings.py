@@ -10,6 +10,7 @@ import numpy as np
 # from imutils import face_utils
 
 from compare.compare import gather_files, get_valid_file, round_up, is_invalid_file, safe_write
+from compare.compare_args import CompareArgs
 from compare.compare_result import CompareResult
 from compare.model import image_embeddings, text_embeddings, embedding_similarity
 from utils.config import config
@@ -41,26 +42,19 @@ class CompareEmbedding:
     THRESHHOLD_GROUP_CUTOFF = 4500 # TODO fix this for Embedding case
     TEXT_EMBEDDING_CACHE = {}
 
-    def __init__(self, base_dir=".", recursive=True, search_file_path=None, counter_limit=30000,
-                 compare_faces=False, embedding_similarity_threshold=0.9,
-                 inclusion_pattern=None, overwrite=False, verbose=False, gather_files_func=gather_files,
-                 include_gifs=False, match_dims=False, progress_listener=None):
+    def __init__(self, args=CompareArgs(), gather_files_func=gather_files):
+        self.args = args
         self.files = []
-        self.recursive = recursive
-        self.set_base_dir(base_dir)
-        self.set_search_file_path(search_file_path)
-        self.counter_limit = counter_limit
-        self.compare_faces = compare_faces
-        self.inclusion_pattern = inclusion_pattern
-        self.include_gifs = include_gifs
-        self.match_dims = match_dims
-        self.overwrite = overwrite
-        self.verbose = verbose
-        self.progress_listener = progress_listener
+        self.set_base_dir(self.args.base_dir)
+        self.set_search_file_path(self.args.search_file_path)
+        self.compare_faces = self.args.compare_faces
+#        self.args.match_dims = match_dims
+        self.verbose = self.args.verbose
+        self.progress_listener = self.args.listener
         self._faceCascade = None
         if self.compare_faces:
             self._set_face_cascade()
-        self.embedding_similarity_threshold = embedding_similarity_threshold
+        self.embedding_similarity_threshold = self.args.threshold
         self._file_embeddings = np.empty((0, 512))
         self._file_faces = np.empty((0))
         self.settings_updated = False
@@ -100,14 +94,14 @@ class CompareEmbedding:
         self._files_found = []
         if self.gather_files_func:
             exts = config.file_types
-            if self.include_gifs:
+            if self.args.include_gifs:
                 exts.append(".gif")
-            self.files = self.gather_files_func(base_dir=self.base_dir, exts=exts, recursive=self.recursive)
+            self.files = self.gather_files_func(base_dir=self.base_dir, exts=exts, recursive=self.args.recursive)
         else:
             raise Exception("No gather files function found.")
         self.files.sort()
         self.has_new_file_data = False
-        self.max_files_processed = min(self.counter_limit, len(self.files))
+        self.max_files_processed = min(self.args.counter_limit, len(self.files))
         self.max_files_processed_even = round_up(self.max_files_processed, 200)
 
         if self.is_run_search:
@@ -128,13 +122,13 @@ class CompareEmbedding:
         print(f" comparison files base directory: {self.base_dir}")
         print(f" compare faces: {self.compare_faces}")
         print(f" embedding similarity threshold: {self.embedding_similarity_threshold}")
-        print(f" max file process limit: {self.counter_limit}")
+        print(f" max file process limit: {self.args.counter_limit}")
         print(f" max files processable for base dir: {self.max_files_processed}")
-        print(f" recursive: {self.recursive}")
-        print(f" file glob pattern: {self.inclusion_pattern}")
-        print(f" include gifs: {self.include_gifs}")
+        print(f" recursive: {self.args.recursive}")
+        print(f" file glob pattern: {self.args.inclusion_pattern}")
+        print(f" include gifs: {self.args.include_gifs}")
         print(f" file embeddings filepath: {self._file_embeddings_filepath}")
-        print(f" overwrite image data: {self.overwrite}")
+        print(f" overwrite image data: {self.args.overwrite}")
         print("|--------------------------------------------------------------------|\n\n")
 
     def _set_face_cascade(self):
@@ -161,11 +155,11 @@ class CompareEmbedding:
         For all the found files in the base directory, either load the cached
         image data or extract new data and add it to the cache.
         '''
-        if self.overwrite or not os.path.exists(self._file_embeddings_filepath):
+        if self.args.overwrite or not os.path.exists(self._file_embeddings_filepath):
             if not os.path.exists(self._file_embeddings_filepath):
                 print("Image data not found so creating new cache"
                       + " - this may take a while.")
-            elif self.overwrite:
+            elif self.args.overwrite:
                 print("Overwriting image data caches - this may take a while.")
             self._file_embeddings_dict = {}
             self._file_faces_dict = {}
@@ -188,10 +182,10 @@ class CompareEmbedding:
         counter = 0
 
         for f in self.files:
-            if is_invalid_file(f, counter, self.is_run_search, self.inclusion_pattern):
+            if is_invalid_file(f, counter, self.is_run_search, self.args.inclusion_pattern):
                 continue
 
-            if counter > self.counter_limit:
+            if counter > self.args.counter_limit:
                 break
 
             if f in self._file_embeddings_dict:
@@ -237,7 +231,7 @@ class CompareEmbedding:
 
         # Save image file data
 
-        if self.has_new_file_data or self.overwrite:
+        if self.has_new_file_data or self.args.overwrite:
             with open(self._file_embeddings_filepath, "wb") as store:
                 pickle.dump(self._file_embeddings_dict, store)
             if self._faceCascade:
@@ -246,7 +240,7 @@ class CompareEmbedding:
             self._file_embeddings_dict = None
             self._file_faces_dict = None
             if self.verbose:
-                if self.overwrite:
+                if self.args.overwrite:
                     print("Overwrote any pre-existing image data at:")
                 else:
                     print("Updated image data saved to: ")
@@ -426,7 +420,7 @@ class CompareEmbedding:
         files_grouped - Keys are the file indexes, values are tuple of the group index and diff score.
         file_groups - Keys are the group indexes, values are dicts with keys as the file in the group, values the diff score
         '''
-        overwrite = self.overwrite or not store_checkpoints
+        overwrite = self.args.overwrite or not store_checkpoints
         print(f"Store checkpoints: {store_checkpoints}")
         compare_result = CompareResult.load(self.base_dir, self._files_found, overwrite=overwrite)
         if compare_result.is_complete:
@@ -698,7 +692,7 @@ class CompareEmbedding:
         search_text_index = config.text_embedding_search_presets.index(search_text)
         count = 0
 
-        if len(self.segregation_map) == 0 or self.overwrite: # TODO different boolean for this cache
+        if len(self.segregation_map) == 0 or self.args.overwrite: # TODO different boolean for this cache
             for preset in config.text_embedding_search_presets:
                 self._tokenize_text(preset, embeddings)
 
