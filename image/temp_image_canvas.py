@@ -10,6 +10,9 @@ from utils.config import config
 from utils.constants import ImageGenerationType
 from utils.app_style import AppStyle
 from utils.utils import Utils
+from utils.translations import I18N
+
+_ = I18N._
 
 class ResizingCanvas(Canvas):
     '''
@@ -72,7 +75,9 @@ class TempImageCanvas:
         self.master.bind("<Shift-Escape>", self.close_windows)
         self.master.bind("<Shift-D>", lambda event: self.app_actions.get_image_details(image_path=self.image_path))
         # TODO come up with a solution that allows for the set image generation type in ImageDetails class to be used instead of hardcoding
-        self.master.bind("<Shift-U>", lambda event: self.app_actions.run_image_generation(_type=ImageGenerationType.CONTROL_NET))
+        self.master.bind("<Shift-I>", lambda event: self.app_actions.run_image_generation(_type=ImageGenerationType.CONTROL_NET))
+        self.master.bind("<Button-3>", lambda event: self.app_actions.run_image_generation(_type=ImageGenerationType.CONTROL_NET))
+        self.master.bind("<Shift-Y>", lambda event: self.app_actions.set_marks_from_downstream_related_images(image_to_use=self.image_path))
         self.master.bind("<Control-m>", self.open_move_marks_window)
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
         self.master.bind("<Control-r>", self.run_previous_marks_action)
@@ -85,19 +90,20 @@ class TempImageCanvas:
     def close_windows(self, event=None):
         self.master.destroy()
 
-    def create_image(self, image_path):
+    def create_image(self, image_path, extra_text=None):
 #        self.canvas.clear_image()
         self.image_path = image_path
         TempImageCanvas.image = self.get_image_to_fit(image_path)
         self.canvas.create_image_center(TempImageCanvas.image)
-        TempImageCanvas.top_level.title(image_path)
+        title = image_path if extra_text is None else image_path + " - " + extra_text
+        TempImageCanvas.top_level.title(title)
         self.master.update()
         self.master.after(1, lambda: self.master.focus_force())
 
     def clear_image(self):
         self.canvas.clear_image()
         self.image_path = None
-        TempImageCanvas.top_level.title("Open a new related image with Shift+R on main window")
+        TempImageCanvas.top_level.title(_("Open a new related image with Shift+R on main window"))
 
     def get_image_to_fit(self, filename) -> ImageTk.PhotoImage:
         '''

@@ -352,6 +352,10 @@ msgstr "Moved search image to "
 msgid "Running image gen: "
 msgstr "Running image gen: "
 
+#: .\app.py:1499
+msgid "Error running image generation:"
+msgstr "Error running image generation:"
+
 #: .\app.py:1504
 msgid "Running refacdir"
 msgstr "Running refacdir"
@@ -532,6 +536,10 @@ msgstr "MOVE"
 #: .\files\marked_file_mover.py:182
 msgid "COPY"
 msgstr "COPY"
+
+#: .\files\marked_file_mover.py:186
+msgid "DELETE"
+msgstr "DELETE"
 
 #: .\files\marked_file_mover.py:186 .\files\recent_directory_window.py:136
 msgid "Add directories from parent"

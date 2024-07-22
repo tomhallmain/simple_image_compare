@@ -1,11 +1,12 @@
+from enum import Enum
 import re
 import os
 import shutil
 import subprocess
 import sys
 
-
 from utils.running_tasks_registry import start_thread
+
 
 class Utils:
     @staticmethod
@@ -93,7 +94,6 @@ class Utils:
 
         return new_text
 
-
     @staticmethod
     def get_relative_dirpath_split(base_dir, filepath):
     # split the filepath from base directory
@@ -111,6 +111,27 @@ class Utils:
 
         return relative_dirpath, basename
 
+    @staticmethod
+    def get_relative_dirpath(base_dir, levels=1):
+        # get relative dirpath from base directory
+        if "/" not in base_dir and "\\" not in base_dir:
+            return base_dir
+        if "/" in base_dir:
+            # temp = base_dir
+            # if "/" == base_dir[0]:
+            #     temp = base_dir[1:]
+            dir_parts = base_dir.split("/")
+        else:
+            dir_parts = base_dir.split("\\")
+        if len(dir_parts) <= levels:
+            return base_dir
+        relative_dirpath = ""
+        for i in range(len(dir_parts) - 1, len(dir_parts) - levels - 1, -1):
+            if relative_dirpath == "":
+                relative_dirpath = dir_parts[i]
+            else:
+                relative_dirpath = dir_parts[i] + "/" + relative_dirpath
+        return relative_dirpath
 
     @staticmethod
     # NOTE: Maybe want to raise Exception if either existing filepath or target dir are not valid
@@ -171,3 +192,23 @@ class Utils:
                 return _locale[:_locale.index("_")]
         # TODO support finding default languages on other platforms
         return 'en'
+
+    @staticmethod
+    def modifier_key_pressed(event, keys_to_check=[]):
+        if not event:
+            return (False)
+        is_pressed = []
+        for key in keys_to_check:
+            if not isinstance(key, ModifierKey):
+                raise Exception("Invalid modifier key: " + str(key))
+            is_pressed.append(event.state & key.value != 0)
+        if len(keys_to_check) == 1:
+            return is_pressed[0]
+        return tuple(is_pressed)
+
+
+
+class ModifierKey(Enum):
+    SHIFT = 0x1
+    CTRL = 0x4
+    ALT = 0x20000

@@ -7,6 +7,7 @@ from tkinter.ttk import Button
 from utils.app_style import AppStyle
 from utils.config import config
 from utils.translations import I18N
+from utils.utils import ModifierKey, Utils
 
 _ = I18N._
 
@@ -17,6 +18,15 @@ class RecentDirectories:
     @staticmethod
     def set_recent_directories(directories):
         RecentDirectories.directories = list(directories)
+
+    @staticmethod
+    def set_recent_directory(_dir=dir):
+        if len(RecentDirectories.directories) > 0:
+            if RecentDirectories.directories[0] == _dir:
+                return
+            if _dir in RecentDirectories.directories:
+                RecentDirectories.directories.remove(_dir)
+        RecentDirectories.directories.insert(0, _dir)
 
 
 class RecentDirectoryWindow():
@@ -184,7 +194,6 @@ class RecentDirectoryWindow():
                 initialdir=starting_target, title=_("Set image comparison directory"))
         return _dir, False
 
-
     def handle_directory(self, event=None, _dir=None):
         """
         Have to call this when user is setting a new directory as well, in which case _dir will be None.
@@ -199,16 +208,12 @@ class RecentDirectoryWindow():
             self.close_windows()
             raise Exception("Failed to set target directory to receive marked files.")
         if target_was_valid and _dir is not None:
-            if _dir in RecentDirectories.directories:
-                RecentDirectories.directories.remove(_dir)
-            RecentDirectories.directories.insert(0, _dir)
+            RecentDirectories.set_recent_directory(_dir)
             return _dir
 
         _dir = os.path.normpath(_dir)
         # NOTE don't want to sort here, instead keep the most recent directories at the top
-        if _dir in RecentDirectories.directories:
-            RecentDirectories.directories.remove(_dir)
-        RecentDirectories.directories.insert(0, _dir)
+        RecentDirectories.set_recent_directory(_dir)
         self.set_directory(_dir=_dir)
 
     def set_directory(self, event=None, _dir=None):
@@ -336,9 +341,8 @@ class RecentDirectoryWindow():
         The idea is the user can filter the directories using keypresses, then press enter to
         do the action on the first filtered directory.
         """
-#        shift_key_pressed = (event.state & 0x1) != 0
-        control_key_pressed = (event.state & 0x4) != 0
-        alt_key_pressed = (event.state & 0x20000) != 0
+        control_key_pressed, alt_key_pressed = Utils.modifier_key_pressed(
+            event, keys_to_check=[ModifierKey.CTRL, ModifierKey.ALT])
         if alt_key_pressed:
             penultimate_dir = RecentDirectoryWindow.get_history_directory(start_index=1)
             if penultimate_dir is not None and os.path.isdir(penultimate_dir):

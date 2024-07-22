@@ -20,6 +20,7 @@ from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
 from compare.compare import get_valid_file
+from compare.compare_args import CompareArgs
 from compare.compare_wrapper import CompareWrapper
 from extensions.refacdir_client import RefacDirClient
 from extensions.sd_runner_client import SDRunnerClient
@@ -35,7 +36,7 @@ from utils.constants import Mode, CompareMode
 from utils.help_and_config import HelpAndConfig
 from utils.running_tasks_registry import periodic, start_thread
 from utils.translations import I18N
-from utils.utils import Utils
+from utils.utils import Utils, ModifierKey
 from image.image_details import ImageDetails # must import after config because of dynamic import
 
 _ = I18N._
@@ -251,6 +252,7 @@ class App():
             "show_next_image": self.show_next_image,
             "get_image_details": self.get_image_details,
             "run_image_generation": self.run_image_generation,
+            "set_marks_from_downstream_related_images": self.set_marks_from_downstream_related_images,
             "go_to_file": self.go_to_file,
             "set_base_dir": self.set_base_dir,
             "get_base_dir": self.get_base_dir,
@@ -429,9 +431,12 @@ class App():
         self.master.bind("<Shift-M>", self.add_or_remove_mark_for_current_image)
         self.master.bind("<Shift-N>", self._add_all_marks_from_last_or_current_group)
         self.master.bind("<Shift-G>", self.go_to_mark)
+        self.master.bind("<Shift-K>", lambda event: ImageDetails.open_temp_image_canvas(self.master, MarkedFiles.last_moved_image, self.app_actions))
         self.master.bind("<Shift-A>", self.set_current_image_run_search)
+        self.master.bind("<Shift-Z>", self.add_current_image_to_negative_search)
         self.master.bind("<Shift-U>", self.run_refacdir)
         self.master.bind("<Shift-I>", lambda event: ImageDetails.run_image_generation_static(self.app_actions))
+        self.master.bind("<Control-Return>", lambda event: ImageDetails.run_image_generation_static(self.app_actions, last_action=True))
         self.master.bind("<Shift-C>", lambda event: MarkedFiles.clear_file_marks(self.toast))
         self.master.bind("<Control-Tab>", self.cycle_windows)
         self.master.bind("<Shift-Escape>", lambda event: self.on_closing() if self.is_secondary() else None)
@@ -467,7 +472,9 @@ class App():
         if not grid_sidebar:
             self.toggle_sidebar()
 
-        if not base_dir:
+        if base_dir:
+            RecentDirectories.set_recent_directory(base_dir)
+        else:
             base_dir = self.load_info_cache()
 
         if base_dir is not None and base_dir != "" and base_dir != "." and os.path.isdir(base_dir):
@@ -641,6 +648,7 @@ class App():
         self.toast(message)
 
     def return_to_browsing_mode(self, event=None):
+        # TODO instead of simply returning, make this method toggle between browsing mode and the last compare mode if a compare has been run
         self.set_mode(Mode.BROWSE)
         self.file_browser.refresh()
         self._set_label_state()
@@ -690,9 +698,9 @@ class App():
 
     def check_many_files(self, window, action="do this action", threshold=2000):
         if window.file_browser.is_slow_total_files(threshold=threshold):
-            res = self.alert(_("Many Files"), f"There are a lot of files in {window.base_dir} and it may take a while" +
+            res = self.alert(_("Many Files"), f"There are a lot of files in {window.base_dir} and it may take a while" + # TODO i18n
                              f" to {action}.\n\nWould you like to proceed?", kind="askokcancel")
-            return res != messagebox.OK and res != True
+            return res != messagebox.OK
         return False
 
     def find_related_images_in_open_window(self, event=None, base_dir=None):
@@ -714,7 +722,7 @@ class App():
         else:
             self.toast(_("No downstream related image(s) found in {0}").format(base_dir))
 
-    def set_marks_from_downstream_related_images(self, event=None, base_dir=None):
+    def set_marks_from_downstream_related_images(self, event=None, base_dir=None, image_to_use=None):
         # TODO some way to tell if the current mark is invalid based on whether the window has been switched, and if so clear it and use the current image instead
         if base_dir is None:
             window, dirs = self.get_other_window_or_self_dir()
@@ -724,7 +732,8 @@ class App():
             base_dir = dirs[0]
         else:
             window = App.get_window(base_dir=base_dir)
-        image_to_use = self.img_path if len(MarkedFiles.file_marks) != 1 else MarkedFiles.file_marks[0]
+        if image_to_use is None:
+            image_to_use = self.img_path if len(MarkedFiles.file_marks) != 1 else MarkedFiles.file_marks[0]
         if self.check_many_files(window, action="find related images"):
             return
         downstream_related_images = ImageDetails.get_downstream_related_images(image_to_use, base_dir, self.app_actions, force_refresh=True)
@@ -803,8 +812,8 @@ class App():
         self.set_base_dir_box.insert(0, self.base_dir)
         self.file_browser.set_directory(self.base_dir)
         # Update settings to those last set for this directory, if found
-        recursive = app_info_cache.get(base_dir, "recursive", default_val=False)
-        sort_by = app_info_cache.get(base_dir, "sort_by", default_val=self.sort_by.get())
+        recursive = app_info_cache.get(self.base_dir, "recursive", default_val=False)
+        sort_by = app_info_cache.get(self.base_dir, "sort_by", default_val=self.sort_by.get())
         if recursive != self.image_browse_recurse_var.get():
             self.image_browse_recurse_var.set(recursive)
             self.file_browser.set_recursive(recursive)
@@ -823,6 +832,8 @@ class App():
             else:
                 self.show_next_image()
             self._set_label_state()
+        relative_dirpath = Utils.get_relative_dirpath(self.base_dir, levels=2)
+        self.master.title(_(" Simple Image Compare ") + "- " + relative_dirpath)
         self.master.update()
 
     def open_recent_directory_window(self, event=None, open_gui=True, run_compare_image=None, extra_callback_args=None):
@@ -973,8 +984,7 @@ class App():
         Execute a new image search from the provided search image.
         '''
         if self.mode == Mode.BROWSE:
-            alt_key_pressed = event and (event.state & 0x20000) != 0
-            if alt_key_pressed:
+            if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.ALT]):
                 random_image = self.file_browser.random_file()
                 if os.path.isfile(random_image):
                     self.create_image(random_image) # sets current image first
@@ -994,6 +1004,15 @@ class App():
                 filepath = filepath[len(base_dir)+1:]
             self.search_image.set(filepath)
             self.set_search_image()
+        else:
+            self.alert(_("Error"), _("Failed to get active image filepath"), kind="error")
+
+    def add_current_image_to_negative_search(self, event=None):
+        filepath = self.get_active_image_filepath()
+        if filepath:
+            base_dir = self.get_base_dir()
+            if filepath.startswith(base_dir):
+                filepath = filepath[len(base_dir)+1:]
         else:
             self.alert(_("Error"), _("Failed to get active image filepath"), kind="error")
 
@@ -1122,20 +1141,20 @@ class App():
 
     def _run_compare(self, find_duplicates=False, searching_image=False, search_text=None, search_text_negative=None) -> None:
         '''
-        Execute operations on the Compare object in any mode. Create a new
-        Compare object if needed.
+        Execute operations on the Compare object in any mode. Create a new Compare object if needed.
         '''
-        recursive = self.file_browser.recursive
-        search_file_path = self.get_search_file_path() if searching_image else None
-        counter_limit = self.get_counter_limit()
-        compare_faces = self.compare_faces.get()
-        overwrite = self.overwrite.get()
-        compare_threshold = self.get_compare_threshold()
-        inclusion_pattern = self.get_inclusion_pattern()
-        store_checkpoints = self.store_checkpoints.get()
+        args = CompareArgs(self.get_base_dir(), self.mode, recursive=self.file_browser.recursive, searching_image=searching_image)
+        if searching_image:
+            args.search_file_path = self.get_search_file_path()
+        args.counter_limit = self.get_counter_limit()
+        args.compare_faces = self.compare_faces.get()
+        args.overwrite = self.overwrite.get()
+        args.compare_threshold = self.get_compare_threshold()
+        args.inclusion_pattern = self.get_inclusion_pattern()
+        args.store_checkpoints = self.store_checkpoints.get()
         listener = ProgressListener(update_func=self.display_progress)
-        self.compare_wrapper.run(self.get_base_dir(), self.mode, recursive, searching_image, search_file_path, search_text, search_text_negative,
-                                 find_duplicates, counter_limit, compare_threshold, compare_faces, inclusion_pattern, overwrite, listener, store_checkpoints)
+        self.compare_wrapper.run(self.get_base_dir(), self.mode, args.recursive, searching_image, args.search_file_path, search_text, search_text_negative,
+                                 find_duplicates, args.counter_limit, args.compare_threshold, args.compare_faces, args.inclusion_pattern, args.overwrite, listener, args.store_checkpoints)
 
     def _set_toggled_view_matches(self):
         self.is_toggled_view_matches = True
@@ -1175,7 +1194,10 @@ class App():
             self._check_marks()
             files = self.file_browser.select_series(start_file=MarkedFiles.file_marks[-1], end_file=self.img_path)
         else:
-            files = list(self.compare_wrapper.files_matched)
+            if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.ALT]):
+                files = list(self.compare_wrapper.files_matched) # Select all file matches
+            else:
+                files = self.compare_wrapper.select_series(start_file=MarkedFiles.file_marks[-1], end_file=self.img_path)
         for _file in files:
             if not _file in MarkedFiles.file_marks:
                 MarkedFiles.file_marks.append(_file)
@@ -1183,7 +1205,7 @@ class App():
 
     def go_to_mark(self, event=None):
         self._check_marks()
-        alt_key_pressed = event and (event.state & 0x20000) != 0
+        alt_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.ALT])
         MarkedFiles.mark_cursor += -1 if alt_key_pressed else 1
         if MarkedFiles.mark_cursor >= len(MarkedFiles.file_marks):
             MarkedFiles.mark_cursor = 0
@@ -1322,10 +1344,11 @@ class App():
 
     def home(self, event=None):
         if self.mode == Mode.BROWSE:
-            shift_key_pressed = event and (event.state & 0x1) != 0
             self.file_browser.refresh()
-            if shift_key_pressed:
+            if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT]):
                 self.create_image(self.file_browser.last_file())
+                if len(MarkedFiles.file_marks) == 1 and self.file_browser.has_file(MarkedFiles.file_marks[0]):
+                    self._add_all_marks_from_last_or_current_group()
             else:
                 self.create_image(self.file_browser.next_file())
             self.master.update()
@@ -1335,13 +1358,13 @@ class App():
             self.compare_wrapper.set_current_group()
 
     def page_up(self, event=None):
-        shift_key_pressed = event is not None and (event.state & 0x1) != 0
+        shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
         next_file = self.file_browser.page_up(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_up(half_length=shift_key_pressed)
         self.create_image(next_file)
         self.master.update()
 
     def page_down(self, event=None):
-        shift_key_pressed = event is not None and (event.state & 0x1) != 0
+        shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
         next_file = self.file_browser.page_down(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_down(half_length=shift_key_pressed)
         self.create_image(next_file)
         self.master.update()
@@ -1490,13 +1513,16 @@ class App():
             except KeyError as e:
                 pass # The group may have been removed before update_groups_for_removed_file was called on the last file in it
 
-    def run_image_generation(self, event=None, _type=None):
+    def run_image_generation(self, event=None, _type=None, image_path=None):
         self.sd_runner_client.start()
+        if image_path is None:
+            image_path = self.img_path
         try:
-            self.sd_runner_client.run(_type, self.img_path)
+            self.sd_runner_client.run(_type, image_path)
+            ImageDetails.previous_image_generation_image = image_path
             self.toast(_("Running image gen: ") + str(_type))
         except Exception as e:
-            self.alert(_("Warning"), _("Error running image generation:\n") + str(e), kind="error")
+            self.alert(_("Warning"), _("Error running image generation:") + "\n" + str(e), kind="error")
 
     def run_refacdir(self, event=None):
         self.refacdir_client.start()

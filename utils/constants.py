@@ -16,6 +16,7 @@ class Mode(Enum):
 class CompareMode(Enum):
     COLOR_MATCHING = _("Color Matching")
     CLIP_EMBEDDING = _("CLIP Embedding")
+#    PROMPTS = _("Prompts")
 
     def __str__(self):
         return self.value

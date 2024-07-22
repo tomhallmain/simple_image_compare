@@ -14,7 +14,7 @@ from utils.app_style import AppStyle
 from utils.config import config
 from utils.constants import Mode
 from utils.translations import I18N
-from utils.utils import Utils
+from utils.utils import Utils, ModifierKey
 
 _ = I18N._
 
@@ -38,6 +38,7 @@ class MarkedFiles():
     mark_cursor = -1
     mark_target_dirs = []
     previous_marks = []
+    last_moved_image = None
     last_set_target_dir = None
     file_browser = None # a file browser for test_is_in_directory
 
@@ -181,7 +182,7 @@ class MarkedFiles():
             self.add_directory_copy_btn = None
             self.add_btn("add_directory_copy_btn", _("COPY"), copy_handler_new_dir, column=2)
             self.delete_btn = None
-            self.add_btn("delete_btn", "DELETE", self.delete_marked_files, column=3)
+            self.add_btn("delete_btn", _("DELETE"), self.delete_marked_files, column=3)
             self.set_target_dirs_from_dir_btn = None
             self.add_btn("set_target_dirs_from_dir_btn", _("Add directories from parent"), self.set_target_dirs_from_dir, column=4)
             self.clear_target_dirs_btn = None
@@ -296,7 +297,7 @@ class MarkedFiles():
         """
         Move or copy the marked files to the target directory.
 
-        TODO fix i18n for this method
+        TODO i18n fix for this method
         """
         MarkedFiles.is_performing_action = True
         some_files_already_present = False
@@ -309,15 +310,18 @@ class MarkedFiles():
             print(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}")
         exceptions = {}
         invalid_files = []
+        set_last_moved_file = False
         for marked_file in MarkedFiles.file_marks:
             if MarkedFiles.is_cancelled_action:
                 break
             new_filename = os.path.join(target_dir, os.path.basename(marked_file))
+            if not set_last_moved_file:
+                MarkedFiles.last_moved_image = new_filename
+                set_last_moved_file = True
             try:
                 move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
                 print(f"{action_part2} file to {new_filename}")
                 MarkedFiles.previous_marks.append(marked_file)
-                has_moved_one_file = True
             except Exception as e:
                 exceptions[marked_file] = (str(e), new_filename)
                 if not os.path.exists(marked_file):
@@ -540,9 +544,8 @@ class MarkedFiles():
 
         TODO: handle case of multiple filtered directories better, instead of just selecting the first
         """
-        shift_key_pressed = (event.state & 0x1) != 0
-        control_key_pressed = (event.state & 0x4) != 0
-        alt_key_pressed = (event.state & 0x20000) != 0
+        shift_key_pressed, control_key_pressed, alt_key_pressed = Utils.modifier_key_pressed(
+            event, keys_to_check=[ModifierKey.SHIFT, ModifierKey.CTRL, ModifierKey.ALT])
         move_func = Utils.copy_file if shift_key_pressed else Utils.move_file
         if alt_key_pressed:
             penultimate_action = FileActionsWindow.get_history_action(start_index=1)
@@ -649,8 +652,8 @@ class MarkedFiles():
 
 
     def do_action_test_is_in_directory(self, event):
-        control_key_pressed = (event.state & 0x4) != 0
-        alt_key_pressed = (event.state & 0x20000) != 0
+        control_key_pressed, alt_key_pressed = Utils.modifier_key_pressed(
+            event, keys_to_check=[ModifierKey.CTRL, ModifierKey.ALT])
         target_dir = None
         if alt_key_pressed:
             penultimate_action = FileActionsWindow.get_history_action(start_index=1)
@@ -674,8 +677,7 @@ class MarkedFiles():
         target_dir = self.handle_target_directory(target_dir=target_dir)
         if config.debug and self.filter_text is not None and self.filter_text.strip() != "":
             print(f"Filtered by string: {self.filter_text}")
-        shift_key_pressed = (event.state & 0x1) != 0
-        if shift_key_pressed:
+        if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT]):
             self.find_is_downstream_related_image_in_directory(target_dir=target_dir)
         else:
             some_files_already_present = MarkedFiles.test_in_directory_static(self.app_actions, target_dir=target_dir, single_image=self.single_image)

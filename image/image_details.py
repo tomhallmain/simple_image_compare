@@ -39,6 +39,7 @@ class ImageDetails():
     downstream_related_images_cache = {}
     downstream_related_image_browser = FileBrowser()
     image_generation_mode = ImageGenerationType.CONTROL_NET
+    previous_image_generation_image = None
 
     def __init__(self, parent_master, master, image_path, index_text, app_actions, do_refresh=True):
         self.parent_master = parent_master
@@ -255,6 +256,12 @@ class ImageDetails():
             if not related_image_path_found or not os.path.isfile(related_image_path):
                 return
             print(f"{image_path} - Possibly related image {related_image_path} found")
+        ImageDetails.open_temp_image_canvas(master=master, related_image_path=related_image_path, app_actions=app_actions)
+
+    @staticmethod
+    def open_temp_image_canvas(master=None, related_image_path=None, app_actions=None):
+        if related_image_path is None:
+            return
         base_dir = os.path.dirname(related_image_path)
         if app_actions.get_window(base_dir=base_dir, img_path=related_image_path, refocus=True) is not None:
             return
@@ -342,8 +349,11 @@ class ImageDetails():
         ImageDetails.run_image_generation_static(self.app_actions)
 
     @staticmethod
-    def run_image_generation_static(app_actions):
-        app_actions.run_image_generation(_type=ImageDetails.image_generation_mode)
+    def run_image_generation_static(app_actions, last_action=False):
+        if last_action and ImageDetails.previous_image_generation_image is not None:
+            app_actions.run_image_generation(_type=ImageDetails.image_generation_mode, image_path=ImageDetails.previous_image_generation_image)
+        else:
+            app_actions.run_image_generation(_type=ImageDetails.image_generation_mode)
 
 
     def update_tags(self):

@@ -12,6 +12,7 @@ class AppActions:
         self.show_next_image = actions["show_next_image"]
         self.get_image_details = actions["get_image_details"]
         self.run_image_generation = actions["run_image_generation"]
+        self.set_marks_from_downstream_related_images = actions["set_marks_from_downstream_related_images"]
         self.set_base_dir = actions["set_base_dir"]
         self.get_base_dir = actions["get_base_dir"]
         self.go_to_file = actions["go_to_file"]

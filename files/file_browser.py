@@ -80,6 +80,9 @@ class FileBrowser:
     def has_files(self):
         return len(self._files) > 0
 
+    def has_file(self, _file):
+        return _file in self.filepaths
+
     def count(self):
         return len(self._files)
 

@@ -43,7 +43,7 @@ def periodic(registry_attr_name):
     def scheduler(fcn):
         async def wrapper(*args, **kwargs):
             registry_id = getattr(getattr(args[0], registry_attr_name), "registry_id")
-            print(f'Started periodic task: {running_tasks_registry.name(registry_id)}')
+            # print(f'Started periodic task: {running_tasks_registry.name(registry_id)}')
             while True:
                 if registry_id is not None and not running_tasks_registry.is_running(registry_id):
                     print(f"Ended periodic task: {running_tasks_registry.name(registry_id)}")

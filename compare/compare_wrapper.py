@@ -188,6 +188,19 @@ class CompareWrapper:
             return 1
         return paging_length
 
+    def select_series(self, start_file, end_file):
+        if start_file not in self.files_matched:
+            raise Exception('Start file not in list of matches')
+        if end_file not in self.files_matched:
+            raise Exception('End file not in list of matches')
+        start_index = self.files_matched.index(start_file)
+        end_index = self.files_matched.index(end_file)
+        if start_index > end_index:
+            selected = self.files_matched[end_index:start_index+1]
+        else:
+            selected = self.files_matched[start_index:end_index+1]
+        return selected
+
     def _requires_new_compare(self, base_dir):
         if not self.has_compare() or self._compare.base_dir != base_dir:
             return True

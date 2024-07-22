@@ -347,8 +347,7 @@ msgid "Running image gen: "
 msgstr ""
 
 #: .\app.py:1499
-msgid ""
-"Error running image generation:\n"
+msgid "Error running image generation:"
 msgstr ""
 
 #: .\app.py:1504
@@ -526,6 +525,10 @@ msgstr ""
 
 #: .\files\marked_file_mover.py:182
 msgid "COPY"
+msgstr ""
+
+#: .\files\marked_file_mover.py:186
+msgid "DELETE"
 msgstr ""
 
 #: .\files\marked_file_mover.py:186 .\files\recent_directory_window.py:136

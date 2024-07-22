@@ -262,7 +262,7 @@ msgstr "Erste sortierte Marke"
 
 #: .\app.py:1198
 msgid "Only one marked file set."
-msgstr "Nur ein markierter Dateisatz."
+msgstr "Es wird nur eine markierte Datei gesetzt"
 
 #: .\app.py:1209
 msgid "Including marks: {0}"
@@ -350,7 +350,11 @@ msgstr "Suchbild verschoben nach "
 
 #: .\app.py:1497
 msgid "Running image gen: "
-msgstr "Laufendes Bild gen: "
+msgstr "Laufende Bilderzeugung: "
+
+#: .\app.py:1499
+msgid "Error running image generation:"
+msgstr "Fehler bei der Bilderzeugung:"
 
 #: .\app.py:1504
 msgid "Running refacdir"
@@ -532,6 +536,10 @@ msgstr "BEWEGEN"
 #: .\files\marked_file_mover.py:182
 msgid "COPY"
 msgstr "KOPIE"
+
+#: .\files\marked_file_mover.py:186
+msgid "DELETE"
+msgstr "L\u00d6SCHEN"
 
 #: .\files\marked_file_mover.py:186 .\files\recent_directory_window.py:136
 msgid "Add directories from parent"
