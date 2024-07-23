@@ -1,7 +1,7 @@
-
+from copy import deepcopy
 
 from utils.config import config
-from utils.constants import Mode
+from utils.constants import CompareMode, Mode
 
 class CompareArgs:
     def __init__(self, base_dir=".", listener=None, mode=Mode.GROUP, recursive=True, searching_image=False,
@@ -28,9 +28,24 @@ class CompareArgs:
         self.match_dims = False
         self.verbose = True
 
-    def _is_new_data_request_required(self, other):
+    def not_searching(self):
+        return (self.search_file_path is None or self.search_file_path.strip() == "") and \
+               (self.search_text is None or self.search_text.strip() == "") and \
+               (self.search_text_negative is None or self.search_text_negative.strip() == "") and \
+               (self.negative_search_file_path is None or self.negative_search_file_path.strip() == "")
+
+    def _is_new_data_request_required(self, other, compare_mode=CompareMode.CLIP_EMBEDDING):
         return (self.threshold != other.threshold
                 or self.counter_limit != other.counter_limit
                 or self.inclusion_pattern != other.inclusion_pattern
                 or self.recursive != other.recursive
+                or (CompareMode.CLIP_EMBEDDING == compare_mode and self.compare_faces != other.compare_faces)
+                        # Unfortunately, this boolean requires a separate method in the CompareEmbedding search case
                 or (not self.overwrite and other.overwrite))
+
+    def clone(self):
+        clone = CompareArgs()
+        for k, v in self.__dict__.items():
+            if not k == "listener":
+                clone.__dict__[k] = deepcopy(v)
+        return clone

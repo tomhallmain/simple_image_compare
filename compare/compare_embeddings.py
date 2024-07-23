@@ -39,6 +39,7 @@ class CompareEmbedding:
     EMBEDDINGS_DATA = "image_embeddings.pkl"
     TOP_COLORS_DATA = "image_top_colors.pkl"
     THRESHHOLD_POTENTIAL_DUPLICATE = config.threshold_potential_duplicate_embedding
+    THRESHHOLD_PROBABLE_MATCH = 0.98
     THRESHHOLD_GROUP_CUTOFF = 4500 # TODO fix this for Embedding case
     TEXT_EMBEDDING_CACHE = {}
 
@@ -104,7 +105,7 @@ class CompareEmbedding:
         self.max_files_processed = min(self.args.counter_limit, len(self.files))
         self.max_files_processed_even = round_up(self.max_files_processed, 200)
 
-        if self.is_run_search:
+        if self.is_run_search and self.compare_faces: # this extra boolean is important in this case.
             if self.search_file_path in self.files:
                 self.files.remove(self.search_file_path)
             self.search_file_index = 0
@@ -293,119 +294,6 @@ class CompareEmbedding:
         else:
             return similars
 
-    def find_similars_to_image(self, search_path, search_file_index):
-        '''
-        Search the numpy array of all known image arrays for similar
-        characteristics to the provide image.
-        '''
-        files_grouped = {}
-        _files_found = list(self._files_found)
-
-        if self.verbose:
-            print("Identifying similar image files...")
-        _files_found.pop(search_file_index)
-        search_file_embedding = self._file_embeddings[search_file_index]
-        file_embeddings = np.delete(self._file_embeddings, search_file_index, 0)
-        embedding_similars = self._compute_embedding_diff(
-            file_embeddings, search_file_embedding, True)
-
-        if self.compare_faces:
-            search_file_faces = self._file_faces[search_file_index]
-            file_faces = np.delete(self._file_faces, search_file_index)
-            face_comparisons = file_faces - search_file_faces
-            face_similars = face_comparisons == 0
-            similars = np.nonzero(embedding_similars[0] * face_similars)
-        else:
-            similars = np.nonzero(embedding_similars[0])
-
-        if config.search_only_return_closest:
-            for _index in similars[0]:
-                files_grouped[_files_found[_index]] = embedding_similars[1][_index]
-            # Sort results by increasing difference score
-            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
-        else:
-            temp = {}
-            count = 0
-            for i in range(len(_files_found)):
-                temp[_files_found[i]] = embedding_similars[1][i]
-            for file, similarity in dict(sorted(temp.items(), key=lambda item: item[1], reverse=True)).items():
-                if count == config.max_search_results:
-                    break
-                files_grouped[file] = similarity
-                count += 1
-            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1], reverse=True))
-
-        if len(files_grouped) > 0:
-            with open(self.search_output_path, "w") as textfile:
-                header = f"Possibly related images to \"{search_path}\":\n"
-                textfile.write(header)
-                if self.verbose:
-                    print(header)
-                for f in files_grouped:
-                    similarity = files_grouped[f]
-                    if not f == search_path:
-                        if similarity > CompareEmbedding.THRESHHOLD_POTENTIAL_DUPLICATE:
-                            line = "DUPLICATE: " + f
-                        elif similarity > 0.98:
-                            line = "PROBABLE MATCH: " + f
-                        else:
-                            line = f"{f} - similarity: {similarity}"
-                        safe_write(textfile, line + "\n")
-                        if self.verbose:
-                            print(line)
-            if self.verbose:
-                print("\nThis output data saved to file at "
-                      + self.search_output_path)
-        elif self.verbose:
-            print("No similar images to \"" + self.search_file_path
-                  + "\" identified with current params.")
-        return {0: files_grouped}
-
-    def _run_search_on_path(self, search_file_path):
-        '''
-        Prepare and begin a search for a provided image file path.
-        '''
-        if (search_file_path is None or search_file_path == ""
-                or search_file_path == self.base_dir):
-            while search_file_path is None:
-                search_file_path = input(
-                    "\nEnter a new file path to search for similars "
-                    + "(enter \"exit\" or press Ctrl-C to quit): \n\n  > ")
-                if search_file_path is not None and search_file_path == "exit":
-                    break
-                search_file_path = get_valid_file(self.base_dir, search_file_path)
-                if search_file_path is None:
-                    print("Invalid filepath provided.")
-                else:
-                    print("")
-
-        # Gather new image data if it was not in the initial list
-
-        if search_file_path not in self._files_found:
-            if self.verbose:
-                print("Filepath not found in initial list - gathering new file data")
-            try:
-                embedding = image_embeddings(search_file_path)
-            except OSError as e:
-                if self.verbose:
-                    print(f"{search_file_path} - {e}")
-                raise AssertionError(
-                    "Encountered an error accessing the provided file path in the file system.")
-
-            self._file_embeddings = np.insert(self._file_embeddings, 0, [embedding], 0)
-            if self.compare_faces:
-                n_faces = self._get_faces_count(search_file_path)
-                self._file_faces = np.insert(self._file_faces, 0, [n_faces], 0)
-            self._files_found.insert(0, search_file_path)
-
-        files_grouped = self.find_similars_to_image(
-            search_file_path, self._files_found.index(search_file_path))
-        search_file_path = None
-        return files_grouped
-
-    def run_search(self):
-        return self._run_search_on_path(self.search_file_path)
-
     def run_comparison(self, store_checkpoints=False):
         '''
         Compare all found image arrays to each other by starting with the
@@ -561,8 +449,128 @@ class CompareEmbedding:
         else:
             return self.run_comparison(store_checkpoints=store_checkpoints)
 
+
+    def find_similars_to_image(self, search_path, search_file_index):
+        '''
+        Search the numpy array of all known image arrays for similar
+        characteristics to the provide image.
+        NOTE Legacy method to allow for compare_faces boolean to be respected.
+        '''
+        files_grouped = {}
+        _files_found = list(self._files_found)
+
+        if self.verbose:
+            print("Identifying similar image files...")
+        _files_found.pop(search_file_index)
+        search_file_embedding = self._file_embeddings[search_file_index]
+        file_embeddings = np.delete(self._file_embeddings, search_file_index, 0)
+        embedding_similars = self._compute_embedding_diff(
+            file_embeddings, search_file_embedding, True)
+
+        if self.compare_faces:
+            search_file_faces = self._file_faces[search_file_index]
+            file_faces = np.delete(self._file_faces, search_file_index)
+            face_comparisons = file_faces - search_file_faces
+            face_similars = face_comparisons == 0
+            similars = np.nonzero(embedding_similars[0] * face_similars)
+        else:
+            similars = np.nonzero(embedding_similars[0])
+
+        if config.search_only_return_closest:
+            for _index in similars[0]:
+                files_grouped[_files_found[_index]] = embedding_similars[1][_index]
+            # Sort results by increasing difference score
+            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
+        else:
+            temp = {}
+            count = 0
+            for i in range(len(_files_found)):
+                temp[_files_found[i]] = embedding_similars[1][i]
+            for file, similarity in dict(sorted(temp.items(), key=lambda item: item[1], reverse=True)).items():
+                if count == config.max_search_results:
+                    break
+                files_grouped[file] = similarity
+                count += 1
+            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1], reverse=True))
+
+        if len(files_grouped) > 0:
+            with open(self.search_output_path, "w") as textfile:
+                header = f"Possibly related images to \"{search_path}\":\n"
+                textfile.write(header)
+                if self.verbose:
+                    print(header)
+                for f in files_grouped:
+                    similarity = files_grouped[f]
+                    if not f == search_path:
+                        if similarity > CompareEmbedding.THRESHHOLD_POTENTIAL_DUPLICATE:
+                            line = "DUPLICATE: " + f
+                        elif similarity > CompareEmbedding.THRESHHOLD_PROBABLE_MATCH:
+                            line = "PROBABLE MATCH: " + f
+                        else:
+                            line = f"{f} - similarity: {similarity}"
+                        safe_write(textfile, line + "\n")
+                        if self.verbose:
+                            print(line)
+            if self.verbose:
+                print("\nThis output data saved to file at "
+                      + self.search_output_path)
+        elif self.verbose:
+            print("No similar images to \"" + self.search_file_path
+                  + "\" identified with current params.")
+        return {0: files_grouped}
+
+    def _run_search_on_path(self, search_file_path):
+        '''
+        Prepare and begin a search for a provided image file path.
+        NOTE Legacy method to allow for compare_faces boolean to be respected.
+        '''
+        if (search_file_path is None or search_file_path == ""
+                or search_file_path == self.base_dir):
+            while search_file_path is None:
+                search_file_path = input(
+                    "\nEnter a new file path to search for similars "
+                    + "(enter \"exit\" or press Ctrl-C to quit): \n\n  > ")
+                if search_file_path is not None and search_file_path == "exit":
+                    break
+                search_file_path = get_valid_file(self.base_dir, search_file_path)
+                if search_file_path is None:
+                    print("Invalid filepath provided.")
+                else:
+                    print("")
+
+        # Gather new image data if it was not in the initial list
+
+        if search_file_path not in self._files_found:
+            if self.verbose:
+                print("Filepath not found in initial list - gathering new file data")
+            try:
+                embedding = image_embeddings(search_file_path)
+            except OSError as e:
+                if self.verbose:
+                    print(f"{search_file_path} - {e}")
+                raise AssertionError(
+                    "Encountered an error accessing the provided file path in the file system.")
+
+            self._file_embeddings = np.insert(self._file_embeddings, 0, [embedding], 0)
+            if self.compare_faces:
+                n_faces = self._get_faces_count(search_file_path)
+                self._file_faces = np.insert(self._file_faces, 0, [n_faces], 0)
+            self._files_found.insert(0, search_file_path)
+
+        files_grouped = self.find_similars_to_image(
+            search_file_path, self._files_found.index(search_file_path))
+        search_file_path = None
+        return files_grouped
+
+    def run_search(self):
+        if self.args.compare_faces:
+            return self._run_search_on_path(self.search_file_path)
+        else:
+            return self.search_multimodal()
+
     def _compute_multiembedding_diff(self, positive_embeddings=[], negative_embeddings=[], threshold=0.0):
         files_grouped = {}
+        normalization_factor = 1
 
         if config.search_only_return_closest:
             _files_found = list(self._files_found)
@@ -573,12 +581,13 @@ class CompareEmbedding:
                 files_grouped[_files_found[_index]] = embedding_similars[1][_index]
             # Sort results by increasing difference score
             files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
+#            return files_grouped
         
         '''
         Generate embedding_similars arrays for both positive and negative embedding
         sets. For the positives, multiply the similarities together. For the negatives
         successively divide the results from the positive multiplications. The end
-        result SHOULD reflect a combined similarity in the appropriate direction for
+        result should reflect a combined similarity in the appropriate direction for
         each set of requested text embeddings.
         '''
 
@@ -587,20 +596,18 @@ class CompareEmbedding:
         for p_emb in positive_embeddings:
             embedding_similars = self._compute_embedding_diff(
                 self._file_embeddings, p_emb, True, threshold=threshold)
-            normalized = embedding_similars[1] / min(embedding_similars[1])
-            if combined_similars is None:
-                combined_similars = normalized
-            else:
-                combined_similars = combined_similars * normalized
+            min_similarity = min(embedding_similars[1])
+            normalization_factor *= min_similarity
+            normalized = embedding_similars[1] / min_similarity
+            combined_similars = normalized if combined_similars is None else combined_similars * normalized
 
         for n_emb in negative_embeddings:
             embedding_similars = self._compute_embedding_diff(
                 self._file_embeddings, n_emb, True, threshold=threshold)
-            normalized = embedding_similars[1] / min(embedding_similars[1])
-            if combined_similars is None:
-                combined_similars = 1 / normalized
-            else:
-                combined_similars = combined_similars / normalized
+            min_similarity = min(embedding_similars[1])
+            normalization_factor /= min_similarity
+            normalized = embedding_similars[1] / min_similarity
+            combined_similars = 1/ normalized if combined_similars is None else combined_similars / normalized
 
         if combined_similars is None:
             raise Exception('No results found.')
@@ -615,69 +622,96 @@ class CompareEmbedding:
             files_grouped[file] = similarity
             count += 1
         files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1], reverse=True))
-        return files_grouped
+        return files_grouped, normalization_factor
 
-    def find_similars_to_text(self, search_text, positive_embeddings, negative_embeddings):
+    def find_similars_to_embeddings(self, positive_embeddings, negative_embeddings):
         '''
-        Search the numpy array of all known image arrays for similar
-        characteristics to the provide image.
+        Search the numpy array of all known image embeddings for similar
+        characteristics to the provided images and texts.
         '''
         files_grouped = {}
 
         if self.verbose:
             print("Identifying similar image files...")
 
-        # NOTE It is much less likely for text to match exactly
-        adjusted_threshold = self.embedding_similarity_threshold / 3
-        files_grouped = self._compute_multiembedding_diff(positive_embeddings, negative_embeddings, adjusted_threshold)
+        if self.args.search_file_path is None and self.args.negative_search_file_path is None:
+            # NOTE It is much less likely for text to match exactly
+            adjusted_threshold = self.embedding_similarity_threshold / 3
+        else:
+            adjusted_threshold = self.embedding_similarity_threshold
+        files_grouped, normalization_factor = self._compute_multiembedding_diff(positive_embeddings, negative_embeddings, adjusted_threshold)
+        adjusted_threshold_duplicate = CompareEmbedding.THRESHHOLD_POTENTIAL_DUPLICATE / normalization_factor
+        adjusted_threshold_match = CompareEmbedding.THRESHHOLD_PROBABLE_MATCH / normalization_factor
 
         if len(files_grouped) > 0:
             with open(self.search_output_path, "w") as textfile:
-                header = f"Possibly related images to \"{search_text}\":\n"
+                header = f"Possibly related images to ("
+                if self.args.search_file_path is not None:
+                    header += f"search file {self.args.search_file_path}, "
+                if self.args.search_text is not None:
+                    header += f"search text \"{self.args.search_text}\", "
+                if self.args.negative_search_file_path is not None:
+                    header += f"negative search file {self.args.negative_search_file_path}, "
+                if self.args.search_text_negative is not None:
+                    header += f"negative search text \"{self.args.search_text_negative}\", "
+                header = header[:-2] + "):\n"
                 textfile.write(header)
                 if self.verbose:
                     print(header)
                 for f in files_grouped:
                     similarity = files_grouped[f]
-                    # Skip duplicate determination here because with text it is very unlikely for duplicates to appear
-                    line = f"{f} - similarity: {similarity}"
+                    # NOTE with text or negative-only searches it is probably impossible for duplicates to appear
+                    if similarity > adjusted_threshold_duplicate:
+                        line = "DUPLICATE: " + f
+                    elif similarity > adjusted_threshold_match:
+                        line = "PROBABLE MATCH: " + f
+                    else:
+                        line = f"{f} - similarity: {similarity}"
                     safe_write(textfile, line + "\n")
                     if self.verbose:
                         print(line)
             if self.verbose:
-                print("\nThis output data saved to file at "
-                      + self.search_output_path)
+                print("\nThis output data saved to file at " + self.search_output_path)
         elif self.verbose:
-            print("No similar images to \"" + search_text
-                  + "\" identified with current params.")
+            print("No related images identified with current params.")
         return {0: files_grouped}
 
-    def search_text(self, search_text, search_text_negative=None):
+    def search_multimodal(self):
         '''
-        Prepare and begin a search for provided search text.
+        Search for provided search images and text.
         '''
 
         if config.text_embedding_search_presets_exclusive \
-                and search_text in config.text_embedding_search_presets:
-            return self.segregate_by_text_with_domain(search_text)
+                and self.args.search_text in config.text_embedding_search_presets:
+            return self.segregate_by_text_with_domain(self.args.search_text)
 
         files_grouped = {0: {}}
         positive_embeddings = []
         negative_embeddings = []
 
-        if search_text is not None and search_text.strip() != "":
-            for text in search_text.split(","):
+        if self.args.search_file_path is not None:
+            self._tokenize_image(self.args.search_file_path, positive_embeddings)
+        
+        if self.args.negative_search_file_path is not None:
+            self._tokenize_image(self.args.negative_search_file_path, negative_embeddings, "negative search image")
+
+        if self.args.search_text is not None and self.args.search_text.strip() != "":
+            for text in self.args.search_text.split(","):
                 self._tokenize_text(text.strip(), positive_embeddings, "positive search text")
 
-        if search_text_negative is not None and search_text_negative.strip() != "":
-            for text in search_text_negative.split(","):
-                self._tokenize_text(text.strip(), negative_embeddings, "negative_search_text")
+        if self.args.search_text_negative is not None and self.args.search_text_negative.strip() != "":
+            for text in self.args.search_text_negative.split(","):
+                self._tokenize_text(text.strip(), negative_embeddings, "negative search text")
 
         if len(positive_embeddings) == 0 and len(negative_embeddings) == 0:
-            print(f"Failed to generate embeddings from search texts. search text = {search_text}, search text negative = {search_text_negative}")
+            print(f"Failed to generate embeddings.\n"
+                  f"search image = {self.args.search_file_path}\n"
+                  f"negative search image = {self.args.negative_search_file_path}\n"
+                  f"search text = {self.args.search_text}\n"
+                  f"search text negative = {self.args.search_text_negative}")
             return files_grouped # TODO better exception handling
     
-        files_grouped = self.find_similars_to_text(search_text, positive_embeddings, negative_embeddings)
+        files_grouped = self.find_similars_to_embeddings(positive_embeddings, negative_embeddings)
         return files_grouped
 
     def segregate_by_text_with_domain(self, search_text, search_text_negative=None, threshold=0.0):
@@ -740,6 +774,18 @@ class CompareEmbedding:
                 print(f"{text} - {e}")
             raise AssertionError(
                 f"Encountered an error generating token embedding for {descriptor}")
+
+    def _tokenize_image(self, image_path, embeddings=[], descriptor="search image"):
+        if self.verbose:
+            print(f"Tokenizing {descriptor}: \"{image_path}\"")
+        try:
+            embedding = image_embeddings(image_path)
+            embeddings.append(embedding)
+        except OSError as e:
+            if self.verbose:
+                print(f"{image_path} - {e}")
+            raise AssertionError(
+                "Encountered an error accessing the provided file path in the file system.")
 
     def _sort_groups(self, file_groups):
         return sorted(file_groups,

@@ -17,6 +17,8 @@ The color matching compare mode is faster than CLIP embedding but less robust. I
 
 When using CLIP embedding compare mode, you can search your images by text - both positive and negative. Commas will break the texts to search into multiple parts, to be combined in a final set of results. If there is a good CLIP signal for the search texts it will likely return the images you are looking for. It will take a while to load the first time as embeddings need to be generated. If a list of preset text searches is defined in your config JSON, you can cycle between them with the dedicated shortcut found below.
 
+If a search image is set simultaneously with search text, its embedding will be factored into the search at a weight equal to a single search text part.
+
 ## Image Browser
 
 The UI can be used as an image file browser. This is especially useful on Windows as the following features are available that the default Windows Photo Viewer application either does not support or makes hard to quickly reconfigure:

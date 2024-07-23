@@ -32,7 +32,7 @@ class RecentDirectories:
 class RecentDirectoryWindow():
     recent_directories = []
     last_set_directory = None
-    last_downstream_comparison_directory = None
+    last_comparison_directory = None
 
     directory_history = []
     MAX_DIRECTORIES = 50
@@ -97,8 +97,11 @@ class RecentDirectoryWindow():
         if extra_callback_args is None or extra_callback_args[0] is None:
             self.downstream_callback = None
             directories_to_add_and_sort_first = []
+            self.callback_args = {}
         else:
-            self.downstream_callback, directories_to_add_and_sort_first = extra_callback_args
+            self.downstream_callback = extra_callback_args[0]
+            directories_to_add_and_sort_first = extra_callback_args[1]
+            self.callback_args = extra_callback_args[2] if len(extra_callback_args) > 2 else {}
         self.app_actions = app_actions
         self.base_dir = os.path.normpath(base_dir)
         self.filter_text = ""
@@ -222,8 +225,8 @@ class RecentDirectoryWindow():
             print(f"Filtered by string: {self.filter_text}")
         RecentDirectoryWindow.update_history(_dir)
         if self.downstream_callback is not None:
-            self.downstream_callback(base_dir=_dir)
-            RecentDirectoryWindow.last_downstream_comparison_directory = _dir
+            self.downstream_callback(base_dir=_dir, **self.callback_args)
+            RecentDirectoryWindow.last_comparison_directory = _dir
         elif self.run_compare_image is None:
             self.app_actions.set_base_dir(base_dir_from_dir_window=_dir)
         elif self.run_compare_image == "":

@@ -185,10 +185,11 @@ class App():
         return None #raise Exception(f"No window found for window id {window_id} or base dir {base_dir}")
 
     @staticmethod
-    def find_window_with_compare():
+    def find_window_with_compare(default_window=None):
         for _app in App.open_windows:
             if _app.compare_wrapper.has_compare():
                 return _app
+        return default_window
 
     def toggle_theme(self, to_theme=None, do_toast=True):
         if (to_theme is None and AppStyle.IS_DEFAULT_THEME) or to_theme == AppStyle.LIGHT_THEME:
@@ -307,14 +308,14 @@ class App():
         self.search_img_path_box.bind("<Return>", self.set_search)
         self.apply_to_grid(self.search_img_path_box, sticky=W)
 
-        self.add_button("search_text_btn", _("Search text (embedding mode)"), self.search_text_embedding)
+        self.add_button("search_text_btn", _("Search text (embedding mode)"), self.set_search)
         self.search_text = tk.StringVar()
         self.search_text_box = self.new_entry(self.search_text)
-        self.search_text_box.bind("<Return>", self.search_text_embedding)
+        self.search_text_box.bind("<Return>", self.set_search)
         self.apply_to_grid(self.search_text_box, sticky=W)
         self.search_text_negative = tk.StringVar()
         self.search_text_negative_box = self.new_entry(self.search_text_negative)
-        self.search_text_negative_box.bind("<Return>", self.search_text_embedding)
+        self.search_text_negative_box.bind("<Return>", self.set_search)
         self.apply_to_grid(self.search_text_negative_box, sticky=W)
 
         self.label_compare_mode = Label(self.sidebar)
@@ -663,6 +664,30 @@ class App():
             self.home()
         self.toast(_("Browsing mode set."))
 
+    def get_other_window_or_self_dir(self, allow_current_window=False, prefer_compare_window=False):
+        if prefer_compare_window:
+            window = App.find_window_with_compare()
+            if window is not None:
+                return window, [window.base_dir]
+        if RecentDirectoryWindow.last_comparison_directory is not None \
+                and os.path.isdir(RecentDirectoryWindow.last_comparison_directory):
+            window = App.get_window(base_dir=RecentDirectoryWindow.last_comparison_directory)
+            if window is not None:
+                return window, [window.base_dir]
+            else:
+                RecentDirectoryWindow.last_comparison_directory = None
+        if len(App.secondary_top_levels) == 0:
+            return self, [self.base_dir] # should be main window in this case
+        window = None
+        other_dirs = []
+        for _app in App.open_windows:
+            if _app is not None and (allow_current_window or _app.window_id != self.window_id) and os.path.isdir(_app.base_dir):
+                window = _app
+                other_dirs.append(_app.base_dir)
+        if len(other_dirs) == 1:
+            return window, other_dirs
+        return None, other_dirs
+
     def get_image_details(self, event=None, image_path=None):
         preset_image_path = True
         if image_path is None:
@@ -748,26 +773,6 @@ class App():
             self.toast(_("{0} file marks set").format(len(downstream_related_images)))
             window.go_to_mark()
             window.canvas.after(1, window.canvas.focus_force())
-
-    def get_other_window_or_self_dir(self):
-        if RecentDirectoryWindow.last_downstream_comparison_directory is not None \
-                and os.path.isdir(RecentDirectoryWindow.last_downstream_comparison_directory):
-            window = App.get_window(base_dir=RecentDirectoryWindow.last_downstream_comparison_directory)
-            if window is not None:
-                return window, [window.base_dir]
-            else:
-                RecentDirectoryWindow.last_downstream_comparison_directory = None
-        if len(App.secondary_top_levels) == 0:
-            return self, [self.base_dir] # should be main window in this case
-        window = None
-        other_dirs = []
-        for _app in App.open_windows:
-            if _app is not None and _app.window_id != self.window_id and os.path.isdir(_app.base_dir):
-                window = _app
-                other_dirs.append(_app.base_dir)
-        if len(other_dirs) == 1:
-            return window, other_dirs
-        return None, other_dirs
 
     def get_help_and_config(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
@@ -918,29 +923,49 @@ class App():
         Set the search image or text using the provided UI values, or prompt the
         user for selection. Set the mode based on the result.
         '''
+        args = CompareArgs()
         image_path = self.get_search_file_path()
+        search_text = self.search_text.get()
+        search_text_negative = self.search_text_negative.get()
+        if search_text.strip() == "":
+            search_text = None
+        if search_text_negative.strip() == "":
+            search_text_negative = None
+        args.search_text = search_text
 
-        if image_path is None or not os.path.isfile(image_path):
-                    #(self.compare_wrapper.search_image_full_path is not None
-                    #   and image_path == self.compare_wrapper.search_image_full_path):
+        # TODO eventually will need a separate box for the negative search file path so that it is not exclusive with negative search file text
+        if search_text_negative and os.path.isfile(search_text_negative.strip()):
+            args.negative_search_file_path = search_text_negative.strip()
+            args.search_text_negative = None
+        else:
+            args.search_text_negative = search_text_negative
+            args.negative_search_file_path = None
+
+        if args.search_text is not None or args.search_text_negative is not None:
+            self.compare_wrapper.validate_compare_mode(CompareMode.CLIP_EMBEDDING, _("Compare mode must be set to Clip embedding to search text embeddings"))
+
+        if image_path is not None and not os.path.isfile(image_path):
             image_path = filedialog.askopenfilename(
                 initialdir=self.get_search_dir(), title=_("Select image file"),
                 filetypes=[("Image files", "*.jpg *.jpeg *.png *.tiff *.gif")])
 
         if image_path is not None and image_path.strip() != "":
-            self.search_image.set(os.path.basename(image_path))
+            if image_path.startswith(self.get_base_dir()):
+                self.search_image.set(os.path.basename(image_path))
             self.search_dir = os.path.dirname(image_path)
+            args.search_file_path = image_path
             self.compare_wrapper.search_image_full_path = image_path
             self.show_searched_image()
 
-        if self.compare_wrapper.search_image_full_path is None or self.compare_wrapper.search_image_full_path == "":
+        if args.not_searching():
             if self.mode != Mode.BROWSE:
                 self.set_mode(Mode.GROUP)
         else:
             self.set_mode(Mode.SEARCH)
 
         self.master.update()
-        self.run_compare(compare_args=CompareArgs(searching_image=True))
+        self.master.focus()
+        self.run_compare(compare_args=args)
 
     def show_searched_image(self) -> None:
         if config.debug:
@@ -985,49 +1010,57 @@ class App():
                 return False
         return self.compare_wrapper.show_next_image(show_alert=show_alert)
 
-    def set_current_image_run_search(self, event=None) -> None:
+    def set_current_image_run_search(self, event=None, base_dir=None) -> None:
         '''
         Execute a new image search from the provided search image.
         '''
+        if base_dir is None:
+            window, dirs = self.get_other_window_or_self_dir(allow_current_window=True, prefer_compare_window=True)
+            if window is None:
+                self.open_recent_directory_window(extra_callback_args=(self.set_current_image_run_search, dirs))
+                return
+            base_dir = dirs[0]
+        else:
+            window = App.get_window(base_dir=base_dir)
         if self.mode == Mode.BROWSE:
             if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.ALT]):
                 random_image = self.file_browser.random_file()
                 if os.path.isfile(random_image):
                     self.create_image(random_image) # sets current image first
-        if self.mode == Mode.SEARCH:
-            if not self.compare_wrapper.has_image_matches:
-                self.alert(_("Search required"), _("No matches found. Search again to find potential matches."))
-                return
-            search_image_path = self.search_image.get()
-            search_image_path = get_valid_file(
-                self.get_base_dir(), search_image_path)
-            if (self.compare_wrapper.files_matched is None or search_image_path == self.compare_wrapper.current_match()):
-                self.alert(_("Already set image"), _("Current image is already the search image."))
         filepath = self.get_active_image_filepath()
         if filepath:
-            base_dir = self.get_base_dir()
-            if filepath.startswith(base_dir):
-                filepath = filepath[len(base_dir)+1:]
-            self.search_image.set(filepath)
-            self.set_search()
+            window._set_image_run_search(filepath)
         else:
             self.alert(_("Error"), _("Failed to get active image filepath"), kind="error")
 
-    def add_current_image_to_negative_search(self, event=None):
+    def _set_image_run_search(self, filepath):
+        base_dir = self.get_base_dir()
+        if filepath.startswith(base_dir):
+            filepath = filepath[len(base_dir)+1:]
+        self.search_image.set(filepath)
+        self.set_search()
+
+    def add_current_image_to_negative_search(self, event=None, base_dir=None):
         filepath = self.get_active_image_filepath()
         if filepath:
-            window = App.find_window_with_compare()
-            if window:
-                window.negative_image_search(filepath)
+            if base_dir is None:
+                window, dirs = self.get_other_window_or_self_dir(allow_current_window=True, prefer_compare_window=True)
+                if window is None:
+                    self.open_recent_directory_window(extra_callback_args=(self.add_current_image_to_negative_search, dirs))
+                    return
+                base_dir = dirs[0]
             else:
-                self.negative_image_search(filepath)
+                window = App.get_window(base_dir=base_dir)
+            window.negative_image_search(filepath)
         else:
             self.alert(_("Error"), _("Failed to get active image filepath"), kind="error")
 
     def negative_image_search(self, filepath):
         args = self.compare_wrapper.get_args()
-        args.negative_search_file_paths = filepath
-        # TODO finish this once search consolidation is implemented
+        args.negative_search_file_path = filepath
+        self.search_text_negative_box.delete(0, "end")
+        self.search_text_negative_box.insert(0, filepath)
+        self.set_search()
 
     def create_image(self, image_path, extra_text=None) -> None:
         '''
@@ -1160,8 +1193,6 @@ class App():
         args.base_dir = self.get_base_dir()
         args.mode = self.mode
         args.recursive = self.file_browser.recursive
-        if args.searching_image:
-            args.search_file_path = self.get_search_file_path()
         args.counter_limit = self.get_counter_limit()
         args.compare_faces = self.compare_faces.get()
         args.overwrite = self.overwrite.get()
@@ -1173,16 +1204,6 @@ class App():
 
     def _set_toggled_view_matches(self):
         self.is_toggled_view_matches = True
-
-    def search_text_embedding(self, event=None):
-        self.compare_wrapper.validate_compare_mode(CompareMode.CLIP_EMBEDDING, _("Compare mode must be set to Clip embedding to search text embeddings"))
-        search_text = self.search_text.get()
-        search_text_negative = self.search_text_negative.get()
-        if search_text.strip() == "" and search_text_negative.strip() == "":
-            self.alert(_("Invalid search text"), _("Search text must be set"), kind="warning")
-            return
-        self.run_compare(compare_args=CompareArgs(search_text=search_text, search_text_negative=search_text_negative))
-        self.master.focus()
 
     def add_or_remove_mark_for_current_image(self, event=None, show_toast=True):
         if self.delete_lock:
@@ -1344,7 +1365,7 @@ class App():
                 self.search_text_box.insert(0, next_text_embedding_search_preset)
 
             self.master.update()
-            self.search_text_embedding()
+            self.set_search()
 
     def cycle_windows(self, event=None):
         if App.window_index >= len(App.open_windows):
@@ -1552,7 +1573,6 @@ class App():
                 app_info_cache.set_meta("base_dir", base_dir)
             if self.img_path and self.img_path != "":
                 app_info_cache.set(base_dir, "image_cursor", os.path.basename(self.img_path))
-#                print(f"Stored image cursor: {os.path.basename(self.img_path)}") # TODO remove
             app_info_cache.set(base_dir, "recursive", self.file_browser.is_recursive())
             app_info_cache.set(base_dir, "sort_by", str(self.file_browser.get_sort_by()))
         app_info_cache.set_meta("recent_directories", RecentDirectories.directories)
