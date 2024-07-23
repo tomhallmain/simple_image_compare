@@ -72,7 +72,7 @@ class MarkedFiles():
         for f in MarkedFiles.previous_marks:
             if f not in MarkedFiles.file_marks and os.path.exists(f):
                 MarkedFiles.file_marks.append(f)
-        toast_callback(_("Set current marks from previous.") + "\n" + _("_Total set: %s").format(len(MarkedFiles.file_marks)))
+        toast_callback(_("Set current marks from previous.") + "\n" + _("Total set: {0}").format(len(MarkedFiles.file_marks)))
 
     @staticmethod
     def run_previous_action(app_actions):

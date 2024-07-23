@@ -489,7 +489,7 @@ msgid "Set current marks from previous."
 msgstr "Set current marks from previous."
 
 #: .\files\marked_file_mover.py:75
-msgid "_Total set: %s"
+msgid "Total set: {0}"
 msgstr "Total set: {0}"
 
 #: .\files\marked_file_mover.py:100 .\files\marked_file_mover.py:132
