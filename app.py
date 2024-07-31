@@ -52,6 +52,7 @@ _ = I18N._
 ### TODO custom frame class for sidebar to hold all the buttons
 ### TODO compare window (only compare a set of images from directory, sorted by some logic)
 ### TODO drag and drop images to auto-set directory and image
+### TODO mechanism to temporarily hide images while in directory, without marking them
 
 ### TODO replace restored files to compare if present after previous deletion
 
@@ -153,7 +154,7 @@ class App():
                     if image_path is not None and image_path != "":
                         if do_search:
                             _app.search_img_path_box.insert(0, image_path)
-                            _app.set_search_image()
+                            _app.set_search()
                         else:
                             _app.go_to_file(search_text=image_path)
                     _app.canvas.after(1, lambda: _app.canvas.focus_force())
@@ -464,6 +465,7 @@ class App():
         self.master.bind("<Control-s>", self.next_text_embedding_preset)
         self.master.bind("<Control-b>", self.return_to_browsing_mode)
         self.master.bind("<Home>", self.home)
+        self.master.bind("<End>", lambda event: self.home(last_file=True))
         self.master.bind("<Prior>", self.page_up)
         self.master.bind("<Next>", self.page_down)
 
@@ -715,8 +717,6 @@ class App():
                 self.app_actions.image_details_window.update_image_details(image_path, index_text)
         else:
             top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
-            top_level.title("Image Details")
-            top_level.geometry("600x400")
             try:
                 image_details_window = ImageDetails(self.master, top_level, image_path, index_text,
                                                     self.app_actions, do_refresh=not preset_image_path)
@@ -731,7 +731,7 @@ class App():
         if window.file_browser.is_slow_total_files(threshold=threshold):
             res = self.alert(_("Many Files"), f"There are a lot of files in {window.base_dir} and it may take a while" + # TODO i18n
                              f" to {action}.\n\nWould you like to proceed?", kind="askokcancel")
-            return res != messagebox.OK
+            return res != messagebox.OK and res != True
         return False
 
     def find_related_images_in_open_window(self, event=None, base_dir=None):
@@ -1152,7 +1152,7 @@ class App():
 
     def display_progress(self, context, percent_complete):
         self._set_label_state(Utils._wrap_text_to_fit_length(
-                f"{context}: {int(percent_complete)}% complete", 30))
+                _("{0}: {1}% complete").format(context, int(percent_complete)), 30))
         self.master.update()
 
     def _validate_run(self):
@@ -1316,6 +1316,9 @@ class App():
             self.alert("Go To File Window Error", str(e), kind="error")
 
     def go_to_file(self, event=None, search_text="", retry_with_delay=0, exact_match=False):
+        # TODO if file is not in current directory, search in another window.
+        # If it is not in any open window but is a valid filepath, open a new
+        # window with that file's directory and go to the file in the new window.
         if self.mode == Mode.BROWSE:
             image_path = self.file_browser.find(search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match)
         else:
@@ -1341,6 +1344,7 @@ class App():
         elif not os.path.isfile(run_compare_image):
             self.alert(_("No image selected"), _("No image was selected for comparison"))
         else:
+            # TODO enable this function to target already open windows with existing compares if available
             self.open_recent_directory_window(run_compare_image=self.img_path)
 
     def next_text_embedding_preset(self, event=None):
@@ -1353,6 +1357,7 @@ class App():
         if next_text_embedding_search_preset is None:
             self.alert(_("No Text Search Presets Found"), _("No text embedding search presets found. Set them in the config.json file."))
         else:
+            self.search_image.set("")
             self.search_text_box.delete(0, "end")
             self.search_text_negative_box.delete(0, "end")
 
@@ -1378,13 +1383,16 @@ class App():
         _app.canvas.after(1, _app.canvas.focus_force())
         App.window_index += 1
 
-    def home(self, event=None):
+    def home(self, event=None, last_file=False):
         if self.mode == Mode.BROWSE:
             self.file_browser.refresh()
-            if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT]):
+            if last_file:
                 self.create_image(self.file_browser.last_file())
                 if len(MarkedFiles.file_marks) == 1 and self.file_browser.has_file(MarkedFiles.file_marks[0]):
                     self._add_all_marks_from_last_or_current_group()
+            elif Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT]):
+                self.home(last_file=True)
+                return
             else:
                 self.create_image(self.file_browser.next_file())
             self.master.update()
@@ -1432,7 +1440,7 @@ class App():
         filepath = self.get_active_image_filepath()
         if filepath is not None:
             self.toast("Opening file in GIMP: " + filepath)
-            Utils.open_file_in_gimp(filepath)
+            Utils.open_file_in_gimp(filepath, config.gimp_exe_loc)
         else:
             self.alert(_("Error"), _("Failed to open current file in GIMP, unable to get valid filepath"), kind="error")
 

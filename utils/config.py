@@ -58,6 +58,7 @@ class Config:
         self.sd_runner_client_password = "<PASSWORD>"
         self.refacdir_client_port = 6001
         self.refacdir_client_password = "<PASSWORD>"
+        self.gimp_exe_loc = "gimp-2.10"
 
         dict_set = False
         configs =  [ f.path for f in os.scandir(Config.CONFIGS_DIR_LOC) if f.is_file() and f.path.endswith(".json") ]
@@ -96,7 +97,8 @@ class Config:
                             "clip_model",
                             "file_paths_json_path",
                             "sd_runner_client_password",
-                            "refacdir_client_password")
+                            "refacdir_client_password",
+                            "gimp_exe_loc")
             self.set_values(bool,
                             "image_browse_recursive",
                             "image_tagging_enabled",

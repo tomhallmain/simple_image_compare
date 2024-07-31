@@ -11,9 +11,9 @@ def rotate_image(image_path, right=False):
 		img = cv2.imread(image_path)
 		#rotating the image
 		if right:
-			rotated = np.rot90(img, k=-2)
+			rotated = np.rot90(img, k=-1)
 		else:
-			rotated = np.rot90(img, k=2)
+			rotated = np.rot90(img, k=1)
 
 		current_extension = os.path.splitext(image_path)[-1]
 		temp_filepath = os.path.join(os.path.dirname(image_path), 'temp' + current_extension)

@@ -18,7 +18,9 @@ from compare.compare_args import CompareArgs
 from compare.compare_result import CompareResult
 from utils.config import config
 from utils.constants import CompareMode
+from utils.translations import I18N
 
+_ = I18N._
 
 def usage():
     print("  Option                 Function                                 Default")
@@ -425,7 +427,7 @@ class Compare:
                 else:
                     print(".", end="", flush=True)
                 if self.progress_listener:
-                    self.progress_listener.update("Image data collection", percent_complete)
+                    self.progress_listener.update(_("Image data collection"), percent_complete)
 
         # Save image file data
 
@@ -656,7 +658,7 @@ class Compare:
                 else:
                     print(".", end="", flush=True)
                 if self.progress_listener:
-                    self.progress_listener.update("Image comparison", percent_complete)
+                    self.progress_listener.update(_("Image comparison"), percent_complete)
 
             compare_file_colors = np.roll(self._file_colors, i, 0)
             color_similars = self._compute_color_diff(

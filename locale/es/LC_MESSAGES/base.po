@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2024-07-22 23:53-0400\n"
+"POT-Creation-Date: 2024-07-30 23:50-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: es Team <<EMAIL>>\n"
@@ -15,139 +15,139 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: .\app.py:166 .\app.py:847 .\app.py:1687
+#: .\app.py:167 .\app.py:847 .\app.py:1695
 msgid " Simple Image Compare "
 msgstr " Comparaci\u00f3n sencilla de im\u00e1genes "
 
-#: .\app.py:291 .\compare\compare_wrapper.py:417
+#: .\app.py:292 .\compare\compare_wrapper.py:417
 msgid "Set a directory to run comparison."
 msgstr "Establece un directorio para ejecutar la comparaci\u00f3n."
 
-#: .\app.py:298
+#: .\app.py:299
 msgid "Toggle theme"
 msgstr "Alternar tema"
 
-#: .\app.py:299
+#: .\app.py:300
 msgid "Set directory"
 msgstr "Establecer directorio"
 
-#: .\app.py:300
+#: .\app.py:301
 msgid "Add dirpath..."
 msgstr "A\u00f1adir ruta al directorio..."
 
-#: .\app.py:303
+#: .\app.py:304
 msgid "Set search file"
 msgstr "Establecer archivo de b\u00fasqueda"
 
-#: .\app.py:311
+#: .\app.py:312
 msgid "Search text (embedding mode)"
 msgstr "Buscar texto (modo de incrustaci\u00f3n)"
 
-#: .\app.py:322
+#: .\app.py:323
 msgid "Compare mode"
 msgstr "Modo Comparar"
 
-#: .\app.py:340
+#: .\app.py:341
 msgid "Compare faces"
 msgstr "Comparar caras"
 
-#: .\app.py:344
+#: .\app.py:345
 msgid "Overwrite cache"
 msgstr "Sobrescribir cach\u00e9"
 
-#: .\app.py:348
+#: .\app.py:349
 msgid "Store checkpoints"
 msgstr "Almacenar puntos de control"
 
-#: .\app.py:352
+#: .\app.py:353
 msgid "Max files to compare"
 msgstr "M\u00e1ximo de archivos a comparar"
 
-#: .\app.py:358
+#: .\app.py:359
 msgid "Filter files by glob pattern"
 msgstr "Filtrar archivos por patr\u00f3n glob"
 
-#: .\app.py:365
+#: .\app.py:366
 msgid "Browsing mode - Sort by"
 msgstr "Modo de navegaci\u00f3n - Ordenar por"
 
-#: .\app.py:372
+#: .\app.py:373
 msgid "Recurse subdirectories"
 msgstr "Buscar en subdirectorios"
 
-#: .\app.py:377
+#: .\app.py:378
 msgid "Image resize to full window"
 msgstr "Imagen redimensionada a ventana completa"
 
-#: .\app.py:382
+#: .\app.py:383
 msgid "Search only return closest"
 msgstr "Buscar s\u00f3lo devuelve lo m\u00e1s cercano"
 
-#: .\app.py:389
+#: .\app.py:390
 msgid "Run image compare"
 msgstr "Comparar im\u00e1genes"
 
-#: .\app.py:391
+#: .\app.py:392
 msgid "Find duplicates"
 msgstr "Buscar duplicados"
 
-#: .\app.py:393
+#: .\app.py:394 .\image\image_details.py:47
 msgid "Image details"
 msgstr "Detalles de la imagen"
 
-#: .\app.py:404
+#: .\app.py:405
 msgid "Search current image"
 msgstr "Buscar imagen actual"
 
-#: .\app.py:405
+#: .\app.py:406
 msgid "Open image location"
 msgstr "Abrir ubicaci\u00f3n de la imagen"
 
-#: .\app.py:406
+#: .\app.py:407
 msgid "Copy image path"
 msgstr "Copiar ruta de imagen"
 
-#: .\app.py:407
+#: .\app.py:408
 msgid "---- DELETE ----"
 msgstr "---- BORRAR ----"
 
-#: .\app.py:521
+#: .\app.py:523
 msgid "Confirm Quit"
 msgstr "Confirmar Salir"
 
-#: .\app.py:521
+#: .\app.py:523
 msgid "Would you like to quit the application?"
 msgstr "\u00bfDesea abandonar la aplicaci\u00f3n?"
 
-#: .\app.py:585
+#: .\app.py:587
 msgid "Ended slideshows"
 msgstr "Presentaciones finalizadas"
 
-#: .\app.py:626
+#: .\app.py:628
 msgid "No files found in directory after refresh."
 msgstr "No se han encontrado archivos en el directorio tras la actualizaci\u00f3n."
 
-#: .\app.py:626 .\app.py:1509 .\app.py:1561
+#: .\app.py:628 .\app.py:1517 .\app.py:1569
 msgid "Warning"
 msgstr "Advertencia"
 
-#: .\app.py:649
+#: .\app.py:651
 msgid "Slideshow for new images started"
 msgstr "Iniciada la presentaci\u00f3n de nuevas im\u00e1genes"
 
-#: .\app.py:651
+#: .\app.py:653
 msgid "Slideshow started"
 msgstr "Presentaci\u00f3n de diapositivas iniciada"
 
-#: .\app.py:654
+#: .\app.py:656
 msgid "Slideshows ended"
 msgstr "Fin de las presentaciones"
 
-#: .\app.py:665
+#: .\app.py:667
 msgid "Browsing mode set."
 msgstr "Modo de navegaci\u00f3n establecido."
 
-#: .\app.py:699
+#: .\app.py:701
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(Abra esta imagen como parte de un directorio para ver los detalles del \u00edndice)."
 
@@ -191,14 +191,18 @@ msgstr "Seleccionar archivo de imagen"
 msgid "Somehow, the search file is invalid"
 msgstr "De alguna manera, el archivo de b\u00fasqueda no es v\u00e1lido"
 
-#: .\app.py:978 .\app.py:1034 .\app.py:1056 .\app.py:1429 .\app.py:1437
-#: .\app.py:1488 .\app.py:1528
+#: .\app.py:978 .\app.py:1034 .\app.py:1056 .\app.py:1437 .\app.py:1445
+#: .\app.py:1496 .\app.py:1536
 msgid "Error"
 msgstr "Error"
 
 #: .\app.py:1034 .\app.py:1056
 msgid "Failed to get active image filepath"
 msgstr "Error al obtener la ruta de archivo de la imagen activa"
+
+#: .\app.py:1155
+msgid "{0}: {1}% complete"
+msgstr "{0}: {1}% completado"
 
 #: .\app.py:1161
 msgid "Confirm comparison"
@@ -256,105 +260,113 @@ msgstr ""
 msgid "Go To File"
 msgstr "Ir al archivo"
 
-#: .\app.py:1328
+#: .\app.py:1331
 msgid "File not found"
 msgstr "Archivo no encontrado"
 
-#: .\app.py:1328
+#: .\app.py:1331
 msgid "No file was found for the search text: \"{0}\""
 msgstr "No se ha encontrado ning\u00fan archivo para el texto buscado: \u00ab{0}\u00bb"
 
-#: .\app.py:1342
+#: .\app.py:1345
 msgid "No image selected"
 msgstr "Ninguna imagen seleccionada"
 
-#: .\app.py:1342
+#: .\app.py:1345
 msgid "No image was selected for comparison"
 msgstr "No se ha seleccionado ninguna imagen para la comparaci\u00f3n"
 
-#: .\app.py:1354
+#: .\app.py:1358
 msgid "No Text Search Presets Found"
 msgstr "No se han encontrado preajustes de b\u00fasqueda de texto"
 
-#: .\app.py:1354
+#: .\app.py:1358
 msgid "No text embedding search presets found. Set them in the config.json file."
 msgstr "No se han encontrado preajustes de b\u00fasqueda de texto incrustado. Config\u00farelos en el archivo config.json."
 
-#: .\app.py:1429
+#: .\app.py:1437
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "No se ha podido abrir la ubicaci\u00f3n del archivo actual, no se ha podido obtener una ruta de archivo v\u00e1lida."
 
-#: .\app.py:1437
+#: .\app.py:1445
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "Error al abrir el archivo actual en GIMP, no se puede obtener una ruta de archivo v\u00e1lida."
 
-#: .\app.py:1453
+#: .\app.py:1461
 msgid "DELETE_LOCK"
 msgstr ""
 "El bloqueo de borrado tras la transici\u00f3n\n"
 "de diapositivas imped\u00eda el borrado"
 
-#: .\app.py:1470
+#: .\app.py:1478
 msgid "Invalid action, no files found to delete"
 msgstr "Acci\u00f3n no v\u00e1lida, no se han encontrado archivos para eliminar"
 
-#: .\app.py:1473
+#: .\app.py:1481
 msgid "Invalid action, search image not found"
 msgstr "Acci\u00f3n no v\u00e1lida, imagen de b\u00fasqueda no encontrada"
 
-#: .\app.py:1488
+#: .\app.py:1496
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "No se ha podido eliminar el archivo actual, no se ha podido obtener una ruta de archivo v\u00e1lida."
 
-#: .\app.py:1493
+#: .\app.py:1501
 msgid "Removing file: {0}"
 msgstr "Eliminando archivo: {0}"
 
-#: .\app.py:1510
+#: .\app.py:1518
 msgid "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."
 msgstr "No se ha podido enviar el archivo a la papelera, por lo que se eliminar\u00e1. Instale pip send2trash o establezca una carpeta espec\u00edfica en config.json."
 
-#: .\app.py:1528
+#: .\app.py:1536
 msgid "Invalid target filepath for replacement: "
 msgstr "Ruta de archivo de destino no v\u00e1lida para la sustituci\u00f3n: "
 
-#: .\app.py:1532
+#: .\app.py:1540
 msgid "Moved search image to "
 msgstr "Imagen de b\u00fasqueda trasladada a "
 
-#: .\app.py:1559
+#: .\app.py:1567
 msgid "Running image gen: "
 msgstr "Ejecutar la generaci\u00f3n de im\u00e1genes: "
 
-#: .\app.py:1561
+#: .\app.py:1569
 msgid "Error running image generation:"
 msgstr "Error al generar la imagen:"
 
-#: .\app.py:1566
+#: .\app.py:1574
 msgid "Running refacdir"
 msgstr "Ejecuci\u00f3n de la aplicaci\u00f3n refacdir"
 
-#: .\app.py:1640
+#: .\app.py:1648
 msgid "GROUP_DETAILS"
 msgstr ""
 "Grupo {0} de {1}\n"
 "Tama00f1o: {2}"
 
-#: .\app.py:1644
+#: .\app.py:1652
 msgid "No image files found"
 msgstr "No se han encontrado archivos de imagen"
 
-#: .\app.py:1646
+#: .\app.py:1654
 msgid "1 image file found"
 msgstr "1 archivo de imagen encontrado"
 
-#: .\app.py:1646
+#: .\app.py:1654
 msgid "{0} image files found"
 msgstr "{0} archivos de imagen encontrados"
 
-#: .\app.py:1648
+#: .\app.py:1656
 msgid "(filtered)"
 msgstr "(filtrado)"
+
+#: .\compare\compare.py:430 .\compare\compare_embeddings.py:233
+msgid "Image data collection"
+msgstr "Recopilaci\u00f3n de datos de im\u00e1genes"
+
+#: .\compare\compare.py:661 .\compare\compare_embeddings.py:344
+msgid "Image comparison"
+msgstr "Comparaci\u00f3n de im\u00e1genes"
 
 #: .\compare\compare_wrapper.py:55
 msgid "Invalid mode"
@@ -666,127 +678,127 @@ msgstr "A00f1adir directorio"
 msgid "Set image comparison directory"
 msgstr "Establecer directorio de comparaci\u00f3n de im\u00e1genes"
 
-#: .\image\image_details.py:80
+#: .\image\image_details.py:82
 msgid "Image Path"
 msgstr "Ruta de imagen"
 
-#: .\image\image_details.py:82
+#: .\image\image_details.py:84
 msgid "File Index"
 msgstr "\u00cdndice de archivos"
 
-#: .\image\image_details.py:84
+#: .\image\image_details.py:86
 msgid "Color Mode"
 msgstr "Modo de color"
 
-#: .\image\image_details.py:86
+#: .\image\image_details.py:88
 msgid "Dimensions"
 msgstr "Dimensiones"
 
-#: .\image\image_details.py:88 .\utils\constants.py:53
+#: .\image\image_details.py:90 .\utils\constants.py:53
 msgid "Size"
 msgstr "Tama00f1o"
 
-#: .\image\image_details.py:90
+#: .\image\image_details.py:92
 msgid "Modification Time"
 msgstr "Tiempo de modificaci\u00f3n"
 
-#: .\image\image_details.py:92
+#: .\image\image_details.py:94
 msgid "Positive"
 msgstr "Positivo"
 
-#: .\image\image_details.py:94
+#: .\image\image_details.py:96
 msgid "Negative"
 msgstr "Negativo"
 
-#: .\image\image_details.py:99
+#: .\image\image_details.py:101
 msgid "Copy Prompt"
 msgstr "Aviso de copia"
 
-#: .\image\image_details.py:100
+#: .\image\image_details.py:102
 msgid "Copy Prompt No BREAK"
 msgstr "Copie el aviso sin \u00abBREAK\u00bb."
 
-#: .\image\image_details.py:104
+#: .\image\image_details.py:106
 msgid "Rotate Image Left"
 msgstr "Girar imagen a la izquierda"
 
-#: .\image\image_details.py:105
+#: .\image\image_details.py:107
 msgid "Rotate Image Right"
 msgstr "Girar imagen al derecho"
 
-#: .\image\image_details.py:109
+#: .\image\image_details.py:111
 msgid "Crop Image (Smart Detect)"
 msgstr "Recortar imagen (Detecci\u00f3n inteligente)"
 
-#: .\image\image_details.py:110
+#: .\image\image_details.py:112
 msgid "Enhance Image"
 msgstr "Mejorar la imagen"
 
-#: .\image\image_details.py:113
+#: .\image\image_details.py:115
 msgid "Open Related Image"
 msgstr "Abrir Imagen relacionada"
 
-#: .\image\image_details.py:121
+#: .\image\image_details.py:123
 msgid "Image Generation"
 msgstr "Generaci\u00f3n de im\u00e1genes"
 
-#: .\image\image_details.py:129
+#: .\image\image_details.py:131
 msgid "Run Image Generation"
 msgstr "Ejecutar la generaci\u00f3n de im\u00e1genes"
 
-#: .\image\image_details.py:131
+#: .\image\image_details.py:133
 msgid "Press Shift+I on a main app window to run this"
 msgstr "Pulsa May\u00fas+I en una ventana de la aplicaci\u00f3n principal para ejecutar esto"
 
-#: .\image\image_details.py:134
+#: .\image\image_details.py:136
 msgid "Tags"
 msgstr "Etiquetas"
 
-#: .\image\image_details.py:144
+#: .\image\image_details.py:146
 msgid "Update Tags"
 msgstr "Actualizar etiquetas"
 
-#: .\image\image_details.py:179
+#: .\image\image_details.py:181
 msgid "Copied prompt"
 msgstr "Copiado el aviso"
 
-#: .\image\image_details.py:188
+#: .\image\image_details.py:190
 msgid "Copied prompt without BREAK"
 msgstr "Copiado el aviso sin \u00abBREAK\u00bb."
 
-#: .\image\image_details.py:196
+#: .\image\image_details.py:198
 msgid "Rotated image left"
 msgstr "Imagen girada a la izquierda"
 
-#: .\image\image_details.py:196
+#: .\image\image_details.py:198
 msgid "Rotated image right"
 msgstr "Imagen girada a la derecha"
 
-#: .\image\image_details.py:205
+#: .\image\image_details.py:207
 msgid "Cropped image"
 msgstr "Imagen recortada"
 
-#: .\image\image_details.py:207
+#: .\image\image_details.py:209
 msgid "No crops found"
 msgstr "No se ha encontrado ning\u00fan recorte de imagen"
 
-#: .\image\image_details.py:214
+#: .\image\image_details.py:216
 msgid "Enhanced image"
 msgstr "Imagen mejorada"
 
-#: .\image\image_details.py:316 .\image\image_details.py:323
+#: .\image\image_details.py:318 .\image\image_details.py:325
 msgid "%s downstream image(s) found."
 msgstr "Se han encontrado {0} im\u00e1genes relacionadas con la corriente descendente."
 
-#: .\image\image_details.py:319
+#: .\image\image_details.py:321
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (en cach\u00e9) imagen(es) relacionada(s) con la corriente descendente encontrada(s)."
 
-#: .\image\image_details.py:325
+#: .\image\image_details.py:327
 msgid "No downstream related images found in"
 msgstr "No se han encontrado im\u00e1genes relacionadas con la corriente descendente en"
 
-#: .\image\image_details.py:370
+#: .\image\image_details.py:372
 msgid "Updated tags for %s"
 msgstr "Etiquetas actualizadas para {0}"
 

@@ -52,5 +52,6 @@
   "sd_runner_client_port": 6000,
   "sd_runner_client_password": "<PASSWORD>",
   "refacdir_client_port": 6001,
-  "refacdir_client_password": "<PASSWORD>"
+  "refacdir_client_password": "<PASSWORD>",
+  "gimp_exe_loc": "gimp-2.10"
 }

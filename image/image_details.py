@@ -44,6 +44,8 @@ class ImageDetails():
     def __init__(self, parent_master, master, image_path, index_text, app_actions, do_refresh=True):
         self.parent_master = parent_master
         self.master = master
+        self.master.title(_("Image details"))
+        self.master.geometry("700x500")
         self.image_path = image_path
         self.app_actions = app_actions
         self.frame = Frame(self.master)
