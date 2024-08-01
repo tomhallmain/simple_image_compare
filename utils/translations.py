@@ -14,10 +14,11 @@ class I18N:
     translate = gettext.translation('base', localedir, languages=[_locale])
 
     @staticmethod
-    def install_locale(locale):
-        translate = gettext.translation('base', I18N.localedir, languages=[locale], fallback=True)
-        translate.install()
-        print("Switched locale to: " + locale)
+    def install_locale(locale, verbose=True):
+        I18N.translate = gettext.translation('base', I18N.localedir, languages=[locale], fallback=True)
+        I18N.translate.install()
+        if verbose:
+            print("Switched locale to: " + locale)
 
     @staticmethod
     def _(s):

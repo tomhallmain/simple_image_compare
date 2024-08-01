@@ -1692,6 +1692,7 @@ class App():
 
 
 if __name__ == "__main__":
+    I18N.install_locale(config.locale, verbose=config.print_settings)
     assets = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets")
     root = ThemedTk(theme="black", themebg="black")
     root.title(_(" Simple Image Compare "))

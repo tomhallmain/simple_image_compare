@@ -2,6 +2,7 @@ import getopt
 import os
 import pickle
 import sys
+from time import sleep
 
 import numpy as np
 # from imutils import face_utils
@@ -109,6 +110,7 @@ class CompareEmbedding(BaseCompare):
         else:
             print("Gathering image data", end="", flush=True)
 
+        add_wait = sys.platform == "darwin" and self.max_files_processed_even < 500
         counter = 0
 
         for f in self.files:
@@ -157,6 +159,8 @@ class CompareEmbedding(BaseCompare):
                 else:
                     print(".", end="", flush=True)
                 if self.progress_listener:
+                    if add_wait:
+                        sleep(1)
                     self.progress_listener.update(_("Image data collection"), percent_complete)
 
         # Save image file data

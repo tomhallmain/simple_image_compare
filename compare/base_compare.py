@@ -116,6 +116,15 @@ class BaseCompare:
         if self.verbose:
             self.print_settings()
 
+    def get_data(self):
+        pass
+
+    def print_settings(self):
+        pass
+
+    def set_base_dir(self, base_dir):
+        pass
+
     def _set_face_cascade(self):
         '''
         Load the face recognition model if compare_faces option was requested.
@@ -160,7 +169,7 @@ class BaseCompare:
     def run_search(self):
         pass
 
-    def run_comparison(self):
+    def run_comparison(self, store_checkpoints=False):
         pass
 
     def find_similars_to_image(self, search_path, search_file_index):
