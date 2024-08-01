@@ -166,7 +166,7 @@ class App():
         top_level = tk.Toplevel(master)
         top_level.title(_(" Simple Image Compare "))
         top_level.geometry(config.default_secondary_window_size)
-        window_id = random.randint(1000000000,9999999999)
+        window_id = random.randint(1000000000, 9999999999)
         App.secondary_top_levels[window_id] = top_level # Keep reference to avoid gc
         if do_search and (image_path is None or image_path == ""):
             do_search = False
@@ -183,7 +183,7 @@ class App():
                 if refocus:
                     _app.refocus()
                 return _app
-        return None #raise Exception(f"No window found for window id {window_id} or base dir {base_dir}")
+        return None  # raise Exception(f"No window found for window id {window_id} or base dir {base_dir}")
 
     @staticmethod
     def find_window_with_compare(default_window=None):
@@ -500,7 +500,7 @@ class App():
                 self.set_search()
             else:
                 self.go_to_file(search_text=image_path)
-        
+
         App.open_windows.append(self)
 
     def is_secondary(self):
@@ -711,7 +711,7 @@ class App():
             elif self.mode == Mode.SEARCH and self.is_toggled_view_matches:
                 index_text = f"{_index} of {len_files_matched} ({self.file_browser.get_index_details()})"
             else:
-                index_text = "" # shouldn't happen
+                index_text = ""  # shouldn't happen
         if self.app_actions.image_details_window is not None:
             if self.app_actions.image_details_window.do_refresh:
                 self.app_actions.image_details_window.update_image_details(image_path, index_text)
@@ -792,7 +792,7 @@ class App():
             try:
                 if self.show_next_image():
                     return
-            except Exception as e:
+            except Exception:
                 pass
 
     def set_base_dir(self, base_dir_from_dir_window=None) -> None:
@@ -933,7 +933,8 @@ class App():
             search_text_negative = None
         args.search_text = search_text
 
-        # TODO eventually will need a separate box for the negative search file path so that it is not exclusive with negative search file text
+        # TODO eventually will need a separate box for the negative search file
+        # path so that it is not exclusive with negative search file text
         if search_text_negative and os.path.isfile(search_text_negative.strip()):
             args.negative_search_file_path = search_text_negative.strip()
             args.search_text_negative = None
@@ -1000,7 +1001,7 @@ class App():
         if self.mode == Mode.BROWSE:
             next_file = self.file_browser.next_file()
             if self.img_path == next_file:
-                return True # NOTE self.refresh() is calling this method in this case
+                return True  # NOTE self.refresh() is calling this method in this case
             self.master.update()
             try:
                 self.create_image(next_file)
@@ -1026,7 +1027,7 @@ class App():
             if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.ALT]):
                 random_image = self.file_browser.random_file()
                 if os.path.isfile(random_image):
-                    self.create_image(random_image) # sets current image first
+                    self.create_image(random_image)  # sets current image first
         filepath = self.get_active_image_filepath()
         if filepath:
             window._set_image_run_search(filepath)
@@ -1072,7 +1073,7 @@ class App():
             self.img = self.get_image_to_fit(image_path)
         except Exception as e:
             if "truncated" in str(e):
-                time.sleep(0.25) # If the image was just created in the directory, it's possible it's still being filled with data
+                time.sleep(0.25)  # If the image was just created in the directory, it's possible it's still being filled with data
                 self.img = self.get_image_to_fit(image_path)
             else:
                 raise e
@@ -1179,7 +1180,7 @@ class App():
             try:
                 exec_func(*args)
             except Exception:
-                traceback.print_exc()            
+                traceback.print_exc()
             self.progress_bar.stop()
             self.progress_bar.grid_forget()
             self.destroy_grid_element("progress_bar")
@@ -1209,7 +1210,8 @@ class App():
         if self.delete_lock:
             warning = _("DELETE_LOCK_MARK_STOP")
             self.toast(warning)
-            raise Exception(warning) # Have to raise exception to in some cases prevent downstream events from happening with no marks
+            raise Exception(warning)
+            # NOTE Have to raise exception to in some cases prevent downstream events from happening with no marks
         self._check_marks(min_mark_size=0)
         if self.img_path in MarkedFiles.file_marks:
             MarkedFiles.file_marks.remove(self.img_path)
@@ -1231,7 +1233,7 @@ class App():
             files = self.file_browser.select_series(start_file=MarkedFiles.file_marks[-1], end_file=self.img_path)
         else:
             if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.ALT]):
-                files = list(self.compare_wrapper.files_matched) # Select all file matches
+                files = list(self.compare_wrapper.files_matched)  # Select all file matches
             else:
                 files = self.compare_wrapper.select_series(start_file=MarkedFiles.file_marks[-1], end_file=self.img_path)
         for _file in files:
@@ -1276,7 +1278,7 @@ class App():
         if not open_gui:
             top_level.attributes('-alpha', 0.3)
         try:
-            marked_file_mover = MarkedFiles(top_level, open_gui, single_image, self.mode, 
+            marked_file_mover = MarkedFiles(top_level, open_gui, single_image, self.mode,
                                             self.app_actions, base_dir=self.get_base_dir())
         except Exception as e:
             self.alert("Marked Files Window Error", str(e), kind="error")
@@ -1496,14 +1498,14 @@ class App():
             self.alert(_("Error"), _("Failed to delete current file, unable to get valid filepath"), kind="error")
 
     def _handle_delete(self, filepath, toast=True, manual_delete=True):
-        MarkedFiles.set_delete_lock() # Undo deleting action is not supported
+        MarkedFiles.set_delete_lock()  # Undo deleting action is not supported
         if toast and manual_delete:
             self.toast(_("Removing file: {0}").format(filepath))
         else:
             print("Removing file: " + filepath)
         if config.delete_instantly:
             os.remove(filepath)
-        elif config.trash_folder is not None: 
+        elif config.trash_folder is not None:
             filepath = os.path.normpath(filepath)
             sep = "\\" if "\\" in filepath else "/"
             new_filepath = filepath[filepath.rfind(sep)+1:len(filepath)]
@@ -1555,7 +1557,7 @@ class App():
                 self.compare_wrapper._update_groups_for_removed_file(self.mode,
                         group_indexes[0], group_indexes[1], set_group=False, show_next_image=show_next_image)
             except KeyError as e:
-                pass # The group may have been removed before update_groups_for_removed_file was called on the last file in it
+                pass  # The group may have been removed before update_groups_for_removed_file was called on the last file in it
 
     def run_image_generation(self, event=None, _type=None, image_path=None):
         self.sd_runner_client.start()
@@ -1575,7 +1577,7 @@ class App():
 
     def store_info_cache(self):
         base_dir = self.get_base_dir()
-#        print(f"Base dir for store_info_cache: {base_dir}")
+        # print(f"Base dir for store_info_cache: {base_dir}")
         if base_dir and base_dir != "":
             if not self.is_secondary():
                 app_info_cache.set_meta("base_dir", base_dir)
@@ -1624,10 +1626,10 @@ class App():
             font=('Helvetica', 10)
         )
         label.grid(row=1, column=1, sticky="NSEW", padx=10, pady=(0, 5))
-        
+
         # Make the window invisible and bring it to front
         toast.attributes('-topmost', True)
-#        toast.withdraw()
+        # toast.withdraw()
 
         # Start a new thread that will destroy the window after a few seconds
         def self_destruct_after(time_in_seconds):
@@ -1674,7 +1676,7 @@ class App():
         if getattr(self, button_ref_name) is None:
             button = Button(master=self.sidebar, text=text, command=command)
             setattr(self, button_ref_name, button)
-            button # for some reason this is necessary to maintain the reference?
+            button  # for some reason this is necessary to maintain the reference?
             self.apply_to_grid(button)
 
     def new_entry(self, text_variable=None, text=""):
@@ -1693,7 +1695,7 @@ if __name__ == "__main__":
     assets = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets")
     root = ThemedTk(theme="black", themebg="black")
     root.title(_(" Simple Image Compare "))
-    #root.iconbitmap(bitmap=r"icon.ico")
+    # root.iconbitmap(bitmap=r"icon.ico")
     icon = PhotoImage(file=os.path.join(assets, "icon.png"))
     root.iconphoto(False, icon)
     root.geometry(config.default_main_window_size)

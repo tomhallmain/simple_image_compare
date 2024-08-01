@@ -1,15 +1,12 @@
 import getopt
-from glob import glob
 import os
 import pickle
-import random
 import sys
 
-import cv2
 import numpy as np
 # from imutils import face_utils
 
-from compare.compare import gather_files, get_valid_file, round_up, is_invalid_file, safe_write
+from compare.base_compare import BaseCompare, gather_files, round_up, safe_write, is_invalid_file, get_valid_file
 from compare.compare_args import CompareArgs
 from compare.compare_result import CompareResult
 from compare.model import image_embeddings, text_embeddings, embedding_similarity
@@ -18,6 +15,7 @@ from utils.constants import CompareMode
 from utils.translations import I18N
 
 _ = I18N._
+
 
 def usage():
     print("  Option                 Function                                 Default")
@@ -32,8 +30,7 @@ def usage():
     print("  -v                     Verbose                                         ")
 
 
-
-class CompareEmbedding:
+class CompareEmbedding(BaseCompare):
     COMPARE_MODE = CompareMode.CLIP_EMBEDDING
     SEARCH_OUTPUT_FILE = "simple_image_compare_search_output.txt"
     GROUPS_OUTPUT_FILE = "simple_image_compare_file_groups_output.txt"
@@ -42,21 +39,11 @@ class CompareEmbedding:
     TOP_COLORS_DATA = "image_top_colors.pkl"
     THRESHHOLD_POTENTIAL_DUPLICATE = config.threshold_potential_duplicate_embedding
     THRESHHOLD_PROBABLE_MATCH = 0.98
-    THRESHHOLD_GROUP_CUTOFF = 4500 # TODO fix this for Embedding case
+    THRESHHOLD_GROUP_CUTOFF = 4500  # TODO fix this for Embedding case
     TEXT_EMBEDDING_CACHE = {}
 
     def __init__(self, args=CompareArgs(), gather_files_func=gather_files):
-        self.args = args
-        self.files = []
-        self.set_base_dir(self.args.base_dir)
-        self.set_search_file_path(self.args.search_file_path)
-        self.compare_faces = self.args.compare_faces
-#        self.args.match_dims = match_dims
-        self.verbose = self.args.verbose
-        self.progress_listener = self.args.listener
-        self._faceCascade = None
-        if self.compare_faces:
-            self._set_face_cascade()
+        super().__init__(args, gather_files)
         self.embedding_similarity_threshold = self.args.threshold
         self._file_embeddings = np.empty((0, 512))
         self._file_faces = np.empty((0))
@@ -75,47 +62,6 @@ class CompareEmbedding:
         self._file_faces_filepath = os.path.join(base_dir, CompareEmbedding.FACES_DATA)
         self._file_embeddings_filepath = os.path.join(base_dir, CompareEmbedding.EMBEDDINGS_DATA)
 
-    def set_search_file_path(self, search_file_path):
-        '''
-        Set the search file path. If it is already in the found data, move the
-        reference to it to the first index in the list.
-        '''
-        self.search_file_path = search_file_path
-        self.is_run_search = search_file_path is not None
-        if self.is_run_search and self.files is not None:
-            if self.search_file_path in self.files:
-                self.files.remove(self.search_file_path)
-            self.search_file_index = 0
-            self.files.insert(self.search_file_index, self.search_file_path)
-
-    def get_files(self):
-        '''
-        Get all image files in the base dir as requested by the parameters.
-
-        To override the default file inclusion behavior, pass a gather_files_func to the Compare object.
-        '''
-        self._files_found = []
-        if self.gather_files_func:
-            exts = config.file_types
-            if self.args.include_gifs:
-                exts.append(".gif")
-            self.files = self.gather_files_func(base_dir=self.base_dir, exts=exts, recursive=self.args.recursive)
-        else:
-            raise Exception("No gather files function found.")
-        self.files.sort()
-        self.has_new_file_data = False
-        self.max_files_processed = min(self.args.counter_limit, len(self.files))
-        self.max_files_processed_even = round_up(self.max_files_processed, 200)
-
-        if self.is_run_search and self.compare_faces: # this extra boolean is important in this case.
-            if self.search_file_path in self.files:
-                self.files.remove(self.search_file_path)
-            self.search_file_index = 0
-            self.files.insert(self.search_file_index, self.search_file_path)
-
-        if self.verbose:
-            self.print_settings()
-
     def print_settings(self):
         print("\n\n|--------------------------------------------------------------------|")
         print(" CONFIGURATION SETTINGS:")
@@ -133,25 +79,6 @@ class CompareEmbedding:
         print(f" file embeddings filepath: {self._file_embeddings_filepath}")
         print(f" overwrite image data: {self.args.overwrite}")
         print("|--------------------------------------------------------------------|\n\n")
-
-    def _set_face_cascade(self):
-        '''
-        Load the face recognition model if compare_faces option was requested.
-        '''
-        cascPath = ""
-        for minor_version in range(10, 5, -1):
-            cascPath = "/usr/local/lib/python3." + \
-                str(minor_version) + \
-                "/site-packages/cv2/data/haarcascade_frontalface_default.xml"
-            if os.path.exists(cascPath):
-                break
-        if not os.path.exists(cascPath):
-            print("WARNING: Face cascade model not found (cv2 package,"
-                  + " Python version 3.6 or greater expected)")
-            print("Run with flag --faces=False to avoid this warning.")
-            self.compare_faces = False
-        else:
-            self._faceCascade = cv2.CascadeClassifier(cascPath)
 
     def get_data(self):
         '''
@@ -260,27 +187,8 @@ class CompareEmbedding:
         elif self.verbose:
             print(f"Data from {self._n_files_found} files compiled for comparison.")
 
-    def _get_faces_count(self, filepath):
-        '''
-        Try to get the number of faces in the image using the face model.
-        '''
-        n_faces = random.random() * 10000 + 6  # Set to a value unlikely to match
-        try:
-            gray = cv2.imread(filepath, 0)
-            faces = self._faceCascade.detectMultiScale(
-                gray,
-                scaleFactor=1.1,
-                minNeighbors=5,
-                flags=cv2.CASCADE_SCALE_IMAGE
-            )
-            n_faces = len(faces)
-        except Exception as e:
-            if self.verbose:
-                print(e)
-        return n_faces
-
     def _compute_embedding_diff(self, base_array, compare_array,
-                            return_diff_scores=False, threshold=None):
+                                return_diff_scores=False, threshold=None):
         '''
         Perform an elementwise diff between two image color arrays using the
         selected color difference algorithm.
@@ -306,7 +214,7 @@ class CompareEmbedding:
             Step 1: [X, Y, Z] -> [Z, X, Y] (elementwise comparison)
             Step 2: [X, Y, Z] -> [Y, Z, X] (elementwise comparison)
             ^ At this point, all arrays have been compared.
-        
+
         files_grouped - Keys are the file indexes, values are tuple of the group index and diff score.
         file_groups - Keys are the group indexes, values are dicts with keys as the file in the group, values the diff score
         '''
@@ -376,7 +284,7 @@ class CompareEmbedding:
                 elif f1_grouped:
                     existing_group_index, previous_diff_score = compare_result.files_grouped[base_index]
                     if previous_diff_score - CompareEmbedding.THRESHHOLD_GROUP_CUTOFF > diff_score:
-#                        print(f"Previous: {previous_diff_score} , New: {diff_score}")
+                        # print(f"Previous: {previous_diff_score} , New: {diff_score}")
                         compare_result.files_grouped[base_index] = (compare_result.group_index, diff_score)
                         compare_result.files_grouped[diff_index] = (compare_result.group_index, diff_score)
                         compare_result.group_index += 1
@@ -386,7 +294,7 @@ class CompareEmbedding:
                 else:
                     existing_group_index, previous_diff_score = compare_result.files_grouped[diff_index]
                     if previous_diff_score - CompareEmbedding.THRESHHOLD_GROUP_CUTOFF > diff_score:
-#                        print(f"Previous: {previous_diff_score} , New: {diff_score}")
+                        # print(f"Previous: {previous_diff_score} , New: {diff_score}")
                         compare_result.files_grouped[base_index] = (compare_result.group_index, diff_score)
                         compare_result.files_grouped[diff_index] = (compare_result.group_index, diff_score)
                         compare_result.group_index += 1
@@ -450,7 +358,6 @@ class CompareEmbedding:
             return self.run_search()
         else:
             return self.run_comparison(store_checkpoints=store_checkpoints)
-
 
     def find_similars_to_image(self, search_path, search_file_index):
         '''
@@ -583,8 +490,8 @@ class CompareEmbedding:
                 files_grouped[_files_found[_index]] = embedding_similars[1][_index]
             # Sort results by increasing difference score
             files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
-#            return files_grouped
-        
+            return files_grouped
+
         '''
         Generate embedding_similars arrays for both positive and negative embedding
         sets. For the positives, multiply the similarities together. For the negatives
@@ -693,7 +600,7 @@ class CompareEmbedding:
 
         if self.args.search_file_path is not None:
             self._tokenize_image(self.args.search_file_path, positive_embeddings)
-        
+
         if self.args.negative_search_file_path is not None:
             self._tokenize_image(self.args.negative_search_file_path, negative_embeddings, "negative search image")
 
@@ -711,8 +618,8 @@ class CompareEmbedding:
                   f"negative search image = {self.args.negative_search_file_path}\n"
                   f"search text = {self.args.search_text}\n"
                   f"search text negative = {self.args.search_text_negative}")
-            return files_grouped # TODO better exception handling
-    
+            return files_grouped  # TODO better exception handling
+
         files_grouped = self.find_similars_to_embeddings(positive_embeddings, negative_embeddings)
         return files_grouped
 
@@ -728,13 +635,13 @@ class CompareEmbedding:
         search_text_index = config.text_embedding_search_presets.index(search_text)
         count = 0
 
-        if len(self.segregation_map) == 0 or self.args.overwrite: # TODO different boolean for this cache
+        if len(self.segregation_map) == 0 or self.args.overwrite:  # TODO different boolean for this cache
             for preset in config.text_embedding_search_presets:
                 self._tokenize_text(preset, embeddings)
 
             for f in self._files_found:
                 self.segregation_map[f] = []
-            
+
             for embedding in embeddings:
                 embedding_similars = self._compute_embedding_diff(
                     self._file_embeddings, embedding, True, threshold=threshold)
@@ -795,7 +702,7 @@ class CompareEmbedding:
 
     def get_probable_duplicates(self):
         return self._probable_duplicates
-    
+
     def remove_from_groups(self, removed_files=[]):
         # TODO technically it would be better to refresh the file and data lists every time a compare is done
         # If not, will need to add a way to re-add the removed file data in case the remove action was undone
@@ -813,6 +720,26 @@ class CompareEmbedding:
         for f in removed_files:
             if f in self._files_found:
                 self._files_found.remove(f)
+
+    def readd_files(self, filepaths=[]):
+        readded_indexes = []
+        for f in filepaths:
+            if f not in self._files_found:
+                readded_indexes.append(len(self._files_found))
+                self._files_found.append(f)
+                try:
+                    embedding = image_embeddings(f)
+                except OSError as e:
+                    print(f"Error generating embedding from file {f}: {e}")
+                    continue
+                self.file_embeddings_dict[f] = embedding
+                self._file_embeddings = np.append(self._file_embeddings, [embedding], 0)
+                if self.compare_faces:
+                    n_faces = self.get_faces_count(f)
+                    self._file_faces_dict = n_faces
+                    self._file_faces = np.append(self._file_faces, [n_faces], 0)
+                if self.verbose:
+                    print(f"Readded file to compare: {f}")
 
     @staticmethod
     def single_text_compare(image_path, texts_dict):
@@ -848,6 +775,7 @@ class CompareEmbedding:
                 "Encountered an error accessing the provided file paths in the file system.")
         similarity = embedding_similarity(emb1, emb2)[0]
         return similarity > 0.8
+
 
 if __name__ == "__main__":
     base_dir = "."

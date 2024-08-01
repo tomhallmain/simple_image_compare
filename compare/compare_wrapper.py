@@ -70,12 +70,12 @@ class CompareWrapper:
             return False
 
         self._app_actions._set_toggled_view_matches()
-        
+
         if self.match_index > 0:
             self.match_index -= 1
         else:
             self.match_index = len(self.files_matched) - 1
-        
+
         self._master.update()
         self._app_actions.create_image(self.current_match())
         return True
@@ -148,7 +148,7 @@ class CompareWrapper:
             self.current_group_index = 0
         else:
             self.current_group_index += 1
-        self.set_current_group()        
+        self.set_current_group()
 
     def set_current_group(self, start_match_index=0) -> None:
         '''
@@ -169,7 +169,7 @@ class CompareWrapper:
         self._app_actions._set_label_state(group_number=self.current_group_index, size=len(self.files_matched))
         self._master.update()
         self._app_actions.create_image(self.current_match())
-    
+
     def page_down(self, half_length=False):
         paging_length = self._get_paging_length(half_length=half_length)
         test_cursor = self.match_index + paging_length
@@ -307,7 +307,7 @@ class CompareWrapper:
         self._app_actions._set_label_state(Utils._wrap_text_to_fit_length(
             _("Running image comparisons..."), 30))
         self.files_grouped, self.file_groups = self._compare.run(store_checkpoints=args.store_checkpoints)
-        
+
         if len(self.files_grouped) == 0:
             self.has_image_matches = False
             self._app_actions._set_label_state(_("Set a directory and search file."))
@@ -388,7 +388,7 @@ class CompareWrapper:
         else:
             files_matched = []
             group = self.file_groups[actual_index]
-            for f in self._get_sorted_file_matches(group, app_mode):                    
+            for f in self._get_sorted_file_matches(group, app_mode):
                 files_matched.append(f)
 
         if len(files_matched) < 3:
@@ -424,13 +424,13 @@ class CompareWrapper:
                 self.set_current_group()
         else:
             filepath = files_matched[match_index]
-#            print(f"Filepath from update_groups: {filepath}")
+            # print(f"Filepath from update_groups: {filepath}")
             if app_mode != Mode.SEARCH:
                 self.files_grouped = {
                     k: v for k, v in self.files_grouped.items() if v[0] != actual_index}
             del files_matched[match_index]
             del self.file_groups[actual_index][filepath]
- 
+
             if set_group:
                 if self.match_index == len(self.files_matched):
                     self.match_index = 0
@@ -440,6 +440,9 @@ class CompareWrapper:
                 if show_next_image:
                     self._master.update()
                     self._app_actions.create_image(self.current_match())
+
+    def update_compare_for_readded_file(self, readded_file):
+        self._compare.readd_file(readded_file)
 
     def _get_file_group_map(self, app_mode):
         if app_mode == Mode.BROWSE:
@@ -459,5 +462,3 @@ class CompareWrapper:
             return sorted(group, key=lambda f: group[f], reverse=True)
         else:
             return sorted(group, key=lambda f: group[f])
-
-
