@@ -1,11 +1,15 @@
 from glob import glob
 import os
 import random
+import sys
 
 import cv2
 
 from compare.compare_args import CompareArgs
 from utils.config import config
+from utils.translations import I18N
+
+_ = I18N._
 
 
 def gather_files(base_dir=".", exts=config.file_types, recursive=True):
@@ -118,6 +122,19 @@ class BaseCompare:
 
     def get_data(self):
         pass
+
+    def _handle_progress(self, counter, total, gathering_data=True):
+        percent_complete = counter / total * 100
+        if percent_complete % 10 == 0:
+            if self.verbose:
+                desc1 = "data gathered" if gathering_data else "compared"
+                print(str(int(percent_complete)) + "% " + desc1)
+            else:
+                print(".", end="", flush=True)
+            if self.progress_listener and sys.platform != "darwin":
+                # TODO there is a bug with updating master here on OSX for some reason.
+                desc2 = _("Image data collection") if gathering_data else _("Image comparison")
+                self.progress_listener.update(desc2, percent_complete)
 
     def print_settings(self):
         pass

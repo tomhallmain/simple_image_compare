@@ -2,7 +2,6 @@ import getopt
 import os
 import pickle
 import sys
-from time import sleep
 
 import numpy as np
 # from imutils import face_utils
@@ -110,7 +109,6 @@ class CompareEmbedding(BaseCompare):
         else:
             print("Gathering image data", end="", flush=True)
 
-        add_wait = sys.platform == "darwin" and self.max_files_processed_even < 500
         counter = 0
 
         for f in self.files:
@@ -151,17 +149,7 @@ class CompareEmbedding(BaseCompare):
             if self.compare_faces:
                 self._file_faces = np.append(self._file_faces, [n_faces], 0)
             self._files_found.append(f)
-
-            percent_complete = counter / self.max_files_processed_even * 100
-            if percent_complete % 10 == 0:
-                if self.verbose:
-                    print(f"{int(percent_complete)}% data gathered")
-                else:
-                    print(".", end="", flush=True)
-                if self.progress_listener:
-                    if add_wait:
-                        sleep(1)
-                    self.progress_listener.update(_("Image data collection"), percent_complete)
+            self._handle_progress(counter, self.max_files_processed_even)
 
         # Save image file data
 
@@ -246,14 +234,7 @@ class CompareEmbedding(BaseCompare):
                 if i % 250 == 0 and i != len(self._files_found) and i > compare_result.i:
                     compare_result.store()
                 compare_result.i = i
-            percent_complete = (i / n_files_found_even) * 100
-            if percent_complete % 10 == 0:
-                if self.verbose:
-                    print(f"{int(percent_complete)}% compared")
-                else:
-                    print(".", end="", flush=True)
-                if self.progress_listener:
-                    self.progress_listener.update(_("Image comparison"), percent_complete)
+            self._handle_progress(i, n_files_found_even, gathering_data=False)
 
             compare_file_embeddings = np.roll(self._file_embeddings, i, 0)
             color_similars = self._compute_embedding_diff(

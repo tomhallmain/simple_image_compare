@@ -301,15 +301,7 @@ class Compare(BaseCompare):
             if self.compare_faces:
                 self._file_faces = np.append(self._file_faces, [n_faces], 0)
             self._files_found.append(f)
-
-            percent_complete = counter / self.max_files_processed_even * 100
-            if percent_complete % 10 == 0:
-                if self.verbose:
-                    print(str(int(percent_complete)) + "% data gathered")
-                else:
-                    print(".", end="", flush=True)
-                if self.progress_listener:
-                    self.progress_listener.update(_("Image data collection"), percent_complete)
+            self._handle_progress(counter, self.max_files_processed_even)
 
         # Save image file data
 
@@ -514,14 +506,7 @@ class Compare(BaseCompare):
                 if i % 250 == 0 and i != len(self._files_found) and i > compare_result.i:
                     compare_result.store()
                 compare_result.i = i
-            percent_complete = (i / n_files_found_even) * 100
-            if percent_complete % 10 == 0:
-                if self.verbose:
-                    print(f"{int(percent_complete)}% compared")
-                else:
-                    print(".", end="", flush=True)
-                if self.progress_listener:
-                    self.progress_listener.update(_("Image comparison"), percent_complete)
+            self._handle_progress(i, n_files_found_even, gathering_data=False)
 
             compare_file_colors = np.roll(self._file_colors, i, 0)
             color_similars = self._compute_color_diff(

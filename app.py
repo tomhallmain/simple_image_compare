@@ -167,7 +167,7 @@ class App():
         top_level.title(_(" Simple Image Compare "))
         top_level.geometry(config.default_secondary_window_size)
         window_id = random.randint(1000000000, 9999999999)
-        App.secondary_top_levels[window_id] = top_level # Keep reference to avoid gc
+        App.secondary_top_levels[window_id] = top_level  # Keep reference to avoid gc
         if do_search and (image_path is None or image_path == ""):
             do_search = False
         _app = App(top_level, base_dir=base_dir, image_path=image_path, grid_sidebar=False, do_search=do_search, window_id=window_id)
@@ -195,12 +195,12 @@ class App():
     def toggle_theme(self, to_theme=None, do_toast=True):
         if (to_theme is None and AppStyle.IS_DEFAULT_THEME) or to_theme == AppStyle.LIGHT_THEME:
             if to_theme is None:
-                self.master.set_theme("breeze", themebg="black") # Changes the window to light theme
+                self.master.set_theme("breeze", themebg="black")  # Changes the window to light theme
             AppStyle.BG_COLOR = "gray"
             AppStyle.FG_COLOR = "black"
         else:
             if to_theme is None:
-                self.master.set_theme("black", themebg="black") # Changes the window to dark theme
+                self.master.set_theme("black", themebg="black")  # Changes the window to dark theme
             AppStyle.BG_COLOR = config.background_color if config.background_color and config.background_color != "" else "#26242f"
             AppStyle.FG_COLOR = config.foreground_color if config.foreground_color and config.foreground_color != "" else "white"
         AppStyle.IS_DEFAULT_THEME = (not AppStyle.IS_DEFAULT_THEME or to_theme == AppStyle.DARK_THEME) and to_theme != AppStyle.LIGHT_THEME
@@ -431,6 +431,8 @@ class App():
         self.master.bind("<Shift-R>", self.show_related_image)
         self.master.bind("<Shift-T>", self.find_related_images_in_open_window)
         self.master.bind("<Shift-Y>", self.set_marks_from_downstream_related_images)
+        self.master.bind("<Shift-V>", self.hide_current_image)
+        self.master.bind("<Shift-B>", self.clear_hidden_images)
         self.master.bind("<Shift-H>", self.get_help_and_config)
         self.master.bind("<Shift-S>", self.toggle_slideshow)
         self.master.bind("<MouseWheel>", lambda event: self.show_next_image() if event.delta > 0 else self.show_prev_image())
@@ -984,9 +986,13 @@ class App():
         in the list of matches.
         '''
         if self.mode == Mode.BROWSE:
+            start_file = self.file_browser.current_file()
+            previous_file = self.file_browser.previous_file()
+            while previous_file in self.compare_wrapper.hidden_images and previous_file != start_file:
+                previous_file = self.file_browser.previous_file()
             self.master.update()
             try:
-                self.create_image(self.file_browser.previous_file())
+                self.create_image(previous_file)
                 return True
             except Exception as e:
                 self.alert("Exception", str(e))
@@ -999,9 +1005,12 @@ class App():
         in the list of matches.
         '''
         if self.mode == Mode.BROWSE:
+            start_file = self.file_browser.current_file()
             next_file = self.file_browser.next_file()
             if self.img_path == next_file:
                 return True  # NOTE self.refresh() is calling this method in this case
+            while next_file in self.compare_wrapper.hidden_images and next_file != start_file:
+                next_file = self.file_browser.next_file()
             self.master.update()
             try:
                 self.create_image(next_file)
@@ -1026,6 +1035,10 @@ class App():
         if self.mode == Mode.BROWSE:
             if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.ALT]):
                 random_image = self.file_browser.random_file()
+                counter = 0
+                while random_image in self.compare_wrapper.hidden_images and counter < 50:
+                    random_image = self.file_browser.random_file()
+                    counter += 1
                 if os.path.isfile(random_image):
                     self.create_image(random_image)  # sets current image first
         filepath = self.get_active_image_filepath()
@@ -1388,7 +1401,13 @@ class App():
     def home(self, event=None, last_file=False):
         if self.mode == Mode.BROWSE:
             self.file_browser.refresh()
+            current_file = self.get_active_image_filepath()
+            if current_file is None:
+                raise Exception("No active image file.")
             if last_file:
+                last_image = self.file_browser.last_file()
+                while last_image in self.compare_wrapper.hidden_images and last_image != current_file:
+                    last_image = self.file_browser.prev_file()
                 self.create_image(self.file_browser.last_file())
                 if len(MarkedFiles.file_marks) == 1 and self.file_browser.has_file(MarkedFiles.file_marks[0]):
                     self._add_all_marks_from_last_or_current_group()
@@ -1396,7 +1415,10 @@ class App():
                 self.home(last_file=True)
                 return
             else:
-                self.create_image(self.file_browser.next_file())
+                first_image = current_file
+                while first_image in self.compare_wrapper.hidden_images and first_image != current_file:
+                    first_image = self.file_browser.next_file()
+                self.create_image(first_image)
             self.master.update()
         elif self.compare_wrapper.has_compare():
             self.compare_wrapper.current_group_index = 0
@@ -1405,13 +1427,19 @@ class App():
 
     def page_up(self, event=None):
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
-        next_file = self.file_browser.page_up(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_up(half_length=shift_key_pressed)
-        self.create_image(next_file)
+        current_image = self.get_active_image_filepath()
+        prev_file = self.file_browser.page_up(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_up(half_length=shift_key_pressed)
+        while prev_file in self.compare_wrapper.hidden_images and prev_file != current_image:
+            prev_file = self.file_browser.prev_file() if self.mode == Mode.BROWSE else self.compare_wrapper._get_prev_image()
+        self.create_image(prev_file)
         self.master.update()
 
     def page_down(self, event=None):
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
+        current_image = self.get_active_image_filepath()
         next_file = self.file_browser.page_down(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_down(half_length=shift_key_pressed)
+        while next_file in self.compare_wrapper.hidden_images and next_file != current_image:
+            next_file = self.file_browser.next_file() if self.mode == Mode.BROWSE else self.compare_wrapper._get_next_image()
         self.create_image(next_file)
         self.master.update()
 
@@ -1454,6 +1482,17 @@ class App():
                 filepath = filepath.replace("\\", "\\\\")
         self.master.clipboard_clear()
         self.master.clipboard_append(filepath)
+
+    def hide_current_image(self, event=None):
+        filepath = self.get_active_image_filepath()
+        if filepath not in self.compare_wrapper.hidden_images:
+            self.compare_wrapper.hidden_images.append(filepath)
+        self.toast(_("Hid current image.\nTo unhide, press Shift+B."))
+        self.show_next_image()
+
+    def clear_hidden_images(self, event=None):
+        self.compare_wrapper.hidden_images.clear()
+        self.toast(_("Cleared all hidden images."))
 
     def delete_image(self, event=None):
         '''
@@ -1519,7 +1558,6 @@ class App():
                 self.alert(_("Warning"),
                            _("Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."))
                 os.remove(filepath)
-
 
     def replace_current_image_with_search_image(self):
         '''
@@ -1637,6 +1675,8 @@ class App():
             label.destroy()
             toast.destroy()
         start_thread(self_destruct_after, use_asyncio=False, args=[config.toasts_persist_seconds])
+        if sys.platform == "darwin":
+            self.canvas.after(1, lambda: self.canvas.focus_force())
 
     def _set_label_state(self, text=None, group_number=None, size=-1):
         if text is not None:
@@ -1648,7 +1688,7 @@ class App():
                 args = (group_number + 1, len(self.compare_wrapper.file_groups), size)
                 self.label_state["text"] = Utils._wrap_text_to_fit_length(
                     _("GROUP_DETAILS").format(*args), 30)
-        else: # Set based on file count
+        else:  # Set based on file count
             file_count = self.file_browser.count()
             if file_count == 0:
                 text = _("No image files found")

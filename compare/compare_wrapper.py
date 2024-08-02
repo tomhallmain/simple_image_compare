@@ -33,6 +33,7 @@ class CompareWrapper:
         self.match_index = 0
         self.group_indexes = []
         self.max_group_index = 0
+        self.hidden_images = []
 
     def has_compare(self):
         return self._compare is not None
@@ -61,6 +62,22 @@ class CompareWrapper:
     def actual_group_index(self):
         return self.group_indexes[self.current_group_index]
 
+    def _get_prev_image(self):
+        if self.match_index > 0:
+            self.match_index -= 1
+        else:
+            self.match_index = len(self.files_matched) - 1
+
+        return self.current_match()
+
+    def _get_next_image(self):
+        if len(self.files_matched) > self.match_index + 1:
+            self.match_index += 1
+        else:
+            self.match_index = 0
+
+        return self.current_match()
+
     def show_prev_image(self, show_alert=True):
         if self.files_matched is None:
             return False
@@ -70,14 +87,12 @@ class CompareWrapper:
             return False
 
         self._app_actions._set_toggled_view_matches()
-
-        if self.match_index > 0:
-            self.match_index -= 1
-        else:
-            self.match_index = len(self.files_matched) - 1
-
+        prev_image = self._get_prev_image()
+        start_image = prev_image
+        while prev_image in self.hidden_images and prev_image != start_image:
+            prev_image = self._get_prev_image()
         self._master.update()
-        self._app_actions.create_image(self.current_match())
+        self._app_actions.create_image(prev_image)
         return True
 
     def show_next_image(self, show_alert=True):
@@ -89,16 +104,14 @@ class CompareWrapper:
             return False
 
         self._app_actions._set_toggled_view_matches()
-
-        if len(self.files_matched) > self.match_index + 1:
-            self.match_index += 1
-        else:
-            self.match_index = 0
+        next_image = self._get_next_image()
+        start_image = next_image
+        while next_image in self.hidden_images and next_image != start_image:
+            next_image = self._get_next_image()
 
         self._master.update()
-        self._app_actions.create_image(self.current_match())
+        self._app_actions.create_image(next_image)
         return True
-
 
     def find_next_unrelated_image(self, file_browser, forward=True):
         found_unrelated_image = False

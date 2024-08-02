@@ -86,6 +86,8 @@ A directory with images must be set before most of the below bindings will have 
 | Home             |                  | Go to first image      |
 | Page Up          |                  | Page through images    |
 | Page Down        |                  | Page through images    |
+| Shift+V          |                  | Hide current image     |
+| Shift+B          |                  | Clear hidden images    |
 | Shift-M          |                  | Add/remove a mark      |
 | Shift-N          |                  | Add marks from last    |
 | Shift-G          |                  | Go to next mark        |
@@ -111,7 +113,7 @@ A directory with images must be set before most of the below bindings will have 
 
 ## Move Marks Window Behavior
 
-When the move marks window is open -- with or without GUI -- marks can be moved to a target directory with the GUI elements if visible, or by pressing the Enter key. After pressing the Enter key, a number of things can occur:
+When the move marks window is open -- with or without GUI -- marks can be moved to a target directory by pressing the Enter key, or with the GUI elements if visible. After pressing the Enter key, a number of things can occur:
 
 - If no target directories have been set, a folder picker window will open to set a new directory.
 
