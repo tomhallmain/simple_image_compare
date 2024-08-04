@@ -10,8 +10,20 @@ class Mode(Enum):
     GROUP = _("Group Comparison Mode")
     DUPLICATES = _("Duplicate Detection Mode")
 
+    def get_text(self):
+        if self == Mode.BROWSE:
+            return _("Browsing Mode")
+        elif self == Mode.SEARCH:
+            return _("Searching Mode")
+        elif self == Mode.GROUP:
+            return _("Group Comparison Mode")
+        elif self == Mode.DUPLICATES:
+            return _("Duplicate Detection Mode")
+        raise Exception("Unhandled Mode text: " + str(self.mode))
+
     def __str__(self):
         return self.value
+
 
 class CompareMode(Enum):
     COLOR_MATCHING = _("Color Matching")
@@ -37,12 +49,13 @@ class CompareMode(Enum):
             return _("Color diff threshold")
         if self == CompareMode.CLIP_EMBEDDING:
             return _("Embedding similarity threshold")
-    
+
     def threshold_vals(self):
         if self == CompareMode.COLOR_MATCHING:
             return [str(i) for i in list(range(31))]
         if self == CompareMode.CLIP_EMBEDDING:
             return [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.925, 0.95, 0.98, 0.99]
+
 
 class SortBy(Enum):
     NAME = _("Name")
@@ -68,6 +81,7 @@ class SortBy(Enum):
     def members():
         return [str(value) for key, value in SortBy.__members__.items()]
 
+
 class Sort(Enum):
     ASC = _("ascending")
     DESC = _("descending")
@@ -77,9 +91,8 @@ class Sort(Enum):
         return self.value
 
 
-
 class ImageGenerationType(Enum):
-    REDO_PROMPT= "redo_prompt"
+    REDO_PROMPT = "redo_prompt"
     CONTROL_NET = "control_net"
     IP_ADAPTER = "ip_adapter"
     RENOISER = "renoiser"

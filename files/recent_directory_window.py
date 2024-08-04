@@ -200,9 +200,9 @@ class RecentDirectoryWindow():
     def handle_directory(self, event=None, _dir=None):
         """
         Have to call this when user is setting a new directory as well, in which case _dir will be None.
-        
+
         In this case we will need to add the new directory to the list of valid directories.
-        
+
         Also in this case, this function will call itself by calling set_directory(),
         just this time with the directory set.
         """
@@ -306,18 +306,18 @@ class RecentDirectoryWindow():
                     temp.append(_dir)
             for _dir in RecentDirectories.directories:
                 basename = os.path.basename(os.path.normpath(_dir))
-                if not _dir in temp:
+                if _dir not in temp:
                     if basename.lower().startswith(self.filter_text):
                         temp.append(_dir)
             # Second pass try to match parent directory name, so these will appear after
             for _dir in RecentDirectories.directories:
-                if not _dir in temp:
+                if _dir not in temp:
                     dirname = os.path.basename(os.path.dirname(os.path.normpath(_dir)))
                     if dirname and dirname.lower().startswith(self.filter_text):
                         temp.append(_dir)
             # Third pass try to match part of the basename
             for _dir in RecentDirectories.directories:
-                if not _dir in temp:
+                if _dir not in temp:
                     basename = os.path.basename(os.path.normpath(_dir))
                     if basename and (f" {self.filter_text}" in basename.lower() or f"_{self.filter_text}" in basename.lower()):
                         temp.append(_dir)
@@ -388,4 +388,3 @@ class RecentDirectoryWindow():
             setattr(self, button_ref_name, button)
             button # for some reason this is necessary to maintain the reference?
             button.grid(row=row, column=column)
-

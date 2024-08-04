@@ -23,6 +23,7 @@ _ = I18N._
 # TODO: fix image generation mode selection widget
 # TODO: rename file
 
+
 def get_readable_file_size(path):
     size = os.path.getsize(path)
     if size < 1024:
@@ -31,6 +32,7 @@ def get_readable_file_size(path):
         return str(round(size/1024, 1)) + " KB"
     else:
         return str(round(size/(1024*1024), 1)) + " MB"
+
 
 class ImageDetails():
     related_image_canvas = None
@@ -312,7 +314,7 @@ class ImageDetails():
     @staticmethod
     def get_downstream_related_images(image_path, other_base_dir, app_actions, force_refresh=False):
         key = image_path + "/" + other_base_dir
-        if force_refresh or not key in ImageDetails.downstream_related_images_cache:
+        if force_refresh or key not in ImageDetails.downstream_related_images_cache:
             ImageDetails.refresh_downstream_related_image_cache(key, image_path, other_base_dir)
             downstream_related_images = ImageDetails.downstream_related_images_cache[key]
             toast_text = _("%s downstream image(s) found.").format(len(downstream_related_images))
@@ -343,7 +345,6 @@ class ImageDetails():
         ImageDetails.downstream_related_image_index += 1
         return downstream_related_image_path
 
-
     def set_image_generation_mode(self, event=None):
         ImageDetails.image_generation_mode = ImageGenerationType.get(self.image_generation_mode_var.get())
 
@@ -356,7 +357,6 @@ class ImageDetails():
             app_actions.run_image_generation(_type=ImageDetails.image_generation_mode, image_path=ImageDetails.previous_image_generation_image)
         else:
             app_actions.run_image_generation(_type=ImageDetails.image_generation_mode)
-
 
     def update_tags(self):
         print(f"Updating tags for {self.image_path}")
@@ -395,11 +395,10 @@ class ImageDetails():
         if getattr(self, button_ref_name) is None:
             button = Button(master=self.frame, text=text, command=command)
             setattr(self, button_ref_name, button)
-            button # for some reason this is necessary to maintain the reference?
+            button  # for some reason this is necessary to maintain the reference?
             button.grid(row=row, column=column)
         if increment_row_counter:
             if column == 0:
                 self.row_count0 += 1
             else:
                 self.row_count1 += 1
-

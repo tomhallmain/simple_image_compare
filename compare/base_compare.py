@@ -11,6 +11,9 @@ from utils.translations import I18N
 
 _ = I18N._
 
+# TODO - Add CompareData class for mode-agnostic data handling
+# TODO - Make below functions part of the BaseCompare class
+
 
 def gather_files(base_dir=".", exts=config.file_types, recursive=True):
     files = []
@@ -133,7 +136,8 @@ class BaseCompare:
                 print(".", end="", flush=True)
             if self.progress_listener and sys.platform != "darwin":
                 # TODO there is a bug with updating master here on OSX for some reason.
-                desc2 = _("Image data collection") if gathering_data else _("Image comparison")
+                desc2 = _("Image data collection") if gathering_data else _(
+                    "Image comparison")
                 self.progress_listener.update(desc2, percent_complete)
 
     def print_settings(self):

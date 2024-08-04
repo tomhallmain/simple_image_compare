@@ -42,7 +42,7 @@ class MarkedFiles():
     last_set_target_dir = None
     file_browser = None # a file browser for test_is_in_directory
 
-    # For file operations that take a while because they involve many files, pressing Ctrl+Z while they are 
+    # For file operations that take a while because they involve many files, pressing Ctrl+Z while they are
     # running should not attempt to undo the action before the currently running one.
     is_performing_action = False
     is_cancelled_action = False
@@ -258,9 +258,9 @@ class MarkedFiles():
         """
         Have to call this when user is setting a new target directory as well,
         in which case target_dir will be None.
-        
+
         In this case we will need to add the new target dir to the list of valid directories.
-        
+
         Also in this case, this function will call itself by calling
         move_marks_to_target_dir(), just this time with the directory set.
         """
@@ -272,7 +272,7 @@ class MarkedFiles():
             return target_dir
 
         target_dir = os.path.normpath(target_dir)
-        if not target_dir in MarkedFiles.mark_target_dirs:
+        if target_dir not in MarkedFiles.mark_target_dirs:
             MarkedFiles.mark_target_dirs.append(target_dir)
             MarkedFiles.mark_target_dirs.sort()
         if move_func is not None:
@@ -346,7 +346,7 @@ class MarkedFiles():
             matching_files = False
             for marked_file, exc_tuple in exceptions.items():
                 print(exc_tuple[0])
-                if not marked_file in invalid_files:
+                if marked_file not in invalid_files:
                     if not config.clear_marks_with_errors_after_move and not single_image:
                         # Just in case some of them failed to move for whatever reason.
                         MarkedFiles.file_marks.append(marked_file)
@@ -426,7 +426,7 @@ class MarkedFiles():
         MarkedFiles.previous_marks.clear()
         if len(exceptions) > 0:
             for marked_file in exceptions.keys():
-                if not marked_file in invalid_files:
+                if marked_file not in invalid_files:
                     MarkedFiles.previous_marks.append(marked_file) # Just in case some of them failed to move for whatever reason.
             action_part3 = "move" if is_moving_back else "copy"
             raise Exception(f"Failed to {action_part3} some files: {exceptions}")
@@ -447,13 +447,13 @@ class MarkedFiles():
 
         for target_dir in target_dirs_to_add:
             dirpath = os.path.normpath(os.path.join(parent_dir, target_dir))
-            if not dirpath in MarkedFiles.mark_target_dirs:
+            if dirpath not in MarkedFiles.mark_target_dirs:
                 if dirpath != self.base_dir:
                     MarkedFiles.mark_target_dirs.append(dirpath)
 
         MarkedFiles.mark_target_dirs.sort()
         self.filtered_target_dirs = MarkedFiles.mark_target_dirs[:]
-        self.filter_text = "" # Clear the filter to ensure all new directories are shown
+        self.filter_text = ""  # Clear the filter to ensure all new directories are shown
         self.clear_widget_lists()
         self.add_target_dir_widgets()
         self.master.update()
@@ -502,18 +502,18 @@ class MarkedFiles():
                     temp.append(target_dir)
             for target_dir in MarkedFiles.mark_target_dirs:
                 basename = os.path.basename(os.path.normpath(target_dir))
-                if not target_dir in temp:
+                if target_dir not in temp:
                     if basename.lower().startswith(self.filter_text):
                         temp.append(target_dir)
             # Second pass try to match parent directory name, so these will appear after
             for target_dir in MarkedFiles.mark_target_dirs:
-                if not target_dir in temp:
+                if target_dir not in temp:
                     dirname = os.path.basename(os.path.dirname(os.path.normpath(target_dir)))
                     if dirname and dirname.lower().startswith(self.filter_text):
                         temp.append(target_dir)
             # Third pass try to match part of the basename
             for target_dir in MarkedFiles.mark_target_dirs:
-                if not target_dir in temp:
+                if target_dir not in temp:
                     basename = os.path.basename(os.path.normpath(target_dir))
                     if basename and (f" {self.filter_text}" in basename.lower() or f"_{self.filter_text}" in basename.lower()):
                         temp.append(target_dir)
@@ -523,7 +523,6 @@ class MarkedFiles():
             self.clear_widget_lists()
             self.add_target_dir_widgets()
             self.master.update()
-
 
     def do_action(self, event):
         """
@@ -610,7 +609,6 @@ class MarkedFiles():
         self.copy_btn_list = []
         self.label_list = []
 
-
     def delete_marked_files(self, event=None):
         """
         Delete the marked files.
@@ -646,10 +644,9 @@ class MarkedFiles():
             self.app_actions.toast(_("Deleted %s marked files.").format(len(removed_files)))
 
         # In the BROWSE case, the file removal should be recognized by the file browser
-        ## TODO it will not be handled in case of using file JSON. need to handle this case separately.        
+        ## TODO it will not be handled in case of using file JSON. need to handle this case separately.
         self.app_actions.refresh(removed_files=(removed_files if self.app_mode != Mode.BROWSE else []))
         self.close_windows()
-
 
     def do_action_test_is_in_directory(self, event):
         control_key_pressed, alt_key_pressed = Utils.modifier_key_pressed(
@@ -755,9 +752,9 @@ class MarkedFiles():
         self.master.destroy()
         if self.single_image is not None and len(MarkedFiles.file_marks) == 1:
             # This implies the user has opened the marks window directly from the current image
-            # but did not take any action on this marked file. It's possible that the action 
+            # but did not take any action on this marked file. It's possible that the action
             # the user requested was already taken, and an error was thrown preventing it from
-            # being repeated and overwriting the file. If so the user likely doesn't want to 
+            # being repeated and overwriting the file. If so the user likely doesn't want to
             # take any more actions on this file so we can forget about it.
             MarkedFiles.file_marks.clear()
             self.app_actions.toast(_("Cleared marked file"))
@@ -771,7 +768,7 @@ class MarkedFiles():
         if getattr(self, button_ref_name) is None:
             button = Button(master=self.frame, text=text, command=command)
             setattr(self, button_ref_name, button)
-            button # for some reason this is necessary to maintain the reference?
+            button  # for some reason this is necessary to maintain the reference?
             button.grid(row=row, column=column)
 
     @staticmethod
@@ -805,4 +802,3 @@ class MarkedFiles():
                 app_actions.toast(_("Marks cleared."))
             elif removed_count > 0:
                 app_actions.toast(_("Removed {0} marks").format(removed_count))
-

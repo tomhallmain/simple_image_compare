@@ -15,7 +15,7 @@ import tkinter as tk
 from tkinter import Canvas, PhotoImage, filedialog, messagebox, HORIZONTAL, Label, Checkbutton
 from tkinter.constants import W
 import tkinter.font as fnt
-from tkinter.ttk import Button, Entry, Frame, OptionMenu, Progressbar, Style
+from tkinter.ttk import Button, Entry, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
@@ -37,7 +37,7 @@ from utils.help_and_config import HelpAndConfig
 from utils.running_tasks_registry import periodic, start_thread
 from utils.translations import I18N
 from utils.utils import Utils, ModifierKey
-from image.image_details import ImageDetails # must import after config because of dynamic import
+from image.image_details import ImageDetails  # must import after config because of dynamic import
 
 _ = I18N._
 
@@ -55,7 +55,6 @@ _ = I18N._
 ### TODO mechanism to temporarily hide images while in directory, without marking them
 
 ### TODO replace restored files to compare if present after previous deletion
-
 
 
 class ResizingCanvas(Canvas):
@@ -135,8 +134,6 @@ class ProgressListener:
         self.update_func(context, percent_complete)
 
 
-
-
 class App():
     '''
     UI for comparing image files and making related file changes.
@@ -153,12 +150,15 @@ class App():
                 if _app.base_dir == base_dir:
                     if image_path is not None and image_path != "":
                         if do_search:
+#                            print("Doing search: " + str(image_path))
+                            _app.search_img_path_box.delete(0, "end")
                             _app.search_img_path_box.insert(0, image_path)
                             _app.set_search()
                         else:
                             _app.go_to_file(search_text=image_path)
                     _app.canvas.after(1, lambda: _app.canvas.focus_force())
                     return
+#                print(f"app base dir \"{_app.base_dir}\" was not base dir: {base_dir}")
         if master is None:
             # Usually want to do this because if a secondary window is the source of another secondary window and that initial secondary window
             # is closed, the second secondary window will also be closed because its master has been destroyed.
@@ -215,7 +215,6 @@ class App():
         self.master.update()
         if do_toast:
             self.toast(f"Theme switched to {AppStyle.get_theme_name()}.")
-
 
     def __init__(self, master, base_dir=None, image_path=None, grid_sidebar=config.sidebar_visible, do_search=False, window_id=0):
         self.master = master
@@ -488,10 +487,16 @@ class App():
         else:
             base_dir = self.load_info_cache()
 
+        App.open_windows.append(self)
+
         if base_dir is not None and base_dir != "" and base_dir != "." and os.path.isdir(base_dir):
 #            print(f"Setting base dir to {base_dir} on window ID {self.window_id} before self.set_base_dir")
             self.set_base_dir_box.insert(0, base_dir)
             self.set_base_dir(base_dir_from_dir_window=base_dir)
+
+        if not self.is_secondary():
+            for _dir in app_info_cache.get_meta("secondary_base_dirs", default_val=[]):
+                App.add_secondary_window(_dir)
 
         self.canvas.after(1, lambda: self.canvas.focus_force())
 
@@ -503,13 +508,11 @@ class App():
             else:
                 self.go_to_file(search_text=image_path)
 
-        App.open_windows.append(self)
-
     def is_secondary(self):
         return self.window_id > 0
 
     def on_closing(self):
-        self.store_info_cache()
+        self.store_info_cache(store_window_state=not self.is_secondary())
         if self.is_secondary():
             MarkedFiles.remove_marks_for_base_dir(self.base_dir, self.app_actions)
             for i in range(len(App.open_windows)):
@@ -554,7 +557,7 @@ class App():
         Change the current mode of the application.
         '''
         self.mode = mode
-        self.label_mode['text'] = str(mode)
+        self.label_mode['text'] = mode.get_text()
         if mode != Mode.SEARCH:
             self.destroy_grid_element("toggle_image_view_btn")
             self.destroy_grid_element("replace_current_image_btn")
@@ -1250,7 +1253,7 @@ class App():
             else:
                 files = self.compare_wrapper.select_series(start_file=MarkedFiles.file_marks[-1], end_file=self.img_path)
         for _file in files:
-            if not _file in MarkedFiles.file_marks:
+            if _file not in MarkedFiles.file_marks:
                 MarkedFiles.file_marks.append(_file)
         self.toast(_("Marks added. Total set: {0}").format(len(MarkedFiles.file_marks)))
 
@@ -1613,7 +1616,7 @@ class App():
         self.refacdir_client.run(self.img_path)
         self.toast(_("Running refacdir"))
 
-    def store_info_cache(self):
+    def store_info_cache(self, store_window_state=False):
         base_dir = self.get_base_dir()
         # print(f"Base dir for store_info_cache: {base_dir}")
         if base_dir and base_dir != "":
@@ -1623,6 +1626,12 @@ class App():
                 app_info_cache.set(base_dir, "image_cursor", os.path.basename(self.img_path))
             app_info_cache.set(base_dir, "recursive", self.file_browser.is_recursive())
             app_info_cache.set(base_dir, "sort_by", str(self.file_browser.get_sort_by()))
+        if store_window_state:
+            secondary_base_dirs = []
+            for _app in App.open_windows:
+                if _app.is_secondary() and _app.base_dir not in secondary_base_dirs:
+                    secondary_base_dirs.append(_app.base_dir)
+            app_info_cache.set_meta("secondary_base_dirs", secondary_base_dirs)
         app_info_cache.set_meta("recent_directories", RecentDirectories.directories)
         app_info_cache.set_meta("marked_file_target_dirs", MarkedFiles.mark_target_dirs)
         app_info_cache.store()

@@ -30,7 +30,7 @@ class SortableFile:
         except Exception:
             self.ctime = datetime.fromtimestamp(0)
             self.mtime = datetime.fromtimestamp(0)
-            self.size = 0            
+            self.size = 0
         self.tags = self.get_tags()
 
     def get_tags(self):
@@ -107,7 +107,7 @@ class FileBrowser:
     def refresh(self, refresh_cursor=True, file_check=False, removed_files=[]):
         last_files = self.get_files() if file_check else []
         if config.use_file_paths_json:
-            self.update_json_for_removed_files(removed_files)            
+            self.update_json_for_removed_files(removed_files)
         if refresh_cursor:
             with self.cursor_lock:
                 self.file_cursor = -1
@@ -344,7 +344,7 @@ class FileBrowser:
     def get_sorted_filepaths(self, sortable_files):
         if self.sort == Sort.RANDOM:
             sortable_files = list(sortable_files)
-            shuffle(sortable_files) # TODO technically should be caching the random sort state somehow
+            shuffle(sortable_files)  # TODO technically should be caching the random sort state somehow
         else:
             reverse = self.sort == Sort.DESC
 
@@ -352,9 +352,9 @@ class FileBrowser:
                 sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=reverse)
             elif self.sort_by == SortBy.NAME:
                 sortable_files = Utils.alphanumeric_sort(sortable_files, text_lambda=lambda sf: sf.basename.lower(), reverse=reverse)
-            elif self.sort_by == SortBy.CREATION_TIME:  
+            elif self.sort_by == SortBy.CREATION_TIME:
                 sortable_files.sort(key=lambda sf: sf.ctime, reverse=reverse)
-            elif self.sort_by == SortBy.MODIFY_TIME:  
+            elif self.sort_by == SortBy.MODIFY_TIME:
                 sortable_files.sort(key=lambda sf: sf.mtime, reverse=reverse)
             elif self.sort_by == SortBy.TYPE:
                 # Sort by full path first, then by extension
@@ -375,7 +375,7 @@ class FileBrowser:
 
     def _gather_files(self, files=None):
         allowed_extensions = config.file_types
-        if files is None: # This is not the standard use case, only used in methods where we don't care about sorting
+        if files is None:  # This is not the standard use case, only used in methods where we don't care about sorting
             self.filepaths.clear()
             files = self.filepaths
 
@@ -385,7 +385,7 @@ class FileBrowser:
                 filtered_files = [f for f in filepaths if re.search(self.filter, f)]
             else:
                 pattern = "**/" + self.filter if self.recursive else self.filter
-                if not "*" in pattern or (pattern.startswith("**") and not pattern.endswith("*")):
+                if "*" not in pattern or (pattern.startswith("**") and not pattern.endswith("*")):
                     pattern += "*"
                 recursive = self.recursive or self.filter.startswith("**/")
                 filtered_files = glob.glob(os.path.join(self.directory, pattern), recursive=recursive)
