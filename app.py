@@ -19,7 +19,6 @@ from tkinter.ttk import Button, Entry, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
 from PIL import ImageTk, Image
 
-from compare.compare import get_valid_file
 from compare.compare_args import CompareArgs
 from compare.compare_wrapper import CompareWrapper
 from extensions.refacdir_client import RefacDirClient
@@ -37,7 +36,8 @@ from utils.help_and_config import HelpAndConfig
 from utils.running_tasks_registry import periodic, start_thread
 from utils.translations import I18N
 from utils.utils import Utils, ModifierKey
-from image.image_details import ImageDetails  # must import after config because of dynamic import
+# must import after config because of dynamic import
+from image.image_details import ImageDetails
 
 _ = I18N._
 
@@ -53,6 +53,7 @@ _ = I18N._
 ### TODO compare window (only compare a set of images from directory, sorted by some logic)
 ### TODO drag and drop images to auto-set directory and image
 ### TODO mechanism to temporarily hide images while in directory, without marking them
+### TODO some way to crop an image and search by that cropped part
 
 ### TODO replace restored files to compare if present after previous deletion
 
@@ -150,7 +151,7 @@ class App():
                 if _app.base_dir == base_dir:
                     if image_path is not None and image_path != "":
                         if do_search:
-#                            print("Doing search: " + str(image_path))
+                            # print("Doing search: " + str(image_path))
                             _app.search_img_path_box.delete(0, "end")
                             _app.search_img_path_box.insert(0, image_path)
                             _app.set_search()
@@ -158,7 +159,7 @@ class App():
                             _app.go_to_file(search_text=image_path)
                     _app.canvas.after(1, lambda: _app.canvas.focus_force())
                     return
-#                print(f"app base dir \"{_app.base_dir}\" was not base dir: {base_dir}")
+                # print(f"app base dir \"{_app.base_dir}\" was not base dir: {base_dir}")
         if master is None:
             # Usually want to do this because if a secondary window is the source of another secondary window and that initial secondary window
             # is closed, the second secondary window will also be closed because its master has been destroyed.
@@ -170,7 +171,8 @@ class App():
         App.secondary_top_levels[window_id] = top_level  # Keep reference to avoid gc
         if do_search and (image_path is None or image_path == ""):
             do_search = False
-        _app = App(top_level, base_dir=base_dir, image_path=image_path, grid_sidebar=False, do_search=do_search, window_id=window_id)
+        _app = App(top_level, base_dir=base_dir, image_path=image_path,
+                   grid_sidebar=False, do_search=do_search, window_id=window_id)
 
     @staticmethod
     def get_window(window_id=None, base_dir=None, img_path=None, refocus=False):
@@ -203,15 +205,18 @@ class App():
                 self.master.set_theme("black", themebg="black")  # Changes the window to dark theme
             AppStyle.BG_COLOR = config.background_color if config.background_color and config.background_color != "" else "#26242f"
             AppStyle.FG_COLOR = config.foreground_color if config.foreground_color and config.foreground_color != "" else "white"
-        AppStyle.IS_DEFAULT_THEME = (not AppStyle.IS_DEFAULT_THEME or to_theme == AppStyle.DARK_THEME) and to_theme != AppStyle.LIGHT_THEME
+        AppStyle.IS_DEFAULT_THEME = (not AppStyle.IS_DEFAULT_THEME or to_theme
+                                     == AppStyle.DARK_THEME) and to_theme != AppStyle.LIGHT_THEME
         self.master.config(bg=AppStyle.BG_COLOR)
         self.sidebar.config(bg=AppStyle.BG_COLOR)
         self.canvas.config(bg=AppStyle.BG_COLOR)
         for name, attr in self.__dict__.items():
             if isinstance(attr, Label):
-                attr.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR, font=fnt.Font(size=config.font_size))
+                attr.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR,
+                            font=fnt.Font(size=config.font_size))
             elif isinstance(attr, Checkbutton):
-                attr.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR, selectcolor=AppStyle.BG_COLOR, font=fnt.Font(size=config.font_size))
+                attr.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR,
+                            selectcolor=AppStyle.BG_COLOR, font=fnt.Font(size=config.font_size))
         self.master.update()
         if do_toast:
             self.toast(f"Theme switched to {AppStyle.get_theme_name()}.")
@@ -321,7 +326,7 @@ class App():
         self.label_compare_mode = Label(self.sidebar)
         self.add_label(self.label_compare_mode, _("Compare mode"))
         self.compare_mode_var = tk.StringVar()
-        self.compare_mode_choice = OptionMenu(self.sidebar, self.compare_mode_var, str(self.compare_wrapper.compare_mode),
+        self.compare_mode_choice = OptionMenu(self.sidebar, self.compare_mode_var, self.compare_wrapper.compare_mode.get_text(),
                                               *CompareMode.members(), command=self.set_compare_mode)
         self.apply_to_grid(self.compare_mode_choice, sticky=W)
 
@@ -364,7 +369,7 @@ class App():
         self.label_sort_by = Label(self.sidebar)
         self.add_label(self.label_sort_by, _("Browsing mode - Sort by"))
         self.sort_by = tk.StringVar()
-        self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by, config.sort_by.value,
+        self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by, config.sort_by.get_text(),
                                          *SortBy.members(), command=self.set_sort_by)
         self.apply_to_grid(self.sort_by_choice, sticky=W)
 
@@ -380,7 +385,7 @@ class App():
 
         search_return_closest_var = tk.BooleanVar(value=config.search_only_return_closest)
         self.search_return_closest_choice = Checkbutton(self.sidebar, text=_('Search only return closest'),
-                                              variable=search_return_closest_var, command=self.compare_wrapper.toggle_search_only_return_closest)
+                                                        variable=search_return_closest_var, command=self.compare_wrapper.toggle_search_only_return_closest)
         self.apply_to_grid(self.search_return_closest_choice, sticky=W)
 
         ################################ Run context-aware UI elements
@@ -490,7 +495,7 @@ class App():
         App.open_windows.append(self)
 
         if base_dir is not None and base_dir != "" and base_dir != "." and os.path.isdir(base_dir):
-#            print(f"Setting base dir to {base_dir} on window ID {self.window_id} before self.set_base_dir")
+            # print(f"Setting base dir to {base_dir} on window ID {self.window_id} before self.set_base_dir")
             self.set_base_dir_box.insert(0, base_dir)
             self.set_base_dir(base_dir_from_dir_window=base_dir)
 
@@ -522,6 +527,9 @@ class App():
             del App.secondary_top_levels[self.window_id]
             self.file_check_config.end_filecheck()
             self.slideshow_config.end_slideshows()
+        else:
+            for _app in App.open_windows:
+                _app.store_info_cache()
         self.master.destroy()
 
     def quit(self, event=None):
@@ -608,7 +616,8 @@ class App():
 
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
         # TODO if some removed files are in a different window than self, find the window and refresh it as well with those files removed.
-        self.file_browser.refresh(refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files)
+        self.file_browser.refresh(
+            refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files)
         if len(removed_files) > 0:
             if self.mode == Mode.BROWSE:
                 self._set_label_state()
@@ -624,7 +633,8 @@ class App():
             self.show_next_image()
             self._set_label_state()
             if show_new_images and has_new_images:
-                self.delete_lock = True # User may have started delete just before the image changes, lock for a short period after to ensure no misdeletion
+                # User may have started delete just before the image changes, lock for a short period after to ensure no misdeletion
+                self.delete_lock = True
                 time.sleep(1)
                 self.delete_lock = False
         else:
@@ -643,7 +653,7 @@ class App():
 
     @periodic(registry_attr_name="slideshow_config")
     async def do_slideshow(self, **kwargs):
-        if self.slideshow_config.slideshow_running and self.mode == Mode.BROWSE:
+        if self.slideshow_config.slideshow_running:
             if config.debug:
                 print("Slideshow next image")
             base_dir = self.set_base_dir_box.get()
@@ -684,7 +694,7 @@ class App():
             else:
                 RecentDirectoryWindow.last_comparison_directory = None
         if len(App.secondary_top_levels) == 0:
-            return self, [self.base_dir] # should be main window in this case
+            return self, [self.base_dir]  # should be main window in this case
         window = None
         other_dirs = []
         for _app in App.open_windows:
@@ -734,8 +744,8 @@ class App():
 
     def check_many_files(self, window, action="do this action", threshold=2000):
         if window.file_browser.is_slow_total_files(threshold=threshold):
-            res = self.alert(_("Many Files"), f"There are a lot of files in {window.base_dir} and it may take a while" + # TODO i18n
-                             f" to {action}.\n\nWould you like to proceed?", kind="askokcancel")
+            res = self.alert(_("Many Files"), f"There are a lot of files in {window.base_dir} and it may take a while"  # TODO i18n
+                             + f" to {action}.\n\nWould you like to proceed?", kind="askokcancel")
             return res != messagebox.OK and res != True
         return False
 
@@ -743,7 +753,8 @@ class App():
         if base_dir is None:
             window, dirs = self.get_other_window_or_self_dir()
             if window is None:
-                self.open_recent_directory_window(extra_callback_args=(self.find_related_images_in_open_window, dirs))
+                self.open_recent_directory_window(extra_callback_args=(
+                    self.find_related_images_in_open_window, dirs))
                 return
             base_dir = dirs[0]
         else:
@@ -763,7 +774,8 @@ class App():
         if base_dir is None:
             window, dirs = self.get_other_window_or_self_dir()
             if window is None:
-                self.open_recent_directory_window(extra_callback_args=(self.set_marks_from_downstream_related_images, dirs))
+                self.open_recent_directory_window(extra_callback_args=(
+                    self.set_marks_from_downstream_related_images, dirs))
                 return
             base_dir = dirs[0]
         else:
@@ -772,7 +784,8 @@ class App():
             image_to_use = self.img_path if len(MarkedFiles.file_marks) != 1 else MarkedFiles.file_marks[0]
         if self.check_many_files(window, action="find related images"):
             return
-        downstream_related_images = ImageDetails.get_downstream_related_images(image_to_use, base_dir, self.app_actions, force_refresh=True)
+        downstream_related_images = ImageDetails.get_downstream_related_images(
+            image_to_use, base_dir, self.app_actions, force_refresh=True)
         if downstream_related_images is not None:
             MarkedFiles.file_marks = downstream_related_images
             self.toast(_("{0} file marks set").format(len(downstream_related_images)))
@@ -812,7 +825,7 @@ class App():
         elif (base_dir == "" or base_dir == "Add dirpath..." or self.base_dir == base_dir) and len(RecentDirectories.directories) == 0:
             base_dir = filedialog.askdirectory(
                 initialdir=self.get_base_dir(), title="Set image comparison directory")
-            self.base_dir = get_valid_file(self.base_dir, base_dir)
+            self.base_dir = Utils.get_valid_file(self.base_dir, base_dir)
             if self.base_dir is None:
                 raise Exception("Failed to set image comparison directory")
             RecentDirectories.directories.append(self.base_dir)
@@ -830,15 +843,22 @@ class App():
         # Update settings to those last set for this directory, if found
         recursive = app_info_cache.get(self.base_dir, "recursive", default_val=False)
         sort_by = app_info_cache.get(self.base_dir, "sort_by", default_val=self.sort_by.get())
+        compare_mode = app_info_cache.get(self.base_dir, "compare_mode", default_val=self.compare_wrapper.compare_mode.get_text())
         if recursive != self.image_browse_recurse_var.get():
             self.image_browse_recurse_var.set(recursive)
             self.file_browser.set_recursive(recursive)
         try:
+            if compare_mode != self.compare_wrapper.compare_mode.get_text():
+                self.compare_mode_var.set(compare_mode)
+                self.compare_wrapper.compare_mode = CompareMode.get(compare_mode)
+        except Exception as e:
+            print("Error setting stored compare mode: " + str(e))
+        try:
             if sort_by != self.sort_by.get():
                 self.sort_by.set(sort_by)
                 self.file_browser.set_sort_by(SortBy.get(sort_by))
-        except Exception:
-            pass
+        except Exception as e:
+            print("Error setting stored sort by: " + str(e))
         if not self.compare_wrapper.has_compare():
             self.set_mode(Mode.BROWSE)
             previous_file = app_info_cache.get(self.base_dir, "image_cursor")
@@ -879,14 +899,12 @@ class App():
         if image_path is None or image_path == "":
             self.compare_wrapper.search_image_full_path = None
             return None
-        search_file = get_valid_file(self.get_base_dir(), image_path)
+        search_file = Utils.get_valid_file(self.get_base_dir(), image_path)
         if search_file is None:
-            search_file = get_valid_file(self.get_search_dir(), image_path)
+            search_file = Utils.get_valid_file(self.get_search_dir(), image_path)
             if search_file is None:
-                self.alert("Invalid search file",
-                           "Search file is not a valid file for base dir.", kind="error")
-                raise AssertionError(
-                    "Search file is not a valid file.")
+                self.alert("Invalid search file", "Search file is not a valid file for base dir.", kind="error")
+                raise AssertionError("Search file is not a valid file.")
         return search_file
 
     def get_counter_limit(self) -> int | None:
@@ -948,7 +966,8 @@ class App():
             args.negative_search_file_path = None
 
         if args.search_text is not None or args.search_text_negative is not None:
-            self.compare_wrapper.validate_compare_mode(CompareMode.CLIP_EMBEDDING, _("Compare mode must be set to Clip embedding to search text embeddings"))
+            self.compare_wrapper.validate_compare_mode(CompareMode.CLIP_EMBEDDING, _(
+                "Compare mode must be set to Clip embedding to search text embeddings"))
 
         if image_path is not None and not os.path.isfile(image_path):
             image_path = filedialog.askopenfilename(
@@ -1028,9 +1047,11 @@ class App():
         Execute a new image search from the provided search image.
         '''
         if base_dir is None:
-            window, dirs = self.get_other_window_or_self_dir(allow_current_window=True, prefer_compare_window=True)
+            window, dirs = self.get_other_window_or_self_dir(
+                allow_current_window=True, prefer_compare_window=True)
             if window is None:
-                self.open_recent_directory_window(extra_callback_args=(self.set_current_image_run_search, dirs))
+                self.open_recent_directory_window(extra_callback_args=(
+                    self.set_current_image_run_search, dirs))
                 return
             base_dir = dirs[0]
         else:
@@ -1061,9 +1082,11 @@ class App():
         filepath = self.get_active_image_filepath()
         if filepath:
             if base_dir is None:
-                window, dirs = self.get_other_window_or_self_dir(allow_current_window=True, prefer_compare_window=True)
+                window, dirs = self.get_other_window_or_self_dir(
+                    allow_current_window=True, prefer_compare_window=True)
                 if window is None:
-                    self.open_recent_directory_window(extra_callback_args=(self.add_current_image_to_negative_search, dirs))
+                    self.open_recent_directory_window(extra_callback_args=(
+                        self.add_current_image_to_negative_search, dirs))
                     return
                 base_dir = dirs[0]
             else:
@@ -1089,7 +1112,8 @@ class App():
             self.img = self.get_image_to_fit(image_path)
         except Exception as e:
             if "truncated" in str(e):
-                time.sleep(0.25)  # If the image was just created in the directory, it's possible it's still being filled with data
+                # If the image was just created in the directory, it's possible it's still being filled with data
+                time.sleep(0.25)
                 self.img = self.get_image_to_fit(image_path)
             else:
                 raise e
@@ -1176,9 +1200,9 @@ class App():
         base_dir_selected = self.set_base_dir_box.get()
         if not base_dir_selected or base_dir_selected == "":
             res = self.alert(_("Confirm comparison"),
-                    _("No base directory has been set, will use current base directory of ") +
-                    f"{self.base_dir}\n\n" + _("Are you sure you want to proceed?"),
-                    kind="askokcancel")
+                             _("No base directory has been set, will use current base directory of ")
+                             + f"{self.base_dir}\n\n" + _("Are you sure you want to proceed?"),
+                             kind="askokcancel")
             return res == messagebox.OK or res == True
         return True
 
@@ -1249,7 +1273,8 @@ class App():
             files = self.file_browser.select_series(start_file=MarkedFiles.file_marks[-1], end_file=self.img_path)
         else:
             if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.ALT]):
-                files = list(self.compare_wrapper.files_matched)  # Select all file matches
+                # Select all file matches
+                files = list(self.compare_wrapper.files_matched)
             else:
                 files = self.compare_wrapper.select_series(start_file=MarkedFiles.file_marks[-1], end_file=self.img_path)
         for _file in files:
@@ -1338,7 +1363,8 @@ class App():
         # If it is not in any open window but is a valid filepath, open a new
         # window with that file's directory and go to the file in the new window.
         if self.mode == Mode.BROWSE:
-            image_path = self.file_browser.find(search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match)
+            image_path = self.file_browser.find(
+                search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match)
         else:
             image_path, group_indexes = self.compare_wrapper.find_file_after_comparison(search_text, exact_match=exact_match)
             if group_indexes:
@@ -1373,7 +1399,8 @@ class App():
         # object to accomplish this.
         next_text_embedding_search_preset = config.next_text_embedding_search_preset()
         if next_text_embedding_search_preset is None:
-            self.alert(_("No Text Search Presets Found"), _("No text embedding search presets found. Set them in the config.json file."))
+            self.alert(_("No Text Search Presets Found"), _(
+                "No text embedding search presets found. Set them in the config.json file."))
         else:
             self.search_image.set("")
             self.search_text_box.delete(0, "end")
@@ -1458,7 +1485,7 @@ class App():
             filepath = self.compare_wrapper.search_image_full_path
         else:
             filepath = self.compare_wrapper.current_match()
-        return get_valid_file(self.get_base_dir(), filepath)
+        return Utils.get_valid_file(self.get_base_dir(), filepath)
 
     def open_image_location(self, event=None):
         filepath = self.get_active_image_filepath()
@@ -1534,8 +1561,7 @@ class App():
             self._handle_delete(filepath)
             if self.compare_wrapper._compare:
                 self.compare_wrapper.compare().remove_from_groups([filepath])
-            self.compare_wrapper._update_groups_for_removed_file(self.mode,
-                        self.compare_wrapper.current_group_index, self.compare_wrapper.match_index, show_next_image=True)
+            self.compare_wrapper._update_groups_for_removed_file(self.mode, self.compare_wrapper.current_group_index, self.compare_wrapper.match_index, show_next_image=True)
         else:
             self.alert(_("Error"), _("Failed to delete current file, unable to get valid filepath"), kind="error")
 
@@ -1573,7 +1599,7 @@ class App():
             return
 
         _filepath = self.compare_wrapper.current_match()
-        filepath = get_valid_file(self.get_base_dir(), _filepath)
+        filepath = Utils.get_valid_file(self.get_base_dir(), _filepath)
 
         if filepath is None:
             self.alert(_("Error"), _("Invalid target filepath for replacement: ") + _filepath, kind="error")
@@ -1596,8 +1622,8 @@ class App():
             try:
                 group_indexes = file_group_map[filepath]
                 self.compare_wrapper._update_groups_for_removed_file(self.mode,
-                        group_indexes[0], group_indexes[1], set_group=False, show_next_image=show_next_image)
-            except KeyError as e:
+                    group_indexes[0], group_indexes[1], set_group=False, show_next_image=show_next_image)
+            except KeyError:
                 pass  # The group may have been removed before update_groups_for_removed_file was called on the last file in it
 
     def run_image_generation(self, event=None, _type=None, image_path=None):
@@ -1625,7 +1651,8 @@ class App():
             if self.img_path and self.img_path != "":
                 app_info_cache.set(base_dir, "image_cursor", os.path.basename(self.img_path))
             app_info_cache.set(base_dir, "recursive", self.file_browser.is_recursive())
-            app_info_cache.set(base_dir, "sort_by", str(self.file_browser.get_sort_by()))
+            app_info_cache.set(base_dir, "sort_by", self.file_browser.get_sort_by().get_text())
+            app_info_cache.set(base_dir, "compare_mode", CompareMode.get(self.compare_mode_var.get()).get_text())
         if store_window_state:
             secondary_base_dirs = []
             for _app in App.open_windows:
@@ -1702,7 +1729,8 @@ class App():
             if file_count == 0:
                 text = _("No image files found")
             else:
-                text = _("1 image file found") if file_count == 1 else _("{0} image files found").format(file_count)
+                text = _("1 image file found") if file_count == 1 else _(
+                    "{0} image files found").format(file_count)
             if self.inclusion_pattern.get() != "":
                 text += "\n" + _("(filtered)")
             self.label_state["text"] = text

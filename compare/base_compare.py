@@ -6,13 +6,14 @@ import sys
 import cv2
 
 from compare.compare_args import CompareArgs
+from compare.compare_data import CompareData
+from compare.compare_result import CompareResult
 from utils.config import config
+from utils.constants import CompareMode
 from utils.translations import I18N
+from utils.utils import Utils
 
 _ = I18N._
-
-# TODO - Add CompareData class for mode-agnostic data handling
-# TODO - Make below functions part of the BaseCompare class
 
 
 def gather_files(base_dir=".", exts=config.file_types, recursive=True):
@@ -24,47 +25,6 @@ def gather_files(base_dir=".", exts=config.file_types, recursive=True):
     return files
 
 
-def round_up(number, to):
-    if number % to == 0:
-        return number
-    else:
-        return number - (number % to) + to
-
-
-def safe_write(textfile, data):
-    try:
-        textfile.write(data)
-    except UnicodeEncodeError as e:
-        print(e)
-
-
-def is_invalid_file(file_path, counter, run_search, inclusion_pattern):
-    if file_path is None:
-        return True
-    elif run_search and counter == 0:
-        return False
-    elif inclusion_pattern is not None:
-        return inclusion_pattern not in file_path
-    else:
-        return False
-
-
-def get_valid_file(base_dir, input_filepath):
-    if (not isinstance(input_filepath, str) or input_filepath is None
-            or input_filepath.strip() == ""):
-        return None
-    if input_filepath.startswith('"') and input_filepath.endswith('"'):
-        input_filepath = input_filepath[1:-1]
-    elif input_filepath.startswith("'") and input_filepath.endswith("'"):
-        input_filepath = input_filepath[1:-1]
-    if os.path.exists(input_filepath):
-        return input_filepath
-    elif base_dir is not None and os.path.exists(os.path.join(base_dir, input_filepath)):
-        return base_dir + "/" + input_filepath
-    else:
-        return None
-
-
 class BaseCompare:
     def __init__(self, args=CompareArgs(), gather_files_func=gather_files):
         self.args = args
@@ -72,13 +32,27 @@ class BaseCompare:
         self.set_base_dir(self.args.base_dir)
         self.set_search_file_path(self.args.search_file_path)
         self.compare_faces = self.args.compare_faces
-#        self.args.match_dims = match_dims
+        # self.args.match_dims = match_dims
         self.verbose = self.args.verbose
         self.progress_listener = self.args.listener
         self._faceCascade = None
         if self.compare_faces:
             self._set_face_cascade()
         self.gather_files_func = gather_files_func
+        self.compare_result = CompareResult(base_dir=self.args.base_dir)
+
+    def set_base_dir(self, base_dir):
+        '''
+        Set the base directory and prepare cache file references.
+        '''
+        self.base_dir = base_dir
+        if self.args.compare_mode == CompareMode.COLOR_MATCHING:
+            self.compare_data = CompareData(
+                base_dir=base_dir, mode=self.args.compare_mode, use_thumb=self.use_thumb)
+        else:
+            self.compare_data = CompareData(
+                base_dir=base_dir, mode=self.args.compare_mode)
+        self.compare_result = CompareResult(base_dir=base_dir)
 
     def set_search_file_path(self, search_file_path):
         '''
@@ -99,7 +73,6 @@ class BaseCompare:
 
         To override the default file inclusion behavior, pass a gather_files_func to the Compare object.
         '''
-        self._files_found = []
         if self.gather_files_func:
             exts = config.file_types
             if self.args.include_gifs:
@@ -109,10 +82,11 @@ class BaseCompare:
         else:
             raise Exception("No gather files function found.")
         self.files.sort()
-        self.has_new_file_data = False
+        self.compare_data.has_new_file_data = False
         self.max_files_processed = min(
             self.args.counter_limit, len(self.files))
-        self.max_files_processed_even = round_up(self.max_files_processed, 200)
+        self.max_files_processed_even = Utils.round_up(
+            self.max_files_processed, 200)
 
         if self.is_run_search:
             if self.search_file_path in self.files:
@@ -141,9 +115,6 @@ class BaseCompare:
                 self.progress_listener.update(desc2, percent_complete)
 
     def print_settings(self):
-        pass
-
-    def set_base_dir(self, base_dir):
         pass
 
     def _set_face_cascade(self):

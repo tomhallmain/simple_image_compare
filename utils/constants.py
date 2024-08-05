@@ -10,6 +10,8 @@ class Mode(Enum):
     GROUP = _("Group Comparison Mode")
     DUPLICATES = _("Duplicate Detection Mode")
 
+    # NOTE need this method because this class is initialized before the config
+    # locale overwrites the default I18N settings.
     def get_text(self):
         if self == Mode.BROWSE:
             return _("Browsing Mode")
@@ -19,7 +21,7 @@ class Mode(Enum):
             return _("Group Comparison Mode")
         elif self == Mode.DUPLICATES:
             return _("Duplicate Detection Mode")
-        raise Exception("Unhandled Mode text: " + str(self.mode))
+        raise Exception("Unhandled Mode text: " + str(self))
 
     def __str__(self):
         return self.value
@@ -30,19 +32,26 @@ class CompareMode(Enum):
     CLIP_EMBEDDING = _("CLIP Embedding")
 #    PROMPTS = _("Prompts")
 
+    def get_text(self):
+        if self == CompareMode.COLOR_MATCHING:
+            return _("Color Matching")
+        elif self == CompareMode.CLIP_EMBEDDING:
+            return _("CLIP Embedding")
+        raise Exception("Unhandled Compare Mode text: " + str(self))
+
     def __str__(self):
         return self.value
 
     @staticmethod
     def get(name):
         for key, value in CompareMode.__members__.items():
-            if str(value) == name:
+            if value.get_text() == name or value.value == name:
                 return value
-        raise Exception(f"Not a valid prompt mode: {name}")
+        raise Exception(f"Not a valid compare mode: {name}")
 
     @staticmethod
     def members():
-        return [str(value) for key, value in CompareMode.__members__.items()]
+        return [value.get_text() for key, value in CompareMode.__members__.items()]
 
     def threshold_str(self):
         if self == CompareMode.COLOR_MATCHING:
@@ -67,25 +76,47 @@ class SortBy(Enum):
     NAME_LENGTH = _("Name Length")
     RANDOMIZE = _("Random")
 
+    def get_text(self):
+        if self == SortBy.NAME:
+            return _("Name")
+        elif self == SortBy.FULL_PATH:
+            return _("Full Path")
+        elif self == SortBy.CREATION_TIME:
+            return _("Creation Time")
+        elif self == SortBy.MODIFY_TIME:
+            return _("Modify Time")
+        elif self == SortBy.TYPE:
+            return _("Type")
+        elif self == SortBy.SIZE:
+            return _("Size")
+        elif self == SortBy.NAME_LENGTH:
+            return _("Name Length")
+        elif self == SortBy.RANDOMIZE:
+            return _("Random")
+        raise Exception("Unhandled Sort By text: " + str(self))
+
     def __str__(self):
         return self.value
 
     @staticmethod
     def get(name):
         for key, value in SortBy.__members__.items():
-            if str(value) == name:
+            if str(value.value) == name or value.get_text() == name:
                 return value
-        raise Exception(f"Not a valid prompt mode: {name}")
+        raise Exception(f"Not a valid sort by: {name}")
 
     @staticmethod
     def members():
-        return [str(value) for key, value in SortBy.__members__.items()]
+        return [value.get_text() for key, value in SortBy.__members__.items()]
 
 
 class Sort(Enum):
     ASC = _("ascending")
     DESC = _("descending")
     RANDOM = _("random")
+
+    def get_text(self):
+        return _(self.value)
 
     def __str__(self):
         return self.value

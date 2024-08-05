@@ -427,7 +427,7 @@ class MarkedFiles():
         if len(exceptions) > 0:
             for marked_file in exceptions.keys():
                 if marked_file not in invalid_files:
-                    MarkedFiles.previous_marks.append(marked_file) # Just in case some of them failed to move for whatever reason.
+                    MarkedFiles.previous_marks.append(marked_file)  # Just in case some of them failed to move for whatever reason.
             action_part3 = "move" if is_moving_back else "copy"
             raise Exception(f"Failed to {action_part3} some files: {exceptions}")
         app_actions.refresh()

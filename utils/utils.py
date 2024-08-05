@@ -24,10 +24,11 @@ class Utils:
         return os.path.expanduser("~")
 
     @staticmethod
-    def alphanumeric_sort(l, text_lambda=lambda i: i, reverse=False): 
+    def alphanumeric_sort(l, text_lambda=lambda i: i, reverse=False):
         """ Sort the given iterable in the way that humans expect."""
-        convert = lambda text: int(text) if text.isdigit() else text
-        alphanum_key = lambda item: [ convert(c) for c in re.split('([0-9]+)', text_lambda(item)) ] 
+        def convert(text): return int(text) if text.isdigit() else text
+        def alphanum_key(item): return [convert(c)
+                                        for c in re.split('([0-9]+)', text_lambda(item))]
         return sorted(l, key=alphanum_key, reverse=reverse)
 
     @staticmethod
@@ -78,9 +79,11 @@ class Utils:
                     text = text[fit_length:]
                 elif " " in test_new_text and test_new_text.index(" ") < len(test_new_text) - 2:
                     last_space_block = re.findall(" +", test_new_text)[-1]
-                    last_space_block_index = test_new_text.rfind(last_space_block)
+                    last_space_block_index = test_new_text.rfind(
+                        last_space_block)
                     new_text += text[:last_space_block_index]
-                    text = text[(last_space_block_index+len(last_space_block)):]
+                    text = text[(last_space_block_index
+                                 + len(last_space_block)):]
                 else:
                     new_text += test_new_text
                     text = text[fit_length:]
@@ -96,10 +99,10 @@ class Utils:
 
     @staticmethod
     def get_relative_dirpath_split(base_dir, filepath):
-    # split the filepath from base directory
+        # split the filepath from base directory
         relative_filepath = filepath.split(base_dir)[-1]
-        
-        # remove leading slash if exists 
+
+        # remove leading slash if exists
         if relative_filepath[0] == '/' or relative_filepath[0] == "\\":
             relative_filepath = relative_filepath[1:]
 
@@ -136,24 +139,25 @@ class Utils:
     @staticmethod
     # NOTE: Maybe want to raise Exception if either existing filepath or target dir are not valid
     def move_file(existing_filepath, target_dir, overwrite_existing=False):
-        new_filepath = os.path.join(target_dir, os.path.basename(existing_filepath))
+        new_filepath = os.path.join(
+            target_dir, os.path.basename(existing_filepath))
         if not overwrite_existing and os.path.exists(new_filepath):
             raise Exception("File already exists: " + new_filepath)
         shutil.move(existing_filepath, new_filepath)
 
     @staticmethod
     def copy_file(existing_filepath, target_dir, overwrite_existing=False):
-        new_filepath = os.path.join(target_dir, os.path.basename(existing_filepath))
+        new_filepath = os.path.join(
+            target_dir, os.path.basename(existing_filepath))
         if not overwrite_existing and os.path.exists(new_filepath):
             raise Exception("File already exists: " + new_filepath)
         shutil.copy2(existing_filepath, new_filepath)
 
-
     @staticmethod
     def open_file_location(filepath):
-        if sys.platform=='win32':
+        if sys.platform == 'win32':
             os.startfile(filepath)
-        elif sys.platform=='darwin':
+        elif sys.platform == 'darwin':
             subprocess.Popen(['open', filepath])
         else:
             try:
@@ -161,33 +165,34 @@ class Utils:
             except OSError:
                 # er, think of something else to try
                 # xdg-open *should* be supported by recent Gnome, KDE, Xfce
-                raise Exception("Unsupported distribution for opening file location.")
+                raise Exception(
+                    "Unsupported distribution for opening file location.")
 
     @staticmethod
     def open_file_in_gimp(filepath, gimp_exe_loc="gimp-2.10"):
         def gimp_process():
             command = ["set", "LANG=en", "&&", gimp_exe_loc, filepath]
             process = subprocess.call(command, shell=True)
-            if process!=0:
+            if process != 0:
                 raise Exception("Could not open file in GIMP")
         start_thread(gimp_process)
 
     @staticmethod
     def is_external_drive(filepath):
-        if sys.platform=='win32':
-            return os.path.splitdrive(filepath)[0]!='C:'
+        if sys.platform == 'win32':
+            return os.path.splitdrive(filepath)[0] != 'C:'
         else:
             # TODO figure out how to detect external drives on other platforms
             return False
 
     @staticmethod
     def get_default_user_language():
-        if sys.platform=='win32':
+        if sys.platform == 'win32':
             import ctypes
             import locale
             windll = ctypes.windll.kernel32
             windll.GetUserDefaultUILanguage()
-            _locale = locale.windows_locale[ windll.GetUserDefaultUILanguage() ]
+            _locale = locale.windows_locale[windll.GetUserDefaultUILanguage()]
             if _locale is not None and "_" in _locale:
                 return _locale[:_locale.index("_")]
         # TODO support finding default languages on other platforms
@@ -206,6 +211,39 @@ class Utils:
             return is_pressed[0]
         return tuple(is_pressed)
 
+    @staticmethod
+    def round_up(number, to):
+        if number % to == 0:
+            return number
+        else:
+            return number - (number % to) + to
+
+    @staticmethod
+    def is_invalid_file(file_path, counter, run_search, inclusion_pattern):
+        if file_path is None:
+            return True
+        elif run_search and counter == 0:
+            return False
+        elif inclusion_pattern is not None:
+            return inclusion_pattern not in file_path
+        else:
+            return False
+
+    @staticmethod
+    def get_valid_file(base_dir, input_filepath):
+        if (not isinstance(input_filepath, str) or input_filepath is None
+                or input_filepath.strip() == ""):
+            return None
+        if input_filepath.startswith('"') and input_filepath.endswith('"'):
+            input_filepath = input_filepath[1:-1]
+        elif input_filepath.startswith("'") and input_filepath.endswith("'"):
+            input_filepath = input_filepath[1:-1]
+        if os.path.exists(input_filepath):
+            return input_filepath
+        elif base_dir is not None and os.path.exists(os.path.join(base_dir, input_filepath)):
+            return base_dir + "/" + input_filepath
+        else:
+            return None
 
 
 class ModifierKey(Enum):

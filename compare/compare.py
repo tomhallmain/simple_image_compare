@@ -1,7 +1,6 @@
 from collections import Counter
 import getopt
 import os
-import pickle
 import sys
 
 import cv2
@@ -12,12 +11,13 @@ from sklearn.cluster import KMeans
 from skimage.color import rgb2lab
 # from imutils import face_utils
 
-from compare.base_compare import BaseCompare, gather_files, round_up, get_valid_file, is_invalid_file, safe_write
+from compare.base_compare import BaseCompare, gather_files
 from compare.compare_args import CompareArgs
 from compare.compare_result import CompareResult
 from utils.config import config
 from utils.constants import CompareMode
 from utils.translations import I18N
+from utils.utils import Utils
 
 _ = I18N._
 
@@ -148,17 +148,13 @@ def get_image_array(filepath):
 
 class Compare(BaseCompare):
     COMPARE_MODE = CompareMode.COLOR_MATCHING
-    SEARCH_OUTPUT_FILE = "simple_image_compare_search_output.txt"
-    GROUPS_OUTPUT_FILE = "simple_image_compare_file_groups_output.txt"
-    FACES_DATA = "image_faces.pkl"
-    THUMB_COLORS_DATA = "image_thumb_colors.pkl"
-    TOP_COLORS_DATA = "image_top_colors.pkl"
     THRESHHOLD_POTENTIAL_DUPLICATE = 50
+    THRESHHOLD_PROBABLE_MATCH = 1000
     THRESHHOLD_GROUP_CUTOFF = 4500
 
     def __init__(self, args=CompareArgs(), use_thumb=True, gather_files_func=gather_files):
-        super().__init__(args, gather_files)
         self.use_thumb = use_thumb
+        super().__init__(args, gather_files_func)
         self.compare_faces = self.args.compare_faces
         if self.use_thumb:
             self.thumb_dim = 15
@@ -184,19 +180,6 @@ class Compare(BaseCompare):
         self.settings_updated = False
         self._probable_duplicates = []
 
-    def set_base_dir(self, base_dir):
-        '''
-        Set the base directory and prepare cache file references.
-        '''
-        self.base_dir = base_dir
-        self.search_output_path = os.path.join(base_dir, Compare.SEARCH_OUTPUT_FILE)
-        self.groups_output_path = os.path.join(base_dir, Compare.GROUPS_OUTPUT_FILE)
-        self._file_faces_filepath = os.path.join(base_dir, Compare.FACES_DATA)
-        if self.use_thumb:
-            self._file_colors_filepath = os.path.join(base_dir, Compare.THUMB_COLORS_DATA)
-        else:
-            self._file_colors_filepath = os.path.join(base_dir, Compare.TOP_COLORS_DATA)
-
     def print_settings(self):
         print("\n\n|--------------------------------------------------------------------|")
         print(" CONFIGURATION SETTINGS:")
@@ -207,14 +190,16 @@ class Compare(BaseCompare):
         print(f" compare faces: {self.compare_faces}")
         print(f" use thumb: {self.use_thumb}")
         print(f" max file process limit: {self.args.counter_limit}")
-        print(f" max files processable for base dir: {self.max_files_processed}")
+        print(
+            f" max files processable for base dir: {self.max_files_processed}")
         print(f" recursive: {self.args.recursive}")
         print(f" file glob pattern: {self.args.inclusion_pattern}")
         print(f" include gifs: {self.args.include_gifs}")
         print(f" n colors: {self.n_colors}")
         print(f" colors below threshold: {self.colors_below_threshold}")
         print(f" color diff threshold: {self.color_diff_threshold}")
-        print(f" file colors filepath: {self._file_colors_filepath}")
+        print(
+            f" file colors filepath: {self.compare_data._file_data_filepath}")
         print(f" modifier: {self.modifier}")
         print(f" color getter: {self.color_getter}")
         print(f" color diff alg: {self.color_diff_alg}")
@@ -226,22 +211,8 @@ class Compare(BaseCompare):
         For all the found files in the base directory, either load the cached
         image data or extract new data and add it to the cache.
         '''
-        if self.args.overwrite or not os.path.exists(self._file_colors_filepath):
-            if not os.path.exists(self._file_colors_filepath):
-                print("Image data not found so creating new cache"
-                      + " - this may take a while.")
-            elif self.args.overwrite:
-                print("Overwriting image data caches - this may take a while.")
-            self._file_colors_dict = {}
-            self._file_faces_dict = {}
-        else:
-            with open(self._file_colors_filepath, "rb") as f:
-                self._file_colors_dict = pickle.load(f)
-            if self.compare_faces:
-                with open(self._file_faces_filepath, "rb") as f:
-                    self._file_faces_dict = pickle.load(f)
-            else:
-                self._file_faces_dict = {}
+        self.compare_data.load_data(overwrite=self.args.overwrite,
+                                    compare_faces=self.compare_faces)
 
         # Gather image file data from directory
 
@@ -253,16 +224,16 @@ class Compare(BaseCompare):
         counter = 0
 
         for f in self.files:
-            if is_invalid_file(f, counter, self.is_run_search, self.args.inclusion_pattern):
+            if Utils.is_invalid_file(f, counter, self.is_run_search, self.args.inclusion_pattern):
                 continue
 
             if counter > self.args.counter_limit:
                 break
 
-            if f in self._file_colors_dict:
-                colors = self._file_colors_dict[f]
-                if self.compare_faces and f in self._file_faces_dict:
-                    n_faces = self._file_faces_dict[f]
+            if f in self.compare_data.file_data_dict:
+                colors = self.compare_data.file_data_dict[f]
+                if self.compare_faces and f in self.compare_data.file_faces_dict:
+                    n_faces = self.compare_data.file_faces_dict[f]
             else:
                 try:
                     image = get_image_array(f)
@@ -277,60 +248,33 @@ class Compare(BaseCompare):
                     # i.e. broken PNG file (bad header checksum in b'tEXt')
                     continue
 
-                if f in self._file_colors_dict:
-                    colors = self._file_colors_dict[f]
-                else:
-                    try:
-                        colors = self.color_getter(image, self.modifier)
-                    except ValueError as e:
-                        if self.verbose:
-                            print(e)
-                            print(f)
-                        continue
-                    self._file_colors_dict[f] = colors
+                try:
+                    colors = self.color_getter(image, self.modifier)
+                except ValueError as e:
+                    if self.verbose:
+                        print(e)
+                        print(f)
+                    continue
+
+                self.compare_data.file_data_dict[f] = colors
                 if self.compare_faces:
-                    if f in self._file_faces_dict:
-                        n_faces = self._file_faces_dict[f]
+                    if f in self.compare_data.file_faces_dict:
+                        n_faces = self.compare_data.file_faces_dict[f]
                     else:
                         n_faces = self._get_faces_count(f)
-                        self._file_faces_dict[f] = n_faces
-                self.has_new_file_data = True
+                        self.compare_data.file_faces_dict[f] = n_faces
+                self.compare_data.has_new_file_data = True
 
             counter += 1
             self._file_colors = np.append(self._file_colors, [colors], 0)
             if self.compare_faces:
                 self._file_faces = np.append(self._file_faces, [n_faces], 0)
-            self._files_found.append(f)
+            self.compare_data.files_found.append(f)
             self._handle_progress(counter, self.max_files_processed_even)
 
         # Save image file data
-
-        if self.has_new_file_data or self.args.overwrite:
-            with open(self._file_colors_filepath, "wb") as store:
-                pickle.dump(self._file_colors_dict, store)
-            if self._faceCascade:
-                with open(self._file_faces_filepath, "wb") as store:
-                    pickle.dump(self._file_faces_dict, store)
-            self._file_colors_dict = None
-            self._file_faces_dict = None
-            if self.verbose:
-                if self.args.overwrite:
-                    print("Overwrote any pre-existing image data at:")
-                else:
-                    print("Updated image data saved to: ")
-                print(self._file_colors_filepath)
-                if self.compare_faces:
-                    print(self._file_faces_filepath)
-
-        self._n_files_found = len(self._files_found)
-
-        if self._n_files_found == 0:
-            raise AssertionError("No image data found for comparison with"
-                                 + " current params - checked"
-                                 + " in base dir = \"" + self.base_dir + "\"")
-        elif self.verbose:
-            print("Data from " + str(self._n_files_found)
-                  + " files compiled for comparison.")
+        self.compare_data.save_data(self.args.overwrite, verbose=self.verbose,
+                                    compare_faces=self.compare_faces)
 
     def _compute_color_diff(self, base_array, compare_array,
                             return_diff_scores=False):
@@ -354,7 +298,7 @@ class Compare(BaseCompare):
         characteristics to the provide image.
         '''
         files_grouped = {}
-        _files_found = list(self._files_found)
+        _files_found = list(self.compare_data.files_found)
 
         if self.verbose:
             print("Identifying similar image files...")
@@ -386,36 +330,14 @@ class Compare(BaseCompare):
                     break
                 files_grouped[file] = difference
                 count += 1
-            files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
 
         # Sort results by increasing difference score
-        files_grouped = dict(sorted(files_grouped.items(), key=lambda item: item[1]))
-
-        if len(files_grouped) > 0:
-            with open(self.search_output_path, "w") as textfile:
-                header = f"Possibly related images to \"{search_path}\":\n"
-                textfile.write(header)
-                if self.verbose:
-                    print(header)
-                for f in files_grouped:
-                    diff_score = int(files_grouped[f])
-                    if not f == search_path:
-                        if diff_score < Compare.THRESHHOLD_POTENTIAL_DUPLICATE:
-                            line = "DUPLICATE: " + f
-                        elif diff_score < 1000:
-                            line = "PROBABLE MATCH: " + f
-                        else:
-                            similarity_score = str(round(1000/diff_score, 4))
-                            line = f + " - similarity: " + similarity_score
-                        safe_write(textfile, line + "\n")
-                        if self.verbose:
-                            print(line)
-            if self.verbose:
-                print("\nThis output data saved to file at "
-                      + self.search_output_path)
-        elif self.verbose:
-            print("No similar images to \"" + self.search_file_path
-                  + "\" identified with current params.")
+        self.compare_result.files_grouped = dict(
+            sorted(files_grouped.items(), key=lambda item: item[1]))
+        self.compare_result.finalize_search_result(
+            self.search_file_path, verbose=self.verbose, is_embedding=False,
+            threshold_duplicate=Compare.THRESHHOLD_POTENTIAL_DUPLICATE,
+            threshold_related=Compare.THRESHHOLD_PROBABLE_MATCH)
         return {0: files_grouped}
 
     def _run_search_on_path(self, search_file_path):
@@ -430,7 +352,8 @@ class Compare(BaseCompare):
                     + "(enter \"exit\" or press Ctrl-C to quit): \n\n  > ")
                 if search_file_path is not None and search_file_path == "exit":
                     break
-                search_file_path = get_valid_file(self.base_dir, search_file_path)
+                search_file_path = Utils.get_valid_file(
+                    self.base_dir, search_file_path)
                 if search_file_path is None:
                     print("Invalid filepath provided.")
                 else:
@@ -438,7 +361,7 @@ class Compare(BaseCompare):
 
         # Gather new image data if it was not in the initial list
 
-        if search_file_path not in self._files_found:
+        if search_file_path not in self.compare_data.files_found:
             if self.verbose:
                 print("Filepath not found in initial list - gathering new file data")
             try:
@@ -459,10 +382,10 @@ class Compare(BaseCompare):
             n_faces = self._get_faces_count(search_file_path)
             self._file_colors = np.insert(self._file_colors, 0, [colors], 0)
             self._file_faces = np.insert(self._file_faces, 0, [n_faces], 0)
-            self._files_found.insert(0, search_file_path)
+            self.compare_data.files_found.insert(0, search_file_path)
 
         files_grouped = self.find_similars_to_image(
-            search_file_path, self._files_found.index(search_file_path))
+            search_file_path, self.compare_data.files_found.index(search_file_path))
         search_file_path = None
         return files_grouped
 
@@ -484,12 +407,13 @@ class Compare(BaseCompare):
         file_groups - Keys are the group indexes, values are dicts with keys as the file in the group, values the diff score
         '''
         overwrite = self.args.overwrite or not store_checkpoints
-        compare_result = CompareResult.load(self.base_dir, self._files_found, overwrite=overwrite)
-        if compare_result.is_complete:
-            return (compare_result.files_grouped, compare_result.file_groups)
-        n_files_found_even = round_up(self._n_files_found, 5)
+        self.compare_result = CompareResult.load(
+            self.base_dir, self.compare_data.files_found, overwrite=overwrite)
+        if self.compare_result.is_complete:
+            return (self.compare_result.files_grouped, self.compare_result.file_groups)
+        n_files_found_even = Utils.round_up(self.compare_data.n_files_found, 5)
 
-        if self._n_files_found > 5000:
+        if self.compare_data.n_files_found > 5000:
             print("\nWARNING: Large image file set found, comparison between all"
                   + " images may take a while.\n")
         if self.verbose:
@@ -497,15 +421,15 @@ class Compare(BaseCompare):
         else:
             print("Identifying groups of similar image files", end="", flush=True)
 
-        for i in range(len(self._files_found)):
+        for i in range(self.compare_data.n_files_found):
             if i == 0:  # At this roll index the data would compare to itself
                 continue
             if store_checkpoints:
-                if i < compare_result.i:
+                if i < self.compare_result.i:
                     continue
-                if i % 250 == 0 and i != len(self._files_found) and i > compare_result.i:
-                    compare_result.store()
-                compare_result.i = i
+                if i % 250 == 0 and i != len(self.compare_data.files_found) and i > self.compare_result.i:
+                    self.compare_result.store()
+                self.compare_result.i = i
             self._handle_progress(i, n_files_found_even, gathering_data=False)
 
             compare_file_colors = np.roll(self._file_colors, i, 0)
@@ -521,94 +445,66 @@ class Compare(BaseCompare):
                 similars = np.nonzero(color_similars[0])
 
             for base_index in similars[0]:
-                diff_index = ((base_index - i) % self._n_files_found)
+                diff_index = ((base_index - i) %
+                              self.compare_data.n_files_found)
                 diff_score = color_similars[1][base_index]
-                f1_grouped = base_index in compare_result.files_grouped
-                f2_grouped = diff_index in compare_result.files_grouped
+                f1_grouped = base_index in self.compare_result.files_grouped
+                f2_grouped = diff_index in self.compare_result.files_grouped
 
                 if diff_score < Compare.THRESHHOLD_POTENTIAL_DUPLICATE:
-                    base_file = self._files_found[base_index]
-                    diff_file = self._files_found[diff_index]
+                    base_file = self.compare_data.files_found[base_index]
+                    diff_file = self.compare_data.files_found[diff_index]
                     if ((base_file, diff_file) not in self._probable_duplicates
                             and (diff_file, base_file) not in self._probable_duplicates):
-                        self._probable_duplicates.append((base_file, diff_file))
+                        self._probable_duplicates.append(
+                            (base_file, diff_file))
 
                 if not f1_grouped and not f2_grouped:
-                    compare_result.files_grouped[base_index] = (compare_result.group_index, diff_score)
-                    compare_result.files_grouped[diff_index] = (compare_result.group_index, diff_score)
-                    compare_result.group_index += 1
+                    self.compare_result.files_grouped[base_index] = (
+                        self.compare_result.group_index, diff_score)
+                    self.compare_result.files_grouped[diff_index] = (
+                        self.compare_result.group_index, diff_score)
+                    self.compare_result.group_index += 1
                     continue
                 elif f1_grouped:
-                    existing_group_index, previous_diff_score = compare_result.files_grouped[base_index]
+                    existing_group_index, previous_diff_score = self.compare_result.files_grouped[
+                        base_index]
                     if previous_diff_score - Compare.THRESHHOLD_GROUP_CUTOFF > diff_score:
-#                        print(f"Previous: {previous_diff_score} , New: {diff_score}")
-                        compare_result.files_grouped[base_index] = (compare_result.group_index, diff_score)
-                        compare_result.files_grouped[diff_index] = (compare_result.group_index, diff_score)
-                        compare_result.group_index += 1
+                        # print(f"Previous: {previous_diff_score} , New: {diff_score}")
+                        self.compare_result.files_grouped[base_index] = (
+                            self.compare_result.group_index, diff_score)
+                        self.compare_result.files_grouped[diff_index] = (
+                            self.compare_result.group_index, diff_score)
+                        self.compare_result.group_index += 1
                     else:
-                        compare_result.files_grouped[diff_index] = (
+                        self.compare_result.files_grouped[diff_index] = (
                             existing_group_index, diff_score)
                 else:
-                    existing_group_index, previous_diff_score = compare_result.files_grouped[diff_index]
+                    existing_group_index, previous_diff_score = self.compare_result.files_grouped[
+                        diff_index]
                     if previous_diff_score - Compare.THRESHHOLD_GROUP_CUTOFF > diff_score:
-#                        print(f"Previous: {previous_diff_score} , New: {diff_score}")
-                        compare_result.files_grouped[base_index] = (compare_result.group_index, diff_score)
-                        compare_result.files_grouped[diff_index] = (compare_result.group_index, diff_score)
-                        compare_result.group_index += 1
+                        # print(f"Previous: {previous_diff_score} , New: {diff_score}")
+                        self.compare_result.files_grouped[base_index] = (
+                            self.compare_result.group_index, diff_score)
+                        self.compare_result.files_grouped[diff_index] = (
+                            self.compare_result.group_index, diff_score)
+                        self.compare_result.group_index += 1
                     else:
-                        compare_result.files_grouped[base_index] = (existing_group_index, diff_score)
+                        self.compare_result.files_grouped[base_index] = (
+                            existing_group_index, diff_score)
 
-        for file_index in compare_result.files_grouped:
-            _file = self._files_found[file_index]
-            group_index, diff_score = compare_result.files_grouped[file_index]
-            if group_index in compare_result.file_groups:
-                file_group = compare_result.file_groups[group_index]
+        for file_index in self.compare_result.files_grouped:
+            _file = self.compare_data.files_found[file_index]
+            group_index, diff_score = self.compare_result.files_grouped[file_index]
+            if group_index in self.compare_result.file_groups:
+                file_group = self.compare_result.file_groups[group_index]
             else:
                 file_group = {}
             file_group[_file] = diff_score
-            compare_result.file_groups[group_index] = file_group
+            self.compare_result.file_groups[group_index] = file_group
 
-        if not self.verbose:
-            print("")
-        group_counter = 0
-        group_print_cutoff = 5
-        to_print_etc = True
-
-        if len(compare_result.files_grouped) > 0:
-            print("")
-
-            # TODO calculate group similarities and mark duplicates separately in this case
-
-            with open(self.groups_output_path, "w") as textfile:
-                for group_index in self._sort_groups(compare_result.file_groups):
-                    group = compare_result.file_groups[group_index]
-                    if len(group) < 2:
-                        continue
-                        # Technically this means losing some possible associations.
-                        # TODO handle stranded group members
-                    group_counter += 1
-                    textfile.write("Group " + str(group_counter) + "\n")
-                    if group_counter <= group_print_cutoff:
-                        print("Group " + str(group_counter))
-                    elif to_print_etc:
-                        print("(etc.)")
-                        to_print_etc = False
-                    for f in sorted(group, key=lambda f: group[f]):
-                        safe_write(textfile, f + "\n")
-                        if group_counter <= group_print_cutoff:
-                            print(f)
-
-            print("\nFound " + str(group_counter)
-                  + " image groups with current parameters.")
-            print("\nPrinted up to first " + str(group_print_cutoff)
-                  + " groups identified. All group data saved to file at "
-                  + self.groups_output_path)
-            if store_checkpoints:
-                compare_result.is_complete = True
-                compare_result.store()
-        else:
-            print("No similar images identified with current params.")
-        return (compare_result.files_grouped, compare_result.file_groups)
+        self.compare_result.finalize_group_result()
+        return (self.compare_result.files_grouped, self.compare_result.file_groups)
 
     def run(self, store_checkpoints=False):
         '''
@@ -630,18 +526,20 @@ class Compare(BaseCompare):
         # TODO technically it would be better to refresh the file and data lists every time a compare is done
         remove_indexes = []
         for f in removed_files:
-            if f in self._files_found:
-                remove_indexes.append(self._files_found.index(f))
+            if f in self.compare_data.files_found:
+                remove_indexes.append(self.compare_data.files_found.index(f))
         remove_indexes.sort()
 
         if len(self._file_colors) > 0:
-            self._file_colors = np.delete(self._file_colors, remove_indexes, axis=0)
+            self._file_colors = np.delete(
+                self._file_colors, remove_indexes, axis=0)
         if len(self._file_faces) > 0:
-            self._file_faces = np.delete(self._file_faces, remove_indexes, axis=0)
+            self._file_faces = np.delete(
+                self._file_faces, remove_indexes, axis=0)
 
         for f in removed_files:
-            if f in self._files_found:
-                self._files_found.remove(f)
+            if f in self.compare_data.files_found:
+                self.compare_data.files_found.remove(f)
 
     @staticmethod
     def is_related(image1, image2):
@@ -702,7 +600,7 @@ if __name__ == "__main__":
                     print("No change made.")
                     exit()
             elif o == "--search":
-                search_file_path = get_valid_file(base_dir, a)
+                search_file_path = Utils.get_valid_file(base_dir, a)
                 run_search = True
                 if search_file_path is None:
                     assert False, "Search file provided \"" + str(a) \

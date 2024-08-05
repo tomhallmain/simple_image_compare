@@ -15,6 +15,7 @@ from utils.utils import Utils
 
 _ = I18N._
 
+
 class CompareWrapper:
     def __init__(self, master, compare_mode, app_actions):
         self._master = master
@@ -247,7 +248,7 @@ class CompareWrapper:
             self.new_compare(args)
         else:
             assert self._compare is not None
-            get_new_data = self._compare.args._is_new_data_request_required(args, self.compare_mode)
+            get_new_data = self._compare.args._is_new_data_request_required(args)
             self._compare.args = args
             self._compare.set_search_file_path(args.search_file_path)
             self._compare.compare_faces = args.compare_faces
@@ -284,8 +285,10 @@ class CompareWrapper:
 
     def new_compare(self, args):
         if self.compare_mode == CompareMode.CLIP_EMBEDDING:
+            args.compare_mode = CompareMode.CLIP_EMBEDDING
             self._compare = CompareEmbedding(args)
         elif self.compare_mode == CompareMode.COLOR_MATCHING:
+            args.compare_mode = CompareMode.COLOR_MATCHING
             self._compare = Compare(args, use_thumb=True)
 
     def run_search(self) -> None:
@@ -327,7 +330,7 @@ class CompareWrapper:
             self._app_actions.alert(_("No Groups Found"), _("None of the files can be grouped with current settings."))
             return
 
-        self.group_indexes = self._compare._sort_groups(self.file_groups)
+        self.group_indexes = self._compare.compare_result.sort_groups(self.file_groups)
         self.max_group_index = max(self.file_groups.keys())
         self._app_actions._add_buttons_for_mode()
         self.current_group_index = 0

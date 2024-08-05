@@ -221,7 +221,7 @@ class FileBrowser:
 
     def get_index_details(self):
         files = self.get_files()
-        return _("FILE_BROWSER_INDEX_DETAILS").format(self.file_cursor+1, len(files), self.sort_by, self.sort)
+        return _("FILE_BROWSER_INDEX_DETAILS").format(self.file_cursor+1, len(files), self.sort_by.get_text(), self.sort.get_text())
 
     def go_to_file(self, filepath):
         files = self.get_files()
