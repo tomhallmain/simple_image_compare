@@ -92,12 +92,12 @@ class FileBrowser:
 
     def set_filter(self, filter):
         if config.debug:
-            print(f"File browser set filter: {filter}")
+            Utils.log_debug(f"File browser set filter: {filter}")
         self.filter = filter
 
     def set_recursive(self, recursive):
         if config.debug:
-            print(f"File browser set recursive: {recursive}")
+            Utils.log_debug(f"File browser set recursive: {recursive}")
         self.recursive = recursive
         self.refresh()
 
@@ -141,7 +141,7 @@ class FileBrowser:
         self.directory = directory
         self.checking_files = True
         self._files_cache = {}
-        print(f"Setting base directory: {directory}")
+        Utils.log(f"Setting base directory: {directory}")
         return self.refresh()
 
     def get_sort_by(self):
@@ -203,7 +203,7 @@ class FileBrowser:
         return files[self.file_cursor]
 
     def load_file_paths_json(self):
-        print("Loading external file paths from JSON: " + config.file_paths_json_path)
+        Utils.log("Loading external file paths from JSON: " + config.file_paths_json_path)
         with open(config.file_paths_json_path, "r") as f:
             return json.load(f)
 
@@ -217,7 +217,7 @@ class FileBrowser:
 
         with open(config.file_paths_json_path,"w") as f:
             json.dump(files, f, indent=4)
-            print("JSON file updated: " + config.file_paths_json_path)
+            Utils.log("JSON file updated: " + config.file_paths_json_path)
 
     def get_index_details(self):
         files = self.get_files()
@@ -254,13 +254,13 @@ class FileBrowser:
         if search_text in files:
             self.file_cursor = files.index(search_text)
             if config.debug:
-                print(f"Index of {search_text}: {self.file_cursor}")
+                Utils.log_debug(f"Index of {search_text}: {self.file_cursor}")
             return search_text
         filenames = [os.path.basename(f) for f in files]
         if search_text in filenames:
             self.file_cursor = filenames.index(search_text)
             if config.debug:
-                print(f"Index of {search_text}: {self.file_cursor}")
+                Utils.log_debug(f"Index of {search_text}: {self.file_cursor}")
             return files[self.file_cursor]
         if exact_match:
             return None
@@ -270,7 +270,7 @@ class FileBrowser:
             filename = filenames[i]
             if filename.lower().startswith(search_text):
                 if config.debug:
-                    print(f"Index of {filename}: {i}")
+                    Utils.log_debug(f"Index of {filename}: {i}")
                 self.file_cursor = i
                 return files[self.file_cursor]
         # Finally try to match string anywhere within file name
@@ -278,7 +278,7 @@ class FileBrowser:
             filename = files[i]
             if search_text in filename:
                 if config.debug:
-                    print(f"Index of {filename}: {i}")
+                    Utils.log_debug(f"Index of {filename}: {i}")
                 self.file_cursor = i
                 return files[self.file_cursor]
         return None
@@ -336,7 +336,7 @@ class FileBrowser:
         if len(files) == 0 and retry_with_delay > 0:
             if retry_with_delay > 3:
                 return files
-            print(f"No files found, sleeping for {retry_with_delay} seconds and trying again...")
+            Utils.log_yellow(f"No files found, sleeping for {retry_with_delay} seconds and trying again...")
             sleep(retry_with_delay)
             return self.get_files_with_retry(retry_with_delay=retry_with_delay+1)
         return files

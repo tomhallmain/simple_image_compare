@@ -127,6 +127,7 @@ class ImageGenerationType(Enum):
     CONTROL_NET = "control_net"
     IP_ADAPTER = "ip_adapter"
     RENOISER = "renoiser"
+    LAST_SETTINGS = "last_settings"
 
     def __str__(self):
         return self.value

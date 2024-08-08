@@ -129,7 +129,6 @@ class MarkedFiles():
         return 0
 
     def __init__(self, master, is_gui, single_image, app_mode, app_actions, base_dir="."):
-        print(_("NO_MARK_TARGET_SET"))
         self.is_gui = is_gui
         self.single_image = single_image
         self.master = master
@@ -283,7 +282,7 @@ class MarkedFiles():
     def move_marks_to_dir(self, event=None, target_dir=None, move_func=Utils.move_file):
         target_dir = self.handle_target_directory(target_dir=target_dir)
         if config.debug and self.filter_text is not None and self.filter_text.strip() != "":
-            print(f"Filtered by string: {self.filter_text}")
+            Utils.log_debug(f"Filtered by string: {self.filter_text}")
         if self.do_set_permanent_mark_target:
             FileActionsWindow.set_permanent_action(target_dir, move_func, self.app_actions.toast)
             self.do_set_permanent_mark_target = False
@@ -307,7 +306,7 @@ class MarkedFiles():
         MarkedFiles.previous_marks.clear()
         FileActionsWindow.update_history(target_dir, move_func, MarkedFiles.file_marks)
         if len(MarkedFiles.file_marks) > 1:
-            print(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}")
+            Utils.log_yellow(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}")
         exceptions = {}
         invalid_files = []
         set_last_moved_file = False
@@ -320,7 +319,7 @@ class MarkedFiles():
                 set_last_moved_file = True
             try:
                 move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
-                print(f"{action_part2} file to {new_filename}")
+                Utils.log(f"{action_part2} file to {new_filename}")
                 MarkedFiles.previous_marks.append(marked_file)
             except Exception as e:
                 exceptions[marked_file] = (str(e), new_filename)
@@ -329,23 +328,24 @@ class MarkedFiles():
         if MarkedFiles.is_cancelled_action:
             MarkedFiles.is_cancelled_action = False
             MarkedFiles.is_performing_action = False
-            print(f"Cancelled {action_part1} to {target_dir}")
+            Utils.log_yellow(f"Cancelled {action_part1} to {target_dir}")
             if len(MarkedFiles.previous_marks) > 0:
                 MarkedFiles.undo_move_marks(app_actions.get_base_dir(), app_actions)
             return False, False
         if len(exceptions) < len(MarkedFiles.file_marks):
             message = action_part2 + _(" %s files to").format(len(MarkedFiles.file_marks) - len(exceptions)) + f"\n{target_dir}"
+            Utils.log_yellow(message.replace("\n", " "))
             app_actions.toast(message)
             MarkedFiles.delete_lock = False
         MarkedFiles.file_marks.clear()
         exceptions_present = len(exceptions) > 0
         if exceptions_present:
             action_part3 = "move" if is_moving else "copy"
-            print(f"Failed to {action_part3} some files:")
+            Utils.log_red(f"Failed to {action_part3} some files:")
             names_are_short = False
             matching_files = False
             for marked_file, exc_tuple in exceptions.items():
-                print(exc_tuple[0])
+                Utils.log(exc_tuple[0])
                 if marked_file not in invalid_files:
                     if not config.clear_marks_with_errors_after_move and not single_image:
                         # Just in case some of them failed to move for whatever reason.
@@ -353,13 +353,13 @@ class MarkedFiles():
                     if exc_tuple[0].startswith("File already exists"):
                         if _calculate_hash(marked_file) == _calculate_hash(exc_tuple[1]):
                             matching_files = True
-                            print(f"File hashes match: {marked_file} <> {exc_tuple[1]}")
+                            Utils.log(f"File hashes match: {marked_file} <> {exc_tuple[1]}")
                         elif len(os.path.basename(marked_file)) < 13 and not names_are_short:
                             names_are_short = True
                         some_files_already_present = True
             if some_files_already_present:
                 if config.clear_marks_with_errors_after_move and not single_image:
-                    print("Cleared invalid marks by config option")
+                    Utils.log("Cleared invalid marks by config option")
                 warning = _("Existing filenames match!")
                 if matching_files:
                     warning += "\n" + _("WARNING: Exact file match.")
@@ -400,7 +400,7 @@ class MarkedFiles():
                 initialdir=target_dir, title=_("Where should the marked files have gone?"))
         if base_dir is None or base_dir == "" or not os.path.isdir(base_dir):
             raise Exception("Failed to get valid base directory for undo move marked files.")
-        print(f"Undoing action: {action_part1} {len(MarkedFiles.previous_marks)} files from directory:\n{MarkedFiles.last_set_target_dir}")
+        Utils.log_yellow(f"Undoing action: {action_part1} {len(MarkedFiles.previous_marks)} files from directory:\n{MarkedFiles.last_set_target_dir}")
         exceptions = {}
         invalid_files = []
         for marked_file in MarkedFiles.previous_marks:
@@ -412,7 +412,7 @@ class MarkedFiles():
                 else:
                     # Remove the file.
                     os.remove(expected_new_filepath)
-                print(f"{action_part2} file from {target_dir}: {os.path.basename(marked_file)}")
+                Utils.log(f"{action_part2} file from {target_dir}: {os.path.basename(marked_file)}")
             except Exception as e:
                 exceptions[marked_file] = str(e)
                 if is_moving_back:
@@ -489,7 +489,7 @@ class MarkedFiles():
             return
         if self.filter_text.strip() == "":
             if config.debug:
-                print("Filter unset")
+                Utils.log_debug("Filter unset")
             # Restore the list of target directories to the full list
             self.filtered_target_dirs.clear()
             self.filtered_target_dirs = MarkedFiles.mark_target_dirs[:]
@@ -576,7 +576,7 @@ class MarkedFiles():
         basename = os.path.basename(dirpath)
         for text in config.text_embedding_search_presets:
             if basename == text or re.search(f"(^|_| ){text}($|_| )", basename):
-                print(f"Found embeddable directory for text {text}: {dirpath}")
+                Utils.log(f"Found embeddable directory for text {text}: {dirpath}")
                 return text
         return None
 
@@ -630,7 +630,7 @@ class MarkedFiles():
                 self.app_actions.delete(filepath, manual_delete=False)
                 removed_files.append(filepath)
             except Exception as e:
-                print(f"Failed to delete {filepath}: {e}")
+                Utils.log_red(f"Failed to delete {filepath}: {e}")
                 if os.path.exists(filepath):
                     failed_to_delete.append(filepath)
 
@@ -673,7 +673,7 @@ class MarkedFiles():
     def test_is_in_directory(self, event=None, target_dir=None):
         target_dir = self.handle_target_directory(target_dir=target_dir)
         if config.debug and self.filter_text is not None and self.filter_text.strip() != "":
-            print(f"Filtered by string: {self.filter_text}")
+            Utils.log_debug(f"Filtered by string: {self.filter_text}")
         if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT]):
             self.find_is_downstream_related_image_in_directory(target_dir=target_dir)
         else:
@@ -687,12 +687,12 @@ class MarkedFiles():
         """
         MarkedFiles.is_performing_action = True
         if len(MarkedFiles.file_marks) > 1:
-            print(f"Checking if {len(MarkedFiles.file_marks)} files are in directory: {target_dir}")
+            Utils.log(f"Checking if {len(MarkedFiles.file_marks)} files are in directory: {target_dir}")
         found_files = []
         for marked_file in MarkedFiles.file_marks:
             new_filename = os.path.join(target_dir, os.path.basename(marked_file))
             if os.path.isfile(new_filename):
-                print(f"{marked_file} is already present in {new_filename}")
+                Utils.log_yellow(f"{marked_file} is already present in {target_dir}")
                 found_files.append((marked_file, new_filename))
 #        MarkedFiles.file_marks.clear() MAYBE use if not config.clear_marks_with_errors_after_move and not single_image
         names_are_short = False
@@ -700,12 +700,12 @@ class MarkedFiles():
         for marked_file, new_filename in found_files:
             if _calculate_hash(marked_file) == _calculate_hash(new_filename):
                 matching_files += 1
-                print(f"File hashes match: {marked_file} <> {new_filename}")
+                Utils.log(f"File hashes match: {marked_file} <> {new_filename}")
             elif len(os.path.basename(marked_file)) < 13 and not names_are_short:
                 names_are_short = True
         if len(found_files) > 0:
             # if config.clear_marks_with_errors_after_move and not single_image:
-            #     print("Cleared invalid marks by config option")
+            #     Utils.log("Cleared invalid marks by config option")
             warning = _("Existing filenames found!")
             if matching_files == len(MarkedFiles.file_marks):
                 warning += "\n" + _("WARNING: All file hashes match.")
@@ -743,7 +743,7 @@ class MarkedFiles():
                         downstream_related_images.append(path)
         if len(downstream_related_images) > 0:
             for image in downstream_related_images:
-                print(f"Downstream related image found: {image}")
+                Utils.log_yellow(f"Downstream related image found: {image}")
             self.app_actions.toast(_("Found %s downstream related images").format(len(downstream_related_images)))
         else:
             self.app_actions.toast(_("No downstream related images found"))

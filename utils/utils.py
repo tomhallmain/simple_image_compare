@@ -1,14 +1,44 @@
 from enum import Enum
+import logging
 import re
 import os
 import shutil
 import subprocess
 import sys
 
+from utils.custom_formatter import CustomFormatter
 from utils.running_tasks_registry import start_thread
+
+# create logger with 'spam_application'
+logger = logging.getLogger("simple_image_compare")
+logger.setLevel(logging.DEBUG)
+
+# create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+ch.setFormatter(CustomFormatter())
+
+logger.addHandler(ch)
 
 
 class Utils:
+    @staticmethod
+    def log(message, level=logging.INFO):
+        logger.log(level, message)
+    
+    @staticmethod
+    def log_debug(message):
+        Utils.log(message, logging.DEBUG)
+
+    @staticmethod
+    def log_red(message):
+        Utils.log(message, logging.ERROR)
+    
+    @staticmethod
+    def log_yellow(message):
+        Utils.log(message, logging.WARNING)
+
     @staticmethod
     def trace(frame, event, arg):
         if event == "call":

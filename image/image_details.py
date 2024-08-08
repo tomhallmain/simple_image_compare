@@ -354,7 +354,7 @@ class ImageDetails():
     @staticmethod
     def run_image_generation_static(app_actions, last_action=False):
         if last_action and ImageDetails.previous_image_generation_image is not None:
-            app_actions.run_image_generation(_type=ImageDetails.image_generation_mode, image_path=ImageDetails.previous_image_generation_image)
+            app_actions.run_image_generation(_type=ImageGenerationType.LAST_SETTINGS, image_path=ImageDetails.previous_image_generation_image)
         else:
             app_actions.run_image_generation(_type=ImageDetails.image_generation_mode)
 

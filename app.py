@@ -9,7 +9,7 @@ import traceback
 try:
     from send2trash import send2trash
 except Exception:
-    print("Could not import trashing utility - all deleted images will be deleted instantly")
+    Utils.log_red("Could not import trashing utility - all deleted images will be deleted instantly")
 
 import tkinter as tk
 from tkinter import Canvas, PhotoImage, filedialog, messagebox, HORIZONTAL, Label, Checkbutton
@@ -535,7 +535,7 @@ class App():
     def quit(self, event=None):
         res = self.alert(_("Confirm Quit"), _("Would you like to quit the application?"), kind="askokcancel")
         if res == messagebox.OK or res == True:
-            print("Exiting application")
+            Utils.log_yellow("Exiting application")
             for window in App.open_windows:
                 if window.window_id == 0:
                     window.on_closing()
@@ -546,7 +546,7 @@ class App():
             RecentDirectories.set_recent_directories(app_info_cache.get_meta("recent_directories", default_val=[]))
             return app_info_cache.get_meta("base_dir")
         except Exception as e:
-            print(e)
+            Utils.log_red(e)
 
     def toggle_fullscreen(self, event=None):
         self.fullscreen = not self.fullscreen
@@ -612,7 +612,7 @@ class App():
     def refocus(self, event=None):
         self.canvas.after(1, lambda: self.canvas.focus_force())
         if config.debug:
-            print("Refocused main window")
+            Utils.log_debug("Refocused main window")
 
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
         # TODO if some removed files are in a different window than self, find the window and refresh it as well with those files removed.
@@ -642,7 +642,7 @@ class App():
             self._set_label_state()
             self.alert(_("Warning"), _("No files found in directory after refresh."), kind="warning")
         if config.debug:
-            print("Refreshed files")
+            Utils.log_debug("Refreshed files")
 
     @periodic(registry_attr_name="file_check_config")
     async def check_files(self, **kwargs):
@@ -655,7 +655,7 @@ class App():
     async def do_slideshow(self, **kwargs):
         if self.slideshow_config.slideshow_running:
             if config.debug:
-                print("Slideshow next image")
+                Utils.log_debug("Slideshow next image")
             base_dir = self.set_base_dir_box.get()
             if base_dir and base_dir != "":
                 self.show_next_image()
@@ -852,13 +852,13 @@ class App():
                 self.compare_mode_var.set(compare_mode)
                 self.compare_wrapper.compare_mode = CompareMode.get(compare_mode)
         except Exception as e:
-            print("Error setting stored compare mode: " + str(e))
+            Utils.log_red("Error setting stored compare mode: " + str(e))
         try:
             if sort_by != self.sort_by.get():
                 self.sort_by.set(sort_by)
                 self.file_browser.set_sort_by(SortBy.get(sort_by))
         except Exception as e:
-            print("Error setting stored sort by: " + str(e))
+            Utils.log_red("Error setting stored sort by: " + str(e))
         if not self.compare_wrapper.has_compare():
             self.set_mode(Mode.BROWSE)
             previous_file = app_info_cache.get(self.base_dir, "image_cursor")
@@ -994,12 +994,12 @@ class App():
 
     def show_searched_image(self) -> None:
         if config.debug:
-            print(f"Search image full path: {self.compare_wrapper.search_image_full_path}")
+            Utils.log_debug(f"Search image full path: {self.compare_wrapper.search_image_full_path}")
         if self.compare_wrapper.search_image_full_path is not None and self.compare_wrapper.search_image_full_path.strip() != "":
             if os.path.isfile(self.compare_wrapper.search_image_full_path):
                 self.create_image(self.compare_wrapper.search_image_full_path, extra_text="(search image)")
             else:
-                print(self.compare_wrapper.search_image_full_path)
+                Utils.log_yellow(self.compare_wrapper.search_image_full_path)
                 self.alert(_("Error"), _("Somehow, the search file is invalid"), kind="error")
 
     def show_prev_image(self, event=None, show_alert=True) -> bool:
@@ -1307,7 +1307,7 @@ class App():
     def open_move_marks_window(self, event=None, open_gui=True, override_marks=[]):
         self._check_marks(min_mark_size=0)
         if len(override_marks) > 0:
-            print(_("Including marks: {0}").format(override_marks))
+            Utils.log(_("Including marks: {0}").format(override_marks))
             MarkedFiles.file_marks.extend(override_marks)
         single_image = None
         if len(MarkedFiles.file_marks) == 0:
@@ -1570,7 +1570,7 @@ class App():
         if toast and manual_delete:
             self.toast(_("Removing file: {0}").format(filepath))
         else:
-            print("Removing file: " + filepath)
+            Utils.log("Removing file: " + filepath)
         if config.delete_instantly:
             os.remove(filepath)
         elif config.trash_folder is not None:
@@ -1583,7 +1583,7 @@ class App():
             try:
                 send2trash(os.path.normpath(filepath))
             except Exception as e:
-                print(e)
+                Utils.log_red(e)
                 self.alert(_("Warning"),
                            _("Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."))
                 os.remove(filepath)
@@ -1667,7 +1667,7 @@ class App():
         if kind not in ("error", "warning", "info", "askokcancel"):
             raise ValueError("Unsupported alert kind.")
 
-        print(f"Alert - Title: \"{title}\" Message: {message}")
+        Utils.log_yellow(f"Alert - Title: \"{title}\" Message: {message}")
         if kind == "askokcancel":
             alert_method = getattr(messagebox, kind)
         else:
@@ -1675,7 +1675,7 @@ class App():
         return alert_method(title, message)
 
     def toast(self, message):
-        print("Toast message: " + message.replace("\n", " "))
+        Utils.log("Toast message: " + message.replace("\n", " "))
         if not config.show_toasts:
             return
 
@@ -1782,7 +1782,7 @@ if __name__ == "__main__":
 
     # Graceful shutdown handler
     def graceful_shutdown(signum, frame):
-        print("Caught signal, shutting down gracefully...")
+        Utils.log("Caught signal, shutting down gracefully...")
         app.on_closing()
         exit(0)
 

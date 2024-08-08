@@ -4,6 +4,7 @@ from image.image_data_extractor import image_data_extractor
 from utils.config import config
 from utils.constants import ImageGenerationType
 from utils.translations import I18N
+from utils.utils import Utils
 
 _ = I18N._
 
@@ -20,14 +21,14 @@ class SDRunnerClient:
     def start(self):
         try:
             self._conn = Client((self._host, self._port), authkey=str.encode(config.sd_runner_client_password))
-            print("Started SDRunner Client")
+            Utils.log("Started SDRunner Client")
         except Exception as e:
-            print(f"Failed to connect to SD Runner: {e}")
+            Utils.log_red(f"Failed to connect to SD Runner: {e}")
             raise e
 
     def send(self, msg):
         if config.debug:
-            print(f"Sending {msg} to SD Runner")
+            Utils.log_debug(f"Sending {msg} to SD Runner")
         self._conn.send(msg)
         return self._conn.recv()
 
@@ -36,9 +37,9 @@ class SDRunnerClient:
             self._conn.send(SDRunnerClient.COMMAND_CLOSE_CONNECTION)
             self._conn.close()
             self._conn = None
-            print("Closed SD Runner Client")
+            Utils.log("Closed SD Runner Client")
         except Exception as e:
-            print(f"Failed to close SD Runner Client: {e}")
+            Utils.log_red(f"Failed to close SD Runner Client: {e}")
             raise e
 
     def validate_connection(self):
@@ -68,7 +69,7 @@ class SDRunnerClient:
             if "error" in resp:
                 self.close()
                 raise Exception(f'SD Runner failed to start run {_type} on file {base_image}\n{resp["error"]}: {resp["data"]}')
-            print(f"SD Runner started run {_type} on file {base_image}")
+            Utils.log(f"SD Runner started run {_type} on file {base_image}")
             self.close()
             return resp['data'] if "data" in resp else None
         except Exception as e:

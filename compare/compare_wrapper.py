@@ -345,7 +345,7 @@ class CompareWrapper:
                 self._app_actions.alert(_("No Duplicates Found"), _("None of the files appear to be duplicates based on the current settings."))
                 return
             self._app_actions.set_mode(Mode.DUPLICATES, do_update=True)
-            print("Probable duplicates:")
+            Utils.log("Probable duplicates:")
             pprint.pprint(duplicates, width=160)
             duplicate_group_count = 0
             for file1, file2 in duplicates:
@@ -394,13 +394,13 @@ class CompareWrapper:
         NOTE: This would be more complex if there was not a guarantee groups are disjoint.
         '''
         if config.debug:
-            print(f"Updating groups for removed file {match_index} in group {group_index}")
+            Utils.log_debug(f"Updating groups for removed file {match_index} in group {group_index}")
         actual_index = self.group_indexes[group_index]
         if set_group or group_index == self.current_group_index:
             files_matched = self.files_matched
             set_group = True
             if config.debug and app_mode != Mode.SEARCH:
-                print("setting group")
+                Utils.log_debug("setting group")
         else:
             files_matched = []
             group = self.file_groups[actual_index]
