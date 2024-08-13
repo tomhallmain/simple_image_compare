@@ -6,11 +6,6 @@ import time
 import traceback
 
 
-try:
-    from send2trash import send2trash
-except Exception:
-    Utils.log_red("Could not import trashing utility - all deleted images will be deleted instantly")
-
 import tkinter as tk
 from tkinter import Canvas, PhotoImage, filedialog, messagebox, HORIZONTAL, Label, Checkbutton
 from tkinter.constants import W
@@ -40,6 +35,12 @@ from utils.utils import Utils, ModifierKey
 from image.image_details import ImageDetails
 
 _ = I18N._
+
+try:
+    from send2trash import send2trash
+except Exception:
+    Utils.log_red("Could not import trashing utility - all deleted images will be deleted instantly")
+
 
 ### TODO image zoom feature
 ### TODO copy/cut image using hotkey (pywin32 ? win32com? IDataPobject?)
@@ -133,6 +134,19 @@ class ProgressListener:
 
     def update(self, context, percent_complete):
         self.update_func(context, percent_complete)
+
+
+class AwareEntry(Entry):
+    an_entry_has_focus = False
+
+    def __init__(self, *args, **kwargs):
+        Entry.__init__(self, *args, **kwargs)
+        self.bind('<FocusIn>', lambda e: AwareEntry.set_focus(True))
+        self.bind('<FocusOut>', lambda e: AwareEntry.set_focus(False))
+
+    @staticmethod
+    def set_focus(in_focus):
+        AwareEntry.an_entry_has_focus = in_focus
 
 
 class App():
@@ -420,38 +434,38 @@ class App():
         self.set_mode(Mode.BROWSE)
 
         ################################ Key bindings
-        self.master.bind('<Left>', self.show_prev_image)
-        self.master.bind('<Right>', self.show_next_image)
-        self.master.bind('<Shift-BackSpace>', self.go_to_previous_image)
+        self.master.bind('<Left>', lambda e: self.check_focus(e, self.show_prev_image))
+        self.master.bind('<Right>', lambda e: self.check_focus(e, self.show_next_image))
+        self.master.bind('<Shift-BackSpace>', lambda e: self.check_focus(e, self.go_to_previous_image))
         self.master.bind('<Shift-Left>', lambda event: self.compare_wrapper.show_prev_group(file_browser=(self.file_browser if self.mode == Mode.BROWSE else None)))
         self.master.bind('<Shift-Right>', lambda event: self.compare_wrapper.show_next_group(file_browser=(self.file_browser if self.mode == Mode.BROWSE else None)))
-        self.master.bind('<Shift-O>', self.open_image_location)
-        self.master.bind('<Shift-P>', self.open_image_in_gimp)
-        self.master.bind('<Shift-Delete>', self.delete_image)
+        self.master.bind('<Shift-O>', lambda e: self.check_focus(e, self.open_image_location))
+        self.master.bind('<Shift-P>', lambda e: self.check_focus(e, self.open_image_in_gimp))
+        self.master.bind('<Shift-Delete>', lambda e: self.check_focus(e, self.delete_image))
         self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Shift-F>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.master.bind("<Shift-D>", self.get_image_details)
-        self.master.bind("<Shift-R>", self.show_related_image)
-        self.master.bind("<Shift-T>", self.find_related_images_in_open_window)
-        self.master.bind("<Shift-Y>", self.set_marks_from_downstream_related_images)
-        self.master.bind("<Shift-V>", self.hide_current_image)
-        self.master.bind("<Shift-B>", self.clear_hidden_images)
-        self.master.bind("<Shift-H>", self.get_help_and_config)
-        self.master.bind("<Shift-S>", self.toggle_slideshow)
+        self.master.bind("<Shift-F>", lambda e: self.check_focus(e, self.toggle_fullscreen))
+        self.master.bind("<Escape>", lambda e: self.end_fullscreen() and self.refocus())
+        self.master.bind("<Shift-D>", lambda e: self.check_focus(e, self.get_image_details))
+        self.master.bind("<Shift-R>", lambda e: self.check_focus(e, self.show_related_image))
+        self.master.bind("<Shift-T>", lambda e: self.check_focus(e, self.find_related_images_in_open_window))
+        self.master.bind("<Shift-Y>", lambda e: self.check_focus(e, self.set_marks_from_downstream_related_images))
+        self.master.bind("<Shift-V>", lambda e: self.check_focus(e, self.hide_current_image))
+        self.master.bind("<Shift-B>", lambda e: self.check_focus(e, self.clear_hidden_images))
+        self.master.bind("<Shift-H>", lambda e: self.check_focus(e, self.get_help_and_config))
+        self.master.bind("<Shift-S>", lambda e: self.check_focus(e, self.toggle_slideshow))
         self.master.bind("<MouseWheel>", lambda event: self.show_next_image() if event.delta > 0 else self.show_prev_image())
         self.master.bind("<Button-2>", self.delete_image)
         self.master.bind("<Button-3>", lambda event: ImageDetails.run_image_generation_static(self.app_actions))
-        self.master.bind("<Shift-M>", self.add_or_remove_mark_for_current_image)
-        self.master.bind("<Shift-N>", self._add_all_marks_from_last_or_current_group)
-        self.master.bind("<Shift-G>", self.go_to_mark)
-        self.master.bind("<Shift-K>", lambda event: ImageDetails.open_temp_image_canvas(self.master, MarkedFiles.last_moved_image, self.app_actions))
-        self.master.bind("<Shift-A>", self.set_current_image_run_search)
-        self.master.bind("<Shift-Z>", self.add_current_image_to_negative_search)
-        self.master.bind("<Shift-U>", self.run_refacdir)
-        self.master.bind("<Shift-I>", lambda event: ImageDetails.run_image_generation_static(self.app_actions))
+        self.master.bind("<Shift-M>", lambda e: self.check_focus(e, self.add_or_remove_mark_for_current_image))
+        self.master.bind("<Shift-N>", lambda e: self.check_focus(e, self._add_all_marks_from_last_or_current_group))
+        self.master.bind("<Shift-G>", lambda e: self.check_focus(e, self.go_to_mark))
+        self.master.bind("<Shift-K>", lambda e: self.check_focus(e, lambda e1: ImageDetails.open_temp_image_canvas(self.master, MarkedFiles.last_moved_image, self.app_actions)))
+        self.master.bind("<Shift-A>", lambda e: self.check_focus(e, self.set_current_image_run_search))
+        self.master.bind("<Shift-Z>", lambda e: self.check_focus(e, self.add_current_image_to_negative_search))
+        self.master.bind("<Shift-U>", lambda e: self.check_focus(e, self.run_refacdir))
+        self.master.bind("<Shift-I>", lambda e: self.check_focus(e, lambda e1: ImageDetails.run_image_generation_static(self.app_actions)))
         self.master.bind("<Control-Return>", lambda event: ImageDetails.run_image_generation_static(self.app_actions, last_action=True))
-        self.master.bind("<Shift-C>", lambda event: MarkedFiles.clear_file_marks(self.toast))
+        self.master.bind("<Shift-C>", lambda e: self.check_focus(e, lambda e1: MarkedFiles.clear_file_marks(self.toast)))
         self.master.bind("<Control-Tab>", self.cycle_windows)
         self.master.bind("<Shift-Escape>", lambda event: self.on_closing() if self.is_secondary() else None)
         self.master.bind("<Control-q>", self.quit)
@@ -559,6 +573,7 @@ class App():
     def end_fullscreen(self, event=None):
         if self.fullscreen:
             self.toggle_fullscreen()
+        return True
 
     def set_mode(self, mode, do_update=True):
         '''
@@ -1505,7 +1520,7 @@ class App():
             self.alert(_("Error"), _("Failed to open current file in GIMP, unable to get valid filepath"), kind="error")
 
     def copy_image_path(self):
-        filepath = self.file_browser.current_file()
+        filepath = self.get_active_image_filepath()
         if sys.platform == 'win32':
             filepath = os.path.normpath(filepath)
             if config.escape_backslash_filepaths:
@@ -1756,8 +1771,19 @@ class App():
             button  # for some reason this is necessary to maintain the reference?
             self.apply_to_grid(button)
 
-    def new_entry(self, text_variable=None, text=""):
-        return Entry(self.sidebar, text=text, textvariable=text_variable, width=30, font=fnt.Font(size=config.font_size))
+    def new_entry(self, text_variable=None, text="", aware_entry=True):
+        if aware_entry:
+            return AwareEntry(self.sidebar, text=text, textvariable=text_variable, width=30, font=fnt.Font(size=config.font_size))
+        else:
+
+            return Entry(self.sidebar, text=text, textvariable=text_variable, width=30, font=fnt.Font(size=config.font_size))
+
+    def check_focus(self, event, func):
+        # Skip key binding that might be triggered by a text entry
+        if event is not None and AwareEntry.an_entry_has_focus:
+            return
+        if func:
+            func()
 
     def destroy_grid_element(self, element_ref_name, decrement_row_counter=True):
         element = getattr(self, element_ref_name)
