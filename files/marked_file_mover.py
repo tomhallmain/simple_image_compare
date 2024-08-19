@@ -200,6 +200,8 @@ class MarkedFiles():
         self.master.bind("<Button-3>", self.do_action_test_is_in_directory)
         self.master.bind("<Control-t>", self.set_permanent_mark_target)
         self.master.bind("<Control-s>", self.sort_target_dirs_by_embedding)
+        self.master.bind("<Prior>", self.page_up)
+        self.master.bind("<Next>", self.page_down)
 
     def add_target_dir_widgets(self):
         row = 0
@@ -454,11 +456,28 @@ class MarkedFiles():
         MarkedFiles.mark_target_dirs.sort()
         self.filtered_target_dirs = MarkedFiles.mark_target_dirs[:]
         self.filter_text = ""  # Clear the filter to ensure all new directories are shown
-        self.clear_widget_lists()
-        self.add_target_dir_widgets()
-        self.master.update()
+        self._refresh_widgets()
         self.frame.after(1, lambda: self.frame.focus_force())
 
+    def _get_paging_length(self):
+        return max(1, int(len(self.filtered_target_dirs) / 10))
+
+    def _refresh_widgets(self):
+        if self.is_gui:
+            self.clear_widget_lists()
+            self.add_target_dir_widgets()
+            self.master.update()
+
+    def page_up(self, event=None):
+        paging_len = self._get_paging_length()
+        idx = len(self.filtered_target_dirs) - paging_len
+        self.filtered_target_dirs = self.filtered_target_dirs[idx:] + self.filtered_target_dirs[:idx]
+        self._refresh_widgets()
+
+    def page_down(self, event=None):
+        paging_len = self._get_paging_length()
+        self.filtered_target_dirs = self.filtered_target_dirs[paging_len:] + self.filtered_target_dirs[:paging_len]
+        self._refresh_widgets()
 
     def filter_targets(self, event):
         """
@@ -474,10 +493,7 @@ class MarkedFiles():
                     self.filtered_target_dirs = self.filtered_target_dirs[1:] + [self.filtered_target_dirs[0]]
                 else:  # keysym == "Up"
                     self.filtered_target_dirs = [self.filtered_target_dirs[-1]] + self.filtered_target_dirs[:-1]
-                if self.is_gui:
-                    self.clear_widget_lists()
-                    self.add_target_dir_widgets()
-                    self.master.update()
+                self._refresh_widgets()
             if event.keysym != "BackSpace":
                 return
         if event.keysym == "BackSpace":
@@ -519,10 +535,7 @@ class MarkedFiles():
                         temp.append(target_dir)
             self.filtered_target_dirs = temp[:]
 
-        if self.is_gui:
-            self.clear_widget_lists()
-            self.add_target_dir_widgets()
-            self.master.update()
+        self._refresh_widgets()
 
     def do_action(self, event):
         """
@@ -566,11 +579,9 @@ class MarkedFiles():
         self.app_actions.toast(_("Recording next mark target and action."))
 
     def clear_target_dirs(self, event=None):
-        self.clear_widget_lists()
         MarkedFiles.mark_target_dirs.clear()
         self.filtered_target_dirs.clear()
-        self.add_target_dir_widgets()
-        self.master.update()
+        self._refresh_widgets()
 
     def _get_embedding_text_for_dirpath(self, dirpath):
         basename = os.path.basename(dirpath)
@@ -592,10 +603,7 @@ class MarkedFiles():
             sorted_dirs.append(dirpath)
         self.filtered_target_dirs = list(sorted_dirs)
         self.is_sorted_by_embedding = True
-        if self.is_gui:
-            self.clear_widget_lists()
-            self.add_target_dir_widgets()
-            self.master.update()
+        self._refresh_widgets()
         self.app_actions.toast(_("Sorted directories by embedding comparison."))
 
     def clear_widget_lists(self):
