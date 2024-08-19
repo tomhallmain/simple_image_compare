@@ -18,6 +18,7 @@ class AppActions:
         self.go_to_file = actions["go_to_file"]
         self.delete = actions["delete"]
         self.open_move_marks_window = actions["open_move_marks_window"]
+        self.release_canvas_image = actions["release_canvas_image"]
         self._add_buttons_for_mode = actions["_add_buttons_for_mode"]
         self._set_label_state = actions["_set_label_state"]
         self._set_toggled_view_matches = actions["_set_toggled_view_matches"]

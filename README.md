@@ -38,7 +38,7 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Extension with [refacdir](https://github.com/tomhallmain/refacdir) for file operations
 - Find related images and prompts from embedded ComfyUI workflows
 
-It is not implemented yet, but there will ultimately be zoom and drag functionality in browsing mode, as well as when viewing grouped images after a comparison has been run.
+Zoom and drag functionality is available in both browsing mode, as well as when viewing grouped images after a comparison has been run.
 
 ## Configuration
 

@@ -190,7 +190,6 @@ class App():
         self.fill_canvas = config.fill_canvas
         self.fullscreen = False
         self.delete_lock = False
-        self.img = None
         self.img_path = None
         self.prev_img_path = None
         self.is_toggled_view_matches = True
@@ -221,9 +220,10 @@ class App():
             "get_base_dir": self.get_base_dir,
             "delete": self._handle_delete,
             "open_move_marks_window": self.open_move_marks_window,
+            "release_canvas_image": lambda: self.canvas_image.release_image(),
             "_set_toggled_view_matches": self._set_toggled_view_matches,
             "_set_label_state": self._set_label_state,
-            "_add_buttons_for_mode": self._add_buttons_for_mode
+            "_add_buttons_for_mode": self._add_buttons_for_mode,
         }
         self.app_actions = AppActions(actions=app_actions)
 
@@ -558,7 +558,7 @@ class App():
 
     def toggle_image_browse_recursive(self):
         self.file_browser.set_recursive(self.image_browse_recurse_var.get())
-        if self.mode == Mode.BROWSE and self.img:
+        if self.mode == Mode.BROWSE and self.canvas_image.canvas.imagetk:
             self.show_next_image()
 
     def refocus(self, event=None):
@@ -717,7 +717,7 @@ class App():
         next_related_image = ImageDetails.next_downstream_related_image(image_to_use, base_dir, self.app_actions)
         if next_related_image is not None:
             window.go_to_file(search_text=next_related_image)
-            window.canvas.after(1, window.canvas.focus_force())
+            window.canvas_image.canvas.after(1, lambda: window.canvas_image.canvas.focus_force())
         else:
             self.toast(_("No downstream related image(s) found in {0}").format(base_dir))
 
@@ -742,7 +742,7 @@ class App():
             MarkedFiles.file_marks = downstream_related_images
             self.toast(_("{0} file marks set").format(len(downstream_related_images)))
             window.go_to_mark()
-            window.canvas.after(1, window.canvas.focus_force())
+            window.canvas_image.canvas.after(1, lambda: window.canvas_image.canvas.focus_force())
 
     def get_help_and_config(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
@@ -1231,17 +1231,18 @@ class App():
         if len(override_marks) > 0:
             Utils.log(_("Including marks: {0}").format(override_marks))
             MarkedFiles.file_marks.extend(override_marks)
-        single_image = None
+        current_image = self.get_active_image_filepath()
+        single_image = False
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
-            single_image = self.get_active_image_filepath()
+            single_image = True
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title(_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)))
         top_level.geometry(MarkedFiles.get_geometry(is_gui=open_gui))
         if not open_gui:
             top_level.attributes('-alpha', 0.3)
         try:
-            marked_file_mover = MarkedFiles(top_level, open_gui, single_image, self.mode,
+            marked_file_mover = MarkedFiles(top_level, open_gui, single_image, current_image, self.mode,
                                             self.app_actions, base_dir=self.get_base_dir())
         except Exception as e:
             self.alert("Marked Files Window Error", str(e), kind="error")
@@ -1399,7 +1400,7 @@ class App():
         return self.mode == Mode.SEARCH and not self.is_toggled_view_matches
 
     def get_active_image_filepath(self):
-        if self.img is None:
+        if self.canvas_image.canvas.imagetk is None:
             return None
         if self.mode == Mode.BROWSE:
             return self.file_browser.current_file()
@@ -1458,6 +1459,7 @@ class App():
             self.file_browser.checking_files = False
             filepath = self.file_browser.current_file()
             if filepath:
+                self.canvas_image.release_image()
                 self._handle_delete(filepath)
                 MarkedFiles.handle_file_removal(filepath)
                 self.file_browser.refresh(refresh_cursor=False, removed_files=[filepath])
@@ -1480,6 +1482,7 @@ class App():
             MarkedFiles.handle_file_removal(filepath)
             if filepath == self.compare_wrapper.search_image_full_path:
                 self.compare_wrapper.search_image_full_path = None
+            self.canvas_image.release_image()
             self._handle_delete(filepath)
             if self.compare_wrapper._compare:
                 self.compare_wrapper.compare().remove_from_groups([filepath])

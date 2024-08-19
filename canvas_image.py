@@ -7,10 +7,11 @@ import tkinter as tk
 import time
 
 from tkinter import Canvas, ttk, filedialog
+from tkinter.ttk import Frame, Scrollbar
 from PIL import Image, ImageTk
 
 from gif_image_ui import GifImageUI
-from utils.utils import scale_dims
+from utils.utils import Utils
 
 
 class ResizingCanvas(Canvas):
@@ -52,14 +53,14 @@ class ResizingCanvas(Canvas):
     def clear_image(self):
         self.delete("_")
 
-class AutoScrollbar(ttk.Scrollbar):
+class AutoScrollbar(Scrollbar):
     """ A scrollbar that hides itself if it's not needed. Works only for grid geometry manager """
     def set(self, lo, hi):
         if float(lo) <= 0.0 and float(hi) >= 1.0:
             self.grid_remove()
         else:
             self.grid()
-            ttk.Scrollbar.set(self, lo, hi)
+            Scrollbar.set(self, lo, hi)
 
     def pack(self, **kw):
         raise tk.TclError('Cannot use pack with the widget ' + self.__class__.__name__)
@@ -67,11 +68,11 @@ class AutoScrollbar(ttk.Scrollbar):
     def place(self, **kw):
         raise tk.TclError('Cannot use place with the widget ' + self.__class__.__name__)
 
-class CanvasImage(ttk.Frame):
+class CanvasImage(Frame):
     """ Display and zoom image """
     def __init__(self, master):
         """ Initialize the ImageFrame """
-        ttk.Frame.__init__(self, master)
+        Frame.__init__(self, master)
         self.imscale = 1.0  # scale for the canvas image zoom, public for outer classes
         self.__delta = 1.3  # zoom magnitude
         self.__filter = Image.LANCZOS  # could be: NEAREST, BILINEAR, BICUBIC and LANCZOS
@@ -80,7 +81,7 @@ class CanvasImage(ttk.Frame):
         self.do_grid(row=0, column=1)
         # Vertical and horizontal scrollbars for canvas
         hbar = AutoScrollbar(self, orient='horizontal')
-        vbar = AutoScrollbar(self, orient='vertical')
+        vbar = AutoScrollbar(self, orient='vertical') # TODO make these hidden until needed
         hbar.grid(row=1, column=0, sticky='we')
         vbar.grid(row=0, column=1, sticky='ns')
         # Create canvas and bind it with scrollbars. Public for outer classes
@@ -185,6 +186,13 @@ class CanvasImage(ttk.Frame):
                 self.__image.stop_display()
             self.canvas.clear_image()
             self.master.update()
+
+    def release_image(self):
+        if self.__pyramid is not None:
+            for img in self.__pyramid:
+                img.close()
+            if self.__image is not None and not (isinstance(self.__image, GifImageUI)):
+                self.__image.close()
 
     def smaller(self):
         """ Resize image proportionally and return smaller image """
@@ -321,7 +329,7 @@ class CanvasImage(ttk.Frame):
         size_float = self.canvas.get_size()
         canvas_width = int(size_float[0])
         canvas_height = int(size_float[1])
-        fit_dims = scale_dims((img.width, img.height), (canvas_width, canvas_height), maximize=self.fill_canvas)
+        fit_dims = Utils.scale_dims((img.width, img.height), (canvas_width, canvas_height), maximize=self.fill_canvas)
         img = img.resize(fit_dims)
         return ImageTk.PhotoImage(img)
 
@@ -376,13 +384,13 @@ class CanvasImage(ttk.Frame):
         else:
             self.__previous_state = event.state  # remember the last keystroke state
             # Up, Down, Left, Right keystrokes
-            if event.keycode in [68, 39, 102]:  # scroll right: keys 'D', 'Right' or 'Numpad-6'
+            if event.keycode == 102:  # scroll right: keys 'D', 'Right' (68, 39) or 'Numpad-6'
                 self.__scroll_x('scroll',  1, 'unit', event=event)
-            elif event.keycode in [65, 37, 100]:  # scroll left: keys 'A', 'Left' or 'Numpad-4'
+            elif event.keycode == 100:  # scroll left: keys 'A', 'Left' (65, 37) or 'Numpad-4'
                 self.__scroll_x('scroll', -1, 'unit', event=event)
-            elif event.keycode in [87, 38, 104]:  # scroll up: keys 'W', 'Up' or 'Numpad-8'
+            elif event.keycode == 104:  # scroll up: keys 'W', 'Up' (87, 38) or 'Numpad-8'
                 self.__scroll_y('scroll', -1, 'unit', event=event)
-            elif event.keycode in [83, 40, 98]:  # scroll down: keys 'S', 'Down' or 'Numpad-2'
+            elif event.keycode == 98:  # scroll down: keys 'S', 'Down' (83, 40) or 'Numpad-2'
                 self.__scroll_y('scroll',  1, 'unit', event=event)
 
     def crop(self, bbox):
@@ -413,11 +421,11 @@ class CanvasImage(ttk.Frame):
         super().destroy()
 
 
-class MainWindow(ttk.Frame):
+class MainWindow(Frame):
     """ Main window class """
     def __init__(self, mainframe):
         """ Initialize the main Frame """
-        ttk.Frame.__init__(self, master=mainframe)
+        Frame.__init__(self, master=mainframe)
         self.master.title('Advanced Zoom v3.0')
         self.master.geometry('1400x800')  # size of the main window
         self.master.resizable(1, 1)

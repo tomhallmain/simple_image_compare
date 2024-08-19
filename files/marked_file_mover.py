@@ -128,9 +128,10 @@ class MarkedFiles():
             return 1
         return 0
 
-    def __init__(self, master, is_gui, single_image, app_mode, app_actions, base_dir="."):
+    def __init__(self, master, is_gui, single_image, current_image, app_mode, app_actions, base_dir="."):
         self.is_gui = is_gui
         self.single_image = single_image
+        self.current_image = current_image
         self.master = master
         self.app_mode = app_mode
         self.is_sorted_by_embedding = False
@@ -289,12 +290,12 @@ class MarkedFiles():
             FileActionsWindow.set_permanent_action(target_dir, move_func, self.app_actions.toast)
             self.do_set_permanent_mark_target = False
         some_files_already_present, exceptions_present = MarkedFiles.move_marks_to_dir_static(
-            self.app_actions, target_dir=target_dir, move_func=move_func, single_image=self.single_image)
+            self.app_actions, target_dir=target_dir, move_func=move_func, single_image=self.single_image, current_image=self.current_image)
         self.close_windows()
 
     @staticmethod
-    def move_marks_to_dir_static(app_actions, target_dir=None,
-                                 move_func=Utils.move_file, single_image=False) -> Tuple[bool, bool]:
+    def move_marks_to_dir_static(app_actions, target_dir=None, move_func=Utils.move_file,
+                                 single_image=False, current_image="") -> Tuple[bool, bool]:
         """
         Move or copy the marked files to the target directory.
 
@@ -320,6 +321,8 @@ class MarkedFiles():
                 MarkedFiles.last_moved_image = new_filename
                 set_last_moved_file = True
             try:
+                if is_moving and current_image == marked_file:
+                    app_actions.release_canvas_image()
                 move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
                 Utils.log(f"{action_part2} file to {new_filename}")
                 MarkedFiles.previous_marks.append(marked_file)
