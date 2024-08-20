@@ -75,34 +75,37 @@ class MarkedFiles():
         toast_callback(_("Set current marks from previous.") + "\n" + _("Total set: {0}").format(len(MarkedFiles.file_marks)))
 
     @staticmethod
-    def run_previous_action(app_actions):
+    def run_previous_action(app_actions, current_image=None):
         previous_action = FileActionsWindow.get_history_action(start_index=0)
         if previous_action is None:
             return False, False
         return MarkedFiles.move_marks_to_dir_static(app_actions,
                                              target_dir=previous_action.target,
                                              move_func=previous_action.action,
-                                             single_image=(len(MarkedFiles.file_marks)==1))
+                                             single_image=(len(MarkedFiles.file_marks)==1),
+                                             current_image=current_image)
 
     @staticmethod
-    def run_penultimate_action(app_actions):
+    def run_penultimate_action(app_actions, current_image=None):
         penultimate_action = FileActionsWindow.get_history_action(start_index=1)
         if penultimate_action is None:
             return False, False
         return MarkedFiles.move_marks_to_dir_static(app_actions,
                                              target_dir=penultimate_action.target,
                                              move_func=penultimate_action.action,
-                                             single_image=(len(MarkedFiles.file_marks)==1))
+                                             single_image=(len(MarkedFiles.file_marks)==1),
+                                             current_image=current_image)
 
     @staticmethod
-    def run_permanent_action(app_actions):
+    def run_permanent_action(app_actions, current_image=None):
         if not FileActionsWindow.permanent_action:
             app_actions.toast(_("NO_MARK_TARGET_SET"))
             return False, False
         return MarkedFiles.move_marks_to_dir_static(app_actions,
                                              target_dir=FileActionsWindow.permanent_action.target,
                                              move_func=FileActionsWindow.permanent_action.action,
-                                             single_image=(len(MarkedFiles.file_marks)==1))
+                                             single_image=(len(MarkedFiles.file_marks)==1),
+                                             current_image=current_image)
 
     @staticmethod
     def get_geometry(is_gui=True):
@@ -295,7 +298,7 @@ class MarkedFiles():
 
     @staticmethod
     def move_marks_to_dir_static(app_actions, target_dir=None, move_func=Utils.move_file,
-                                 single_image=False, current_image="") -> Tuple[bool, bool]:
+                                 single_image=False, current_image=None) -> Tuple[bool, bool]:
         """
         Move or copy the marked files to the target directory.
 

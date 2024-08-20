@@ -121,7 +121,7 @@ class CanvasImage(Frame):
         self.__curr_img = 0  # current image from the pyramid
         self.__scale = self.imscale * self.__ratio  # image pyramide scale
         self.__reduction = 2  # reduction degree of image pyramid
-        self.canvas.focus_set()  # set focus on the canvas
+        # self.focus()  # set focus on the canvas
         self.master.update()
         self.image_displayed = False
         self.mousewheel_bound = False
@@ -178,7 +178,10 @@ class CanvasImage(Frame):
         # Put image into container rectangle and use it to set proper coordinates to the image
         self.container = self.canvas.create_rectangle((0, 0, self.imwidth, self.imheight), width=0)
         self.__show_image(center=True)  # show image on the canvas
-        self.canvas.focus_set()  # set focus on the canvas
+        # self.focus()  # set focus on the canvas
+
+    def focus(self):   # set focus on the canvas
+        self.canvas.focus_set()
 
     def clear(self) -> None:
         if self.__image is not None and self.canvas is not None:

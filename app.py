@@ -98,17 +98,17 @@ class App():
     @staticmethod
     def add_secondary_window(base_dir, image_path=None, do_search=False, master=None):
         if not config.always_open_new_windows:
-            for _app in App.open_windows:
-                if _app.base_dir == base_dir:
+            for window in App.open_windows:
+                if window.base_dir == base_dir:
                     if image_path is not None and image_path != "":
                         if do_search:
                             # print("Doing search: " + str(image_path))
-                            _app.search_img_path_box.delete(0, "end")
-                            _app.search_img_path_box.insert(0, image_path)
-                            _app.set_search()
+                            window.search_img_path_box.delete(0, "end")
+                            window.search_img_path_box.insert(0, image_path)
+                            window.set_search()
                         else:
-                            _app.go_to_file(search_text=image_path)
-                    _app.canvas.after(1, lambda: _app.canvas.focus_force())
+                            window.go_to_file(search_text=image_path)
+                    window.canvas_image.focus()
                     return
                 # print(f"app base dir \"{_app.base_dir}\" was not base dir: {base_dir}")
         if master is None:
@@ -122,20 +122,20 @@ class App():
         App.secondary_top_levels[window_id] = top_level  # Keep reference to avoid gc
         if do_search and (image_path is None or image_path == ""):
             do_search = False
-        _app = App(top_level, base_dir=base_dir, image_path=image_path,
+        window = App(top_level, base_dir=base_dir, image_path=image_path,
                    grid_sidebar=False, do_search=do_search, window_id=window_id)
 
     @staticmethod
     def get_window(window_id=None, base_dir=None, img_path=None, refocus=False):
-        for _app in App.open_windows:
-            if _app.window_id == window_id or \
-                    (base_dir is not None and _app.base_dir == base_dir) or \
-                    (img_path is not None and _app.img_path == img_path):
+        for window in App.open_windows:
+            if window.window_id == window_id or \
+                    (base_dir is not None and window.base_dir == base_dir) or \
+                    (img_path is not None and window.img_path == img_path):
                 if img_path is not None:
-                    _app.go_to_file(search_text=os.path.basename(img_path), exact_match=True)
+                    window.go_to_file(search_text=os.path.basename(img_path), exact_match=True)
                 if refocus:
-                    _app.refocus()
-                return _app
+                    window.refocus()
+                return window
         return None  # raise Exception(f"No window found for window id {window_id} or base dir {base_dir}")
 
     @staticmethod
@@ -454,7 +454,7 @@ class App():
             for _dir in app_info_cache.get_meta("secondary_base_dirs", default_val=[]):
                 App.add_secondary_window(_dir)
 
-        self.canvas_image.canvas.after(1, lambda: self.canvas_image.canvas.focus_force())
+        self.canvas_image.focus()
 
         if image_path is not None:
             if do_search:
@@ -562,7 +562,7 @@ class App():
             self.show_next_image()
 
     def refocus(self, event=None):
-        self.canvas_image.canvas.after(1, lambda: self.canvas_image.canvas.focus_force())
+        self.canvas_image.focus()
         if config.debug:
             Utils.log_debug("Refocused main window")
 
@@ -717,7 +717,7 @@ class App():
         next_related_image = ImageDetails.next_downstream_related_image(image_to_use, base_dir, self.app_actions)
         if next_related_image is not None:
             window.go_to_file(search_text=next_related_image)
-            window.canvas_image.canvas.after(1, lambda: window.canvas_image.canvas.focus_force())
+            window.canvas_image.focus()
         else:
             self.toast(_("No downstream related image(s) found in {0}").format(base_dir))
 
@@ -742,7 +742,7 @@ class App():
             MarkedFiles.file_marks = downstream_related_images
             self.toast(_("{0} file marks set").format(len(downstream_related_images)))
             window.go_to_mark()
-            window.canvas_image.canvas.after(1, lambda: window.canvas_image.canvas.focus_force())
+            window.canvas_image.focus()
 
     def get_help_and_config(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
@@ -1250,17 +1250,17 @@ class App():
     def run_previous_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
-        MarkedFiles.run_previous_action(self.app_actions)
+        MarkedFiles.run_previous_action(self.app_actions, self.get_active_image_filepath())
 
     def run_penultimate_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
-        MarkedFiles.run_penultimate_action(self.app_actions)
+        MarkedFiles.run_penultimate_action(self.app_actions, self.get_active_image_filepath())
 
     def run_permanent_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
-        MarkedFiles.run_permanent_action(self.app_actions)
+        MarkedFiles.run_permanent_action(self.app_actions, self.get_active_image_filepath())
 
     def _check_marks(self, min_mark_size=1):
         if len(MarkedFiles.file_marks) < min_mark_size:
@@ -1343,12 +1343,12 @@ class App():
     def cycle_windows(self, event=None):
         if App.window_index >= len(App.open_windows):
             App.window_index = 0
-        _app = App.open_windows[App.window_index]
-        if _app.window_id == self.window_id:
+        window = App.open_windows[App.window_index]
+        if window.window_id == self.window_id:
             App.window_index += 1
         if App.window_index >= len(App.open_windows):
             App.window_index = 0
-        _app.canvas.after(1, _app.canvas.focus_force())
+        window.canvas_image.focus()
         App.window_index += 1
 
     def home(self, event=None, last_file=False):
@@ -1637,7 +1637,7 @@ class App():
             toast.destroy()
         start_thread(self_destruct_after, use_asyncio=False, args=[config.toasts_persist_seconds])
         if sys.platform == "darwin":
-            self.canvas_image.canvas.after(1, lambda: self.canvas_image.canvas.focus_force())
+            self.canvas_image.focus()
 
     def _set_label_state(self, text=None, group_number=None, size=-1):
         if text is not None:
