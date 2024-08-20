@@ -12,9 +12,7 @@ from tkinter.constants import W
 import tkinter.font as fnt
 from tkinter.ttk import Button, Entry, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
-from PIL import ImageTk, Image
 
-from canvas_image import CanvasImage
 from compare.compare_args import CompareArgs
 from compare.compare_wrapper import CompareWrapper
 from extensions.refacdir_client import RefacDirClient
@@ -23,6 +21,7 @@ from files.file_browser import FileBrowser, SortBy
 from files.go_to_file import GoToFile
 from files.marked_file_mover import MarkedFiles
 from files.recent_directory_window import RecentDirectories, RecentDirectoryWindow
+from image.canvas_image import CanvasImage
 from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
