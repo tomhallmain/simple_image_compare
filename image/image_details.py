@@ -47,7 +47,7 @@ class ImageDetails():
         self.parent_master = parent_master
         self.master = master
         self.master.title(_("Image details"))
-        self.master.geometry("700x500")
+        self.master.geometry("700x600")
         self.image_path = image_path
         self.app_actions = app_actions
         self.frame = Frame(self.master)
@@ -76,10 +76,14 @@ class ImageDetails():
         self.label_positive = Label(self.frame)
         self._label_negative = Label(self.frame)
         self.label_negative = Label(self.frame)
+        self._label_models = Label(self.frame)
+        self.label_models = Label(self.frame)
+        self._label_loras = Label(self.frame)
+        self.label_loras = Label(self.frame)
         self._label_tags = Label(self.frame)
 
         image_mode, image_dims, mod_time, file_size = self._get_image_info()
-        positive, negative = image_data_extractor.get_image_prompts(self.image_path)
+        positive, negative, models, loras = image_data_extractor.get_image_prompts_and_models(self.image_path)
 
         self.add_label(self._label_path, _("Image Path"), wraplength=col_0_width)
         self.add_label(self.label_path, self.image_path, column=1)
@@ -97,6 +101,10 @@ class ImageDetails():
         self.add_label(self.label_positive, positive, column=1)
         self.add_label(self._label_negative, _("Negative"), wraplength=col_0_width)
         self.add_label(self.label_negative, negative, column=1)
+        self.add_label(self._label_models, _("Models"), wraplength=col_0_width)
+        self.add_label(self.label_models, ", ".join(models), column=1)
+        self.add_label(self._label_loras, _("LoRAs"), wraplength=col_0_width)
+        self.add_label(self.label_loras, ", ".join(loras), column=1)
 
         self.copy_prompt_btn = None
         self.copy_prompt_no_break_btn = None
@@ -134,6 +142,10 @@ class ImageDetails():
         self.label_help = Label(self.frame)
         self.add_label(self.label_help, _("Press Shift+I on a main app window to run this"), column=1)
 
+        self.run_redo_prompt_button = None
+        self.add_button("run_redo_prompt_button", _("Redo Prompt"), self.run_redo_prompt, column=0)
+        self.row_count1 += 1
+
         if config.image_tagging_enabled:
             self.add_label(self._label_tags, _("Tags"), wraplength=col_0_width)
 
@@ -165,7 +177,7 @@ class ImageDetails():
     def update_image_details(self, image_path, index_text):
         self.image_path = image_path
         image_mode, image_dims, mod_time, file_size = self._get_image_info()
-        positive, negative = image_data_extractor.get_image_prompts(self.image_path)
+        positive, negative, models, loras = image_data_extractor.get_image_prompts_and_models(self.image_path)
         self.label_path["text"] = image_path
         self.label_index["text"] = index_text
         self.label_mode["text"] = image_mode
@@ -174,6 +186,8 @@ class ImageDetails():
         self.label_size["text"] = file_size
         self.label_positive["text"] = positive
         self.label_negative["text"] = negative
+        self.label_models["text"] = ", ".join(models)
+        self.label_loras["text"] = ", ".join(loras)
         self.master.update()
 
     def copy_prompt(self):
@@ -351,12 +365,17 @@ class ImageDetails():
     def run_image_generation(self, event=None):
         ImageDetails.run_image_generation_static(self.app_actions)
 
+    def run_redo_prompt(self, event=None):
+        ImageDetails.run_image_generation_static(self.app_actions, _type=ImageGenerationType.REDO_PROMPT)
+
     @staticmethod
-    def run_image_generation_static(app_actions, last_action=False):
-        if last_action and ImageDetails.previous_image_generation_image is not None:
+    def run_image_generation_static(app_actions, last_action=False, _type=None):
+        if last_action:
             app_actions.run_image_generation(_type=ImageGenerationType.LAST_SETTINGS, image_path=ImageDetails.previous_image_generation_image)
         else:
-            app_actions.run_image_generation(_type=ImageDetails.image_generation_mode)
+            if _type is None:
+                _type = ImageDetails.image_generation_mode
+            app_actions.run_image_generation(_type=_type)
 
     def update_tags(self):
         print(f"Updating tags for {self.image_path}")

@@ -186,7 +186,6 @@ class App():
         self.file_check_config = FileCheckConfig(self.window_id)
         self.slideshow_config = SlideshowConfig(self.window_id)
         self.mode = Mode.BROWSE
-        self.fill_canvas = config.fill_canvas
         self.fullscreen = False
         self.delete_lock = False
         self.img_path = None
@@ -328,7 +327,7 @@ class App():
                                                 variable=self.image_browse_recurse_var, command=self.toggle_image_browse_recursive)
         self.apply_to_grid(self.image_browse_recurse, sticky=W)
 
-        fill_canvas_var = tk.BooleanVar(value=self.fill_canvas)
+        fill_canvas_var = tk.BooleanVar(value=config.fill_canvas)
         self.fill_canvas_choice = Checkbutton(self.sidebar, text=_('Image resize to full window'), variable=fill_canvas_var, command=self.toggle_fill_canvas)
         self.apply_to_grid(self.fill_canvas_choice, sticky=W)
 
@@ -362,7 +361,7 @@ class App():
 
         # Image panel and state management
         self.master.update()
-        self.canvas_image = CanvasImage(self.master)
+        self.canvas_image = CanvasImage(self.master, config.fill_canvas)
 
         # Default mode is BROWSE - GROUP and SEARCH are only valid modes when a compare is run
         self.set_mode(Mode.BROWSE)

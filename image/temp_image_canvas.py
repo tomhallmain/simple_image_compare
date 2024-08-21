@@ -75,8 +75,8 @@ class TempImageCanvas:
         self.master.bind("<Shift-Escape>", self.close_windows)
         self.master.bind("<Shift-D>", lambda event: self.app_actions.get_image_details(image_path=self.image_path))
         # TODO come up with a solution that allows for the set image generation type in ImageDetails class to be used instead of hardcoding
-        self.master.bind("<Shift-I>", lambda event: self.app_actions.run_image_generation(_type=ImageGenerationType.CONTROL_NET))
-        self.master.bind("<Button-3>", lambda event: self.app_actions.run_image_generation(_type=ImageGenerationType.CONTROL_NET))
+        self.master.bind("<Shift-I>", lambda event: self.app_actions.run_image_generation(_type=ImageGenerationType.CONTROL_NET, image_path=self.image_path))
+        self.master.bind("<Button-3>", lambda event: self.app_actions.run_image_generation(_type=ImageGenerationType.CONTROL_NET, image_path=self.image_path))
         self.master.bind("<Shift-Y>", lambda event: self.app_actions.set_marks_from_downstream_related_images(image_to_use=self.image_path))
         self.master.bind("<Control-m>", self.open_move_marks_window)
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))

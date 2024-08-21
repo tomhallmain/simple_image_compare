@@ -70,7 +70,7 @@ class AutoScrollbar(Scrollbar):
 
 class CanvasImage(Frame):
     """ Display and zoom image """
-    def __init__(self, master):
+    def __init__(self, master, fill_canvas=False):
         """ Initialize the ImageFrame """
         Frame.__init__(self, master)
         self.imscale = 1.0  # scale for the canvas image zoom, public for outer classes
@@ -113,6 +113,7 @@ class CanvasImage(Frame):
         self.__image = None
         self.imwidth = 0
         self.imheight = 0
+        self.fill_canvas = fill_canvas
         self.__min_side = min(self.imwidth, self.imheight)  # get the smaller image side
         # Create image pyramid
         self.__pyramid = None
@@ -138,7 +139,6 @@ class CanvasImage(Frame):
             return
 
         self.path = path
-        self.fill_canvas = False
         self.__huge = False  # huge or not
         self.__huge_size = 14000  # define size of the huge image
         self.__band_width = 1024  # width of the tile band

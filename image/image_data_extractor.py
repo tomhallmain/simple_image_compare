@@ -134,7 +134,6 @@ class ImageDataExtractor:
         node_inputs = {}
         prompt = self.extract_prompt(image_path)
 
-
         if prompt is not None:
             for k, v in prompt.items():
                 if ImageDataExtractor.CLASS_TYPE in v and ImageDataExtractor.INPUTS in v:
@@ -154,6 +153,37 @@ class ImageDataExtractor:
             print(f"Negative: \"{negative}\"")
 
         return (positive, negative)
+
+    def get_models(self, image_path):
+        prompt = self.extract_prompt(image_path)
+        models = []
+        loras = []
+
+        if prompt is not None:
+            for k, v in prompt.items():
+                if ImageDataExtractor.CLASS_TYPE in v and ImageDataExtractor.INPUTS in v:
+                    # print(v[ImageDataExtractor.CLASS_TYPE])
+                    if "Checkpoint" in v[ImageDataExtractor.CLASS_TYPE] and "ckpt_name" in v[ImageDataExtractor.INPUTS]:
+                        ckpt_name = v[ImageDataExtractor.INPUTS]["ckpt_name"]
+                        if "." in ckpt_name:
+                            ckpt_name = ckpt_name[:ckpt_name.rfind(".")]
+                        models.append(ckpt_name)
+                    elif "Lora" in v[ImageDataExtractor.CLASS_TYPE] and "lora_name" in v[ImageDataExtractor.INPUTS]:
+                        strength_model = 0
+                        strength_clip = 0
+                        if "strength_model" in v[ImageDataExtractor.INPUTS]:
+                            strength_model = v[ImageDataExtractor.INPUTS]["strength_model"]
+                        if "strength_clip" in v[ImageDataExtractor.INPUTS]:
+                            strength_clip = v[ImageDataExtractor.INPUTS]["strength_clip"]
+                        if strength_model == 0 and strength_clip == 0:
+                            continue
+                        lora_name = v[ImageDataExtractor.INPUTS]["lora_name"]
+                        if  "." in lora_name:
+                            lora_name = lora_name[:lora_name.rfind(".")]
+                        loras.append(lora_name)
+
+        return (models, loras)
+
 
     def uses_load_images(self, image_path, control_net_image_paths=[]):
         if not control_net_image_paths or len(control_net_image_paths) == 0:
@@ -222,7 +252,7 @@ class ImageDataExtractor:
             raise Exception("Stable diffusion prompt reader failed to import. Please check log and config.json file.")
         return ImageDataReader(image_path)
 
-    def get_image_prompts(self, image_path):
+    def get_image_prompts_and_models(self, image_path):
         positive = "(Unable to parse image prompt information for this file.)"
         negative = ""
 
@@ -247,7 +277,14 @@ class ImageDataExtractor:
 #                print(e)
                 pass
 
-        return positive, negative
+        models = []
+        loras = []
+        try:
+            models, loras = self.get_models(image_path)
+        except Exception as e:
+            pass
+
+        return positive, negative, models, loras
 
     def get_related_image_path(self, image_path, node_id="LoadImage"):
         use_class_type = True

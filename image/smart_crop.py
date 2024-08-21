@@ -504,6 +504,11 @@ class Cropper:
                     del diffs[val]
         return diffs
 
+    @staticmethod
+    def random_crop(image, allowable_proportions):
+        pass
+
+
 if __name__ == '__main__':
 
 
