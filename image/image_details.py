@@ -121,9 +121,14 @@ class ImageDetails():
         self.add_button("enhance_image_btn", _("Enhance Image"), lambda: self.enhance_image(), column=1)
 
         self.random_crop_btn = None
-        self.flip_image_btn = None
+        self.randomly_modify_btn = None
         self.add_button("random_crop_btn", _("Random Crop"), lambda: self.random_crop(), column=0)
-        self.add_button("flip_image_btn",  _("Flip Image"), lambda: self.flip_image(), column=1)
+        self.add_button("randomly_modify_btn", _("Randomly Modify"), lambda: self.random_modification(), column=1)
+        
+        self.flip_image_btn = None
+        self.flip_vertical_btn = None
+        self.add_button("flip_image_btn",  _("Flip Image Horiztontally"), lambda: self.flip_image(), column=0)
+        self.add_button("flip_vertical_btn", _("Flip Image Vertically"), lambda: self.flip_image(vertical=True), column=1)
 
         self.open_related_image_btn = None
         self.add_button("open_related_image_btn", _("Open Related Image"), self.open_related_image)
@@ -247,8 +252,8 @@ class ImageDetails():
         self.app_actions.refresh()
         self.app_actions.toast(_("Randomly modified image"))
 
-    def flip_image(self):
-        ImageOps.flip_left_right(self.image_path)
+    def flip_image(self, vertical=False):
+        ImageOps.flip_image(self.image_path, vertical=False)
         self.app_actions.refresh()
         self.app_actions.toast(_("Flipped image"))
 
@@ -276,7 +281,7 @@ class ImageDetails():
             node_id = ImageDetails.related_image_saved_node_id
         related_image_path = image_data_extractor.get_related_image_path(image_path, node_id)
         if related_image_path is None or related_image_path == "":
-            print(f"{image_path} - No related image found for node id {node_id}")
+            # print(f"{image_path} - No related image found for node id {node_id}")
             return None, False
         elif not os.path.isfile(related_image_path):
             if not check_extra_directories:
