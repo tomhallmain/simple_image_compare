@@ -5,12 +5,13 @@ import sys
 import cv2
 import numpy as np
 
-from PIL import Image, ImageDraw, ImageEnhance
+from PIL import ImageDraw, ImageEnhance
+import PIL.Image
 
-#from utils.utils import Utils
+from utils.utils import Utils
 
 class ImageOps:
-    COLORS = ["red", "green", "blue", "yellow", "purple", "orange"]
+    COLORS = ["red", "green", "blue", "yellow", "purple", "orange", "black", "white", "gray", "pink", "brown"]
 
     @staticmethod
     def new_filepath(image_path: str, new_filename: str, append_part: str | None) -> str:
@@ -72,7 +73,7 @@ class ImageOps:
         new_file = os.path.join(dirname, new_filename)
         if os.path.exists(new_file):
             raise Exception("File already exists: " + new_filename) # TODO maybe remove this
-        image = Image.open(image_path)
+        image = PIL.Image.open(image_path)
         brightness_enhancer = ImageEnhance.Brightness(image)
         brightened = brightness_enhancer.enhance(1.3)
         image.close()
@@ -85,17 +86,17 @@ class ImageOps:
         image.close()
 
     @staticmethod
-    def flip_image(image_path, vertical=False):
-        original_img = Image.open(image_path)
-        mod_img = ImageOps.flip_image(original_img, vertical=vertical)
+    def flip_image(image_path, top_bottom=False):
+        original_img = PIL.Image.open(image_path)
+        mod_img, original_img = ImageOps._flip_image(original_img, top_bottom=top_bottom)
         new_filepath = ImageOps.new_filepath(image_path, "", "_flipped")
         mod_img.save(new_filepath)
         original_img.close()
         mod_img.close()
 
     @staticmethod
-    def flip_image(im, vertical=False):
-        return im.transpose(method=Image.FLIP_TOP_BOTTOM if vertical else Image.FLIP_LEFT_RIGHT), im
+    def _flip_image(im, top_bottom=False):
+        return im.transpose(method=PIL.Image.FLIP_TOP_BOTTOM if top_bottom else PIL.Image.FLIP_LEFT_RIGHT), im
 
     @staticmethod
     def _upscale(im, shortest_side=1200):
@@ -124,7 +125,7 @@ class ImageOps:
 
     @staticmethod
     def random_crop_and_upscale(image_path, allowable_proportions=0.4, shortest_side=1200):
-        im = Image.open(image_path)
+        im = PIL.Image.open(image_path)
         cropped = ImageOps._random_crop_and_upscale(im, allowable_proportions, shortest_side)
         im.close()
         new_filepath = ImageOps.new_filepath(image_path, "", "_cropped")
@@ -154,9 +155,9 @@ class ImageOps:
 
     @staticmethod
     def randomly_modify_image(image_path):
-        im = Image.open(image_path)
+        im = PIL.Image.open(image_path)
         has_modified_image = False
-        if random.random() < 0.4:
+        if random.random() < 0.5:
             cv2_image = ImageOps.pil_to_cv2(im)
             angle_diff = int(random.random() * 55)
             angle = angle_diff if random.random() > 0.5 else 360 - angle_diff
@@ -164,14 +165,14 @@ class ImageOps:
             im.close()
             im = ImageOps.cv2_to_pil(cv2_image)
             has_modified_image = True
-        if random.random() < 0.3:
-            im, original_im = ImageOps.flip_image(im)
+        if random.random() < 0.5:
+            im, original_im = ImageOps._flip_image(im)
             original_im.close()
             has_modified_image = True
-        if random.random() < 0.4:
+        if random.random() < 0.5:
             ImageOps._random_draw(im)
             has_modified_image = True
-        if random.random() < 0.4:
+        if random.random() < 0.5:
             im_final = ImageOps._random_crop_and_upscale(im)
             has_modified_image = True
         else:
@@ -188,7 +189,7 @@ class ImageOps:
 
     @staticmethod
     def random_draw(image_path):
-        image = Image.open(image_path)
+        image = PIL.Image.open(image_path)
         ImageOps._random_draw(image)
         new_filepath = ImageOps.new_filepath(image_path, "", "_drawn")
         image.save(new_filepath)
@@ -207,15 +208,23 @@ class ImageOps:
                 ImageOps._chord(image, draw)
 
     @staticmethod
+    def _color():
+        return random.choice(ImageOps.COLORS)
+
+    @staticmethod
+    def _opacity():
+        return random.uniform(0.5, 1.0)
+
+    @staticmethod
     def _line(image, image_draw):
         if random.randint(0, 1) == 0:
             for i in range(0, 100, 20):
-                image_draw.line((i, 0) + image.size, width=random.randint(2, 20), fill=random.choice(ImageOps.COLORS))
+                image_draw.line((i, 0) + image.size, width=random.randint(2, 20), fill=ImageOps._color())
         else:
             points = []
             for i in range(random.randint(2, 4)):
                 points.append((random.randint(0, image.size[0]), random.randint(0, image.size[1])))
-            image_draw.line(points, width=random.randint(2, 40), fill=random.choice(ImageOps.COLORS), joint="curve")
+            image_draw.line(points, width=random.randint(2, 40), fill=ImageOps._color(), joint="curve")
 
     @staticmethod
     def _arc(image, image_draw):
@@ -227,7 +236,7 @@ class ImageOps:
             start1 = random.randint(0, image.size[1])
             end1 = random.randint(start1, image.size[1])
             bounds = (start0, start1, end0, end1)
-            image_draw.arc(bounds, start=start, end=end, fill=random.choice(ImageOps.COLORS), width=random.randint(2, 40))
+            image_draw.arc(bounds, start=start, end=end, fill=ImageOps._color(), width=random.randint(2, 40))
 
     @staticmethod
     def _chord(image, image_draw):
@@ -239,7 +248,7 @@ class ImageOps:
             start1 = random.randint(0, image.size[1])
             end1 = random.randint(start1, image.size[1])
             bounds = (start0, start1, end0, end1)
-            image_draw.chord(bounds, start=start, end=end, fill=random.choice(ImageOps.COLORS), outline=random.choice(ImageOps.COLORS), width=random.randint(2, 40))
+            image_draw.chord(bounds, start=start, end=end, fill=ImageOps._color(), outline=ImageOps._color(), width=random.randint(2, 40))
 
     @staticmethod
     def pil_to_cv2(pil_image):
@@ -255,7 +264,7 @@ class ImageOps:
         # convert from openCV2 to PIL. Notice the COLOR_BGR2RGB which means that
         # the color is converted from BGR to RGB
         color_converted = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
-        pil_image = Image.fromarray(color_converted)
+        pil_image = PIL.Image.fromarray(color_converted)
         return pil_image
 
 if __name__ == "__main__":

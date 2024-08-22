@@ -128,7 +128,7 @@ class ImageDetails():
         self.flip_image_btn = None
         self.flip_vertical_btn = None
         self.add_button("flip_image_btn",  _("Flip Image Horiztontally"), lambda: self.flip_image(), column=0)
-        self.add_button("flip_vertical_btn", _("Flip Image Vertically"), lambda: self.flip_image(vertical=True), column=1)
+        self.add_button("flip_vertical_btn", _("Flip Image Vertically"), lambda: self.flip_image(top_bottom=True), column=1)
 
         self.open_related_image_btn = None
         self.add_button("open_related_image_btn", _("Open Related Image"), self.open_related_image)
@@ -252,8 +252,8 @@ class ImageDetails():
         self.app_actions.refresh()
         self.app_actions.toast(_("Randomly modified image"))
 
-    def flip_image(self, vertical=False):
-        ImageOps.flip_image(self.image_path, vertical=False)
+    def flip_image(self, top_bottom=False):
+        ImageOps.flip_image(self.image_path, top_bottom=top_bottom)
         self.app_actions.refresh()
         self.app_actions.toast(_("Flipped image"))
 
