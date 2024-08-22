@@ -1418,7 +1418,10 @@ class App():
             self.alert(_("Error"), _("Failed to open location of current file, unable to get valid filepath"), kind="error")
 
     def open_image_in_gimp(self, event=None):
-        filepath = self.get_active_image_filepath()
+        if self.delete_lock:
+            filepath = self.prev_img_path
+        else:
+            filepath = self.get_active_image_filepath()
         if filepath is not None:
             self.toast("Opening file in GIMP: " + filepath)
             Utils.open_file_in_gimp(filepath, config.gimp_exe_loc)

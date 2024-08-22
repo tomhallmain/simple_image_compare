@@ -6,12 +6,13 @@ from PIL import ImageChops
 from PIL import Image
 from PIL.Image import Image as PilImage
 
+from image.image_ops import ImageOps
 from utils.config import config
 
 class Cropper:
     @staticmethod
     def smart_crop_simple(image_path: str, new_filename: str) -> None:
-        new_filepath = Cropper.new_filepath(image_path, new_filename, None)
+        new_filepath = ImageOps.new_filepath(image_path, new_filename, None)
         if os.path.exists(new_filepath):
             print("Skipping crop already run: " + new_filepath)
             return
@@ -34,7 +35,7 @@ class Cropper:
         we can crop the image and save valid images accordingly.
         '''
         saved_files = []
-        new_filepath = Cropper.new_filepath(image_path, new_filename, None)
+        new_filepath = ImageOps.new_filepath(image_path, new_filename, None)
         if os.path.exists(new_filepath):
             print("Skipping crop already run: " + new_filepath)
             return saved_files
@@ -46,26 +47,13 @@ class Cropper:
             for i in range(len(cropped_images)):
                 cropped_image = cropped_images[i]
                 if index_filepaths:
-                    new_filepath = Cropper.new_filepath(image_path, new_filename, "_" + str(i))
+                    new_filepath = ImageOps.new_filepath(image_path, new_filename, "_" + str(i))
                 cropped_image.save(new_filepath)
                 cropped_image.close()
             print("Cropped image: " + new_filepath)
         else:
             print("No cropping")
         return saved_files
-
-    @staticmethod
-    def new_filepath(image_path: str, new_filename: str, append_part: str | None) -> str:
-        dirname = os.path.dirname(image_path)
-        if new_filename is None or new_filename == "" or append_part is not None:
-            basename = os.path.basename(image_path)
-            filename_part, ext = os.path.splitext(basename)
-            if append_part is not None:
-                new_filename = filename_part + append_part + ext
-            else:
-                new_filename = filename_part + "_cropped" + ext
-        new_filepath = os.path.join(dirname, new_filename)
-        return new_filepath
 
     @staticmethod
     def is_in_color_range(px: Tuple[int, int, int], minimal_color: int) -> bool:
@@ -503,10 +491,6 @@ class Cropper:
                         print(f'Consolidated value = {val} Winning value = {winning_value} Max = {_max}')
                     del diffs[val]
         return diffs
-
-    @staticmethod
-    def random_crop(image, allowable_proportions):
-        pass
 
 
 if __name__ == '__main__':

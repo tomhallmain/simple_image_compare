@@ -149,8 +149,8 @@ class ImageDataExtractor:
             if positive == "":
                 positive = prompt_dicts.get(node_inputs[ImageDataExtractor.POSITIVE], "")
             negative = prompt_dicts.get(node_inputs[ImageDataExtractor.NEGATIVE], "")
-            print(f"Positive: \"{positive}\"")
-            print(f"Negative: \"{negative}\"")
+            # print(f"Positive: \"{positive}\"")
+            # print(f"Negative: \"{negative}\"")
 
         return (positive, negative)
 

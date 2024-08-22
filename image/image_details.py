@@ -9,8 +9,7 @@ from tkinter.ttk import Entry, Button
 
 from files.file_browser import FileBrowser
 from image.image_data_extractor import image_data_extractor
-from image.image_enhancer import enhance_image
-from image.rotation import rotate_image
+from image.image_ops import ImageOps
 from image.smart_crop import Cropper
 from image.temp_image_canvas import TempImageCanvas
 from utils.config import config
@@ -121,13 +120,19 @@ class ImageDetails():
         self.add_button("crop_image_btn", _("Crop Image (Smart Detect)"), lambda: self.crop_image(), column=0)
         self.add_button("enhance_image_btn", _("Enhance Image"), lambda: self.enhance_image(), column=1)
 
+        self.random_crop_btn = None
+        self.flip_image_btn = None
+        self.add_button("random_crop_btn", _("Random Crop"), lambda: self.random_crop(), column=0)
+        self.add_button("flip_image_btn",  _("Flip Image"), lambda: self.flip_image(), column=1)
+
         self.open_related_image_btn = None
         self.add_button("open_related_image_btn", _("Open Related Image"), self.open_related_image)
-        self.related_image_node_id = StringVar(self.master, value=ImageDetails.related_image_saved_node_id)
-        self.related_image_node_id_entry = Entry(self.frame, textvariable=self.related_image_node_id, width=30, font=Font(size=8))
-        self.related_image_node_id_entry.bind("<Return>", self.open_related_image)
-        self.related_image_node_id_entry.grid(row=self.row_count1, column=1, sticky="w")
-        self.row_count1 += 1
+        # self.related_image_node_id = StringVar(self.master, value=ImageDetails.related_image_saved_node_id)
+        # self.related_image_node_id_entry = Entry(self.frame, textvariable=self.related_image_node_id, width=30, font=Font(size=8))
+        # self.related_image_node_id_entry.bind("<Return>", self.open_related_image)
+        # self.related_image_node_id_entry.grid(row=self.row_count1, column=1, sticky="w")
+        self.label_related_image = Label(self.frame)
+        self.add_label(self.label_related_image, self.get_related_image_text(), column=1)
 
         self.label_image_generation = Label(self.frame)
         self.add_label(self.label_image_generation, _("Image Generation"))
@@ -188,6 +193,7 @@ class ImageDetails():
         self.label_negative["text"] = negative
         self.label_models["text"] = ", ".join(models)
         self.label_loras["text"] = ", ".join(loras)
+        self.label_related_image["text"] = self.get_related_image_text()
         self.master.update()
 
     def copy_prompt(self):
@@ -206,7 +212,7 @@ class ImageDetails():
         self.app_actions.toast(_("Copied prompt without BREAK"))
 
     def rotate_image(self, right=False):
-        rotate_image(self.image_path, right)
+        ImageOps.rotate_image(self.image_path, right)
         self.close_windows()
         self.app_actions.refresh()
         # TODO properly set the file info on the rotated file instead of having to use this callback
@@ -225,35 +231,56 @@ class ImageDetails():
             self.app_actions.toast(_("No crops found"))
 
     def enhance_image(self):
-        enhance_image(self.image_path)
+        ImageOps.enhance_image(self.image_path)
         self.close_windows()
         self.app_actions.refresh()
         # TODO actually go to the new file. In this case we don't want to replace the original because there may be errors in some cases.
         self.app_actions.toast(_("Enhanced image"))
 
-    def open_related_image(self, event=None):
-        node_id = self.related_image_node_id.get().strip()
-        if node_id == "":
-            print("No node id given")
+    def random_crop(self):
+        ImageOps.random_crop_and_upscale(self.image_path)
+        self.app_actions.refresh()
+        self.app_actions.toast(_("Randomly cropped image"))
+
+    def random_modification(self):
+        ImageOps.randomly_modify_image(self.image_path)
+        self.app_actions.refresh()
+        self.app_actions.toast(_("Randomly modified image"))
+
+    def flip_image(self):
+        ImageOps.flip_left_right(self.image_path)
+        self.app_actions.refresh()
+        self.app_actions.toast(_("Flipped image"))
+
+    def get_related_image_text(self):
+        node_id = ImageDetails.related_image_saved_node_id
+        related_image_path, exact_match = ImageDetails.get_related_image_path(self.image_path, node_id)
+        if related_image_path is not None:
+            related_image_text = related_image_path if exact_match else related_image_path + _(" (Exact Match Not Found)")
         else:
-            ImageDetails.related_image_saved_node_id = node_id
-            ImageDetails.show_related_image(self.parent_master, node_id, self.image_path, self.app_actions)
+            related_image_text = _("(No related image found)")
+        return related_image_text
+
+    def open_related_image(self, event=None):
+        # TODO either remove the node id specification field or add it back somewhere else
+        # node_id = self.related_image_node_id.get().strip()
+        # if node_id == "":
+        #     raise Exception("No node id given")
+        # else:
+        #     ImageDetails.related_image_saved_node_id = node_id
+        ImageDetails.show_related_image(self.parent_master, None, self.image_path, self.app_actions)
 
     @staticmethod
-    def get_related_image_path(image_path, node_id=None):
+    def get_related_image_path(image_path, node_id=None, check_extra_directories=True):
         if node_id is None or node_id == "":
             node_id = ImageDetails.related_image_saved_node_id
-        return image_data_extractor.get_related_image_path(image_path, node_id)
-
-    @staticmethod
-    def show_related_image(master=None, node_id=None, image_path="", app_actions=None):
-        if master is None or image_path == "":
-            raise Exception("No master or image path given")
-        related_image_path = ImageDetails.get_related_image_path(image_path, node_id)
+        related_image_path = image_data_extractor.get_related_image_path(image_path, node_id)
         if related_image_path is None or related_image_path == "":
             print(f"{image_path} - No related image found for node id {node_id}")
-            return
+            return None, False
         elif not os.path.isfile(related_image_path):
+            if not check_extra_directories:
+                return related_image_path, False
             print(f"{image_path} - Related image {related_image_path} not found")
             basename = os.path.basename(related_image_path)
             if len(config.directories_to_search_for_related_images) > 0:
@@ -272,8 +299,15 @@ class ImageDetails():
                     if related_image_path_found:
                         break
             if not related_image_path_found or not os.path.isfile(related_image_path):
-                return
+                return related_image_path, False
             print(f"{image_path} - Possibly related image {related_image_path} found")
+        return related_image_path, True
+
+    @staticmethod
+    def show_related_image(master=None, node_id=None, image_path="", app_actions=None):
+        if master is None or image_path == "":
+            raise Exception("No master or image path given")
+        related_image_path, exact_match = ImageDetails.get_related_image_path(image_path, node_id)
         ImageDetails.open_temp_image_canvas(master=master, related_image_path=related_image_path, app_actions=app_actions)
 
     @staticmethod
