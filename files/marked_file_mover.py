@@ -108,6 +108,19 @@ class MarkedFiles():
                                              current_image=current_image)
 
     @staticmethod
+    def run_hotkey_action(app_actions, current_image=None, number=-1, shift_key_pressed=False):
+        assert number in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        if number not in FileActionsWindow.hotkey_actions:
+            app_actions.toast(_("NO_HOTKEY_ACTION_SET"))
+            return False, False
+        file_action = FileActionsWindow.hotkey_actions[number]
+        return MarkedFiles.move_marks_to_dir_static(app_actions,
+                                             target_dir=file_action.target,
+                                             move_func=file_action.get_action(do_flip=shift_key_pressed),
+                                             single_image=(len(MarkedFiles.file_marks)==1),
+                                             current_image=current_image)
+
+    @staticmethod
     def get_geometry(is_gui=True):
         if is_gui:
             width = 600
@@ -150,6 +163,7 @@ class MarkedFiles():
             self.starting_target = base_dir
 
         self.do_set_permanent_mark_target = False
+        self.do_set_hotkey_action = -1
         self.move_btn_list = []
         self.copy_btn_list = []
         self.label_list = []
@@ -206,6 +220,9 @@ class MarkedFiles():
         self.master.bind("<Control-s>", self.sort_target_dirs_by_embedding)
         self.master.bind("<Prior>", self.page_up)
         self.master.bind("<Next>", self.page_down)
+
+        for i in range(10):
+            self.master.bind(str(i), self.set_hotkey_action)
 
     def add_target_dir_widgets(self):
         row = 0
@@ -292,6 +309,9 @@ class MarkedFiles():
         if self.do_set_permanent_mark_target:
             FileActionsWindow.set_permanent_action(target_dir, move_func, self.app_actions.toast)
             self.do_set_permanent_mark_target = False
+        if self.do_set_hotkey_action > -1:
+            FileActionsWindow.set_hotkey_action(self.do_set_hotkey_action, target_dir, move_func, self.app_actions.toast)
+            self.do_set_hotkey_action = -1
         some_files_already_present, exceptions_present = MarkedFiles.move_marks_to_dir_static(
             self.app_actions, target_dir=target_dir, move_func=move_func, single_image=self.single_image, current_image=self.current_image)
         self.close_windows()
@@ -582,6 +602,11 @@ class MarkedFiles():
 
     def set_permanent_mark_target(self, event=None):
         self.do_set_permanent_mark_target = True
+        self.app_actions.toast(_("Recording next mark target and action."))
+
+    def set_hotkey_action(self, event=None):
+        assert event is not None
+        self.do_set_hotkey_action = int(event.keysym)
         self.app_actions.toast(_("Recording next mark target and action."))
 
     def clear_target_dirs(self, event=None):

@@ -99,6 +99,7 @@ A directory with images must be set before most of the below bindings will have 
 | Ctrl-R           |                  | Run previous marks action    |
 | Ctrl-E           |                  | Run penultimate marks action |
 | Ctrl-T           |                  | Run permanent marks action   |
+| Ctrl-[Number Key]|                  | Run hotkey marks action      |
 | Ctrl-Z           |                  | Undo move marks              |
 | Ctrl-X           |                  | Modify last marks move       |
 | Ctrl-D           |                  | Set marks from previous      |

@@ -12,7 +12,16 @@ class Action():
         self.action = action
         self.target = target
         self.marks = marks[:]
-    
+
+    def get_action(self, do_flip=False):
+        action = self.action
+        if do_flip:
+            if action == Utils.move_file:
+                action = Utils.copy_file
+            elif action == Utils.copy_file:
+                action = Utils.move_file
+        return self.action
+
     def set_marks(self, marks):
         self.marks = marks
 
@@ -27,15 +36,27 @@ class Action():
     def __str__(self):
         return self.action.__name__ + " to " + self.target
 
+def convert_action_from_text(action_text):
+    if action_text == "move_file":
+        return Utils.move_file
+    elif action_text == "copy_file":
+        return Utils.copy_file
+    else:
+        return None
+#        raise Exception("Unknown action: " + action_text)
+
 def setup_permanent_action():
     permanent_mark_target = app_info_cache.get_meta("permanent_mark_target")
     permanent_action = app_info_cache.get_meta("permanent_action")
-    if permanent_action == "move_file":
-        return Action(Utils.move_file, permanent_mark_target)
-    elif permanent_action == "copy_file":
-        return Action(Utils.copy_file, permanent_mark_target)
-    else:
-        return None
+    return Action(convert_action_from_text(permanent_action), permanent_mark_target)
+
+def setup_hotkey_actions():
+    hotkey_actions_dict = app_info_cache.get_meta("hotkey_actions", default_val={})
+    assert type(hotkey_actions_dict) == dict
+    hotkey_actions = {}
+    for number, action in hotkey_actions_dict.items():
+        hotkey_actions[int(number)] = Action(convert_action_from_text(action["action"]), action["target"])
+    return hotkey_actions
 
 
 class FileActionsWindow:
@@ -43,6 +64,7 @@ class FileActionsWindow:
     Window to hold info about completed file actions.
     '''
     permanent_action = setup_permanent_action()
+    hotkey_actions = setup_hotkey_actions()
     action_history = []
     MAX_ACTIONS = 50
     N_ACTIONS_CUTOFF = 30
@@ -73,6 +95,14 @@ class FileActionsWindow:
         app_info_cache.set_meta("permanent_action", move_func.__name__)
         app_info_cache.set_meta("permanent_mark_target", target_dir)
         toast_callback(f"Set permanent action:\n{move_func.__name__} to {target_dir}")
+
+
+    @staticmethod
+    def set_hotkey_action(number, target_dir, move_func, toast_callback):
+        FileActionsWindow.hotkey_actions[number] = Action(move_func, target_dir)
+        hotkey_actions = app_info_cache.get_meta("hotkey_actions", default_val={})
+        hotkey_actions[number] = {"action": move_func.__name__, "target": target_dir}
+        app_info_cache.set_meta("hotkey_actions", hotkey_actions)
 
 
     @staticmethod

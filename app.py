@@ -424,6 +424,9 @@ class App():
         self.master.bind("<Prior>", self.page_up)
         self.master.bind("<Next>", self.page_down)
 
+        for i in range(10):
+            self.master.bind(str(i), self.run_hotkey_marks_action)
+
         # Start async threads
         start_thread(self.check_files)
 
@@ -560,7 +563,8 @@ class App():
             self.show_next_image()
 
     def refocus(self, event=None):
-        self.canvas_image.focus()
+        shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
+        self.canvas_image.focus(refresh_image=shift_key_pressed)
         if config.debug:
             Utils.log_debug("Refocused main window")
 
@@ -976,6 +980,7 @@ class App():
                 self.create_image(next_file)
                 return True
             except Exception as e:
+                traceback.print_exc()
                 self.alert("Exception", str(e))
                 return False
         return self.compare_wrapper.show_next_image(show_alert=show_alert)
@@ -1259,6 +1264,16 @@ class App():
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
         MarkedFiles.run_permanent_action(self.app_actions, self.get_active_image_filepath())
+
+    def run_hotkey_marks_action(self, event=None):
+        assert event is not None
+        shift_key_pressed, control_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT, ModifierKey.CTRL])
+        if not control_key_pressed:
+            return
+        if len(MarkedFiles.file_marks) == 0:
+            self.add_or_remove_mark_for_current_image(show_toast=False)
+        number = int(event.keysym)
+        MarkedFiles.run_hotkey_action(self.app_actions, self.get_active_image_filepath(), number, bool(shift_key_pressed))
 
     def _check_marks(self, min_mark_size=1):
         if len(MarkedFiles.file_marks) < min_mark_size:

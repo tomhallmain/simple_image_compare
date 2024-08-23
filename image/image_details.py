@@ -352,7 +352,7 @@ class ImageDetails():
         for path in ImageDetails.downstream_related_image_browser.filepaths:
             if path == image_path:
                 continue
-            related_image_path = ImageDetails.get_related_image_path(path)
+            related_image_path, exact_match = ImageDetails.get_related_image_path(path)
             if related_image_path is not None:
                 if related_image_path == image_path:
                     downstream_related_images.append(path)

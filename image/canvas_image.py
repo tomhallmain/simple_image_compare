@@ -174,14 +174,23 @@ class CanvasImage(Frame):
         while w > 512 and h > 512:  # top pyramid image is around 512 pixels in size
             w /= self.__reduction  # divide on reduction degree
             h /= self.__reduction  # divide on reduction degree
-            self.__pyramid.append(self.__pyramid[-1].resize((int(w), int(h)), self.__filter))
+            try:
+                self.__pyramid.append(self.__pyramid[-1].resize((int(w), int(h)), self.__filter))
+            except Exception as e:
+                if "truncated" in str(e):
+                    time.sleep(0.25)
+                    self.__pyramid.append(self.__pyramid[-1].resize((int(w), int(h)), self.__filter))
+                else:
+                    raise e
         # Put image into container rectangle and use it to set proper coordinates to the image
         self.container = self.canvas.create_rectangle((0, 0, self.imwidth, self.imheight), width=0)
         self.__show_image(center=True)  # show image on the canvas
         # self.focus()  # set focus on the canvas
 
-    def focus(self):   # set focus on the canvas
+    def focus(self, refresh_image=False):   # set focus on the canvas
         self.canvas.focus_set()
+        if refresh_image:
+            self.show_image(self.path)
 
     def clear(self) -> None:
         if self.__image is not None and self.canvas is not None:
