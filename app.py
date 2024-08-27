@@ -17,6 +17,7 @@ from compare.compare_args import CompareArgs
 from compare.compare_wrapper import CompareWrapper
 from extensions.refacdir_client import RefacDirClient
 from extensions.sd_runner_client import SDRunnerClient
+from files.file_actions_window import FileActionsWindow
 from files.file_browser import FileBrowser, SortBy
 from files.go_to_file import GoToFile
 from files.marked_file_mover import MarkedFiles
@@ -254,22 +255,22 @@ class App():
         self.set_base_dir_box = self.new_entry(text=_("Add dirpath..."))
         self.apply_to_grid(self.set_base_dir_box)
 
-        self.add_button("set_search_btn", _("Set search file"), self.set_search)
+        self.add_button("set_search_btn", _("Set search file"), self.set_search_for_image)
         self.search_image = tk.StringVar()
         self.search_img_path_box = self.new_entry(self.search_image)
         if do_search and image_path is not None:
             self.search_img_path_box.insert(0, image_path)
-        self.search_img_path_box.bind("<Return>", self.set_search)
+        self.search_img_path_box.bind("<Return>", self.set_search_for_image)
         self.apply_to_grid(self.search_img_path_box, sticky=W)
 
-        self.add_button("search_text_btn", _("Search text (embedding mode)"), self.set_search)
+        self.add_button("search_text_btn", _("Search text (embedding mode)"), self.set_search_for_text)
         self.search_text = tk.StringVar()
         self.search_text_box = self.new_entry(self.search_text)
-        self.search_text_box.bind("<Return>", self.set_search)
+        self.search_text_box.bind("<Return>", self.set_search_for_text)
         self.apply_to_grid(self.search_text_box, sticky=W)
         self.search_text_negative = tk.StringVar()
         self.search_text_negative_box = self.new_entry(self.search_text_negative)
-        self.search_text_negative_box.bind("<Return>", self.set_search)
+        self.search_text_negative_box.bind("<Return>", self.set_search_for_text)
         self.apply_to_grid(self.search_text_negative_box, sticky=W)
 
         self.label_compare_mode = Label(self.sidebar)
@@ -409,6 +410,7 @@ class App():
         self.master.bind("<Control-g>", self.open_go_to_file_window)
         self.master.bind("<Control-h>", self.toggle_sidebar)
         self.master.bind("<Control-C>", self.copy_marks_list)
+        self.master.bind("<Control-n>", self.open_file_actions_window)
         self.master.bind("<Control-m>", self.open_move_marks_window)
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
         self.master.bind("<Control-r>", self.run_previous_marks_action)
@@ -684,6 +686,7 @@ class App():
         if self.app_actions.image_details_window is not None:
             if self.app_actions.image_details_window.do_refresh:
                 self.app_actions.image_details_window.update_image_details(image_path, index_text)
+            self.app_actions.image_details_window.focus()
         else:
             top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
             try:
@@ -697,10 +700,13 @@ class App():
         ImageDetails.show_related_image(master=self.master, image_path=self.img_path, app_actions=self.app_actions)
 
     def check_many_files(self, window, action="do this action", threshold=2000):
-        if window.file_browser.is_slow_total_files(threshold=threshold):
+        if not window.file_browser.has_confirmed_dir() and window.file_browser.is_slow_total_files(threshold=threshold):
             res = self.alert(_("Many Files"), f"There are a lot of files in {window.base_dir} and it may take a while"  # TODO i18n
                              + f" to {action}.\n\nWould you like to proceed?", kind="askokcancel")
-            return res != messagebox.OK and res != True
+            not_ok = res != messagebox.OK and res != True
+            if not_ok:
+                return True
+            window.file_browser.set_dir_confirmed()
         return False
 
     def find_related_images_in_open_window(self, event=None, base_dir=None):
@@ -726,7 +732,7 @@ class App():
     def set_marks_from_downstream_related_images(self, event=None, base_dir=None, image_to_use=None):
         # TODO some way to tell if the current mark is invalid based on whether the window has been switched, and if so clear it and use the current image instead
         if base_dir is None:
-            window, dirs = self.get_other_window_or_self_dir()
+            window, dirs = self.get_other_window_or_self_dir(allow_current_window=True)
             if window is None:
                 self.open_recent_directory_window(extra_callback_args=(
                     self.set_marks_from_downstream_related_images, dirs))
@@ -882,6 +888,22 @@ class App():
     def get_inclusion_pattern(self) -> str | None:
         inclusion_pattern = self.inclusion_pattern.get().strip()
         return None if inclusion_pattern == "" else inclusion_pattern
+
+    def set_search_for_image(self, event=None) -> None:
+        image_path = self.get_search_file_path()
+        if image_path is None or image_path == "":
+            if self.img_path is None:
+                self.alert(_("Invalid Setting"), _("No image selected."), kind="error")
+            self.search_img_path_box.delete(0, tk.END)
+            self.search_img_path_box.insert(0, str(self.img_path))
+        self.set_search()
+
+    def set_search_for_text(self, event=None):
+        search_text = self.search_text.get()
+        search_text_negative = self.search_text_negative.get()
+        if search_text.strip() == "" and search_text_negative.strip() == "":
+            self.search_text.set("cat")
+        self.set_search()
 
     def set_search(self, event=None) -> None:
         '''
@@ -1267,9 +1289,7 @@ class App():
 
     def run_hotkey_marks_action(self, event=None):
         assert event is not None
-        shift_key_pressed, control_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT, ModifierKey.CTRL])
-        if not control_key_pressed:
-            return
+        shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
         number = int(event.keysym)
@@ -1284,6 +1304,17 @@ class App():
     def revert_last_marks_change(self, event=None):
         if not config.use_file_paths_json:
             MarkedFiles.undo_move_marks(self.get_base_dir(), self.app_actions)
+
+    def open_file_actions_window(self, event=None):
+        top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
+        top_level.title(_("File Actions"))
+        top_level.geometry("700x1200")
+        try:
+            file_actions_window = FileActionsWindow(top_level, self.master, self.app_actions,
+                                                    ImageDetails.open_temp_image_canvas,
+                                                    MarkedFiles.move_marks_to_dir_static)
+        except Exception as e:
+            self.alert("File Actions Window Error", str(e), kind="error")
 
     def open_go_to_file_window(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)

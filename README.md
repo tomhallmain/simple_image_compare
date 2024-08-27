@@ -96,10 +96,11 @@ A directory with images must be set before most of the below bindings will have 
 | Ctrl-H           |                  | Hide/show sidebar      |
 | Ctrl-M           |                  | Open marks window      |
 | Ctrl-K           |                  | Open marks window (no GUI)   |
+| Ctrl-N           |                  | Open mark history window     |
 | Ctrl-R           |                  | Run previous marks action    |
 | Ctrl-E           |                  | Run penultimate marks action |
 | Ctrl-T           |                  | Run permanent marks action   |
-| Ctrl-[Number Key]|                  | Run hotkey marks action      |
+| Number Keys      |                  | Run permanent marks action   |
 | Ctrl-Z           |                  | Undo move marks              |
 | Ctrl-X           |                  | Modify last marks move       |
 | Ctrl-D           |                  | Set marks from previous      |
@@ -130,7 +131,7 @@ When the move marks window is open -- with or without GUI -- marks can be moved 
 
 Simply typing letters while the mark window is open will filter the list of mark target directories, even if the GUI is not present. The backspace key will delete letters from the filter. You can scroll through the list of saved target directories using arrow keys.
 
-To bypass the move marks window, use the Ctrl+R or Ctrl+E shortcuts to immediately run the previous and penultimate actions respectively on the current selection.
+To bypass the move marks window, use the Ctrl+R or Ctrl+E shortcuts to immediately run the previous and penultimate actions respectively on the current selection. You can also use the number keys or Ctrl+T as hotkeys for persistent marks actions.
 
 ## Limitations
 

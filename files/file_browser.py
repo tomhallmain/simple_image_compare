@@ -62,6 +62,8 @@ class SortableFile:
 
 
 class FileBrowser:
+    have_confirmed_directories = []
+
     def __init__(self, directory=".", recursive=False, filter=None, sort_by=SortBy.NAME):
         self.directory = directory
         self.recursive = recursive
@@ -89,6 +91,13 @@ class FileBrowser:
     def is_slow_total_files(self, threshold=2000):
         factor = 5 if Utils.is_external_drive(self.directory) else 1
         return factor * len(self._files) > threshold
+
+    def has_confirmed_dir(self):
+        return self.directory in FileBrowser.have_confirmed_directories
+
+    def set_dir_confirmed(self):
+        if not self.has_confirmed_dir():
+            FileBrowser.have_confirmed_directories.append(self.directory)
 
     def set_filter(self, filter):
         if config.debug:

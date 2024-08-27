@@ -173,6 +173,9 @@ class ImageDetails():
         self.master.bind("<Escape>", self.close_windows)
         self.master.bind("<Shift-C>", self.crop_image)
         self.master.protocol("WM_DELETE_WINDOW", self.close_windows)
+        self.focus()
+
+    def focus(self):
         self.frame.after(1, lambda: self.frame.focus_force())
 
     def _get_image_info(self):
@@ -313,24 +316,24 @@ class ImageDetails():
         if master is None or image_path == "":
             raise Exception("No master or image path given")
         related_image_path, exact_match = ImageDetails.get_related_image_path(image_path, node_id)
-        ImageDetails.open_temp_image_canvas(master=master, related_image_path=related_image_path, app_actions=app_actions)
+        ImageDetails.open_temp_image_canvas(master=master, image_path=related_image_path, app_actions=app_actions)
 
     @staticmethod
-    def open_temp_image_canvas(master=None, related_image_path=None, app_actions=None):
-        if related_image_path is None:
+    def open_temp_image_canvas(master=None, image_path=None, app_actions=None):
+        if image_path is None:
             return
-        base_dir = os.path.dirname(related_image_path)
-        if app_actions.get_window(base_dir=base_dir, img_path=related_image_path, refocus=True) is not None:
+        base_dir = os.path.dirname(image_path)
+        if app_actions.get_window(base_dir=base_dir, img_path=image_path, refocus=True) is not None:
             return
         if ImageDetails.related_image_canvas is None:
-            ImageDetails.set_related_image_canvas(master, related_image_path, app_actions)
+            ImageDetails.set_related_image_canvas(master, image_path, app_actions)
         try:
-            ImageDetails.related_image_canvas.create_image(related_image_path)
-            print(f"Related image: {related_image_path}")
+            ImageDetails.related_image_canvas.create_image(image_path)
+            print(f"Related image: {image_path}")
         except Exception as e:
             if "invalid command name" in str(e):
-                ImageDetails.set_related_image_canvas(master, related_image_path, app_actions)
-                ImageDetails.related_image_canvas.create_image(related_image_path)
+                ImageDetails.set_related_image_canvas(master, image_path, app_actions)
+                ImageDetails.related_image_canvas.create_image(image_path)
             else:
                 raise e
 

@@ -7,7 +7,7 @@ from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
 from compare.compare_embeddings import CompareEmbedding
-from files.file_actions_window import FileActionsWindow
+from files.file_actions_window import Action, FileActionsWindow
 from files.file_browser import FileBrowser
 from image.image_data_extractor import image_data_extractor
 from utils.app_style import AppStyle
@@ -313,11 +313,12 @@ class MarkedFiles():
             FileActionsWindow.set_hotkey_action(self.do_set_hotkey_action, target_dir, move_func, self.app_actions.toast)
             self.do_set_hotkey_action = -1
         some_files_already_present, exceptions_present = MarkedFiles.move_marks_to_dir_static(
-            self.app_actions, target_dir=target_dir, move_func=move_func, single_image=self.single_image, current_image=self.current_image)
+            self.app_actions, target_dir=target_dir, move_func=move_func,
+            single_image=self.single_image, current_image=self.current_image)
         self.close_windows()
 
     @staticmethod
-    def move_marks_to_dir_static(app_actions, target_dir=None, move_func=Utils.move_file,
+    def move_marks_to_dir_static(app_actions, target_dir=None, move_func=Utils.move_file, files=None,
                                  single_image=False, current_image=None) -> Tuple[bool, bool]:
         """
         Move or copy the marked files to the target directory.
@@ -330,13 +331,14 @@ class MarkedFiles():
         action_part1 = _("Moving") if is_moving else _("Copying")
         action_part2 = _("Moved") if is_moving else _("Copied")
         MarkedFiles.previous_marks.clear()
-        FileActionsWindow.update_history(target_dir, move_func, MarkedFiles.file_marks)
-        if len(MarkedFiles.file_marks) > 1:
-            Utils.log_yellow(f"{action_part1} {len(MarkedFiles.file_marks)} files to directory: {target_dir}")
+        files_to_move = MarkedFiles.file_marks if files is None else files
+        action = Action(move_func, target_dir, MarkedFiles.file_marks)
+        if len(files_to_move) > 1:
+            Utils.log_yellow(f"{action_part1} {len(files_to_move)} files to directory: {target_dir}")
         exceptions = {}
         invalid_files = []
         set_last_moved_file = False
-        for marked_file in MarkedFiles.file_marks:
+        for marked_file in files_to_move:
             if MarkedFiles.is_cancelled_action:
                 break
             new_filename = os.path.join(target_dir, os.path.basename(marked_file))
@@ -347,6 +349,7 @@ class MarkedFiles():
                 if is_moving and current_image == marked_file:
                     app_actions.release_canvas_image()
                 move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
+                action.add_file(new_filename)
                 Utils.log(f"{action_part2} file to {new_filename}")
                 MarkedFiles.previous_marks.append(marked_file)
             except Exception as e:
@@ -360,8 +363,9 @@ class MarkedFiles():
             if len(MarkedFiles.previous_marks) > 0:
                 MarkedFiles.undo_move_marks(app_actions.get_base_dir(), app_actions)
             return False, False
-        if len(exceptions) < len(MarkedFiles.file_marks):
-            message = action_part2 + _(" %s files to").format(len(MarkedFiles.file_marks) - len(exceptions)) + f"\n{target_dir}"
+        if len(exceptions) < len(files_to_move):
+            FileActionsWindow.update_history(action)
+            message = action_part2 + _(" %s files to").format(len(files_to_move) - len(exceptions)) + f"\n{target_dir}"
             Utils.log_yellow(message.replace("\n", " "))
             app_actions.toast(message)
             MarkedFiles.delete_lock = False
