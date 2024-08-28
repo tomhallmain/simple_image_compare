@@ -127,7 +127,7 @@ class ImageDetails():
         
         self.flip_image_btn = None
         self.flip_vertical_btn = None
-        self.add_button("flip_image_btn",  _("Flip Image Horiztontally"), lambda: self.flip_image(), column=0)
+        self.add_button("flip_image_btn",  _("Flip Image Horizontally"), lambda: self.flip_image(), column=0)
         self.add_button("flip_vertical_btn", _("Flip Image Vertically"), lambda: self.flip_image(top_bottom=True), column=1)
 
         self.open_related_image_btn = None

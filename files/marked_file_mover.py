@@ -111,7 +111,7 @@ class MarkedFiles():
     def run_hotkey_action(app_actions, current_image=None, number=-1, shift_key_pressed=False):
         assert number in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         if number not in FileActionsWindow.hotkey_actions:
-            app_actions.toast(_("NO_HOTKEY_ACTION_SET"))
+            app_actions.toast(_("NO_HOTKEY_ACTION_SET").format(number, number))
             return False, False
         file_action = FileActionsWindow.hotkey_actions[number]
         return MarkedFiles.move_marks_to_dir_static(app_actions,

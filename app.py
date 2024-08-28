@@ -253,7 +253,7 @@ class App():
         self.add_button("toggle_theme_btn", _("Toggle theme"), self.toggle_theme)
         self.add_button("set_base_dir_btn", _("Set directory"), self.set_base_dir)
         self.set_base_dir_box = self.new_entry(text=_("Add dirpath..."))
-        self.apply_to_grid(self.set_base_dir_box)
+        self.apply_to_grid(self.set_base_dir_box, sticky=W)
 
         self.add_button("set_search_btn", _("Set search file"), self.set_search_for_image)
         self.search_image = tk.StringVar()
