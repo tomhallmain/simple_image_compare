@@ -27,6 +27,8 @@ class ResizingCanvas(Canvas):
         self.width = parent.winfo_width() * 9/10
     
     def reset_sizes(self):
+        self.xview_moveto(0)
+        self.yview_moveto(0)
         self.height = self.parent.winfo_height()
         self.width = self.parent.winfo_width() * 9/10
 
@@ -93,6 +95,7 @@ class CanvasImage(Frame):
 #        print(self.canvas.get_size())
         hbar.configure(command=self.__scroll_x)  # bind scrollbars to the canvas
         vbar.configure(command=self.__scroll_y)
+
         # Bind events to the Canvas
         self.canvas.bind('<Configure>', lambda event: self.__show_image())  # canvas is resized
         self.canvas.bind('<ButtonPress-1>', self.__move_from)  # remember canvas position
@@ -103,7 +106,7 @@ class CanvasImage(Frame):
         # Handle keystrokes in idle mode, because program slows down on a weak computers,
         # when too many key stroke events in the same time
         self.canvas.bind('<Key>', lambda event: self.canvas.after_idle(self.__keystroke, event))
-        # Decide if this image huge or not
+
         self.__huge = False  # huge or not
         self.__huge_size = 14000  # define size of the huge image
         self.__band_width = 1024  # width of the tile band
@@ -138,10 +141,9 @@ class CanvasImage(Frame):
             self.__image.display(self.canvas)
             return
 
+        self.imscale = 1.0
         self.path = path
         self.__huge = False  # huge or not
-        self.__huge_size = 14000  # define size of the huge image
-        self.__band_width = 1024  # width of the tile band
         Image.MAX_IMAGE_PIXELS = 1000000000  # suppress DecompressionBombError for the big image
         with warnings.catch_warnings():  # suppress DecompressionBombWarning
             warnings.simplefilter('ignore')
@@ -169,7 +171,6 @@ class CanvasImage(Frame):
         self.__ratio = max(self.imwidth, self.imheight) / self.__huge_size if self.__huge else 1.0
         self.__curr_img = 0  # current image from the pyramid
         self.__scale = self.imscale * self.__ratio  # image pyramide scale
-        self.__reduction = 2  # reduction degree of image pyramid
         w, h = self.__pyramid[-1].size
         while w > 512 and h > 512:  # top pyramid image is around 512 pixels in size
             w /= self.__reduction  # divide on reduction degree

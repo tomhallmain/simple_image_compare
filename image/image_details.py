@@ -262,7 +262,7 @@ class ImageDetails():
 
     def get_related_image_text(self):
         node_id = ImageDetails.related_image_saved_node_id
-        related_image_path, exact_match = ImageDetails.get_related_image_path(self.image_path, node_id)
+        related_image_path, exact_match = ImageDetails.get_related_image_path(self.image_path, node_id, check_extra_directories=False)
         if related_image_path is not None:
             related_image_text = related_image_path if exact_match else related_image_path + _(" (Exact Match Not Found)")
         else:
@@ -286,6 +286,8 @@ class ImageDetails():
         if related_image_path is None or related_image_path == "":
             # print(f"{image_path} - No related image found for node id {node_id}")
             return None, False
+        elif check_extra_directories is None:
+            return related_image_path, False
         elif not os.path.isfile(related_image_path):
             if not check_extra_directories:
                 return related_image_path, False
@@ -309,7 +311,7 @@ class ImageDetails():
             if not related_image_path_found or not os.path.isfile(related_image_path):
                 return related_image_path, False
             print(f"{image_path} - Possibly related image {related_image_path} found")
-        return related_image_path, True
+        return related_image_path, check_extra_directories
 
     @staticmethod
     def show_related_image(master=None, node_id=None, image_path="", app_actions=None):
@@ -355,7 +357,7 @@ class ImageDetails():
         for path in ImageDetails.downstream_related_image_browser.filepaths:
             if path == image_path:
                 continue
-            related_image_path, exact_match = ImageDetails.get_related_image_path(path)
+            related_image_path, exact_match = ImageDetails.get_related_image_path(path, check_extra_directories=None)
             if related_image_path is not None:
                 if related_image_path == image_path:
                     downstream_related_images.append(path)
@@ -411,13 +413,13 @@ class ImageDetails():
         ImageDetails.run_image_generation_static(self.app_actions, _type=ImageGenerationType.REDO_PROMPT)
 
     @staticmethod
-    def run_image_generation_static(app_actions, last_action=False, _type=None):
+    def run_image_generation_static(app_actions, last_action=False, _type=None, modify_call=False):
         if last_action:
-            app_actions.run_image_generation(_type=ImageGenerationType.LAST_SETTINGS, image_path=ImageDetails.previous_image_generation_image)
+            app_actions.run_image_generation(_type=ImageGenerationType.LAST_SETTINGS, image_path=ImageDetails.previous_image_generation_image, modify_call=modify_call)
         else:
             if _type is None:
                 _type = ImageDetails.image_generation_mode
-            app_actions.run_image_generation(_type=_type)
+            app_actions.run_image_generation(_type=_type, modify_call=modify_call)
 
     def update_tags(self):
         print(f"Updating tags for {self.image_path}")

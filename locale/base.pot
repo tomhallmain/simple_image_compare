@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2024-08-28 11:39-0400\n"
+"POT-Creation-Date: 2024-08-30 20:36-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: .\app.py:119 .\app.py:832 .\app.py:1758
+#: .\app.py:119 .\app.py:833 .\app.py:1771
 msgid " Simple Image Compare "
 msgstr ""
 
@@ -127,7 +127,7 @@ msgstr ""
 msgid "No files found in directory after refresh."
 msgstr ""
 
-#: .\app.py:599 .\app.py:1559 .\app.py:1610
+#: .\app.py:599 .\app.py:1562 .\app.py:1617
 msgid "Warning"
 msgstr ""
 
@@ -151,222 +151,221 @@ msgstr ""
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr ""
 
-#: .\app.py:704
+#: .\app.py:705
 msgid "Many Files"
 msgstr ""
 
-#: .\app.py:730
+#: .\app.py:731
 msgid "No downstream related image(s) found in {0}"
 msgstr ""
 
-#: .\app.py:751
+#: .\app.py:752
 msgid "{0} file marks set"
 msgstr ""
 
-#: .\app.py:757
+#: .\app.py:758
 msgid "Help and Config"
 msgstr ""
 
-#: .\app.py:837
+#: .\app.py:838
 msgid "Set Image Comparison Directory"
 msgstr ""
 
-#: .\app.py:875
+#: .\app.py:876
 msgid "Counter limit must be an integer value."
 msgstr ""
 
-#: .\app.py:875 .\app.py:896
+#: .\app.py:876 .\app.py:897
 msgid "Invalid Setting"
 msgstr ""
 
-#: .\app.py:896
+#: .\app.py:897
 msgid "No image selected."
 msgstr ""
 
-#: .\app.py:933
+#: .\app.py:934
 msgid "Compare mode must be set to Clip embedding to search text embeddings"
 msgstr ""
 
-#: .\app.py:938
+#: .\app.py:939
 msgid "Select image file"
 msgstr ""
 
-#: .\app.py:967
+#: .\app.py:968
 msgid "Somehow, the search file is invalid"
 msgstr ""
 
-#: .\app.py:967 .\app.py:1037 .\app.py:1061 .\app.py:1464 .\app.py:1475
-#: .\app.py:1538 .\app.py:1577
-msgid "Error"
-msgstr ""
-
-#: .\app.py:1037 .\app.py:1061
+#: .\app.py:1038 .\app.py:1062
 msgid "Failed to get active image filepath"
 msgstr ""
 
-#: .\app.py:1143
+#: .\app.py:1144
 msgid "{0}: {1}% complete"
 msgstr ""
 
-#: .\app.py:1149
+#: .\app.py:1150
 msgid "Confirm comparison"
 msgstr ""
 
-#: .\app.py:1150
+#: .\app.py:1151
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 
-#: .\app.py:1151
+#: .\app.py:1152
 msgid "Are you sure you want to proceed?"
 msgstr ""
 
-#: .\app.py:1198
+#: .\app.py:1199
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 
-#: .\app.py:1209
+#: .\app.py:1210
 msgid "Mark removed. Remaining: {0}"
 msgstr ""
 
-#: .\app.py:1213
+#: .\app.py:1214
 msgid "Mark added. Total set: {0}"
 msgstr ""
 
-#: .\app.py:1230
+#: .\app.py:1231
 msgid "Marks added. Total set: {0}"
 msgstr ""
 
-#: .\app.py:1239
+#: .\app.py:1240
 msgid "First sorted mark"
 msgstr ""
 
-#: .\app.py:1246
+#: .\app.py:1247
 msgid "Only one marked file set."
 msgstr ""
 
-#: .\app.py:1257
+#: .\app.py:1258
 msgid "Including marks: {0}"
 msgstr ""
 
-#: .\app.py:1265
+#: .\app.py:1266
 msgid "Move {0} Marked File(s)"
 msgstr ""
 
-#: .\app.py:1300
+#: .\app.py:1301
 msgid "NO_MARKS_SET"
 msgstr ""
 
-#: .\app.py:1310
+#: .\app.py:1311
 msgid "File Actions"
 msgstr ""
 
-#: .\app.py:1321
+#: .\app.py:1322
 msgid "Go To File"
 msgstr ""
 
-#: .\app.py:1342
+#: .\app.py:1343
 msgid "File not found"
 msgstr ""
 
-#: .\app.py:1342
+#: .\app.py:1343
 msgid "No file was found for the search text: \"{0}\""
 msgstr ""
 
-#: .\app.py:1356
+#: .\app.py:1357
 msgid "No image selected"
 msgstr ""
 
-#: .\app.py:1356
+#: .\app.py:1357
 msgid "No image was selected for comparison"
 msgstr ""
 
-#: .\app.py:1369
+#: .\app.py:1370
 msgid "No Text Search Presets Found"
 msgstr ""
 
-#: .\app.py:1369
+#: .\app.py:1370
 msgid "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 
-#: .\app.py:1464
+#: .\app.py:1467
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr ""
 
-#: .\app.py:1475
+#: .\app.py:1478
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 
-#: .\app.py:1490
+#: .\app.py:1493
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
 msgstr ""
 
-#: .\app.py:1495
+#: .\app.py:1498
 msgid "Cleared all hidden images."
 msgstr ""
 
-#: .\app.py:1502
+#: .\app.py:1505
 msgid "DELETE_LOCK"
 msgstr ""
 
-#: .\app.py:1520
+#: .\app.py:1523
 msgid "Invalid action, no files found to delete"
 msgstr ""
 
-#: .\app.py:1523
+#: .\app.py:1526
 msgid "Invalid action, search image not found"
 msgstr ""
 
-#: .\app.py:1538
+#: .\app.py:1541
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 
-#: .\app.py:1543
+#: .\app.py:1546
 msgid "Removing file: {0}"
 msgstr ""
 
-#: .\app.py:1560
+#: .\app.py:1563
 msgid "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."
 msgstr ""
 
-#: .\app.py:1577
+#: .\app.py:1580
 msgid "Invalid target filepath for replacement: "
 msgstr ""
 
-#: .\app.py:1581
+#: .\app.py:1584
 msgid "Moved search image to "
 msgstr ""
 
-#: .\app.py:1608
+#: .\app.py:1615
 msgid "Running image gen: "
 msgstr ""
 
-#: .\app.py:1610
+#: .\app.py:1617
 msgid "Error running image generation:"
 msgstr ""
 
-#: .\app.py:1615
+#: .\app.py:1622
 msgid "Running refacdir"
 msgstr ""
 
-#: .\app.py:1698
+#: .\app.py:1648
+msgid "Error"
+msgstr ""
+
+#: .\app.py:1711
 msgid "GROUP_DETAILS"
 msgstr ""
 
-#: .\app.py:1702
+#: .\app.py:1715
 msgid "No image files found"
 msgstr ""
 
-#: .\app.py:1704
+#: .\app.py:1717
 msgid "1 image file found"
 msgstr ""
 
-#: .\app.py:1704
+#: .\app.py:1717
 msgid "{0} image files found"
 msgstr ""
 
-#: .\app.py:1707
+#: .\app.py:1720
 msgid "(filtered)"
 msgstr ""
 
@@ -542,7 +541,7 @@ msgstr ""
 msgid "Invalid search string, please enter some text."
 msgstr ""
 
-#: .\files\marked_file_mover.py:68 .\files\marked_file_mover.py:845
+#: .\files\marked_file_mover.py:68 .\files\marked_file_mover.py:853
 msgid "Marks cleared."
 msgstr ""
 
@@ -610,107 +609,115 @@ msgstr ""
 msgid "Moved"
 msgstr ""
 
-#: .\files\marked_file_mover.py:368
-msgid " %s files to"
+#: .\files\marked_file_mover.py:370
+msgid "Moved {0} files to {1}"
 msgstr ""
 
-#: .\files\marked_file_mover.py:395
+#: .\files\marked_file_mover.py:372
+msgid "Copied {0} files to {1}"
+msgstr ""
+
+#: .\files\marked_file_mover.py:399
 msgid "Existing filenames match!"
 msgstr ""
 
-#: .\files\marked_file_mover.py:397
+#: .\files\marked_file_mover.py:401
 msgid "WARNING: Exact file match."
 msgstr ""
 
-#: .\files\marked_file_mover.py:399 .\files\marked_file_mover.py:758
+#: .\files\marked_file_mover.py:403 .\files\marked_file_mover.py:766
 msgid "WARNING: Short filenames."
 msgstr ""
 
-#: .\files\marked_file_mover.py:425
+#: .\files\marked_file_mover.py:429
 msgid "Moving back"
 msgstr ""
 
-#: .\files\marked_file_mover.py:425
+#: .\files\marked_file_mover.py:429
 msgid "Removing"
 msgstr ""
 
-#: .\files\marked_file_mover.py:426
+#: .\files\marked_file_mover.py:430
 msgid "Moved back"
 msgstr ""
 
-#: .\files\marked_file_mover.py:426
+#: .\files\marked_file_mover.py:430
 msgid "Removed"
 msgstr ""
 
-#: .\files\marked_file_mover.py:432
+#: .\files\marked_file_mover.py:436
 msgid "Where should the marked files have gone?"
 msgstr ""
 
-#: .\files\marked_file_mover.py:456
-msgid " %s files from"
+#: .\files\marked_file_mover.py:462
+msgid "Moved back {0} files from {1}"
 msgstr ""
 
-#: .\files\marked_file_mover.py:473
+#: .\files\marked_file_mover.py:464
+msgid "Removed {0} files from {1}"
+msgstr ""
+
+#: .\files\marked_file_mover.py:481
 msgid "Select parent directory for target directories"
 msgstr ""
 
-#: .\files\marked_file_mover.py:609 .\files\marked_file_mover.py:614
+#: .\files\marked_file_mover.py:617 .\files\marked_file_mover.py:622
 msgid "Recording next mark target and action."
 msgstr ""
 
-#: .\files\marked_file_mover.py:642
+#: .\files\marked_file_mover.py:650
 msgid "Sorted directories by embedding comparison."
 msgstr ""
 
-#: .\files\marked_file_mover.py:662
+#: .\files\marked_file_mover.py:670
 msgid "Confirm Delete"
 msgstr ""
 
-#: .\files\marked_file_mover.py:663
+#: .\files\marked_file_mover.py:671
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr ""
 
-#: .\files\marked_file_mover.py:683
+#: .\files\marked_file_mover.py:691
 msgid "Delete Failed"
 msgstr ""
 
-#: .\files\marked_file_mover.py:684
+#: .\files\marked_file_mover.py:692
 msgid "Failed to delete %s files - check log for details."
 msgstr ""
 
-#: .\files\marked_file_mover.py:687
+#: .\files\marked_file_mover.py:695
 msgid "Deleted %s marked files."
 msgstr ""
 
-#: .\files\marked_file_mover.py:752
+#: .\files\marked_file_mover.py:760
 msgid "Existing filenames found!"
 msgstr ""
 
-#: .\files\marked_file_mover.py:754
+#: .\files\marked_file_mover.py:762
 msgid "WARNING: All file hashes match."
 msgstr ""
 
-#: .\files\marked_file_mover.py:756
+#: .\files\marked_file_mover.py:764
 msgid "WARNING: %s of %s file hashes match."
 msgstr ""
 
-#: .\files\marked_file_mover.py:762
+#: .\files\marked_file_mover.py:770
 msgid "No existing filenames found."
 msgstr ""
 
-#: .\files\marked_file_mover.py:790
+#: .\files\marked_file_mover.py:798
 msgid "Found %s downstream related images"
 msgstr ""
 
-#: .\files\marked_file_mover.py:792
+#: .\files\marked_file_mover.py:800
 msgid "No downstream related images found"
 msgstr ""
 
-#: .\files\marked_file_mover.py:803
+#: .\files\marked_file_mover.py:811
 msgid "Cleared marked file"
 msgstr ""
 
-#: .\files\marked_file_mover.py:847
+#: .\files\marked_file_mover.py:855
 msgid "Removed {0} marks"
 msgstr ""
 

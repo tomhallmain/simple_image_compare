@@ -58,13 +58,14 @@ class SDRunnerClient:
                 self.close()
                 raise Exception(_('Image does not contain a prompt to redo!'))
 
-    def run(self, _type, base_image):
+    def run(self, _type, base_image, append=False):
         if not isinstance(_type, ImageGenerationType):
             raise TypeError(f'{_type} is not a valid ImageGenerationType')
         self.validate_image_for_type(_type, base_image)
         self.validate_connection()
         try:
-            command  = {'command': 'run', 'type': _type.value, 'args': [base_image]}
+            command  = {'command': 'run', 'type': _type.value,
+                        'args': {'image': base_image, 'append': append}}
             resp = self.send(command)
             if "error" in resp:
                 self.close()

@@ -8,8 +8,6 @@ import numpy as np
 from PIL import ImageDraw, ImageEnhance
 import PIL.Image
 
-from utils.utils import Utils
-
 class ImageOps:
     COLORS = ["red", "green", "blue", "yellow", "purple", "orange", "black", "white", "gray", "pink", "brown"]
 
@@ -22,7 +20,7 @@ class ImageOps:
             if append_part is not None:
                 new_filename = filename_part + append_part + ext
             else:
-                new_filename = filename_part + "_cropped" + ext
+                new_filename = filename_part + "_crop" + ext
         new_filepath = os.path.join(dirname, new_filename)
         return new_filepath
 
@@ -38,9 +36,8 @@ class ImageOps:
                 rotated = np.rot90(img, k=1)
 
             current_extension = os.path.splitext(image_path)[-1]
-            temp_filepath = os.path.join(os.path.dirname(image_path), 'temp' + current_extension)
-            cv2.imwrite(temp_filepath, rotated)
-            Utils.move_file(temp_filepath, image_path, overwrite_existing=True)
+            new_filepath = ImageOps.new_filepath(image_path, "", "_rot")
+            cv2.imwrite(new_filepath, rotated)
         except Exception as e:
             print(f'Error in rotate image: {e}')
 
@@ -48,7 +45,7 @@ class ImageOps:
     def rotate_image_partial(image_path, angle=90, center=None, scale=1.0):
         image = cv2.imread(image_path)
         rotated = ImageOps._rotate_image_partial(image, angle=angle, center=center, scale=scale)
-        new_filepath = ImageOps.new_filepath(image_path, "", "_rotated")
+        new_filepath = ImageOps.new_filepath(image_path, "", "_rot")
         rotated.imsave(new_filepath)
         image.close()
 
@@ -69,7 +66,7 @@ class ImageOps:
     def enhance_image(image_path):
         dirname = os.path.dirname(image_path)
         filename_parts = os.path.splitext(os.path.basename(image_path))
-        new_filename = filename_parts[0] + "_brightened" + filename_parts[1]
+        new_filename = filename_parts[0] + "_b" + filename_parts[1]
         new_file = os.path.join(dirname, new_filename)
         if os.path.exists(new_file):
             raise Exception("File already exists: " + new_filename) # TODO maybe remove this
@@ -89,7 +86,7 @@ class ImageOps:
     def flip_image(image_path, top_bottom=False):
         original_img = PIL.Image.open(image_path)
         mod_img, original_img = ImageOps._flip_image(original_img, top_bottom=top_bottom)
-        new_filepath = ImageOps.new_filepath(image_path, "", "_flipped")
+        new_filepath = ImageOps.new_filepath(image_path, "", "_flip")
         mod_img.save(new_filepath)
         original_img.close()
         mod_img.close()
@@ -128,7 +125,7 @@ class ImageOps:
         im = PIL.Image.open(image_path)
         cropped = ImageOps._random_crop_and_upscale(im, allowable_proportions, shortest_side)
         im.close()
-        new_filepath = ImageOps.new_filepath(image_path, "", "_cropped")
+        new_filepath = ImageOps.new_filepath(image_path, "", "_crop")
         cropped.save(new_filepath)
 
     @staticmethod
@@ -149,7 +146,7 @@ class ImageOps:
         sr.setModel("edsr", 3)
         # Upscale the image
         result = sr.upsample(image)
-        new_filepath = ImageOps.new_filepath(image_path, "", "_upscaled")
+        new_filepath = ImageOps.new_filepath(image_path, "", "_up")
         # Save the image
         cv2.imwrite(new_filepath, result)
 
@@ -179,7 +176,7 @@ class ImageOps:
             im_final = im
         if not has_modified_image:
             print("No modifications made to image!")
-        new_filepath = ImageOps.new_filepath(image_path, "", "_edited")
+        new_filepath = ImageOps.new_filepath(image_path, "", "_edit")
         im_final.save(new_filepath)
         im.close()
         try:

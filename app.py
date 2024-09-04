@@ -389,7 +389,7 @@ class App():
         self.master.bind("<Shift-S>", lambda e: self.check_focus(e, self.toggle_slideshow))
         self.master.bind("<MouseWheel>", lambda event: None if (event.state & 0x1) != 0 else (self.show_next_image() if event.delta > 0 else self.show_prev_image()))
         self.master.bind("<Button-2>", self.delete_image)
-        self.master.bind("<Button-3>", lambda event: ImageDetails.run_image_generation_static(self.app_actions))
+        self.master.bind("<Button-3>", self.trigger_image_generation)
         # self.master.bind('<Button-5>',   self.show_next_image)  # for Linux, wheel scroll down
         # self.master.bind('<Button-4>',   self.show_prev_image)  # for Linux, wheel scroll up
         self.master.bind("<Shift-M>", lambda e: self.check_focus(e, self.add_or_remove_mark_for_current_image))
@@ -661,7 +661,7 @@ class App():
             return window, other_dirs
         return None, other_dirs
 
-    def get_image_details(self, event=None, image_path=None):
+    def get_image_details(self, event=None, image_path=None, manually_keyed=True):
         preset_image_path = True
         if image_path is None:
             image_path = self.img_path
@@ -686,7 +686,8 @@ class App():
         if self.app_actions.image_details_window is not None:
             if self.app_actions.image_details_window.do_refresh:
                 self.app_actions.image_details_window.update_image_details(image_path, index_text)
-            self.app_actions.image_details_window.focus()
+            if manually_keyed:
+                self.app_actions.image_details_window.focus()
         else:
             top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
             try:
@@ -694,7 +695,7 @@ class App():
                                                     self.app_actions, do_refresh=not preset_image_path)
                 self.app_actions.image_details_window = image_details_window
             except Exception as e:
-                self.alert("Image Details Error", str(e), kind="error")
+                self.handle_error(str(e), title="Image Details Error")
 
     def show_related_image(self, event=None):
         ImageDetails.show_related_image(master=self.master, image_path=self.img_path, app_actions=self.app_actions)
@@ -843,7 +844,7 @@ class App():
                 top_level, self.master, open_gui, self.app_actions, base_dir=self.get_base_dir(),
                 run_compare_image=run_compare_image, extra_callback_args=extra_callback_args)
         except Exception as e:
-            self.alert("Recent Directory Window Error", str(e), kind="error")
+            self.handle_error(str(e), title="Recent Directory Window Error")
 
     def get_base_dir(self) -> str:
         return "." if (self.base_dir is None or self.base_dir == "") else self.base_dir
@@ -863,7 +864,7 @@ class App():
         if search_file is None:
             search_file = Utils.get_valid_file(self.get_search_dir(), image_path)
             if search_file is None:
-                self.alert("Invalid search file", "Search file is not a valid file for base dir.", kind="error")
+                self.handle_error("Search file is not a valid file for base dir.", title="Invalid search file")
                 raise AssertionError("Search file is not a valid file.")
         return search_file
 
@@ -872,7 +873,7 @@ class App():
         try:
             return None if counter_limit_str == "" else int(counter_limit_str)
         except Exception:
-            self.alert(_("Invalid Setting"), _("Counter limit must be an integer value."), kind="error")
+            self.handle_error(_("Counter limit must be an integer value."), title=_("Invalid Setting"))
             raise AssertionError("Counter limit must be an integer value.")
 
     def get_compare_threshold(self):
@@ -893,7 +894,7 @@ class App():
         image_path = self.get_search_file_path()
         if image_path is None or image_path == "":
             if self.img_path is None:
-                self.alert(_("Invalid Setting"), _("No image selected."), kind="error")
+                self.handle_error(_("No image selected."), title=_("Invalid Setting"))
             self.search_img_path_box.delete(0, tk.END)
             self.search_img_path_box.insert(0, str(self.img_path))
         self.set_search()
@@ -964,7 +965,7 @@ class App():
                 self.create_image(self.compare_wrapper.search_image_full_path, extra_text="(search image)")
             else:
                 Utils.log_yellow(self.compare_wrapper.search_image_full_path)
-                self.alert(_("Error"), _("Somehow, the search file is invalid"), kind="error")
+                self.handle_error(_("Somehow, the search file is invalid"))
 
     def show_prev_image(self, event=None, show_alert=True) -> bool:
         '''
@@ -981,7 +982,7 @@ class App():
                 self.create_image(previous_file)
                 return True
             except Exception as e:
-                self.alert("Exception", str(e))
+                self.handle_error(str(e), title="Exception")
                 return False
         return self.compare_wrapper.show_prev_image(show_alert=show_alert)
 
@@ -1003,7 +1004,7 @@ class App():
                 return True
             except Exception as e:
                 traceback.print_exc()
-                self.alert("Exception", str(e))
+                self.handle_error(str(e), title="Exception")
                 return False
         return self.compare_wrapper.show_next_image(show_alert=show_alert)
 
@@ -1034,7 +1035,7 @@ class App():
         if filepath:
             window._set_image_run_search(filepath)
         else:
-            self.alert(_("Error"), _("Failed to get active image filepath"), kind="error")
+            self.handle_error(_("Failed to get active image filepath"))
 
     def _set_image_run_search(self, filepath):
         base_dir = self.get_base_dir()
@@ -1058,7 +1059,7 @@ class App():
                 window = App.get_window(base_dir=base_dir)
             window.negative_image_search(filepath)
         else:
-            self.alert(_("Error"), _("Failed to get active image filepath"), kind="error")
+            self.handle_error(_("Failed to get active image filepath"))
 
     def negative_image_search(self, filepath):
         args = self.compare_wrapper.get_args()
@@ -1085,7 +1086,7 @@ class App():
             text += "\n" + extra_text
         self.label_current_image_name["text"] = text
         if self.app_actions.image_details_window is not None:
-            self.get_image_details()
+            self.get_image_details(manually_keyed=False)
     
     def clear_image(self):
         self.canvas_image.clear()
@@ -1270,7 +1271,7 @@ class App():
             marked_file_mover = MarkedFiles(top_level, open_gui, single_image, current_image, self.mode,
                                             self.app_actions, base_dir=self.get_base_dir())
         except Exception as e:
-            self.alert("Marked Files Window Error", str(e), kind="error")
+            self.handle_error(str(e), title="Marked Files Window Error")
 
     def run_previous_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
@@ -1314,7 +1315,7 @@ class App():
                                                     ImageDetails.open_temp_image_canvas,
                                                     MarkedFiles.move_marks_to_dir_static)
         except Exception as e:
-            self.alert("File Actions Window Error", str(e), kind="error")
+            self.handle_error(str(e), title="File Actions Window Error")
 
     def open_go_to_file_window(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
@@ -1323,7 +1324,7 @@ class App():
         try:
             go_to_file = GoToFile(top_level, self.app_actions)
         except Exception as e:
-            self.alert("Go To File Window Error", str(e), kind="error")
+            self.handle_error(str(e), title="Go To File Window Error")
 
     def go_to_file(self, event=None, search_text="", retry_with_delay=0, exact_match=False):
         # TODO if file is not in current directory, search in another window.
@@ -1404,20 +1405,21 @@ class App():
             if last_file:
                 last_image = self.file_browser.last_file()
                 while last_image in self.compare_wrapper.hidden_images and last_image != current_file:
-                    last_image = self.file_browser.prev_file()
+                    last_image = self.file_browser.previous_file()
                 self.create_image(self.file_browser.last_file())
                 if len(MarkedFiles.file_marks) == 1 and self.file_browser.has_file(MarkedFiles.file_marks[0]):
                     self._add_all_marks_from_last_or_current_group()
             elif Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT]):
-                self.home(last_file=True)
+                self.home(last_file=not last_file)
                 return
             else:
-                first_image = current_file
+                first_image = self.file_browser.next_file()
                 while first_image in self.compare_wrapper.hidden_images and first_image != current_file:
                     first_image = self.file_browser.next_file()
                 self.create_image(first_image)
             self.master.update()
         elif self.compare_wrapper.has_compare():
+            # TODO map last_file logic for compare case
             self.compare_wrapper.current_group_index = 0
             self.compare_wrapper.match_index = 0
             self.compare_wrapper.set_current_group()
@@ -1461,7 +1463,7 @@ class App():
             self.toast("Opening file location: " + filepath)
             Utils.open_file_location(filepath)
         else:
-            self.alert(_("Error"), _("Failed to open location of current file, unable to get valid filepath"), kind="error")
+            self.handle_error(_("Failed to open location of current file, unable to get valid filepath"))
 
     def open_image_in_gimp(self, event=None):
         if self.delete_lock:
@@ -1472,7 +1474,7 @@ class App():
             self.toast("Opening file in GIMP: " + filepath)
             Utils.open_file_in_gimp(filepath, config.gimp_exe_loc)
         else:
-            self.alert(_("Error"), _("Failed to open current file in GIMP, unable to get valid filepath"), kind="error")
+            self.handle_error(_("Failed to open current file in GIMP, unable to get valid filepath"))
 
     def copy_image_path(self):
         filepath = self.get_active_image_filepath()
@@ -1535,7 +1537,7 @@ class App():
                 self.compare_wrapper.compare().remove_from_groups([filepath])
             self.compare_wrapper._update_groups_for_removed_file(self.mode, self.compare_wrapper.current_group_index, self.compare_wrapper.match_index, show_next_image=True)
         else:
-            self.alert(_("Error"), _("Failed to delete current file, unable to get valid filepath"), kind="error")
+            self.handle_error(_("Failed to delete current file, unable to get valid filepath"))
 
     def _handle_delete(self, filepath, toast=True, manual_delete=True):
         MarkedFiles.set_delete_lock()  # Undo deleting action is not supported
@@ -1574,7 +1576,7 @@ class App():
         filepath = Utils.get_valid_file(self.get_base_dir(), _filepath)
 
         if filepath is None:
-            self.alert(_("Error"), _("Invalid target filepath for replacement: ") + _filepath, kind="error")
+            self.handle_error(_("Invalid target filepath for replacement: ") + _filepath)
             return
 
         os.rename(str(self.compare_wrapper.search_image_full_path), filepath)
@@ -1598,16 +1600,20 @@ class App():
             except KeyError:
                 pass  # The group may have been removed before update_groups_for_removed_file was called on the last file in it
 
-    def run_image_generation(self, event=None, _type=None, image_path=None):
+    def trigger_image_generation(self, event=None, last_action=False):
+        shift_key_pressed = event and Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
+        ImageDetails.run_image_generation_static(self.app_actions, last_action=last_action, modify_call=bool(shift_key_pressed))
+
+    def run_image_generation(self, event=None, _type=None, image_path=None, modify_call=False):
         self.sd_runner_client.start()
         if image_path is None:
             image_path = self.img_path
         try:
-            self.sd_runner_client.run(_type, image_path)
+            self.sd_runner_client.run(_type, image_path, append=modify_call)
             ImageDetails.previous_image_generation_image = image_path
             self.toast(_("Running image gen: ") + str(_type))
         except Exception as e:
-            self.alert(_("Warning"), _("Error running image generation:") + "\n" + str(e), kind="error")
+            self.handle_error(_("Error running image generation:") + "\n" + str(e), title=_("Warning"))
 
     def run_refacdir(self, event=None):
         self.refacdir_client.start()
@@ -1634,6 +1640,12 @@ class App():
         app_info_cache.set_meta("recent_directories", RecentDirectories.directories)
         app_info_cache.set_meta("marked_file_target_dirs", MarkedFiles.mark_target_dirs)
         app_info_cache.store()
+
+    def handle_error(self, error_text, title=None, kind="error"):
+        traceback.print_exc()
+        if title is None:
+            title = _("Error")
+        self.alert(title, error_text, kind=kind)
 
     def alert(self, title, message, kind="info", hidemain=True) -> None:
         if kind not in ("error", "warning", "info", "askokcancel"):

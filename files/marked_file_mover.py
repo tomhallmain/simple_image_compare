@@ -322,8 +322,6 @@ class MarkedFiles():
                                  single_image=False, current_image=None) -> Tuple[bool, bool]:
         """
         Move or copy the marked files to the target directory.
-
-        TODO i18n fix for this method
         """
         MarkedFiles.is_performing_action = True
         some_files_already_present = False
@@ -365,7 +363,10 @@ class MarkedFiles():
             return False, False
         if len(exceptions) < len(files_to_move):
             FileActionsWindow.update_history(action)
-            message = action_part2 + _(" %s files to").format(len(files_to_move) - len(exceptions)) + f"\n{target_dir}"
+            if is_moving:
+                message = _("Moved {0} files to {1}").format(len(files_to_move) - len(exceptions), target_dir)
+            else:
+                message = _("Copied {0} files to {1}").format(len(files_to_move) - len(exceptions), target_dir)
             Utils.log_yellow(message.replace("\n", " "))
             app_actions.toast(message)
             MarkedFiles.delete_lock = False
@@ -413,8 +414,6 @@ class MarkedFiles():
     def undo_move_marks(base_dir, app_actions):
         """
         Undo the previous move/copy operation.
-
-        TODO fix i18n for this method
         """
         if MarkedFiles.is_performing_action:
             MarkedFiles.is_cancelled_action = True
@@ -453,7 +452,10 @@ class MarkedFiles():
                 elif os.path.exists(expected_new_filepath):
                     invalid_files.append(expected_new_filepath)
         if len(exceptions) < len(MarkedFiles.previous_marks):
-            message = action_part2 + _(" %s files from").format(len(MarkedFiles.previous_marks) - len(exceptions)) + f"\n{target_dir}"
+            if is_moving_back:
+                message = _("Moved back {0} files from {1}").format(len(MarkedFiles.previous_marks) - len(exceptions), target_dir)
+            else:
+                message = _("Removed {0} files from {1}").format(len(MarkedFiles.previous_marks) - len(exceptions), target_dir)
             app_actions.toast(message)
         MarkedFiles.previous_marks.clear()
         if len(exceptions) > 0:
