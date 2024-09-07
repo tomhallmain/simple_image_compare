@@ -33,7 +33,7 @@
   "sd_prompt_reader_loc": "{HOME}\\stable-diffusion-prompt-reader",
   "tag_suggestions_file": "tag_suggestions.json",
   "file_types": [
-    ".jpg", ".jpeg", ".png", ".tiff", ".webp"
+    ".jpg", ".jpeg", ".png", ".tiff", ".webp", ".bmp"
   ],
   "directories_to_search_for_related_images": [    
   ],

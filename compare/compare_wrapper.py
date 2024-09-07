@@ -455,6 +455,7 @@ class CompareWrapper:
 
                 if show_next_image:
                     self._master.update()
+                    self._app_actions.release_canvas_image()
                     self._app_actions.create_image(self.current_match())
 
     def update_compare_for_readded_file(self, readded_file):

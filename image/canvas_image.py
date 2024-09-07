@@ -6,11 +6,11 @@ import warnings
 import tkinter as tk
 import time
 
-from tkinter import Canvas, ttk, filedialog
+from tkinter import Canvas
 from tkinter.ttk import Frame, Scrollbar
 from PIL import Image, ImageTk
 
-from gif_image_ui import GifImageUI
+from image.gif_image_ui import GifImageUI
 from utils.utils import Utils
 
 

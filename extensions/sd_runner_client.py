@@ -74,7 +74,10 @@ class SDRunnerClient:
             self.close()
             return resp['data'] if "data" in resp else None
         except Exception as e:
-            self.close()
+            try:
+                self.close()
+            except Exception as e2:
+               pass
             raise Exception(f'Failed to start run on SD Runner: {e}')
 
     def stop(self):

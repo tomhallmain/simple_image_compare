@@ -43,22 +43,6 @@ except Exception:
     Utils.log_red("Could not import trashing utility - all deleted images will be deleted instantly")
 
 
-### TODO Polish up image zoom feature
-### TODO copy/cut image using hotkey (pywin32 ? win32com? IDataPobject?)
-### TODO some type of plugin to filter the images using a filter function defined externally
-### TODO enable comparison jobs on user-defined file list
-### TODO compare option to restrict by matching image dimensions
-### TODO compare option encoding size
-### TODO add checkbox for include gif option
-### TODO tkVideoPlayer or tkVideoUtils for playing videos
-### TODO custom frame class for sidebar to hold all the buttons
-### TODO compare window (only compare a set of images from directory, sorted by some logic)
-### TODO drag and drop images to auto-set directory and image
-### TODO mechanism to temporarily hide images while in directory, without marking them
-### TODO some way to crop an image and search by that cropped part
-
-### TODO replace restored files to compare if present after previous deletion
-
 
 class Sidebar(tk.Frame):
     def __init__(self, master=None, cnf={}, **kw):
@@ -571,7 +555,6 @@ class App():
             Utils.log_debug("Refocused main window")
 
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
-        # TODO if some removed files are in a different window than self, find the window and refresh it as well with those files removed.
         self.file_browser.refresh(
             refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files)
         if len(removed_files) > 0:
