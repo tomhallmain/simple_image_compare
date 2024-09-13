@@ -36,7 +36,8 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Can be set up to run on user-defined list of files in place of a directory
 - Extension with [sd-runner](https://github.com/tomhallmain/sd-runner) for image generation
 - Extension with [refacdir](https://github.com/tomhallmain/refacdir) for file operations
-- Find related images and prompts from embedded ComfyUI workflows
+- Find related images and prompts from embedded Stable Diffusion workflows
+- Sort files by related images and prompts
 
 Zoom and drag functionality is available in both browsing mode, as well as when viewing grouped images after a comparison has been run.
 
@@ -101,8 +102,8 @@ A directory with images must be set before most of the below bindings will have 
 | Ctrl-E           |                  | Run penultimate marks action |
 | Ctrl-T           |                  | Run permanent marks action   |
 | Number Keys      |                  | Run permanent marks action   |
-| Ctrl-Z           |                  | Undo move marks              |
-| Ctrl-X           |                  | Modify last marks move       |
+| Ctrl-Z           |                  | Undo marks action            |
+| Ctrl-X           |                  | Modify last marks action     |
 | Ctrl-D           |                  | Set marks from previous      |
 | Ctrl-B           |                  | Switch back to browsing mode |
 | Ctrl-S           |                  | Run next text search preset  |
@@ -132,6 +133,8 @@ When the move marks window is open -- with or without GUI -- marks can be moved 
 Simply typing letters while the mark window is open will filter the list of mark target directories, even if the GUI is not present. The backspace key will delete letters from the filter. You can scroll through the list of saved target directories using arrow keys.
 
 To bypass the move marks window, use the Ctrl+R or Ctrl+E shortcuts to immediately run the previous and penultimate actions respectively on the current selection. You can also use the number keys or Ctrl+T as hotkeys for persistent marks actions.
+
+Ctrl+Z will undo the previous file marks move or copy action. If an earlier action needs to be reversed or modified, open the marks history window to verify the action in the history list and reverse it via the UI.
 
 ## Limitations
 

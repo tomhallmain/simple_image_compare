@@ -1,4 +1,3 @@
-from datetime import datetime
 import glob
 import json
 import os
@@ -8,6 +7,7 @@ import threading
 from time import sleep
 from typing import List
 
+from files.sortable_file import SortableFile
 from utils.config import config
 from utils.constants import Sort, SortBy
 from utils.translations import I18N
@@ -15,50 +15,6 @@ from utils.utils import Utils
 
 _ = I18N._
 
-
-class SortableFile:
-    def __init__(self, full_file_path):
-        self.full_file_path = full_file_path
-        self.basename = os.path.basename(full_file_path)
-        self.name_length = len(self.basename)
-        self.root, self.extension = os.path.splitext(self.basename)
-        try:
-            stat_obj = os.stat(full_file_path)
-            self.ctime = datetime.fromtimestamp(stat_obj.st_ctime)
-            self.mtime = datetime.fromtimestamp(stat_obj.st_mtime)
-            self.size = stat_obj.st_size
-        except Exception:
-            self.ctime = datetime.fromtimestamp(0)
-            self.mtime = datetime.fromtimestamp(0)
-            self.size = 0
-        self.tags = self.get_tags()
-
-    def get_tags(self):
-        tags = []
-
-        # TODO
-        # try:
-        #     pass
-        # except Exception:
-        #     pass
-
-        return tags
-
-    def __eq__(self, other):
-        if not isinstance(other, SortableFile):
-            return False
-        return (
-            self.full_file_path == other.full_file_path
-            and self.ctime == other.ctime
-            and self.mtime == other.mtime
-            and self.size == other.size
-            )
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def __hash__(self):
-        return hash((self.full_file_path, self.ctime, self.mtime, self.size))
 
 
 class FileBrowser:
@@ -165,6 +121,9 @@ class FileBrowser:
 
     def set_sort(self, sort):
         self.sort = sort
+        if self.sort == SortBy.RELATED_IMAGE:
+            for f, sf in self._files_cache.items():
+                sf.set_related_image_path()
         return self.get_files()
 
     def current_file(self):
@@ -374,9 +333,11 @@ class FileBrowser:
                 sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=reverse)
                 sortable_files.sort(key=lambda sf: sf.size, reverse=reverse)
             elif self.sort_by == SortBy.NAME_LENGTH:
-                # Sort by full path first, then by size
+                # Sort by full path first, then by name length
                 sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=reverse)
                 sortable_files.sort(key=lambda sf: sf.name_length, reverse=reverse)
+            elif self.sort_by == SortBy.RELATED_IMAGE:
+                sortable_files.sort(key=lambda sf: sf.get_related_image_or_self(), reverse=reverse)
 
         # After sorting, extract the file path only
         filepaths = [sf.full_file_path for sf in sortable_files]

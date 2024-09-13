@@ -8,6 +8,7 @@ _ = I18N._
 
 
 class GoToFile:
+    last_search_text = ""
 
     @staticmethod
     def get_geometry():
@@ -25,6 +26,7 @@ class GoToFile:
         self.frame.config(bg=AppStyle.BG_COLOR)
 
         self.search_text = StringVar()
+        self.search_text.set(GoToFile.last_search_text)
         self.search_text_box = Entry(self.frame, textvariable=self.search_text, width=50)
         self.search_text_box.grid(row=0, column=0)
         self.search_text_box.bind("<Return>", self.go_to_file)
@@ -40,6 +42,7 @@ class GoToFile:
         if search_text.strip() == "":
             self.app_actions.toast(_("Invalid search string, please enter some text."))
             return
+        GoToFile.last_search_text = search_text
         self.app_actions.go_to_file(search_text=search_text)
         self.close_windows()
 

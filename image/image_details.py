@@ -264,7 +264,7 @@ class ImageDetails():
         node_id = ImageDetails.related_image_saved_node_id
         related_image_path, exact_match = ImageDetails.get_related_image_path(self.image_path, node_id, check_extra_directories=False)
         if related_image_path is not None:
-            related_image_text = related_image_path if exact_match else related_image_path + _(" (Exact Match Not Found)")
+            related_image_text = related_image_path if exact_match else (related_image_path + _(" (Exact Match Not Found)"))
         else:
             related_image_text = _("(No related image found)")
         return related_image_text
@@ -311,7 +311,7 @@ class ImageDetails():
             if not related_image_path_found or not os.path.isfile(related_image_path):
                 return related_image_path, False
             print(f"{image_path} - Possibly related image {related_image_path} found")
-        return related_image_path, check_extra_directories
+        return related_image_path, True
 
     @staticmethod
     def show_related_image(master=None, node_id=None, image_path="", app_actions=None):

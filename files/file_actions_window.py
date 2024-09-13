@@ -173,37 +173,43 @@ class FileActionsWindow:
     def add_action_history_widgets(self):
         row = 0
         base_col = 0
+        last_action = None
         for i in range(len(FileActionsWindow.action_history)):
             row += 1
             if row > FileActionsWindow.MAX_ACTION_ROWS:
                 break
             action = FileActionsWindow.action_history[i]
+            if action != last_action or len(action.new_files) != 1 or \
+                    (last_action is not None and len(last_action.new_files) != 1):
+                _label_target_dir = Label(self.frame.viewPort)
+                self.label_filename_list.append(_label_target_dir)
+                action_text = Utils.get_relative_dirpath(action.target, levels=2)
+                if len(action.new_files) > 1:
+                    action_text += _(" ({0} files)").format(len(action.new_files))
+                self.add_label(_label_target_dir, action_text, row=row, column=base_col, wraplength=FileActionsWindow.COL_0_WIDTH)
 
-            _label_target_dir = Label(self.frame.viewPort)
-            self.label_filename_list.append(_label_target_dir)
-            action_text = Utils.get_relative_dirpath(action.target, levels=2)
-            if len(action.new_files) > 1:
-                action_text += _(" ({0} files)").format(len(action.new_files))
-            self.add_label(_label_target_dir, action_text, row=row, column=base_col, wraplength=FileActionsWindow.COL_0_WIDTH)
+                _label_action = Label(self.frame.viewPort)
+                self.label_action_list.append(_label_action)
+                action_text = _("Move") if action.is_move_action() else _("Copy")
+                self.add_label(_label_action, action_text, row=row, column=base_col+1, wraplength=FileActionsWindow.COL_0_WIDTH)
 
-            _label_action = Label(self.frame.viewPort)
-            self.label_action_list.append(_label_action)
-            action_text = _("Move") if action.is_move_action() else _("Copy")
-            self.add_label(_label_action, action_text, row=row, column=base_col+1, wraplength=FileActionsWindow.COL_0_WIDTH)
+                undo_btn = Button(self.frame.viewPort, text=_("Undo"))
+                self.undo_btn_list.append(undo_btn)
+                undo_btn.grid(row=row, column=base_col+3)
+                def undo_handler(event, self=self, action=action):
+                    return self.undo(event, action)
+                undo_btn.bind("<Button-1>", undo_handler)
 
-            undo_btn = Button(self.frame.viewPort, text=_("Undo"))
-            self.undo_btn_list.append(undo_btn)
-            undo_btn.grid(row=row, column=base_col+3)
-            def undo_handler(event, self=self, action=action):
-                return self.undo(event, action)
-            undo_btn.bind("<Button-1>", undo_handler)
+                modify_btn = Button(self.frame.viewPort, text=_("Modify"))
+                self.modify_btn_list.append(modify_btn)
+                modify_btn.grid(row=row, column=base_col+4)
+                def modify_handler(event, self=self, action=action):
+                    return self.modify(event, action)
+                modify_btn.bind("<Button-1>", modify_handler)
+            else:
+                row -= 1
 
-            modify_btn = Button(self.frame.viewPort, text=_("Modify"))
-            self.modify_btn_list.append(modify_btn)
-            modify_btn.grid(row=row, column=base_col+4)
-            def modify_handler(event, self=self, action=action):
-                return self.modify(event, action)
-            modify_btn.bind("<Button-1>", modify_handler)
+            last_action = action
 
             for filename in action.new_files:
                 row += 1

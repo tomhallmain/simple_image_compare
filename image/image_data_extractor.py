@@ -1,8 +1,8 @@
-from PIL import Image
 import json
 import os
 import sys
 
+from PIL import Image
 import pprint
 
 from utils.config import config
@@ -26,6 +26,7 @@ class ImageDataExtractor:
     TAGS_KEY = "SIC_TAGS"
     COMFYUI_PROMPT_KEY = "prompt"
     A1111_PARAMS_KEY = "parameters"
+    RELATED_IMAGE_KEY = "related_image"
 
     def __init__(self):
         pass
@@ -77,12 +78,13 @@ class ImageDataExtractor:
                 prompt = json.loads(info[ImageDataExtractor.COMFYUI_PROMPT_KEY])
                 return prompt
             elif ImageDataExtractor.A1111_PARAMS_KEY in info:
+#                print(info[ImageDataExtractor.A1111_PARAMS_KEY])
 #                print("skipping unhandled Automatic1111 image info")
                 pass
             else:
+#                print(info)
 #                print("Unhandled exif data: " + image_path)
                 pass
-#                print(info)
         else:
             print("Exif data not found: " + image_path)
         return None
@@ -300,7 +302,10 @@ class ImageDataExtractor:
                 related_image_path = image_data_extractor.get_input_by_node_id(image_path, node_id, "image")
         except Exception:
             related_image_path = None
+        if related_image_path is None:
+            info = Image.open(image_path).info
+            if ImageDataExtractor.RELATED_IMAGE_KEY in info:
+                return str(info[ImageDataExtractor.RELATED_IMAGE_KEY])
         return related_image_path
-
 
 image_data_extractor = ImageDataExtractor()
