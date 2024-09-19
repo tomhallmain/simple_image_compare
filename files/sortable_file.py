@@ -11,6 +11,7 @@ class SortableFile:
         self.name_length = len(self.basename)
         self.root, self.extension = os.path.splitext(self.basename)
         self.related_image_path = None
+        self.related_image_path_key = self.full_file_path
         try:
             stat_obj = os.stat(full_file_path)
             self.ctime = datetime.fromtimestamp(stat_obj.st_ctime)
@@ -37,6 +38,8 @@ class SortableFile:
         self.related_image_path = image_data_extractor.get_related_image_path(self.full_file_path)
         if self.related_image_path is None:
             self.related_image_path = ""
+        # TODO use the related image path cache in ImageDetails to see if THIS related image path has a related image of its own.
+        # IF it does, then set the related image path key to the higher level related image path + some identifier.
 
     def get_related_image_or_self(self):
         if self.related_image_path is None:

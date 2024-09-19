@@ -7,6 +7,8 @@
   "compare_mode": "CLIP_EMBEDDING",
   "max_search_results": 200,
   "search_only_return_closest": false,
+  "file_actions_history_max": 200,
+  "file_actions_window_rows_max": 300,
   "store_checkpoints": false,
   "embedding_similarity_threshold": 0.9,
   "color_diff_threshold": 15,
@@ -53,5 +55,24 @@
   "sd_runner_client_password": "<PASSWORD>",
   "refacdir_client_port": 6001,
   "refacdir_client_password": "<PASSWORD>",
-  "gimp_exe_loc": "gimp-2.10"
+  "gimp_exe_loc": "gimp-2.10",
+  "image_edit_configuration": {
+    "random_rotation_chance": 0.5,
+    "random_flip_chance": 0.5,
+    "random_draw_chance": 0.5,
+    "random_crop_chance": 0.5,
+    "random_color_rotation_chance": 0.2,
+    "random_scale_chance": 0.3,
+    "random_noise_chance": 0.7,
+    "random_contrast_chance": 0.2,
+    "random_brightness_chance": 0.1,
+    "random_saturation_chance": 0.4,
+    "random_hue_chance": 0.5,
+    "random_blur_chance": 0.3,
+    "random_sharpen_chance": 0.7,
+    "random_invert_chance": 0.2,
+    "random_sepia_chance": 0.1,
+    "random_grayscale_chance": 0.5,
+    "random_pixelate_chance": 0.3
+  }
 }

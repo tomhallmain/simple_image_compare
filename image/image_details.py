@@ -292,18 +292,18 @@ class ImageDetails():
             if not check_extra_directories:
                 return related_image_path, False
             print(f"{image_path} - Related image {related_image_path} not found")
-            basename = os.path.basename(related_image_path)
             if len(config.directories_to_search_for_related_images) > 0:
+                basename = os.path.basename(related_image_path)
                 related_image_path_found = False
                 for directory in config.directories_to_search_for_related_images:
-                    dir_files = glob.glob(os.path.join(directory, "**/*"), recursive=True)
-                    for _file in dir_files:
-                        if _file == related_image_path:
+                    dir_filepaths = glob.glob(os.path.join(directory, "**/*"), recursive=True)
+                    for file_path in dir_filepaths:
+                        if file_path == image_path:
                             continue
-                        if _file.endswith(basename):
-                            file_basename = os.path.basename(_file)
+                        if file_path.endswith(basename):
+                            file_basename = os.path.basename(file_path)
                             if basename == file_basename:
-                                related_image_path = _file
+                                related_image_path = file_path
                                 related_image_path_found = True
                                 break
                     if related_image_path_found:
@@ -318,6 +318,12 @@ class ImageDetails():
         if master is None or image_path == "":
             raise Exception("No master or image path given")
         related_image_path, exact_match = ImageDetails.get_related_image_path(image_path, node_id)
+        if related_image_path is None or related_image_path == "":
+            app_actions.toast(_("(No related image found)"))
+            return
+        elif not exact_match:
+            app_actions.toast(_(" (Exact Match Not Found)"))
+            return
         ImageDetails.open_temp_image_canvas(master=master, image_path=related_image_path, app_actions=app_actions)
 
     @staticmethod

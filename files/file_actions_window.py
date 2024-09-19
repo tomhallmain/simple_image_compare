@@ -1,8 +1,9 @@
 import os
 
-from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
+from tkinter import Label, LEFT, W
 from tkinter.ttk import Button
 
+from utils.config import config
 from lib.tk_scroll_demo import ScrollFrame
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
@@ -93,8 +94,8 @@ class FileActionsWindow:
     permanent_action = setup_permanent_action()
     hotkey_actions = setup_hotkey_actions()
     action_history = []
-    MAX_ACTIONS = 50
-    MAX_ACTION_ROWS = 200
+    MAX_ACTIONS = config.file_actions_history_max
+    MAX_ACTION_ROWS = config.file_actions_window_rows_max
     COL_0_WIDTH = 600
 
     @staticmethod

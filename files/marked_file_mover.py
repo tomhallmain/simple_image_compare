@@ -1,6 +1,7 @@
 import hashlib
 import os
 import re
+import sys
 from typing import Tuple
 
 from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
@@ -57,6 +58,15 @@ class MarkedFiles():
     @staticmethod
     def set_target_dirs(target_dirs):
         MarkedFiles.mark_target_dirs = target_dirs
+        for d in MarkedFiles.mark_target_dirs[:]:
+            if not os.path.isdir(d):
+                # The external drive this reference is pointing to may not be mounted, might still be valid
+                if sys.platform == "win32" and not d.startswith("C:\\"):
+                    base_dir = os.path.split("\\")[0] + "\\"
+                    if not os.path.isdir(base_dir):
+                        continue
+                MarkedFiles.mark_target_dirs.remove(d)
+                print(f"Removed stale target directory reference: {d}")
 
     @staticmethod
     def set_delete_lock(delete_lock=True):

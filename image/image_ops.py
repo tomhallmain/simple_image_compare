@@ -8,6 +8,9 @@ import numpy as np
 from PIL import ImageDraw, ImageEnhance
 import PIL.Image
 
+from utils.config import config
+
+
 class ImageOps:
     COLORS = ["red", "green", "blue", "yellow", "purple", "orange", "black", "white", "gray", "pink", "brown"]
 
@@ -154,7 +157,7 @@ class ImageOps:
     def randomly_modify_image(image_path):
         im = PIL.Image.open(image_path)
         has_modified_image = False
-        if random.random() < 0.5:
+        if random.random() < config.image_edit_configuration.random_rotation_chance:
             cv2_image = ImageOps.pil_to_cv2(im)
             angle_diff = int(random.random() * 55)
             angle = angle_diff if random.random() > 0.5 else 360 - angle_diff
@@ -162,14 +165,14 @@ class ImageOps:
             im.close()
             im = ImageOps.cv2_to_pil(cv2_image)
             has_modified_image = True
-        if random.random() < 0.5:
+        if random.random() < config.image_edit_configuration.random_flip_chance:
             im, original_im = ImageOps._flip_image(im)
             original_im.close()
             has_modified_image = True
-        if random.random() < 0.5:
+        if random.random() < config.image_edit_configuration.random_draw_chance:
             ImageOps._random_draw(im)
             has_modified_image = True
-        if random.random() < 0.5:
+        if random.random() < config.image_edit_configuration.random_crop_chance:
             im_final = ImageOps._random_crop_and_upscale(im)
             has_modified_image = True
         else:

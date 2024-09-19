@@ -1,6 +1,7 @@
 import json
 import os
 
+from image.image_edit_configuration import ImageEditConfiguration
 from utils.constants import CompareMode, SortBy
 from utils.running_tasks_registry import running_tasks_registry
 from utils.utils import Utils
@@ -19,6 +20,8 @@ class Config:
         self.clip_model = "ViT-B/32"
         self.compare_mode = CompareMode.CLIP_EMBEDDING
         self.max_search_results = 50
+        self.file_actions_history_max = 200
+        self.file_actions_window_rows_max = 300
         self.search_only_return_closest = False
         self.store_checkpoints = False
         self.embedding_similarity_threshold = 0.9
@@ -59,6 +62,7 @@ class Config:
         self.refacdir_client_port = 6001
         self.refacdir_client_password = "<PASSWORD>"
         self.gimp_exe_loc = "gimp-2.10"
+        self.image_edit_configuration = ImageEditConfiguration()
 
         dict_set = False
         configs =  [ f.path for f in os.scandir(Config.CONFIGS_DIR_LOC) if f.is_file() and f.path.endswith(".json") ]
@@ -117,6 +121,8 @@ class Config:
                             "always_open_new_windows")
             self.set_values(int,
                             "max_search_results",
+                            "file_actions_history_max",
+                            "file_actions_window_rows_max",
                             "color_diff_threshold",
                             "file_counter_limit",
                             "slideshow_interval_seconds",
@@ -148,11 +154,24 @@ class Config:
         self.debug = self.log_level and self.log_level.lower() == "debug"
 
         if len(self.directories_to_search_for_related_images) > 0:
-            temp = self.directories_to_search_for_related_images[:]
-            for _dir in temp:
+            for i in range(len(self.directories_to_search_for_related_images)):
+                _dir = self.directories_to_search_for_related_images[i]
                 if not os.path.isdir(_dir):
-                    print(f"Invalid directory to search for related images: {_dir}")
-                    self.directories_to_search_for_related_images.remove(_dir)
+                    try_dir = None
+                    try:
+                        try_dir = self.validate_and_set_directory(key=_dir, override=True)
+                    except Exception as e:
+                        pass
+                    if try_dir is None:
+                        print(f"Invalid directory to search for related images: {_dir}")
+                        self.directories_to_search_for_related_images.remove(_dir)
+                    else:
+                        self.directories_to_search_for_related_images[i] = try_dir
+
+        if not "image_edit_configuration" in self.dict or not type(self.dict["image_edit_configuration"] == dict):
+            print("Image edit configuration not found or invalid, using default values.")
+        else:   
+            self.image_edit_configuration.set_from_dict(self.dict["image_edit_configuration"])
 
         if self.print_settings:
             self.print_config_settings()
@@ -162,8 +181,8 @@ class Config:
             self.locale = Utils.get_default_user_language()
         os.environ["LANG"] = self.locale
 
-    def validate_and_set_directory(self, key):
-        loc = self.dict[key]
+    def validate_and_set_directory(self, key, override=False):
+        loc = key if override else self.dict[key]
         if loc and loc.strip() != "":
             if "{HOME}" in loc:
                 loc = loc.strip().replace("{HOME}", os.path.expanduser("~"))

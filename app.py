@@ -23,6 +23,7 @@ from files.go_to_file import GoToFile
 from files.marked_file_mover import MarkedFiles
 from files.recent_directory_window import RecentDirectories, RecentDirectoryWindow
 from image.canvas_image import CanvasImage
+from lib.aware_entry import AwareEntry
 from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
@@ -55,19 +56,6 @@ class ProgressListener:
 
     def update(self, context, percent_complete):
         self.update_func(context, percent_complete)
-
-
-class AwareEntry(Entry):
-    an_entry_has_focus = False
-
-    def __init__(self, *args, **kwargs):
-        Entry.__init__(self, *args, **kwargs)
-        self.bind('<FocusIn>', lambda e: AwareEntry.set_focus(True))
-        self.bind('<FocusOut>', lambda e: AwareEntry.set_focus(False))
-
-    @staticmethod
-    def set_focus(in_focus):
-        AwareEntry.an_entry_has_focus = in_focus
 
 
 class App():
@@ -1590,7 +1578,10 @@ class App():
     def run_image_generation(self, event=None, _type=None, image_path=None, modify_call=False):
         self.sd_runner_client.start()
         if image_path is None:
-            image_path = self.img_path
+            if self.delete_lock:
+                image_path = self.prev_img_path
+            else:
+                image_path = self.get_active_image_filepath()
         try:
             self.sd_runner_client.run(_type, image_path, append=modify_call)
             ImageDetails.previous_image_generation_image = image_path
