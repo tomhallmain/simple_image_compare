@@ -10,6 +10,7 @@ from tkinter.ttk import Entry, Button
 from files.file_browser import FileBrowser
 from image.image_data_extractor import image_data_extractor
 from image.image_ops import ImageOps
+from image.metadata_viewer_window import MetadataViewerWindow
 from image.smart_crop import Cropper
 from image.temp_image_canvas import TempImageCanvas
 from utils.config import config
@@ -41,6 +42,7 @@ class ImageDetails():
     downstream_related_image_browser = FileBrowser()
     image_generation_mode = ImageGenerationType.CONTROL_NET
     previous_image_generation_image = None
+    metatdata_viewer_window = None
 
     def __init__(self, parent_master, master, image_path, index_text, app_actions, do_refresh=True):
         self.parent_master = parent_master
@@ -130,6 +132,10 @@ class ImageDetails():
         self.add_button("flip_image_btn",  _("Flip Image Horizontally"), lambda: self.flip_image(), column=0)
         self.add_button("flip_vertical_btn", _("Flip Image Vertically"), lambda: self.flip_image(top_bottom=True), column=1)
 
+        self.metadata_btn = None
+        self.add_button("metadata_btn",  _("Show Metadata"), lambda: self.show_metadata(), column=0)
+        self.row_count1 += 1
+
         self.open_related_image_btn = None
         self.add_button("open_related_image_btn", _("Open Related Image"), self.open_related_image)
         # self.related_image_node_id = StringVar(self.master, value=ImageDetails.related_image_saved_node_id)
@@ -202,6 +208,11 @@ class ImageDetails():
         self.label_models["text"] = ", ".join(models)
         self.label_loras["text"] = ", ".join(loras)
         self.label_related_image["text"] = self.get_related_image_text()
+        if ImageDetails.metatdata_viewer_window is not None:
+            if ImageDetails.metatdata_viewer_window.has_closed:
+                ImageDetails.metatdata_viewer_window = None
+            else:
+                self.show_metadata()
         self.master.update()
 
     def copy_prompt(self):
@@ -259,6 +270,19 @@ class ImageDetails():
         ImageOps.flip_image(self.image_path, top_bottom=top_bottom)
         self.app_actions.refresh()
         self.app_actions.toast(_("Flipped image"))
+
+    def show_metadata(self, event=None):
+        metadata_text = image_data_extractor.get_raw_metadata_text(self.image_path)
+        if metadata_text is None:
+            self.app_actions.toast(_("No metadata found"))
+        else:
+            self._show_metadata_window(metadata_text)
+
+    def _show_metadata_window(self, metadata_text):
+        if ImageDetails.metatdata_viewer_window is None:
+            ImageDetails.metatdata_viewer_window = MetadataViewerWindow(self.master, self.app_actions, metadata_text, self.image_path)
+        else:
+            ImageDetails.metatdata_viewer_window.update_metadata(metadata_text, self.image_path)
 
     def get_related_image_text(self):
         node_id = ImageDetails.related_image_saved_node_id

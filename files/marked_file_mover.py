@@ -11,6 +11,7 @@ from compare.compare_embeddings import CompareEmbedding
 from files.file_actions_window import Action, FileActionsWindow
 from files.file_browser import FileBrowser
 from image.image_data_extractor import image_data_extractor
+from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
 from utils.constants import Mode
@@ -56,6 +57,10 @@ class MarkedFiles():
     COL_0_WIDTH = 600
 
     @staticmethod
+    def load_target_dirs():
+        MarkedFiles.set_target_dirs(app_info_cache.get_meta("marked_file_target_dirs", default_val=[]))
+
+    @staticmethod
     def set_target_dirs(target_dirs):
         MarkedFiles.mark_target_dirs = target_dirs
         for d in MarkedFiles.mark_target_dirs[:]:
@@ -67,6 +72,10 @@ class MarkedFiles():
                         continue
                 MarkedFiles.mark_target_dirs.remove(d)
                 print(f"Removed stale target directory reference: {d}")
+
+    @staticmethod
+    def store_target_dirs():
+        app_info_cache.set_meta("marked_file_target_dirs", MarkedFiles.mark_target_dirs)
 
     @staticmethod
     def set_delete_lock(delete_lock=True):
@@ -501,14 +510,14 @@ class MarkedFiles():
         self._refresh_widgets()
         self.frame.after(1, lambda: self.frame.focus_force())
 
-    def _get_paging_length(self):
-        return max(1, int(len(self.filtered_target_dirs) / 10))
-
     def _refresh_widgets(self):
         if self.is_gui:
             self.clear_widget_lists()
             self.add_target_dir_widgets()
             self.master.update()
+
+    def _get_paging_length(self):
+        return max(1, int(len(self.filtered_target_dirs) / 10))
 
     def page_up(self, event=None):
         paging_len = self._get_paging_length()
@@ -559,8 +568,8 @@ class MarkedFiles():
                 if basename.lower() == self.filter_text:
                     temp.append(target_dir)
             for target_dir in MarkedFiles.mark_target_dirs:
-                basename = os.path.basename(os.path.normpath(target_dir))
                 if target_dir not in temp:
+                    basename = os.path.basename(os.path.normpath(target_dir))
                     if basename.lower().startswith(self.filter_text):
                         temp.append(target_dir)
             # Second pass try to match parent directory name, so these will appear after

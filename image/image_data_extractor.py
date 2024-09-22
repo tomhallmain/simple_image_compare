@@ -71,6 +71,12 @@ class ImageDataExtractor:
                 return False
         return True
 
+    def get_raw_metadata_text(self, image_path):
+        info = Image.open(image_path).info
+        if not isinstance(info, dict):
+            return None
+        return pprint.pformat(info)
+
     def extract_prompt(self, image_path):
         info = Image.open(image_path).info
         if isinstance(info, dict):

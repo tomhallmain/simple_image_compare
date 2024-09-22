@@ -3,7 +3,7 @@ import os
 from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
-#from utils.app_info_cache import app_info_cache
+from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
 from utils.translations import I18N
@@ -14,6 +14,14 @@ _ = I18N._
 
 class RecentDirectories:
     directories = []
+
+    @staticmethod
+    def store_recent_directories():
+        app_info_cache.set_meta("recent_directories", RecentDirectories.directories)
+
+    @staticmethod
+    def load_recent_directories():
+        RecentDirectories.directories = app_info_cache.get_meta("recent_directories", default_val=[])
 
     @staticmethod
     def set_recent_directories(directories):

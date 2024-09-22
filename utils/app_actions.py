@@ -8,6 +8,7 @@ class AppActions:
         self.refresh = actions["refresh"]
         self.refocus = actions["refocus"]
         self.set_mode = actions["set_mode"]
+        self.get_active_image_filepath = actions["get_active_image_filepath"]
         self.create_image = actions["create_image"]
         self.show_next_image = actions["show_next_image"]
         self.get_image_details = actions["get_image_details"]

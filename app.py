@@ -181,6 +181,7 @@ class App():
             "refresh": self.refresh,
             "refocus": self.refocus,
             "set_mode": self.set_mode,
+            "get_active_image_filepath": self.get_active_image_filepath,
             "create_image": self.create_image,
             "show_next_image": self.show_next_image,
             "get_image_details": self.get_image_details,
@@ -468,11 +469,34 @@ class App():
 
     def load_info_cache(self):
         try:
-            MarkedFiles.set_target_dirs(app_info_cache.get_meta("marked_file_target_dirs", default_val=[]))
-            RecentDirectories.set_recent_directories(app_info_cache.get_meta("recent_directories", default_val=[]))
+            MarkedFiles.load_target_dirs()
+            RecentDirectories.load_recent_directories()
+            FileActionsWindow.load_action_history()
             return app_info_cache.get_meta("base_dir")
         except Exception as e:
             Utils.log_red(e)
+
+    def store_info_cache(self, store_window_state=False):
+        base_dir = self.get_base_dir()
+        # print(f"Base dir for store_info_cache: {base_dir}")
+        if base_dir and base_dir != "":
+            if not self.is_secondary():
+                app_info_cache.set_meta("base_dir", base_dir)
+            if self.img_path and self.img_path != "":
+                app_info_cache.set(base_dir, "image_cursor", os.path.basename(self.img_path))
+            app_info_cache.set(base_dir, "recursive", self.file_browser.is_recursive())
+            app_info_cache.set(base_dir, "sort_by", self.file_browser.get_sort_by().get_text())
+            app_info_cache.set(base_dir, "compare_mode", CompareMode.get(self.compare_mode_var.get()).get_text())
+        if store_window_state:
+            secondary_base_dirs = []
+            for _app in App.open_windows:
+                if _app.is_secondary() and _app.base_dir not in secondary_base_dirs:
+                    secondary_base_dirs.append(_app.base_dir)
+            app_info_cache.set_meta("secondary_base_dirs", secondary_base_dirs)
+        RecentDirectories.store_recent_directories()
+        MarkedFiles.store_target_dirs()
+        FileActionsWindow.store_action_history()
+        app_info_cache.store()
 
     def toggle_fullscreen(self, event=None):
         self.fullscreen = not self.fullscreen
@@ -1593,27 +1617,6 @@ class App():
         self.refacdir_client.start()
         self.refacdir_client.run(self.img_path)
         self.toast(_("Running refacdir"))
-
-    def store_info_cache(self, store_window_state=False):
-        base_dir = self.get_base_dir()
-        # print(f"Base dir for store_info_cache: {base_dir}")
-        if base_dir and base_dir != "":
-            if not self.is_secondary():
-                app_info_cache.set_meta("base_dir", base_dir)
-            if self.img_path and self.img_path != "":
-                app_info_cache.set(base_dir, "image_cursor", os.path.basename(self.img_path))
-            app_info_cache.set(base_dir, "recursive", self.file_browser.is_recursive())
-            app_info_cache.set(base_dir, "sort_by", self.file_browser.get_sort_by().get_text())
-            app_info_cache.set(base_dir, "compare_mode", CompareMode.get(self.compare_mode_var.get()).get_text())
-        if store_window_state:
-            secondary_base_dirs = []
-            for _app in App.open_windows:
-                if _app.is_secondary() and _app.base_dir not in secondary_base_dirs:
-                    secondary_base_dirs.append(_app.base_dir)
-            app_info_cache.set_meta("secondary_base_dirs", secondary_base_dirs)
-        app_info_cache.set_meta("recent_directories", RecentDirectories.directories)
-        app_info_cache.set_meta("marked_file_target_dirs", MarkedFiles.mark_target_dirs)
-        app_info_cache.store()
 
     def handle_error(self, error_text, title=None, kind="error"):
         traceback.print_exc()

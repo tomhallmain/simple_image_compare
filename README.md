@@ -31,6 +31,7 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Go to file by string search
 - Mark groups of files to enable quick transitions and comparisons
 - Move, copy, and delete marked file groups
+- Revert and modify file action changes
 - Quickly find directories via recent directory picker window
 - Stores session info about seen directories (useful for directories with many images)
 - Can be set up to run on user-defined list of files in place of a directory
@@ -38,6 +39,7 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Extension with [refacdir](https://github.com/tomhallmain/refacdir) for file operations
 - Find related images and prompts from embedded Stable Diffusion workflows
 - Sort files by related images and prompts
+- View raw image metadata
 
 Zoom and drag functionality is available in both browsing mode, as well as when viewing grouped images after a comparison has been run.
 
@@ -135,6 +137,12 @@ Simply typing letters while the mark window is open will filter the list of mark
 To bypass the move marks window, use the Ctrl+R or Ctrl+E shortcuts to immediately run the previous and penultimate actions respectively on the current selection. You can also use the number keys or Ctrl+T as hotkeys for persistent marks actions.
 
 Ctrl+Z will undo the previous file marks move or copy action. If an earlier action needs to be reversed or modified, open the marks history window to verify the action in the history list and reverse it via the UI.
+
+## File Actions Window Behavior
+
+The file actions window displays a certain number of completed actions, as defined in the config JSON. Similar to the move marks window, typing will add to a text filter that filters the actions by the target directory basenames.
+
+On this window the previous file action images can be viewed and reversed or modified if desired.
 
 ## Limitations
 
