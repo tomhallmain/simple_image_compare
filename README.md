@@ -83,6 +83,8 @@ A directory with images must be set before most of the below bindings will have 
 | Shift-S          |                  | Toggle slideshow       |
 | Shift-D          |                  | Show image details     |
 | Shift-I          | Right Click      | Run image generation   |
+| Control-Return   |                  | Continue image generation   |
+| Control-Shift-Return |              | Cancel image generation |
 | Shift-U          |                  | Run refacdir           |
 | Shift-P          |                  | Open image in GIMP     |
 | Ctrl-G           |                  | Open filename search   |

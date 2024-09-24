@@ -131,6 +131,7 @@ class ImageGenerationType(Enum):
     IP_ADAPTER = "ip_adapter"
     RENOISER = "renoiser"
     LAST_SETTINGS = "last_settings"
+    CANCEL = "cancel"
 
     def __str__(self):
         return self.value

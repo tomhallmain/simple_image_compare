@@ -13,6 +13,7 @@ from image.image_ops import ImageOps
 from image.metadata_viewer_window import MetadataViewerWindow
 from image.smart_crop import Cropper
 from image.temp_image_canvas import TempImageCanvas
+from utils.app_info_cache import app_info_cache
 from utils.config import config
 from utils.constants import ImageGenerationType
 from utils.app_style import AppStyle
@@ -43,6 +44,14 @@ class ImageDetails():
     image_generation_mode = ImageGenerationType.CONTROL_NET
     previous_image_generation_image = None
     metatdata_viewer_window = None
+
+    @staticmethod
+    def load_image_generation_mode():
+        ImageDetails.image_generation_mode = ImageGenerationType[app_info_cache.get_meta("image_generation_mode", default_val="CONTROL_NET")]
+
+    @staticmethod
+    def store_image_generation_mode():
+        app_info_cache.set_meta("image_generation_mode", ImageDetails.image_generation_mode.name)
 
     def __init__(self, parent_master, master, image_path, index_text, app_actions, do_refresh=True):
         self.parent_master = parent_master
@@ -262,9 +271,13 @@ class ImageDetails():
         self.app_actions.toast(_("Randomly cropped image"))
 
     def random_modification(self):
-        ImageOps.randomly_modify_image(self.image_path)
-        self.app_actions.refresh()
-        self.app_actions.toast(_("Randomly modified image"))
+        ImageDetails.randomly_modify_image(self.image_path, self.app_actions)
+
+    @staticmethod
+    def randomly_modify_image(image_path, app_actions):
+        ImageOps.randomly_modify_image(image_path)
+        app_actions.refresh()
+        app_actions.toast(_("Randomly modified image"))
 
     def flip_image(self, top_bottom=False):
         ImageOps.flip_image(self.image_path, top_bottom=top_bottom)
@@ -443,9 +456,10 @@ class ImageDetails():
         ImageDetails.run_image_generation_static(self.app_actions, _type=ImageGenerationType.REDO_PROMPT)
 
     @staticmethod
-    def run_image_generation_static(app_actions, last_action=False, _type=None, modify_call=False):
+    def run_image_generation_static(app_actions, last_action=False, _type=None, modify_call=False, cancel=False):
         if last_action:
-            app_actions.run_image_generation(_type=ImageGenerationType.LAST_SETTINGS, image_path=ImageDetails.previous_image_generation_image, modify_call=modify_call)
+            _type = ImageGenerationType.CANCEL if cancel else ImageGenerationType.LAST_SETTINGS
+            app_actions.run_image_generation(_type=_type, image_path=ImageDetails.previous_image_generation_image, modify_call=modify_call)
         else:
             if _type is None:
                 _type = ImageDetails.image_generation_mode

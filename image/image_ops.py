@@ -53,6 +53,10 @@ class ImageOps:
         image.close()
 
     @staticmethod
+    def get_random_color():
+        return tuple([random.randint(0, 255) for i in range(3)])
+
+    @staticmethod
     def _rotate_image_partial(image, angle=90, center=None, scale=1.0):
         # grab the dimensions of the image
         (h, w) = image.shape[:2]
@@ -61,7 +65,9 @@ class ImageOps:
             center = (w // 2, h // 2)
         # perform the rotation
         M = cv2.getRotationMatrix2D(center, angle, scale)
-        rotated = cv2.warpAffine(image, M, (w, h))
+        rotated = cv2.warpAffine(image, M, (w, h),
+                                 borderMode=cv2.BORDER_CONSTANT,
+                                 borderValue=ImageOps.get_random_color())
         # return the rotated image
         return rotated
 
@@ -111,10 +117,15 @@ class ImageOps:
     @staticmethod
     def _random_crop_and_upscale(im, allowable_proportions=0.4, shortest_side=1200):
         width, height = im.size
+        landscape = width > height
         midpoint_x = int(width / 2)
         midpoint_y = int(height / 2)
-        allowable_range_x = midpoint_x * allowable_proportions * 2
-        allowable_range_y = midpoint_y * allowable_proportions * 2
+        if landscape:
+            allowable_range_x = midpoint_x * allowable_proportions * 2
+            allowable_range_y = midpoint_y * allowable_proportions
+        else:
+            allowable_range_x = midpoint_x * allowable_proportions
+            allowable_range_y = midpoint_y * allowable_proportions * 2
         x0 = int(allowable_range_x * random.random())
         x1 = int(width - (allowable_range_x * random.random()))
         y0 = int(allowable_range_y * random.random())
@@ -157,26 +168,28 @@ class ImageOps:
     def randomly_modify_image(image_path):
         im = PIL.Image.open(image_path)
         has_modified_image = False
-        if random.random() < config.image_edit_configuration.random_rotation_chance:
-            cv2_image = ImageOps.pil_to_cv2(im)
-            angle_diff = int(random.random() * 55)
-            angle = angle_diff if random.random() > 0.5 else 360 - angle_diff
-            cv2_image = ImageOps._rotate_image_partial(cv2_image, angle=angle)
-            im.close()
-            im = ImageOps.cv2_to_pil(cv2_image)
-            has_modified_image = True
-        if random.random() < config.image_edit_configuration.random_flip_chance:
-            im, original_im = ImageOps._flip_image(im)
-            original_im.close()
-            has_modified_image = True
-        if random.random() < config.image_edit_configuration.random_draw_chance:
-            ImageOps._random_draw(im)
-            has_modified_image = True
-        if random.random() < config.image_edit_configuration.random_crop_chance:
-            im_final = ImageOps._random_crop_and_upscale(im)
-            has_modified_image = True
-        else:
-            im_final = im
+        while not has_modified_image:
+            if random.random() < config.image_edit_configuration.random_rotation_chance:
+                cv2_image = ImageOps.pil_to_cv2(im)
+                angle_diff = int(random.random() * 55)
+                angle = angle_diff if random.random() > 0.5 else 360 - angle_diff
+                cv2_image = ImageOps._rotate_image_partial(cv2_image, angle=angle)
+                im.close()
+                im = ImageOps.cv2_to_pil(cv2_image)
+                has_modified_image = True
+            if random.random() < config.image_edit_configuration.random_flip_chance:
+                im, original_im = ImageOps._flip_image(im)
+                original_im.close()
+                has_modified_image = True
+            if random.random() < config.image_edit_configuration.random_draw_chance:
+                ImageOps._random_draw(im)
+                has_modified_image = True
+            if random.random() < config.image_edit_configuration.random_crop_chance:
+                temp_im = ImageOps._random_crop_and_upscale(im)
+                im.close()
+                im = temp_im
+                has_modified_image = True
+        im_final = im
         if not has_modified_image:
             print("No modifications made to image!")
         new_filepath = ImageOps.new_filepath(image_path, "", "_edit")

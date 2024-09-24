@@ -373,7 +373,8 @@ class App():
         self.master.bind("<Shift-Z>", lambda e: self.check_focus(e, self.add_current_image_to_negative_search))
         self.master.bind("<Shift-U>", lambda e: self.check_focus(e, self.run_refacdir))
         self.master.bind("<Shift-I>", lambda e: self.check_focus(e, lambda: ImageDetails.run_image_generation_static(self.app_actions)))
-        self.master.bind("<Control-Return>", lambda event: ImageDetails.run_image_generation_static(self.app_actions, last_action=True))
+        self.master.bind("<Shift-Q>", lambda e: self.check_focus(e, lambda: ImageDetails.randomly_modify_image(self.get_active_image_filepath(), self.app_actions)))
+        self.master.bind("<Control-Return>", lambda event: ImageDetails.run_image_generation_static(self.app_actions, last_action=True, cancel=Utils.modifier_key_pressed(event, [ModifierKey.SHIFT])))
         self.master.bind("<Shift-C>", lambda e: self.check_focus(e, lambda: MarkedFiles.clear_file_marks(self.toast)))
         self.master.bind("<Control-Tab>", self.cycle_windows)
         self.master.bind("<Shift-Escape>", lambda event: self.on_closing() if self.is_secondary() else None)
@@ -472,6 +473,7 @@ class App():
             MarkedFiles.load_target_dirs()
             RecentDirectories.load_recent_directories()
             FileActionsWindow.load_action_history()
+            ImageDetails.load_image_generation_mode()
             return app_info_cache.get_meta("base_dir")
         except Exception as e:
             Utils.log_red(e)
@@ -496,6 +498,7 @@ class App():
         RecentDirectories.store_recent_directories()
         MarkedFiles.store_target_dirs()
         FileActionsWindow.store_action_history()
+        ImageDetails.store_image_generation_mode()
         app_info_cache.store()
 
     def toggle_fullscreen(self, event=None):
