@@ -7,14 +7,14 @@ import traceback
 
 
 import tkinter as tk
-from tkinter import PhotoImage, filedialog, messagebox, HORIZONTAL, Label, Checkbutton
-from tkinter.constants import W
+from tkinter import Label, Checkbutton, PhotoImage, filedialog, messagebox, HORIZONTAL, W
 import tkinter.font as fnt
 from tkinter.ttk import Button, Entry, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
 
 from compare.compare_args import CompareArgs
 from compare.compare_wrapper import CompareWrapper
+from compare.prevalidations_window import PrevalidationsWindow
 from extensions.refacdir_client import RefacDirClient
 from extensions.sd_runner_client import SDRunnerClient
 from files.file_actions_window import FileActionsWindow
@@ -193,6 +193,7 @@ class App():
             "delete": self._handle_delete,
             "open_move_marks_window": self.open_move_marks_window,
             "release_canvas_image": lambda: self.canvas_image.release_image(),
+            "hide_current_image": self.hide_current_image,
             "_set_toggled_view_matches": self._set_toggled_view_matches,
             "_set_label_state": self._set_label_state,
             "_add_buttons_for_mode": self._add_buttons_for_mode,
@@ -387,6 +388,7 @@ class App():
         self.master.bind("<Control-n>", self.open_file_actions_window)
         self.master.bind("<Control-m>", self.open_move_marks_window)
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
+        self.master.bind("<Control-j>", self.open_prevalidations_window)
         self.master.bind("<Control-r>", self.run_previous_marks_action)
         self.master.bind("<Control-e>", self.run_penultimate_marks_action)
         self.master.bind("<Control-t>", self.run_permanent_marks_action)
@@ -474,6 +476,7 @@ class App():
             RecentDirectories.load_recent_directories()
             FileActionsWindow.load_action_history()
             ImageDetails.load_image_generation_mode()
+            PrevalidationsWindow.set_prevalidations()
             return app_info_cache.get_meta("base_dir")
         except Exception as e:
             Utils.log_red(e)
@@ -499,6 +502,7 @@ class App():
         MarkedFiles.store_target_dirs()
         FileActionsWindow.store_action_history()
         ImageDetails.store_image_generation_mode()
+        PrevalidationsWindow.store_prevalidations()
         app_info_cache.store()
 
     def toggle_fullscreen(self, event=None):
@@ -973,7 +977,7 @@ class App():
         if self.mode == Mode.BROWSE:
             start_file = self.file_browser.current_file()
             previous_file = self.file_browser.previous_file()
-            while previous_file in self.compare_wrapper.hidden_images and previous_file != start_file:
+            while self.compare_wrapper.skip_image(previous_file) and previous_file != start_file:
                 previous_file = self.file_browser.previous_file()
             self.master.update()
             try:
@@ -994,7 +998,7 @@ class App():
             next_file = self.file_browser.next_file()
             if self.img_path == next_file:
                 return True  # NOTE self.refresh() is calling this method in this case
-            while next_file in self.compare_wrapper.hidden_images and next_file != start_file:
+            while self.compare_wrapper.skip_image(next_file) and next_file != start_file:
                 next_file = self.file_browser.next_file()
             self.master.update()
             try:
@@ -1305,22 +1309,23 @@ class App():
             MarkedFiles.undo_move_marks(self.get_base_dir(), self.app_actions)
 
     def open_file_actions_window(self, event=None):
-        top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
-        top_level.title(_("File Actions"))
-        top_level.geometry("700x1200")
         try:
-            file_actions_window = FileActionsWindow(top_level, self.master, self.app_actions,
+            file_actions_window = FileActionsWindow(self.master, self.app_actions,
                                                     ImageDetails.open_temp_image_canvas,
                                                     MarkedFiles.move_marks_to_dir_static)
         except Exception as e:
             self.handle_error(str(e), title="File Actions Window Error")
 
+    def open_prevalidations_window(self, event=None):
+        if config.enable_prevalidations:
+            try:
+                prevalidation_window = PrevalidationsWindow(self.master, self.app_actions)
+            except Exception as e:
+                self.handle_error(str(e), title="Prevalidations Window Error")
+
     def open_go_to_file_window(self, event=None):
-        top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
-        top_level.title(_("Go To File"))
-        top_level.geometry(GoToFile.get_geometry())
         try:
-            go_to_file = GoToFile(top_level, self.app_actions)
+            go_to_file = GoToFile(self.master, self.app_actions)
         except Exception as e:
             self.handle_error(str(e), title="Go To File Window Error")
 
@@ -1483,11 +1488,12 @@ class App():
         self.master.clipboard_clear()
         self.master.clipboard_append(filepath)
 
-    def hide_current_image(self, event=None):
-        filepath = self.get_active_image_filepath()
+    def hide_current_image(self, event=None, image_path=None):
+        filepath = self.get_active_image_filepath() if image_path is None else image_path
         if filepath not in self.compare_wrapper.hidden_images:
             self.compare_wrapper.hidden_images.append(filepath)
-        self.toast(_("Hid current image.\nTo unhide, press Shift+B."))
+        if image_path is None:
+            self.toast(_("Hid current image.\nTo unhide, press Shift+B."))
         self.show_next_image()
 
     def clear_hidden_images(self, event=None):
@@ -1609,6 +1615,7 @@ class App():
                 image_path = self.prev_img_path
             else:
                 image_path = self.get_active_image_filepath()
+        _type = ImageDetails.get_image_specific_generation_mode() if _type is None else _type
         try:
             self.sd_runner_client.run(_type, image_path, append=modify_call)
             ImageDetails.previous_image_generation_image = image_path

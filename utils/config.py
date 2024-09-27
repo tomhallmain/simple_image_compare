@@ -57,6 +57,7 @@ class Config:
         self.text_embedding_search_presets = []
         self.text_embedding_search_preset_index = -1
         self.text_embedding_search_presets_exclusive = False
+        self.enable_prevalidations = True
         self.sd_runner_client_port = 6000
         self.sd_runner_client_password = "<PASSWORD>"
         self.refacdir_client_port = 6001
@@ -118,7 +119,8 @@ class Config:
                             "store_checkpoints",
                             "search_only_return_closest",
                             "sidebar_visible",
-                            "always_open_new_windows")
+                            "always_open_new_windows",
+                            "enable_prevalidations")
             self.set_values(int,
                             "max_search_results",
                             "file_actions_history_max",

@@ -465,6 +465,12 @@ class ImageDetails():
                 _type = ImageDetails.image_generation_mode
             app_actions.run_image_generation(_type=_type, modify_call=modify_call)
 
+    @staticmethod
+    def get_image_specific_generation_mode():
+        if ImageDetails.image_generation_mode in [ImageGenerationType.REDO_PROMPT, ImageGenerationType.CONTROL_NET, ImageGenerationType.IP_ADAPTER]:
+            return ImageDetails.image_generation_mode
+        return ImageGenerationType.CONTROL_NET
+
     def update_tags(self):
         print(f"Updating tags for {self.image_path}")
         tags_str = self.tags_str.get()

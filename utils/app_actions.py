@@ -18,6 +18,7 @@ class AppActions:
         self.get_base_dir = actions["get_base_dir"]
         self.go_to_file = actions["go_to_file"]
         self.delete = actions["delete"]
+        self.hide_current_image = actions["hide_current_image"]
         self.open_move_marks_window = actions["open_move_marks_window"]
         self.release_canvas_image = actions["release_canvas_image"]
         self._add_buttons_for_mode = actions["_add_buttons_for_mode"]

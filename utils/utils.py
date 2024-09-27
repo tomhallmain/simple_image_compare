@@ -173,7 +173,7 @@ class Utils:
             target_dir, os.path.basename(existing_filepath))
         if not overwrite_existing and os.path.exists(new_filepath):
             raise Exception("File already exists: " + new_filepath)
-        shutil.move(existing_filepath, new_filepath)
+        return shutil.move(existing_filepath, new_filepath)
 
     @staticmethod
     def copy_file(existing_filepath, target_dir, overwrite_existing=False):
@@ -181,7 +181,7 @@ class Utils:
             target_dir, os.path.basename(existing_filepath))
         if not overwrite_existing and os.path.exists(new_filepath):
             raise Exception("File already exists: " + new_filepath)
-        shutil.copy2(existing_filepath, new_filepath)
+        return shutil.copy2(existing_filepath, new_filepath)
 
     @staticmethod
     def open_file_location(filepath):
@@ -274,6 +274,26 @@ class Utils:
             return base_dir + "/" + input_filepath
         else:
             return None
+
+    @staticmethod
+    def split(string, delimiter=","):
+        # Split the string by the delimiter and clean any delimiter escapes present in the string
+        parts = []
+        i = 0
+        while i < len(string):
+            if string[i] == delimiter:
+                if i == 0 or string[i-1] != "\\":
+                    parts.append(string[:i])
+                    string = string[i+1:]
+                    i = -1
+                elif i != 0 and string[i-1] == "\\":
+                    string = string[:i-1] + delimiter + string[i+1:]
+            elif i == len(string) - 1:
+                parts.append(string[:i+1])
+            i += 1
+        if len(parts) == 0 and len(string) != 0:
+            parts.append(string)
+        return parts
 
 
 class ModifierKey(Enum):

@@ -4,10 +4,8 @@ import sys
 from PIL import Image, ImageTk
 from tkinter import Toplevel, Frame, Canvas, Label
 
-from extensions.sd_runner_client import SDRunnerClient
 from files.marked_file_mover import MarkedFiles
 from utils.config import config
-from utils.constants import ImageGenerationType
 from utils.app_style import AppStyle
 from utils.utils import Utils
 from utils.translations import I18N
@@ -74,15 +72,15 @@ class TempImageCanvas:
         self.master.bind("<Escape>", self.app_actions.refocus)
         self.master.bind("<Shift-Escape>", self.close_windows)
         self.master.bind("<Shift-D>", lambda event: self.app_actions.get_image_details(image_path=self.image_path))
-        # TODO come up with a solution that allows for the set image generation type in ImageDetails class to be used instead of hardcoding
-        self.master.bind("<Shift-I>", lambda event: self.app_actions.run_image_generation(_type=ImageGenerationType.CONTROL_NET, image_path=self.image_path))
-        self.master.bind("<Button-3>", lambda event: self.app_actions.run_image_generation(_type=ImageGenerationType.CONTROL_NET, image_path=self.image_path))
+        self.master.bind("<Shift-I>", lambda event: self.app_actions.run_image_generation(_type=None, image_path=self.image_path))
+        self.master.bind("<Button-3>", lambda event: self.app_actions.run_image_generation(_type=None, image_path=self.image_path))
         self.master.bind("<Shift-Y>", lambda event: self.app_actions.set_marks_from_downstream_related_images(image_to_use=self.image_path))
         self.master.bind("<Control-m>", self.open_move_marks_window)
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
         self.master.bind("<Control-r>", self.run_previous_marks_action)
         self.master.bind("<Control-e>", self.run_penultimate_marks_action)
-        self.master.bind("<Control-c>", self.copy_image_path)
+        self.master.bind("<Shift-C>", self.copy_file_to_base_dir)
+        self.master.bind("<Control-c>", self.copy_image_path) # TODO replace this with copy data instead of just path
         self.master.bind("<Control-t>", self.run_permanent_marks_action)
         self.master.bind("<Control-w>", self.new_full_window_with_image)
         self.master.update()
@@ -154,6 +152,16 @@ class TempImageCanvas:
                 filepath = filepath.replace("\\", "\\\\")
         self.master.clipboard_clear()
         self.master.clipboard_append(filepath)
+
+    def copy_file_to_base_dir(self, event=None):
+        if self.image_path is None or not os.path.isfile(self.image_path):
+            raise ValueError("No image loaded.")
+        base_dir = self.app_actions.get_base_dir()
+        current_image_dir = os.path.dirname(self.image_path)
+        if base_dir is not None and base_dir != "" and os.path.normpath(base_dir) != os.path.normpath(current_image_dir):
+            filepath = str(self.image_path)
+            new_file = os.path.join(base_dir, os.path.basename(filepath))
+            Utils.copy_file(filepath, new_file, overwrite_existing=config.move_marks_overwrite_existing_file)
 
     def new_full_window_with_image(self, event=None):
         if self.image_path is None or not os.path.isfile(self.image_path):

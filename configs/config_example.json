@@ -51,6 +51,7 @@
     {"positive": "masterpiece, artful", "negative": "ugly, deformed"}
   ],
   "text_embedding_search_presets_exclusive": false,
+  "enable_prevalidations": true,
   "sd_runner_client_port": 6000,
   "sd_runner_client_password": "<PASSWORD>",
   "refacdir_client_port": 6001,

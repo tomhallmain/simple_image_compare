@@ -588,6 +588,19 @@ class CompareEmbedding(BaseCompare):
                     print(f"Readded file to compare: {f}")
 
     @staticmethod
+    def _get_text_embedding_from_cache(text):
+        if text in CompareEmbedding.TEXT_EMBEDDING_CACHE:
+            text_embedding = CompareEmbedding.TEXT_EMBEDDING_CACHE[text]
+        else:
+            try:
+                text_embedding = text_embeddings(text)
+                CompareEmbedding.TEXT_EMBEDDING_CACHE[text] = text_embedding
+            except OSError as e:
+                print(f"{text} - {e}")
+                raise AssertionError("Encountered an error generating text embedding.")
+        return text_embedding
+
+    @staticmethod
     def single_text_compare(image_path, texts_dict):
         print(f"Running text comparison for \"{image_path}\" - text = {texts_dict}")
         similarities = {}
@@ -598,17 +611,38 @@ class CompareEmbedding(BaseCompare):
             raise AssertionError(
                 f"Encountered an error accessing the provided file path {image_embeddings} in the file system.")
         for key, text in texts_dict.items():
-            if text in CompareEmbedding.TEXT_EMBEDDING_CACHE:
-                text_embedding = CompareEmbedding.TEXT_EMBEDDING_CACHE[text]
-            else:
-                try:
-                    text_embedding = text_embeddings(text)
-                    CompareEmbedding.TEXT_EMBEDDING_CACHE[text] = text_embedding
-                except OSError as e:
-                    print(f"{text} - {e}")
-                    raise AssertionError("Encountered an error accessing the provided file path in the file system.")
-            similarities[key] = embedding_similarity(image_embedding, text_embedding)
+            similarities[key] = embedding_similarity(image_embedding, CompareEmbedding._get_text_embedding_from_cache(text))
         return similarities
+
+    @staticmethod
+    def multi_text_compare(image_path, positives, negatives, threshold=0.3):
+        print(f"Running text comparison for \"{image_path}\" - positive texts = {positives}, negative texts = {negatives}")
+        positive_similarities = []
+        negative_similarities = []
+        try:
+            image_embedding = image_embeddings(image_path)
+        except OSError as e:
+            print(f"{image_path} - {e}")
+            raise AssertionError(
+                f"Encountered an error accessing the provided file path {image_embeddings} in the file system.")
+        
+        for text in positives:
+            similarity = embedding_similarity(image_embedding, CompareEmbedding._get_text_embedding_from_cache(text))
+            positive_similarities.append(float(similarity[0]))
+        for text in negatives:
+            similarity = embedding_similarity(image_embedding, CompareEmbedding._get_text_embedding_from_cache(text))
+            negative_similarities.append(1/float(similarity[0]))
+
+        combined_positive_similarity = sum(positive_similarities)/max(len(positive_similarities),1)
+        combined_negative_similarity = sum(negative_similarities)/max(len(negative_similarities),1)
+        if combined_positive_similarity > 0 and combined_negative_similarity > 0:
+            combined_similarity = combined_positive_similarity / combined_negative_similarity
+        elif combined_positive_similarity > 0:
+            combined_similarity = combined_positive_similarity
+        else:
+            combined_similarity = 1 / combined_negative_similarity
+        print(f"Combined similarity = {combined_similarity} Positive similarities = {positive_similarities} Negative similarites = {negative_similarities} Threshold = {threshold}")
+        return combined_similarity > threshold
 
     @staticmethod
     def is_related(image1, image2):

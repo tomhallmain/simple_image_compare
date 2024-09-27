@@ -8,6 +8,7 @@ import pprint
 from compare.compare import Compare
 from compare.compare_args import CompareArgs
 from compare.compare_embeddings import CompareEmbedding
+from compare.prevalidations_window import PrevalidationAction, PrevalidationsWindow
 from utils.config import config
 from utils.constants import Mode, CompareMode
 from utils.translations import I18N
@@ -113,6 +114,15 @@ class CompareWrapper:
         self._master.update()
         self._app_actions.create_image(next_image)
         return True
+
+    def skip_image(self, image_path):
+        if image_path in self.hidden_images:
+            return True
+        prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self._app_actions.hide_current_image, self._app_actions.toast)
+        if prevalidation_action is not None:
+            if prevalidation_action != PrevalidationAction.NOTIFY:
+                return True
+        return False
 
     def find_next_unrelated_image(self, file_browser, forward=True):
         found_unrelated_image = False

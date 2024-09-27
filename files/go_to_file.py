@@ -1,4 +1,4 @@
-from tkinter import Frame, Label, StringVar, filedialog, LEFT, W
+from tkinter import Toplevel, Frame, StringVar, LEFT, W
 from tkinter.ttk import Entry, Button
 
 from utils.app_style import AppStyle
@@ -8,6 +8,7 @@ _ = I18N._
 
 
 class GoToFile:
+    top_level = None
     last_search_text = ""
 
     @staticmethod
@@ -17,7 +18,10 @@ class GoToFile:
         return f"{width}x{height}"
 
     def __init__(self, master, app_actions):
-        self.master = master
+        GoToFile.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
+        GoToFile.top_level.title(_("Go To File"))
+        GoToFile.top_level.geometry(GoToFile.get_geometry())
+        self.master = GoToFile.top_level
         self.app_actions = app_actions
         self.frame = Frame(self.master)
         self.frame.grid(column=0, row=0)

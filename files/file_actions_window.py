@@ -1,6 +1,6 @@
 import os
 
-from tkinter import Label, LEFT, W
+from tkinter import Toplevel, Label, LEFT, W
 from tkinter.ttk import Button
 
 from utils.config import config
@@ -122,6 +122,7 @@ class FileActionsWindow:
     '''
     Window to hold info about completed file actions.
     '''
+    top_level = None
     permanent_action = setup_permanent_action()
     hotkey_actions = setup_hotkey_actions()
     action_history = []
@@ -184,9 +185,11 @@ class FileActionsWindow:
         if len(FileActionsWindow.action_history) > FileActionsWindow.MAX_ACTIONS:
             del FileActionsWindow.action_history[-1]
 
-
-    def __init__(self, master, app_master, app_actions, view_image_callback, move_marks_callback):
-        self.master = master
+    def __init__(self, app_master, app_actions, view_image_callback, move_marks_callback, geometry="700x1200"):
+        FileActionsWindow.top_level = Toplevel(app_master, bg=AppStyle.BG_COLOR)
+        FileActionsWindow.top_level.title(_("File Actions"))
+        FileActionsWindow.top_level.geometry(geometry)
+        self.master = FileActionsWindow.top_level
         self.app_master = app_master
         self.is_sorted_by_embedding = False
         self.app_actions = app_actions
@@ -468,33 +471,28 @@ class FileActionsWindow:
             if image_path is None:
                 raise Exception("No active image")
         image_path = os.path.normpath(image_path)
+        search_basename = os.path.basename(image_path).lower()
+        basename_no_ext = os.path.splitext(search_basename)[0].lower()
         temp = []
         for action in FileActionsWindow.action_history:
             for f in action.new_files:
                 if f == image_path:
                     temp.append(action)
                     break
-        # for action in FileActionsWindow.action_history:
-        #     basename = os.path.basename(os.path.normpath(action.target))
-        #     if basename.lower() == self.filter_text:
-        #         temp.append(action)
-        # for action in FileActionsWindow.action_history:
-        #     if action not in temp:
-        #         basename = os.path.basename(os.path.normpath(action.target))
-        #         if basename.lower().startswith(self.filter_text):
-        #             temp.append(action)
-        # # Second pass try to match parent directory name, so these will appear after
-        # for action in FileActionsWindow.action_history:
-        #     if action not in temp:
-        #         dirname = os.path.basename(os.path.dirname(os.path.normpath(action.target)))
-        #         if dirname and dirname.lower().startswith(self.filter_text):
-        #             temp.append(action)
-        # # Third pass try to match part of the basename
-        # for action in FileActionsWindow.action_history:
-        #     if action not in temp:
-        #         basename = os.path.basename(os.path.normpath(action.target))
-        #         if basename and (f" {self.filter_text}" in basename.lower() or f"_{self.filter_text}" in basename.lower()):
-        #             temp.append(action)
+        for action in FileActionsWindow.action_history:
+            if action not in temp:
+                for f in action.new_files:
+                    basename = os.path.basename(os.path.normpath(f))
+                    if basename.lower() == search_basename:
+                        temp.append(action)
+                        break
+        for action in FileActionsWindow.action_history:
+            if action not in temp:
+                for f in action.new_files:
+                    basename = os.path.basename(os.path.normpath(f))
+                    if basename.lower().startswith(basename_no_ext):
+                        temp.append(action)
+                        break
         self.filtered_action_history = temp[:]
         self._refresh_widgets()
 

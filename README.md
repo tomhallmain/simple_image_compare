@@ -40,6 +40,7 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Find related images and prompts from embedded Stable Diffusion workflows
 - Sort files by related images and prompts
 - View raw image metadata
+- Content filtering of images based on their text CLIP similarity (automatically hide, move to dir, delete etc)
 
 Zoom and drag functionality is available in both browsing mode, as well as when viewing grouped images after a comparison has been run.
 
@@ -99,6 +100,7 @@ A directory with images must be set before most of the below bindings will have 
 | Shift-C          |                  | Clear marks list       |
 | Ctrl-C           |                  | Copy marks list        |
 | Ctrl-H           |                  | Hide/show sidebar      |
+| Ctrl-J           |                  | Open content filter window   |
 | Ctrl-M           |                  | Open marks window      |
 | Ctrl-K           |                  | Open marks window (no GUI)   |
 | Ctrl-N           |                  | Open mark history window     |
