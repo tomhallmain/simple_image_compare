@@ -359,13 +359,12 @@ class App():
         self.master.bind("<Shift-Y>", lambda e: self.check_focus(e, self.set_marks_from_downstream_related_images))
         self.master.bind("<Shift-V>", lambda e: self.check_focus(e, self.hide_current_image))
         self.master.bind("<Shift-B>", lambda e: self.check_focus(e, self.clear_hidden_images))
+        self.master.bind("<Shift-J>", lambda e: self.check_focus(e, self.run_prevalidations_for_base_dir))
         self.master.bind("<Shift-H>", lambda e: self.check_focus(e, self.get_help_and_config))
         self.master.bind("<Shift-S>", lambda e: self.check_focus(e, self.toggle_slideshow))
         self.master.bind("<MouseWheel>", lambda event: None if (event.state & 0x1) != 0 else (self.show_next_image() if event.delta > 0 else self.show_prev_image()))
         self.master.bind("<Button-2>", self.delete_image)
         self.master.bind("<Button-3>", self.trigger_image_generation)
-        # self.master.bind('<Button-5>',   self.show_next_image)  # for Linux, wheel scroll down
-        # self.master.bind('<Button-4>',   self.show_prev_image)  # for Linux, wheel scroll up
         self.master.bind("<Shift-M>", lambda e: self.check_focus(e, self.add_or_remove_mark_for_current_image))
         self.master.bind("<Shift-N>", lambda e: self.check_focus(e, self._add_all_marks_from_last_or_current_group))
         self.master.bind("<Shift-G>", lambda e: self.check_focus(e, self.go_to_mark))
@@ -375,6 +374,7 @@ class App():
         self.master.bind("<Shift-U>", lambda e: self.check_focus(e, self.run_refacdir))
         self.master.bind("<Shift-I>", lambda e: self.check_focus(e, lambda: ImageDetails.run_image_generation_static(self.app_actions)))
         self.master.bind("<Shift-Q>", lambda e: self.check_focus(e, lambda: ImageDetails.randomly_modify_image(self.get_active_image_filepath(), self.app_actions)))
+        self.master.bind("<Shift-L>", lambda e: self.check_focus(e, self.toggle_prevalidations))
         self.master.bind("<Control-Return>", lambda event: ImageDetails.run_image_generation_static(self.app_actions, last_action=True, cancel=Utils.modifier_key_pressed(event, [ModifierKey.SHIFT])))
         self.master.bind("<Shift-C>", lambda e: self.check_focus(e, lambda: MarkedFiles.clear_file_marks(self.toast)))
         self.master.bind("<Control-Tab>", self.cycle_windows)
@@ -1323,6 +1323,18 @@ class App():
             except Exception as e:
                 self.handle_error(str(e), title="Prevalidations Window Error")
 
+    def run_prevalidations_for_base_dir(self, event=None):
+        PrevalidationsWindow.prevalidated_cache.clear()
+        for image_path in self.file_browser.get_files():
+            try:
+                prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self.get_base_dir, self.hide_current_image, self.toast)
+            except Exception as e:
+                print(e)
+
+    def toggle_prevalidations(self, event=None):
+        config.enable_prevalidations = not config.enable_prevalidations
+        self.toast(_("Prevalidations now running") if config.enable_prevalidations else _("Prevalidations turned off"))
+
     def open_go_to_file_window(self, event=None):
         try:
             go_to_file = GoToFile(self.master, self.app_actions)
@@ -1407,7 +1419,7 @@ class App():
                 raise Exception("No active image file.")
             if last_file:
                 last_image = self.file_browser.last_file()
-                while last_image in self.compare_wrapper.hidden_images and last_image != current_file:
+                while self.compare_wrapper.skip_image(last_image) and last_image != current_file:
                     last_image = self.file_browser.previous_file()
                 self.create_image(self.file_browser.last_file())
                 if len(MarkedFiles.file_marks) == 1 and self.file_browser.has_file(MarkedFiles.file_marks[0]):
@@ -1417,7 +1429,7 @@ class App():
                 return
             else:
                 first_image = self.file_browser.next_file()
-                while first_image in self.compare_wrapper.hidden_images and first_image != current_file:
+                while self.compare_wrapper.skip_image(first_image) and first_image != current_file:
                     first_image = self.file_browser.next_file()
                 self.create_image(first_image)
             self.master.update()
@@ -1431,8 +1443,8 @@ class App():
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
         current_image = self.get_active_image_filepath()
         prev_file = self.file_browser.page_up(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_up(half_length=shift_key_pressed)
-        while prev_file in self.compare_wrapper.hidden_images and prev_file != current_image:
-            prev_file = self.file_browser.prev_file() if self.mode == Mode.BROWSE else self.compare_wrapper._get_prev_image()
+        while self.compare_wrapper.skip_image(prev_file) and prev_file != current_image:
+            prev_file = self.file_browser.previous_file() if self.mode == Mode.BROWSE else self.compare_wrapper._get_prev_image()
         self.create_image(prev_file)
         self.master.update()
 
@@ -1440,7 +1452,7 @@ class App():
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
         current_image = self.get_active_image_filepath()
         next_file = self.file_browser.page_down(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_down(half_length=shift_key_pressed)
-        while next_file in self.compare_wrapper.hidden_images and next_file != current_image:
+        while self.compare_wrapper.skip_image(next_file) and next_file != current_image:
             next_file = self.file_browser.next_file() if self.mode == Mode.BROWSE else self.compare_wrapper._get_next_image()
         self.create_image(next_file)
         self.master.update()

@@ -110,7 +110,7 @@ class ImageDetails():
         self.add_label(self._label_positive, _("Positive"), wraplength=col_0_width)
         self.add_label(self.label_positive, positive, column=1)
         self.add_label(self._label_negative, _("Negative"), wraplength=col_0_width)
-        self.add_label(self.label_negative, negative, column=1)
+        self.add_label(self.label_negative, negative if config.show_negative_prompt else "(negative prompt not show by config setting)", column=1)
         self.add_label(self._label_models, _("Models"), wraplength=col_0_width)
         self.add_label(self.label_models, ", ".join(models), column=1)
         self.add_label(self._label_loras, _("LoRAs"), wraplength=col_0_width)
@@ -213,7 +213,8 @@ class ImageDetails():
         self.label_mtime["text"] = mod_time
         self.label_size["text"] = file_size
         self.label_positive["text"] = positive
-        self.label_negative["text"] = negative
+        if config.show_negative_prompt:
+            self.label_negative["text"] = negative
         self.label_models["text"] = ", ".join(models)
         self.label_loras["text"] = ", ".join(loras)
         self.label_related_image["text"] = self.get_related_image_text()

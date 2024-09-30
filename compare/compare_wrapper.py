@@ -118,10 +118,11 @@ class CompareWrapper:
     def skip_image(self, image_path):
         if image_path in self.hidden_images:
             return True
-        prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self._app_actions.hide_current_image, self._app_actions.toast)
-        if prevalidation_action is not None:
-            if prevalidation_action != PrevalidationAction.NOTIFY:
-                return True
+        if config.enable_prevalidations:
+            prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_image, self._app_actions.toast)
+            if prevalidation_action is not None:
+                if prevalidation_action != PrevalidationAction.NOTIFY:
+                    return True
         return False
 
     def find_next_unrelated_image(self, file_browser, forward=True):

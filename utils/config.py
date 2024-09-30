@@ -58,6 +58,7 @@ class Config:
         self.text_embedding_search_preset_index = -1
         self.text_embedding_search_presets_exclusive = False
         self.enable_prevalidations = True
+        self.show_negative_prompt = True
         self.sd_runner_client_port = 6000
         self.sd_runner_client_password = "<PASSWORD>"
         self.refacdir_client_port = 6001
@@ -120,7 +121,8 @@ class Config:
                             "search_only_return_closest",
                             "sidebar_visible",
                             "always_open_new_windows",
-                            "enable_prevalidations")
+                            "enable_prevalidations",
+                            "show_negative_prompt")
             self.set_values(int,
                             "max_search_results",
                             "file_actions_history_max",
