@@ -132,6 +132,7 @@ class ImageGenerationType(Enum):
     RENOISER = "renoiser"
     LAST_SETTINGS = "last_settings"
     CANCEL = "cancel"
+    REVERT_TO_SIMPLE_GEN = "revert_to_simple_gen"
 
     def __str__(self):
         return self.value

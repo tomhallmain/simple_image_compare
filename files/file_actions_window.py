@@ -1,3 +1,4 @@
+from enum import Enum
 import os
 
 from tkinter import Toplevel, Label, LEFT, W
@@ -14,11 +15,12 @@ _ = I18N._
 
 
 class Action():
-    def __init__(self, action, target, original_marks=[], new_files=[]):
+    def __init__(self, action, target, original_marks=[], new_files=[], auto=False):
         self.action = action
         self.target = target
         self.original_marks = original_marks[:]
         self.new_files = new_files[:]
+        self.auto = auto
 
     def add_file(self, file):
         self.new_files.append(file)
@@ -63,7 +65,9 @@ class Action():
 
     @staticmethod
     def from_dict(dct):
-        return Action(Action.convert_action_from_text(dct["action"]), dct["target"], dct["original_marks"][:], dct["new_files"][:])
+        return Action(Action.convert_action_from_text(dct["action"]),
+                      dct["target"], dct["original_marks"][:], dct["new_files"][:],
+                      dct["auto"] if "auto" in dct else False)
 
     def __eq__(self, other):
         if not isinstance(other, Action):
@@ -144,13 +148,13 @@ class FileActionsWindow:
             FileActionsWindow.action_history.append(Action.from_dict(action_dict))
 
     @staticmethod
-    def get_history_action(start_index=0):
+    def get_history_action(start_index=0, exclude_auto=True):
         # Get a previous action that is not equivalent to the permanent action if possible.
         action = None
         seen_actions = []
         for i in range(len(FileActionsWindow.action_history)):
             action = FileActionsWindow.action_history[i]
-            is_returnable_action = action != FileActionsWindow.permanent_action
+            is_returnable_action = action != FileActionsWindow.permanent_action and not (exclude_auto and action.auto)
             if not is_returnable_action or action in seen_actions:
                 start_index += 1
             seen_actions.append(action)
@@ -184,6 +188,13 @@ class FileActionsWindow:
         FileActionsWindow.action_history.insert(0, latest_action)
         if len(FileActionsWindow.action_history) > FileActionsWindow.MAX_ACTIONS:
             del FileActionsWindow.action_history[-1]
+
+    @staticmethod
+    def add_file_action(action, source, target, auto=True):
+        new_filepath = str(action(source, target))
+        print("Moved file to " + new_filepath)
+        new_action = Action(action, target, [source], [new_filepath], auto)
+        FileActionsWindow.update_history(new_action)
 
     def __init__(self, app_master, app_actions, view_image_callback, move_marks_callback, geometry="700x1200"):
         FileActionsWindow.top_level = Toplevel(app_master, bg=AppStyle.BG_COLOR)
@@ -273,7 +284,10 @@ class FileActionsWindow:
                     break
                 _label_filename = Label(self.frame.viewPort)
                 self.label_filename_list.append(_label_filename)
-                self.add_label(_label_filename, os.path.basename(filename), row=row, column=base_col, wraplength=FileActionsWindow.COL_0_WIDTH)
+                filename_text = os.path.basename(filename)
+                if len(filename_text) > 50:
+                    filename_text = Utils.get_centrally_truncated_string(filename_text, 50)
+                self.add_label(_label_filename, filename_text, row=row, column=base_col, wraplength=FileActionsWindow.COL_0_WIDTH)
 
                 # _label_action = Label(self.frame.viewPort)
                 # self.label_action_list.append(_label_action)

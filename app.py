@@ -5,7 +5,6 @@ import sys
 import time
 import traceback
 
-
 import tkinter as tk
 from tkinter import Label, Checkbutton, PhotoImage, filedialog, messagebox, HORIZONTAL, W
 import tkinter.font as fnt
@@ -142,7 +141,7 @@ class App():
                             selectcolor=AppStyle.BG_COLOR, font=fnt.Font(size=config.font_size))
         self.master.update()
         if do_toast:
-            self.toast(f"Theme switched to {AppStyle.get_theme_name()}.")
+            self.toast(_("Theme switched to {0}.").format(AppStyle.get_theme_name()))
 
     def __init__(self, master, base_dir=None, image_path=None, grid_sidebar=config.sidebar_visible, do_search=False, window_id=0):
         self.master = master
@@ -375,7 +374,7 @@ class App():
         self.master.bind("<Shift-I>", lambda e: self.check_focus(e, lambda: ImageDetails.run_image_generation_static(self.app_actions)))
         self.master.bind("<Shift-Q>", lambda e: self.check_focus(e, lambda: ImageDetails.randomly_modify_image(self.get_active_image_filepath(), self.app_actions)))
         self.master.bind("<Shift-L>", lambda e: self.check_focus(e, self.toggle_prevalidations))
-        self.master.bind("<Control-Return>", lambda event: ImageDetails.run_image_generation_static(self.app_actions, last_action=True, cancel=Utils.modifier_key_pressed(event, [ModifierKey.SHIFT])))
+        self.master.bind("<Control-Return>", lambda event: ImageDetails.run_image_generation_static(self.app_actions, event=event))
         self.master.bind("<Shift-C>", lambda e: self.check_focus(e, lambda: MarkedFiles.clear_file_marks(self.toast)))
         self.master.bind("<Control-Tab>", self.cycle_windows)
         self.master.bind("<Shift-Escape>", lambda event: self.on_closing() if self.is_secondary() else None)
@@ -1616,9 +1615,9 @@ class App():
             except KeyError:
                 pass  # The group may have been removed before update_groups_for_removed_file was called on the last file in it
 
-    def trigger_image_generation(self, event=None, last_action=False):
+    def trigger_image_generation(self, event=None):
         shift_key_pressed = event and Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
-        ImageDetails.run_image_generation_static(self.app_actions, last_action=last_action, modify_call=bool(shift_key_pressed))
+        ImageDetails.run_image_generation_static(self.app_actions, modify_call=bool(shift_key_pressed))
 
     def run_image_generation(self, event=None, _type=None, image_path=None, modify_call=False):
         self.sd_runner_client.start()

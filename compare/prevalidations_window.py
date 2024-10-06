@@ -6,6 +6,7 @@ import tkinter.font as fnt
 from tkinter.ttk import Entry, Button
 
 from compare.compare_embeddings import CompareEmbedding
+from files.file_actions_window import FileActionsWindow
 from utils.app_style import AppStyle
 from utils.app_info_cache import app_info_cache
 from utils.config import config
@@ -19,6 +20,7 @@ class PrevalidationAction(Enum):
     HIDE = "HIDE"
     NOTIFY = "NOTIFY"
     MOVE = "MOVE"
+    COPY = "COPY"
     DELETE = "DELETE"
 
     def is_cache_type(self):
@@ -29,13 +31,15 @@ class Prevalidation:
     NO_POSITIVES_STR = _("(no positives set)")
     NO_NEGATIVES_STR = _("(no negatives set)")
 
-    def __init__(self, name=_("New Prevalidation"), positives=[], negatives=[], threshold=0.23, action=PrevalidationAction.NOTIFY, action_modifier="", is_active=True):
+    def __init__(self, name=_("New Prevalidation"), positives=[], negatives=[], threshold=0.23,
+                 action=PrevalidationAction.NOTIFY, action_modifier="", run_on_folder=None, is_active=True):
         self.name = name
         self.positives = positives
         self.negatives = negatives
         self.threshold = threshold
         self.action = action if isinstance(action, Enum) else PrevalidationAction[action]
         self.action_modifier = action_modifier
+        self.run_on_folder = run_on_folder
         self.is_active = is_active
 
     def set_positives(self, text):
@@ -58,24 +62,26 @@ class Prevalidation:
         if is_above_threshold:
             if self.action == PrevalidationAction.HIDE:
                 hide_callback(image_path)
-                toast_callback(self.name + " detected - hidden")
+                toast_callback(self.name + _(" detected") + _(" - hidden"))
             elif self.action == PrevalidationAction.NOTIFY:
-                toast_callback(self.name + " detected")
-            elif self.action == PrevalidationAction.MOVE:
+                toast_callback(self.name + _(" detected"))
+            elif self.action == PrevalidationAction.MOVE or self.action == PrevalidationAction.COPY:
                 if self.action_modifier is not None and len(self.action_modifier) > 0:
                     if not os.path.exists(self.action_modifier):
                         raise Exception("Invalid move target directory for prevalidation " + self.name + ": " + self.action_modifier)
                     if not os.path.normpath(os.path.dirname(image_path)) == os.path.normpath(self.action_modifier):
-                        toast_callback(self.name + " detected\nMoving file: " + image_path)
+                        toast_callback(self.name + _(" detected") + "\n" + _("Moving file: ") + image_path)
                         try:
-                            new_filepath = str(Utils.move_file(image_path, self.action_modifier))
-                            print("Moved file to " + new_filepath)
+                            FileActionsWindow.add_file_action(
+                                Utils.move_file if self.action == PrevalidationAction.MOVE else Utils.copy_file,
+                                image_path, self.action_modifier
+                            )
                         except Exception as e:
                             print(e)
                 else:
                     raise Exception("Target directory not defined on prevalidation "  + self.name)
             elif self.action == PrevalidationAction.DELETE:
-                toast_callback(self.name + " detected\nDeleting file: " + image_path)
+                toast_callback(self.name + _(" detected") + "\n" + _("Deleting file: ") + image_path)
                 try:
                     os.remove(image_path)
                     print("Deleted file at " + image_path)
@@ -94,8 +100,20 @@ class Prevalidation:
         else:
             return Prevalidation.NO_NEGATIVES_STR
 
+    def validate(self):
+        if self.name is None or len(self.name) == 0:
+            raise Exception('Prevalidation name is None or empty')
+        if (self.positives is None or len(self.positives) == 0) and \
+                (self.negatives is None and len(self.negatives) == 0):
+            raise Exception("At least one of positive or negative texts must be set.")
+        if self.is_move_action() and \
+                not os.path.isdir(self.action_modifier):
+            raise Exception('Action modifier must be a valid directory')
+        if self.run_on_folder is not None and not os.path.isdir(self.run_on_folder):
+            raise Exception('Run on folder must be a valid directory: ' + self.run_on_folder)
+
     def is_move_action(self):
-        return self.action == PrevalidationAction.MOVE
+        return self.action == PrevalidationAction.MOVE or self.action == PrevalidationAction.COPY
 
     def to_dict(self):
         return {
@@ -105,7 +123,8 @@ class Prevalidation:
             "threshold": self.threshold,
             "action": self.action.value,
             "action_modifier": self.action_modifier,
-            "is_active": self.is_active
+            "run_on_folder": self.run_on_folder,
+            "is_active": self.is_active,
             }
 
     @staticmethod
@@ -113,7 +132,7 @@ class Prevalidation:
         return Prevalidation(**d)
 
     def __str__(self) -> str:
-        return f"{self.name} ({len(self.positives)} positives, {len(self.negatives)} negatives)"
+        return self.name + _(" ({0} positives, {1} negatives)").format(len(self.positives), len(self.negatives))
 
 class PrevalidationModifyWindow():
     top_level = None
@@ -136,7 +155,7 @@ class PrevalidationModifyWindow():
         row = 0
         self._label_info = Label(self.frame)
         self.add_label(self._label_info, _("Prevalidation Name"), row=row, wraplength=PrevalidationModifyWindow.COL_0_WIDTH)
-        self.new_prevalidation_name = StringVar(self.master, value="New Prevalidation" if prevalidation is None else prevalidation.name)
+        self.new_prevalidation_name = StringVar(self.master, value=_("New Prevalidation") if prevalidation is None else prevalidation.name)
         self.new_prevalidation_name_entry = Entry(self.frame, textvariable=self.new_prevalidation_name, width=50, font=fnt.Font(size=config.font_size))
         self.new_prevalidation_name_entry.grid(row=row, column=1, sticky=W)
 
@@ -177,6 +196,13 @@ class PrevalidationModifyWindow():
         self.action_modifier_entry.grid(row=row, column=1, sticky=W)
 
         row += 1
+        self.label_run_on_folder = Label(self.frame)
+        self.add_label(self.label_run_on_folder, _("Run on Directory"), row=row, column=0)
+        self.run_on_folder_var = StringVar(self.master, value=self.prevalidation.run_on_folder)
+        self.run_on_folder_entry = Entry(self.frame, textvariable=self.run_on_folder_var, width=50, font=fnt.Font(size=config.font_size))
+        self.run_on_folder_entry.grid(row=row, column=1, sticky=W)
+
+        row += 1
         self.add_prevalidation_btn = None
         self.add_btn("add_prevalidation_btn", _("Done"), self.finalize_prevalidation, row=row, column=0)
 
@@ -205,6 +231,10 @@ class PrevalidationModifyWindow():
     def set_action_modifier(self):
         self.prevalidation.action_modifier = self.action_modifier_var.get()
 
+    def set_run_on_folder(self):
+        self.prevalidation.run_on_folder = self.run_on_folder_entry.get().strip() \
+                if self.run_on_folder_entry.get().strip() != "" else None
+
     def finalize_prevalidation(self, event=None):
         self.set_name()
         self.set_positives()
@@ -212,21 +242,10 @@ class PrevalidationModifyWindow():
         self.set_threshold()
         self.set_action()
         self.set_action_modifier()
-        self.validate()
+        self.set_run_on_folder()
+        self.prevalidation.validate()
         self.close_windows()
         self.refresh_callback(self.prevalidation)
-
-    def validate(self):
-        if self.prevalidation is None:
-            raise Exception('Prevalidation is None')
-        if self.prevalidation.name is None or len(self.prevalidation.name) == 0:
-            raise Exception('Prevalidation name is None or empty')
-        if (self.prevalidation.positives is None or len(self.prevalidation.positives) == 0) and \
-                (self.prevalidation.negatives is None and len(self.prevalidation.negatives) == 0):
-            raise Exception("At least one of positive or negative texts must be set.")
-        if self.prevalidation.is_move_action() and \
-                not os.path.isdir(self.prevalidation.action_modifier):
-            raise Exception('Action modifier must be a valid directory')
 
     def close_windows(self, event=None):
         self.master.destroy()
@@ -260,14 +279,17 @@ class PrevalidationsWindow():
 
     @staticmethod
     def prevalidate(image_path, get_base_dir_func, hide_callback, toast_callback):
+        base_dir = get_base_dir_func()
         if len(PrevalidationsWindow.directories_to_exclude) > 0:
-            if get_base_dir_func() in PrevalidationsWindow.directories_to_exclude:
+            if base_dir in PrevalidationsWindow.directories_to_exclude:
                 return None
         if image_path not in PrevalidationsWindow.prevalidated_cache:
             prevalidation_action = None
             for prevalidation in PrevalidationsWindow.prevalidations:
                 if prevalidation.is_active:
-                    if prevalidation.is_move_action() and prevalidation.action_modifier == get_base_dir_func():
+                    if prevalidation.is_move_action() and prevalidation.action_modifier == base_dir:
+                        continue
+                    if prevalidation.run_on_folder is not None and base_dir != prevalidation.run_on_folder:
                         continue
                     prevalidation_action = prevalidation.run_on_image_path(image_path, hide_callback, toast_callback)
                     if prevalidation_action is not None:

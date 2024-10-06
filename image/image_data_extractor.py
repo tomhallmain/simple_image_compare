@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import sys
 
 from PIL import Image
@@ -77,20 +78,19 @@ class ImageDataExtractor:
             return None
         return pprint.pformat(info)
 
-    def extract_prompt(self, image_path):
+    def extract_prompt(self, image_path, comfyui=True):
         info = Image.open(image_path).info
         if isinstance(info, dict):
-            if ImageDataExtractor.COMFYUI_PROMPT_KEY in info:
-                prompt = json.loads(info[ImageDataExtractor.COMFYUI_PROMPT_KEY])
-                return prompt
+            if comfyui:
+                if ImageDataExtractor.COMFYUI_PROMPT_KEY in info:
+                    prompt = json.loads(info[ImageDataExtractor.COMFYUI_PROMPT_KEY])
+                    return prompt
             elif ImageDataExtractor.A1111_PARAMS_KEY in info:
-#                print(info[ImageDataExtractor.A1111_PARAMS_KEY])
-#                print("skipping unhandled Automatic1111 image info")
-                pass
+                return self._build_a1111_prompt_info_object(info[ImageDataExtractor.A1111_PARAMS_KEY])
             else:
-#                print(info)
-#                print("Unhandled exif data: " + image_path)
-                pass
+                print(info.keys())
+                print("Unhandled exif data: " + image_path)
+                # pass
         else:
             print("Exif data not found: " + image_path)
         return None
@@ -163,11 +163,12 @@ class ImageDataExtractor:
         return (positive, negative)
 
     def get_models(self, image_path):
-        prompt = self.extract_prompt(image_path)
         models = []
         loras = []
+        prompt = self.extract_prompt(image_path)
 
         if prompt is not None:
+            # ComfyUI
             for k, v in prompt.items():
                 if ImageDataExtractor.CLASS_TYPE in v and ImageDataExtractor.INPUTS in v:
                     # print(v[ImageDataExtractor.CLASS_TYPE])
@@ -189,6 +190,10 @@ class ImageDataExtractor:
                         if  "." in lora_name:
                             lora_name = lora_name[:lora_name.rfind(".")]
                         loras.append(lora_name)
+        else:
+            prompt = self.extract_prompt(image_path, comfyui=False)
+            if prompt is not None:
+                models, loras = [prompt["Model"]], prompt["Loras"]
 
         return (models, loras)
 
@@ -314,4 +319,54 @@ class ImageDataExtractor:
                 return str(info[ImageDataExtractor.RELATED_IMAGE_KEY])
         return related_image_path
 
+    def _build_a1111_prompt_info_object(self, prompt_text):
+        negative_prompt = "Negative prompt: "
+        steps = "Steps: "
+        sampler = "Sampler: "
+        cfg = "CFG scale: "
+        seed = "Seed: "
+        size = "Size: "
+        model_hash = "Model hash: "
+        model = "Model: "
+        denoising = "Denoising strength: "
+        lora_hash = "Lora hashes: "
+        version = "Version: "
+        prompt_info = {}
+        prompt_info["Positive prompt"] = prompt_text[:prompt_text.rfind(negative_prompt)]
+        prompt_text = prompt_text[prompt_text.rfind(negative_prompt):]
+        all_keys = [negative_prompt, steps, sampler, cfg, seed, size, model_hash, model, denoising, lora_hash, version]
+        for i in range(len(all_keys)):
+            key = all_keys[i]
+            next_key = all_keys[i + 1] if i < (len(all_keys) - 1) else None
+            if key in prompt_text:
+                value = prompt_text[len(key):prompt_text.rfind(next_key)] if next_key is not None else prompt_text[len(key):]
+                if len(value) > 0:
+                    value = value.strip()
+                    if value.endswith(","):
+                        value = value[:-1]
+                    if value.startswith("\"") and value.endswith("\""):
+                        value = value[1:-1]
+                prompt_info[key.strip().replace(":", "")] = value
+                # print("____")
+                # print(key)
+                # print(value)
+                # print(prompt_text)
+                if next_key is not None:
+                    prompt_text = prompt_text[prompt_text.rfind(next_key):]
+        prompt_info["Positive prompt"], prompt_info["Loras"] = self._extract_loras_from_a1111_prompt(prompt_info["Positive prompt"])
+        return prompt_info
+
+    def _extract_loras_from_a1111_prompt(self, prompt_text):
+        actual_prompt = prompt_text
+        loras = []
+        lora_tag_pattern = r"<lora:[A-Za-z0-9\-]+:[0-9\.]+(:[0-9\.]+)?>"
+        first_lora_tag_match = re.search(lora_tag_pattern, prompt_text)
+        if first_lora_tag_match is not None:
+            actual_prompt = prompt_text[:first_lora_tag_match.start()].strip()
+            for match in re.finditer(lora_tag_pattern, prompt_text):
+                lora_tag = match.group(0)[6:-1]
+                loras.append(lora_tag[:lora_tag.index(":")])
+        return actual_prompt, loras
+
 image_data_extractor = ImageDataExtractor()
+

@@ -6,6 +6,7 @@ class ImageEditConfiguration:
         self.random_flip_chance = 0.5
         self.random_draw_chance = 0.5
         self.random_crop_chance = 0.5
+        self.random_shear_chance = 0.3
 
         self.random_color_rotation_chance = 0.2
         self.random_scale_chance = 0.3

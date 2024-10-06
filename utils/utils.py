@@ -167,6 +167,15 @@ class Utils:
         return relative_dirpath
 
     @staticmethod
+    def get_centrally_truncated_string(s, maxlen):
+        # get centrally truncated string
+        if len(s) <= maxlen:
+            return s
+        max_left_index = int((maxlen)/2-2)
+        min_right_index = int(-(maxlen)/2-1)
+        return s[:max_left_index] + "..." + s[min_right_index:]
+
+    @staticmethod
     # NOTE: Maybe want to raise Exception if either existing filepath or target dir are not valid
     def move_file(existing_filepath, target_dir, overwrite_existing=False):
         new_filepath = os.path.join(

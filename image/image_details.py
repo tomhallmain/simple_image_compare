@@ -18,6 +18,7 @@ from utils.config import config
 from utils.constants import ImageGenerationType
 from utils.app_style import AppStyle
 from utils.translations import I18N
+from utils.utils import Utils, ModifierKey
 
 _ = I18N._
 
@@ -110,7 +111,7 @@ class ImageDetails():
         self.add_label(self._label_positive, _("Positive"), wraplength=col_0_width)
         self.add_label(self.label_positive, positive, column=1)
         self.add_label(self._label_negative, _("Negative"), wraplength=col_0_width)
-        self.add_label(self.label_negative, negative if config.show_negative_prompt else "(negative prompt not show by config setting)", column=1)
+        self.add_label(self.label_negative, negative if config.show_negative_prompt else _("(negative prompt not shown by config setting)"), column=1)
         self.add_label(self._label_models, _("Models"), wraplength=col_0_width)
         self.add_label(self.label_models, ", ".join(models), column=1)
         self.add_label(self._label_loras, _("LoRAs"), wraplength=col_0_width)
@@ -457,9 +458,14 @@ class ImageDetails():
         ImageDetails.run_image_generation_static(self.app_actions, _type=ImageGenerationType.REDO_PROMPT)
 
     @staticmethod
-    def run_image_generation_static(app_actions, last_action=False, _type=None, modify_call=False, cancel=False):
-        if last_action:
-            _type = ImageGenerationType.CANCEL if cancel else ImageGenerationType.LAST_SETTINGS
+    def run_image_generation_static(app_actions,  _type=None, modify_call=False, event=None):
+        if event is not None:
+            if Utils.modifier_key_pressed(event, [ModifierKey.SHIFT]):
+                _type = ImageGenerationType.CANCEL
+            elif Utils.modifier_key_pressed(event, [ModifierKey.ALT]):
+                _type = ImageGenerationType.REVERT_TO_SIMPLE_GEN
+            else:
+                _type = ImageGenerationType.LAST_SETTINGS
             app_actions.run_image_generation(_type=_type, image_path=ImageDetails.previous_image_generation_image, modify_call=modify_call)
         else:
             if _type is None:

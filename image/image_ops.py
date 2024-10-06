@@ -53,8 +53,11 @@ class ImageOps:
         image.close()
 
     @staticmethod
-    def get_random_color():
-        return tuple([random.randint(0, 255) for i in range(3)])
+    def get_random_color(true_random_chance=0.75):
+        if random.random() < true_random_chance:
+            return tuple([random.randint(0, 255) for i in range(3)])
+        else:
+            return (0, 0, 0) if random.random() > 0.5 else (255, 255, 255)
 
     @staticmethod
     def _rotate_image_partial(image, angle=90, center=None, scale=1.0):
@@ -147,6 +150,43 @@ class ImageOps:
         pass
 
     @staticmethod
+    def rotate_and_shear_image(im, angle=30, x_shear=.7, y_shear=.7):
+        """
+        Rotates an image (angle in degrees) and expands image to avoid cropping
+        change from https://stackoverflow.com/a/51109152
+        https://gist.github.com/hsuRush/b2def27c98ce7ba3eb84a42e6d01328c
+        """
+        #print(im.shape)
+        height, width = im.shape[:2] # image shape has 3 dimensions
+        image_center = (width/2, height/2) # getRotationMatrix2D needs coordinates in reverse order (width, height) compared to shape
+
+        rotation_im = cv2.getRotationMatrix2D(image_center, angle, 1.)
+        rotation_im[0,1] += x_shear
+        rotation_im[1,0] += y_shear
+
+        # rotation calculates the cos and sin, taking absolutes of those.
+        abs_cos_x = abs(rotation_im[0,0]) 
+        abs_sin_x = abs(rotation_im[0,1])
+        abs_cos_y = abs(rotation_im[1,0]) 
+        abs_sin_y = abs(rotation_im[1,1])
+
+        # find the new width and height bounds
+        bound_w = int(width * abs_cos_x +  height *  abs_sin_x )
+        bound_h = int(height * abs_sin_y  + width * abs_cos_y )
+
+        # subtract old image center (bringing image back to origo) and adding the new image center coordinates
+        rotation_im[0, 2] += bound_w/2 - image_center[0] - image_center[1] * x_shear
+        rotation_im[1, 2] += bound_h/2 - image_center[1] - image_center[0] * y_shear
+
+        # rotate image with the new bounds and translated rotation imrix
+        im = cv2.warpAffine(im, rotation_im, (bound_w, bound_h), flags=cv2.INTER_LINEAR,
+                            borderMode=cv2.BORDER_CONSTANT, borderValue=ImageOps.get_random_color())
+        im = cv2.resize(im, (width, height))
+
+        #print(rotated_im.shape)
+        return im
+
+    @staticmethod
     def upscale(image_path):
         from cv2 import dnn_superres
         # Create an SR object
@@ -180,6 +220,18 @@ class ImageOps:
             if random.random() < config.image_edit_configuration.random_flip_chance:
                 im, original_im = ImageOps._flip_image(im)
                 original_im.close()
+                has_modified_image = True
+            if random.random() < config.image_edit_configuration.random_shear_chance:
+                cv2_image = ImageOps.pil_to_cv2(im)
+                angle = random.randint(0, 25)
+                x_shear = int(random.random() * 2 - 1)
+                y_shear = int(random.random() * 2 - 1)
+                cv2_image = ImageOps.rotate_and_shear_image(cv2_image, angle=angle, x_shear=x_shear, y_shear=y_shear)
+                im.close()
+                im = ImageOps.cv2_to_pil(cv2_image)
+                temp_im = ImageOps._random_crop_and_upscale(im)
+                im.close()
+                im = temp_im
                 has_modified_image = True
             if random.random() < config.image_edit_configuration.random_draw_chance:
                 ImageOps._random_draw(im)

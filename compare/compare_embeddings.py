@@ -616,7 +616,7 @@ class CompareEmbedding(BaseCompare):
 
     @staticmethod
     def multi_text_compare(image_path, positives, negatives, threshold=0.3):
-        print(f"Running text comparison for \"{image_path}\" - positive texts = {positives}, negative texts = {negatives}")
+        # print(f"Running text comparison for \"{image_path}\" - positive texts = {positives}, negative texts = {negatives}")
         positive_similarities = []
         negative_similarities = []
         try:
@@ -624,8 +624,8 @@ class CompareEmbedding(BaseCompare):
         except OSError as e:
             print(f"{image_path} - {e}")
             raise AssertionError(
-                f"Encountered an error accessing the provided file path {image_embeddings} in the file system.")
-        
+                f"Encountered an error accessing the provided file path {image_path} in the file system.")
+
         for text in positives:
             similarity = embedding_similarity(image_embedding, CompareEmbedding._get_text_embedding_from_cache(text))
             positive_similarities.append(float(similarity[0]))
@@ -641,7 +641,7 @@ class CompareEmbedding(BaseCompare):
             combined_similarity = combined_positive_similarity
         else:
             combined_similarity = 1 / combined_negative_similarity
-        print(f"Combined similarity = {combined_similarity} Positive similarities = {positive_similarities} Negative similarites = {negative_similarities} Threshold = {threshold}")
+        # print(f"Combined similarity = {combined_similarity} Positive similarities = {positive_similarities} Negative similarites = {negative_similarities} Threshold = {threshold}")
         return combined_similarity > threshold
 
     @staticmethod
