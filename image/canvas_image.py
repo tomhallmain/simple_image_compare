@@ -10,6 +10,17 @@ from tkinter import Canvas
 from tkinter.ttk import Frame, Scrollbar
 from PIL import Image, ImageTk
 
+try:
+    from pillow_heif import register_heif_opener
+    register_heif_opener()
+except ImportError:
+    print("Failed to import HEIF library, HEIC images will not be viewable!")
+
+try:
+    import pillow_avif
+except ImportError:
+    print("Failed to import AVIF library, AVIF images will not be viewable!")
+
 from image.gif_image_ui import GifImageUI
 from utils.utils import Utils
 

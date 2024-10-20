@@ -88,9 +88,9 @@ class ImageDataExtractor:
             elif ImageDataExtractor.A1111_PARAMS_KEY in info:
                 return self._build_a1111_prompt_info_object(info[ImageDataExtractor.A1111_PARAMS_KEY])
             else:
-                print(info.keys())
-                print("Unhandled exif data: " + image_path)
-                # pass
+                # print(info.keys())
+                # print("Unhandled exif data: " + image_path)
+                pass
         else:
             print("Exif data not found: " + image_path)
         return None
