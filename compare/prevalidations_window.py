@@ -17,6 +17,7 @@ _ = I18N._
 
 
 class PrevalidationAction(Enum):
+    SKIP = "SKIP"
     HIDE = "HIDE"
     NOTIFY = "NOTIFY"
     MOVE = "MOVE"
@@ -25,7 +26,7 @@ class PrevalidationAction(Enum):
 
     def is_cache_type(self):
         # If the action is not one of these types, it should have been moved out of the directory.
-        return self == PrevalidationAction.HIDE or self == PrevalidationAction.NOTIFY
+        return self == PrevalidationAction.HIDE or self == PrevalidationAction.NOTIFY or self == PrevalidationAction.SKIP
 
 class Prevalidation:
     NO_POSITIVES_STR = _("(no positives set)")
@@ -60,7 +61,9 @@ class Prevalidation:
     def run_on_image_path(self, image_path, hide_callback, toast_callback):
         is_above_threshold = CompareEmbedding.multi_text_compare(image_path, self.positives, self.negatives, self.threshold)
         if is_above_threshold:
-            if self.action == PrevalidationAction.HIDE:
+            if self.action == PrevalidationAction.SKIP:
+                toast_callback(self.name +  _(" detected") +  _(" - skipped"))
+            elif self.action == PrevalidationAction.HIDE:
                 hide_callback(image_path)
                 toast_callback(self.name + _(" detected") + _(" - hidden"))
             elif self.action == PrevalidationAction.NOTIFY:
@@ -114,6 +117,23 @@ class Prevalidation:
 
     def is_move_action(self):
         return self.action == PrevalidationAction.MOVE or self.action == PrevalidationAction.COPY
+
+    def move_index(self, idx, direction_count=1):
+        unit = 1 if direction_count > 0 else -1
+        direction_count = abs(direction_count)
+        replacement_idx = idx
+        while direction_count > 0:
+            replacement_idx += unit
+            direction_count -= 1
+            if replacement_idx >= len(PrevalidationsWindow.prevalidations):
+                replacement_idx = 0
+            elif replacement_idx < 0:
+                replacement_idx = len(PrevalidationsWindow.prevalidations) - 1
+        # if replacement_idx >= idx:
+        #     replacement_idx -= 1
+        move_item = PrevalidationsWindow.prevalidations[idx]
+        del PrevalidationsWindow.prevalidations[idx]
+        PrevalidationsWindow.prevalidations.insert(replacement_idx, move_item)
 
     def to_dict(self):
         return {
@@ -337,9 +357,13 @@ class PrevalidationsWindow():
         self.filter_text = ""
         self.filtered_prevalidations = PrevalidationsWindow.prevalidations[:]
         self.label_list = []
+        self.label_list2 = []
+        self.is_active_var_list = []
+        self.is_active_list = []
         self.set_prevalidation_btn_list = []
         self.modify_prevalidation_btn_list = []
         self.delete_prevalidation_btn_list = []
+        self.move_down_btn_list = []
 
         self.frame = Frame(self.master)
         self.frame.grid(column=0, row=0)
@@ -375,28 +399,48 @@ class PrevalidationsWindow():
             self.label_list.append(label_name)
             self.add_label(label_name, str(prevalidation), row=row, column=base_col, wraplength=PrevalidationsWindow.COL_0_WIDTH)
 
+            label_action = Label(self.frame)
+            self.label_list2.append(label_action)
+            self.add_label(label_action, prevalidation.action.name, row=row, column=base_col + 1)
+
+            is_active_var = BooleanVar(value=prevalidation.is_active)
+            def set_is_active_handler(prevalidation=prevalidation):
+                prevalidation.is_active = is_active_var.get()
+            is_active_box = Checkbutton(self.frame, variable=is_active_var, font=fnt.Font(size=config.font_size), command=set_is_active_handler)
+            is_active_box.grid(row=row, column=base_col + 2, sticky=(W))
+            self.is_active_list.append(is_active_box)
+            self.is_active_var_list.append(is_active_var)
+
             activate_prevalidation_var = BooleanVar(value=prevalidation.is_active)
             self.activate_prevalidation_choice = Checkbutton(self.frame, variable=activate_prevalidation_var, bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR, font=fnt.Font(size=config.font_size))
             set_prevalidation_btn = Button(self.frame, text=_("Set"))
             self.set_prevalidation_btn_list.append(set_prevalidation_btn)
-            set_prevalidation_btn.grid(row=row, column=base_col+1)
+            set_prevalidation_btn.grid(row=row, column=base_col+3)
             def set_prevalidation_handler(event, prevalidation=prevalidation, var=activate_prevalidation_var):
                 prevalidation.is_active = var.get()
             set_prevalidation_btn.bind("<Button-1>", set_prevalidation_handler)
 
             modify_prevalidation_btn = Button(self.frame, text=_("Modify"))
             self.set_prevalidation_btn_list.append(modify_prevalidation_btn)
-            modify_prevalidation_btn.grid(row=row, column=base_col+2)
+            modify_prevalidation_btn.grid(row=row, column=base_col+4)
             def modify_prevalidation_handler(event, self=self, prevalidation=prevalidation):
                 return self.open_prevalidation_modify_window(event, prevalidation)
             modify_prevalidation_btn.bind("<Button-1>", modify_prevalidation_handler)
 
             delete_prevalidation_btn = Button(self.frame, text=_("Delete"))
             self.delete_prevalidation_btn_list.append(delete_prevalidation_btn)
-            delete_prevalidation_btn.grid(row=row, column=base_col+3)
+            delete_prevalidation_btn.grid(row=row, column=base_col+5)
             def delete_prevalidation_handler(event, self=self, prevalidation=prevalidation):
                 return self.delete_prevalidation(event, prevalidation)
             delete_prevalidation_btn.bind("<Button-1>", delete_prevalidation_handler)
+
+            move_down_btn = Button(self.frame, text=_("Move down"))
+            self.move_down_btn_list.append(move_down_btn)
+            move_down_btn.grid(row=row, column=base_col+6)
+            def move_down_handler(event, self=self, prevalidation=prevalidation):
+                prevalidation.move_index(i, 1)
+                self.refresh()
+            move_down_btn.bind("<Button-1>", move_down_handler)
 
     def open_prevalidation_modify_window(self, event=None, prevalidation=None):
         if PrevalidationsWindow.prevalidation_modify_window is not None:
@@ -418,6 +462,7 @@ class PrevalidationsWindow():
         for prevalidation in PrevalidationsWindow.prevalidations:
             if prevalidation.is_move_action():
                 PrevalidationsWindow.directories_to_exclude.append(prevalidation.action_modifier)
+        self.refresh()
 
     def delete_prevalidation(self, event=None, prevalidation=None):
         if prevalidation is not None and prevalidation in PrevalidationsWindow.prevalidations:
@@ -510,16 +555,25 @@ class PrevalidationsWindow():
     def clear_widget_lists(self):
         for label in self.label_list:
             label.destroy()
+        for label in self.label_list2:
+            label.destroy()
+        for chkbtn in self.is_active_list:
+            chkbtn.destroy()
         for btn in self.set_prevalidation_btn_list:
             btn.destroy()
         for btn in self.modify_prevalidation_btn_list:
             btn.destroy()
         for btn in self.delete_prevalidation_btn_list:
             btn.destroy()
+        for btn in self.move_down_btn_list:
+            btn.destroy()
+        self.label_list = []
+        self.label_list2 = []
+        self.is_active_list = []
         self.set_prevalidation_btn_list = []
         self.modify_prevalidation_btn_list = []
         self.delete_prevalidation_btn_list = []
-        self.label_list = []
+        self.move_down_btn_list = []
 
     def refresh(self, refresh_list=True):
         self.filtered_prevalidations = PrevalidationsWindow.prevalidations[:]
