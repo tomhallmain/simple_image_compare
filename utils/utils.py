@@ -9,7 +9,7 @@ import sys
 from utils.custom_formatter import CustomFormatter
 from utils.running_tasks_registry import start_thread
 
-# create logger with 'spam_application'
+# create logger
 logger = logging.getLogger("simple_image_compare")
 logger.setLevel(logging.DEBUG)
 

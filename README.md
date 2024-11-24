@@ -138,7 +138,7 @@ When the move marks window is open -- with or without GUI -- marks can be moved 
 
 Simply typing letters while the mark window is open will filter the list of mark target directories, even if the GUI is not present. The backspace key will delete letters from the filter. You can scroll through the list of saved target directories using arrow keys.
 
-To bypass the move marks window, use the Ctrl+R or Ctrl+E shortcuts to immediately run the previous and penultimate actions respectively on the current selection. You can also use the number keys or Ctrl+T as hotkeys for persistent marks actions.
+To bypass the move marks window, use the Ctrl+R or Ctrl+E shortcuts to immediately run the previous and penultimate actions respectively on the current selection. You can also use number keys or Ctrl+T as hotkeys for persistent marks actions. To set a number key while in the marks window, use Shift+{desired number key}.
 
 Ctrl+Z will undo the previous file marks move or copy action. If an earlier action needs to be reversed or modified, open the marks history window to verify the action in the history list and reverse it via the UI.
 

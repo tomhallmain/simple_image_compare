@@ -241,7 +241,7 @@ class MarkedFiles():
         self.master.bind("<Next>", self.page_down)
 
         for i in range(10):
-            self.master.bind(str(i), self.set_hotkey_action)
+            self.master.bind(f"Shift-{i}", self.set_hotkey_action)
 
     def add_target_dir_widgets(self):
         row = 0
