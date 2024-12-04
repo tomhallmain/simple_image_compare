@@ -1,6 +1,7 @@
 from datetime import datetime
 import glob
 import os
+import re
 
 from PIL import Image
 from tkinter import Frame, Label, OptionMenu, StringVar, LEFT, W
@@ -232,14 +233,24 @@ class ImageDetails():
         self.master.clipboard_append(positive)
         self.app_actions.toast(_("Copied prompt"))
 
-    # Remove pony prompt massaging
     def copy_prompt_no_break(self):
         positive = self.label_positive["text"]
         if "BREAK" in positive:
             positive = positive[positive.index("BREAK")+6:]
+        positive = ImageDetails.remove_emphases(positive)
         self.master.clipboard_clear()
         self.master.clipboard_append(positive)
         self.app_actions.toast(_("Copied prompt without BREAK"))
+
+    @staticmethod
+    def remove_emphases(prompt):
+        prompt = prompt.replace("(", "").replace(")", "")
+        prompt = prompt.replace("[", "").replace("]", "")
+        if ":" in prompt:
+            prompt = re.sub(r":[0-9]*\.[0-9]+", "", prompt)
+        if "<" in prompt:
+            prompt = re.sub(r"<[^>]*>", "", prompt)
+        return prompt
 
     def rotate_image(self, right=False):
         ImageOps.rotate_image(self.image_path, right)
