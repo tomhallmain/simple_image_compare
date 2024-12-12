@@ -243,6 +243,16 @@ class ImageDetails():
         self.app_actions.toast(_("Copied prompt without BREAK"))
 
     @staticmethod
+    def copy_prompt_no_break_static(image_path, master, app_actions):
+        positive, negative, models, loras = image_data_extractor.get_image_prompts_and_models(image_path)
+        if "BREAK" in positive:
+            positive  = positive[positive.index("BREAK")+6:]
+        positive = ImageDetails.remove_emphases(positive)
+        master.clipboard_clear()
+        master.clipboard_append(positive)
+        app_actions.toast(_("Copied prompt without BREAK"))
+
+    @staticmethod
     def remove_emphases(prompt):
         prompt = prompt.replace("(", "").replace(")", "")
         prompt = prompt.replace("[", "").replace("]", "")

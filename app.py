@@ -374,6 +374,7 @@ class App():
         self.master.bind("<Shift-I>", lambda e: self.check_focus(e, lambda: ImageDetails.run_image_generation_static(self.app_actions)))
         self.master.bind("<Shift-Q>", lambda e: self.check_focus(e, lambda: ImageDetails.randomly_modify_image(self.get_active_image_filepath(), self.app_actions)))
         self.master.bind("<Shift-L>", lambda e: self.check_focus(e, self.toggle_prevalidations))
+        self.master.bind("<Shift-E>", lambda e: self.check_focus(e, lambda: ImageDetails.copy_prompt_no_break_static(self.get_active_image_filepath(), self.master, self.app_actions)))
         self.master.bind("<Control-Return>", lambda event: ImageDetails.run_image_generation_static(self.app_actions, event=event))
         self.master.bind("<Shift-C>", lambda e: self.check_focus(e, lambda: MarkedFiles.clear_file_marks(self.toast)))
         self.master.bind("<Control-Tab>", self.cycle_windows)
