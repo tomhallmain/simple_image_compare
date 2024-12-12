@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2024-10-06 11:17-0400\n"
+"POT-Creation-Date: 2024-12-12 13:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: fr Team <<EMAIL>>\n"
@@ -15,103 +15,103 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: .\app.py:91 .\app.py:835 .\app.py:1769
+#: .\app.py:90 .\app.py:835 .\app.py:1769
 msgid " Simple Image Compare "
 msgstr " Comparaison simple d'images "
 
-#: .\app.py:145
+#: .\app.py:144
 msgid "Theme switched to {0}."
 msgstr "Le th\u00e8me est pass\u00e9 \u00e0 {0}."
 
-#: .\app.py:220 .\compare\compare_wrapper.py:444
+#: .\app.py:219 .\compare\compare_wrapper.py:444
 msgid "Set a directory to run comparison."
 msgstr "D\u00e9finir un r\u00e9pertoire pour ex\u00e9cuter la comparaison."
 
-#: .\app.py:227
+#: .\app.py:226
 msgid "Toggle theme"
 msgstr "Th\u00e8me basculant"
 
-#: .\app.py:228
+#: .\app.py:227
 msgid "Set directory"
 msgstr "D\u00e9finir le r\u00e9pertoire"
 
-#: .\app.py:229
+#: .\app.py:228
 msgid "Add dirpath..."
 msgstr "Ajouter le chemin du r\u00e9pertoire..."
 
-#: .\app.py:232
+#: .\app.py:231
 msgid "Set search file"
 msgstr "D\u00e9finir le fichier de recherche"
 
-#: .\app.py:240
+#: .\app.py:239
 msgid "Search text (embedding mode)"
 msgstr "Texte de recherche (mode d'int\u00e9gration)"
 
-#: .\app.py:251
+#: .\app.py:250
 msgid "Compare mode"
 msgstr "Mode de comparaison"
 
-#: .\app.py:269
+#: .\app.py:268
 msgid "Compare faces"
 msgstr "Comparer les visages"
 
-#: .\app.py:273
+#: .\app.py:272
 msgid "Overwrite cache"
 msgstr "Ecraser le cache"
 
-#: .\app.py:277
+#: .\app.py:276
 msgid "Store checkpoints"
 msgstr "Stocker les points de contr\u00f4le"
 
-#: .\app.py:281
+#: .\app.py:280
 msgid "Max files to compare"
 msgstr "Nombre maximal de fichiers \u00e0 comparer"
 
-#: .\app.py:287
+#: .\app.py:286
 msgid "Filter files by glob pattern"
 msgstr "Filtrer les fichiers par motif global"
 
-#: .\app.py:294
+#: .\app.py:293
 msgid "Browsing mode - Sort by"
 msgstr "Mode de navigation - Trier par"
 
-#: .\app.py:301
+#: .\app.py:300
 msgid "Recurse subdirectories"
 msgstr "R\u00e9currence des sous-r\u00e9pertoires"
 
-#: .\app.py:306
+#: .\app.py:305
 msgid "Image resize to full window"
 msgstr "Redimensionnement de l'image en pleine fen\u00eatre"
 
-#: .\app.py:310
+#: .\app.py:309
 msgid "Search only return closest"
 msgstr "Ne renvoyer que le plus proche"
 
-#: .\app.py:317
+#: .\app.py:316
 msgid "Run image compare"
 msgstr "Lancer la comparaison d'images"
 
-#: .\app.py:319
+#: .\app.py:318
 msgid "Find duplicates"
 msgstr "Recherche de doublons"
 
-#: .\app.py:321 .\image\image_details.py:60
+#: .\app.py:320 .\image\image_details.py:61
 msgid "Image details"
 msgstr "D\u00e9tails de l'image"
 
-#: .\app.py:332
+#: .\app.py:331
 msgid "Search current image"
 msgstr "Recherche de l'image actuelle"
 
-#: .\app.py:333
+#: .\app.py:332 .\utils\help_and_config.py:73
 msgid "Open image location"
 msgstr "Ouvrir l'emplacement de l'image"
 
-#: .\app.py:334
+#: .\app.py:333
 msgid "Copy image path"
 msgstr "Copier le chemin de l'image"
 
-#: .\app.py:335
+#: .\app.py:334
 msgid "---- DELETE ----"
 msgstr "---- SUPPRIMER ----"
 
@@ -483,108 +483,117 @@ msgstr "Plus de groupes"
 msgid "There are no more image groups remaining for this directory and current filter settings."
 msgstr "Il ne reste plus de groupes d'images pour ce r\u00e9pertoire et les param\u00e8tres de filtrage actuels."
 
-#: .\compare\prevalidations_window.py:31
+#: .\compare\prevalidations_window.py:32
 msgid "(no positives set)"
 msgstr "(pas d'ensemble de posatifs)"
 
-#: .\compare\prevalidations_window.py:32
+#: .\compare\prevalidations_window.py:33
 msgid "(no negatives set)"
 msgstr "(pas d'ensemble de n\u00e9gatifs)"
 
-#: .\compare\prevalidations_window.py:34
-#: .\compare\prevalidations_window.py:158
+#: .\compare\prevalidations_window.py:35
+#: .\compare\prevalidations_window.py:178
 msgid "New Prevalidation"
 msgstr "Nouvelle pr\u00e9validation"
 
 #: .\compare\prevalidations_window.py:65
-msgid " - hidden"
-msgstr " - cach\u00e9"
+msgid " - skipped"
+msgstr " - saut\u00e9"
 
-#: .\compare\prevalidations_window.py:65 .\compare\prevalidations_window.py:67
-#: .\compare\prevalidations_window.py:73 .\compare\prevalidations_window.py:84
+#: .\compare\prevalidations_window.py:65 .\compare\prevalidations_window.py:68
+#: .\compare\prevalidations_window.py:70 .\compare\prevalidations_window.py:76
+#: .\compare\prevalidations_window.py:87
 msgid " detected"
 msgstr "  d\u00e9tect\u00e9"
 
-#: .\compare\prevalidations_window.py:73
+#: .\compare\prevalidations_window.py:68
+msgid " - hidden"
+msgstr " - cach\u00e9"
+
+#: .\compare\prevalidations_window.py:76
 msgid "Moving file: "
 msgstr "D\u00e9placement d'un fichier : "
 
-#: .\compare\prevalidations_window.py:84
+#: .\compare\prevalidations_window.py:87
 msgid "Deleting file: "
 msgstr "Suppression d'un fichier : "
 
-#: .\compare\prevalidations_window.py:135
+#: .\compare\prevalidations_window.py:155
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} positifs, {1} n\u00e9gatifs)"
 
-#: .\compare\prevalidations_window.py:148
+#: .\compare\prevalidations_window.py:168
 msgid "Modify Prevalidation"
 msgstr "Modifier la pr\u00e9validation"
 
-#: .\compare\prevalidations_window.py:157
+#: .\compare\prevalidations_window.py:177
 msgid "Prevalidation Name"
 msgstr "Nom de la pr\u00e9validation"
 
-#: .\compare\prevalidations_window.py:164
+#: .\compare\prevalidations_window.py:184
 msgid "Positives"
 msgstr "Positif"
 
-#: .\compare\prevalidations_window.py:171
+#: .\compare\prevalidations_window.py:191
 msgid "Negatives"
 msgstr "N\u00e9gatif"
 
-#: .\compare\prevalidations_window.py:178
+#: .\compare\prevalidations_window.py:198
 msgid "Threshold"
 msgstr "Seuil"
 
-#: .\compare\prevalidations_window.py:185
+#: .\compare\prevalidations_window.py:205
 msgid "Action"
 msgstr "Action"
 
-#: .\compare\prevalidations_window.py:193
+#: .\compare\prevalidations_window.py:213
 msgid "Action Modifier"
 msgstr "Modificateur d'action"
 
-#: .\compare\prevalidations_window.py:200
+#: .\compare\prevalidations_window.py:220
 msgid "Run on Directory"
 msgstr "Ex\u00e9cuter sur le r\u00e9pertoire"
 
-#: .\compare\prevalidations_window.py:207
+#: .\compare\prevalidations_window.py:227
 msgid "Done"
 msgstr "Fait"
 
-#: .\compare\prevalidations_window.py:323
+#: .\compare\prevalidations_window.py:343
 msgid "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 msgstr "Aucune pr\u00e9validation n'a \u00e9t\u00e9 trouv\u00e9e avec le nom : {0}. R\u00e9glez-le dans la fen\u00eatre des pr\u00e9validations."
 
-#: .\compare\prevalidations_window.py:334
+#: .\compare\prevalidations_window.py:354
 msgid "Prevalidations"
 msgstr "Pr\u00e9validations"
 
-#: .\compare\prevalidations_window.py:353
+#: .\compare\prevalidations_window.py:377
 msgid "Set Prevalidations"
 msgstr "Fixer les pr\u00e9validations"
 
-#: .\compare\prevalidations_window.py:355
+#: .\compare\prevalidations_window.py:379
 msgid "Add prevalidation"
 msgstr "Ajouter la pr\u00e9validation"
 
-#: .\compare\prevalidations_window.py:357
+#: .\compare\prevalidations_window.py:381
 msgid "Clear prevalidations"
 msgstr "Pr\u00e9validations claires"
 
-#: .\compare\prevalidations_window.py:380
+#: .\compare\prevalidations_window.py:416
 msgid "Set"
 msgstr "R\u00e9gler"
 
-#: .\compare\prevalidations_window.py:387 .\files\file_actions_window.py:269
+#: .\compare\prevalidations_window.py:423 .\files\file_actions_window.py:269
 #: .\files\file_actions_window.py:312
 msgid "Modify"
 msgstr "Modifier"
 
-#: .\compare\prevalidations_window.py:394
+#: .\compare\prevalidations_window.py:430
 msgid "Delete"
 msgstr "Supprimer"
+
+#: .\compare\prevalidations_window.py:437
+msgid "Move down"
+msgstr "Descendre"
 
 #: .\extensions\sd_runner_client.py:59
 msgid "Image does not contain a prompt to redo!"
@@ -863,188 +872,188 @@ msgstr "Ajouter un r\u00e9pertoire"
 msgid "Set image comparison directory"
 msgstr "D\u00e9finir le r\u00e9pertoire de comparaison des images"
 
-#: .\image\image_details.py:99
+#: .\image\image_details.py:100
 msgid "Image Path"
 msgstr "Trajectoire de l'image"
 
-#: .\image\image_details.py:101
+#: .\image\image_details.py:102
 msgid "File Index"
 msgstr "Index des fichiers"
 
-#: .\image\image_details.py:103
+#: .\image\image_details.py:104
 msgid "Color Mode"
 msgstr "Mode couleur"
 
-#: .\image\image_details.py:105
+#: .\image\image_details.py:106
 msgid "Dimensions"
 msgstr "Dimensions"
 
-#: .\image\image_details.py:107 .\utils\constants.py:75
+#: .\image\image_details.py:108 .\utils\constants.py:75
 #: .\utils\constants.py:92
 msgid "Size"
 msgstr "Taille"
 
-#: .\image\image_details.py:109
+#: .\image\image_details.py:110
 msgid "Modification Time"
 msgstr "Temps de modification"
 
-#: .\image\image_details.py:111
+#: .\image\image_details.py:112
 msgid "Positive"
 msgstr "Positif"
 
-#: .\image\image_details.py:113
+#: .\image\image_details.py:114
 msgid "Negative"
 msgstr "N\u00e9gatif"
 
-#: .\image\image_details.py:114
+#: .\image\image_details.py:115
 msgid "(negative prompt not shown by config setting)"
 msgstr "(l'invite n\u00e9gative n'est pas affich\u00e9e dans la configuration)"
 
-#: .\image\image_details.py:115
+#: .\image\image_details.py:116
 msgid "Models"
 msgstr "Mod\u00e8les"
 
-#: .\image\image_details.py:117
+#: .\image\image_details.py:118
 msgid "LoRAs"
 msgstr "LoRAs"
 
-#: .\image\image_details.py:122
+#: .\image\image_details.py:123
 msgid "Copy Prompt"
 msgstr "Invite \u00e0 la copie"
 
-#: .\image\image_details.py:123
+#: .\image\image_details.py:124
 msgid "Copy Prompt No BREAK"
 msgstr "Invitation \u00e0 copier sans \u00ab BREAK \u00bb"
 
-#: .\image\image_details.py:127
+#: .\image\image_details.py:128
 msgid "Rotate Image Left"
 msgstr "Rotation de l'image \u00e0 gauche"
 
-#: .\image\image_details.py:128
+#: .\image\image_details.py:129
 msgid "Rotate Image Right"
 msgstr "Rotation de l'image \u00e0 droite"
 
-#: .\image\image_details.py:132
+#: .\image\image_details.py:133
 msgid "Crop Image (Smart Detect)"
 msgstr "Recadrer l'image (d\u00e9tection intelligente)"
 
-#: .\image\image_details.py:133
+#: .\image\image_details.py:134
 msgid "Enhance Image"
 msgstr "Am\u00e9liorer l'image"
 
-#: .\image\image_details.py:137
+#: .\image\image_details.py:138
 msgid "Random Crop"
 msgstr "R\u00e9colte al\u00e9atoire"
 
-#: .\image\image_details.py:138
+#: .\image\image_details.py:139
 msgid "Randomly Modify"
 msgstr "Modifier de fa\u00e7on al\u00e9atoire"
 
-#: .\image\image_details.py:142
+#: .\image\image_details.py:143
 msgid "Flip Image Horizontally"
 msgstr "Retourner l'image horizontalement"
 
-#: .\image\image_details.py:143
+#: .\image\image_details.py:144
 msgid "Flip Image Vertically"
 msgstr "Retourner l'image verticalement"
 
-#: .\image\image_details.py:146
+#: .\image\image_details.py:147
 msgid "Show Metadata"
 msgstr "Afficher les m\u00e9tadonn\u00e9es"
 
-#: .\image\image_details.py:150
+#: .\image\image_details.py:151
 msgid "Open Related Image"
 msgstr "Ouvrir Image associ\u00e9e"
 
-#: .\image\image_details.py:159
+#: .\image\image_details.py:160
 msgid "Image Generation"
 msgstr "G\u00e9n\u00e9ration d'images"
 
-#: .\image\image_details.py:167
+#: .\image\image_details.py:168
 msgid "Run Image Generation"
 msgstr "Lancer la g\u00e9n\u00e9ration d'images"
 
-#: .\image\image_details.py:169
+#: .\image\image_details.py:170
 msgid "Press Shift+I on a main app window to run this"
 msgstr "Appuyez sur Shift+I dans une fen\u00eatre de l'application principale pour lancer cette op\u00e9ration."
 
-#: .\image\image_details.py:172
+#: .\image\image_details.py:173
 msgid "Redo Prompt"
 msgstr "Refaire l'invite"
 
-#: .\image\image_details.py:176
+#: .\image\image_details.py:177
 msgid "Tags"
 msgstr "Tags"
 
-#: .\image\image_details.py:186
+#: .\image\image_details.py:187
 msgid "Update Tags"
 msgstr "Tags de mise \u00e0 jour"
 
-#: .\image\image_details.py:233
+#: .\image\image_details.py:234
 msgid "Copied prompt"
 msgstr "Invite copi\u00e9e"
 
-#: .\image\image_details.py:242
+#: .\image\image_details.py:243 .\image\image_details.py:253
 msgid "Copied prompt without BREAK"
 msgstr "Copie de l'invite sans \u00ab BREAK \u00bb"
 
-#: .\image\image_details.py:250
+#: .\image\image_details.py:271
 msgid "Rotated image left"
 msgstr "Rotation de l'image \u00e0 gauche"
 
-#: .\image\image_details.py:250
+#: .\image\image_details.py:271
 msgid "Rotated image right"
 msgstr "Rotation de l'image \u00e0 droite"
 
-#: .\image\image_details.py:259
+#: .\image\image_details.py:280
 msgid "Cropped image"
 msgstr "Image recadr\u00e9e"
 
-#: .\image\image_details.py:261
+#: .\image\image_details.py:282
 msgid "No crops found"
 msgstr "Aucun recadrage d'image n'a \u00e9t\u00e9 trouv\u00e9"
 
-#: .\image\image_details.py:268
+#: .\image\image_details.py:289
 msgid "Enhanced image"
 msgstr "Image am\u00e9lior\u00e9e"
 
-#: .\image\image_details.py:273
+#: .\image\image_details.py:294
 msgid "Randomly cropped image"
 msgstr "Image recadr\u00e9e de mani\u00e8re al\u00e9atoire"
 
-#: .\image\image_details.py:282
+#: .\image\image_details.py:303
 msgid "Randomly modified image"
 msgstr "Image modifi\u00e9e de mani\u00e8re al\u00e9atoire"
 
-#: .\image\image_details.py:287
+#: .\image\image_details.py:308
 msgid "Flipped image"
 msgstr "Image invers\u00e9e"
 
-#: .\image\image_details.py:292
+#: .\image\image_details.py:313
 msgid "No metadata found"
 msgstr "Pas de m\u00e9tadonn\u00e9es trouv\u00e9es"
 
-#: .\image\image_details.py:306 .\image\image_details.py:364
+#: .\image\image_details.py:327 .\image\image_details.py:385
 msgid " (Exact Match Not Found)"
 msgstr " (Correspondance exacte non trouv\u00e9e)"
 
-#: .\image\image_details.py:308 .\image\image_details.py:361
+#: .\image\image_details.py:329 .\image\image_details.py:382
 msgid "(No related image found)"
 msgstr "(Aucune image connexe trouv\u00e9e)"
 
-#: .\image\image_details.py:423 .\image\image_details.py:430
+#: .\image\image_details.py:444 .\image\image_details.py:451
 msgid "%s downstream image(s) found."
 msgstr "{0} image(s) li\u00e9e(s) \u00e0 l'aval trouv\u00e9e(s)."
 
-#: .\image\image_details.py:426
+#: .\image\image_details.py:447
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (en cache) image(s) li\u00e9e(s) \u00e0 l'aval trouv\u00e9e(s)."
 
-#: .\image\image_details.py:432
+#: .\image\image_details.py:453
 msgid "No downstream related images found in"
 msgstr "Aucune image li\u00e9e \u00e0 l'aval n'a \u00e9t\u00e9 trouv\u00e9e dans"
 
-#: .\image\image_details.py:492
+#: .\image\image_details.py:513
 msgid "Updated tags for %s"
 msgstr "Mise \u00e0 jour des tags pour {0}"
 
@@ -1136,43 +1145,239 @@ msgstr "ordre d\u00e9croissant"
 msgid "random"
 msgstr "au hasard"
 
-#: .\utils\help_and_config.py:105
+#: .\utils\help_and_config.py:34
+msgid "Command"
+msgstr "Commande"
+
+#: .\utils\help_and_config.py:34
+msgid "Description"
+msgstr "Description"
+
+#: .\utils\help_and_config.py:35
+msgid "Search current image in new window"
+msgstr "Recherche de l'image actuelle dans une nouvelle fen\u00eatre"
+
+#: .\utils\help_and_config.py:36
+msgid "Return to Browsing mode"
+msgstr "Retour au mode navigation"
+
+#: .\utils\help_and_config.py:37
+msgid "Copy marks list"
+msgstr "Copier la liste des notes"
+
+#: .\utils\help_and_config.py:38
+msgid "Set current marks from previous marks list"
+msgstr "D\u00e9finir les marques actuelles \u00e0 partir de la liste des marques pr\u00e9c\u00e9dentes"
+
+#: .\utils\help_and_config.py:39
+msgid "Run penultimate marks action"
+msgstr "Ex\u00e9cuter l'action des avant-derni\u00e8res marques"
+
+#: .\utils\help_and_config.py:40
+msgid "Open Go to file window"
+msgstr "Ouvrir la fen\u00eatre Aller au fichier"
+
+#: .\utils\help_and_config.py:41
+msgid "Hide/show sidebar"
+msgstr "Cacher/afficher la barre lat\u00e9rale"
+
+#: .\utils\help_and_config.py:42
+msgid "Open content filters window"
+msgstr "Ouvrir la fen\u00eatre des filtres de contenu"
+
+#: .\utils\help_and_config.py:43
+msgid "Open marks window (no GUI)"
+msgstr "Ouvrir la fen\u00eatre des marques (pas d'interface graphique)"
+
+#: .\utils\help_and_config.py:44
+msgid "Open marks window"
+msgstr "Ouvrir la fen\u00eatre des marques"
+
+#: .\utils\help_and_config.py:45
+msgid "Open marks action history window"
+msgstr "Ouvrir la fen\u00eatre de l'historique des marques"
+
+#: .\utils\help_and_config.py:46
+msgid "Quit"
+msgstr "Quitter"
+
+#: .\utils\help_and_config.py:47
+msgid "Run previous marks action"
+msgstr "Ex\u00e9cuter l'action des marques pr\u00e9c\u00e9dentes"
+
+#: .\utils\help_and_config.py:48
+msgid "Continue image generation"
+msgstr "Poursuivre la g\u00e9n\u00e9ration d'images"
+
+#: .\utils\help_and_config.py:49
+msgid "Cancel image generation"
+msgstr "Annuler la g\u00e9n\u00e9ration d'images"
+
+#: .\utils\help_and_config.py:50
+msgid "Run next text embedding search preset"
+msgstr "Lancer la recherche d'int\u00e9gration de texte suivante"
+
+#: .\utils\help_and_config.py:51
+msgid "Run permanent marks action"
+msgstr "Ex\u00e9cuter l'action des marques permanentes"
+
+#: .\utils\help_and_config.py:52
+msgid "Open new compare window"
+msgstr "Ouvrir une nouvelle fen\u00eatre de comparaison"
+
+#: .\utils\help_and_config.py:53
+msgid "Move previous marks to a different directory"
+msgstr "D\u00e9placer les marques pr\u00e9c\u00e9dentes dans un autre r\u00e9pertoire"
+
+#: .\utils\help_and_config.py:54 .\utils\help_and_config.py:82
+msgid "Undo previous marks changes"
+msgstr "Annuler les changements de marques pr\u00e9c\u00e9dents"
+
+#: .\utils\help_and_config.py:55
+msgid "Toggle fullscreen"
+msgstr "Basculer en plein \u00e9cran"
+
+#: .\utils\help_and_config.py:56
+msgid "Go to first sorted image"
+msgstr "Aller \u00e0 la premi\u00e8re image tri\u00e9e"
+
+#: .\utils\help_and_config.py:57
+msgid "Go to last sorted image"
+msgstr "Aller \u00e0 la derni\u00e8re image tri\u00e9e"
+
+#: .\utils\help_and_config.py:58
+msgid "Show previous/next image"
+msgstr "Afficher l'image pr\u00e9c\u00e9dente/suivante"
+
+#: .\utils\help_and_config.py:59
+msgid "Page through images"
+msgstr "Parcourir les images"
+
+#: .\utils\help_and_config.py:60
+msgid "Search current image in current window"
+msgstr "Recherche de l'image actuelle dans la fen\u00eatre actuelle"
+
+#: .\utils\help_and_config.py:61
+msgid "Clear all hidden images"
+msgstr "Effacer toutes les images cach\u00e9es"
+
+#: .\utils\help_and_config.py:62
+msgid "Clear marks list"
+msgstr "Effacer la liste des marques"
+
+#: .\utils\help_and_config.py:63
+msgid "Show image details"
+msgstr "Afficher les d\u00e9tails de l'image"
+
+#: .\utils\help_and_config.py:64
+msgid "Delete image (or marked file group if marks window selected)"
+msgstr "Supprimer l'image (ou le groupe de fichiers marqu\u00e9s si la fen\u00eatre des marques est s\u00e9lectionn\u00e9e)"
+
+#: .\utils\help_and_config.py:65
+msgid "Go to next mark"
+msgstr "Passer \u00e0 la marque suivante"
+
+#: .\utils\help_and_config.py:66
+msgid "Show help window"
+msgstr "Afficher la fen\u00eatre d'aide"
+
+#: .\utils\help_and_config.py:67
+msgid "Run image generation"
+msgstr "Lancer la g\u00e9n\u00e9ration d'images"
+
+#: .\utils\help_and_config.py:68
+msgid "Run content filters for all files in the current directory"
+msgstr "Ex\u00e9cuter des filtres de contenu pour tous les fichiers du r\u00e9pertoire actuel"
+
+#: .\utils\help_and_config.py:69
+msgid "View last moved image mark"
+msgstr "Afficher la derni\u00e8re marque d'image d\u00e9plac\u00e9e"
+
+#: .\utils\help_and_config.py:70
+msgid "Toggle content filters"
+msgstr "Filtres de contenu"
+
+#: .\utils\help_and_config.py:71
+msgid "Add or remove a mark for current image"
+msgstr "Ajouter ou supprimer une marque pour l'image actuelle"
+
+#: .\utils\help_and_config.py:72
+msgid "Add all marks between most recently set and current selected inclusive, or all marks in current group"
+msgstr "Ajouter toutes les marques entre le dernier ensemble et l'ensemble s\u00e9lectionn\u00e9, ou toutes les marques du groupe actuel"
+
+#: .\utils\help_and_config.py:74
+msgid "Open image in GIMP"
+msgstr "Ouvrir l'image dans GIMP"
+
+#: .\utils\help_and_config.py:75
+msgid "Randomly modify image"
+msgstr "Modifier l'image de mani\u00e8re al\u00e9atoire"
+
+#: .\utils\help_and_config.py:76
+msgid "View related image (controlnet, etc.)"
+msgstr "Voir l'image associ\u00e9e (controlnet, etc.)"
+
+#: .\utils\help_and_config.py:77
+msgid "Toggle slideshow"
+msgstr "Afficher le diaporama"
+
+#: .\utils\help_and_config.py:78
+msgid "Find related images in open window"
+msgstr "Trouver des images connexes dans la fen\u00eatre ouverte"
+
+#: .\utils\help_and_config.py:79
+msgid "Run refacdir"
+msgstr "Ex\u00e9cuter refacdir"
+
+#: .\utils\help_and_config.py:80
+msgid "Hide current image"
+msgstr "Masquer l'image actuelle"
+
+#: .\utils\help_and_config.py:81
+msgid "Set marks from downstream related images"
+msgstr "Marques de d\u00e9marcation par rapport aux images li\u00e9es \u00e0 l'aval"
+
+#: .\utils\help_and_config.py:83
+msgid "Show previous/next group"
+msgstr "Afficher le groupe pr\u00e9c\u00e9dent/suivant"
+
+#: .\utils\help_and_config.py:131
 msgid "Show Toasts"
 msgstr "Toasts du spectacle"
 
-#: .\utils\help_and_config.py:107
+#: .\utils\help_and_config.py:133
 msgid "Slideshow Interval (sec)"
 msgstr "Intervalle de diaporama (sec)"
 
-#: .\utils\help_and_config.py:109
+#: .\utils\help_and_config.py:135
 msgid "File Check Interval (sec)"
 msgstr "Intervalle de v\u00e9rification des fichiers (sec)"
 
-#: .\utils\help_and_config.py:111
+#: .\utils\help_and_config.py:137
 msgid "Max Search Results"
 msgstr "R\u00e9sultats de la recherche Max"
 
-#: .\utils\help_and_config.py:113
+#: .\utils\help_and_config.py:139
 msgid "Sort By"
 msgstr "Trier par"
 
-#: .\utils\help_and_config.py:115
+#: .\utils\help_and_config.py:141
 msgid "Toasts Persist (sec)"
 msgstr "Les toasts persistent (sec)"
 
-#: .\utils\help_and_config.py:117
+#: .\utils\help_and_config.py:143
 msgid "Delete Instantly"
 msgstr "Supprimer instantan\u00e9ment"
 
-#: .\utils\help_and_config.py:119
+#: .\utils\help_and_config.py:145
 msgid "Trash Folder"
 msgstr "Dossier de la corbeille"
 
-#: .\utils\help_and_config.py:121
+#: .\utils\help_and_config.py:147
 msgid "Image Tagging Enabled"
 msgstr "Activation du balisage des images"
 
-#: .\utils\help_and_config.py:123
+#: .\utils\help_and_config.py:149
 msgid "Escape Backslash Filepaths"
 msgstr "\u00c9chapper \u00e0 la barre oblique inverse chemins d'acc\u00e8s aux fichiers"
 
