@@ -1,6 +1,7 @@
 from tkinter import Frame, Label, BooleanVar, StringVar, LEFT, W, E, Checkbutton
 from tkinter.ttk import Entry
 
+from lib.tk_scroll_demo import ScrollFrame
 from utils.config import config
 from utils.app_style import AppStyle
 from utils.translations import I18N
@@ -12,11 +13,15 @@ _ = I18N._
 
 
 class HelpAndConfig():
-    has_run_import = False
+    has_run_import = False 
 
     def __init__(self, master):
         self.master = master
-        self.frame = Frame(self.master)
+        self.help_label_list = []
+
+        self.scroll_frame = ScrollFrame(self.master, bg_color=AppStyle.BG_COLOR)
+        self.scroll_frame.pack(side="top", fill="both", expand=True)
+        self.frame = Frame(self.scroll_frame.viewPort)
         self.frame.grid(column=0, row=0)
         self.frame.columnconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=9)
@@ -25,36 +30,58 @@ class HelpAndConfig():
         self.row_counter1 = 0
         col_0_width = 250
 
-        self.help_label_list = []
-
         # TODO i18n
         help_details = {
             "Command": "Description",
-            "Shift+D": "Show image details",
-            "Ctrl+G": "Open Go to file window",
-            "Home": "Reset image browser",
-            "Page Up/Down": "Page through images",
-            "Shift+M": "Add or remove a mark for current image",
-            "Shift+N": "Add all marks between most recently set and current file, or all marks in current group",
-            "Shift+G": "Go to next mark",
-            "Shift+C": "Clear marks list",
+            "Ctrl+A": "Search current image in new window",
+            "Ctrl+B": "Return to Browsing mode",
             "Ctrl+C": "Copy marks list",
             "Ctrl+D": "Set current marks from previous marks list",
-            "Ctrl+M": "Open marks window",
-            "Ctrl+K": "Open marks window (no GUI)",
-            "Ctrl+Z": "Undo previous marks changes",
-            "Ctrl+X": "Move previous marks to a different directory",
-            "Ctrl+B": "Return to Browsing mode",
-            "Ctrl+R": "Run previous marks action",
             "Ctrl+E": "Run penultimate marks action",
-            "Ctrl+T": "Run permanent marks action",
+            "Ctrl+G": "Open Go to file window",
+            "Ctrl+H": "Hide/show sidebar",
+            "Ctrl+J": "Open content filters window",
+            "Ctrl+K": "Open marks window (no GUI)",
+            "Ctrl+M": "Open marks window",
+            "Ctrl+N": "Open marks action history window",
+            "Ctrl+Q": "Quit",
+            "Ctrl+R": "Run previous marks action",
+            "Ctrl+Return": "Continue image generation",
+            "Ctrl+Shift+Return":"Cancel image generation",
             "Ctrl+S": "Run next text embedding search preset",
-            "Left/Right Arrow": "Show previous/next image",
-            "Mouse Wheel Up/Down": "Show previous/next image",
-            "Shift+Left/Right Arrow":  "Show previous/next group",
+            "Ctrl+T": "Run permanent marks action",
+            "Ctrl+W": "Open new compare window",
+            "Ctrl+X": "Move previous marks to a different directory",
+            "Ctrl+Z": "Undo previous marks changes",
+            "Shift-F / F11": "Toggle fullscreen",
+            "Home": "Go to first sorted image",
+            "End":   "Go to last sorted image",
+            "Left/Right Arrow\nMouse Wheel Up/Down": "Show previous/next image",
+            "Page Up/Down": "Page through images",
+            "Shift-A": "Search current image in current window",
+            "Shift+B": "Clear all hidden images",
+            "Shift+C": "Clear marks list",
+            "Shift+D": "Show image details",
+            "Shift+Delete\nMouse Wheel Click": "Delete image (or marked file group if marks window selected)",
+            "Shift+G": "Go to next mark",
+            "Shift+H": "Show help window",
+            "Shift+I\nRight Click": "Run image generation",
+            "Shift+J": "Run content filters for all files in the current directory",
+            "Shift+K": "View last moved image mark",
+            "Shift+L": "Toggle prevalidations",
+            "Shift+M": "Add or remove a mark for current image",
+            "Shift+N": "Add all marks between most recently set and current selected inclusive, or all marks in current group",
             "Shift+O": "Open image location",
-            "Shift+Delete / Mouse Wheel Click": "Delete image (or marked file group if marks window selected)",
-            "F11": "Toggle fullscreen",
+            "Shift+P": "Open image in GIMP",
+            "Shift+Q": "Randomly modify image",
+            "Shift+R": "View related image (controlnet, etc.)",
+            "Shift+S": "Toggle slideshow",
+            "Shift+T":  "Find related images in open window",
+            "Shift+U": "Run refacdir",
+            "Shift+V": "Hide current image",
+            "Shift+Y": "Set marks from downstream related images",
+            "Shift+Z": "Undo previous marks changes",
+            "Shift+Left/Right Arrow":  "Show previous/next group",
         }
 
         for key, value in help_details.items():

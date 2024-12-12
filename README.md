@@ -72,53 +72,7 @@ If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [
 
 While the UI elements support normal usage in most cases, there are many bindings that enable extended functionality, mostly to minimize UI content unrelated to image viewers.
 
-A directory with images must be set before most of the below bindings will have any effect. The group bindings are only functional in GROUP mode after a comparison has been run.
-
-| Keys             | Mouse            | Effect                 |
-|------------------|------------------|------------------------|
-| Shift-H          |                  | Show help window       |
-| Left Arrow       | Mouse Wheel Up   | Show previous image    |
-| Right Arrow      | Mouse Wheel Down | Show next image        |
-| Shift-Left       |                  | Show previous group    |
-| Shift-Right      |                  | Show next group        |
-| Shift-S          |                  | Toggle slideshow       |
-| Shift-D          |                  | Show image details     |
-| Shift-I          | Right Click      | Run image generation   |
-| Control-Return   |                  | Continue image generation   |
-| Control-Shift-Return |              | Cancel image generation |
-| Shift-U          |                  | Run refacdir           |
-| Shift-P          |                  | Open image in GIMP     |
-| Ctrl-G           |                  | Open filename search   |
-| Home             |                  | Go to first image      |
-| Page Up          |                  | Page through images    |
-| Page Down        |                  | Page through images    |
-| Shift+V          |                  | Hide current image     |
-| Shift+B          |                  | Clear hidden images    |
-| Shift-M          |                  | Add/remove a mark      |
-| Shift-N          |                  | Add marks from last    |
-| Shift-G          |                  | Go to next mark        |
-| Shift-C          |                  | Clear marks list       |
-| Ctrl-C           |                  | Copy marks list        |
-| Ctrl-H           |                  | Hide/show sidebar      |
-| Ctrl-J           |                  | Open content filter window   |
-| Ctrl-M           |                  | Open marks window      |
-| Ctrl-K           |                  | Open marks window (no GUI)   |
-| Ctrl-N           |                  | Open mark history window     |
-| Ctrl-R           |                  | Run previous marks action    |
-| Ctrl-E           |                  | Run penultimate marks action |
-| Ctrl-T           |                  | Run permanent marks action   |
-| Number Keys      |                  | Run permanent marks action   |
-| Ctrl-Z           |                  | Undo marks action            |
-| Ctrl-X           |                  | Modify last marks action     |
-| Ctrl-D           |                  | Set marks from previous      |
-| Ctrl-B           |                  | Switch back to browsing mode |
-| Ctrl-S           |                  | Run next text search preset  |
-| Ctrl-W           |                  | Open new compare window      |
-| Ctrl-A           |                  | Search current image in new window    |
-| Shift-R          |                  | View related image (controlnet, etc.) |
-| Shift-O          |                  | Open image location    |
-| Shift-Delete     | Mouse Wheel Click| Delete image(s)        |
-| F11              |                  | Toggle fullscreen      |
+Press Shift+H to open up a help window with all key bindings. A directory with images must be set before most of the bindings will have any effect. The group bindings are only functional in GROUP mode after a comparison has been run.
 
 ## Move Marks Window Behavior
 
