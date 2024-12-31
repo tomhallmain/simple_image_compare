@@ -41,13 +41,38 @@ class Utils:
 
     @staticmethod
     def trace(frame, event, arg):
-        if event == "call":
-            filename = frame.f_code.co_filename
-            if "file_browser" in filename:
-                lineno = frame.f_lineno
-                # you can examine the frame, locals, etc too.
-                print("%s @ %s" % (filename, lineno))
-        return Utils.trace
+        if event != 'call':
+            return
+        co = frame.f_code
+        func_name = co.co_name
+        if func_name == 'write':  # Ignore write() calls from print statements
+            return
+        func_filename = co.co_filename
+        func_line_no = frame.f_lineno
+        caller = frame.f_back
+        app_name = "simple_image_compare"
+        site_packages = "site-packages"
+        if caller is None:
+            if app_name in func_filename:
+                func_simple_name = os.path.splitext(os.path.basename(func_filename))[0]
+                print(f'{func_simple_name}:{func_line_no}:{func_name}()')
+            return
+        caller_filename = caller.f_code.co_filename
+        if app_name in func_filename or app_name in caller_filename:
+            if app_name in func_filename:
+                func_simple_name = os.path.splitext(os.path.basename(func_filename))[0]
+            elif site_packages in func_filename:
+                func_simple_name = func_filename[func_filename.find(site_packages)+len(site_packages)+1:]
+            else:
+                func_simple_name = func_filename
+            if app_name in caller_filename:
+                caller_simple_name = os.path.splitext(os.path.basename(func_filename))[0]
+            elif site_packages in caller_filename:
+                caller_simple_name = caller_filename[caller_filename.find(site_packages)+len(site_packages)+1:]
+            else:
+                caller_simple_name = caller_filename
+            caller_line_no = caller.f_lineno
+            print(f'{caller_simple_name}:{caller_line_no} called {func_simple_name}:{func_line_no}:{func_name}()')
 
     @staticmethod
     def get_user_dir():

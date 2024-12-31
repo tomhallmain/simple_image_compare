@@ -157,9 +157,7 @@ class MediaFrame(Frame):
                 path.endswith('.webm') or path.endswith('.mkv')):
             self.clear()
             self.__image = VideoUI(path)
-            print("before display")
             self.__image.display(self.canvas)
-            print("after display")
             return
 
         self.imscale = 1.0
@@ -216,8 +214,8 @@ class MediaFrame(Frame):
 
     def clear(self) -> None:
         if self.__image is not None and self.canvas is not None:
-            if (isinstance(self.__image, GifImageUI)):
-                self.__image.stop_display()
+            if (isinstance(self.__image, VideoUI)):
+                self.__image.stop()
             self.canvas.clear_image()
             self.master.update()
 
@@ -225,7 +223,7 @@ class MediaFrame(Frame):
         if self.__pyramid is not None:
             for img in self.__pyramid:
                 img.close()
-            if self.__image is not None and not (isinstance(self.__image, GifImageUI)):
+            if self.__image is not None and not (isinstance(self.__image, VideoUI)):
                 self.__image.close()
 
     def smaller(self):

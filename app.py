@@ -21,7 +21,7 @@ from files.file_browser import FileBrowser, SortBy
 from files.go_to_file import GoToFile
 from files.marked_file_mover import MarkedFiles
 from files.recent_directory_window import RecentDirectories, RecentDirectoryWindow
-from image.canvas_image import MediaFrame
+from image.media_frame import MediaFrame
 from lib.aware_entry import AwareEntry
 from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
@@ -1773,6 +1773,8 @@ if __name__ == "__main__":
     root.geometry(config.default_main_window_size)
     # root.attributes('-fullscreen', True)
     app = App(root)
+
+    # sys.settrace(Utils.trace)
 
     # Graceful shutdown handler
     def graceful_shutdown(signum, frame):
