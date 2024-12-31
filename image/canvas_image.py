@@ -1,5 +1,4 @@
-# https://stackoverflow.com/questions/41656176/tkinter-canvas-zoom-move-pan#answer-48137257
-# -*- coding: utf-8 -*-
+# Modified from https://stackoverflow.com/questions/41656176/tkinter-canvas-zoom-move-pan#answer-48137257
 # Advanced zoom for images of various types from small to huge up to several GB
 import math
 import warnings
@@ -22,6 +21,8 @@ except ImportError:
     print("Failed to import AVIF library, AVIF images will not be viewable!")
 
 from image.gif_image_ui import GifImageUI
+from image.video_ui import VideoUI
+from utils.config import config
 from utils.utils import Utils
 
 
@@ -36,7 +37,7 @@ class ResizingCanvas(Canvas):
         self.parent = parent
         self.height = parent.winfo_height()
         self.width = parent.winfo_width() * 9/10
-    
+
     def reset_sizes(self):
         self.xview_moveto(0)
         self.yview_moveto(0)
@@ -81,11 +82,12 @@ class AutoScrollbar(Scrollbar):
     def place(self, **kw):
         raise tk.TclError('Cannot use place with the widget ' + self.__class__.__name__)
 
-class CanvasImage(Frame):
-    """ Display and zoom image """
+class MediaFrame(Frame):
+    """ Display and zoom image, display other media """
     def __init__(self, master, fill_canvas=False):
         """ Initialize the ImageFrame """
         Frame.__init__(self, master)
+        VideoUI.set_video_frame_handle_callback(self.get_handle)
         self.imscale = 1.0  # scale for the canvas image zoom, public for outer classes
         self.__delta = 1.3  # zoom magnitude
         self.__filter = Image.LANCZOS  # could be: NEAREST, BILINEAR, BICUBIC and LANCZOS
@@ -142,14 +144,22 @@ class CanvasImage(Frame):
         self.mousewheel_bound = False
 
     def set_background_color(self, background_color):
-        self.canvas.config(bg=background_color)        
+        self.canvas.config(bg=background_color)
+    
+    def get_handle(self):
+        return self.winfo_id()
 
     def show_image(self, path):
-        if (isinstance(self.__image, GifImageUI)):
-            self.__image.stop_display()
-        if path.endswith(".gif"):
-            self.__image = GifImageUI(path)
+        if (isinstance(self.__image, VideoUI)):
+            self.__image.stop()
+        if config.enable_videos and (
+                path.endswith(".gif") or path.endswith('.mp4') or \
+                path.endswith('.webm') or path.endswith('.mkv')):
+            self.clear()
+            self.__image = VideoUI(path)
+            print("before display")
             self.__image.display(self.canvas)
+            print("after display")
             return
 
         self.imscale = 1.0
@@ -460,7 +470,7 @@ class MainWindow(Frame):
         self.sidebar.grid(row=0, column=0)
         self.show_image_btn = tk.Button(master=self.sidebar, text="Show image", command=self.show_image)
         self.show_image_btn.grid(row=0, column=0)
-        self.canvas = CanvasImage(self.master)  # create widget
+        self.canvas = MediaFrame(self.master)  # create widget
         self.canvas.grid(row=0, column=1)  # show widget
         self.master.update()
 

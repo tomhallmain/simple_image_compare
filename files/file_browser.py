@@ -359,16 +359,16 @@ class FileBrowser:
                     pattern += "*"
                 recursive = self.recursive or self.filter.startswith("**/")
                 filtered_files = glob.glob(os.path.join(self.directory, pattern), recursive=recursive)
-            for file in filtered_files:
+            for f in filtered_files:
                 for ext in allowed_extensions:
-                    if file.endswith(ext):
-                        files.append(file)
+                    if f.lower().endswith(ext):
+                        files.append(f)
         else:
             if self.use_file_paths_json:
                 filepaths = self.load_file_paths_json()
             _ = "**/" if self.recursive else ""
             for ext in allowed_extensions:
                 if self.use_file_paths_json:
-                    files.extend([f for f in filepaths if f.endswith(ext)])
+                    files.extend([f for f in filepaths if f.lower().endswith(ext)])
                 else:
                     files.extend(glob.glob(os.path.join(self.directory, _ + "*" + ext), recursive=self.recursive))

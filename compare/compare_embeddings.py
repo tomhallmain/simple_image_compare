@@ -36,6 +36,7 @@ class CompareEmbedding(BaseCompare):
     THRESHHOLD_PROBABLE_MATCH = 0.98
     THRESHHOLD_GROUP_CUTOFF = 4500  # TODO fix this for Embedding case
     TEXT_EMBEDDING_CACHE = {}
+    MULTI_EMBEDDING_CACHE = {} # keys are tuples of the filename + any text embedding search combination, values are combined similarity
 
     def __init__(self, args=CompareArgs(), gather_files_func=gather_files):
         super().__init__(args, gather_files_func)
@@ -60,7 +61,7 @@ class CompareEmbedding(BaseCompare):
         print(f" max files processable for base dir: {self.max_files_processed}")
         print(f" recursive: {self.args.recursive}")
         print(f" file glob pattern: {self.args.inclusion_pattern}")
-        print(f" include gifs: {self.args.include_gifs}")
+        print(f" include videos: {self.args.include_videos}")
         print(f" file embeddings filepath: {self.compare_data._file_data_filepath}")
         print(f" overwrite image data: {self.args.overwrite}")
         print("|--------------------------------------------------------------------|\n\n")
@@ -616,6 +617,9 @@ class CompareEmbedding(BaseCompare):
 
     @staticmethod
     def multi_text_compare(image_path, positives, negatives, threshold=0.3):
+        key = (image_path, "::p", tuple(positives), "::n", tuple(negatives))
+        if key in CompareEmbedding.MULTI_EMBEDDING_CACHE:
+            return bool(CompareEmbedding.MULTI_EMBEDDING_CACHE[key] > threshold)
         # print(f"Running text comparison for \"{image_path}\" - positive texts = {positives}, negative texts = {negatives}")
         positive_similarities = []
         negative_similarities = []
@@ -642,6 +646,7 @@ class CompareEmbedding(BaseCompare):
         else:
             combined_similarity = 1 / combined_negative_similarity
         # print(f"Combined similarity = {combined_similarity} Positive similarities = {positive_similarities} Negative similarites = {negative_similarities} Threshold = {threshold}")
+        CompareEmbedding.MULTI_EMBEDDING_CACHE[key] = combined_similarity
         return combined_similarity > threshold
 
     @staticmethod

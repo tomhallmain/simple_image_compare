@@ -12,3 +12,4 @@ send2trash
 openai-clip
 torch
 ttkthemes
+python-vlc

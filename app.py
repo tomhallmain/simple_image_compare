@@ -21,7 +21,7 @@ from files.file_browser import FileBrowser, SortBy
 from files.go_to_file import GoToFile
 from files.marked_file_mover import MarkedFiles
 from files.recent_directory_window import RecentDirectories, RecentDirectoryWindow
-from image.canvas_image import CanvasImage
+from image.canvas_image import MediaFrame
 from lib.aware_entry import AwareEntry
 from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
@@ -335,7 +335,7 @@ class App():
 
         # Image panel and state management
         self.master.update()
-        self.canvas_image = CanvasImage(self.master, config.fill_canvas)
+        self.canvas_image = MediaFrame(self.master, config.fill_canvas)
 
         # Default mode is BROWSE - GROUP and SEARCH are only valid modes when a compare is run
         self.set_mode(Mode.BROWSE)

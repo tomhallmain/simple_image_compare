@@ -47,7 +47,9 @@ class Config:
         self.trash_folder = None
         self.sd_prompt_reader_loc = None
         self.always_open_new_windows = False
-        self.file_types = [".jpg", ".jpeg", ".png", ".tiff", ".webp"]
+        self.image_types = [".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".bmp", ".heic", ".avif"]
+        self.video_types = [".gif", ".mp4", ".mkv", ".avi", ".wmv", ".mov", ".flv"]
+        self.enable_videos = True
         self.directories_to_search_for_related_images = []
         self.font_size = 8
         self.threshold_potential_duplicate_color = 50
@@ -87,10 +89,15 @@ class Config:
             print(e)
             print("Unable to load config. Ensure config.json file is located in the configs directory of simple-image-comare.")
 
+        # Handle old version config keys
+        if "file_types" in self.dict:
+            self.dict["image_types"] = list(self.dict["file_types"])
+
         if dict_set:
             self.set_values(None, "trash_folder")
             self.set_values(list,
-                            "file_types",
+                            "image_types",
+                            "video_types",
                             "text_embedding_search_presets",
                             "directories_to_search_for_related_images")
             self.set_values(str,
@@ -110,6 +117,7 @@ class Config:
                             "image_tagging_enabled",
                             "escape_backslash_filepaths",
                             "fill_canvas",
+                            "enable_videos",
                             "print_settings",
                             "show_toasts",
                             "delete_instantly",
@@ -140,6 +148,12 @@ class Config:
             self.set_values(float,
                             "embedding_similarity_threshold",
                             "threshold_potential_duplicate_embedding")
+
+            self.file_types = list(self.image_types)
+            if self.enable_videos:
+                self.file_types.extend(list(self.video_types))
+
+
             try:
                 self.sd_prompt_reader_loc = self.validate_and_set_directory(key="sd_prompt_reader_loc")
             except Exception as e:

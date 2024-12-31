@@ -19,9 +19,9 @@ When using CLIP embedding compare mode, you can search your images by text - bot
 
 If a search image is set simultaneously with search text, its embedding will be factored into the search at a weight equal to a single search text part.
 
-## Image Browser
+## Image and Video Browser
 
-The UI can be used as an image file browser. This is especially useful on Windows as the following features are available that the default Windows Photo Viewer application either does not support or makes hard to quickly reconfigure:
+The UI can be used as a media file browser. The following features are available that your OS default photo application may not have:
 - Auto-resize images to fill the screen
 - Auto-refresh directory files
 - Slideshow (customizable)
@@ -30,8 +30,8 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Faster load times when switching between sort types
 - Go to file by string search
 - Mark groups of files to enable quick transitions and comparisons
-- Move, copy, and delete marked file groups
-- Revert and modify file action changes
+- Move, copy, and delete marked file groups without overwriting system clipboard
+- Revert and modify historical file action changes
 - Quickly find directories via recent directory picker window
 - Stores session info about seen directories (useful for directories with many images)
 - Can be set up to run on user-defined list of files in place of a directory
@@ -40,15 +40,17 @@ The UI can be used as an image file browser. This is especially useful on Window
 - Find related images and prompts from embedded Stable Diffusion workflows
 - Sort files by related images and prompts
 - View raw image metadata
-- Content filtering of images based on their text CLIP similarity (automatically hide, move to dir, delete etc)
+- Content filtering of images and videos based on their text CLIP similarity (automatically hide, move to dir, delete etc)
 
-Zoom and drag functionality is available in both browsing mode, as well as when viewing grouped images after a comparison has been run.
+Zoom and drag functionality is available in both browsing mode, as well as when viewing grouped media after a comparison has been run.
+
+Note that in order to view videos and GIFs, you must set the `enable_videos` setting in the config file.
 
 ## Configuration
 
 `clip_model` defines the CLIP model to use for generating embeddings.
 
-`file_types` defines the allowed file extensions for gathering image files.
+`image_types` defines the allowed file extensions for gathering image files, while `video_types` defines the allowed file extensions for gathering video files - there are only valid if the `enable_videos` setting is enabled.
 
 `file_check_interval_seconds` defines the interval between auto-updates to identify recent file changes.
 
@@ -109,5 +111,3 @@ On this window the previous file action images can be viewed and reversed or mod
 This is a simple app primarily meant for personal use but could be adapted for more intensive use cases.
 
 The face similarity measure in particular is very crude and only compares the number of faces in each image, so it is off by default. At a future time more complex face comparison logic may be added, but for now the embedding comparison is helpful in matching faces.
-
-GIFs are not currently supported, but may be at a future date.

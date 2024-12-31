@@ -16,9 +16,16 @@ from utils.utils import Utils
 _ = I18N._
 
 
-def gather_files(base_dir=".", exts=config.file_types, recursive=True):
+def gather_files(base_dir=".", exts=config.image_types, recursive=True, include_videos=False):
     files = []
     recursive_str = "**/" if recursive else ""
+    exts = exts[:]
+    if include_videos:
+        for ext in config.video_types:
+            if ext not in exts:
+                exts.append(ext)
+    else:
+        exts = [e for e in exts if e not in config.video_types]
     for ext in exts:
         pattern = os.path.join(base_dir, recursive_str + "*" + ext)
         files.extend(glob(pattern, recursive=recursive))
@@ -74,8 +81,8 @@ class BaseCompare:
         To override the default file inclusion behavior, pass a gather_files_func to the Compare object.
         '''
         if self.gather_files_func:
-            exts = config.file_types
-            if self.args.include_gifs:
+            exts = config.image_types
+            if self.args.include_videos:
                 exts.append(".gif")
             self.files = self.gather_files_func(
                 base_dir=self.base_dir, exts=exts, recursive=self.args.recursive)

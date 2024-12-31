@@ -9,6 +9,7 @@ from compare.compare import Compare
 from compare.compare_args import CompareArgs
 from compare.compare_embeddings import CompareEmbedding
 from compare.prevalidations_window import PrevalidationAction, PrevalidationsWindow
+from image.frame_cache import FrameCache
 from utils.config import config
 from utils.constants import Mode, CompareMode
 from utils.translations import I18N
@@ -119,10 +120,17 @@ class CompareWrapper:
         if image_path in self.hidden_images:
             return True
         if config.enable_prevalidations:
-            prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_image, self._app_actions.toast)
+            try:
+                prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_image, self._app_actions.toast)
+            except Exception as e:
+                actual_image_path = FrameCache.get_image_path(image_path)
+                if actual_image_path != image_path:
+                    print("Got first frame from video: " + image_path)
+                    prevalidation_action = PrevalidationsWindow.prevalidate(actual_image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_image, self._app_actions.toast)
+                else:
+                    raise e
             if prevalidation_action is not None:
-                if prevalidation_action != PrevalidationAction.NOTIFY:
-                    return True
+                return prevalidation_action != PrevalidationAction.NOTIFY
         return False
 
     def find_next_unrelated_image(self, file_browser, forward=True):

@@ -69,7 +69,7 @@ class ComparePrompts:
         '''
         self._files_found = []
         if self.gather_files_func:
-            exts = config.file_types
+            exts = config.image_types
             if self.include_gifs:
                 exts.append(".gif")
             self.files = self.gather_files_func(base_dir=self.base_dir, exts=exts, recursive=self.recursive)

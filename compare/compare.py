@@ -14,6 +14,7 @@ from skimage.color import rgb2lab
 from compare.base_compare import BaseCompare, gather_files
 from compare.compare_args import CompareArgs
 from compare.compare_result import CompareResult
+from image.frame_cache import FrameCache
 from utils.config import config
 from utils.constants import CompareMode
 from utils.translations import I18N
@@ -131,12 +132,16 @@ def is_any_x_true_consecutive(bool_list, x_threshold):
 
 def get_image_array(filepath):
     '''
-    If this is a GIF file, return the array from the first frame only.
+    If this is a GIF or video file, return the array from the first frame only.
 
     If the image is grayscale, raise a ValueError. If the image has more
     dimensions than standard RGB, reshape it to RGB.
     '''
-    image = imageio.imread(filepath)
+    try:
+        image = imageio.imread(filepath)
+    except Exception as e:
+        filepath = FrameCache.get_image_path(filepath)
+        image = imageio.imread(filepath)
     image_shape = np.shape(image)
     if (len(image_shape) < 3 or image_shape[0] < 1 or image_shape[1] < 1
             or image_shape[2] < 1):
@@ -194,7 +199,7 @@ class Compare(BaseCompare):
             f" max files processable for base dir: {self.max_files_processed}")
         print(f" recursive: {self.args.recursive}")
         print(f" file glob pattern: {self.args.inclusion_pattern}")
-        print(f" include gifs: {self.args.include_gifs}")
+        print(f" include gifs: {self.args.include_videos}")
         print(f" n colors: {self.n_colors}")
         print(f" colors below threshold: {self.colors_below_threshold}")
         print(f" color diff threshold: {self.color_diff_threshold}")
