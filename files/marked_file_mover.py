@@ -364,7 +364,7 @@ class MarkedFiles():
                 set_last_moved_file = True
             try:
                 if is_moving and current_image == marked_file:
-                    app_actions.release_canvas_image()
+                    app_actions.release_media_canvas()
                 move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
                 action.add_file(new_filename)
                 Utils.log(f"{action_part2} file to {new_filename}")

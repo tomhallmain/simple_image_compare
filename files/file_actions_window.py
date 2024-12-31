@@ -481,7 +481,7 @@ class FileActionsWindow:
 
     def _search_for_image(self, event=None, image_path=None):
         if image_path is None:
-            image_path = self.app_actions.get_active_image_filepath()
+            image_path = self.app_actions.get_active_media_filepath()
             if image_path is None:
                 raise Exception("No active image")
         image_path = os.path.normpath(image_path)

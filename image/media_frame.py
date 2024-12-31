@@ -37,6 +37,7 @@ class ResizingCanvas(Canvas):
         self.parent = parent
         self.height = parent.winfo_height()
         self.width = parent.winfo_width() * 9/10
+        self.imagetk = None
 
     def reset_sizes(self):
         self.xview_moveto(0)
@@ -151,14 +152,15 @@ class MediaFrame(Frame):
 
     def show_image(self, path):
         if (isinstance(self.__image, VideoUI)):
-            self.__image.stop()
-        if config.enable_videos and (
-                path.endswith(".gif") or path.endswith('.mp4') or \
-                path.endswith('.webm') or path.endswith('.mkv')):
-            self.clear()
-            self.__image = VideoUI(path)
-            self.__image.display(self.canvas)
-            return
+            pass
+#            self.__image.stop()
+        if config.enable_videos:
+            path_lower = path.lower()
+            if any([lambda: path_lower.endswith(ext) for ext in config.video_types]):
+                self.clear()
+                self.__image = VideoUI(path)
+                self.__image.display(self.canvas)
+                return
 
         self.imscale = 1.0
         self.path = path
@@ -215,7 +217,8 @@ class MediaFrame(Frame):
     def clear(self) -> None:
         if self.__image is not None and self.canvas is not None:
             if (isinstance(self.__image, VideoUI)):
-                self.__image.stop()
+                pass
+#                self.__image.stop()
             self.canvas.clear_image()
             self.master.update()
 

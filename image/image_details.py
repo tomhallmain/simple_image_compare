@@ -94,8 +94,18 @@ class ImageDetails():
         self.label_loras = Label(self.frame)
         self._label_tags = Label(self.frame)
 
-        image_mode, image_dims, mod_time, file_size = self._get_image_info()
-        positive, negative, models, loras = image_data_extractor.get_image_prompts_and_models(self.image_path)
+        if any([lambda: self.image_path.lower().endswith(ext) for ext in config.video_types]):
+            image_mode = ""
+            image_dims = ""
+            positive = ""
+            negative = ""
+            models = ""
+            loras = ""
+        else:
+            image_mode, image_dims = self._get_image_info()
+            positive, negative, models, loras = image_data_extractor.get_image_prompts_and_models(self.image_path)
+
+        mod_time, file_size = self._get_file_info()
 
         self.add_label(self._label_path, _("Image Path"), wraplength=col_0_width)
         self.add_label(self.label_path, self.image_path, column=1)
@@ -199,14 +209,18 @@ class ImageDetails():
         image = Image.open(self.image_path)
         image_mode = str(image.mode)
         image_dims = f"{image.size[0]}x{image.size[1]}"
-        mod_time = datetime.fromtimestamp(os.path.getmtime(self.image_path)).strftime("%Y-%m-%d %H:%M")
         image.close()
+        return image_mode, image_dims
+    
+    def _get_file_info(self):
+        mod_time = datetime.fromtimestamp(os.path.getmtime(self.image_path)).strftime("%Y-%m-%d %H:%M")
         file_size = get_readable_file_size(self.image_path)
-        return image_mode, image_dims, mod_time, file_size
+        return mod_time, file_size
 
     def update_image_details(self, image_path, index_text):
         self.image_path = image_path
-        image_mode, image_dims, mod_time, file_size = self._get_image_info()
+        image_mode, image_dims = self._get_image_info()
+        mod_time, file_size = self._get_file_info()
         positive, negative, models, loras = image_data_extractor.get_image_prompts_and_models(self.image_path)
         self.label_path["text"] = image_path
         self.label_index["text"] = index_text

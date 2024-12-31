@@ -81,7 +81,7 @@ class CompareWrapper:
 
         return self.current_match()
 
-    def show_prev_image(self, show_alert=True):
+    def show_prev_media(self, show_alert=True):
         if self.files_matched is None:
             return False
         elif len(self.files_matched) == 0:
@@ -98,7 +98,7 @@ class CompareWrapper:
         self._app_actions.create_image(prev_image)
         return True
 
-    def show_next_image(self, show_alert=True):
+    def show_next_media(self, show_alert=True):
         if self.files_matched is None:
             return False
         elif len(self.files_matched) == 0:
@@ -121,12 +121,12 @@ class CompareWrapper:
             return True
         if config.enable_prevalidations:
             try:
-                prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_image, self._app_actions.toast)
+                prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_media, self._app_actions.toast)
             except Exception as e:
                 actual_image_path = FrameCache.get_image_path(image_path)
                 if actual_image_path != image_path:
                     print("Got first frame from video: " + image_path)
-                    prevalidation_action = PrevalidationsWindow.prevalidate(actual_image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_image, self._app_actions.toast)
+                    prevalidation_action = PrevalidationsWindow.prevalidate(actual_image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_media, self._app_actions.toast)
                 else:
                     raise e
             if prevalidation_action is not None:
@@ -405,7 +405,7 @@ class CompareWrapper:
                 return file, group_indexes
         return None, None
 
-    def _update_groups_for_removed_file(self, app_mode, group_index, match_index, set_group=True, show_next_image=False):
+    def _update_groups_for_removed_file(self, app_mode, group_index, match_index, set_group=True, show_next_media=False):
         '''
         After a file has been removed, delete the cached image path for it and
         remove the group if only one file remains in that group.
@@ -450,7 +450,7 @@ class CompareWrapper:
                 self.group_indexes = []
                 self._app_actions.set_mode(Mode.BROWSE)
                 self._app_actions._set_label_state(_("Set a directory to run comparison."))
-                self._app_actions.show_next_image()
+                self._app_actions.show_next_media()
                 return
             elif group_index == len(self.file_groups):
                 self.current_group_index = 0
@@ -472,9 +472,9 @@ class CompareWrapper:
                 elif self.match_index > match_index:
                     self.match_index -= 1
 
-                if show_next_image:
+                if show_next_media:
                     self._master.update()
-                    self._app_actions.release_canvas_image()
+                    self._app_actions.release_media_canvas()
                     self._app_actions.create_image(self.current_match())
 
     def update_compare_for_readded_file(self, readded_file):

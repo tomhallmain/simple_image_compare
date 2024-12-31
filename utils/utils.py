@@ -52,6 +52,7 @@ class Utils:
         caller = frame.f_back
         app_name = "simple_image_compare"
         site_packages = "site-packages"
+        lib = "\\Lib\\"
         if caller is None:
             if app_name in func_filename:
                 func_simple_name = os.path.splitext(os.path.basename(func_filename))[0]
@@ -63,12 +64,16 @@ class Utils:
                 func_simple_name = os.path.splitext(os.path.basename(func_filename))[0]
             elif site_packages in func_filename:
                 func_simple_name = func_filename[func_filename.find(site_packages)+len(site_packages)+1:]
+            elif lib in func_filename:
+                func_simple_name = func_filename[func_filename.find(lib)+len(lib):]
             else:
                 func_simple_name = func_filename
             if app_name in caller_filename:
                 caller_simple_name = os.path.splitext(os.path.basename(func_filename))[0]
             elif site_packages in caller_filename:
                 caller_simple_name = caller_filename[caller_filename.find(site_packages)+len(site_packages)+1:]
+            elif lib in func_filename:
+                func_simple_name = func_filename[func_filename.find(lib)+len(lib):]
             else:
                 caller_simple_name = caller_filename
             caller_line_no = caller.f_lineno

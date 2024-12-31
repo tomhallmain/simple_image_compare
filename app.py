@@ -79,7 +79,7 @@ class App():
                             window.set_search()
                         else:
                             window.go_to_file(search_text=image_path)
-                    window.canvas_image.focus()
+                    window.media_canvas.focus()
                     return
                 # print(f"app base dir \"{_app.base_dir}\" was not base dir: {base_dir}")
         if master is None:
@@ -131,7 +131,7 @@ class App():
                                      == AppStyle.DARK_THEME) and to_theme != AppStyle.LIGHT_THEME
         self.master.config(bg=AppStyle.BG_COLOR)
         self.sidebar.config(bg=AppStyle.BG_COLOR)
-        self.canvas_image.set_background_color(AppStyle.BG_COLOR)
+        self.media_canvas.set_background_color(AppStyle.BG_COLOR)
         for name, attr in self.__dict__.items():
             if isinstance(attr, Label):
                 attr.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR,
@@ -180,10 +180,10 @@ class App():
             "refresh": self.refresh,
             "refocus": self.refocus,
             "set_mode": self.set_mode,
-            "get_active_image_filepath": self.get_active_image_filepath,
+            "get_active_media_filepath": self.get_active_media_filepath,
             "create_image": self.create_image,
-            "show_next_image": self.show_next_image,
-            "get_image_details": self.get_image_details,
+            "show_next_media": self.show_next_media,
+            "get_media_details": self.get_media_details,
             "run_image_generation": self.run_image_generation,
             "set_marks_from_downstream_related_images": self.set_marks_from_downstream_related_images,
             "go_to_file": self.go_to_file,
@@ -191,8 +191,8 @@ class App():
             "get_base_dir": self.get_base_dir,
             "delete": self._handle_delete,
             "open_move_marks_window": self.open_move_marks_window,
-            "release_canvas_image": lambda: self.canvas_image.release_image(),
-            "hide_current_image": self.hide_current_image,
+            "release_media_canvas": lambda: self.media_canvas.release_image(),
+            "hide_current_media": self.hide_current_media,
             "_set_toggled_view_matches": self._set_toggled_view_matches,
             "_set_label_state": self._set_label_state,
             "_add_buttons_for_mode": self._add_buttons_for_mode,
@@ -317,7 +317,7 @@ class App():
         self.find_duplicates_btn = None
         self.add_button("find_duplicates_btn", _("Find duplicates"), lambda: self.run_compare(find_duplicates=True))
         self.image_details_btn = None
-        self.add_button("image_details_btn", _("Image details"), self.get_image_details)
+        self.add_button("image_details_btn", _("Image details"), self.get_media_details)
         self.prev_group_btn = None
         self.next_group_btn = None
         self.toggle_image_view_btn = None
@@ -335,14 +335,14 @@ class App():
 
         # Image panel and state management
         self.master.update()
-        self.canvas_image = MediaFrame(self.master, config.fill_canvas)
+        self.media_canvas = MediaFrame(self.master, config.fill_canvas)
 
         # Default mode is BROWSE - GROUP and SEARCH are only valid modes when a compare is run
         self.set_mode(Mode.BROWSE)
 
         ################################ Key bindings
-        self.master.bind('<Left>', lambda e: self.check_focus(e, self.show_prev_image))
-        self.master.bind('<Right>', lambda e: self.check_focus(e, self.show_next_image))
+        self.master.bind('<Left>', lambda e: self.check_focus(e, self.show_prev_media))
+        self.master.bind('<Right>', lambda e: self.check_focus(e, self.show_next_media))
         self.master.bind('<Shift-BackSpace>', lambda e: self.check_focus(e, self.go_to_previous_image))
         self.master.bind('<Shift-Left>', lambda event: self.compare_wrapper.show_prev_group(file_browser=(self.file_browser if self.mode == Mode.BROWSE else None)))
         self.master.bind('<Shift-Right>', lambda event: self.compare_wrapper.show_next_group(file_browser=(self.file_browser if self.mode == Mode.BROWSE else None)))
@@ -352,16 +352,16 @@ class App():
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Shift-F>", lambda e: self.check_focus(e, self.toggle_fullscreen))
         self.master.bind("<Escape>", lambda e: self.end_fullscreen() and self.refocus())
-        self.master.bind("<Shift-D>", lambda e: self.check_focus(e, self.get_image_details))
+        self.master.bind("<Shift-D>", lambda e: self.check_focus(e, self.get_media_details))
         self.master.bind("<Shift-R>", lambda e: self.check_focus(e, self.show_related_image))
         self.master.bind("<Shift-T>", lambda e: self.check_focus(e, self.find_related_images_in_open_window))
         self.master.bind("<Shift-Y>", lambda e: self.check_focus(e, self.set_marks_from_downstream_related_images))
-        self.master.bind("<Shift-V>", lambda e: self.check_focus(e, self.hide_current_image))
+        self.master.bind("<Shift-V>", lambda e: self.check_focus(e, self.hide_current_media))
         self.master.bind("<Shift-B>", lambda e: self.check_focus(e, self.clear_hidden_images))
         self.master.bind("<Shift-J>", lambda e: self.check_focus(e, self.run_prevalidations_for_base_dir))
         self.master.bind("<Shift-H>", lambda e: self.check_focus(e, self.get_help_and_config))
         self.master.bind("<Shift-S>", lambda e: self.check_focus(e, self.toggle_slideshow))
-        self.master.bind("<MouseWheel>", lambda event: None if (event.state & 0x1) != 0 else (self.show_next_image() if event.delta > 0 else self.show_prev_image()))
+        self.master.bind("<MouseWheel>", lambda event: None if (event.state & 0x1) != 0 else (self.show_next_media() if event.delta > 0 else self.show_prev_media()))
         self.master.bind("<Button-2>", self.delete_image)
         self.master.bind("<Button-3>", self.trigger_image_generation)
         self.master.bind("<Shift-M>", lambda e: self.check_focus(e, self.add_or_remove_mark_for_current_image))
@@ -372,9 +372,9 @@ class App():
         self.master.bind("<Shift-Z>", lambda e: self.check_focus(e, self.add_current_image_to_negative_search))
         self.master.bind("<Shift-U>", lambda e: self.check_focus(e, self.run_refacdir))
         self.master.bind("<Shift-I>", lambda e: self.check_focus(e, lambda: ImageDetails.run_image_generation_static(self.app_actions)))
-        self.master.bind("<Shift-Q>", lambda e: self.check_focus(e, lambda: ImageDetails.randomly_modify_image(self.get_active_image_filepath(), self.app_actions)))
+        self.master.bind("<Shift-Q>", lambda e: self.check_focus(e, lambda: ImageDetails.randomly_modify_image(self.get_active_media_filepath(), self.app_actions)))
         self.master.bind("<Shift-L>", lambda e: self.check_focus(e, self.toggle_prevalidations))
-        self.master.bind("<Shift-E>", lambda e: self.check_focus(e, lambda: ImageDetails.copy_prompt_no_break_static(self.get_active_image_filepath(), self.master, self.app_actions)))
+        self.master.bind("<Shift-E>", lambda e: self.check_focus(e, lambda: ImageDetails.copy_prompt_no_break_static(self.get_active_media_filepath(), self.master, self.app_actions)))
         self.master.bind("<Control-Return>", lambda event: ImageDetails.run_image_generation_static(self.app_actions, event=event))
         self.master.bind("<Shift-C>", lambda e: self.check_focus(e, lambda: MarkedFiles.clear_file_marks(self.toast)))
         self.master.bind("<Control-Tab>", self.cycle_windows)
@@ -433,7 +433,7 @@ class App():
             for _dir in app_info_cache.get_meta("secondary_base_dirs", default_val=[]):
                 App.add_secondary_window(_dir)
 
-        self.canvas_image.focus()
+        self.media_canvas.focus()
 
         if image_path is not None:
             if do_search:
@@ -537,7 +537,7 @@ class App():
         self.file_browser.set_sort_by(SortBy.get(self.sort_by.get()))
         self.file_browser.refresh()
         if self.mode == Mode.BROWSE:
-            self.show_next_image()
+            self.show_next_media()
 
     def set_compare_mode(self, event):
         self.compare_wrapper.compare_mode = CompareMode.get(self.compare_mode_var.get())
@@ -560,16 +560,16 @@ class App():
         self.refresh(file_check=False)
 
     def toggle_fill_canvas(self):
-        self.canvas_image.fill_canvas = not self.canvas_image.fill_canvas
+        self.media_canvas.fill_canvas = not self.media_canvas.fill_canvas
 
     def toggle_image_browse_recursive(self):
         self.file_browser.set_recursive(self.image_browse_recurse_var.get())
-        if self.mode == Mode.BROWSE and self.canvas_image.canvas.imagetk:
-            self.show_next_image()
+        if self.mode == Mode.BROWSE and self.media_canvas.canvas.imagetk:
+            self.show_next_media()
 
     def refocus(self, event=None):
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
-        self.canvas_image.focus(refresh_image=shift_key_pressed)
+        self.media_canvas.focus(refresh_image=shift_key_pressed)
         if config.debug:
             Utils.log_debug("Refocused main window")
 
@@ -588,7 +588,7 @@ class App():
                 return
             if show_new_images:
                 has_new_images = self.file_browser.update_cursor_to_new_images()
-            self.show_next_image()
+            self.show_next_media()
             self._set_label_state()
             if show_new_images and has_new_images:
                 # User may have started delete just before the image changes, lock for a short period after to ensure no misdeletion
@@ -616,7 +616,7 @@ class App():
                 Utils.log_debug("Slideshow next image")
             base_dir = self.set_base_dir_box.get()
             if base_dir and base_dir != "":
-                self.show_next_image()
+                self.show_next_media()
 
     def toggle_slideshow(self, event=None):
         self.slideshow_config.toggle_slideshow()
@@ -663,12 +663,12 @@ class App():
             return window, other_dirs
         return None, other_dirs
 
-    def get_image_details(self, event=None, image_path=None, manually_keyed=True):
+    def get_media_details(self, event=None, media_path=None, manually_keyed=True):
         preset_image_path = True
-        if image_path is None:
-            image_path = self.img_path
+        if media_path is None:
+            media_path = self.img_path
             preset_image_path = False
-        if image_path is None or image_path == "":
+        if media_path is None or media_path == "":
             return
         if preset_image_path:
             index_text = _("(Open this image as part of a directory to see index details.)")
@@ -687,13 +687,13 @@ class App():
                 index_text = ""  # shouldn't happen
         if self.app_actions.image_details_window is not None:
             if self.app_actions.image_details_window.do_refresh:
-                self.app_actions.image_details_window.update_image_details(image_path, index_text)
+                self.app_actions.image_details_window.update_image_details(media_path, index_text)
             if manually_keyed:
                 self.app_actions.image_details_window.focus()
         else:
             top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
             try:
-                image_details_window = ImageDetails(self.master, top_level, image_path, index_text,
+                image_details_window = ImageDetails(self.master, top_level, media_path, index_text,
                                                     self.app_actions, do_refresh=not preset_image_path)
                 self.app_actions.image_details_window = image_details_window
             except Exception as e:
@@ -728,7 +728,7 @@ class App():
         next_related_image = ImageDetails.next_downstream_related_image(image_to_use, base_dir, self.app_actions)
         if next_related_image is not None:
             window.go_to_file(search_text=next_related_image)
-            window.canvas_image.focus()
+            window.media_canvas.focus()
         else:
             self.toast(_("No downstream related image(s) found in {0}").format(base_dir))
 
@@ -753,7 +753,7 @@ class App():
             MarkedFiles.file_marks = downstream_related_images
             self.toast(_("{0} file marks set").format(len(downstream_related_images)))
             window.go_to_mark()
-            window.canvas_image.focus()
+            window.media_canvas.focus()
 
     def get_help_and_config(self, event=None):
         top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
@@ -771,7 +771,7 @@ class App():
         while tries < 10:
             tries += 1
             try:
-                if self.show_next_image():
+                if self.show_next_media():
                     return
             except Exception:
                 pass
@@ -827,9 +827,9 @@ class App():
             previous_file = app_info_cache.get(self.base_dir, "image_cursor")
             if previous_file and previous_file != "":
                 if not self.go_to_file(None, previous_file, retry_with_delay=1):
-                    self.show_next_image()
+                    self.show_next_media()
             else:
-                self.show_next_image()
+                self.show_next_media()
             self._set_label_state()
         relative_dirpath = Utils.get_relative_dirpath(self.base_dir, levels=2)
         self.master.title(_(" Simple Image Compare ") + "- " + relative_dirpath)
@@ -969,7 +969,7 @@ class App():
                 Utils.log_yellow(self.compare_wrapper.search_image_full_path)
                 self.handle_error(_("Somehow, the search file is invalid"))
 
-    def show_prev_image(self, event=None, show_alert=True) -> bool:
+    def show_prev_media(self, event=None, show_alert=True) -> bool:
         '''
         If similar image results are present in any mode, display the previous
         in the list of matches.
@@ -986,9 +986,9 @@ class App():
             except Exception as e:
                 self.handle_error(str(e), title="Exception")
                 return False
-        return self.compare_wrapper.show_prev_image(show_alert=show_alert)
+        return self.compare_wrapper.show_prev_media(show_alert=show_alert)
 
-    def show_next_image(self, event=None, show_alert=True) -> bool:
+    def show_next_media(self, event=None, show_alert=True) -> bool:
         '''
         If similar image results are present in any mode, display the next
         in the list of matches.
@@ -1008,7 +1008,7 @@ class App():
                 traceback.print_exc()
                 self.handle_error(str(e), title="Exception")
                 return False
-        return self.compare_wrapper.show_next_image(show_alert=show_alert)
+        return self.compare_wrapper.show_next_media(show_alert=show_alert)
 
     def set_current_image_run_search(self, event=None, base_dir=None) -> None:
         '''
@@ -1033,7 +1033,7 @@ class App():
                     counter += 1
                 if os.path.isfile(random_image):
                     self.create_image(random_image)  # sets current image first
-        filepath = self.get_active_image_filepath()
+        filepath = self.get_active_media_filepath()
         if filepath:
             window._set_image_run_search(filepath)
         else:
@@ -1047,7 +1047,7 @@ class App():
         self.set_search()
 
     def add_current_image_to_negative_search(self, event=None, base_dir=None):
-        filepath = self.get_active_image_filepath()
+        filepath = self.get_active_media_filepath()
         if filepath:
             if base_dir is None:
                 window, dirs = self.get_other_window_or_self_dir(
@@ -1074,7 +1074,7 @@ class App():
         '''
         Show an image in the main content pane of the UI.
         '''
-        self.canvas_image.show_image(image_path)
+        self.media_canvas.show_image(image_path)
         if self.label_current_image_name is None:
             self.label_current_image_name = Label(self.sidebar)
             self.add_label(self.label_current_image_name, "", pady=30)
@@ -1088,10 +1088,10 @@ class App():
             text += "\n" + extra_text
         self.label_current_image_name["text"] = text
         if self.app_actions.image_details_window is not None:
-            self.get_image_details(manually_keyed=False)
+            self.get_media_details(manually_keyed=False)
     
     def clear_image(self):
-        self.canvas_image.clear()
+        self.media_canvas.clear()
         self.destroy_grid_element("label_current_image_name")
         self.label_current_image_name = None
 
@@ -1259,7 +1259,7 @@ class App():
         if len(override_marks) > 0:
             Utils.log(_("Including marks: {0}").format(override_marks))
             MarkedFiles.file_marks.extend(override_marks)
-        current_image = self.get_active_image_filepath()
+        current_image = self.get_active_media_filepath()
         single_image = False
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
@@ -1278,17 +1278,17 @@ class App():
     def run_previous_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
-        MarkedFiles.run_previous_action(self.app_actions, self.get_active_image_filepath())
+        MarkedFiles.run_previous_action(self.app_actions, self.get_active_media_filepath())
 
     def run_penultimate_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
-        MarkedFiles.run_penultimate_action(self.app_actions, self.get_active_image_filepath())
+        MarkedFiles.run_penultimate_action(self.app_actions, self.get_active_media_filepath())
 
     def run_permanent_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
-        MarkedFiles.run_permanent_action(self.app_actions, self.get_active_image_filepath())
+        MarkedFiles.run_permanent_action(self.app_actions, self.get_active_media_filepath())
 
     def run_hotkey_marks_action(self, event=None):
         assert event is not None
@@ -1296,7 +1296,7 @@ class App():
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
         number = int(event.keysym)
-        MarkedFiles.run_hotkey_action(self.app_actions, self.get_active_image_filepath(), number, bool(shift_key_pressed))
+        MarkedFiles.run_hotkey_action(self.app_actions, self.get_active_media_filepath(), number, bool(shift_key_pressed))
 
     def _check_marks(self, min_mark_size=1):
         if len(MarkedFiles.file_marks) < min_mark_size:
@@ -1327,7 +1327,7 @@ class App():
         PrevalidationsWindow.prevalidated_cache.clear()
         for image_path in self.file_browser.get_files():
             try:
-                prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self.get_base_dir, self.hide_current_image, self.toast)
+                prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self.get_base_dir, self.hide_current_media, self.toast)
             except Exception as e:
                 print(e)
 
@@ -1408,13 +1408,13 @@ class App():
             App.window_index += 1
         if App.window_index >= len(App.open_windows):
             App.window_index = 0
-        window.canvas_image.focus()
+        window.media_canvas.focus()
         App.window_index += 1
 
     def home(self, event=None, last_file=False):
         if self.mode == Mode.BROWSE:
             self.file_browser.refresh()
-            current_file = self.get_active_image_filepath()
+            current_file = self.get_active_media_filepath()
             if current_file is None:
                 raise Exception("No active image file.")
             if last_file:
@@ -1441,7 +1441,7 @@ class App():
 
     def page_up(self, event=None):
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
-        current_image = self.get_active_image_filepath()
+        current_image = self.get_active_media_filepath()
         prev_file = self.file_browser.page_up(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_up(half_length=shift_key_pressed)
         while self.compare_wrapper.skip_image(prev_file) and prev_file != current_image:
             prev_file = self.file_browser.previous_file() if self.mode == Mode.BROWSE else self.compare_wrapper._get_prev_image()
@@ -1450,7 +1450,7 @@ class App():
 
     def page_down(self, event=None):
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
-        current_image = self.get_active_image_filepath()
+        current_image = self.get_active_media_filepath()
         next_file = self.file_browser.page_down(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_down(half_length=shift_key_pressed)
         while self.compare_wrapper.skip_image(next_file) and next_file != current_image:
             next_file = self.file_browser.next_file() if self.mode == Mode.BROWSE else self.compare_wrapper._get_next_image()
@@ -1460,8 +1460,8 @@ class App():
     def is_toggled_search_image(self):
         return self.mode == Mode.SEARCH and not self.is_toggled_view_matches
 
-    def get_active_image_filepath(self):
-        if self.canvas_image.canvas.imagetk is None:
+    def get_active_media_filepath(self):
+        if self.media_canvas.canvas.imagetk is None:
             return None
         if self.mode == Mode.BROWSE:
             return self.file_browser.current_file()
@@ -1472,7 +1472,7 @@ class App():
         return Utils.get_valid_file(self.get_base_dir(), filepath)
 
     def open_image_location(self, event=None):
-        filepath = self.get_active_image_filepath()
+        filepath = self.get_active_media_filepath()
 
         if filepath is not None:
             self.toast("Opening file location: " + filepath)
@@ -1484,7 +1484,7 @@ class App():
         if self.delete_lock:
             filepath = self.prev_img_path
         else:
-            filepath = self.get_active_image_filepath()
+            filepath = self.get_active_media_filepath()
         if filepath is not None:
             self.toast("Opening file in GIMP: " + filepath)
             Utils.open_file_in_gimp(filepath, config.gimp_exe_loc)
@@ -1492,7 +1492,7 @@ class App():
             self.handle_error(_("Failed to open current file in GIMP, unable to get valid filepath"))
 
     def copy_image_path(self):
-        filepath = self.get_active_image_filepath()
+        filepath = self.get_active_media_filepath()
         if sys.platform == 'win32':
             filepath = os.path.normpath(filepath)
             if config.escape_backslash_filepaths:
@@ -1500,13 +1500,13 @@ class App():
         self.master.clipboard_clear()
         self.master.clipboard_append(filepath)
 
-    def hide_current_image(self, event=None, image_path=None):
-        filepath = self.get_active_image_filepath() if image_path is None else image_path
+    def hide_current_media(self, event=None, image_path=None):
+        filepath = self.get_active_media_filepath() if image_path is None else image_path
         if filepath not in self.compare_wrapper.hidden_images:
             self.compare_wrapper.hidden_images.append(filepath)
         if image_path is None:
             self.toast(_("Hid current image.\nTo unhide, press Shift+B."))
-        self.show_next_image()
+        self.show_next_media()
 
     def clear_hidden_images(self, event=None):
         self.compare_wrapper.hidden_images.clear()
@@ -1524,11 +1524,11 @@ class App():
             self.file_browser.checking_files = False
             filepath = self.file_browser.current_file()
             if filepath:
-                self.canvas_image.release_image()
+                self.media_canvas.release_image()
                 self._handle_delete(filepath)
                 MarkedFiles.handle_file_removal(filepath)
                 self.file_browser.refresh(refresh_cursor=False, removed_files=[filepath])
-                self.show_next_image()
+                self.show_next_media()
             self.file_browser.checking_files = True
             return
 
@@ -1541,17 +1541,17 @@ class App():
             self.toast(_("Invalid action, search image not found"))
             return
 
-        filepath = self.get_active_image_filepath()
+        filepath = self.get_active_media_filepath()
 
         if filepath is not None:
             MarkedFiles.handle_file_removal(filepath)
             if filepath == self.compare_wrapper.search_image_full_path:
                 self.compare_wrapper.search_image_full_path = None
-            self.canvas_image.release_image()
+            self.media_canvas.release_image()
             self._handle_delete(filepath)
             if self.compare_wrapper._compare:
                 self.compare_wrapper.compare().remove_from_groups([filepath])
-            self.compare_wrapper._update_groups_for_removed_file(self.mode, self.compare_wrapper.current_group_index, self.compare_wrapper.match_index, show_next_image=True)
+            self.compare_wrapper._update_groups_for_removed_file(self.mode, self.compare_wrapper.current_group_index, self.compare_wrapper.match_index, show_next_media=True)
         else:
             self.handle_error(_("Failed to delete current file, unable to get valid filepath"))
 
@@ -1602,17 +1602,17 @@ class App():
         '''
         Remove the files from the groups.
         '''
-        # NOTE cannot use get_active_image_filepath here because file should have been removed by this point.
+        # NOTE cannot use get_active_media_filepath here because file should have been removed by this point.
         current_image = self.compare_wrapper.current_match()
         for filepath in files:
             if filepath == self.compare_wrapper.search_image_full_path:
                 self.compare_wrapper.search_image_full_path = None
-            show_next_image = current_image == filepath
+            show_next_media = current_image == filepath
             file_group_map = self.compare_wrapper._get_file_group_map(self.mode)
             try:
                 group_indexes = file_group_map[filepath]
                 self.compare_wrapper._update_groups_for_removed_file(self.mode,
-                    group_indexes[0], group_indexes[1], set_group=False, show_next_image=show_next_image)
+                    group_indexes[0], group_indexes[1], set_group=False, show_next_media=show_next_media)
             except KeyError:
                 pass  # The group may have been removed before update_groups_for_removed_file was called on the last file in it
 
@@ -1626,7 +1626,7 @@ class App():
             if self.delete_lock:
                 image_path = self.prev_img_path
             else:
-                image_path = self.get_active_image_filepath()
+                image_path = self.get_active_media_filepath()
         _type = ImageDetails.get_image_specific_generation_mode() if _type is None else _type
         try:
             self.sd_runner_client.run(_type, image_path, append=modify_call)
@@ -1695,7 +1695,7 @@ class App():
             toast.destroy()
         start_thread(self_destruct_after, use_asyncio=False, args=[config.toasts_persist_seconds])
         if sys.platform == "darwin":
-            self.canvas_image.focus()
+            self.media_canvas.focus()
 
     def _set_label_state(self, text=None, group_number=None, size=-1):
         if text is not None:
