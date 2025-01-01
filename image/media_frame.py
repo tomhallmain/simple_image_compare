@@ -1,6 +1,7 @@
 # Modified from https://stackoverflow.com/questions/41656176/tkinter-canvas-zoom-move-pan#answer-48137257
 # Advanced zoom for images of various types from small to huge up to several GB
 import math
+import platform
 import warnings
 import tkinter as tk
 import time
@@ -19,6 +20,8 @@ try:
     import pillow_avif
 except ImportError:
     print("Failed to import AVIF library, AVIF images will not be viewable!")
+
+import vlc
 
 from image.gif_image_ui import GifImageUI
 from image.video_ui import VideoUI
@@ -88,7 +91,12 @@ class MediaFrame(Frame):
     def __init__(self, master, fill_canvas=False):
         """ Initialize the ImageFrame """
         Frame.__init__(self, master)
-        VideoUI.set_video_frame_handle_callback(self.get_handle)
+
+        # VLC player controls
+        self.vlc_instance = vlc.Instance()
+        self.vlc_media_player = self.vlc_instance.media_player_new()
+        self.vlc_media = None
+
         self.imscale = 1.0  # scale for the canvas image zoom, public for outer classes
         self.__delta = 1.3  # zoom magnitude
         self.__filter = Image.LANCZOS  # could be: NEAREST, BILINEAR, BICUBIC and LANCZOS
@@ -146,24 +154,49 @@ class MediaFrame(Frame):
 
     def set_background_color(self, background_color):
         self.canvas.config(bg=background_color)
-    
-    def get_handle(self):
-        return self.winfo_id()
+
+    def video_display(self):
+        self.ensure_video_frame()
+        self.vlc_media = self.vlc_instance.media_new(self.path)
+        self.vlc_media_player.set_media(self.vlc_media)
+        if self.vlc_media_player.play() == -1:
+            raise Exception("Failed to play video")
+
+    def close(self):
+        self.video_stop()
+
+    def video_stop(self):
+        self.vlc_media_player.stop()
+
+    def video_pause(self):
+        self.vlc_media_player.pause()
+
+    def video_take_screenshot(self):
+        self.vlc_media_player.take_snapshot()
+
+    def video_seek(self, pos):
+        self.vlc_media_player.set_position(pos)
+
+    def ensure_video_frame(self):
+        # set the window id where to render VLC's video output
+        if platform.system() == 'Windows':
+            self.vlc_media_player.set_hwnd(self.winfo_id())
+        else:
+            self.vlc_media_player.set_xwindow(self.winfo_id()) # this line messes up windows
 
     def show_image(self, path):
         if (isinstance(self.__image, VideoUI)):
-            pass
-#            self.__image.stop()
+            self.video_stop()
+        self.path = path
         if config.enable_videos:
             path_lower = path.lower()
-            if any([lambda: path_lower.endswith(ext) for ext in config.video_types]):
+            if any([path_lower.endswith(ext) for ext in config.video_types]):
                 self.clear()
                 self.__image = VideoUI(path)
-                self.__image.display(self.canvas)
+                self.video_display()
                 return
 
         self.imscale = 1.0
-        self.path = path
         self.__huge = False  # huge or not
         Image.MAX_IMAGE_PIXELS = 1000000000  # suppress DecompressionBombError for the big image
         with warnings.catch_warnings():  # suppress DecompressionBombWarning
@@ -217,17 +250,19 @@ class MediaFrame(Frame):
     def clear(self) -> None:
         if self.__image is not None and self.canvas is not None:
             if (isinstance(self.__image, VideoUI)):
-                pass
-#                self.__image.stop()
+               self.video_stop()
             self.canvas.clear_image()
             self.master.update()
 
-    def release_image(self):
+    def release_media(self):
         if self.__pyramid is not None:
             for img in self.__pyramid:
                 img.close()
-            if self.__image is not None and not (isinstance(self.__image, VideoUI)):
-                self.__image.close()
+            if self.__image is not None:
+                if (isinstance(self.__image, VideoUI)):
+                    self.video_stop()
+                else:
+                    self.__image.close()
 
     def smaller(self):
         """ Resize image proportionally and return smaller image """

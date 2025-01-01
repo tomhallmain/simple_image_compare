@@ -94,16 +94,20 @@ class ImageDetails():
         self.label_loras = Label(self.frame)
         self._label_tags = Label(self.frame)
 
-        if any([lambda: self.image_path.lower().endswith(ext) for ext in config.video_types]):
+        if any([self.image_path.lower().endswith(ext) for ext in config.video_types]):
+            self.is_image = False
             image_mode = ""
             image_dims = ""
             positive = ""
             negative = ""
             models = ""
             loras = ""
+            related_image_text = ""
         else:
+            self.is_image = True
             image_mode, image_dims = self._get_image_info()
             positive, negative, models, loras = image_data_extractor.get_image_prompts_and_models(self.image_path)
+            related_image_text = self.get_related_image_text()
 
         mod_time, file_size = self._get_file_info()
 
@@ -122,7 +126,7 @@ class ImageDetails():
         self.add_label(self._label_positive, _("Positive"), wraplength=col_0_width)
         self.add_label(self.label_positive, positive, column=1)
         self.add_label(self._label_negative, _("Negative"), wraplength=col_0_width)
-        self.add_label(self.label_negative, negative if config.show_negative_prompt else _("(negative prompt not shown by config setting)"), column=1)
+        self.add_label(self.label_negative, negative if config.show_negative_prompt and negative != "" else _("(negative prompt not shown by config setting)"), column=1)
         self.add_label(self._label_models, _("Models"), wraplength=col_0_width)
         self.add_label(self.label_models, ", ".join(models), column=1)
         self.add_label(self._label_loras, _("LoRAs"), wraplength=col_0_width)
@@ -164,13 +168,13 @@ class ImageDetails():
         # self.related_image_node_id_entry.bind("<Return>", self.open_related_image)
         # self.related_image_node_id_entry.grid(row=self.row_count1, column=1, sticky="w")
         self.label_related_image = Label(self.frame)
-        self.add_label(self.label_related_image, self.get_related_image_text(), column=1)
+        self.add_label(self.label_related_image, related_image_text, column=1)
 
         self.label_image_generation = Label(self.frame)
         self.add_label(self.label_image_generation, _("Image Generation"))
         self.image_generation_mode_var = StringVar()
         self.image_generation_mode_choice = OptionMenu(self.frame, self.image_generation_mode_var,
-                                                   *ImageGenerationType.members(), command=self.set_image_generation_mode)
+                                                       *ImageGenerationType.members(), command=self.set_image_generation_mode)
         self.image_generation_mode_choice.grid(row=self.row_count1, column=1, sticky="W")
         self.row_count1 += 1
 
@@ -183,7 +187,7 @@ class ImageDetails():
         self.add_button("run_redo_prompt_button", _("Redo Prompt"), self.run_redo_prompt, column=0)
         self.row_count1 += 1
 
-        if config.image_tagging_enabled:
+        if config.image_tagging_enabled and self.is_image:
             self.add_label(self._label_tags, _("Tags"), wraplength=col_0_width)
 
             self.tags = image_data_extractor.extract_tags(self.image_path)
@@ -219,9 +223,21 @@ class ImageDetails():
 
     def update_image_details(self, image_path, index_text):
         self.image_path = image_path
-        image_mode, image_dims = self._get_image_info()
+        self.is_image = not any([self.image_path.lower().endswith(ext) for ext in config.video_types])
+        if self.is_image:
+            image_mode, image_dims = self._get_image_info()
+            positive, negative, models, loras = image_data_extractor.get_image_prompts_and_models(self.image_path)
+            related_image_text = self.get_related_image_text()
+        else:
+            image_mode = ""
+            image_dims = ""
+            positive = ""
+            negative = ""
+            models = ""
+            loras = ""
+            related_image_text = ""
+
         mod_time, file_size = self._get_file_info()
-        positive, negative, models, loras = image_data_extractor.get_image_prompts_and_models(self.image_path)
         self.label_path["text"] = image_path
         self.label_index["text"] = index_text
         self.label_mode["text"] = image_mode
@@ -233,7 +249,7 @@ class ImageDetails():
             self.label_negative["text"] = negative
         self.label_models["text"] = ", ".join(models)
         self.label_loras["text"] = ", ".join(loras)
-        self.label_related_image["text"] = self.get_related_image_text()
+        self.label_related_image["text"] = related_image_text
         if ImageDetails.metatdata_viewer_window is not None:
             if ImageDetails.metatdata_viewer_window.has_closed:
                 ImageDetails.metatdata_viewer_window = None

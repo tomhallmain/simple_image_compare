@@ -191,7 +191,7 @@ class App():
             "get_base_dir": self.get_base_dir,
             "delete": self._handle_delete,
             "open_move_marks_window": self.open_move_marks_window,
-            "release_media_canvas": lambda: self.media_canvas.release_image(),
+            "release_media_canvas": lambda: self.media_canvas.release_media(),
             "hide_current_media": self.hide_current_media,
             "_set_toggled_view_matches": self._set_toggled_view_matches,
             "_set_label_state": self._set_label_state,
@@ -1524,7 +1524,7 @@ class App():
             self.file_browser.checking_files = False
             filepath = self.file_browser.current_file()
             if filepath:
-                self.media_canvas.release_image()
+                self.media_canvas.release_media()
                 self._handle_delete(filepath)
                 MarkedFiles.handle_file_removal(filepath)
                 self.file_browser.refresh(refresh_cursor=False, removed_files=[filepath])
@@ -1547,7 +1547,7 @@ class App():
             MarkedFiles.handle_file_removal(filepath)
             if filepath == self.compare_wrapper.search_image_full_path:
                 self.compare_wrapper.search_image_full_path = None
-            self.media_canvas.release_image()
+            self.media_canvas.release_media()
             self._handle_delete(filepath)
             if self.compare_wrapper._compare:
                 self.compare_wrapper.compare().remove_from_groups([filepath])

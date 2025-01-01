@@ -404,8 +404,9 @@ class PrevalidationsWindow():
             self.add_label(label_action, prevalidation.action.name, row=row, column=base_col + 1)
 
             is_active_var = BooleanVar(value=prevalidation.is_active)
-            def set_is_active_handler(prevalidation=prevalidation):
-                prevalidation.is_active = is_active_var.get()
+            def set_is_active_handler(prevalidation=prevalidation, var=is_active_var):
+                prevalidation.is_active = var.get()
+                print(f"Set {prevalidation} to active: {prevalidation.is_active}")
             is_active_box = Checkbutton(self.frame, variable=is_active_var, font=fnt.Font(size=config.font_size), command=set_is_active_handler)
             is_active_box.grid(row=row, column=base_col + 2, sticky=(W))
             self.is_active_list.append(is_active_box)
@@ -418,6 +419,7 @@ class PrevalidationsWindow():
             set_prevalidation_btn.grid(row=row, column=base_col+3)
             def set_prevalidation_handler(event, prevalidation=prevalidation, var=activate_prevalidation_var):
                 prevalidation.is_active = var.get()
+                print(f"Set {prevalidation} to active: {prevalidation.is_active}")
             set_prevalidation_btn.bind("<Button-1>", set_prevalidation_handler)
 
             modify_prevalidation_btn = Button(self.frame, text=_("Modify"))
