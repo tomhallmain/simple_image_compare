@@ -10,6 +10,7 @@ from tkinter.ttk import Button
 from compare.compare_embeddings import CompareEmbedding
 from files.file_actions_window import Action, FileActionsWindow
 from files.file_browser import FileBrowser
+from files.hotkey_actions_window import HotkeyActionsWindow
 from image.image_data_extractor import image_data_extractor
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
@@ -220,7 +221,8 @@ class MarkedFiles():
             self.delete_btn = None
             self.add_btn("delete_btn", _("DELETE"), self.delete_marked_files, column=3)
             self.set_target_dirs_from_dir_btn = None
-            self.add_btn("set_target_dirs_from_dir_btn", _("Add directories from parent"), self.set_target_dirs_from_dir, column=4)
+            add_dirs_text = Utils._wrap_text_to_fit_length(_("Add directories from parent"), 30)
+            self.add_btn("set_target_dirs_from_dir_btn", add_dirs_text, self.set_target_dirs_from_dir, column=4)
             self.clear_target_dirs_btn = None
             self.add_btn("clear_target_dirs_btn", _("Clear targets"), self.clear_target_dirs, column=5)
             self.frame.after(1, lambda: self.frame.focus_force())
@@ -237,11 +239,10 @@ class MarkedFiles():
         self.master.bind("<Button-3>", self.do_action_test_is_in_directory)
         self.master.bind("<Control-t>", self.set_permanent_mark_target)
         self.master.bind("<Control-s>", self.sort_target_dirs_by_embedding)
+        self.master.bind("<Control-h>", self.open_hotkey_actions_window)
         self.master.bind("<Prior>", self.page_up)
         self.master.bind("<Next>", self.page_down)
 
-        for i in range(10):
-            self.master.bind(f"Shift-{i}", self.set_hotkey_action)
 
     def add_target_dir_widgets(self):
         row = 0
@@ -256,9 +257,9 @@ class MarkedFiles():
             else:
                 row = i+1
             target_dir = self.filtered_target_dirs[i]
-            self._label_info = Label(self.frame)
-            self.label_list.append(self._label_info)
-            self.add_label(self._label_info, target_dir, row=row, column=base_col, wraplength=MarkedFiles.COL_0_WIDTH)
+            _label_info = Label(self.frame)
+            self.label_list.append(_label_info)
+            self.add_label(_label_info, target_dir, row=row, column=base_col, wraplength=MarkedFiles.COL_0_WIDTH)
 
             move_btn = Button(self.frame, text=_("Move"))
             self.move_btn_list.append(move_btn)
@@ -277,6 +278,23 @@ class MarkedFiles():
     def clear_marks(self):
         MarkedFiles.clear_file_marks(self.app_actions.toast)
         self.close_windows()
+    
+    def open_hotkey_actions_window(self, event):
+        try:
+            hotkey_actions_window = HotkeyActionsWindow(self.master, self.app_actions, self.set_permanent_mark_target, self.set_hotkey_action)
+        except Exception as e:
+            self.app_actions.alert("Error opening hotkey actions window: " + str(e))
+
+    def set_permanent_mark_target(self, event=None):
+        self.do_set_permanent_mark_target = True
+        Utils.log_debug(f"Setting permanent mark target hotkey action")
+        self.app_actions.toast(_("Recording next mark target and action."))
+
+    def set_hotkey_action(self, event=None, hotkey_override=None):
+        assert event is not None or hotkey_override is not None
+        self.do_set_hotkey_action = int(event.keysym) if hotkey_override is None else int(hotkey_override)
+        Utils.log_debug(f"Doing set hotkey action: {self.do_set_hotkey_action}")
+        self.app_actions.toast(_("Recording next mark target and action."))
 
     @staticmethod
     def get_target_directory(target_dir, starting_target, toast_callback):
@@ -624,15 +642,6 @@ class MarkedFiles():
             else:
                 target_dir = MarkedFiles.last_set_target_dir
             self.move_marks_to_dir(target_dir=target_dir, move_func=move_func)
-
-    def set_permanent_mark_target(self, event=None):
-        self.do_set_permanent_mark_target = True
-        self.app_actions.toast(_("Recording next mark target and action."))
-
-    def set_hotkey_action(self, event=None):
-        assert event is not None
-        self.do_set_hotkey_action = int(event.keysym)
-        self.app_actions.toast(_("Recording next mark target and action."))
 
     def clear_target_dirs(self, event=None):
         MarkedFiles.mark_target_dirs.clear()

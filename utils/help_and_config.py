@@ -39,6 +39,7 @@ class HelpAndConfig():
             "Ctrl+E": _("Run penultimate marks action"),
             "Ctrl+G": _("Open Go to file window"),
             "Ctrl+H": _("Hide/show sidebar"),
+            "Ctrl+H*": _("Open hotkeys window (*when marks window open)"),
             "Ctrl+J": _("Open content filters window"),
             "Ctrl+K": _("Open marks window (no GUI)"),
             "Ctrl+M": _("Open marks window"),
