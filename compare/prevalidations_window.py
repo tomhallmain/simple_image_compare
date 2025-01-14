@@ -7,6 +7,8 @@ from tkinter.ttk import Entry, Button
 
 from compare.compare_embeddings import CompareEmbedding
 from files.file_actions_window import FileActionsWindow
+from image.image_classifier import image_classifier_manager
+from image.prevalidation_action import PrevalidationAction
 from utils.app_style import AppStyle
 from utils.app_info_cache import app_info_cache
 from utils.config import config
@@ -16,24 +18,14 @@ from utils.utils import Utils
 _ = I18N._
 
 
-class PrevalidationAction(Enum):
-    SKIP = "SKIP"
-    HIDE = "HIDE"
-    NOTIFY = "NOTIFY"
-    MOVE = "MOVE"
-    COPY = "COPY"
-    DELETE = "DELETE"
-
-    def is_cache_type(self):
-        # If the action is not one of these types, it should have been moved out of the directory.
-        return self == PrevalidationAction.HIDE or self == PrevalidationAction.NOTIFY or self == PrevalidationAction.SKIP
 
 class Prevalidation:
     NO_POSITIVES_STR = _("(no positives set)")
     NO_NEGATIVES_STR = _("(no negatives set)")
 
     def __init__(self, name=_("New Prevalidation"), positives=[], negatives=[], threshold=0.23,
-                 action=PrevalidationAction.NOTIFY, action_modifier="", run_on_folder=None, is_active=True):
+                 action=PrevalidationAction.NOTIFY, action_modifier="", run_on_folder=None, is_active=True,
+                 image_classifier_name="", image_classifier_selected_category="N/A"):
         self.name = name
         self.positives = positives
         self.negatives = negatives
@@ -42,6 +34,11 @@ class Prevalidation:
         self.action_modifier = action_modifier
         self.run_on_folder = run_on_folder
         self.is_active = is_active
+        self.image_classifier_name = image_classifier_name
+        self.image_classifier = None
+        self.image_classifier_categories = [image_classifier_selected_category]
+        self.image_classifier_selected_category = image_classifier_selected_category
+        self.set_image_classifier(image_classifier_name)
 
     def set_positives(self, text):
         self.positives = [x.strip() for x in Utils.split(text, ",") if len(x) > 0]
@@ -58,41 +55,54 @@ class Prevalidation:
         else:
             return Prevalidation.NO_POSITIVES_STR
 
+    def set_image_classifier(self, classfier_name):
+        self.image_classifier = image_classifier_manager.get_classifier(classifier_name)
+        self.image_classifier_categories = list(self.image_classifier.image_classifier_categories)
+
+    def is_selected_category_unset(self):
+        return self.image_classifier_selected_category == "N/A"
+
     def run_on_image_path(self, image_path, hide_callback, toast_callback):
-        is_above_threshold = CompareEmbedding.multi_text_compare(image_path, self.positives, self.negatives, self.threshold)
+        if self.image_classifier is not None:
+            is_above_threshold = self.image_classifier.test_image_for_category(image_path, self.image_classifier_selected_category, self.threshold)
+        else:
+            is_above_threshold = CompareEmbedding.multi_text_compare(image_path, self.positives, self.negatives, self.threshold)
         if is_above_threshold:
-            if self.action == PrevalidationAction.SKIP:
-                toast_callback(self.name +  _(" detected") +  _(" - skipped"))
-            elif self.action == PrevalidationAction.HIDE:
-                hide_callback(image_path)
-                toast_callback(self.name + _(" detected") + _(" - hidden"))
-            elif self.action == PrevalidationAction.NOTIFY:
-                toast_callback(self.name + _(" detected"))
-            elif self.action == PrevalidationAction.MOVE or self.action == PrevalidationAction.COPY:
-                if self.action_modifier is not None and len(self.action_modifier) > 0:
-                    if not os.path.exists(self.action_modifier):
-                        raise Exception("Invalid move target directory for prevalidation " + self.name + ": " + self.action_modifier)
-                    if not os.path.normpath(os.path.dirname(image_path)) == os.path.normpath(self.action_modifier):
-                        toast_callback(self.name + _(" detected") + "\n" + _("Moving file: ") + image_path)
-                        try:
-                            FileActionsWindow.add_file_action(
-                                Utils.move_file if self.action == PrevalidationAction.MOVE else Utils.copy_file,
-                                image_path, self.action_modifier
-                            )
-                        except Exception as e:
-                            print(e)
-                else:
-                    raise Exception("Target directory not defined on prevalidation "  + self.name)
-            elif self.action == PrevalidationAction.DELETE:
-                toast_callback(self.name + _(" detected") + "\n" + _("Deleting file: ") + image_path)
-                try:
-                    os.remove(image_path)
-                    print("Deleted file at " + image_path)
-                except Exception as e:
-                    print(e)
-            return self.action
+            return self.run_action(image_path, hide_callback, toast_callback)
         else:
             return None
+
+    def run_action(self, image_path, hide_callback, toast_callback):
+        if self.action == PrevalidationAction.SKIP:
+            toast_callback(self.name +  _(" detected") +  _(" - skipped"))
+        elif self.action == PrevalidationAction.HIDE:
+            hide_callback(image_path)
+            toast_callback(self.name + _(" detected") + _(" - hidden"))
+        elif self.action == PrevalidationAction.NOTIFY:
+            toast_callback(self.name + _(" detected"))
+        elif self.action == PrevalidationAction.MOVE or self.action == PrevalidationAction.COPY:
+            if self.action_modifier is not None and len(self.action_modifier) > 0:
+                if not os.path.exists(self.action_modifier):
+                    raise Exception("Invalid move target directory for prevalidation " + self.name + ": " + self.action_modifier)
+                if not os.path.normpath(os.path.dirname(image_path)) == os.path.normpath(self.action_modifier):
+                    toast_callback(self.name + _(" detected") + "\n" + _("Moving file: ") + image_path)
+                    try:
+                        FileActionsWindow.add_file_action(
+                            Utils.move_file if self.action == PrevalidationAction.MOVE else Utils.copy_file,
+                            image_path, self.action_modifier
+                        )
+                    except Exception as e:
+                        print(e)
+            else:
+                raise Exception("Target directory not defined on prevalidation "  + self.name)
+        elif self.action == PrevalidationAction.DELETE:
+            toast_callback(self.name + _(" detected") + "\n" + _("Deleting file: ") + image_path)
+            try:
+                os.remove(image_path)
+                print("Deleted file at " + image_path)
+            except Exception as e:
+                print(e)
+        return self.action
 
     def get_negatives_str(self):
         if len(self.negatives) > 0:
@@ -106,9 +116,12 @@ class Prevalidation:
     def validate(self):
         if self.name is None or len(self.name) == 0:
             raise Exception('Prevalidation name is None or empty')
-        if (self.positives is None or len(self.positives) == 0) and \
-                (self.negatives is None and len(self.negatives) == 0):
-            raise Exception("At least one of positive or negative texts must be set.")
+        if self.image_classifier is None:
+            if (self.positives is None or len(self.positives) == 0) and \
+                    (self.negatives is None and len(self.negatives) == 0):
+                raise Exception("At least one of positive or negative texts must be set.")
+        if self.image_classifier is not None and self.image_classifier_selected_category not in self.image_classifier_categories:
+            raise Exception(f"The selected category \"{self.image_classifier_selected_category}\" was not found in the image classifier's category options")
         if self.is_move_action() and \
                 not os.path.isdir(self.action_modifier):
             raise Exception('Action modifier must be a valid directory')
@@ -145,6 +158,8 @@ class Prevalidation:
             "action_modifier": self.action_modifier,
             "run_on_folder": self.run_on_folder,
             "is_active": self.is_active,
+            "image_classifier_name": self.image_classifier_name,
+            "image_classifier_selected_category": self.image_classifier_selected_category,
             }
 
     @staticmethod
@@ -152,7 +167,10 @@ class Prevalidation:
         return Prevalidation(**d)
 
     def __str__(self) -> str:
-        return self.name + _(" ({0} positives, {1} negatives)").format(len(self.positives), len(self.negatives))
+        if self.image_classifier is not None:
+            return self.name + _(" testing classifier {0} for {1}").format(self.image_classifier_name, self.image_classifier_selected_category)
+        else:
+            return self.name + _(" ({0} positives, {1} negatives)").format(len(self.positives), len(self.negatives))
 
 class PrevalidationModifyWindow():
     top_level = None
@@ -223,6 +241,26 @@ class PrevalidationModifyWindow():
         self.run_on_folder_entry.grid(row=row, column=1, sticky=W)
 
         row += 1
+        self.image_classifier_name_entry = Entry(self.frame, textvariable=self.image_classifier_name_var, width=50, font=fnt.Font(size=config.font_size))
+        self.image_classifier_name_entry.grid(row=row, column=1, sticky=W)
+
+        row += 1
+        self.label_image_classifier_name = Label(self.frame)
+        self.add_label(self.label_image_classifier_name, _("Image Classifier Name"), row=row, column=0)
+        self.image_classifier_name_var = StringVar(self.master, value=self.prevalidation.image_classifier_name)
+        name_options = [""]
+        name_options.extend(image_classifier_manager.get_model_names())
+        self.image_classifier_name_choice = OptionMenu(self.frame, self.image_classifier_name_var, self.prevalidation.image_classifier_name, *action_options, command=self.set_image_classifier)
+        self.image_classifier_name_choice.grid(row=row, column=1, sticky=W)
+
+        row += 1
+        self.label_selected_category = Label(self.frame)
+        self.add_label(self.label_selected_category, _("Image Classifier Selected Category"), row=row, column=0)
+        self.image_classifier_selected_category_var = StringVar(self.master, value=self.prevalidation.image_classifier_selected_category)
+        self.image_classifier_selected_category_choice = OptionMenu(self.frame, self.image_classifier_selected_category_var, self.prevalidation.image_classifier_selected_category, *self.prevalidation.image_classifier_categories[:], command=self.set_image_classifier_selected_category)
+        self.image_classifier_selected_category_choice.grid(row=row, column=1, sticky=W)
+
+        row += 1
         self.add_prevalidation_btn = None
         self.add_btn("add_prevalidation_btn", _("Done"), self.finalize_prevalidation, row=row, column=0)
 
@@ -255,6 +293,15 @@ class PrevalidationModifyWindow():
         self.prevalidation.run_on_folder = self.run_on_folder_entry.get().strip() \
                 if self.run_on_folder_entry.get().strip() != "" else None
 
+    def set_image_classifier(self, event=None):
+        self.prevalidation.set_image_classifier(self.image_classifier_name_var.get())
+        set_category_value = self.prevalidation.image_classifier_categories[0] if self.prevalidation.is_selected_category_unset() else self.prevalidation.selected_category
+        self.image_classifier_selected_category_var.set(set_category_value)
+        self.master.update()
+
+    def set_image_classifier_selected_category(self, event=None):
+        self.prevalidation.image_classifier_selected_category = self.image_classifier_selected_category_var.get()
+
     def finalize_prevalidation(self, event=None):
         self.set_name()
         self.set_positives()
@@ -263,6 +310,8 @@ class PrevalidationModifyWindow():
         self.set_action()
         self.set_action_modifier()
         self.set_run_on_folder()
+        self.set_image_classifier()
+        self.set_image_classifier_selected_category()
         self.prevalidation.validate()
         self.close_windows()
         self.refresh_callback(self.prevalidation)

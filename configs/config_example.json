@@ -54,9 +54,15 @@
     "cool car",
     {"positive": "masterpiece, artful", "negative": "ugly, deformed"}
   ],
-  "h5_models": {
-    "model_name": "path/to/my/model.h5"
-  },
+  "image_classifier_h5_models": [
+    {
+      "model_name": "model name (be sure to change this)",
+      "model_location": "path/to/my/model.h5",
+      "model_categories": ["photograph", "drawing"],
+      "target_image_dim": 224,
+      "image_array_divisor": 255
+    }
+  ],
   "text_embedding_search_presets_exclusive": false,
   "enable_prevalidations": true,
   "show_negative_prompt": true,

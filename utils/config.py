@@ -49,6 +49,7 @@ class Config:
         self.always_open_new_windows = False
         self.image_types = [".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".bmp", ".heic", ".avif"]
         self.video_types = [".gif", ".mp4", ".mkv", ".avi", ".wmv", ".mov", ".flv"]
+        self.image_classifier_h5_models = []
         self.enable_videos = True
         self.directories_to_search_for_related_images = []
         self.font_size = 8
@@ -99,7 +100,8 @@ class Config:
                             "image_types",
                             "video_types",
                             "text_embedding_search_presets",
-                            "directories_to_search_for_related_images")
+                            "directories_to_search_for_related_images",
+                            "image_classifier_h5_models")
             self.set_values(str,
                             "foreground_color",
                             "background_color",
@@ -170,7 +172,19 @@ class Config:
                 raise AssertionError("Invalid sort type for sort_by config setting. Must be one of NAME, FULL_PATH, CREATION_TIME, TYPE")
 
         self.debug = self.log_level and self.log_level.lower() == "debug"
+        self.set_directories_to_search_for_related_images()
+        self.check_image_edit_configuration()
+        self.remove_example_h5_model_details()
 
+        if self.print_settings:
+            self.print_config_settings()
+
+        if self.locale is None or self.locale == "":
+            print(f"No locale set for config file.")
+            self.locale = Utils.get_default_user_language()
+        os.environ["LANG"] = self.locale
+
+    def set_directories_to_search_for_related_images(self):
         if len(self.directories_to_search_for_related_images) > 0:
             for i in range(len(self.directories_to_search_for_related_images)):
                 _dir = self.directories_to_search_for_related_images[i]
@@ -186,18 +200,18 @@ class Config:
                     else:
                         self.directories_to_search_for_related_images[i] = try_dir
 
+    def check_image_edit_configuration(self):
         if not "image_edit_configuration" in self.dict or not type(self.dict["image_edit_configuration"] == dict):
             print("Image edit configuration not found or invalid, using default values.")
         else:   
             self.image_edit_configuration.set_from_dict(self.dict["image_edit_configuration"])
 
-        if self.print_settings:
-            self.print_config_settings()
-
-        if self.locale is None or self.locale == "":
-            print(f"No locale set for config file.")
-            self.locale = Utils.get_default_user_language()
-        os.environ["LANG"] = self.locale
+    def remove_example_h5_model_details(self):
+        for i in range(len(self.image_classifier_h5_models)):
+            model_details = self.image_classifier_h5_models[i]
+            if "(be sure to change this)" in model_details["model_name"]:
+                del self.image_classifier_h5_models[i]
+                break
 
     def validate_and_set_directory(self, key, override=False):
         loc = key if override else self.dict[key]
