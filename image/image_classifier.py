@@ -11,26 +11,27 @@ try:
     import tensorflow_hub as hub
     import keras.utils as image
     import numpy as np
+    imports_successful = True
 except ImportError as e:
     Utils.log_yellow(e)
     Utils.log_yellow("Failed to import packages for image classifier models!")
-    imports_successful = True
 
-
-DEFAULT_IMAGE_DIM = 224   # required/default image dimensionality
-MODEL_LOC = r"C:\Users\tehal\nsfw_model\trained_models\mobilenet_v2_140_224\saved_model.h5"
-categories = ['drawings', 'hentai', 'neutral', 'porn', 'sexy']
 
 DEFAULT_MODEL_DETAILS = {
     "model_name": "",
     "model_categories": ["drawing", "photograph"],
     "model_location": "",
-    "target_image_dim": 224,
+    "target_image_dim": 224,   # required/default image dimensionality
     "image_array_divisor": 255,
 }
 
 class ImageClassifier:
     def __init__(self, model_details=DEFAULT_MODEL_DETAILS):
+        self.model_name = DEFAULT_MODEL_DETAILS["model_name"]
+        self.model_categories = DEFAULT_MODEL_DETAILS["model_categories"]
+        self.model_location = DEFAULT_MODEL_DETAILS["model_location"]
+        self.target_image_dim = DEFAULT_MODEL_DETAILS["target_image_dim"]
+        self.image_array_divisor = DEFAULT_MODEL_DETAILS["image_array_divisor"]
         self.__dict__ = dict(model_details)
         self.can_run = imports_successful
         self.model = None
@@ -41,7 +42,7 @@ class ImageClassifier:
                 if self.model_name == "None" or self.model_name == "":
                     raise Exception("Invalid model name: " + self.model_name)
                 if not type(self.model_categories) == list or len(self.model_categories) == 0 \
-                        or any(lambda c: type(c) != str, self.model_categories):
+                        or any([type(c) != str for c in self.model_categories]):
                     raise Exception(f"Invalid model categories: {self.model_categories}")
                 if not type(self.model_location) == str or not os.path.isfile(self.model_location):
                     raise Exception(f"Invalid model location: {self.model_location}")
@@ -54,31 +55,32 @@ class ImageClassifier:
                 Utils.log_red(e)
                 Utils.log_yellow("Failed to set model details for image classifier: " + str(model_details))
             try:
-                self.model = tf.keras.models.load_model(self.model_loc, custom_objects={'KerasLayer': hub.KerasLayer})
+                self.model = tf.keras.models.load_model(self.model_location, custom_objects={'KerasLayer': hub.KerasLayer})
             except Exception as e:
                 self.can_run = False
                 Utils.log_red(e)
                 Utils.log_yellow("Failed to initialize model for image classifier: " + self.model_name)
 
-    def predict_image(image_path):
+    def predict_image(self, image_path):
         if image_path in self.predictions_cache:
             return self.predictions_cache[image_path]
-        img = image.load_img(image_path, target_size=(self.target_image_dim, target_image_dim))
+        assert self.model is not None
+        img = image.load_img(image_path, target_size=(self.target_image_dim, self.target_image_dim))
         y = image.img_to_array(img)
         y /= self.image_array_divisor
         images = np.asarray([y])
         predictions = self.model.predict(images)
         classed_predictions = {}
-        for i in range(5):
-            classed_predictions[categories[i]] = float(predictions[0][i])
+        for i in range(len(self.model_categories)):
+            classed_predictions[self.model_categories[i]] = float(predictions[0][i])
         self.predictions_cache[image_path] = list(classed_predictions)
         return classed_predictions
 
-    def classify_image(image_path):
+    def classify_image(self, image_path):
         if not self.can_run:
             raise Exception(f"Invalid state: Image classifier details failed to initialize, unable to classify image")
-        classed_predictions = predict_image(model, image_path)
-        keys = list(categories)
+        classed_predictions = self.predict_image(image_path)
+        keys = list(self.model_categories)
         keys.sort(key=lambda c: classed_predictions[c], reverse=True)
         classed_category = keys[0]
         if not classed_category in self.model_categories:
@@ -86,7 +88,7 @@ class ImageClassifier:
                             f"\nCategories expected: {self.model_categories}")
         return classed_category
 
-    def test_image_for_category(image_path, category, threshold):
+    def test_image_for_category(self, image_path, category, threshold):
         if not self.can_run:
             raise Exception(f"Invalid state: Image classifier details failed to initialize, unable to classify image")
         return self.predict_image(image_path)[category] > threshold
@@ -117,6 +119,14 @@ class ImageClassifierManager:
         if type(image_classifier) != ImageClassifier:
             raise Exception(f"Invalid image classifier argument: {image_classifier}")
         self.classifiers[image_classifier.model_name] = image_classifier
+
+    def get_classifier(self, model_name):
+        if model_name is None or model_name.strip() == "":
+            return None
+        try:
+            return self.classifiers[model_name]
+        except Exception as e:
+            raise Exception(f"Failed to find image classifier with model name: \"{model_name}\"")
 
     def get_model_names(self):
         return list(self.classifiers.keys())

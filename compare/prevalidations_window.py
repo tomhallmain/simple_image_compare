@@ -36,7 +36,7 @@ class Prevalidation:
         self.is_active = is_active
         self.image_classifier_name = image_classifier_name
         self.image_classifier = None
-        self.image_classifier_categories = [image_classifier_selected_category]
+        self.image_classifier_categories = ["N/A"]
         self.image_classifier_selected_category = image_classifier_selected_category
         self.set_image_classifier(image_classifier_name)
 
@@ -55,9 +55,11 @@ class Prevalidation:
         else:
             return Prevalidation.NO_POSITIVES_STR
 
-    def set_image_classifier(self, classfier_name):
+    def set_image_classifier(self, classifier_name):
         self.image_classifier = image_classifier_manager.get_classifier(classifier_name)
-        self.image_classifier_categories = list(self.image_classifier.image_classifier_categories)
+        if self.image_classifier is not None:
+            self.image_classifier_categories = ["N/A"]
+            self.image_classifier_categories.extend(list(self.image_classifier.image_classifier_categories))
 
     def is_selected_category_unset(self):
         return self.image_classifier_selected_category == "N/A"
@@ -239,10 +241,6 @@ class PrevalidationModifyWindow():
         self.run_on_folder_var = StringVar(self.master, value=self.prevalidation.run_on_folder)
         self.run_on_folder_entry = Entry(self.frame, textvariable=self.run_on_folder_var, width=50, font=fnt.Font(size=config.font_size))
         self.run_on_folder_entry.grid(row=row, column=1, sticky=W)
-
-        row += 1
-        self.image_classifier_name_entry = Entry(self.frame, textvariable=self.image_classifier_name_var, width=50, font=fnt.Font(size=config.font_size))
-        self.image_classifier_name_entry.grid(row=row, column=1, sticky=W)
 
         row += 1
         self.label_image_classifier_name = Label(self.frame)
