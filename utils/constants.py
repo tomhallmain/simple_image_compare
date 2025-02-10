@@ -147,3 +147,12 @@ class ImageGenerationType(Enum):
     @staticmethod
     def members():
         return [str(value) for key, value in ImageGenerationType.__members__.items()]
+
+
+class Direction(Enum):
+    FORWARD = "forward"
+    BACKWARD = "back"
+
+    def get_correction(self, backward_value=0):
+        return backward_value if self == Direction.BACKWARD else -1
+

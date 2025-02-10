@@ -27,7 +27,7 @@ from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config, FileCheckConfig, SlideshowConfig
-from utils.constants import Mode, CompareMode
+from utils.constants import Mode, CompareMode, Direction
 from utils.help_and_config import HelpAndConfig
 from utils.running_tasks_registry import periodic, start_thread
 from utils.translations import I18N
@@ -163,6 +163,7 @@ class App():
         self.img_path = None
         self.prev_img_path = None
         self.is_toggled_view_matches = True
+        self.direction = Direction.FORWARD
         self.has_added_buttons_for_mode = {
             Mode.BROWSE: False,
             Mode.GROUP: False,
@@ -574,8 +575,11 @@ class App():
             Utils.log_debug("Refocused main window")
 
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
+        active_media_filepath_in_removed_files = self.get_active_media_filepath() in removed_files
+        # print(f"File cursor before: {self.file_browser.get_cursor()}")
         self.file_browser.refresh(
-            refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files)
+            refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files, direction=self.direction)
+        # print(f"File cursor after: {self.file_browser.get_cursor()}")
         if len(removed_files) > 0:
             if self.mode == Mode.BROWSE:
                 self._set_label_state()
@@ -588,7 +592,9 @@ class App():
                 return
             if show_new_images:
                 has_new_images = self.file_browser.update_cursor_to_new_images()
-            self.show_next_media()
+                self.show_next_media()
+            if active_media_filepath_in_removed_files:
+                self.last_chosen_direction_func()
             self._set_label_state()
             if show_new_images and has_new_images:
                 # User may have started delete just before the image changes, lock for a short period after to ensure no misdeletion
@@ -974,9 +980,12 @@ class App():
         If similar image results are present in any mode, display the previous
         in the list of matches.
         '''
+        self.direction = Direction.BACKWARD
         if self.mode == Mode.BROWSE:
             start_file = self.file_browser.current_file()
             previous_file = self.file_browser.previous_file()
+            if self.img_path == previous_file:
+                return True  # NOTE self.refresh() is calling this method in this case
             while self.compare_wrapper.skip_image(previous_file) and previous_file != start_file:
                 previous_file = self.file_browser.previous_file()
             self.master.update()
@@ -993,6 +1002,7 @@ class App():
         If similar image results are present in any mode, display the next
         in the list of matches.
         '''
+        self.direction = Direction.FORWARD
         if self.mode == Mode.BROWSE:
             start_file = self.file_browser.current_file()
             next_file = self.file_browser.next_file()
@@ -1009,6 +1019,17 @@ class App():
                 self.handle_error(str(e), title="Exception")
                 return False
         return self.compare_wrapper.show_next_media(show_alert=show_alert)
+
+    def last_chosen_direction_func(self):
+        """
+        This will be next or previous based on the user's last chosen direction.
+        """
+        if self.direction == Direction.BACKWARD:
+            self.show_prev_media()
+        elif self.direction == Direction.FORWARD:
+            self.show_next_media()
+        else:
+            raise Exception(f"Direction was improperly set. Direction was {self.direction}")
 
     def set_current_image_run_search(self, event=None, base_dir=None) -> None:
         '''
@@ -1424,6 +1445,7 @@ class App():
                 self.create_image(self.file_browser.last_file())
                 if len(MarkedFiles.file_marks) == 1 and self.file_browser.has_file(MarkedFiles.file_marks[0]):
                     self._add_all_marks_from_last_or_current_group()
+                self.direction = Direction.BACKWARD
             elif Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT]):
                 self.home(last_file=not last_file)
                 return
@@ -1447,6 +1469,7 @@ class App():
             prev_file = self.file_browser.previous_file() if self.mode == Mode.BROWSE else self.compare_wrapper._get_prev_image()
         self.create_image(prev_file)
         self.master.update()
+        self.direction = Direction.BACKWARD
 
     def page_down(self, event=None):
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
@@ -1456,6 +1479,7 @@ class App():
             next_file = self.file_browser.next_file() if self.mode == Mode.BROWSE else self.compare_wrapper._get_next_image()
         self.create_image(next_file)
         self.master.update()
+        self.direction = Direction.FORWARD
 
     def is_toggled_search_image(self):
         return self.mode == Mode.SEARCH and not self.is_toggled_view_matches
@@ -1527,8 +1551,8 @@ class App():
                 self.media_canvas.release_media()
                 self._handle_delete(filepath)
                 MarkedFiles.handle_file_removal(filepath)
-                self.file_browser.refresh(refresh_cursor=False, removed_files=[filepath])
-                self.show_next_media()
+                self.file_browser.refresh(refresh_cursor=False, removed_files=[filepath], direction=self.direction)
+                self.last_chosen_direction_func()
             self.file_browser.checking_files = True
             return
 

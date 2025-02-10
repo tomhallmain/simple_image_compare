@@ -478,7 +478,7 @@ class CompareWrapper:
                     self._app_actions.create_image(self.current_match())
 
     def update_compare_for_readded_file(self, readded_file):
-        self._compare.readd_file(readded_file)
+        self._compare.readd_files([readded_file])
 
     def _get_file_group_map(self, app_mode):
         if app_mode == Mode.BROWSE:

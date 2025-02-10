@@ -9,7 +9,7 @@ from typing import List
 
 from files.sortable_file import SortableFile
 from utils.config import config
-from utils.constants import Sort, SortBy
+from utils.constants import Sort, SortBy, Direction
 from utils.translations import I18N
 from utils.utils import Utils
 
@@ -69,13 +69,17 @@ class FileBrowser:
     def is_recursive(self):
         return self.recursive
 
-    def refresh(self, refresh_cursor=True, file_check=False, removed_files=[]):
+    def get_cursor(self):
+        with self.cursor_lock:
+            return self.file_cursor
+
+    def refresh(self, refresh_cursor=True, file_check=False, removed_files=[], direction=Direction.FORWARD):
         last_files = self.get_files() if file_check else []
         if config.use_file_paths_json:
             self.update_json_for_removed_files(removed_files)
         if refresh_cursor:
             with self.cursor_lock:
-                self.file_cursor = -1
+                self.file_cursor = direction.get_correction(backward_value=1)
         current_file = self.current_file() if file_check else None
         self.filepaths = []
         self._get_sortable_files()
@@ -84,15 +88,16 @@ class FileBrowser:
         if file_check and current_file and os.path.isfile(current_file):
             with self.cursor_lock:
                 self.file_cursor = files.index(current_file)
-                if self.file_cursor > -1:
-                    self.file_cursor -= 1
+                if len(removed_files) > 0:
+                    if self.file_cursor > -1:
+                        self.file_cursor += direction.get_correction()
             self._new_files = list(set(files) - set(last_files))
         elif not refresh_cursor:
             with self.cursor_lock:
                 if len(files) - 1 < self.file_cursor:
-                    self.file_cursor = -1
+                    self.file_cursor = direction.get_correction()
                 else:
-                    self.file_cursor -= 1
+                    self.file_cursor += direction.get_correction()
         return files
 
     def update_cursor_to_new_images(self):

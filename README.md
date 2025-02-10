@@ -37,12 +37,12 @@ Note that in order to view videos and GIFs, you must set the `enable_videos` set
 
 ## Usage
 
-<details>
-<summary>Expand Details</summary>
 Clone this repository and ensure Python 3 and the required packages are installed from requirements.txt.
 
 Run `app.py` to start the UI, or provide the location of the directory containing images for comparison to `compare_embeddings.py` or `compare.py` at runtime.
 
+<details>
+<summary>Expand Details</summary>
 Useful for detecting duplicates or finding associations between large unstructured sets of image files. File management controls are available after the image analysis has completed.
 
 Individual images can be passed to search against the full image data set by passing flag `--search` with the path of the search file, or setting a search file in the UI before running comparison.
