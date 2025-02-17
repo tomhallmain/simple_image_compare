@@ -398,6 +398,7 @@ class App():
         self.master.bind("<Control-x>", lambda event: MarkedFiles.undo_move_marks(None, self.app_actions))
         self.master.bind("<Control-s>", self.next_text_embedding_preset)
         self.master.bind("<Control-b>", self.return_to_browsing_mode)
+        self.master.bind("<Control-v>", self.toggle_videos_enabled)
         self.master.bind("<Home>", self.home)
         self.master.bind("<End>", lambda event: self.home(last_file=True))
         self.master.bind("<Prior>", self.page_up)
@@ -1356,6 +1357,13 @@ class App():
         config.enable_prevalidations = not config.enable_prevalidations
         self.toast(_("Prevalidations now running") if config.enable_prevalidations else _("Prevalidations turned off"))
 
+    def toggle_videos_enabled(self, event=None):
+        # NOTE have to delete the old compare since it may have been running with invalid file types
+        videos_enabled = config.toggle_video_mode()
+        self.return_to_browsing_mode()
+        self.compare_wrapper = CompareWrapper(self.master, config.compare_mode, self.app_actions)
+        self.toast(_("Videos now running") if videos_enabled else _("Videos turned off"))
+
     def open_go_to_file_window(self, event=None):
         try:
             go_to_file = GoToFile(self.master, self.app_actions)
@@ -1456,6 +1464,7 @@ class App():
                 self.create_image(first_image)
             self.master.update()
         elif self.compare_wrapper.has_compare():
+            self.direction = Direction.FORWARD
             # TODO map last_file logic for compare case
             self.compare_wrapper.current_group_index = 0
             self.compare_wrapper.match_index = 0

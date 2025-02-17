@@ -71,7 +71,7 @@ class TempImageCanvas:
 
         self.master.bind("<Escape>", self.app_actions.refocus)
         self.master.bind("<Shift-Escape>", self.close_windows)
-        self.master.bind("<Shift-D>", lambda event: self.app_actions.get_image_details(image_path=self.image_path))
+        self.master.bind("<Shift-D>", lambda event: self.app_actions.get_media_details(image_path=self.image_path))
         self.master.bind("<Shift-I>", lambda event: self.app_actions.run_image_generation(_type=None, image_path=self.image_path))
         self.master.bind("<Button-3>", lambda event: self.app_actions.run_image_generation(_type=None, image_path=self.image_path))
         self.master.bind("<Shift-Y>", lambda event: self.app_actions.set_marks_from_downstream_related_images(image_to_use=self.image_path))

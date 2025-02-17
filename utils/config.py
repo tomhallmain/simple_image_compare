@@ -268,6 +268,14 @@ class Config:
             print(f" - Stable diffusion prompt reader location is not set or invalid.")
         print(f" - Max files per compare: {self.file_counter_limit}")
 
+    def toggle_video_mode(self):
+        self.enable_videos = not self.enable_videos
+        self.file_types = list(self.image_types)
+        if self.enable_videos:
+            self.file_types.extend(list(self.video_types))
+        return self.enable_videos
+
+
 config = Config()
 
 

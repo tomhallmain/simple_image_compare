@@ -12,6 +12,7 @@ The UI can be used as a media file browser. The following features are available
     <li>Auto-resize images to fill the screen</li>
     <li>Auto-refresh directory files</li>
     <li>Slideshow (customizable)</li>
+    <li>Optionally play video files and other media</li>
     <li>Quicker and smoother transitions between images</li>
     <li>Faster load time for directories with many images in some cases</li>
     <li>Faster load times when switching between sort types</li>
@@ -112,7 +113,7 @@ On this window the previous file action media can be viewed and reversed or the 
 
 ## Limitations
 
-**NOTE** - It is not currently possible to undo a delete action, however unless the delete folder is explicitly set to null in the config it is likely the deleted items will be saved in a trash folder before being fully removed.
+**NOTE** - It is not currently possible to undo or modify a delete action, however unless the delete folder is explicitly set to null in the config it is likely the deleted items will be saved in a trash folder before being fully removed.
 
 This is a simple app primarily meant for personal use but could be adapted for more intensive use cases.
 
