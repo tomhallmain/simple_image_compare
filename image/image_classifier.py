@@ -1,61 +1,183 @@
-
 import os
 
-from utils.config import config
+import numpy as np
+from PIL import Image
+
 from utils.utils import Utils
 
-imports_successful = False
+class H5ImageClassifier:
+    def __init__(self, model_path, custom_objects=None):
+        """Image classifier for H5 models with version-independent loading
+        
+        Args:
+            model_path: Path to .h5 model file
+            custom_objects: Dictionary of custom layer classes {name: class}
+        """
+        self.is_loaded = False
+        self.model = self._load_model(model_path, custom_objects or {})
+        if self.is_loaded:
+            self.input_shape = self._get_input_shape()
+            self._verify_model_compatibility()
 
-try:
-    import tensorflow as tf ## NOTE requires tensorflow version < 3
-    import tensorflow_hub as hub
-    import keras.utils as image
-    import numpy as np
-    imports_successful = True
-except ImportError as e:
-    Utils.log_yellow(e)
-    Utils.log_yellow("Failed to import packages for image classifier models!")
+    def _load_model(self, model_path, custom_objects):
+        """Load model with fallback strategies"""
+        self._register_common_layers(custom_objects)
+        
+        loaders = [
+            self._load_model_tensorflow_keras,
+            self._load_model_tf_keras,
+            self._load_model_keras
+        ]
+        
+        for loader in loaders:
+            model = loader(model_path, custom_objects)
+            if model is not None:
+                self.is_loaded = True
+                return model
+
+        Utils.log_red(f"Failed to load model at {model_path}")
+        return None
+
+    def _register_common_layers(self, custom_objects):
+        """Auto-register common custom layers"""
+        try:
+            import tensorflow_hub as hub
+            custom_objects['KerasLayer'] = hub.KerasLayer
+        except ImportError:
+            pass
+
+    def _load_model_tensorflow_keras(self, model_path, custom_objects):
+        """Attempt loading with TensorFlow's built-in Keras"""
+        try:
+            from tensorflow.keras.models import load_model as tf_load_model
+            from tensorflow.keras.utils import custom_object_scope
+            with custom_object_scope(custom_objects):
+                print("Attempting TensorFlow Keras load...")
+                return tf_load_model(model_path)
+        except Exception as e:
+            print(f"TensorFlow Keras load failed: {str(e)[:200]}")
+            return None
+
+    def _load_model_tf_keras(self, model_path, custom_objects):
+        """Fallback to tf_keras package"""
+        try:
+            from tf_keras.models import load_model
+            print("Attempting tf_keras load...")
+            return load_model(model_path, custom_objects=custom_objects)
+        except Exception as e:
+            print(f"tf_keras load failed: {str(e)[:200]}")
+            return None
+
+    def _load_model_keras(self, model_path, custom_objects):
+        """Last-resort standalone Keras attempt"""
+        try:
+            from keras.models import load_model as keras_load_model
+            from keras.utils.custom_object_scope import custom_object_scope
+            with custom_object_scope(custom_objects):
+                print("Attempting standalone Keras load...")
+                return keras_load_model(model_path)
+        except Exception as e:
+            print(f"Standalone Keras load failed: {str(e)[:200]}")
+            return None
+
+    def _get_input_shape(self):
+        """Get input dimensions with channels-last/channels-first awareness"""
+        input_shape = self.model.input_shape
+        if isinstance(input_shape, list):
+            input_shape = input_shape[0]
+            
+        # Handle different data formats
+        if len(input_shape) == 4:  # Batch dimension included
+            _, height, width, _ = input_shape
+        else:
+            height, width, _ = input_shape
+        return (width, height)  # PIL uses (width, height) for resize
+
+    def _verify_model_compatibility(self):
+        """Check for common compatibility issues"""
+        if not hasattr(self.model, 'predict'):
+            raise ValueError("Loaded model doesn't support prediction interface")
+        if len(self.input_shape) != 2:
+            raise ValueError("Model expects unexpected input dimensions")
+
+    def preprocess_image(self, image_path):
+        """Preprocess image with safety checks"""
+        try:
+            with Image.open(image_path) as img:
+                img = img.convert('RGB')
+                img = img.resize(self.input_shape)
+                img_array = np.array(img, dtype=np.float32) / 255.0
+                return np.expand_dims(img_array, axis=0)
+        except Exception as e:
+            raise ValueError(f"Image processing failed: {str(e)}")
+
+    def predict(self, preprocessed_image, batch_size=32):
+        """Run prediction with validation"""
+        assert self.model is not None
+        if preprocessed_image.shape[1:3] != self.input_shape[::-1]:
+            raise ValueError("Input image dimensions don't match model requirements")
+        return self.model.predict(preprocessed_image, batch_size=batch_size)
+
+    def predict_image(self, image_path):
+        """Run prediction with validation"""
+        preprocessed_img = self.preprocess_image(image_path)
+        return self.predict(preprocessed_img)
 
 
 DEFAULT_MODEL_DETAILS = {
     "model_name": "",
     "model_categories": ["drawing", "photograph"],
     "model_location": "",
-    "target_image_dim": 224,   # required/default image dimensionality
-    "image_array_divisor": 255,
+    "use_hub_keras_layers": False,
 }
 
-class ImageClassifier:
+
+class ImageClassifierWrapper:
     def __init__(self, model_details=DEFAULT_MODEL_DETAILS):
         self.model_name = DEFAULT_MODEL_DETAILS["model_name"]
         self.model_categories = DEFAULT_MODEL_DETAILS["model_categories"]
         self.model_location = DEFAULT_MODEL_DETAILS["model_location"]
-        self.target_image_dim = DEFAULT_MODEL_DETAILS["target_image_dim"]
-        self.image_array_divisor = DEFAULT_MODEL_DETAILS["image_array_divisor"]
+        self.use_hub_keras_layers = DEFAULT_MODEL_DETAILS["use_hub_keras_layers"]
         self.__dict__ = dict(model_details)
-        self.can_run = imports_successful
-        self.model = None
+        self.can_run = True
+        self.h5_classifier = None
         self.predictions_cache = {}
         if self.can_run:
             try:
                 self.model_name = str(self.model_name).strip()
-                if self.model_name == "None" or self.model_name == "":
+                if self.model_name is None or self.model_name == "":
                     raise Exception("Invalid model name: " + self.model_name)
                 if not type(self.model_categories) == list or len(self.model_categories) == 0 \
                         or any([type(c) != str for c in self.model_categories]):
                     raise Exception(f"Invalid model categories: {self.model_categories}")
                 if not type(self.model_location) == str or not os.path.isfile(self.model_location):
                     raise Exception(f"Invalid model location: {self.model_location}")
-                if not type(self.target_image_dim) == int or self.target_image_dim <= 0:
-                    raise Exception(f"Invalid target image dimension, must be positive integer: {self.target_image_dim}")
-                if not type(self.image_array_divisor) == int or self.image_array_divisor <= 0:
-                    raise Exception(f"Invalid image array divisor, must be positive integer: {self.image_array_divisor}")
+                if not type(self.use_hub_keras_layers) == bool:
+                    raise Exception(f"Invalid use hub keras layers flag, must be boolean:  {self.use_hub_keras_layers}")
             except Exception as e:
                 self.can_run = False
                 Utils.log_red(e)
                 Utils.log_yellow("Failed to set model details for image classifier: " + str(model_details))
+            if self.can_run:
+                self.load_classifier()
+
+    def load_classifier(self):
+        assert self.can_run is True
+        custom_objects = {}
+        if self.use_hub_keras_layers:
             try:
-                self.model = tf.keras.models.load_model(self.model_location, custom_objects={'KerasLayer': hub.KerasLayer})
+                import tensorflow_hub as hub
+                custom_objects['KerasLayer'] = hub.KerasLayer
+            except ImportError:
+                Utils.log_red("Failed to import tensorflow hub to support h5 model, please install it using pip")
+                self.can_run = False
+        if self.can_run:
+            try:
+                self.h5_classifier = H5ImageClassifier(
+                    self.model_location,
+                    custom_objects=custom_objects,
+                )
+                self.can_run = bool(self.h5_classifier.is_loaded)
             except Exception as e:
                 self.can_run = False
                 Utils.log_red(e)
@@ -64,12 +186,12 @@ class ImageClassifier:
     def predict_image(self, image_path):
         if image_path in self.predictions_cache:
             return self.predictions_cache[image_path]
-        assert self.model is not None
-        img = image.load_img(image_path, target_size=(self.target_image_dim, self.target_image_dim))
-        y = image.img_to_array(img)
-        y /= self.image_array_divisor
-        images = np.asarray([y])
-        predictions = self.model.predict(images)
+        assert self.h5_classifier is not None
+        # img = image.load_img(image_path, target_size=(self.target_image_dim, self.target_image_dim))
+        # y = image.img_to_array(img)
+        # y /= self.image_array_divisor
+        # images = np.asarray([y])
+        predictions = self.h5_classifier.predict(image_path)
         classed_predictions = {}
         for i in range(len(self.model_categories)):
             classed_predictions[self.model_categories[i]] = float(predictions[0][i])
@@ -92,49 +214,4 @@ class ImageClassifier:
         if not self.can_run:
             raise Exception(f"Invalid state: Image classifier details failed to initialize, unable to classify image")
         return self.predict_image(image_path)[category] > threshold
-
-
-class ImageClassifierManager:
-    def __init__(self):
-        self.classifiers = {}
-        if type(config.image_classifier_h5_models) == list:
-            for model_details in config.image_classifier_h5_models:
-                classifier = ImageClassifier(model_details)
-                if classifier.can_run:
-                    self.classifiers[classifier.model_name] = classifier
-
-    def can_classify(self):
-        return len(self.classifiers) > 0
-
-    def classify_image(self, model_name, image_path):
-        try:
-            return self.classifiers[model_name].classify_image(image_path)
-        except KeyError:
-            if not model_name in self.classifiers:
-                classifier_model_names = list(self.classifiers.keys())
-                raise Exception(f"Image classifier model name not found: {model_name}\n"
-                                f"Valid classifier model names: {classifier_model_names}")
-
-    def add_classifier(self, image_classifier):
-        if type(image_classifier) != ImageClassifier:
-            raise Exception(f"Invalid image classifier argument: {image_classifier}")
-        self.classifiers[image_classifier.model_name] = image_classifier
-
-    def get_classifier(self, model_name):
-        if model_name is None or model_name.strip() == "":
-            return None
-        try:
-            return self.classifiers[model_name]
-        except Exception as e:
-            raise Exception(f"Failed to find image classifier with model name: \"{model_name}\"")
-
-    def get_model_names(self):
-        return list(self.classifiers.keys())
-
-
-image_classifier_manager = ImageClassifierManager()
-
-
-
-
 

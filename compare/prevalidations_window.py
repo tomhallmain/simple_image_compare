@@ -7,7 +7,7 @@ from tkinter.ttk import Entry, Button
 
 from compare.compare_embeddings import CompareEmbedding
 from files.file_actions_window import FileActionsWindow
-from image.image_classifier import image_classifier_manager
+from image.image_classifier_manager import image_classifier_manager
 from image.prevalidation_action import PrevalidationAction
 from utils.app_style import AppStyle
 from utils.app_info_cache import app_info_cache

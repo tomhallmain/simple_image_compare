@@ -59,8 +59,7 @@
       "model_name": "model name (be sure to change this)",
       "model_location": "path/to/my/model.h5",
       "model_categories": ["photograph", "drawing"],
-      "target_image_dim": 224,
-      "image_array_divisor": 255
+      "use_hub_keras_layers": false
     }
   ],
   "text_embedding_search_presets_exclusive": false,
