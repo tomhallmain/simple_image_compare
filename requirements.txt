@@ -13,3 +13,6 @@ openai-clip
 torch
 ttkthemes
 python-vlc
+tensorflow
+tensorflow_hub
+tf_keras

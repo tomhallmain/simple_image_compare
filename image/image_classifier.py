@@ -124,21 +124,14 @@ class H5ImageClassifier:
         return self.predict(preprocessed_img)
 
 
-DEFAULT_MODEL_DETAILS = {
-    "model_name": "",
-    "model_categories": ["drawing", "photograph"],
-    "model_location": "",
-    "use_hub_keras_layers": False,
-}
-
 
 class ImageClassifierWrapper:
-    def __init__(self, model_details=DEFAULT_MODEL_DETAILS):
-        self.model_name = DEFAULT_MODEL_DETAILS["model_name"]
-        self.model_categories = DEFAULT_MODEL_DETAILS["model_categories"]
-        self.model_location = DEFAULT_MODEL_DETAILS["model_location"]
-        self.use_hub_keras_layers = DEFAULT_MODEL_DETAILS["use_hub_keras_layers"]
-        self.__dict__ = dict(model_details)
+    def __init__(self, model_name="", model_categories=["drawing", "photograph"],
+                 model_location="", use_hub_keras_layers=False):
+        self.model_name = model_name
+        self.model_categories = model_categories
+        self.model_location = model_location
+        self.use_hub_keras_layers = use_hub_keras_layers
         self.can_run = True
         self.h5_classifier = None
         self.predictions_cache = {}
@@ -157,7 +150,7 @@ class ImageClassifierWrapper:
             except Exception as e:
                 self.can_run = False
                 Utils.log_red(e)
-                Utils.log_yellow("Failed to set model details for image classifier: " + str(model_details))
+                Utils.log_yellow("Failed to set model details for image classifier: " + str(self.__dict__))
             if self.can_run:
                 self.load_classifier()
 
@@ -191,11 +184,12 @@ class ImageClassifierWrapper:
         # y = image.img_to_array(img)
         # y /= self.image_array_divisor
         # images = np.asarray([y])
-        predictions = self.h5_classifier.predict(image_path)
+        predictions = self.h5_classifier.predict_image(image_path)
         classed_predictions = {}
         for i in range(len(self.model_categories)):
             classed_predictions[self.model_categories[i]] = float(predictions[0][i])
-        self.predictions_cache[image_path] = list(classed_predictions)
+        self.predictions_cache[image_path] = dict(classed_predictions)
+        # print(classed_predictions)
         return classed_predictions
 
     def classify_image(self, image_path):
@@ -205,13 +199,26 @@ class ImageClassifierWrapper:
         keys = list(self.model_categories)
         keys.sort(key=lambda c: classed_predictions[c], reverse=True)
         classed_category = keys[0]
-        if not classed_category in self.model_categories:
-            raise Exception(f"Failed to find matching model category for predicted category: \"{classed_category}\""
-                            f"\nCategories expected: {self.model_categories}")
         return classed_category
 
-    def test_image_for_category(self, image_path, category, threshold):
+    def test_image_for_categories(self, image_path, categories):
         if not self.can_run:
             raise Exception(f"Invalid state: Image classifier details failed to initialize, unable to classify image")
-        return self.predict_image(image_path)[category] > threshold
+        category = self.classify_image(image_path)
+        return category in categories
 
+    def test_image_for_category(self, image_path, category, threshold):
+        if self.can_run:
+            return self.predict_image(image_path)[category] > threshold
+        raise Exception(f"Invalid state: Image classifier details failed to initialize, unable to classify image")
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(name='{self.model_name}', categories={self.model_categories})"
+
+    def __hash__(self) -> int:
+        return hash(self.model_name)
+    
+    def __eq__(self, other):
+        if not isinstance(other, ImageClassifierWrapper):
+            raise TypeError(f"Invalid type for comparison: {type(other)}")
+        return self.model_name == other.model_name

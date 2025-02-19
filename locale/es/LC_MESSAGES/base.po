@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-02-17 16:59-0500\n"
+"POT-Creation-Date: 2025-02-18 21:37-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: es Team <<EMAIL>>\n"
@@ -23,7 +23,7 @@ msgstr " Comparaci\u00f3n sencilla de im\u00e1genes "
 msgid "Theme switched to {0}."
 msgstr "Tema cambiado a {0}."
 
-#: .\app.py:220 .\compare\compare_wrapper.py:452
+#: .\app.py:220 .\compare\compare_wrapper.py:451
 msgid "Set a directory to run comparison."
 msgstr "Establece un directorio para ejecutar la comparaci\u00f3n."
 
@@ -403,126 +403,126 @@ msgstr "No se han encontrado coincidencias. Vuelva a buscar para encontrar posib
 msgid "Search required"
 msgstr "B\u00fasqueda obligatoria"
 
-#: .\compare\compare_wrapper.py:149
+#: .\compare\compare_wrapper.py:148
 msgid "Skipped %s images."
 msgstr "Se han omitido {0} im\u00e1genes."
 
-#: .\compare\compare_wrapper.py:155
+#: .\compare\compare_wrapper.py:154
 msgid "No Unrelated Images"
 msgstr "Sin im\u00e1genes no relacionadas"
 
-#: .\compare\compare_wrapper.py:155
+#: .\compare\compare_wrapper.py:154
 msgid "No unrelated images found."
 msgstr "No se han encontrado im\u00e1genes no relacionadas."
 
-#: .\compare\compare_wrapper.py:191 .\compare\compare_wrapper.py:349
+#: .\compare\compare_wrapper.py:190 .\compare\compare_wrapper.py:348
 msgid "No Groups Found"
 msgstr "No se han encontrado grupos"
 
-#: .\compare\compare_wrapper.py:266
+#: .\compare\compare_wrapper.py:265
 msgid "Gathering image data... setup may take a while depending on number of files involved."
 msgstr "Recopilaci\u00f3n de datos de imagen... la configuraci\u00f3n puede llevar un tiempo dependiendo del n\u00famero de archivos implicados."
 
-#: .\compare\compare_wrapper.py:288
+#: .\compare\compare_wrapper.py:287
 msgid "Confirm group run"
 msgstr "Confirmar la ejecuci\u00f3n en grupo"
 
-#: .\compare\compare_wrapper.py:289
+#: .\compare\compare_wrapper.py:288
 msgid "Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."
 msgstr "Modo de b\u00fasqueda detectado, por favor confirme el cambio a modo de grupo antes de ejecutar. El modo de grupo tardar\u00e1 m\u00e1s tiempo, ya que se comparan todas las im\u00e1genes del directorio base."
 
-#: .\compare\compare_wrapper.py:296
+#: .\compare\compare_wrapper.py:295
 msgid "Gathering image data for comparison"
 msgstr "Recopilaci\u00f3n de datos de im\u00e1genes para su comparaci\u00f3n"
 
-#: .\compare\compare_wrapper.py:315
+#: .\compare\compare_wrapper.py:314
 msgid "Searching images..."
 msgstr "Buscando im\u00e1genes..."
 
-#: .\compare\compare_wrapper.py:321
+#: .\compare\compare_wrapper.py:320
 msgid "Set a directory and search file or search text."
 msgstr "Establece un directorio y un archivo de b\u00fasqueda o un texto de b\u00fasqueda."
 
-#: .\compare\compare_wrapper.py:322
+#: .\compare\compare_wrapper.py:321
 msgid "No Match Found"
 msgstr "No se han encontrado coincidencias"
 
-#: .\compare\compare_wrapper.py:322
+#: .\compare\compare_wrapper.py:321
 msgid "None of the files match the search filters with current settings."
 msgstr "Ninguno de los archivos coincide con los filtros de b\u00fasqueda con la configuraci\u00f3n actual."
 
-#: .\compare\compare_wrapper.py:335
+#: .\compare\compare_wrapper.py:334
 msgid "%s possibly related images found."
 msgstr "{0} im\u00e1genes posiblemente relacionadas encontradas."
 
-#: .\compare\compare_wrapper.py:343
+#: .\compare\compare_wrapper.py:342
 msgid "Running image comparisons..."
 msgstr "Ejecutar comparaciones de im\u00e1genes..."
 
-#: .\compare\compare_wrapper.py:348 .\compare\compare_wrapper.py:363
+#: .\compare\compare_wrapper.py:347 .\compare\compare_wrapper.py:362
 msgid "Set a directory and search file."
 msgstr "Establece un directorio y un archivo de b\u00fasqueda."
 
-#: .\compare\compare_wrapper.py:349
+#: .\compare\compare_wrapper.py:348
 msgid "None of the files can be grouped with current settings."
 msgstr "No se puede agrupar ninguno de los archivos con la configuraci\u00f3n actual."
 
-#: .\compare\compare_wrapper.py:364
+#: .\compare\compare_wrapper.py:363
 msgid "No Duplicates Found"
 msgstr "No se han encontrado duplicados"
 
-#: .\compare\compare_wrapper.py:364
+#: .\compare\compare_wrapper.py:363
 msgid "None of the files appear to be duplicates based on the current settings."
 msgstr "Ninguno de los archivos parece estar duplicado seg\u00fan la configuraci\u00f3n actual."
 
-#: .\compare\compare_wrapper.py:388
+#: .\compare\compare_wrapper.py:387
 msgid "Some group members were left stranded by the grouping process."
 msgstr "Algunos miembros del grupo quedaron desamparados por el proceso de agrupaci\u00f3n."
 
-#: .\compare\compare_wrapper.py:388
+#: .\compare\compare_wrapper.py:387
 msgid "Stranded Group Members Found"
 msgstr "Stranded Group Members Found"
 
-#: .\compare\compare_wrapper.py:443
+#: .\compare\compare_wrapper.py:442
 msgid "No More Groups"
 msgstr "Encontrados los miembros del grupo varados"
 
-#: .\compare\compare_wrapper.py:444
+#: .\compare\compare_wrapper.py:443
 msgid "There are no more image groups remaining for this directory and current filter settings."
 msgstr "No quedan m\u00e1s grupos de im\u00e1genes para este directorio y la configuraci\u00f3n actual del filtro."
 
-#: .\compare\prevalidations_window.py:23
+#: .\compare\prevalidations_window.py:24
 msgid "(no positives set)"
 msgstr "(ning\u00fan positivo fijado)"
 
-#: .\compare\prevalidations_window.py:24
+#: .\compare\prevalidations_window.py:25
 msgid "(no negatives set)"
 msgstr "(ning\u00fan negativo fijado)"
 
-#: .\compare\prevalidations_window.py:26
+#: .\compare\prevalidations_window.py:27
 #: .\compare\prevalidations_window.py:198
 msgid "New Prevalidation"
 msgstr "Nueva Prevalidaci\u00f3ns"
 
-#: .\compare\prevalidations_window.py:79
+#: .\compare\prevalidations_window.py:78
 msgid " - skipped"
 msgstr " - omitido"
 
-#: .\compare\prevalidations_window.py:79 .\compare\prevalidations_window.py:82
-#: .\compare\prevalidations_window.py:84 .\compare\prevalidations_window.py:90
-#: .\compare\prevalidations_window.py:101
+#: .\compare\prevalidations_window.py:78 .\compare\prevalidations_window.py:81
+#: .\compare\prevalidations_window.py:83 .\compare\prevalidations_window.py:89
+#: .\compare\prevalidations_window.py:100
 msgid " detected"
 msgstr " detectado"
 
-#: .\compare\prevalidations_window.py:82
+#: .\compare\prevalidations_window.py:81
 msgid " - hidden"
 msgstr " - oculto"
 
-#: .\compare\prevalidations_window.py:90
+#: .\compare\prevalidations_window.py:89
 msgid "Moving file: "
 msgstr "Moviendo archivo: "
 
-#: .\compare\prevalidations_window.py:101
+#: .\compare\prevalidations_window.py:100
 msgid "Deleting file: "
 msgstr "Borrar archivo: "
 
@@ -558,60 +558,64 @@ msgstr "Umbral"
 msgid "Action"
 msgstr "Acci\u00f3n"
 
-#: .\compare\prevalidations_window.py:233
+#: .\compare\prevalidations_window.py:235
 msgid "Action Modifier"
 msgstr "Modificador de acci\u00f3n"
 
-#: .\compare\prevalidations_window.py:240
+#: .\compare\prevalidations_window.py:242
 msgid "Run on Directory"
 msgstr "Ejecutar en directorio"
 
-#: .\compare\prevalidations_window.py:247
+#: .\compare\prevalidations_window.py:249
 msgid "Image Classifier Name"
 msgstr "Nombre del clasificador de im\u00e1genes"
 
-#: .\compare\prevalidations_window.py:256
+#: .\compare\prevalidations_window.py:260
 msgid "Image Classifier Selected Category"
 msgstr "Clasificador de im\u00e1genes Categor\u00eda seleccionada"
 
-#: .\compare\prevalidations_window.py:263
+#: .\compare\prevalidations_window.py:264
+msgid "Select Categories..."
+msgstr "Seleccionar categor\u00edas..."
+
+#: .\compare\prevalidations_window.py:270
 msgid "Done"
 msgstr "Hecho"
 
-#: .\compare\prevalidations_window.py:390
+#: .\compare\prevalidations_window.py:402
 msgid "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 msgstr "No se ha encontrado ninguna prevalidaci\u00f3n con el nombre: {0}. Establ\u00e9zcalo en la Ventana de Prevalidaciones."
 
-#: .\compare\prevalidations_window.py:401
+#: .\compare\prevalidations_window.py:413
 msgid "Prevalidations"
 msgstr "Prevalidaciones"
 
-#: .\compare\prevalidations_window.py:424
+#: .\compare\prevalidations_window.py:436
 msgid "Set Prevalidations"
 msgstr "Establecer prevalidaciones"
 
-#: .\compare\prevalidations_window.py:426
+#: .\compare\prevalidations_window.py:438
 msgid "Add prevalidation"
 msgstr "A\u00f1adir prevalidaci\u00f3n"
 
-#: .\compare\prevalidations_window.py:428
+#: .\compare\prevalidations_window.py:440
 msgid "Clear prevalidations"
 msgstr "Prevalencias claras"
 
-#: .\compare\prevalidations_window.py:464 .\files\hotkey_actions_window.py:95
+#: .\compare\prevalidations_window.py:476 .\files\hotkey_actions_window.py:95
 msgid "Set"
 msgstr "Fije"
 
-#: .\compare\prevalidations_window.py:472 .\files\file_actions_window.py:269
+#: .\compare\prevalidations_window.py:484 .\files\file_actions_window.py:269
 #: .\files\file_actions_window.py:312
 msgid "Modify"
 msgstr "Modifique"
 
-#: .\compare\prevalidations_window.py:479
+#: .\compare\prevalidations_window.py:491
 msgid "Delete"
 msgstr "Borrar"
 
-#: .\compare\prevalidations_window.py:486
+#: .\compare\prevalidations_window.py:498
 msgid "Move down"
 msgstr "Baja"
 

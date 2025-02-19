@@ -111,7 +111,6 @@ class CompareWrapper:
         start_image = next_image
         while next_image in self.hidden_images and next_image != start_image:
             next_image = self._get_next_image()
-
         self._master.update()
         self._app_actions.create_image(next_image)
         return True

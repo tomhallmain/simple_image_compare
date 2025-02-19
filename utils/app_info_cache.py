@@ -1,6 +1,9 @@
 import json
 import os
+import shutil
 import sys
+
+from utils.utils import Utils
 
 class AppInfoCache:
     CACHE_LOC = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), "app_info_cache.json")
@@ -18,6 +21,7 @@ class AppInfoCache:
 
     def load(self):
         try:
+            shutil.copy2(AppInfoCache.CACHE_LOC, AppInfoCache.CACHE_LOC + ".bak") # overwrite backup
             with open(AppInfoCache.CACHE_LOC, "r") as f:
                 self._cache = json.load(f)
         except FileNotFoundError:
