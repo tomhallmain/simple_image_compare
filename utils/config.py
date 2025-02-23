@@ -185,20 +185,21 @@ class Config:
         os.environ["LANG"] = self.locale
 
     def set_directories_to_search_for_related_images(self):
-        if len(self.directories_to_search_for_related_images) > 0:
-            for i in range(len(self.directories_to_search_for_related_images)):
-                _dir = self.directories_to_search_for_related_images[i]
-                if not os.path.isdir(_dir):
-                    try_dir = None
-                    try:
-                        try_dir = self.validate_and_set_directory(key=_dir, override=True)
-                    except Exception as e:
-                        pass
-                    if try_dir is None:
-                        print(f"Invalid directory to search for related images: {_dir}")
-                        self.directories_to_search_for_related_images.remove(_dir)
-                    else:
-                        self.directories_to_search_for_related_images[i] = try_dir
+        temp_list = self.directories_to_search_for_related_images[:]
+        for _dir in temp_list:
+            if not os.path.isdir(_dir):
+                try_dir = None
+                try:
+                    try_dir = self.validate_and_set_directory(key=_dir, override=True)
+                except Exception as e:
+                    pass
+                if try_dir is None:
+                    print(f"Invalid directory to search for related images: {_dir}")
+                    self.directories_to_search_for_related_images.remove(_dir)
+                else:
+                    self.directories_to_search_for_related_images[
+                        self.directories_to_search_for_related_images.index(_dir)
+                    ] = try_dir
 
     def check_image_edit_configuration(self):
         if not "image_edit_configuration" in self.dict or not type(self.dict["image_edit_configuration"] == dict):

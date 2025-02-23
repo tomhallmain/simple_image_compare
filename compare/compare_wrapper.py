@@ -11,7 +11,7 @@ from compare.compare_embeddings import CompareEmbedding
 from compare.prevalidations_window import PrevalidationAction, PrevalidationsWindow
 from image.frame_cache import FrameCache
 from utils.config import config
-from utils.constants import Mode, CompareMode
+from utils.constants import Mode, CompareMode, Direction
 from utils.translations import I18N
 from utils.utils import Utils
 
@@ -404,7 +404,7 @@ class CompareWrapper:
                 return file, group_indexes
         return None, None
 
-    def _update_groups_for_removed_file(self, app_mode, group_index, match_index, set_group=True, show_next_media=False):
+    def _update_groups_for_removed_file(self, app_mode, group_index, match_index, set_group=True, show_next_media=None):
         '''
         After a file has been removed, delete the cached image path for it and
         remove the group if only one file remains in that group.
@@ -474,7 +474,8 @@ class CompareWrapper:
                 if show_next_media:
                     self._master.update()
                     self._app_actions.release_media_canvas()
-                    self._app_actions.create_image(self.current_match())
+                    media = self._get_prev_image() if show_next_media == Direction.BACKWARD else self.current_match()
+                    self._app_actions.create_image(media)
 
     def update_compare_for_readded_file(self, readded_file):
         self._compare.readd_files([readded_file])

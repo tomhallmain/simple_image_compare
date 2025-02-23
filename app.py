@@ -1640,7 +1640,7 @@ class App():
         for filepath in files:
             if filepath == self.compare_wrapper.search_image_full_path:
                 self.compare_wrapper.search_image_full_path = None
-            show_next_media = current_image == filepath
+            show_next_media = self.direction if current_image == filepath else None
             file_group_map = self.compare_wrapper._get_file_group_map(self.mode)
             try:
                 group_indexes = file_group_map[filepath]
