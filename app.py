@@ -5,8 +5,8 @@ import sys
 import time
 import traceback
 
-import tkinter as tk
-from tkinter import Label, Checkbutton, PhotoImage, filedialog, messagebox, HORIZONTAL, W
+from tkinter import Frame, Toplevel, PhotoImage, Label, Checkbutton, BooleanVar, StringVar, filedialog, messagebox
+from tkinter import BOTH, END, N, NW, YES, HORIZONTAL, W
 import tkinter.font as fnt
 from tkinter.ttk import Button, Entry, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
@@ -44,9 +44,9 @@ except Exception:
 
 
 
-class Sidebar(tk.Frame):
+class Sidebar(Frame):
     def __init__(self, master=None, cnf={}, **kw):
-        tk.Frame.__init__(self, master=master, cnf=cnf, **kw)
+        Frame.__init__(self, master=master, cnf=cnf, **kw)
 
 
 class ProgressListener:
@@ -86,7 +86,7 @@ class App():
             # Usually want to do this because if a secondary window is the source of another secondary window and that initial secondary window
             # is closed, the second secondary window will also be closed because its master has been destroyed.
             master = App.true_master
-        top_level = tk.Toplevel(master)
+        top_level = Toplevel(master)
         top_level.title(_(" Simple Image Compare "))
         top_level.geometry(config.default_secondary_window_size)
         window_id = random.randint(1000000000, 9999999999)
@@ -216,7 +216,7 @@ class App():
         # The top part is a label with info
         self.label_mode = Label(self.sidebar)
         self.label_state = Label(self.sidebar)
-        self.add_label(self.label_mode, "", sticky=tk.N)
+        self.add_label(self.label_mode, "", sticky=N)
         self.add_label(self.label_state, _("Set a directory to run comparison."), pady=10)
 
         #################################### Settings UI
@@ -230,7 +230,7 @@ class App():
         self.apply_to_grid(self.set_base_dir_box, sticky=W)
 
         self.add_button("set_search_btn", _("Set search file"), self.set_search_for_image)
-        self.search_image = tk.StringVar()
+        self.search_image = StringVar()
         self.search_img_path_box = self.new_entry(self.search_image)
         if do_search and image_path is not None:
             self.search_img_path_box.insert(0, image_path)
@@ -238,25 +238,25 @@ class App():
         self.apply_to_grid(self.search_img_path_box, sticky=W)
 
         self.add_button("search_text_btn", _("Search text (embedding mode)"), self.set_search_for_text)
-        self.search_text = tk.StringVar()
+        self.search_text = StringVar()
         self.search_text_box = self.new_entry(self.search_text)
         self.search_text_box.bind("<Return>", self.set_search_for_text)
         self.apply_to_grid(self.search_text_box, sticky=W)
-        self.search_text_negative = tk.StringVar()
+        self.search_text_negative = StringVar()
         self.search_text_negative_box = self.new_entry(self.search_text_negative)
         self.search_text_negative_box.bind("<Return>", self.set_search_for_text)
         self.apply_to_grid(self.search_text_negative_box, sticky=W)
 
         self.label_compare_mode = Label(self.sidebar)
         self.add_label(self.label_compare_mode, _("Compare mode"))
-        self.compare_mode_var = tk.StringVar()
+        self.compare_mode_var = StringVar()
         self.compare_mode_choice = OptionMenu(self.sidebar, self.compare_mode_var, self.compare_wrapper.compare_mode.get_text(),
                                               *CompareMode.members(), command=self.set_compare_mode)
         self.apply_to_grid(self.compare_mode_choice, sticky=W)
 
         self.label_compare_threshold = Label(self.sidebar)
         self.add_label(self.label_compare_threshold, self.compare_wrapper.compare_mode.threshold_str())
-        self.compare_threshold = tk.StringVar()
+        self.compare_threshold = StringVar()
         if self.compare_wrapper.compare_mode == CompareMode.COLOR_MATCHING:
             default_val = config.color_diff_threshold
         else:
@@ -265,15 +265,15 @@ class App():
                                                    str(default_val), *self.compare_wrapper.compare_mode.threshold_vals())
         self.apply_to_grid(self.compare_threshold_choice, sticky=W)
 
-        self.compare_faces = tk.BooleanVar(value=False)
+        self.compare_faces = BooleanVar(value=False)
         self.compare_faces_choice = Checkbutton(self.sidebar, text=_('Compare faces'), variable=self.compare_faces)
         self.apply_to_grid(self.compare_faces_choice, sticky=W)
 
-        self.overwrite = tk.BooleanVar(value=False)
+        self.overwrite = BooleanVar(value=False)
         self.overwrite_choice = Checkbutton(self.sidebar, text=_('Overwrite cache'), variable=self.overwrite)
         self.apply_to_grid(self.overwrite_choice, sticky=W)
 
-        self.store_checkpoints = tk.BooleanVar(value=config.store_checkpoints)
+        self.store_checkpoints = BooleanVar(value=config.store_checkpoints)
         self.store_checkpoints_choice = Checkbutton(self.sidebar, text=_('Store checkpoints'), variable=self.store_checkpoints)
         self.apply_to_grid(self.store_checkpoints_choice, sticky=W)
 
@@ -285,28 +285,28 @@ class App():
 
         self.label_inclusion_pattern = Label(self.sidebar)
         self.add_label(self.label_inclusion_pattern, _("Filter files by glob pattern"))
-        self.inclusion_pattern = tk.StringVar()
+        self.inclusion_pattern = StringVar()
         self.set_inclusion_pattern = self.new_entry(self.inclusion_pattern)
         self.set_inclusion_pattern.bind("<Return>", self.set_file_filter)
         self.apply_to_grid(self.set_inclusion_pattern, sticky=W)
 
         self.label_sort_by = Label(self.sidebar)
         self.add_label(self.label_sort_by, _("Browsing mode - Sort by"))
-        self.sort_by = tk.StringVar()
+        self.sort_by = StringVar()
         self.sort_by_choice = OptionMenu(self.sidebar, self.sort_by, config.sort_by.get_text(),
                                          *SortBy.members(), command=self.set_sort_by)
         self.apply_to_grid(self.sort_by_choice, sticky=W)
 
-        self.image_browse_recurse_var = tk.BooleanVar(value=config.image_browse_recursive)
+        self.image_browse_recurse_var = BooleanVar(value=config.image_browse_recursive)
         self.image_browse_recurse = Checkbutton(self.sidebar, text=_('Recurse subdirectories'),
                                                 variable=self.image_browse_recurse_var, command=self.toggle_image_browse_recursive)
         self.apply_to_grid(self.image_browse_recurse, sticky=W)
 
-        fill_canvas_var = tk.BooleanVar(value=config.fill_canvas)
+        fill_canvas_var = BooleanVar(value=config.fill_canvas)
         self.fill_canvas_choice = Checkbutton(self.sidebar, text=_('Image resize to full window'), variable=fill_canvas_var, command=self.toggle_fill_canvas)
         self.apply_to_grid(self.fill_canvas_choice, sticky=W)
 
-        search_return_closest_var = tk.BooleanVar(value=config.search_only_return_closest)
+        search_return_closest_var = BooleanVar(value=config.search_only_return_closest)
         self.search_return_closest_choice = Checkbutton(self.sidebar, text=_('Search only return closest'),
                                                         variable=search_return_closest_var, command=self.compare_wrapper.toggle_search_only_return_closest)
         self.apply_to_grid(self.search_return_closest_choice, sticky=W)
@@ -698,7 +698,7 @@ class App():
             if manually_keyed:
                 self.app_actions.image_details_window.focus()
         else:
-            top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
+            top_level = Toplevel(self.master, bg=AppStyle.BG_COLOR)
             try:
                 image_details_window = ImageDetails(self.master, top_level, media_path, index_text,
                                                     self.app_actions, do_refresh=not preset_image_path)
@@ -763,7 +763,7 @@ class App():
             window.media_canvas.focus()
 
     def get_help_and_config(self, event=None):
-        top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
+        top_level = Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title(_("Help and Config"))
         top_level.geometry("900x600")
         try:
@@ -843,7 +843,7 @@ class App():
         self.master.update()
 
     def open_recent_directory_window(self, event=None, open_gui=True, run_compare_image=None, extra_callback_args=None):
-        top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
+        top_level = Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title(_("Set Image Comparison Directory"))
         top_level.geometry(RecentDirectoryWindow.get_geometry(is_gui=open_gui))
         if not open_gui:
@@ -904,7 +904,7 @@ class App():
         if image_path is None or image_path == "":
             if self.img_path is None:
                 self.handle_error(_("No image selected."), title=_("Invalid Setting"))
-            self.search_img_path_box.delete(0, tk.END)
+            self.search_img_path_box.delete(0, END)
             self.search_img_path_box.insert(0, str(self.img_path))
         self.set_search()
 
@@ -1286,7 +1286,7 @@ class App():
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
             single_image = True
-        top_level = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
+        top_level = Toplevel(self.master, bg=AppStyle.BG_COLOR)
         top_level.title(_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)))
         top_level.geometry(MarkedFiles.get_geometry(is_gui=open_gui))
         if not open_gui:
@@ -1702,15 +1702,15 @@ class App():
         y = 0
 
         # Create the toast on the top level
-        toast = tk.Toplevel(self.master, bg=AppStyle.BG_COLOR)
+        toast = Toplevel(self.master, bg=AppStyle.BG_COLOR)
         toast.geometry(f'{width}x{height}+{int(x)}+{int(y)}')
-        self.container = tk.Frame(toast)
+        self.container = Frame(toast)
         self.container.config(bg=AppStyle.BG_COLOR)
-        self.container.pack(fill=tk.BOTH, expand=tk.YES)
-        label = tk.Label(
+        self.container.pack(fill=BOTH, expand=YES)
+        label = Label(
             self.container,
             text=message.strip(),
-            anchor=tk.NW,
+            anchor=NW,
             bg=AppStyle.BG_COLOR,
             fg=AppStyle.FG_COLOR,
             font=('Helvetica', 10)
@@ -1797,10 +1797,9 @@ class App():
 
 if __name__ == "__main__":
     I18N.install_locale(config.locale, verbose=config.print_settings)
-    assets = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets")
     root = ThemedTk(theme="black", themebg="black")
     root.title(_(" Simple Image Compare "))
-    # root.iconbitmap(bitmap=r"icon.ico")
+    assets = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets")
     icon = PhotoImage(file=os.path.join(assets, "icon.png"))
     root.iconphoto(False, icon)
     root.geometry(config.default_main_window_size)

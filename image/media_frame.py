@@ -23,7 +23,7 @@ except ImportError:
 
 import vlc
 
-from image.gif_image_ui import GifImageUI
+# from image.gif_image_ui import GifImageUI
 from image.video_ui import VideoUI
 from utils.config import config
 from utils.utils import Utils
