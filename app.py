@@ -1584,7 +1584,7 @@ class App():
             self._handle_delete(filepath)
             if self.compare_wrapper._compare:
                 self.compare_wrapper.compare().remove_from_groups([filepath])
-            self.compare_wrapper._update_groups_for_removed_file(self.mode, self.compare_wrapper.current_group_index, self.compare_wrapper.match_index, show_next_media=True)
+            self.compare_wrapper._update_groups_for_removed_file(self.mode, self.compare_wrapper.current_group_index, self.compare_wrapper.match_index, show_next_media=self.direction)
         else:
             self.handle_error(_("Failed to delete current file, unable to get valid filepath"))
 

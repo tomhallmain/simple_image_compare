@@ -471,7 +471,7 @@ class CompareWrapper:
                 elif self.match_index > match_index:
                     self.match_index -= 1
 
-                if show_next_media:
+                if show_next_media is not None:
                     self._master.update()
                     self._app_actions.release_media_canvas()
                     media = self._get_prev_image() if show_next_media == Direction.BACKWARD else self.current_match()
