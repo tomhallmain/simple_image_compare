@@ -32,11 +32,51 @@ def usage():
     print("  -v                     Verbose                                         ")
 
 
-class CompareEmbedding(BaseCompare):
-    COMPARE_MODE = CompareMode.CLIP_EMBEDDING
+def calculate_chunk_size(embeddings, max_mem_gb=4.0):
+    """
+    Calculate the number of rows (M) to process per chunk.
+    :param embeddings: N x D numpy array of embeddings.
+    :param max_mem_gb: Maximum memory to allocate for a chunk (e.g., 4 GB).
+    """
+    n, d = embeddings.shape
+    bytes_per_row = d * embeddings.dtype.itemsize  # e.g., 512 * 4 bytes (float32)
+    max_rows_per_chunk = int((max_mem_gb * 1e9) / (n * bytes_per_row))
+    return max(1, max_rows_per_chunk)  # Ensure at least 1 row per chunk
+
+
+def chunked_similarity(embeddings, threshold=0.9):
+    """
+    Compute pairwise similarities in memory-efficient chunks.
+    :returns: List of (i, j, similarity) tuples where similarity > threshold.
+    """
+    n = embeddings.shape[0]
+    memory = Utils.calculate_available_ram()
+    chunk_size = calculate_chunk_size(embeddings, max_mem_gb=(memory / 2))
+    similar_pairs = []
+
+    for i_start in range(0, n, chunk_size):
+        i_end = min(i_start + chunk_size, n)
+        chunk = embeddings[i_start:i_end]  # M x D
+
+        # Compute similarities for this chunk against all embeddings
+        chunk_similarity = chunk @ embeddings.T  # M x N
+
+        # Find indices where similarity exceeds threshold (upper triangle only)
+        for i in range(i_start, i_end):
+            for j in range(i + 1, n):  # Upper triangle (i < j)
+                sim = chunk_similarity[i - i_start, j]
+                if sim > threshold:
+                    similar_pairs.append((i, j, sim))
+
+    return similar_pairs
+
+
+
+class CompareEmbeddingMatrix(BaseCompare):
+    COMPARE_MODE = CompareMode.CLIP_EMBEDDING_MATRIX
     THRESHHOLD_POTENTIAL_DUPLICATE = config.threshold_potential_duplicate_embedding
     THRESHHOLD_PROBABLE_MATCH = 0.98
-    THRESHHOLD_GROUP_CUTOFF = 4500  # TODO fix this for Embedding case
+    THRESHHOLD_GROUP_CUTOFF = 0.2 # TODO fix this for Embedding case
     TEXT_EMBEDDING_CACHE = {}
     MULTI_EMBEDDING_CACHE = {} # keys are tuples of the filename + any text embedding search combination, values are combined similarity
 
@@ -145,7 +185,7 @@ class CompareEmbedding(BaseCompare):
         Perform an elementwise diff between two image color arrays using the
         selected color difference algorithm.
         '''
-        vectorized = np.vectorize(np.dot, signature="(m),(n)->()")
+        vectorized = np.vectorize(embedding_similarity, signature="(m),(n)->()")
         simlarities = vectorized(base_array, compare_array)
         if threshold is None:
             similars = simlarities > self.embedding_similarity_threshold
@@ -158,14 +198,16 @@ class CompareEmbedding(BaseCompare):
 
     def run_comparison(self, store_checkpoints=False):
         '''
-        Compare all found image arrays to each other by starting with the
-        base numpy array containing all image data and moving each array to
-        the next index.
+        Compare all found embeddings on an L2-norm basis.
 
-        For example, if there are three images [X, Y, Z], there are two steps:
-            Step 1: [X, Y, Z] -> [Z, X, Y] (elementwise comparison)
-            Step 2: [X, Y, Z] -> [Y, Z, X] (elementwise comparison)
-            ^ At this point, all arrays have been compared.
+        For example, if there are three images [X, Y, Z]:
+            Group the embeddings E = [X, Y, Z]
+            Calculate L2-norm: N = L2(E)
+            If available RAM, simply multiply the normalized matrix by its transpose:
+                S = N * N.T
+            Extract similars from the upper triangle:
+                i, j = np.triu_indices_from(S, k=1)
+            Group the similars by their similarity.
 
         files_grouped - Keys are the file indexes, values are tuple of the group index and diff score.
         file_groups - Keys are the group indexes, values are dicts with keys as the file in the group, values the diff score
@@ -175,93 +217,74 @@ class CompareEmbedding(BaseCompare):
         self.compare_result = CompareResult.load(self.base_dir, self.compare_data.files_found, overwrite=overwrite)
         if self.compare_result.is_complete:
             return (self.compare_result.files_grouped, self.compare_result.file_groups)
-        n_files_found_even = Utils.round_up(self.compare_data.n_files_found, 5)
-        if self.compare_result.i > 1:
-            self._handle_progress(self.compare_result.i, n_files_found_even, gathering_data=False)
 
-        if self.compare_data.n_files_found > 5000:
-            print("\nWARNING: Large image file set found, comparison between all"
-                  + " images may take a while.\n")
         if self.verbose:
             print("Identifying groups of similar image files...")
         else:
             print("Identifying groups of similar image files", end="", flush=True)
-        
-        # check_matrix = [] # TODO remove
 
-        for i in range(self.compare_data.n_files_found):
-            if i == 0:  # At this roll index the data would compare to itself
+        # # After normalization:
+        # norms = np.linalg.norm(self._file_embeddings, axis=1)
+        # print("Embedding norms (should all be ~1.0):")
+        # print("Min:", np.min(norms), "Max:", np.max(norms), "Mean:", np.mean(norms))
+
+        # Compute all pairwise similarities in one step
+        similarity_matrix = self._file_embeddings @ self._file_embeddings.T
+
+        # with open(os.path.join(Utils.get_user_dir(), "simple_image_compare", "tests", "embeddings_matrix_output.json"), "w") as f:
+        #     json.dump(similarity_matrix.tolist(), f)
+
+        # with open(os.path.join(Utils.get_user_dir(), "simple_image_compare", "tests", "embeddings_matrix_output.csv"), "w") as f:
+        #     csvwriter = csv.writer(f)
+        #     for row in similarity_matrix.tolist():
+        #         csvwriter.writerow(row)
+
+        # mask = similarity_matrix > self.embedding_similarity_threshold
+        _i, _j = np.triu_indices_from(similarity_matrix, k=1)
+
+        # Process matches in unique pairs (upper triangle)
+        for i, j in zip(_i, _j):
+            if i == j: # exclude diagonal (self-comparisons)
                 continue
-            if store_checkpoints:
-                if i < self.compare_result.i:
-                    continue
-                if i % 250 == 0 and i != self.compare_data.n_files_found and i > self.compare_result.i:
-                    self.compare_result.store()
-                self.compare_result.i = i
-            self._handle_progress(i, n_files_found_even, gathering_data=False)
+            base_index = i
+            diff_index = j
+            diff_score = similarity_matrix[base_index, diff_index]
+            if diff_score < self.embedding_similarity_threshold:
+                continue
+            f1_grouped = base_index in self.compare_result.files_grouped
+            f2_grouped = diff_index in self.compare_result.files_grouped
 
-            compare_file_embeddings = np.roll(self._file_embeddings, i, 0)
-            color_similars = self._compute_embedding_diff(
-                self._file_embeddings, compare_file_embeddings, True)
-            # check_matrix.append(color_similars[1].tolist())
+            if diff_score > CompareEmbeddingMatrix.THRESHHOLD_POTENTIAL_DUPLICATE:
+                base_file = self.compare_data.files_found[base_index]
+                diff_file = self.compare_data.files_found[diff_index]
+                if ((base_file, diff_file) not in self._probable_duplicates
+                        and (diff_file, base_file) not in self._probable_duplicates):
+                    self._probable_duplicates.append((base_file, diff_file))
 
-            if self.compare_faces:
-                compare_file_faces = np.roll(self._file_faces, i, 0)
-                face_comparisons = self._file_faces - compare_file_faces
-                face_similars = face_comparisons == 0
-                similars = np.nonzero(color_similars[0] * face_similars)
-            else:
-                similars = np.nonzero(color_similars[0])
-            
-            for base_index in similars[0]:
-                diff_index = ((base_index - i) % self.compare_data.n_files_found)
-                diff_score = color_similars[1][base_index]
-                f1_grouped = base_index in self.compare_result.files_grouped
-                f2_grouped = diff_index in self.compare_result.files_grouped
-
-                # base_file = self.compare_data.files_found[base_index]
-                # diff_file = self.compare_data.files_found[diff_index]
-                # print(base_index, diff_index, base_file, diff_file, diff_score)
-
-                if diff_score > CompareEmbedding.THRESHHOLD_POTENTIAL_DUPLICATE:
-                    base_file = self.compare_data.files_found[base_index]
-                    diff_file = self.compare_data.files_found[diff_index]
-                    if ((base_file, diff_file) not in self._probable_duplicates
-                            and (diff_file, base_file) not in self._probable_duplicates):
-                        self._probable_duplicates.append((base_file, diff_file))
-
-                if not f1_grouped and not f2_grouped:
+            if not f1_grouped and not f2_grouped:
+                self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
+                self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
+                self.compare_result.group_index += 1
+                continue
+            elif f1_grouped:
+                existing_group_index, previous_diff_score = self.compare_result.files_grouped[base_index]
+                if previous_diff_score - CompareEmbeddingMatrix.THRESHHOLD_GROUP_CUTOFF > diff_score:
+                    # print(f"Previous: {previous_diff_score} , New: {diff_score}")
                     self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
                     self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
                     self.compare_result.group_index += 1
-                elif f1_grouped:
-                    existing_group_index, previous_diff_score = self.compare_result.files_grouped[base_index]
-                    if previous_diff_score - CompareEmbedding.THRESHHOLD_GROUP_CUTOFF > diff_score:
-                        # print(f"Previous: {previous_diff_score} , New: {diff_score}")
-                        self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
-                        self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
-                        self.compare_result.group_index += 1
-                    else:
-                        self.compare_result.files_grouped[diff_index] = (
-                            existing_group_index, diff_score)
                 else:
-                    existing_group_index, previous_diff_score = self.compare_result.files_grouped[diff_index]
-                    if previous_diff_score - CompareEmbedding.THRESHHOLD_GROUP_CUTOFF > diff_score:
-                        # print(f"Previous: {previous_diff_score} , New: {diff_score}")
-                        self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
-                        self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
-                        self.compare_result.group_index += 1
-                    else:
-                        self.compare_result.files_grouped[base_index] = (existing_group_index, diff_score)
-
-        # with open(os.path.join(Utils.get_user_dir(), "simple_image_compare", "tests", "embeddings_output.json"), "w") as f:
-        #     json.dump(check_matrix, f)
-        
-        # with open(os.path.join(Utils.get_user_dir(), "simple_image_compare", "tests", "embeddings_output.csv"), "w") as f:
-        #     csvwriter = csv.writer(f)
-        #     for row in check_matrix:
-        #         csvwriter.writerow(row)
-
+                    self.compare_result.files_grouped[diff_index] = (
+                        existing_group_index, diff_score)
+            else:
+                existing_group_index, previous_diff_score = self.compare_result.files_grouped[diff_index]
+                if previous_diff_score - CompareEmbeddingMatrix.THRESHHOLD_GROUP_CUTOFF > diff_score:
+                    # print(f"Previous: {previous_diff_score} , New: {diff_score}")
+                    self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
+                    self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
+                    self.compare_result.group_index += 1
+                else:
+                    self.compare_result.files_grouped[base_index] = (existing_group_index, diff_score)
 
         for file_index in self.compare_result.files_grouped:
             _file = self.compare_data.files_found[file_index]
@@ -327,8 +350,8 @@ class CompareEmbedding(BaseCompare):
 
         self.compare_result.finalize_search_result(
             self.search_file_path, verbose=self.verbose, is_embedding=True,
-            threshold_duplicate=CompareEmbedding.THRESHHOLD_POTENTIAL_DUPLICATE,
-            threshold_related=CompareEmbedding.THRESHHOLD_PROBABLE_MATCH)
+            threshold_duplicate=CompareEmbeddingMatrix.THRESHHOLD_POTENTIAL_DUPLICATE,
+            threshold_related=CompareEmbeddingMatrix.THRESHHOLD_PROBABLE_MATCH)
         return {0: self.compare_result.files_grouped}
 
     def _run_search_on_path(self, search_file_path):
@@ -452,8 +475,8 @@ class CompareEmbedding(BaseCompare):
         else:
             adjusted_threshold = self.embedding_similarity_threshold
         normalization_factor = self._compute_multiembedding_diff(positive_embeddings, negative_embeddings, adjusted_threshold)
-        adjusted_threshold_duplicate = CompareEmbedding.THRESHHOLD_POTENTIAL_DUPLICATE / normalization_factor
-        adjusted_threshold_match = CompareEmbedding.THRESHHOLD_PROBABLE_MATCH / normalization_factor
+        adjusted_threshold_duplicate = CompareEmbeddingMatrix.THRESHHOLD_POTENTIAL_DUPLICATE / normalization_factor
+        adjusted_threshold_match = CompareEmbeddingMatrix.THRESHHOLD_PROBABLE_MATCH / normalization_factor
 
         self.compare_result.finalize_search_result(
             self.search_file_path, args=self.args, verbose=self.verbose, is_embedding=True,
@@ -543,17 +566,17 @@ class CompareEmbedding(BaseCompare):
         return {0: files_grouped}
 
     def _tokenize_text(self, text, embeddings=[], descriptor="search text"):
-        if text in CompareEmbedding.TEXT_EMBEDDING_CACHE:
-            text_embedding = CompareEmbedding.TEXT_EMBEDDING_CACHE[text]
+        if text in CompareEmbeddingMatrix.TEXT_EMBEDDING_CACHE:
+            text_embedding = CompareEmbeddingMatrix.TEXT_EMBEDDING_CACHE[text]
             if text_embedding is not None:
-                embeddings.append(CompareEmbedding.TEXT_EMBEDDING_CACHE[text])
+                embeddings.append(CompareEmbeddingMatrix.TEXT_EMBEDDING_CACHE[text])
                 return
         if self.verbose:
             print(f"Tokenizing {descriptor}: \"{text}\"")
         try:
             text_embedding = text_embeddings(text)
             embeddings.append(text_embedding)
-            CompareEmbedding.TEXT_EMBEDDING_CACHE[text] = text_embedding
+            CompareEmbeddingMatrix.TEXT_EMBEDDING_CACHE[text] = text_embedding
         except OSError as e:
             if self.verbose:
                 print(f"{text} - {e}")
@@ -615,12 +638,12 @@ class CompareEmbedding(BaseCompare):
 
     @staticmethod
     def _get_text_embedding_from_cache(text):
-        if text in CompareEmbedding.TEXT_EMBEDDING_CACHE:
-            text_embedding = CompareEmbedding.TEXT_EMBEDDING_CACHE[text]
+        if text in CompareEmbeddingMatrix.TEXT_EMBEDDING_CACHE:
+            text_embedding = CompareEmbeddingMatrix.TEXT_EMBEDDING_CACHE[text]
         else:
             try:
                 text_embedding = text_embeddings(text)
-                CompareEmbedding.TEXT_EMBEDDING_CACHE[text] = text_embedding
+                CompareEmbeddingMatrix.TEXT_EMBEDDING_CACHE[text] = text_embedding
             except OSError as e:
                 print(f"{text} - {e}")
                 raise AssertionError("Encountered an error generating text embedding.")
@@ -637,14 +660,14 @@ class CompareEmbedding(BaseCompare):
             raise AssertionError(
                 f"Encountered an error accessing the provided file path {image_embeddings} in the file system.")
         for key, text in texts_dict.items():
-            similarities[key] = embedding_similarity(image_embedding, CompareEmbedding._get_text_embedding_from_cache(text))
+            similarities[key] = embedding_similarity(image_embedding, CompareEmbeddingMatrix._get_text_embedding_from_cache(text))
         return similarities
 
     @staticmethod
     def multi_text_compare(image_path, positives, negatives, threshold=0.3):
         key = (image_path, "::p", tuple(positives), "::n", tuple(negatives))
-        if key in CompareEmbedding.MULTI_EMBEDDING_CACHE:
-            return bool(CompareEmbedding.MULTI_EMBEDDING_CACHE[key] > threshold)
+        if key in CompareEmbeddingMatrix.MULTI_EMBEDDING_CACHE:
+            return bool(CompareEmbeddingMatrix.MULTI_EMBEDDING_CACHE[key] > threshold)
         # print(f"Running text comparison for \"{image_path}\" - positive texts = {positives}, negative texts = {negatives}")
         positive_similarities = []
         negative_similarities = []
@@ -656,10 +679,10 @@ class CompareEmbedding(BaseCompare):
                 f"Encountered an error accessing the provided file path {image_path} in the file system.")
 
         for text in positives:
-            similarity = embedding_similarity(image_embedding, CompareEmbedding._get_text_embedding_from_cache(text))
+            similarity = embedding_similarity(image_embedding, CompareEmbeddingMatrix._get_text_embedding_from_cache(text))
             positive_similarities.append(float(similarity[0]))
         for text in negatives:
-            similarity = embedding_similarity(image_embedding, CompareEmbedding._get_text_embedding_from_cache(text))
+            similarity = embedding_similarity(image_embedding, CompareEmbeddingMatrix._get_text_embedding_from_cache(text))
             negative_similarities.append(1/float(similarity[0]))
 
         combined_positive_similarity = sum(positive_similarities)/max(len(positive_similarities),1)
@@ -671,7 +694,7 @@ class CompareEmbedding(BaseCompare):
         else:
             combined_similarity = 1 / combined_negative_similarity
         # print(f"Combined similarity = {combined_similarity} Positive similarities = {positive_similarities} Negative similarites = {negative_similarities} Threshold = {threshold}")
-        CompareEmbedding.MULTI_EMBEDDING_CACHE[key] = combined_similarity
+        CompareEmbeddingMatrix.MULTI_EMBEDDING_CACHE[key] = combined_similarity
         return combined_similarity > threshold
 
     @staticmethod
@@ -758,7 +781,7 @@ if __name__ == "__main__":
             usage()
             exit(1)
 
-    compare = CompareEmbedding(base_dir,
+    compare = CompareEmbeddingMatrix(base_dir,
                                search_file_path=search_file_path,
                                counter_limit=counter_limit,
                                embedding_similarity_threshold=embedding_similarity_threshold,

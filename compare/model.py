@@ -15,13 +15,17 @@ def image_embeddings(image_path):
         image_path = FrameCache.get_first_frame(image_path)
         image = preprocess(Image.open(image_path)).unsqueeze(0).to(device)
     with torch.no_grad():
-        return model.encode_image(image).tolist()[0]
+        embedding = model.encode_image(image)
+        embedding /= embedding.norm(dim=-1, keepdim=True)
+        return embedding.tolist()[0]
 
 
 def text_embeddings(text):
     tokens = clip.tokenize([text]).to(device)
     with torch.no_grad():
-        return model.encode_text(tokens).tolist()[0]
+        embedding = model.encode_text(tokens).float()
+        embedding /= embedding.norm(dim=-1, keepdim=True)
+        return embedding.tolist()[0]
 
 
 def embedding_similarity(embedding0, embedding1):

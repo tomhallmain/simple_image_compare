@@ -30,6 +30,7 @@ class Mode(Enum):
 class CompareMode(Enum):
     COLOR_MATCHING = _("Color Matching")
     CLIP_EMBEDDING = _("CLIP Embedding")
+    CLIP_EMBEDDING_MATRIX = _("CLIP Embedding Matrix")
 #    PROMPTS = _("Prompts")
 
     def get_text(self):
@@ -37,6 +38,10 @@ class CompareMode(Enum):
             return _("Color Matching")
         elif self == CompareMode.CLIP_EMBEDDING:
             return _("CLIP Embedding")
+        elif self == CompareMode.CLIP_EMBEDDING_MATRIX:
+            return _("CLIP Embedding Matrix")
+#        elif self == CompareMode.PROMPTS:
+#            return _("Prompts")
         raise Exception("Unhandled Compare Mode text: " + str(self))
 
     def __str__(self):
@@ -56,14 +61,18 @@ class CompareMode(Enum):
     def threshold_str(self):
         if self == CompareMode.COLOR_MATCHING:
             return _("Color diff threshold")
-        if self == CompareMode.CLIP_EMBEDDING:
+        if self.is_embedding():
             return _("Embedding similarity threshold")
+        raise Exception("Unhandled Compare Mode text: " + str(self))
 
     def threshold_vals(self):
         if self == CompareMode.COLOR_MATCHING:
             return [str(i) for i in list(range(31))]
-        if self == CompareMode.CLIP_EMBEDDING:
+        if self.is_embedding():
             return [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.925, 0.95, 0.98, 0.99]
+
+    def is_embedding(self):
+        return self == CompareMode.CLIP_EMBEDDING or self == CompareMode.CLIP_EMBEDDING_MATRIX
 
 
 class SortBy(Enum):

@@ -27,9 +27,11 @@ class CompareData:
             else:
                 self._file_data_filepath = os.path.join(
                     base_dir, CompareData.TOP_COLORS_DATA)
-        else:
+        elif mode.is_embedding():
             self._file_data_filepath = os.path.join(
                 base_dir, CompareData.EMBEDDINGS_DATA)
+        else:
+            raise Exception("Invalid mode")
 
     def load_data(self, overwrite=False, compare_faces=False):
         if overwrite or not os.path.exists(self._file_data_filepath):

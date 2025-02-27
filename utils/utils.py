@@ -2,6 +2,7 @@ from enum import Enum
 import logging
 import re
 import os
+import psutil
 import shutil
 import subprocess
 import sys
@@ -82,6 +83,10 @@ class Utils:
     @staticmethod
     def get_user_dir():
         return os.path.expanduser("~")
+
+    @staticmethod
+    def calculate_available_ram():
+        return psutil.virtual_memory().available / (1024 ** 3)
 
     @staticmethod
     def alphanumeric_sort(l, text_lambda=lambda i: i, reverse=False):

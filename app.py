@@ -887,13 +887,7 @@ class App():
 
     def get_compare_threshold(self):
         compare_threshold_str = self.compare_threshold.get().strip()
-        try:
-            return None if compare_threshold_str == "" else int(compare_threshold_str)
-        except Exception:
-            if self.compare_wrapper.compare_mode == CompareMode.CLIP_EMBEDDING:
-                return config.embedding_similarity_threshold
-            else:
-                return config.color_diff_threshold
+        return int(compare_threshold_str) if self.compare_wrapper.compare_mode == CompareMode.COLOR_MATCHING else float(compare_threshold_str)
 
     def get_inclusion_pattern(self) -> str | None:
         inclusion_pattern = self.inclusion_pattern.get().strip()

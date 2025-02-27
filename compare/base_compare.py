@@ -48,6 +48,26 @@ class BaseCompare:
         self.gather_files_func = gather_files_func
         self.compare_result = CompareResult(base_dir=self.args.base_dir)
 
+    @staticmethod
+    def calculate_chunk_size(embeddings, max_mem_gb=None):
+        """
+        Calculate the number of rows (M) to process per chunk.
+        :param embeddings: N x D numpy array of embeddings.
+        :param max_mem_gb: Maximum memory to allocate for a chunk (e.g., 4 GB).
+        """
+        if max_mem_gb is None or max_mem_gb < 0:
+            max_mem_gb = Utils.calculate_available_ram() - 1.0
+        n, d = embeddings.shape
+        bytes_per_row = d * embeddings.dtype.itemsize  # e.g., 512 * 4 bytes (float32)
+        max_rows_per_chunk = int((max_mem_gb * 1e9) / (n * bytes_per_row))
+        return max(1, max_rows_per_chunk)  # Ensure at least 1 row per chunk
+
+    def get_similarity_threshold(self):
+        return -1.0 # overridden method
+
+    def set_similarity_threshold(self, threshold):
+        return None
+
     def set_base_dir(self, base_dir):
         '''
         Set the base directory and prepare cache file references.
@@ -109,7 +129,7 @@ class BaseCompare:
 
     def _handle_progress(self, counter, total, gathering_data=True):
         percent_complete = counter / total * 100
-        if percent_complete % 10 == 0:
+        if percent_complete % 10 == 0 or counter % 500 == 0:
             if self.verbose:
                 desc1 = "data gathered" if gathering_data else "compared"
                 print(str(int(percent_complete)) + "% " + desc1)

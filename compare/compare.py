@@ -211,6 +211,12 @@ class Compare(BaseCompare):
         print(f" overwrite image data: {self.args.overwrite}")
         print("|--------------------------------------------------------------------|\n\n")
 
+    def get_similarity_threshold(self):
+        return self.color_diff_threshold
+
+    def set_similarity_threshold(self, threshold):
+        self.color_diff_threshold = threshold
+
     def get_data(self):
         '''
         For all the found files in the base directory, either load the cached
@@ -417,6 +423,8 @@ class Compare(BaseCompare):
         if self.compare_result.is_complete:
             return (self.compare_result.files_grouped, self.compare_result.file_groups)
         n_files_found_even = Utils.round_up(self.compare_data.n_files_found, 5)
+        if self.compare_result.i > 1:
+            self._handle_progress(self.compare_result.i, n_files_found_even, gathering_data=False)
 
         if self.compare_data.n_files_found > 5000:
             print("\nWARNING: Large image file set found, comparison between all"
@@ -470,7 +478,6 @@ class Compare(BaseCompare):
                     self.compare_result.files_grouped[diff_index] = (
                         self.compare_result.group_index, diff_score)
                     self.compare_result.group_index += 1
-                    continue
                 elif f1_grouped:
                     existing_group_index, previous_diff_score = self.compare_result.files_grouped[
                         base_index]

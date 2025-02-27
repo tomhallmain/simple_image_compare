@@ -8,6 +8,7 @@ import pprint
 from compare.compare import Compare
 from compare.compare_args import CompareArgs
 from compare.compare_embeddings import CompareEmbedding
+from compare.compare_embeddings_matrix import CompareEmbeddingMatrix
 from compare.prevalidations_window import PrevalidationAction, PrevalidationsWindow
 from image.frame_cache import FrameCache
 from utils.config import config
@@ -161,9 +162,10 @@ class CompareWrapper:
         if file_browser:
             self.find_next_unrelated_image(file_browser, forward=False)
             return
-        if (self.file_groups is None or len(self.group_indexes) == 0
-                or self.current_group_index == max(self.group_indexes)):
+        if (self.file_groups is None or len(self.group_indexes) == 0):
             self.current_group_index = 0
+        elif self.current_group_index == 0:
+            self.current_group_index = len(self.group_indexes) - 1
         else:
             self.current_group_index -= 1
         self.set_current_group()
@@ -241,14 +243,9 @@ class CompareWrapper:
         return selected
 
     def _requires_new_compare(self, base_dir):
-        if not self.has_compare() or self._compare.base_dir != base_dir:
-            return True
-        current_compare_class = self._compare.__class__.__name__
-        if current_compare_class == "Compare":
-            return self.compare_mode != CompareMode.COLOR_MATCHING
-        elif current_compare_class == "CompareEmbedding":
-            return self.compare_mode != CompareMode.CLIP_EMBEDDING
-        raise Exception(f"Unknown Compare class {current_compare_class}")
+        return self._compare is None \
+            or self._compare.base_dir != base_dir \
+            or self.compare_mode != self._compare.COMPARE_MODE
 
     def run(self, args=CompareArgs()):
         get_new_data = True
@@ -270,10 +267,7 @@ class CompareWrapper:
             self._compare.args = args
             self._compare.set_search_file_path(args.search_file_path)
             self._compare.compare_faces = args.compare_faces
-            if self.compare_mode == CompareMode.COLOR_MATCHING:
-                self._compare.color_diff_threshold = args.threshold
-            else:
-                self._compare.embedding_similarity_threshold = args.threshold
+            self._compare.set_similarity_threshold(args.threshold)
             self._compare.print_settings()
 
         if self._compare is None:
@@ -302,11 +296,12 @@ class CompareWrapper:
             self.run_search()
 
     def new_compare(self, args):
+        args.compare_mode = self.compare_mode
         if self.compare_mode == CompareMode.CLIP_EMBEDDING:
-            args.compare_mode = CompareMode.CLIP_EMBEDDING
             self._compare = CompareEmbedding(args)
+        elif self.compare_mode == CompareMode.CLIP_EMBEDDING_MATRIX:
+            self._compare = CompareEmbeddingMatrix(args)
         elif self.compare_mode == CompareMode.COLOR_MATCHING:
-            args.compare_mode = CompareMode.COLOR_MATCHING
             self._compare = Compare(args, use_thumb=True)
 
     def run_search(self) -> None:
@@ -321,7 +316,7 @@ class CompareWrapper:
             self._app_actions.alert(_("No Match Found"), _("None of the files match the search filters with current settings."))
             return
 
-        reverse = self.compare_mode == CompareMode.CLIP_EMBEDDING
+        reverse = self.compare_mode.is_embedding()
         for f in sorted(self.files_grouped[0], key=lambda f: self.files_grouped[0][f], reverse=reverse):
             self.files_matched.append(f)
 
@@ -494,7 +489,7 @@ class CompareWrapper:
         return group_map
 
     def _get_sorted_file_matches(self, group, app_mode):
-        if app_mode == Mode.SEARCH and CompareMode.CLIP_EMBEDDING == self.compare_mode:
+        if app_mode == Mode.SEARCH and self.compare_mode.is_embedding():
             return sorted(group, key=lambda f: group[f], reverse=True)
         else:
             return sorted(group, key=lambda f: group[f])
