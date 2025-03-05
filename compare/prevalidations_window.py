@@ -19,7 +19,6 @@ from utils.utils import Utils
 _ = I18N._
 
 
-
 class Prevalidation:
     NO_POSITIVES_STR = _("(no positives set)")
     NO_NEGATIVES_STR = _("(no negatives set)")

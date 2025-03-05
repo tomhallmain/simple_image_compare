@@ -246,8 +246,9 @@ class Compare(BaseCompare):
                 if self.compare_faces and f in self.compare_data.file_faces_dict:
                     n_faces = self.compare_data.file_faces_dict[f]
             else:
+                image_file_path = self.get_image_path(f)
                 try:
-                    image = get_image_array(f)
+                    image_array = get_image_array(image_file_path)
                 except OSError as e:
                     print(f"{f} - {e}")
                     continue
@@ -260,7 +261,7 @@ class Compare(BaseCompare):
                     continue
 
                 try:
-                    colors = self.color_getter(image, self.modifier)
+                    colors = self.color_getter(image_array, self.modifier)
                 except ValueError as e:
                     if self.verbose:
                         print(e)

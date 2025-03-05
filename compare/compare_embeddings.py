@@ -104,11 +104,13 @@ class CompareEmbedding(BaseCompare):
                     if f in self.compare_data.file_faces_dict:
                         n_faces = self.compare_data.file_faces_dict[f]
                     else:
-                        n_faces = self._get_faces_count(f)
+                        image_file_path = self.get_image_path(f)
+                        n_faces = self._get_faces_count(image_file_path)
                         self.compare_data.file_faces_dict[f] = n_faces
             else:
+                image_file_path = self.get_image_path(f)
                 try:
-                    embedding = image_embeddings(f)
+                    embedding = image_embeddings(image_file_path)
                 except OSError as e:
                     print(f"{f} - {e}")
                     continue
@@ -124,7 +126,7 @@ class CompareEmbedding(BaseCompare):
                     if f in self.compare_data.file_faces_dict:
                         n_faces = self.compare_data.file_faces_dict[f]
                     else:
-                        n_faces = self._get_faces_count(f)
+                        n_faces = self._get_faces_count(image_file_path)
                         self.compare_data.file_faces_dict[f] = n_faces
                 self.has_new_file_data = True
 

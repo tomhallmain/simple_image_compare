@@ -1206,6 +1206,9 @@ class App():
         args.threshold = self.get_compare_threshold()
         args.inclusion_pattern = self.get_inclusion_pattern()
         args.store_checkpoints = self.store_checkpoints.get()
+        args.include_videos = config.enable_videos
+        args.include_gifs = ".gif" in config.video_types
+        args.include_pdfs = config.enable_pdfs
         args.listener = ProgressListener(update_func=self.display_progress)
         self.compare_wrapper.run(args)
 
@@ -1352,11 +1355,8 @@ class App():
         self.toast(_("Prevalidations now running") if config.enable_prevalidations else _("Prevalidations turned off"))
 
     def toggle_videos_enabled(self, event=None):
-        # NOTE have to delete the old compare since it may have been running with invalid file types
-        videos_enabled = config.toggle_video_mode()
-        self.return_to_browsing_mode()
-        self.compare_wrapper = CompareWrapper(self.master, config.compare_mode, self.app_actions)
-        self.toast(_("Videos now running") if videos_enabled else _("Videos turned off"))
+        from files.type_configuration_window import TypeConfigurationWindow
+        TypeConfigurationWindow.show()
 
     def open_go_to_file_window(self, event=None):
         try:

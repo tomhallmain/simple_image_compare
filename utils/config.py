@@ -51,6 +51,7 @@ class Config:
         self.video_types = [".gif", ".mp4", ".mkv", ".avi", ".wmv", ".mov", ".flv"]
         self.image_classifier_h5_models = []
         self.enable_videos = True
+        self.enable_pdfs = False
         self.directories_to_search_for_related_images = []
         self.font_size = 8
         self.threshold_potential_duplicate_color = 50
@@ -120,6 +121,7 @@ class Config:
                             "escape_backslash_filepaths",
                             "fill_canvas",
                             "enable_videos",
+                            "enable_pdfs",
                             "print_settings",
                             "show_toasts",
                             "delete_instantly",

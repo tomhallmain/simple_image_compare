@@ -8,6 +8,7 @@ import cv2
 from compare.compare_args import CompareArgs
 from compare.compare_data import CompareData
 from compare.compare_result import CompareResult
+from image.frame_cache import FrameCache
 from utils.config import config
 from utils.constants import CompareMode
 from utils.translations import I18N
@@ -16,16 +17,31 @@ from utils.utils import Utils
 _ = I18N._
 
 
-def gather_files(base_dir=".", exts=config.image_types, recursive=True, include_videos=False):
+def gather_files(base_dir=".", exts=config.image_types, recursive=True, include_videos=False, include_gifs=False, include_pdfs=False):
     files = []
     recursive_str = "**/" if recursive else ""
     exts = exts[:]
+    
+    # Add video types if enabled (excluding GIFs)
     if include_videos:
         for ext in config.video_types:
-            if ext not in exts:
+            if ext != '.gif' and ext not in exts:
                 exts.append(ext)
     else:
-        exts = [e for e in exts if e not in config.video_types]
+        exts = [e for e in exts if e not in config.video_types or e == '.gif']
+    
+    # Add GIF if enabled
+    if include_gifs and '.gif' not in exts:
+        exts.append('.gif')
+    elif not include_gifs and '.gif' in exts:
+        exts.remove('.gif')
+    
+    # Add PDF if enabled
+    if include_pdfs and '.pdf' not in exts:
+        exts.append('.pdf')
+    elif not include_pdfs and '.pdf' in exts:
+        exts.remove('.pdf')
+    
     for ext in exts:
         pattern = os.path.join(base_dir, recursive_str + "*" + ext)
         files.extend(glob(pattern, recursive=recursive))
@@ -102,10 +118,10 @@ class BaseCompare:
         '''
         if self.gather_files_func:
             exts = config.image_types
-            if self.args.include_videos:
+            if self.args.include_gifs and ".gif" not in exts:
                 exts.append(".gif")
             self.files = self.gather_files_func(
-                base_dir=self.base_dir, exts=exts, recursive=self.args.recursive)
+                base_dir=self.base_dir, exts=exts, recursive=self.args.recursive, include_videos=self.args.include_videos, include_gifs=self.args.include_gifs, include_pdfs=self.args.include_pdfs)
         else:
             raise Exception("No gather files function found.")
         self.files.sort()
@@ -123,6 +139,13 @@ class BaseCompare:
 
         if self.verbose:
             self.print_settings()
+
+    def get_image_path(self, path: str) -> str:
+        """
+        Get the image path for a file, using FrameCache if needed.
+        Returns the original path if no frame extraction is needed.
+        """
+        return FrameCache.get_image_path(path)
 
     def get_data(self):
         pass

@@ -26,7 +26,9 @@ class CompareArgs:
         self.inclusion_pattern = inclusion_pattern
         self.overwrite = overwrite
         self.store_checkpoints = store_checkpoints
-        self.include_videos = False
+        self.include_videos = config.enable_videos
+        self.include_gifs = ".gif" in config.video_types
+        self.include_pdfs = config.enable_pdfs
         self.match_dims = False
         self.verbose = True
 

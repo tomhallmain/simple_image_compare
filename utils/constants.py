@@ -165,3 +165,11 @@ class Direction(Enum):
     def get_correction(self, backward_value=0):
         return backward_value if self == Direction.BACKWARD else -1
 
+
+class CompareMediaType(Enum):
+    """Enumeration of supported media types for comparison."""
+    IMAGE = "image"
+    GIF = "gif"
+    VIDEO = "video"
+    PDF = "pdf"
+

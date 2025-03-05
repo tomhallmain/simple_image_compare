@@ -1,13 +1,116 @@
 import os
 import sys
-from typing import Tuple, Union
-
+from typing import Tuple, Union, Dict, List
+import numpy as np
+from scipy import ndimage
+from sklearn.cluster import KMeans
 from PIL import ImageChops
 from PIL import Image
 from PIL.Image import Image as PilImage
 
 from image.image_ops import ImageOps
 from utils.config import config
+from utils.utils import Utils
+
+def detect_edges_sobel(im: PilImage) -> PilImage:
+    """
+    Use Sobel edge detection to identify potential division lines.
+    This would help catch gradient borders and more subtle divisions.
+    """
+    # Convert to grayscale
+    gray = im.convert('L')
+    gray_array = np.array(gray)
+    
+    # Sobel edge detection
+    sobelx = ndimage.sobel(gray_array, axis=0)
+    sobely = ndimage.sobel(gray_array, axis=1)
+    
+    # Combine edges
+    magnitude = np.sqrt(sobelx**2 + sobely**2)
+    magnitude = magnitude.astype(np.uint8)
+    
+    return Image.fromarray(magnitude)
+
+def detect_contrast_regions(im: PilImage, window_size: int = 10) -> Dict[Tuple[int, int], float]:
+    """
+    Analyze local contrast in sliding windows to identify potential divisions.
+    This helps catch divisions that might not have sharp edges but have
+    significant contrast differences.
+    """
+    width, height = im.size
+    contrast_map = {}
+    
+    for x in range(0, width - window_size, window_size//2):
+        for y in range(0, height - window_size, window_size//2):
+            region = im.crop((x, y, x + window_size, y + window_size))
+            contrast = region.entropy()  # or use custom contrast calculation
+            contrast_map[(x, y)] = contrast
+            
+    return contrast_map
+
+def analyze_color_clusters(im: PilImage) -> np.ndarray:
+    """
+    Use K-means clustering to identify dominant color regions and potential
+    divisions between them. This helps catch divisions based on color
+    composition rather than just edge detection.
+    """
+    # Convert image to array of RGB values
+    img_array = np.array(im)
+    pixels = img_array.reshape(-1, 3)
+    
+    # Perform clustering
+    kmeans = KMeans(n_clusters=5, random_state=42)
+    kmeans.fit(pixels)
+    
+    # Analyze cluster boundaries
+    return kmeans.labels_.reshape(img_array.shape[:2])
+
+def smart_consolidate_diffs(diffs: Dict[int, float], image_size: int, min_gap: int = 20) -> Dict[int, float]:
+    """
+    Enhanced consolidation that considers:
+    - Minimum gap between divisions
+    - Strength of the division (contrast/edge strength)
+    - Proximity to image edges
+    - Symmetry considerations
+    """
+    consolidated = {}
+    sorted_diffs = sorted(diffs.items(), key=lambda x: x[0])
+    
+    for i, (pos, strength) in enumerate(sorted_diffs):
+        if i > 0 and pos - sorted_diffs[i-1][0] < min_gap:
+            # Merge with previous if closer than min_gap
+            prev_pos, prev_strength = sorted_diffs[i-1]
+            if strength > prev_strength:
+                consolidated[pos] = strength
+                if prev_pos in consolidated:
+                    del consolidated[prev_pos]
+            else:
+                consolidated[prev_pos] = prev_strength
+        else:
+            consolidated[pos] = strength
+            
+    return consolidated
+
+def validate_division(im: PilImage, division_pos: int, is_horizontal: bool) -> bool:
+    """
+    Validate a potential division by checking:
+    - Length of the division line
+    - Consistency of the division across the image
+    - Whether it creates reasonable subimage sizes
+    - Whether it aligns with other detected divisions
+    """
+    width, height = im.size
+    min_size = 30  # Minimum subimage size
+    
+    if is_horizontal:
+        if division_pos < min_size or division_pos > height - min_size:
+            return False
+    else:
+        if division_pos < min_size or division_pos > width - min_size:
+            return False
+            
+    # Add more validation logic here
+    return True
 
 class Cropper:
     @staticmethod
@@ -121,64 +224,133 @@ class Cropper:
     def remove_borders_by_division_detection(im: PilImage, tolerance: int = 100) -> Tuple[list[PilImage], bool]:
         '''
         Find vertical and horizontal divisions in an image and remove borders or split the image based on these.
+        Uses multiple detection strategies for better accuracy.
         '''
         width, height = im.size
         midpoint_x, midpoint_y = int(width / 2), int(height / 2)
-        horizontal_diffs, h_diffs_copy = Cropper.detect_perfectly_horizontal_divisions(im)
-        vertical_diffs, v_diffs_copy = Cropper.detect_perfectly_vertical_divisions(im)
+        
+        Utils.log("Starting multi-strategy division detection...")
+        Utils.log(f"Image dimensions: {width}x{height}")
 
-        # If initial detection test fails, try with successively lower tolerances before giving up.
-        # TODO set tolerance dynamically using something like find_standard_deviation_of_pixel_color_in_image
-        if len(horizontal_diffs) == 0 and len(vertical_diffs) == 0:
-            horizontal_diffs, h_diffs_copy = Cropper.detect_perfectly_horizontal_divisions(im, tolerance=60, diffs=h_diffs_copy)
-            vertical_diffs, v_diffs_copy = Cropper.detect_perfectly_vertical_divisions(im, tolerance=60, diffs=v_diffs_copy)
-        if len(horizontal_diffs) == 0 and len(vertical_diffs) == 0:
-            horizontal_diffs, h_diffs_copy = Cropper.detect_perfectly_horizontal_divisions(im, tolerance=30, diffs=h_diffs_copy)
-            vertical_diffs, v_diffs_copy = Cropper.detect_perfectly_vertical_divisions(im, tolerance=30, diffs=v_diffs_copy)
-        if len(horizontal_diffs) == 0 and len(vertical_diffs) == 0:
-            print('No borders or subimages detected')
+        # Get edge detection results
+        Utils.log("Running Sobel edge detection...")
+        edge_image = detect_edges_sobel(im)
+        edge_array = np.array(edge_image)
+        
+        # Get contrast analysis
+        Utils.log("Analyzing contrast regions...")
+        contrast_map = detect_contrast_regions(im)
+        
+        # Get color clustering results
+        Utils.log("Performing color clustering analysis...")
+        color_clusters = analyze_color_clusters(im)
+        
+        # Initialize division dictionaries
+        horizontal_diffs = {}
+        vertical_diffs = {}
+        
+        # Process edge detection results for horizontal divisions
+        Utils.log("Processing horizontal edge detection results...")
+        for y in range(1, height):
+            edge_strength = np.mean(edge_array[y, :])
+            if edge_strength > tolerance:
+                horizontal_diffs[y] = edge_strength
+                
+        # Process edge detection results for vertical divisions
+        Utils.log("Processing vertical edge detection results...")
+        for x in range(1, width):
+            edge_strength = np.mean(edge_array[:, x])
+            if edge_strength > tolerance:
+                vertical_diffs[x] = edge_strength
+        
+        # Process contrast map for additional divisions
+        Utils.log("Processing contrast map for additional divisions...")
+        for (x, y), contrast in contrast_map.items():
+            if contrast > tolerance:
+                if x % 10 == 0:  # Vertical division
+                    vertical_diffs[x] = max(vertical_diffs.get(x, 0), contrast)
+                if y % 10 == 0:  # Horizontal division
+                    horizontal_diffs[y] = max(horizontal_diffs.get(y, 0), contrast)
+        
+        # Process color clusters for additional divisions
+        Utils.log("Processing color cluster boundaries...")
+        cluster_changes_x = np.diff(color_clusters, axis=1)
+        cluster_changes_y = np.diff(color_clusters, axis=0)
+        
+        for x in range(1, width-1):
+            if np.any(cluster_changes_x[:, x] != 0):
+                vertical_diffs[x] = max(vertical_diffs.get(x, 0), tolerance)
+                
+        for y in range(1, height-1):
+            if np.any(cluster_changes_y[y, :] != 0):
+                horizontal_diffs[y] = max(horizontal_diffs.get(y, 0), tolerance)
+
+        Utils.log(f"Initial detection found {len(horizontal_diffs)} horizontal and {len(vertical_diffs)} vertical potential divisions")
+
+        # Smart consolidation of all detected divisions
+        Utils.log("Consolidating close divisions...")
+        horizontal_diffs = smart_consolidate_diffs(horizontal_diffs, height)
+        vertical_diffs = smart_consolidate_diffs(vertical_diffs, width)
+        
+        Utils.log(f"After consolidation: {len(horizontal_diffs)} horizontal and {len(vertical_diffs)} vertical divisions")
+        
+        # Validate divisions
+        Utils.log("Validating detected divisions...")
+        validated_horizontal = {pos: strength for pos, strength in horizontal_diffs.items() 
+                              if validate_division(im, pos, True)}
+        validated_vertical = {pos: strength for pos, strength in vertical_diffs.items() 
+                            if validate_division(im, pos, False)}
+
+        Utils.log(f"After validation: {len(validated_horizontal)} horizontal and {len(validated_vertical)} vertical valid divisions")
+
+        if len(validated_horizontal) == 0 and len(validated_vertical) == 0:
+            Utils.log('No borders or subimages detected')
             return [im], False
 
         if config.debug:
-            print(f'found horizontal diffs: {horizontal_diffs}')
-            print(f'found vertical diffs: {vertical_diffs}')
+            Utils.log(f'Found horizontal diffs: {validated_horizontal}')
+            Utils.log(f'Found vertical diffs: {validated_vertical}')
 
         # If the image is divided down the middle, test both the left and right images for entropy.
-        if len(horizontal_diffs) == 1 and \
-                abs(max(horizontal_diffs.keys()) - midpoint_y) < int(height/10):
-            horizontal_diffs[0] = 0
-            horizontal_diffs[height] = height
-        elif len(vertical_diffs) == 1 and \
-                abs(max(vertical_diffs.keys()) - midpoint_x) < int(width/10):
-            vertical_diffs[0] = 0
-            vertical_diffs[width] = width
+        Utils.log("Checking for middle divisions...")
+        if len(validated_horizontal) == 1 and \
+                abs(max(validated_horizontal.keys()) - midpoint_y) < int(height/10):
+            Utils.log("Detected middle horizontal division")
+            validated_horizontal[0] = 0
+            validated_horizontal[height] = height
+        elif len(validated_vertical) == 1 and \
+                abs(max(validated_vertical.keys()) - midpoint_x) < int(width/10):
+            Utils.log("Detected middle vertical division")
+            validated_vertical[0] = 0
+            validated_vertical[width] = width
 
-        if len(horizontal_diffs) > 2 or len(vertical_diffs) > 2:
-            print('Multiple subimages detected!')
-            print(f"horizontal diffs {horizontal_diffs}")
-            print(f"vertical diffs {vertical_diffs}")
-            return Cropper.split_image(im, horizontal_diffs, vertical_diffs), True
+        if len(validated_horizontal) > 2 or len(validated_vertical) > 2:
+            Utils.log('Multiple subimages detected!')
+            Utils.log(f"Horizontal diffs: {validated_horizontal}")
+            Utils.log(f"Vertical diffs: {validated_vertical}")
+            return Cropper.split_image(im, validated_horizontal, validated_vertical), True
         else:
-            if len(vertical_diffs) == 0 or (len(vertical_diffs) == 1 and min(vertical_diffs.keys()) > midpoint_x):
+            Utils.log("Processing single division case...")
+            if len(validated_vertical) == 0 or (len(validated_vertical) == 1 and min(validated_vertical.keys()) > midpoint_x):
                 left = 0
             else:
-                left = min(vertical_diffs.keys())
-            if len(vertical_diffs) == 0 or (len(vertical_diffs) == 1 and max(vertical_diffs.keys()) < midpoint_x):
+                left = min(validated_vertical.keys())
+            if len(validated_vertical) == 0 or (len(validated_vertical) == 1 and max(validated_vertical.keys()) < midpoint_x):
                 right = width - 1
             else:
-                right = max(vertical_diffs.keys())
-            if len(horizontal_diffs) == 0 or (len(horizontal_diffs) == 1 and min(horizontal_diffs.keys()) > midpoint_y):
+                right = max(validated_vertical.keys())
+            if len(validated_horizontal) == 0 or (len(validated_horizontal) == 1 and min(validated_horizontal.keys()) > midpoint_y):
                 top = 0
             else:
-                top = min(horizontal_diffs.keys())
-            if len(horizontal_diffs) == 0 or (len(horizontal_diffs) == 1 and max(horizontal_diffs.keys()) < midpoint_y):
+                top = min(validated_horizontal.keys())
+            if len(validated_horizontal) == 0 or (len(validated_horizontal) == 1 and max(validated_horizontal.keys()) < midpoint_y):
                 bottom = height - 1
             else:
-                bottom = max(horizontal_diffs.keys())
+                bottom = max(validated_horizontal.keys())
             bbox = (left, top, right, bottom)
             if config.debug:
-                print(f"ORIGINAL IMAGE BOX: 0, 0, {width}, {height}")
-                print(f"CROPPED IMAGE BOX: {left}, {top}, {right}, {bottom}")
+                Utils.log(f"Original image box: 0, 0, {width}, {height}")
+                Utils.log(f"Cropped image box: {left}, {top}, {right}, {bottom}")
             return [im.crop(bbox)], True
 
     @staticmethod

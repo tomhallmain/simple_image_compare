@@ -123,12 +123,11 @@ class CompareWrapper:
             try:
                 prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_media, self._app_actions.toast)
             except Exception as e:
+                # If the initial prevalidation fails, try with the extracted frame
                 actual_image_path = FrameCache.get_image_path(image_path)
-                if actual_image_path != image_path:
-                    print("Got first frame from video: " + image_path)
-                    prevalidation_action = PrevalidationsWindow.prevalidate(actual_image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_media, self._app_actions.toast)
-                else:
+                if actual_image_path == image_path:
                     raise e
+                prevalidation_action = PrevalidationsWindow.prevalidate(actual_image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_media, self._app_actions.toast)
             if prevalidation_action is not None:
                 return prevalidation_action != PrevalidationAction.NOTIFY
         return False

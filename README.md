@@ -12,7 +12,7 @@ The UI can be used as a media file browser. The following features are available
     <li>Auto-resize images to fill the screen</li>
     <li>Auto-refresh directory files</li>
     <li>Slideshow (customizable)</li>
-    <li>Optionally play video files and other media</li>
+    <li>Optionally play and compare video files and other media - typically will use the first image found for the comparison.</li>
     <li>Quicker and smoother transitions between images</li>
     <li>Faster load time for directories with many images in some cases</li>
     <li>Faster load times when switching between sort types</li>
@@ -23,8 +23,8 @@ The UI can be used as a media file browser. The following features are available
     <li>Quickly find directories via recent directory picker window</li>
     <li>Stores session info about seen directories (useful for directories with many images)</li>
     <li>Can be set up to run on user-defined list of files in place of a directory</li>
-    <li>Extension with [sd-runner](https://github.com/tomhallmain/sd-runner) for image generation</li>
-    <li>Extension with [refacdir](https://github.com/tomhallmain/refacdir) for file operations</li>
+    <li>Extension with <a href="https://github.com/tomhallmain/sd-runner" target="_blank">sd-runner</a> for image generation</li>
+    <li>Extension with <a href="https://github.com/tomhallmain/refacdir" target="_blank">refacdir</a> for file operations</li>
     <li>Find related images and prompts from embedded Stable Diffusion workflows</li>
     <li>Sort files by related images and prompts</li>
     <li>View raw image metadata</li>
