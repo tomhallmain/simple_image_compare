@@ -116,6 +116,11 @@ class App():
                 return _app
         return default_window
 
+    @staticmethod
+    def refresh_all_compares():
+        for _app in App.open_windows:
+            _app.refresh_compare()
+
     def toggle_theme(self, to_theme=None, do_toast=True):
         if (to_theme is None and AppStyle.IS_DEFAULT_THEME) or to_theme == AppStyle.LIGHT_THEME:
             if to_theme is None:
@@ -176,6 +181,8 @@ class App():
         app_actions = {
             "new_window": App.add_secondary_window,
             "get_window": App.get_window,
+            "refresh_all_compares": App.refresh_all_compares,
+            "find_window_with_compare": App.find_window_with_compare,
             "toast": self.toast,
             "alert": self.alert,
             "refresh": self.refresh,
@@ -398,7 +405,7 @@ class App():
         self.master.bind("<Control-x>", lambda event: MarkedFiles.undo_move_marks(None, self.app_actions))
         self.master.bind("<Control-s>", self.next_text_embedding_preset)
         self.master.bind("<Control-b>", self.return_to_browsing_mode)
-        self.master.bind("<Control-v>", self.toggle_videos_enabled)
+        self.master.bind("<Control-v>", self.open_type_configuration_window)
         self.master.bind("<Home>", self.home)
         self.master.bind("<End>", lambda event: self.home(last_file=True))
         self.master.bind("<Prior>", self.page_up)
@@ -569,6 +576,10 @@ class App():
         if self.mode == Mode.BROWSE and self.media_canvas.canvas.imagetk:
             self.show_next_media()
 
+    def refresh_compare(self):
+        self.compare_wrapper.clear_compare()
+        self.return_to_browsing_mode(suppress_toast=True)
+
     def refocus(self, event=None):
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
         self.media_canvas.focus(refresh_image=shift_key_pressed)
@@ -636,7 +647,7 @@ class App():
             message = _("Slideshows ended")
         self.toast(message)
 
-    def return_to_browsing_mode(self, event=None):
+    def return_to_browsing_mode(self, event=None, suppress_toast=False):
         # TODO instead of simply returning, make this method toggle between browsing mode and the last compare mode if a compare has been run
         self.set_mode(Mode.BROWSE)
         self.file_browser.refresh()
@@ -644,7 +655,8 @@ class App():
         assert self.img_path is not None
         if not self.go_to_file(None, self.img_path, retry_with_delay=1):
             self.home()
-        self.toast(_("Browsing mode set."))
+        if not suppress_toast:
+            self.toast(_("Browsing mode set."))
 
     def get_other_window_or_self_dir(self, allow_current_window=False, prefer_compare_window=False):
         if prefer_compare_window:
@@ -692,17 +704,17 @@ class App():
                 index_text = f"{_index} of {len_files_matched} ({self.file_browser.get_index_details()})"
             else:
                 index_text = ""  # shouldn't happen
-        if self.app_actions.image_details_window is not None:
-            if self.app_actions.image_details_window.do_refresh:
-                self.app_actions.image_details_window.update_image_details(media_path, index_text)
+        if self.app_actions.image_details_window() is not None:
+            if self.app_actions.image_details_window().do_refresh:
+                self.app_actions.image_details_window().update_image_details(media_path, index_text)
             if manually_keyed:
-                self.app_actions.image_details_window.focus()
+                self.app_actions.image_details_window().focus()
         else:
             top_level = Toplevel(self.master, bg=AppStyle.BG_COLOR)
             try:
                 image_details_window = ImageDetails(self.master, top_level, media_path, index_text,
                                                     self.app_actions, do_refresh=not preset_image_path)
-                self.app_actions.image_details_window = image_details_window
+                self.app_actions.set_image_details_window(image_details_window)
             except Exception as e:
                 self.handle_error(str(e), title="Image Details Error")
 
@@ -1103,7 +1115,7 @@ class App():
         if extra_text is not None:
             text += "\n" + extra_text
         self.label_current_image_name["text"] = text
-        if self.app_actions.image_details_window is not None:
+        if self.app_actions.image_details_window() is not None:
             self.get_media_details(manually_keyed=False)
     
     def clear_image(self):
@@ -1207,7 +1219,7 @@ class App():
         args.inclusion_pattern = self.get_inclusion_pattern()
         args.store_checkpoints = self.store_checkpoints.get()
         args.include_videos = config.enable_videos
-        args.include_gifs = ".gif" in config.video_types
+        args.include_gifs = config.enable_gifs
         args.include_pdfs = config.enable_pdfs
         args.listener = ProgressListener(update_func=self.display_progress)
         self.compare_wrapper.run(args)
@@ -1354,9 +1366,9 @@ class App():
         config.enable_prevalidations = not config.enable_prevalidations
         self.toast(_("Prevalidations now running") if config.enable_prevalidations else _("Prevalidations turned off"))
 
-    def toggle_videos_enabled(self, event=None):
+    def open_type_configuration_window(self, event=None):
         from files.type_configuration_window import TypeConfigurationWindow
-        TypeConfigurationWindow.show()
+        TypeConfigurationWindow.show(master=self.master, app_actions=self.app_actions)
 
     def open_go_to_file_window(self, event=None):
         try:
@@ -1684,7 +1696,7 @@ class App():
             alert_method = getattr(messagebox, f"show{kind}")
         return alert_method(title, message)
 
-    def toast(self, message):
+    def toast(self, message, time_in_seconds=config.toasts_persist_seconds):
         Utils.log("Toast message: " + message.replace("\n", " "))
         if not config.show_toasts:
             return
@@ -1720,7 +1732,7 @@ class App():
             time.sleep(time_in_seconds)
             label.destroy()
             toast.destroy()
-        start_thread(self_destruct_after, use_asyncio=False, args=[config.toasts_persist_seconds])
+        start_thread(self_destruct_after, use_asyncio=False, args=[time_in_seconds])
         if sys.platform == "darwin":
             self.media_canvas.focus()
 

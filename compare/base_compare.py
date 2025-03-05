@@ -118,8 +118,6 @@ class BaseCompare:
         '''
         if self.gather_files_func:
             exts = config.image_types
-            if self.args.include_gifs and ".gif" not in exts:
-                exts.append(".gif")
             self.files = self.gather_files_func(
                 base_dir=self.base_dir, exts=exts, recursive=self.args.recursive, include_videos=self.args.include_videos, include_gifs=self.args.include_gifs, include_pdfs=self.args.include_pdfs)
         else:

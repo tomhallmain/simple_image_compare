@@ -50,7 +50,7 @@ class HelpAndConfig():
             "Ctrl+Shift+Return": _("Cancel image generation"),
             "Ctrl+S": _("Run next text embedding search preset"),
             "Ctrl+T": _("Run permanent marks action"),
-            "Ctrl+V":  _("Toggle videos enabled (clears compare)"),
+            "Ctrl+V":  _("Open type configuration window"),
             "Ctrl+W": _("Open new compare window"),
             "Ctrl+X": _("Move previous marks to a different directory"),
             "Ctrl+Z": _("Undo previous marks changes"),

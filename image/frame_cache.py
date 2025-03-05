@@ -35,7 +35,6 @@ class FrameCache:
         # Check for PDF files first
         if media_path_lower.endswith('.pdf'):
             if config.enable_pdfs:
-                Utils.log(f"Extracting first page from PDF: {media_path}")
                 return cls.get_first_frame(media_path, CompareMediaType.PDF)
             else:
                 return media_path
@@ -44,7 +43,6 @@ class FrameCache:
         if config.enable_videos:
             for ext in config.video_types:
                 if media_path_lower.endswith(ext):
-                    Utils.log(f"Extracting first frame from video: {media_path}")
                     return cls.get_first_frame(media_path, CompareMediaType.VIDEO)
 
         return media_path
@@ -93,6 +91,7 @@ class FrameCache:
             pdf_path: Path to the PDF file
         """
         try:
+            Utils.log(f"Extracting first page from PDF: {pdf_path}")
             pdf = pdfium.PdfDocument(pdf_path)
             if len(pdf) > 0:
                 page = pdf[0]
@@ -118,6 +117,7 @@ class FrameCache:
         Args:
             video_path: Path to the video/GIF file
         """
+        Utils.log(f"Extracting first frame from video: {video_path}")
         cap = cv2.VideoCapture(video_path)
         try:
             ret, frame = cap.read()

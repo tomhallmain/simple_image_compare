@@ -39,6 +39,9 @@ class CompareWrapper:
         self.max_group_index = 0
         self.hidden_images = []
 
+    def clear_compare(self):
+        self._compare = None
+
     def has_compare(self):
         return self._compare is not None
 

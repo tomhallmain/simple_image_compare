@@ -48,9 +48,10 @@ class Config:
         self.sd_prompt_reader_loc = None
         self.always_open_new_windows = False
         self.image_types = [".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".bmp", ".heic", ".avif"]
-        self.video_types = [".gif", ".mp4", ".mkv", ".avi", ".wmv", ".mov", ".flv"]
+        self.video_types = [".mp4", ".mkv", ".avi", ".wmv", ".mov", ".flv"]
         self.image_classifier_h5_models = []
         self.enable_videos = True
+        self.enable_gifs = True
         self.enable_pdfs = False
         self.directories_to_search_for_related_images = []
         self.font_size = 8
@@ -121,6 +122,7 @@ class Config:
                             "escape_backslash_filepaths",
                             "fill_canvas",
                             "enable_videos",
+                            "enable_gifs",
                             "enable_pdfs",
                             "print_settings",
                             "show_toasts",
@@ -156,7 +158,10 @@ class Config:
             self.file_types = list(self.image_types)
             if self.enable_videos:
                 self.file_types.extend(list(self.video_types))
-
+            if self.enable_gifs:
+                self.file_types.append(".gif")
+            if self.enable_pdfs:
+                self.file_types.append(".pdf")
 
             try:
                 self.sd_prompt_reader_loc = self.validate_and_set_directory(key="sd_prompt_reader_loc")

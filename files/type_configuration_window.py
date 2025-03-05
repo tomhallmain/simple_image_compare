@@ -1,134 +1,186 @@
-import tkinter as tk
-from tkinter import ttk
-from typing import Dict, Set
+from tkinter import Toplevel, Frame, Label, BooleanVar, LEFT, W, messagebox
+from tkinter.ttk import Checkbutton, Button, Separator
 
+from utils.app_style import AppStyle
 from utils.config import config
 from utils.constants import CompareMediaType
 from utils.translations import I18N
-from utils.utils import Utils
 
 _ = I18N._
 
 
 class TypeConfigurationWindow:
-    _window = None
-    _checkboxes: Dict[CompareMediaType, tk.BooleanVar] = {}
+    top_level = None
+    COL_0_WIDTH = 600
+    _pending_changes = {}  # Store pending changes until confirmed
+    _original_config = {}  # Store original config state for comparison
+
+    @staticmethod
+    def get_geometry():
+        width = 600
+        height = 250  # Increased height for better spacing
+        return f"{width}x{height}"
 
     @classmethod
-    def show(cls):
-        if cls._window is None:
-            cls._window = tk.Toplevel()
-            cls._window.title(_("Media Type Configuration"))
-            cls._window.geometry("300x200")
-            cls._window.resizable(False, False)
-            cls._window.transient(cls._window.master)
-            cls._window.grab_set()
+    def show(cls, master=None, app_actions=None):
+        if cls.top_level is not None:
+            cls.top_level.lift()
+            return
+        if master is None:
+            raise ValueError("Master window must be provided")
+        if app_actions is None:
+            raise ValueError("AppActions instance must be provided")
+            
+        # Store original config state
+        cls._original_config = {
+            CompareMediaType.VIDEO: config.enable_videos,
+            CompareMediaType.GIF: config.enable_gifs,
+            CompareMediaType.PDF: config.enable_pdfs
+        }
+            
+        cls.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
+        cls.top_level.title(_("Media Type Configuration"))
+        cls.top_level.geometry(cls.get_geometry())
+        cls.top_level.protocol("WM_DELETE_WINDOW", cls.on_closing)
+        cls.top_level.bind("<Escape>", cls.on_closing)
+        
+        # Main container frame with padding
+        main_frame = Frame(cls.top_level, bg=AppStyle.BG_COLOR)
+        main_frame.grid(column=0, row=0, padx=20, pady=20, sticky='nsew')
+        main_frame.columnconfigure(0, weight=1)
+        main_frame.rowconfigure(1, weight=1)  # Make the content area expandable
 
-            # Create main frame
-            main_frame = ttk.Frame(cls._window, padding="10")
-            main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        # Title label with increased font size and padding
+        title_label = Label(main_frame, font=('Helvetica', 12, 'bold'))
+        title_label['text'] = _("Configure Media Types")
+        title_label.grid(column=0, row=0, sticky=W, pady=(0, 15))
+        title_label.config(wraplength=cls.COL_0_WIDTH, justify=LEFT, bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
 
-            # Add title label
-            title_label = ttk.Label(
-                main_frame,
-                text=_("Select media types to enable:")
-            )
-            title_label.grid(row=0, column=0, sticky=tk.W, pady=(0, 10))
-            row = 1
+        # Content frame for checkboxes
+        content_frame = Frame(main_frame, bg=AppStyle.BG_COLOR)
+        content_frame.grid(column=0, row=1, sticky='nsew')
+        content_frame.columnconfigure(0, weight=1)
 
-            # Create checkboxes for each media type
-            for media_type in CompareMediaType:
-                var = tk.BooleanVar(value=cls._is_media_type_enabled(media_type))
-                cls._checkboxes[media_type] = var
-                
-                cb = ttk.Checkbutton(
-                    main_frame,
-                    text=_(media_type.name.capitalize()),
-                    variable=var
-                )
-                cb.grid(row=row, column=0, sticky=tk.W, pady=5)
-                
-                # Disable IMAGE checkbox and ensure it's always checked
-                if media_type == CompareMediaType.IMAGE:
-                    cb.state(['disabled'])
-                    var.set(True)
-                
-                row += 1
+        # Create checkboxes for each media type with consistent spacing
+        row = 0
+        for media_type in CompareMediaType:
+            var = cls._get_media_type_var(media_type)
+            check = Checkbutton(content_frame, text=media_type.get_translation(), variable=var)
+            check.grid(column=0, row=row, sticky=W, pady=5)
+            
+            if media_type == CompareMediaType.IMAGE:
+                check.state(['disabled'])  # Disable the checkbox
+                var.set(True)  # Ensure it's always checked
+            else:
+                check.config(command=lambda m=media_type, v=var: cls._store_pending_change(m, v))
+            
+            row += 1
 
-            # Add buttons
-            button_frame = ttk.Frame(main_frame)
-            button_frame.grid(row=row, column=0, pady=20)
+        # Separator line
+        separator = Separator(main_frame, orient='horizontal')
+        separator.grid(column=0, row=2, sticky='ew', pady=15)
 
-            ttk.Button(
-                button_frame,
-                text=_("Apply"),
-                command=cls._apply_changes
-            ).pack(side=tk.LEFT, padx=5)
+        # Button frame for better alignment
+        button_frame = Frame(main_frame, bg=AppStyle.BG_COLOR)
+        button_frame.grid(column=0, row=3, sticky='e')
+        
+        # Add confirmation button with padding
+        confirm_button = Button(button_frame, text=_("Apply Changes"), 
+                              command=lambda: cls._confirm_changes(app_actions))
+        confirm_button.grid(column=0, row=0, padx=5)
 
-            ttk.Button(
-                button_frame,
-                text=_("Cancel"),
-                command=cls._window.destroy
-            ).pack(side=tk.LEFT, padx=5)
-
-            # Center the window
-            cls._window.update_idletasks()
-            width = cls._window.winfo_width()
-            height = cls._window.winfo_height()
-            x = (cls._window.winfo_screenwidth() // 2) - (width // 2)
-            y = (cls._window.winfo_screenheight() // 2) - (height // 2)
-            cls._window.geometry(f"{width}x{height}+{x}+{y}")
-
-        cls._window.lift()
-        cls._window.focus_force()
+        main_frame.after(1, lambda: main_frame.focus_force())
 
     @classmethod
-    def _is_media_type_enabled(cls, media_type: CompareMediaType) -> bool:
-        """Check if a media type is currently enabled in the config."""
-        if media_type == CompareMediaType.IMAGE:
-            return True  # Images are always enabled
-        elif media_type == CompareMediaType.VIDEO:
-            return config.enable_videos
-        elif media_type == CompareMediaType.GIF:
-            return ".gif" in config.video_types
-        elif media_type == CompareMediaType.PDF:
-            return config.enable_pdfs
+    def on_closing(cls, event=None):
+        """Safely handle window closing."""
+        if cls.top_level is not None:
+            cls._pending_changes.clear()
+            cls._original_config.clear()
+            cls.top_level.destroy()
+            cls.top_level = None
+
+    @classmethod
+    def _store_pending_change(cls, media_type: CompareMediaType, var: BooleanVar):
+        """Store the pending change for a media type."""
+        cls._pending_changes[media_type] = var.get()
+
+    @classmethod
+    def _has_changes(cls) -> bool:
+        """Determine if any configuration changes have been made."""
+        if not cls._pending_changes:
+            return False
+            
+        for media_type, new_value in cls._pending_changes.items():
+            if media_type in cls._original_config:
+                if new_value != cls._original_config[media_type]:
+                    return True
         return False
 
     @classmethod
-    def _apply_changes(cls):
-        """Apply the changes to the config."""
-        changes_made = False
+    def _confirm_changes(cls, app_actions):
+        """Show confirmation dialog and apply changes if confirmed."""
+        if not cls._has_changes():
+            cls.on_closing()
+            return
 
-        # Handle video types
-        if cls._checkboxes[CompareMediaType.VIDEO].get() != config.enable_videos:
-            config.enable_videos = cls._checkboxes[CompareMediaType.VIDEO].get()
-            changes_made = True
+        # Skip confirmation if no compares exist
+        if app_actions.find_window_with_compare() is None:
+            cls._apply_changes(app_actions)
+            return
 
-        # Handle GIF
-        if cls._checkboxes[CompareMediaType.GIF].get() != (".gif" in config.video_types):
-            if cls._checkboxes[CompareMediaType.GIF].get():
-                if ".gif" not in config.video_types:
-                    config.video_types.append(".gif")
-            else:
-                if ".gif" in config.video_types:
-                    config.video_types.remove(".gif")
-            changes_made = True
+        res = app_actions.alert(_("Confirm Changes"), 
+                                _("This will clear all existing compares in open windows. Continue?"),
+                                kind="warning")
+        not_ok = res != messagebox.OK and res != True
+        if not_ok:
+            return
+        cls._apply_changes(app_actions)
 
-        # Handle PDF
-        if cls._checkboxes[CompareMediaType.PDF].get() != config.enable_pdfs:
-            config.enable_pdfs = cls._checkboxes[CompareMediaType.PDF].get()
-            if config.enable_pdfs and ".pdf" not in config.file_types:
-                config.file_types.append(".pdf")
-            elif not config.enable_pdfs and ".pdf" in config.file_types:
-                config.file_types.remove(".pdf")
-            changes_made = True
+    @classmethod
+    def _apply_changes(cls, app_actions):
+        """Apply all pending changes and refresh compares."""
+        # Apply all pending changes
+        for media_type, enabled in cls._pending_changes.items():
+            if media_type == CompareMediaType.VIDEO:
+                config.enable_videos = enabled
+                # Handle video types in file_types
+                if enabled:
+                    # Add video types if not present
+                    for ext in config.video_types:
+                        if ext not in config.file_types:
+                            config.file_types.append(ext)
+                else:
+                    # Remove video types
+                    config.file_types = [ext for ext in config.file_types 
+                                         if ext not in config.video_types]
+            elif media_type == CompareMediaType.GIF:
+                config.enable_gifs = enabled
+                if enabled and ".gif" not in config.file_types:
+                    config.file_types.append(".gif")
+                elif not enabled and ".gif" in config.file_types:
+                    config.file_types.remove(".gif")
+            elif media_type == CompareMediaType.PDF:
+                config.enable_pdfs = enabled
+                if config.enable_pdfs and ".pdf" not in config.file_types:
+                    config.file_types.append(".pdf")
+                elif not config.enable_pdfs and ".pdf" in config.file_types:
+                    config.file_types.remove(".pdf")
+        
+        app_actions.refresh_all_compares()
+        app_actions.toast(_("Media type configuration updated"), time_in_seconds=5)
+        cls.on_closing()
 
-        if changes_made:
-            # Update file_types list
-            config.file_types = list(config.image_types)
-            if config.enable_videos:
-                config.file_types.extend(config.video_types)
-            Utils.log(_("Media type configuration updated"))
-            cls._window.destroy()
-            cls._window = None 
+    @classmethod
+    def _get_media_type_var(cls, media_type: CompareMediaType):
+        """Get the current value for a media type from config."""
+        var = BooleanVar()
+        if media_type == CompareMediaType.IMAGE:
+            var.set(True)  # Always True for IMAGE
+        elif media_type == CompareMediaType.VIDEO:
+            var.set(config.enable_videos)
+        elif media_type == CompareMediaType.GIF:
+            var.set(config.enable_gifs)
+        elif media_type == CompareMediaType.PDF:
+            var.set(config.enable_pdfs)
+        return var 

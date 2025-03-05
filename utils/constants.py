@@ -173,3 +173,15 @@ class CompareMediaType(Enum):
     VIDEO = "video"
     PDF = "pdf"
 
+    def get_translation(self):
+        """Get the translated string for this media type."""
+        if self == CompareMediaType.IMAGE:
+            return _("Image")
+        elif self == CompareMediaType.GIF:
+            return _("GIF")
+        elif self == CompareMediaType.VIDEO:
+            return _("Video")
+        elif self == CompareMediaType.PDF:
+            return _("PDF")
+        raise Exception("Unhandled media type translation: " + str(self))
+

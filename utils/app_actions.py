@@ -1,27 +1,31 @@
+from typing import Callable, Dict, Any
 
 class AppActions:
-    def __init__(self, actions={}):
-        self.new_window = actions["new_window"]
-        self.get_window = actions["get_window"]
-        self.toast = actions["toast"]
-        self.alert = actions["alert"]
-        self.refresh = actions["refresh"]
-        self.refocus = actions["refocus"]
-        self.set_mode = actions["set_mode"]
-        self.get_active_media_filepath = actions["get_active_media_filepath"]
-        self.create_image = actions["create_image"]
-        self.show_next_media = actions["show_next_media"]
-        self.get_media_details = actions["get_media_details"]
-        self.run_image_generation = actions["run_image_generation"]
-        self.set_marks_from_downstream_related_images = actions["set_marks_from_downstream_related_images"]
-        self.set_base_dir = actions["set_base_dir"]
-        self.get_base_dir = actions["get_base_dir"]
-        self.go_to_file = actions["go_to_file"]
-        self.delete = actions["delete"]
-        self.hide_current_media = actions["hide_current_media"]
-        self.open_move_marks_window = actions["open_move_marks_window"]
-        self.release_media_canvas = actions["release_media_canvas"]
-        self._add_buttons_for_mode = actions["_add_buttons_for_mode"]
-        self._set_label_state = actions["_set_label_state"]
-        self._set_toggled_view_matches = actions["_set_toggled_view_matches"]
-        self.image_details_window = None
+    REQUIRED_ACTIONS = {
+        "new_window", "get_window", "toast", "alert", "refresh",
+        "refocus", "set_mode", "get_active_media_filepath",
+        "create_image", "show_next_media", "get_media_details",
+        "run_image_generation", "set_marks_from_downstream_related_images",
+        "set_base_dir", "get_base_dir", "go_to_file", "delete",
+        "hide_current_media", "open_move_marks_window",
+        "release_media_canvas", "_add_buttons_for_mode",
+        "_set_label_state", "_set_toggled_view_matches",
+        "refresh_all_compares"
+    }
+    
+    def __init__(self, actions: Dict[str, Callable[..., Any]]):
+        missing = self.REQUIRED_ACTIONS - set(actions.keys())
+        if missing:
+            raise ValueError(f"Missing required actions: {missing}")
+        self._actions = actions
+    
+    def __getattr__(self, name):
+        if name in self._actions:
+            return self._actions[name]
+        raise AttributeError(f"Action '{name}' not found")
+
+    def image_details_window(self):
+        return self._actions.get("image_details_window")
+    
+    def set_image_details_window(self, image_details_window):
+        self._actions["image_details_window"] = image_details_window

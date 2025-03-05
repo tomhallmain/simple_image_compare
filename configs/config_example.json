@@ -38,9 +38,10 @@
     ".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".bmp", ".heic", ".avif"
   ],
   "video_types": [
-    ".gif", ".mp4", ".mkv", ".webm", ".avi", ".mov", ".wmv", ".flv", ".mpeg", ".m4a"
+    ".mp4", ".mkv", ".webm", ".avi", ".mov", ".wmv", ".flv", ".mpeg", ".m4a"
   ],
   "enable_videos": true,
+  "enable_gifs": true,
   "enable_pdfs": true,
   "directories_to_search_for_related_images": [    
   ],

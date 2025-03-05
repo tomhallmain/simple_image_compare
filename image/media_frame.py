@@ -23,6 +23,7 @@ except ImportError:
 
 import vlc
 
+from image.frame_cache import FrameCache
 # from image.gif_image_ui import GifImageUI
 from image.video_ui import VideoUI
 from utils.config import config
@@ -188,13 +189,25 @@ class MediaFrame(Frame):
         if (isinstance(self.__image, VideoUI)):
             self.video_stop()
         self.path = path
-        if config.enable_videos:
-            path_lower = path.lower()
-            if any([path_lower.endswith(ext) for ext in config.video_types]):
-                self.clear()
-                self.__image = VideoUI(path)
-                self.video_display()
-                return
+        
+        path_lower = path.lower()
+        
+        if config.enable_pdfs and path_lower.endswith('.pdf'):
+            # Handle PDF files
+            self.path = FrameCache.get_image_path(path)
+        elif config.enable_gifs and path_lower.endswith('.gif'):
+            # Handle GIF files
+            # TODO: VLC doesn't handle GIFs well - consider using a different approach
+            # like PIL or a dedicated GIF player library
+            self.path = FrameCache.get_image_path(path)
+        else:
+            # Handle video files
+            if config.enable_videos:
+                if any([path_lower.endswith(ext) for ext in config.video_types]):
+                    self.clear()
+                    self.__image = VideoUI(path)
+                    self.video_display()
+                    return
 
         self.imscale = 1.0
         self.__huge = False  # huge or not
