@@ -1,621 +1,611 @@
 # APPLICATION TRANSLATIONS
-# Copyright (C) YEAR ORGANIZATION
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# THOMAS HALL <tomhall.main@gmail.com>, 2025.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-02-18 21:37-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: 1.0\n"
+"POT-Creation-Date: 2025-03-06 10:48-0500\n"
+"PO-Revision-Date: 2025-03-06 10:48-0500\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"Language: es\n"
 "Language-Team: es Team <<EMAIL>>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=cp1252\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: pygettext.py 1.5\n"
 
-
-#: .\app.py:90 .\app.py:842 .\app.py:1802
+#: .\app.py:90 .\app.py:854 .\app.py:1807
 msgid " Simple Image Compare "
 msgstr " Comparaci\u00f3n sencilla de im\u00e1genes "
 
-#: .\app.py:144
+#: .\app.py:149
 msgid "Theme switched to {0}."
 msgstr "Tema cambiado a {0}."
 
-#: .\app.py:220 .\compare\compare_wrapper.py:451
+#: .\app.py:227 .\compare\compare_wrapper.py:448
 msgid "Set a directory to run comparison."
 msgstr "Establece un directorio para ejecutar la comparaci\u00f3n."
 
-#: .\app.py:227
+#: .\app.py:234
 msgid "Toggle theme"
 msgstr "Alternar tema"
 
-#: .\app.py:228
+#: .\app.py:235
 msgid "Set directory"
 msgstr "Establecer directorio"
 
-#: .\app.py:229
+#: .\app.py:236
 msgid "Add dirpath..."
 msgstr "A\u00f1adir ruta al directorio..."
 
-#: .\app.py:232
+#: .\app.py:239
 msgid "Set search file"
 msgstr "Establecer archivo de b\u00fasqueda"
 
-#: .\app.py:240
+#: .\app.py:247
 msgid "Search text (embedding mode)"
 msgstr "Buscar texto (modo de incrustaci\u00f3n)"
 
-#: .\app.py:251
+#: .\app.py:258
 msgid "Compare mode"
 msgstr "Modo Comparar"
 
-#: .\app.py:269
+#: .\app.py:276
 msgid "Compare faces"
 msgstr "Comparar caras"
 
-#: .\app.py:273
+#: .\app.py:280
 msgid "Overwrite cache"
 msgstr "Sobrescribir cach\u00e9"
 
-#: .\app.py:277
+#: .\app.py:284
 msgid "Store checkpoints"
 msgstr "Almacenar puntos de control"
 
-#: .\app.py:281
+#: .\app.py:288
 msgid "Max files to compare"
 msgstr "M\u00e1ximo de archivos a comparar"
 
-#: .\app.py:287
+#: .\app.py:294
 msgid "Filter files by glob pattern"
 msgstr "Filtrar archivos por patr\u00f3n glob"
 
-#: .\app.py:294
+#: .\app.py:301
 msgid "Browsing mode - Sort by"
 msgstr "Modo de navegaci\u00f3n - Ordenar por"
 
-#: .\app.py:301
+#: .\app.py:308
 msgid "Recurse subdirectories"
 msgstr "Buscar en subdirectorios"
 
-#: .\app.py:306
+#: .\app.py:313
 msgid "Image resize to full window"
 msgstr "Imagen redimensionada a ventana completa"
 
-#: .\app.py:310
+#: .\app.py:317
 msgid "Search only return closest"
 msgstr "Buscar s\u00f3lo devuelve lo m\u00e1s cercano"
 
-#: .\app.py:317
+#: .\app.py:324
 msgid "Run image compare"
 msgstr "Comparar im\u00e1genes"
 
-#: .\app.py:319
+#: .\app.py:326
 msgid "Find duplicates"
 msgstr "Buscar duplicados"
 
-#: .\app.py:321 .\image\image_details.py:61
+#: .\app.py:328 .\image\image_details.py:61
 msgid "Image details"
 msgstr "Detalles de la imagen"
 
-#: .\app.py:332
+#: .\app.py:339
 msgid "Search current image"
 msgstr "Buscar imagen actual"
 
-#: .\app.py:333 .\utils\help_and_config.py:75
+#: .\app.py:340 .\utils\help_and_config.py:75
 msgid "Open image location"
 msgstr "Abrir ubicaci\u00f3n de la imagen"
 
-#: .\app.py:334
+#: .\app.py:341
 msgid "Copy image path"
 msgstr "Copiar ruta de imagen"
 
-#: .\app.py:335
+#: .\app.py:342
 msgid "---- DELETE ----"
 msgstr "---- BORRAR ----"
 
-#: .\app.py:468
+#: .\app.py:475
 msgid "Confirm Quit"
 msgstr "Confirmar Salir"
 
-#: .\app.py:468
+#: .\app.py:475
 msgid "Would you like to quit the application?"
 msgstr "\u00bfDesea abandonar la aplicaci\u00f3n?"
 
-#: .\app.py:560
+#: .\app.py:567
 msgid "Ended slideshows"
 msgstr "Presentaciones finalizadas"
 
-#: .\app.py:608
+#: .\app.py:619
 msgid "No files found in directory after refresh."
 msgstr "No se han encontrado archivos en el directorio tras la actualizaci\u00f3n."
 
-#: .\app.py:608 .\app.py:1610 .\app.py:1669
+#: .\app.py:619 .\app.py:1616 .\app.py:1675
 msgid "Warning"
 msgstr "Advertencia"
 
-#: .\app.py:631
+#: .\app.py:642
 msgid "Slideshow for new images started"
 msgstr "Iniciada la presentaci\u00f3n de nuevas im\u00e1genes"
 
-#: .\app.py:633
+#: .\app.py:644
 msgid "Slideshow started"
 msgstr "Presentaci\u00f3n de diapositivas iniciada"
 
-#: .\app.py:636
+#: .\app.py:647
 msgid "Slideshows ended"
 msgstr "Fin de las presentaciones"
 
-#: .\app.py:647
+#: .\app.py:659
 msgid "Browsing mode set."
 msgstr "Modo de navegaci\u00f3n establecido."
 
-#: .\app.py:681
+#: .\app.py:693
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(Abra esta imagen como parte de un directorio para ver los detalles del \u00edndice)."
 
-#: .\app.py:714
+#: .\app.py:726
 msgid "Many Files"
 msgstr "Muchos archivos"
 
-#: .\app.py:740
+#: .\app.py:752
 msgid "No downstream related image(s) found in {0}"
 msgstr "No se han encontrado im\u00e1genes relacionadas con el flujo descendente en {0}"
 
-#: .\app.py:761
+#: .\app.py:773
 msgid "{0} file marks set"
 msgstr "Se establecen {0} marcas de archivo"
 
-#: .\app.py:767
+#: .\app.py:779
 msgid "Help and Config"
 msgstr "Ayuda y configuraci\u00f3n"
 
-#: .\app.py:847
+#: .\app.py:859
 msgid "Set Image Comparison Directory"
 msgstr "Establecer directorio de comparaci\u00f3n de im\u00e1genes"
 
-#: .\app.py:885
+#: .\app.py:897
 msgid "Counter limit must be an integer value."
 msgstr "El l\u00edmite del contador debe ser un valor entero."
 
-#: .\app.py:885 .\app.py:906
+#: .\app.py:897 .\app.py:912
 msgid "Invalid Setting"
 msgstr "Ajuste no v\u00e1lido"
 
-#: .\app.py:906
+#: .\app.py:912
 msgid "No image selected."
 msgstr "No hay imagen seleccionada."
 
-#: .\app.py:943
+#: .\app.py:949
 msgid "Compare mode must be set to Clip embedding to search text embeddings"
 msgstr "El modo de comparaci\u00f3n debe establecerse en Incrustaci\u00f3n de clip para buscar incrustaciones de texto."
 
-#: .\app.py:948
+#: .\app.py:954
 msgid "Select image file"
 msgstr "Seleccionar archivo de imagen"
 
-#: .\app.py:977
+#: .\app.py:983
 msgid "Somehow, the search file is invalid"
 msgstr "De alguna manera, el archivo de b\u00fasqueda no es v\u00e1lido"
 
-#: .\app.py:1062 .\app.py:1086
+#: .\app.py:1068 .\app.py:1092
 msgid "Failed to get active image filepath"
 msgstr "Error al obtener la ruta de archivo de la imagen activa"
 
-#: .\app.py:1168
+#: .\app.py:1174
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% completado"
 
-#: .\app.py:1174
+#: .\app.py:1180
 msgid "Confirm comparison"
 msgstr "Confirmar comparaci\u00f3n"
 
-#: .\app.py:1175
+#: .\app.py:1181
 msgid "No base directory has been set, will use current base directory of "
 msgstr "No se ha establecido ning\u00fan directorio base, se utilizar\u00e1 el directorio base actual de "
 
-#: .\app.py:1176
+#: .\app.py:1182
 msgid "Are you sure you want to proceed?"
 msgstr "\u00bfEst\u00e1s seguro de que quieres continuar?"
 
-#: .\app.py:1223
+#: .\app.py:1232
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "Borrar bloqueo despu\u00e9s de diapositivas\n"
 "transici\u00f3n impidi\u00f3 a00f1adir marca"
 
-#: .\app.py:1234
+#: .\app.py:1243
 msgid "Mark removed. Remaining: {0}"
 msgstr "Marca eliminada. Restante: {0}"
 
-#: .\app.py:1238
+#: .\app.py:1247
 msgid "Mark added. Total set: {0}"
 msgstr "Marca a00f1adida. Conjunto total: {0}"
 
-#: .\app.py:1255
+#: .\app.py:1264
 msgid "Marks added. Total set: {0}"
 msgstr "Marcas a00f1adidas. Conjunto total: {0}"
 
-#: .\app.py:1264
+#: .\app.py:1273
 msgid "First sorted mark"
 msgstr "Primera marca clasificada"
 
-#: .\app.py:1271
+#: .\app.py:1280
 msgid "Only one marked file set."
 msgstr "S\u00f3lo un conjunto de archivos marcados."
 
-#: .\app.py:1282
+#: .\app.py:1291
 msgid "Including marks: {0}"
 msgstr "Marcas incluidas: {0}"
 
-#: .\app.py:1290
+#: .\app.py:1299
 msgid "Move {0} Marked File(s)"
 msgstr "Mover {0} Archivo(s) marcado(s)"
 
-#: .\app.py:1325
+#: .\app.py:1334
 msgid "NO_MARKS_SET"
 msgstr ""
 "Se han fijado {0} marcas (>={1} esperado).\n"
 "Utiliza May\u00fas+M para fijar una marca."
 
-#: .\app.py:1358
+#: .\app.py:1367
 msgid "Prevalidations now running"
 msgstr "Prevalidaciones en curso"
 
-#: .\app.py:1358
+#: .\app.py:1367
 msgid "Prevalidations turned off"
 msgstr "Prevalidaciones desactivadas"
 
-#: .\app.py:1365
-msgid "Videos now running"
-msgstr "V\u00eddeos en curso"
-
-#: .\app.py:1365
-msgid "Videos turned off"
-msgstr "V\u00eddeos desactivados"
-
-#: .\app.py:1387
+#: .\app.py:1393
 msgid "File not found"
 msgstr "Archivo no encontrado"
 
-#: .\app.py:1387
+#: .\app.py:1393
 msgid "No file was found for the search text: \"{0}\""
 msgstr "No se ha encontrado ning\u00fan archivo para el texto buscado: \u00ab{0}\u00bb"
 
-#: .\app.py:1401
+#: .\app.py:1407
 msgid "No image selected"
 msgstr "Ninguna imagen seleccionada"
 
-#: .\app.py:1401
+#: .\app.py:1407
 msgid "No image was selected for comparison"
 msgstr "No se ha seleccionado ninguna imagen para la comparaci\u00f3n"
 
-#: .\app.py:1414
+#: .\app.py:1420
 msgid "No Text Search Presets Found"
 msgstr "No se han encontrado preajustes de b\u00fasqueda de texto"
 
-#: .\app.py:1414
+#: .\app.py:1420
 msgid "No text embedding search presets found. Set them in the config.json file."
 msgstr "No se han encontrado preajustes de b\u00fasqueda de texto incrustado. Config\u00farelos en el archivo config.json."
 
-#: .\app.py:1514
+#: .\app.py:1520
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "No se ha podido abrir la ubicaci\u00f3n del archivo actual, no se ha podido obtener una ruta de archivo v\u00e1lida."
 
-#: .\app.py:1525
+#: .\app.py:1531
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "Error al abrir el archivo actual en GIMP, no se puede obtener una ruta de archivo v\u00e1lida."
 
-#: .\app.py:1546
+#: .\app.py:1552
 msgid "Cleared all hidden images."
 msgstr "Borrado de todas las im\u00e1genes ocultas."
 
-#: .\app.py:1553
+#: .\app.py:1559
 msgid "DELETE_LOCK"
 msgstr ""
 "El bloqueo de borrado tras la transici\u00f3n\n"
 "de diapositivas imped\u00eda el borrado"
 
-#: .\app.py:1571
+#: .\app.py:1577
 msgid "Invalid action, no files found to delete"
 msgstr "Acci\u00f3n no v\u00e1lida, no se han encontrado archivos para eliminar"
 
-#: .\app.py:1574
+#: .\app.py:1580
 msgid "Invalid action, search image not found"
 msgstr "Acci\u00f3n no v\u00e1lida, imagen de b\u00fasqueda no encontrada"
 
-#: .\app.py:1589
+#: .\app.py:1595
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "No se ha podido eliminar el archivo actual, no se ha podido obtener una ruta de archivo v\u00e1lida."
 
-#: .\app.py:1594
+#: .\app.py:1600
 msgid "Removing file: {0}"
 msgstr "Eliminando archivo: {0}"
 
-#: .\app.py:1611
+#: .\app.py:1617
 msgid "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."
 msgstr "No se ha podido enviar el archivo a la papelera, por lo que se eliminar\u00e1. Instale pip send2trash o establezca una carpeta espec\u00edfica en config.json."
 
-#: .\app.py:1628
+#: .\app.py:1634
 msgid "Invalid target filepath for replacement: "
 msgstr "Ruta de archivo de destino no v\u00e1lida para la sustituci\u00f3n: "
 
-#: .\app.py:1632
+#: .\app.py:1638
 msgid "Moved search image to "
 msgstr "Imagen de b\u00fasqueda trasladada a "
 
-#: .\app.py:1667
+#: .\app.py:1673
 msgid "Running image gen: "
 msgstr "Ejecutar la generaci\u00f3n de im\u00e1genes: "
 
-#: .\app.py:1669
+#: .\app.py:1675
 msgid "Error running image generation:"
 msgstr "Error al generar la imagen:"
 
-#: .\app.py:1674
+#: .\app.py:1680
 msgid "Running refacdir"
 msgstr "Ejecuci\u00f3n de la aplicaci\u00f3n refacdir"
 
-#: .\app.py:1679
+#: .\app.py:1685
 msgid "Error"
 msgstr "Error"
 
-#: .\app.py:1742
+#: .\app.py:1748
 msgid "GROUP_DETAILS"
 msgstr ""
 "Grupo {0} de {1}\n"
 "Tama00f1o: {2}"
 
-#: .\app.py:1746
+#: .\app.py:1752
 msgid "No image files found"
 msgstr "No se han encontrado archivos de imagen"
 
-#: .\app.py:1748
+#: .\app.py:1754
 msgid "1 image file found"
 msgstr "1 archivo de imagen encontrado"
 
-#: .\app.py:1748
+#: .\app.py:1754
 msgid "{0} image files found"
 msgstr "{0} archivos de imagen encontrados"
 
-#: .\app.py:1751
+#: .\app.py:1757
 msgid "(filtered)"
 msgstr "(filtrado)"
 
-#: .\compare\base_compare.py:120
+#: .\compare\base_compare.py:161
 msgid "Image comparison"
 msgstr "Comparaci\u00f3n de im\u00e1genes"
 
-#: .\compare\base_compare.py:120
+#: .\compare\base_compare.py:161
 msgid "Image data collection"
 msgstr "Recopilaci\u00f3n de datos de im\u00e1genes"
 
-#: .\compare\compare_wrapper.py:59
+#: .\compare\compare_wrapper.py:63
 msgid "Invalid mode"
 msgstr "Modo no v\u00e1lido"
 
-#: .\compare\compare_wrapper.py:89 .\compare\compare_wrapper.py:106
+#: .\compare\compare_wrapper.py:93 .\compare\compare_wrapper.py:110
 msgid "No matches found. Search again to find potential matches."
 msgstr "No se han encontrado coincidencias. Vuelva a buscar para encontrar posibles coincidencias."
 
-#: .\compare\compare_wrapper.py:89 .\compare\compare_wrapper.py:106
+#: .\compare\compare_wrapper.py:93 .\compare\compare_wrapper.py:110
 msgid "Search required"
 msgstr "B\u00fasqueda obligatoria"
 
-#: .\compare\compare_wrapper.py:148
+#: .\compare\compare_wrapper.py:151
 msgid "Skipped %s images."
 msgstr "Se han omitido {0} im\u00e1genes."
 
-#: .\compare\compare_wrapper.py:154
+#: .\compare\compare_wrapper.py:157
 msgid "No Unrelated Images"
 msgstr "Sin im\u00e1genes no relacionadas"
 
-#: .\compare\compare_wrapper.py:154
+#: .\compare\compare_wrapper.py:157
 msgid "No unrelated images found."
 msgstr "No se han encontrado im\u00e1genes no relacionadas."
 
-#: .\compare\compare_wrapper.py:190 .\compare\compare_wrapper.py:348
+#: .\compare\compare_wrapper.py:194 .\compare\compare_wrapper.py:345
 msgid "No Groups Found"
 msgstr "No se han encontrado grupos"
 
-#: .\compare\compare_wrapper.py:265
+#: .\compare\compare_wrapper.py:264
 msgid "Gathering image data... setup may take a while depending on number of files involved."
 msgstr "Recopilaci\u00f3n de datos de imagen... la configuraci\u00f3n puede llevar un tiempo dependiendo del n\u00famero de archivos implicados."
 
-#: .\compare\compare_wrapper.py:287
+#: .\compare\compare_wrapper.py:283
 msgid "Confirm group run"
 msgstr "Confirmar la ejecuci\u00f3n en grupo"
 
-#: .\compare\compare_wrapper.py:288
+#: .\compare\compare_wrapper.py:284
 msgid "Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."
 msgstr "Modo de b\u00fasqueda detectado, por favor confirme el cambio a modo de grupo antes de ejecutar. El modo de grupo tardar\u00e1 m\u00e1s tiempo, ya que se comparan todas las im\u00e1genes del directorio base."
 
-#: .\compare\compare_wrapper.py:295
+#: .\compare\compare_wrapper.py:291
 msgid "Gathering image data for comparison"
 msgstr "Recopilaci\u00f3n de datos de im\u00e1genes para su comparaci\u00f3n"
 
-#: .\compare\compare_wrapper.py:314
+#: .\compare\compare_wrapper.py:311
 msgid "Searching images..."
 msgstr "Buscando im\u00e1genes..."
 
-#: .\compare\compare_wrapper.py:320
+#: .\compare\compare_wrapper.py:317
 msgid "Set a directory and search file or search text."
 msgstr "Establece un directorio y un archivo de b\u00fasqueda o un texto de b\u00fasqueda."
 
-#: .\compare\compare_wrapper.py:321
+#: .\compare\compare_wrapper.py:318
 msgid "No Match Found"
 msgstr "No se han encontrado coincidencias"
 
-#: .\compare\compare_wrapper.py:321
+#: .\compare\compare_wrapper.py:318
 msgid "None of the files match the search filters with current settings."
 msgstr "Ninguno de los archivos coincide con los filtros de b\u00fasqueda con la configuraci\u00f3n actual."
 
-#: .\compare\compare_wrapper.py:334
+#: .\compare\compare_wrapper.py:331
 msgid "%s possibly related images found."
 msgstr "{0} im\u00e1genes posiblemente relacionadas encontradas."
 
-#: .\compare\compare_wrapper.py:342
+#: .\compare\compare_wrapper.py:339
 msgid "Running image comparisons..."
 msgstr "Ejecutar comparaciones de im\u00e1genes..."
 
-#: .\compare\compare_wrapper.py:347 .\compare\compare_wrapper.py:362
+#: .\compare\compare_wrapper.py:344 .\compare\compare_wrapper.py:359
 msgid "Set a directory and search file."
 msgstr "Establece un directorio y un archivo de b\u00fasqueda."
 
-#: .\compare\compare_wrapper.py:348
+#: .\compare\compare_wrapper.py:345
 msgid "None of the files can be grouped with current settings."
 msgstr "No se puede agrupar ninguno de los archivos con la configuraci\u00f3n actual."
 
-#: .\compare\compare_wrapper.py:363
+#: .\compare\compare_wrapper.py:360
 msgid "No Duplicates Found"
 msgstr "No se han encontrado duplicados"
 
-#: .\compare\compare_wrapper.py:363
+#: .\compare\compare_wrapper.py:360
 msgid "None of the files appear to be duplicates based on the current settings."
 msgstr "Ninguno de los archivos parece estar duplicado seg\u00fan la configuraci\u00f3n actual."
 
-#: .\compare\compare_wrapper.py:387
+#: .\compare\compare_wrapper.py:384
 msgid "Some group members were left stranded by the grouping process."
 msgstr "Algunos miembros del grupo quedaron desamparados por el proceso de agrupaci\u00f3n."
 
-#: .\compare\compare_wrapper.py:387
+#: .\compare\compare_wrapper.py:384
 msgid "Stranded Group Members Found"
 msgstr "Stranded Group Members Found"
 
-#: .\compare\compare_wrapper.py:442
+#: .\compare\compare_wrapper.py:439
 msgid "No More Groups"
 msgstr "Encontrados los miembros del grupo varados"
 
-#: .\compare\compare_wrapper.py:443
+#: .\compare\compare_wrapper.py:440
 msgid "There are no more image groups remaining for this directory and current filter settings."
 msgstr "No quedan m\u00e1s grupos de im\u00e1genes para este directorio y la configuraci\u00f3n actual del filtro."
 
-#: .\compare\prevalidations_window.py:24
+#: .\compare\prevalidations_window.py:23
 msgid "(no positives set)"
 msgstr "(ning\u00fan positivo fijado)"
 
-#: .\compare\prevalidations_window.py:25
+#: .\compare\prevalidations_window.py:24
 msgid "(no negatives set)"
 msgstr "(ning\u00fan negativo fijado)"
 
-#: .\compare\prevalidations_window.py:27
-#: .\compare\prevalidations_window.py:198
+#: .\compare\prevalidations_window.py:26
+#: .\compare\prevalidations_window.py:197
 msgid "New Prevalidation"
 msgstr "Nueva Prevalidaci\u00f3ns"
 
-#: .\compare\prevalidations_window.py:78
+#: .\compare\prevalidations_window.py:77
 msgid " - skipped"
 msgstr " - omitido"
 
-#: .\compare\prevalidations_window.py:78 .\compare\prevalidations_window.py:81
-#: .\compare\prevalidations_window.py:83 .\compare\prevalidations_window.py:89
-#: .\compare\prevalidations_window.py:100
+#: .\compare\prevalidations_window.py:77 .\compare\prevalidations_window.py:80
+#: .\compare\prevalidations_window.py:82 .\compare\prevalidations_window.py:88
+#: .\compare\prevalidations_window.py:99
 msgid " detected"
 msgstr " detectado"
 
-#: .\compare\prevalidations_window.py:81
+#: .\compare\prevalidations_window.py:80
 msgid " - hidden"
 msgstr " - oculto"
 
-#: .\compare\prevalidations_window.py:89
+#: .\compare\prevalidations_window.py:88
 msgid "Moving file: "
 msgstr "Moviendo archivo: "
 
-#: .\compare\prevalidations_window.py:100
+#: .\compare\prevalidations_window.py:99
 msgid "Deleting file: "
 msgstr "Borrar archivo: "
 
-#: .\compare\prevalidations_window.py:173
+#: .\compare\prevalidations_window.py:172
 msgid " testing classifier {0} for {1}"
 msgstr " probando clasificador {0} para {1}"
 
-#: .\compare\prevalidations_window.py:175
+#: .\compare\prevalidations_window.py:174
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} positivos, {1} negativos)"
 
-#: .\compare\prevalidations_window.py:188
+#: .\compare\prevalidations_window.py:187
 msgid "Modify Prevalidation"
 msgstr "Modificar la prevalidaci\u00f3n"
 
-#: .\compare\prevalidations_window.py:197
+#: .\compare\prevalidations_window.py:196
 msgid "Prevalidation Name"
 msgstr "Prevalidaci\u00f3n Nombre"
 
-#: .\compare\prevalidations_window.py:204
+#: .\compare\prevalidations_window.py:203
 msgid "Positives"
 msgstr "Positivos"
 
-#: .\compare\prevalidations_window.py:211
+#: .\compare\prevalidations_window.py:210
 msgid "Negatives"
 msgstr "Negativos"
 
-#: .\compare\prevalidations_window.py:218
+#: .\compare\prevalidations_window.py:217
 msgid "Threshold"
 msgstr "Umbral"
 
-#: .\compare\prevalidations_window.py:225
+#: .\compare\prevalidations_window.py:224
 msgid "Action"
 msgstr "Acci\u00f3n"
 
-#: .\compare\prevalidations_window.py:235
+#: .\compare\prevalidations_window.py:234
 msgid "Action Modifier"
 msgstr "Modificador de acci\u00f3n"
 
-#: .\compare\prevalidations_window.py:242
+#: .\compare\prevalidations_window.py:241
 msgid "Run on Directory"
 msgstr "Ejecutar en directorio"
 
-#: .\compare\prevalidations_window.py:249
+#: .\compare\prevalidations_window.py:248
 msgid "Image Classifier Name"
 msgstr "Nombre del clasificador de im\u00e1genes"
 
-#: .\compare\prevalidations_window.py:260
+#: .\compare\prevalidations_window.py:259
 msgid "Image Classifier Selected Category"
 msgstr "Clasificador de im\u00e1genes Categor\u00eda seleccionada"
 
-#: .\compare\prevalidations_window.py:264
+#: .\compare\prevalidations_window.py:263
 msgid "Select Categories..."
 msgstr "Seleccionar categor\u00edas..."
 
-#: .\compare\prevalidations_window.py:270
+#: .\compare\prevalidations_window.py:269
 msgid "Done"
 msgstr "Hecho"
 
-#: .\compare\prevalidations_window.py:402
+#: .\compare\prevalidations_window.py:401
 msgid "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 msgstr "No se ha encontrado ninguna prevalidaci\u00f3n con el nombre: {0}. Establ\u00e9zcalo en la Ventana de Prevalidaciones."
 
-#: .\compare\prevalidations_window.py:413
+#: .\compare\prevalidations_window.py:412
 msgid "Prevalidations"
 msgstr "Prevalidaciones"
 
-#: .\compare\prevalidations_window.py:436
+#: .\compare\prevalidations_window.py:435
 msgid "Set Prevalidations"
 msgstr "Establecer prevalidaciones"
 
-#: .\compare\prevalidations_window.py:438
+#: .\compare\prevalidations_window.py:437
 msgid "Add prevalidation"
 msgstr "A\u00f1adir prevalidaci\u00f3n"
 
-#: .\compare\prevalidations_window.py:440
+#: .\compare\prevalidations_window.py:439
 msgid "Clear prevalidations"
 msgstr "Prevalencias claras"
 
-#: .\compare\prevalidations_window.py:476 .\files\hotkey_actions_window.py:95
+#: .\compare\prevalidations_window.py:475 .\files\hotkey_actions_window.py:95
 msgid "Set"
 msgstr "Fije"
 
-#: .\compare\prevalidations_window.py:484 .\files\file_actions_window.py:269
+#: .\compare\prevalidations_window.py:483 .\files\file_actions_window.py:269
 #: .\files\file_actions_window.py:312
 msgid "Modify"
 msgstr "Modifique"
 
-#: .\compare\prevalidations_window.py:491
+#: .\compare\prevalidations_window.py:490
 msgid "Delete"
 msgstr "Borrar"
 
-#: .\compare\prevalidations_window.py:498
+#: .\compare\prevalidations_window.py:497
 msgid "Move down"
 msgstr "Baja"
 
@@ -911,6 +901,30 @@ msgstr "A00f1adir directorio"
 msgid "Set image comparison directory"
 msgstr "Establecer directorio de comparaci\u00f3n de im\u00e1genes"
 
+#: .\files\type_configuration_window.py:42
+msgid "Media Type Configuration"
+msgstr "Configuraci\u00f3n del tipo de medio"
+
+#: .\files\type_configuration_window.py:55
+msgid "Configure Media Types"
+msgstr "Configurar Tipos de Medios"
+
+#: .\files\type_configuration_window.py:88
+msgid "Apply Changes"
+msgstr "Aplicar Cambios"
+
+#: .\files\type_configuration_window.py:132
+msgid "Confirm Changes"
+msgstr "Confirmar Cambios"
+
+#: .\files\type_configuration_window.py:133
+msgid "This will clear all existing compares in open windows. Continue?"
+msgstr "Esto borrar\u00e1 todas las comparaciones existentes en ventanas abiertas. \u00bfContinuar?"
+
+#: .\files\type_configuration_window.py:171
+msgid "Media type configuration updated"
+msgstr "Configuraci\u00f3n del tipo de medio actualizada"
+
 #: .\image\image_details.py:114
 msgid "Image Path"
 msgstr "Ruta de imagen"
@@ -927,8 +941,8 @@ msgstr "Modo de color"
 msgid "Dimensions"
 msgstr "Dimensiones"
 
-#: .\image\image_details.py:122 .\utils\constants.py:75
-#: .\utils\constants.py:92
+#: .\image\image_details.py:122 .\utils\constants.py:84
+#: .\utils\constants.py:101
 msgid "Size"
 msgstr "Tama00f1o"
 
@@ -1124,65 +1138,85 @@ msgstr "Modo de comparaci\u00f3n de grupos"
 msgid "Duplicate Detection Mode"
 msgstr "Modo de detecci\u00f3n de duplicados"
 
-#: .\utils\constants.py:31 .\utils\constants.py:37
+#: .\utils\constants.py:31 .\utils\constants.py:38
 msgid "Color Matching"
 msgstr "Combinaci\u00f3n de colores"
 
-#: .\utils\constants.py:32 .\utils\constants.py:39
+#: .\utils\constants.py:32 .\utils\constants.py:40
 msgid "CLIP Embedding"
 msgstr "Incrustaci\u00f3n CLIP"
 
-#: .\utils\constants.py:58
+#: .\utils\constants.py:33 .\utils\constants.py:42
+msgid "CLIP Embedding Matrix"
+msgstr "Matriz de Incrustaci\u00f3n CLIP"
+
+#: .\utils\constants.py:63
 msgid "Color diff threshold"
 msgstr "Umbral de diferencia de color"
 
-#: .\utils\constants.py:60
+#: .\utils\constants.py:65
 msgid "Embedding similarity threshold"
 msgstr "Umbral de similitud de incrustaci\u00f3n"
 
-#: .\utils\constants.py:70 .\utils\constants.py:82
+#: .\utils\constants.py:79 .\utils\constants.py:91
 msgid "Name"
 msgstr "Nombre"
 
-#: .\utils\constants.py:71 .\utils\constants.py:84
+#: .\utils\constants.py:80 .\utils\constants.py:93
 msgid "Full Path"
 msgstr "Ruta completa"
 
-#: .\utils\constants.py:72 .\utils\constants.py:86
+#: .\utils\constants.py:81 .\utils\constants.py:95
 msgid "Creation Time"
 msgstr "Tiempo de creaci\u00f3n"
 
-#: .\utils\constants.py:73 .\utils\constants.py:88
+#: .\utils\constants.py:82 .\utils\constants.py:97
 msgid "Modify Time"
 msgstr "Modificar la hora"
 
-#: .\utils\constants.py:74 .\utils\constants.py:90
+#: .\utils\constants.py:83 .\utils\constants.py:99
 msgid "Type"
 msgstr "Tipo"
 
-#: .\utils\constants.py:76 .\utils\constants.py:94
+#: .\utils\constants.py:85 .\utils\constants.py:103
 msgid "Name Length"
 msgstr "Nombre Longitud"
 
-#: .\utils\constants.py:77 .\utils\constants.py:96
+#: .\utils\constants.py:86 .\utils\constants.py:105
 msgid "Related Image"
 msgstr "Imagen relacionada"
 
-#: .\utils\constants.py:78 .\utils\constants.py:98
+#: .\utils\constants.py:87 .\utils\constants.py:107
 msgid "Random"
 msgstr "Al azar"
 
-#: .\utils\constants.py:117
+#: .\utils\constants.py:126
 msgid "ascending"
 msgstr "ascendente"
 
-#: .\utils\constants.py:118
+#: .\utils\constants.py:127
 msgid "descending"
 msgstr "descendente"
 
-#: .\utils\constants.py:119
+#: .\utils\constants.py:128
 msgid "random"
 msgstr "al azar"
+
+#: .\utils\constants.py:179
+msgid "Image"
+msgstr "Imagen"
+
+#: .\utils\constants.py:181
+msgid "GIF"
+msgstr "GIF"
+
+#: .\utils\constants.py:183
+msgid "Video"
+msgstr "video"
+
+#: .\utils\constants.py:185
+msgid "PDF"
+msgstr "PDF"
 
 #: .\utils\help_and_config.py:34
 msgid "Command"
@@ -1265,8 +1299,8 @@ msgid "Run permanent marks action"
 msgstr "Ejecutar la acci\u00f3n de marcas permanentes"
 
 #: .\utils\help_and_config.py:53
-msgid "Toggle videos enabled (clears compare)"
-msgstr "Activar v\u00eddeos (borra la comparaci\u00f3n)"
+msgid "Open type configuration window"
+msgstr "Abre el tipo de configuraci\u00f3n ventana"
 
 #: .\utils\help_and_config.py:54
 msgid "Open new compare window"
