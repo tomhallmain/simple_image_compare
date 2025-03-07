@@ -604,7 +604,8 @@ class App():
                 return
             if show_new_images:
                 has_new_images = self.file_browser.update_cursor_to_new_images()
-                self.show_next_media()
+                if has_new_images:
+                    self.show_next_media()
             if active_media_filepath_in_removed_files:
                 self.last_chosen_direction_func()
             self._set_label_state()
