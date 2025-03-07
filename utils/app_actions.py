@@ -25,7 +25,7 @@ class AppActions:
         raise AttributeError(f"Action '{name}' not found")
 
     def image_details_window(self):
-        return self._actions.get("image_details_window")
+        return self._actions.get("_image_details_window")
     
     def set_image_details_window(self, image_details_window):
-        self._actions["image_details_window"] = image_details_window
+        self._actions["_image_details_window"] = image_details_window

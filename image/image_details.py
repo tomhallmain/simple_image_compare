@@ -543,7 +543,7 @@ class ImageDetails():
         self.app_actions.toast(_("Updated tags for %s").format(self.image_path))
 
     def close_windows(self, event=None):
-        self.app_actions.image_details_window = None
+        self.app_actions.set_image_details_window(None)
         self.master.destroy()
 
     def add_label(self, label_ref, text, row=None, column=0, wraplength=500):
