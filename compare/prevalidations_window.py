@@ -122,7 +122,7 @@ class Prevalidation:
                 raise Exception("At least one of positive or negative texts must be set.")
         if self.image_classifier is not None and any([category not in self.image_classifier_categories for category in self.image_classifier_selected_categories]):
             raise Exception(f"One or more selected categories {self.image_classifier_selected_categories} were not found in the image classifier's category options")
-        if self.image_classifier_name is not None and self.image_classifier is None:
+        if self.image_classifier_name is not None and self.image_classifier_name.strip() != "" and self.image_classifier is None:
             raise Exception(f"The image classifier \"{self.image_classifier}\" was not found in the available image classifiers")
         if self.is_move_action() and not os.path.isdir(self.action_modifier):
             raise Exception('Action modifier must be a valid directory')
