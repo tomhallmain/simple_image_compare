@@ -12,7 +12,7 @@ def image_embeddings(image_path):
     try:
      image = preprocess(Image.open(image_path)).unsqueeze(0).to(device)
     except Exception as e:
-        image_path = FrameCache.get_first_frame(image_path)
+        image_path = FrameCache.get_image_path(image_path)
         image = preprocess(Image.open(image_path)).unsqueeze(0).to(device)
     with torch.no_grad():
         embedding = model.encode_image(image)
