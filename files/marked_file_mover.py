@@ -297,7 +297,7 @@ class MarkedFiles():
         self.app_actions.toast(_("Recording next mark target and action."))
 
     @staticmethod
-    def get_target_directory(target_dir, starting_target, toast_callback):
+    def get_target_directory(target_dir, starting_target, app_actions):
         """
         If target dir given is not valid then ask user for a new one
         """
@@ -307,9 +307,10 @@ class MarkedFiles():
             else:
                 if target_dir in MarkedFiles.mark_target_dirs:
                     MarkedFiles.mark_target_dirs.remove(target_dir)
-                toast_callback(_("Invalid directory: %s").format(target_dir))
+                app_actions.toast(_("Invalid directory: %s").format(target_dir))
         target_dir = filedialog.askdirectory(
                 initialdir=starting_target, title=_("Select target directory for marked files"))
+        #app_actions.store_info_cache() # save new target directory
         return target_dir, False
 
 
@@ -323,7 +324,7 @@ class MarkedFiles():
         Also in this case, this function will call itself by calling
         move_marks_to_target_dir(), just this time with the directory set.
         """
-        target_dir, target_was_valid = MarkedFiles.get_target_directory(target_dir, self.starting_target, self.app_actions.toast)
+        target_dir, target_was_valid = MarkedFiles.get_target_directory(target_dir, self.starting_target, self.app_actions)
         if not os.path.isdir(target_dir):
             self.close_windows()
             raise Exception("Failed to set target directory to receive marked files.")

@@ -2,6 +2,7 @@ from tkinter import Toplevel, Frame, Label, BooleanVar, LEFT, W, messagebox
 from tkinter.ttk import Checkbutton, Button, Separator
 
 from utils.app_style import AppStyle
+from utils.app_info_cache import app_info_cache
 from utils.config import config
 from utils.constants import CompareMediaType
 from utils.translations import I18N
@@ -14,6 +15,20 @@ class TypeConfigurationWindow:
     COL_0_WIDTH = 600
     _pending_changes = {}  # Store pending changes until confirmed
     _original_config = {}  # Store original config state for comparison
+
+    @classmethod
+    def load_pending_changes(cls):
+        pending_changes = app_info_cache.get_meta("file_type_configuration", default_val={})
+        assert isinstance(pending_changes, dict)
+        for media_type, enabled in pending_changes.items():
+            cls._pending_changes[CompareMediaType[media_type]] = enabled
+
+    @classmethod
+    def save_pending_changes(cls):
+        pending_changes = {}
+        for media_type, enabled in cls._pending_changes.items():
+            pending_changes[media_type.name] = enabled
+        app_info_cache.set_meta("file_type_configuration", pending_changes)
 
     @staticmethod
     def get_geometry():
@@ -110,11 +125,9 @@ class TypeConfigurationWindow:
         """Determine if any configuration changes have been made."""
         if not cls._pending_changes:
             return False
-            
         for media_type, new_value in cls._pending_changes.items():
-            if media_type in cls._original_config:
-                if new_value != cls._original_config[media_type]:
-                    return True
+            if media_type not in cls._original_config or new_value != cls._original_config[media_type]:
+                return True
         return False
 
     @classmethod
@@ -126,7 +139,7 @@ class TypeConfigurationWindow:
 
         # Skip confirmation if no compares exist
         if app_actions.find_window_with_compare() is None:
-            cls._apply_changes(app_actions)
+            cls.apply_changes(app_actions)
             return
 
         res = app_actions.alert(_("Confirm Changes"), 
@@ -135,11 +148,16 @@ class TypeConfigurationWindow:
         not_ok = res != messagebox.OK and res != True
         if not_ok:
             return
-        cls._apply_changes(app_actions)
+        cls.apply_changes(app_actions)
 
     @classmethod
-    def _apply_changes(cls, app_actions):
+    def apply_changes(cls, app_actions = None):
         """Apply all pending changes and refresh compares."""
+        if cls._has_changes():
+            cls.save_pending_changes()
+        elif app_actions is None:
+            return
+
         # Apply all pending changes
         for media_type, enabled in cls._pending_changes.items():
             if media_type == CompareMediaType.VIDEO:
@@ -166,10 +184,13 @@ class TypeConfigurationWindow:
                     config.file_types.append(".pdf")
                 elif not config.enable_pdfs and ".pdf" in config.file_types:
                     config.file_types.remove(".pdf")
-        
-        app_actions.refresh_all_compares()
-        app_actions.toast(_("Media type configuration updated"), time_in_seconds=5)
-        cls.on_closing()
+
+        if app_actions is not None:
+            app_actions.refresh_all_compares()
+            app_actions.toast(_("Media type configuration updated"), time_in_seconds=5)
+            cls.on_closing()
+        else:
+            cls._pending_changes.clear()
 
     @classmethod
     def _get_media_type_var(cls, media_type: CompareMediaType):

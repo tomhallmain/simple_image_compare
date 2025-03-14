@@ -8,9 +8,9 @@ class AppActions:
         "run_image_generation", "set_marks_from_downstream_related_images",
         "set_base_dir", "get_base_dir", "go_to_file", "delete",
         "hide_current_media", "open_move_marks_window",
-        "release_media_canvas", "_add_buttons_for_mode",
-        "_set_label_state", "_set_toggled_view_matches",
-        "refresh_all_compares"
+        "release_media_canvas", "store_info_cache",
+        "_add_buttons_for_mode", "_set_label_state",
+        "_set_toggled_view_matches", "refresh_all_compares",
     }
     
     def __init__(self, actions: Dict[str, Callable[..., Any]]):

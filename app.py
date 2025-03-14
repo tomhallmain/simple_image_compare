@@ -21,6 +21,7 @@ from files.file_browser import FileBrowser, SortBy
 from files.go_to_file import GoToFile
 from files.marked_file_mover import MarkedFiles
 from files.recent_directory_window import RecentDirectories, RecentDirectoryWindow
+from files.type_configuration_window import TypeConfigurationWindow
 from image.media_frame import MediaFrame
 from lib.aware_entry import AwareEntry
 from utils.app_actions import AppActions
@@ -157,8 +158,12 @@ class App():
         self.master.columnconfigure(1, weight=9)
         self.master.rowconfigure(0, weight=1)
         self.master.protocol("WM_DELETE_WINDOW", self.on_closing)
-
         self.window_id = window_id
+
+        if not self.is_secondary():
+            TypeConfigurationWindow.load_pending_changes() # cannot be in load_info_cache because it is called before file_browser initialization
+            TypeConfigurationWindow.apply_changes()
+
         self.file_browser = FileBrowser(recursive=config.image_browse_recursive, sort_by=config.sort_by)
         self.file_check_config = FileCheckConfig(self.window_id)
         self.slideshow_config = SlideshowConfig(self.window_id)
@@ -201,6 +206,7 @@ class App():
             "open_move_marks_window": self.open_move_marks_window,
             "release_media_canvas": lambda: self.media_canvas.release_media(),
             "hide_current_media": self.hide_current_media,
+            "store_info_cache": self.store_info_cache,
             "_set_toggled_view_matches": self._set_toggled_view_matches,
             "_set_label_state": self._set_label_state,
             "_add_buttons_for_mode": self._add_buttons_for_mode,
@@ -452,6 +458,9 @@ class App():
             else:
                 self.go_to_file(search_text=image_path)
 
+        if self.is_secondary():
+            self.store_info_cache()
+
     def is_secondary(self):
         return self.window_id > 0
 
@@ -492,7 +501,7 @@ class App():
 
     def store_info_cache(self, store_window_state=False):
         base_dir = self.get_base_dir()
-        # print(f"Base dir for store_info_cache: {base_dir}")
+        Utils.log(f"Storing app info cache")
         if base_dir and base_dir != "":
             if not self.is_secondary():
                 app_info_cache.set_meta("base_dir", base_dir)
@@ -560,6 +569,7 @@ class App():
         self.compare_threshold_choice = OptionMenu(self.sidebar, self.compare_threshold,
                                                    str(default_val), *self.compare_wrapper.compare_mode.threshold_vals())
         self.apply_to_grid(self.compare_threshold_choice, sticky=W, specific_row=13)
+        self.store_info_cache()
         self.master.update()
 
     def set_file_filter(self, event=None):
@@ -656,6 +666,7 @@ class App():
         assert self.img_path is not None
         if not self.go_to_file(None, self.img_path, retry_with_delay=1):
             self.home()
+        self.store_info_cache()
         if not suppress_toast:
             self.toast(_("Browsing mode set."))
 
@@ -904,7 +915,7 @@ class App():
 
     def get_inclusion_pattern(self) -> str | None:
         inclusion_pattern = self.inclusion_pattern.get().strip()
-        return None if inclusion_pattern == "" else inclusion_pattern
+        return None if inclusion_pattern.strip() == "" else inclusion_pattern
 
     def set_search_for_image(self, event=None) -> None:
         image_path = self.get_search_file_path()
@@ -1368,7 +1379,6 @@ class App():
         self.toast(_("Prevalidations now running") if config.enable_prevalidations else _("Prevalidations turned off"))
 
     def open_type_configuration_window(self, event=None):
-        from files.type_configuration_window import TypeConfigurationWindow
         TypeConfigurationWindow.show(master=self.master, app_actions=self.app_actions)
 
     def open_go_to_file_window(self, event=None):
