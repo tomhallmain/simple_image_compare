@@ -26,8 +26,11 @@ class TypeConfigurationWindow:
     @classmethod
     def save_pending_changes(cls):
         pending_changes = {}
-        for media_type, enabled in cls._pending_changes.items():
-            pending_changes[media_type.name] = enabled
+        for media_type, enabled in cls._original_config.items():
+            if media_type in cls._pending_changes:
+                pending_changes[media_type.name] = cls._pending_changes[media_type]
+            else:
+                pending_changes[media_type.name] = enabled
         app_info_cache.set_meta("file_type_configuration", pending_changes)
 
     @staticmethod
@@ -51,7 +54,7 @@ class TypeConfigurationWindow:
             CompareMediaType.VIDEO: config.enable_videos,
             CompareMediaType.GIF: config.enable_gifs,
             CompareMediaType.PDF: config.enable_pdfs,
-            CompareMediaType.SVG: config.enable_svgs
+            CompareMediaType.SVG: config.enable_svgs,
         }
             
         cls.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)

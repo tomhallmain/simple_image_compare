@@ -1,3 +1,4 @@
+cairosvg
 imageio==2.31.6
 matplotlib>=3.8.0
 numpy>=1.26.1

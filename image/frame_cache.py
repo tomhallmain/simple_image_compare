@@ -1,10 +1,22 @@
 import os
 import tempfile
-from typing import Optional, Dict, List
+from typing import Dict
 
 import cv2
-import pypdfium2 as pdfium
-import cairosvg
+
+has_imported_pypdfium2 = False
+try:
+    import pypdfium2 as pdfium
+    has_imported_pypdfium2 = True
+except ImportError:
+    pass
+
+has_imported_cairosvg = False
+try:
+    import cairosvg
+    has_imported_cairosvg = True
+except ImportError:
+    pass
 
 from utils.config import config
 from utils.utils import Utils
@@ -38,14 +50,20 @@ class FrameCache:
         # Check for SVG files first (since they're the simplest to convert)
         if media_path_lower.endswith('.svg'):
             if config.enable_svgs:
-                return cls.get_first_frame(media_path, CompareMediaType.SVG)
+                if has_imported_cairosvg:
+                    return cls.get_first_frame(media_path, CompareMediaType.SVG)
+                else:
+                    raise ImportError("Unable to convert SVG to PNG: cairosvg is not installed")
             else:
                 return media_path
 
         # Check for PDF files next
         if media_path_lower.endswith('.pdf'):
             if config.enable_pdfs:
-                return cls.get_first_frame(media_path, CompareMediaType.PDF)
+                if has_imported_pypdfium2:
+                    return cls.get_first_frame(media_path, CompareMediaType.PDF)
+                else:
+                    raise ImportError("Unable to extract PDF frame: pypdfium2 is not installed")
             else:
                 return media_path
 
