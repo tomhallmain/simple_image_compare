@@ -4,6 +4,7 @@ from typing import Optional, Dict, List
 
 import cv2
 import pypdfium2 as pdfium
+import cairosvg
 
 from utils.config import config
 from utils.utils import Utils
@@ -12,8 +13,10 @@ from utils.constants import CompareMediaType
 
 class FrameCache:
     """
-    A cache for extracting and storing the first frame from various media types (videos, GIFs, PDFs).
+    A cache for extracting and storing the first frame from various media types (videos, GIFs, PDFs, SVGs).
     This helps improve performance by avoiding repeated frame extraction operations.
+
+    TODO support getting an "average" frame from a video, or at least an average embedding
     """
     temporary_directory = tempfile.TemporaryDirectory(prefix="tmp_comp_frames")
     cache: Dict[str, str] = {}  # Maps media_path to cached image path
@@ -21,7 +24,7 @@ class FrameCache:
     @classmethod
     def get_image_path(cls, media_path: str) -> str:
         """
-        Get the image path for a media file. If it's a video/GIF/PDF, extracts the first frame.
+        Get the image path for a media file. If it's a video/GIF/PDF/SVG, extracts the first frame.
         Otherwise returns the original path.
 
         Args:
@@ -32,7 +35,14 @@ class FrameCache:
         """
         media_path_lower = media_path.lower()
 
-        # Check for PDF files first
+        # Check for SVG files first (since they're the simplest to convert)
+        if media_path_lower.endswith('.svg'):
+            if config.enable_svgs:
+                return cls.get_first_frame(media_path, CompareMediaType.SVG)
+            else:
+                return media_path
+
+        # Check for PDF files next
         if media_path_lower.endswith('.pdf'):
             if config.enable_pdfs:
                 return cls.get_first_frame(media_path, CompareMediaType.PDF)
@@ -75,6 +85,8 @@ class FrameCache:
         try:
             if media_type == CompareMediaType.PDF:
                 cls._extract_pdf_frame(media_path)
+            elif media_type == CompareMediaType.SVG:
+                cls._extract_svg_frame(media_path)
             else:
                 cls._extract_video_frame(media_path)
         except Exception as e:
@@ -107,6 +119,26 @@ class FrameCache:
                 raise ValueError("PDF has no pages")
         except Exception as e:
             Utils.log(f"Error processing PDF {pdf_path}: {str(e)}")
+            raise
+
+    @classmethod
+    def _extract_svg_frame(cls, svg_path: str) -> None:
+        """
+        Convert an SVG file to a PNG image.
+
+        Args:
+            svg_path: Path to the SVG file
+        """
+        try:
+            Utils.log(f"Converting SVG to PNG: {svg_path}")
+            basename = os.path.splitext(os.path.basename(svg_path))[0] + ".png"
+            frame_path = os.path.join(cls.temporary_directory.name, basename)
+            
+            # Convert SVG to PNG using cairosvg
+            cairosvg.svg2png(url=svg_path, write_to=frame_path)
+            cls.cache[svg_path] = frame_path
+        except Exception as e:
+            Utils.log(f"Error processing SVG {svg_path}: {str(e)}")
             raise
 
     @classmethod

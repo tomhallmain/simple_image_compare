@@ -192,22 +192,23 @@ class MediaFrame(Frame):
         
         path_lower = path.lower()
         
-        if config.enable_pdfs and path_lower.endswith('.pdf'):
-            # Handle PDF files
+        # Handle SVG files first (since they're the simplest to convert)
+        if config.enable_svgs and path_lower.endswith('.svg'):
             self.path = FrameCache.get_image_path(path)
+        # Handle PDF files
+        elif config.enable_pdfs and path_lower.endswith('.pdf'):
+            self.path = FrameCache.get_image_path(path)
+        # Handle GIF files
         elif config.enable_gifs and path_lower.endswith('.gif'):
-            # Handle GIF files
             # TODO: VLC doesn't handle GIFs well - consider using a different approach
             # like PIL or a dedicated GIF player library
             self.path = FrameCache.get_image_path(path)
-        else:
-            # Handle video files
-            if config.enable_videos:
-                if any([path_lower.endswith(ext) for ext in config.video_types]):
-                    self.clear()
-                    self.__image = VideoUI(path)
-                    self.video_display()
-                    return
+        # Handle video files
+        elif config.enable_videos and any([path_lower.endswith(ext) for ext in config.video_types]):
+            self.clear()
+            self.__image = VideoUI(path)
+            self.video_display()
+            return
 
         self.imscale = 1.0
         self.__huge = False  # huge or not

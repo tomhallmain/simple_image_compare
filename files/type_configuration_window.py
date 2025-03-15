@@ -50,7 +50,8 @@ class TypeConfigurationWindow:
         cls._original_config = {
             CompareMediaType.VIDEO: config.enable_videos,
             CompareMediaType.GIF: config.enable_gifs,
-            CompareMediaType.PDF: config.enable_pdfs
+            CompareMediaType.PDF: config.enable_pdfs,
+            CompareMediaType.SVG: config.enable_svgs
         }
             
         cls.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
@@ -184,6 +185,12 @@ class TypeConfigurationWindow:
                     config.file_types.append(".pdf")
                 elif not config.enable_pdfs and ".pdf" in config.file_types:
                     config.file_types.remove(".pdf")
+            elif media_type == CompareMediaType.SVG:
+                config.enable_svgs = enabled
+                if config.enable_svgs and ".svg" not in config.file_types:
+                    config.file_types.append(".svg")
+                elif not config.enable_svgs and ".svg" in config.file_types:
+                    config.file_types.remove(".svg")
 
         if app_actions is not None:
             app_actions.refresh_all_compares()
@@ -204,4 +211,6 @@ class TypeConfigurationWindow:
             var.set(config.enable_gifs)
         elif media_type == CompareMediaType.PDF:
             var.set(config.enable_pdfs)
+        elif media_type == CompareMediaType.SVG:
+            var.set(config.enable_svgs)
         return var 

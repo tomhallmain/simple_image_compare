@@ -43,6 +43,7 @@
   "enable_videos": true,
   "enable_gifs": true,
   "enable_pdfs": true,
+  "enable_svgs": true,
   "directories_to_search_for_related_images": [    
   ],
   "font_size": 8,

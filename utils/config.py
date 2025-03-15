@@ -53,6 +53,7 @@ class Config:
         self.enable_videos = True
         self.enable_gifs = True
         self.enable_pdfs = False
+        self.enable_svgs = False  # SVG support is disabled by default
         self.directories_to_search_for_related_images = []
         self.font_size = 8
         self.threshold_potential_duplicate_color = 50
@@ -124,6 +125,7 @@ class Config:
                             "enable_videos",
                             "enable_gifs",
                             "enable_pdfs",
+                            "enable_svgs",
                             "print_settings",
                             "show_toasts",
                             "delete_instantly",
@@ -162,6 +164,8 @@ class Config:
                 self.file_types.append(".gif")
             if self.enable_pdfs:
                 self.file_types.append(".pdf")
+            if self.enable_svgs:
+                self.file_types.append(".svg")
 
             try:
                 self.sd_prompt_reader_loc = self.validate_and_set_directory(key="sd_prompt_reader_loc")
