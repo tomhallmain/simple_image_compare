@@ -9,6 +9,7 @@ from tkinter.font import Font
 from tkinter.ttk import Entry, Button
 
 from files.file_browser import FileBrowser
+from image.frame_cache import FrameCache
 from image.image_data_extractor import image_data_extractor
 from image.image_ops import ImageOps
 from image.metadata_viewer_window import MetadataViewerWindow
@@ -55,12 +56,12 @@ class ImageDetails():
     def store_image_generation_mode():
         app_info_cache.set_meta("image_generation_mode", ImageDetails.image_generation_mode.name)
 
-    def __init__(self, parent_master, master, image_path, index_text, app_actions, do_refresh=True):
+    def __init__(self, parent_master, master, media_path, index_text, app_actions, do_refresh=True):
         self.parent_master = parent_master
         self.master = master
         self.master.title(_("Image details"))
         self.master.geometry("700x600")
-        self.image_path = image_path
+        self.image_path = FrameCache.get_image_path(media_path)
         self.app_actions = app_actions
         self.frame = Frame(self.master)
         self.frame.grid(column=0, row=0)

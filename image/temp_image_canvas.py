@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 from tkinter import Toplevel, Frame, Canvas, Label
 
 from files.marked_file_mover import MarkedFiles
+from image.frame_cache import FrameCache
 from utils.config import config
 from utils.app_style import AppStyle
 from utils.utils import Utils
@@ -71,7 +72,7 @@ class TempImageCanvas:
 
         self.master.bind("<Escape>", self.app_actions.refocus)
         self.master.bind("<Shift-Escape>", self.close_windows)
-        self.master.bind("<Shift-D>", lambda event: self.app_actions.get_media_details(image_path=self.image_path))
+        self.master.bind("<Shift-D>", lambda event: self.app_actions.get_media_details(media_path=self.image_path))
         self.master.bind("<Shift-I>", lambda event: self.app_actions.run_image_generation(_type=None, image_path=self.image_path))
         self.master.bind("<Button-3>", lambda event: self.app_actions.run_image_generation(_type=None, image_path=self.image_path))
         self.master.bind("<Shift-Y>", lambda event: self.app_actions.set_marks_from_downstream_related_images(image_to_use=self.image_path))
@@ -88,12 +89,11 @@ class TempImageCanvas:
     def close_windows(self, event=None):
         self.master.destroy()
 
-    def create_image(self, image_path, extra_text=None):
-#        self.canvas.clear_image()
-        self.image_path = image_path
-        TempImageCanvas.image = self.get_image_to_fit(image_path)
+    def create_image(self, media_path, extra_text=None):
+        self.image_path = FrameCache.get_image_path(media_path)
+        TempImageCanvas.image = self.get_image_to_fit(media_path)
         self.canvas.create_image_center(TempImageCanvas.image)
-        title = image_path if extra_text is None else image_path + " - " + extra_text
+        title = media_path if extra_text is None else media_path + " - " + extra_text
         TempImageCanvas.top_level.title(title)
         self.master.update()
         self.master.after(1, lambda: self.master.focus_force())
