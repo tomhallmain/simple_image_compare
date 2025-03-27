@@ -32,6 +32,8 @@ class CompareMode(Enum):
     CLIP_EMBEDDING = _("CLIP Embedding")
     CLIP_EMBEDDING_MATRIX = _("CLIP Embedding Matrix")
     SIGLIP_EMBEDDING = _("SIGLIP Embedding")
+    FLAVA_EMBEDDING = _("FLAVA Embedding")
+    ALIGN_EMBEDDING = _("Align Embedding")
 #    PROMPTS = _("Prompts")
 
     def get_text(self):

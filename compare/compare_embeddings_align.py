@@ -30,8 +30,8 @@ def usage():
     print("  -v                     Verbose                                         ")
 
 
-class CompareEmbeddingSiglip(BaseCompare):
-    COMPARE_MODE = CompareMode.SIGLIP_EMBEDDING
+class CompareEmbeddingAlign(BaseCompare):
+    COMPARE_MODE = CompareMode.ALIGN_EMBEDDING
     THRESHHOLD_POTENTIAL_DUPLICATE = config.threshold_potential_duplicate_embedding
     THRESHHOLD_PROBABLE_MATCH = 0.98
     THRESHHOLD_GROUP_CUTOFF = 4500  # TODO fix this for Embedding case
@@ -758,7 +758,7 @@ if __name__ == "__main__":
             usage()
             exit(1)
 
-    compare = CompareEmbeddingSiglip(base_dir,
+    compare = CompareEmbeddingAlign(base_dir,
                                search_file_path=search_file_path,
                                counter_limit=counter_limit,
                                embedding_similarity_threshold=embedding_similarity_threshold,

@@ -8,6 +8,7 @@ import pprint
 from compare.compare import Compare
 from compare.compare_args import CompareArgs
 from compare.compare_embeddings import CompareEmbedding
+from compare.compare_embeddings_flava import CompareEmbeddingFlava
 from compare.compare_embeddings_matrix import CompareEmbeddingMatrix
 from compare.compare_embeddings_siglip import CompareEmbeddingSiglip
 from compare.prevalidations_window import PrevalidationAction, PrevalidationsWindow
@@ -308,6 +309,8 @@ class CompareWrapper:
             self._compare = Compare(args, use_thumb=True)
         elif self.compare_mode == CompareMode.SIGLIP_EMBEDDING:
             self._compare = CompareEmbeddingSiglip(args)
+        elif self.compare_mode == CompareMode.FLAVA_EMBEDDING:
+            self._compare = CompareEmbeddingFlava(args)
 
     def run_search(self) -> None:
         assert self._compare is not None
