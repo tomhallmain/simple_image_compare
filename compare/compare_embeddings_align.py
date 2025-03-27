@@ -8,7 +8,7 @@ import numpy as np
 from compare.base_compare import BaseCompare, gather_files
 from compare.compare_args import CompareArgs
 from compare.compare_result import CompareResult
-from compare.model import image_embeddings_siglip, text_embeddings_siglip, embedding_similarity
+from compare.model import image_embeddings_align, text_embeddings_align, embedding_similarity
 from utils.config import config
 from utils.constants import CompareMode
 from utils.translations import I18N
@@ -108,7 +108,7 @@ class CompareEmbeddingAlign(BaseCompare):
             else:
                 image_file_path = self.get_image_path(f)
                 try:
-                    embedding = image_embeddings_siglip(image_file_path)
+                    embedding = image_embeddings_align(image_file_path)
                 except OSError as e:
                     print(f"{f} - {e}")
                     continue
@@ -356,7 +356,7 @@ class CompareEmbeddingAlign(BaseCompare):
             if self.verbose:
                 print("Filepath not found in initial list - gathering new file data")
             try:
-                embedding = image_embeddings_siglip(search_file_path)
+                embedding = image_embeddings_align(search_file_path)
             except OSError as e:
                 if self.verbose:
                     print(f"{search_file_path} - {e}")
@@ -551,7 +551,7 @@ class CompareEmbeddingAlign(BaseCompare):
         if self.verbose:
             print(f"Tokenizing {descriptor}: \"{text}\"")
         try:
-            text_embedding = text_embeddings_siglip(text)
+            text_embedding = text_embeddings_align(text)
             embeddings.append(text_embedding)
             CompareEmbedding.TEXT_EMBEDDING_CACHE[text] = text_embedding
         except OSError as e:
@@ -564,7 +564,7 @@ class CompareEmbeddingAlign(BaseCompare):
         if self.verbose:
             print(f"Tokenizing {descriptor}: \"{image_path}\"")
         try:
-            embedding = image_embeddings_siglip(image_path)
+            embedding = image_embeddings_align(image_path)
             embeddings.append(embedding)
         except OSError as e:
             if self.verbose:
@@ -600,7 +600,7 @@ class CompareEmbeddingAlign(BaseCompare):
                 readded_indexes.append(len(self.compare_data.files_found))
                 self.compare_data.files_found.append(f)
                 try:
-                    embedding = image_embeddings_siglip(f)
+                    embedding = image_embeddings_align(f)
                 except OSError as e:
                     print(f"Error generating embedding from file {f}: {e}")
                     continue
@@ -619,7 +619,7 @@ class CompareEmbeddingAlign(BaseCompare):
             text_embedding = CompareEmbedding.TEXT_EMBEDDING_CACHE[text]
         else:
             try:
-                text_embedding = text_embeddings_siglip(text)
+                text_embedding = text_embeddings_align(text)
                 CompareEmbedding.TEXT_EMBEDDING_CACHE[text] = text_embedding
             except OSError as e:
                 print(f"{text} - {e}")
@@ -631,7 +631,7 @@ class CompareEmbeddingAlign(BaseCompare):
         print(f"Running text comparison for \"{image_path}\" - text = {texts_dict}")
         similarities = {}
         try:
-            image_embedding = image_embeddings_siglip(image_path)
+            image_embedding = image_embeddings_align(image_path)
         except OSError as e:
             print(f"{image_path} - {e}")
             raise AssertionError(
@@ -645,11 +645,10 @@ class CompareEmbeddingAlign(BaseCompare):
         key = (image_path, "::p", tuple(positives), "::n", tuple(negatives))
         if key in CompareEmbedding.MULTI_EMBEDDING_CACHE:
             return bool(CompareEmbedding.MULTI_EMBEDDING_CACHE[key] > threshold)
-        # print(f"Running text comparison for \"{image_path}\" - positive texts = {positives}, negative texts = {negatives}")
         positive_similarities = []
         negative_similarities = []
         try:
-            image_embedding = image_embeddings_siglip(image_path)
+            image_embedding = image_embeddings_align(image_path)
         except OSError as e:
             print(f"{image_path} - {e}")
             raise AssertionError(
@@ -670,15 +669,14 @@ class CompareEmbeddingAlign(BaseCompare):
             combined_similarity = combined_positive_similarity
         else:
             combined_similarity = 1 / combined_negative_similarity
-        # print(f"Combined similarity = {combined_similarity} Positive similarities = {positive_similarities} Negative similarites = {negative_similarities} Threshold = {threshold}")
         CompareEmbedding.MULTI_EMBEDDING_CACHE[key] = combined_similarity
         return combined_similarity > threshold
 
     @staticmethod
     def is_related(image1, image2):
         try:
-            emb1 = image_embeddings_siglip(image1)
-            emb2 = image_embeddings_siglip(image2)
+            emb1 = image_embeddings_align(image1)
+            emb2 = image_embeddings_align(image2)
         except OSError as e:
             print(f"{search_file_path} - {e}")
             raise AssertionError(
