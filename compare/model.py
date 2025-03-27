@@ -223,8 +223,7 @@ def image_embeddings_flava(image_path):
     with torch.no_grad():
         # Get image features using FLAVA model
         outputs = _get_flava_model().get_image_features(**inputs)
-        # Get the pooled output for global image embedding
-        image_embed = outputs.pooler_output
+        image_embed = outputs.squeeze(0)  # Remove batch dimension [1, 768] → [768]
         # Normalize the embeddings
         image_embed = image_embed / image_embed.norm(dim=-1, keepdim=True)
         return image_embed.tolist()[0]
@@ -236,8 +235,7 @@ def text_embeddings_flava(text):
     with torch.no_grad():
         # Get text features using FLAVA model
         outputs = _get_flava_model().get_text_features(**inputs)
-        # Get the pooled output for global text embedding
-        text_embed = outputs.pooler_output
+        text_embed = outputs.squeeze(0)  # Remove batch dimension [1, 768] → [768]
         # Normalize the embeddings
         text_embed = text_embed / text_embed.norm(dim=-1, keepdim=True)
         return text_embed.tolist()[0]

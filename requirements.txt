@@ -13,6 +13,7 @@ python-vlc
 scikit-image>=0.20.0
 scikit-learn>=1.3.2
 send2trash
+sentencepiece
 tensorflow
 tensorflow_hub
 tf_keras
