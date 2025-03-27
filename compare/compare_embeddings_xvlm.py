@@ -8,7 +8,7 @@ import numpy as np
 from compare.base_compare import BaseCompare, gather_files
 from compare.compare_args import CompareArgs
 from compare.compare_result import CompareResult
-from compare.model import image_embeddings_align, text_embeddings_align, embedding_similarity
+from compare.model import image_embeddings_xvlm, text_embeddings_xvlm, embedding_similarity
 from utils.config import config
 from utils.constants import CompareMode
 from utils.translations import I18N
@@ -30,8 +30,8 @@ def usage():
     print("  -v                     Verbose                                         ")
 
 
-class CompareEmbeddingAlign(BaseCompare):
-    COMPARE_MODE = CompareMode.ALIGN_EMBEDDING
+class CompareEmbeddingXVLM(BaseCompare):
+    COMPARE_MODE = CompareMode.XVLM_EMBEDDING
     THRESHHOLD_POTENTIAL_DUPLICATE = config.threshold_potential_duplicate_embedding
     THRESHHOLD_PROBABLE_MATCH = 0.98
     THRESHHOLD_GROUP_CUTOFF = 4500  # TODO fix this for Embedding case
@@ -108,7 +108,7 @@ class CompareEmbeddingAlign(BaseCompare):
             else:
                 image_file_path = self.get_image_path(f)
                 try:
-                    embedding = image_embeddings_align(image_file_path)
+                    embedding = image_embeddings_xvlm(image_file_path)
                 except OSError as e:
                     print(f"{f} - {e}")
                     continue
@@ -223,7 +223,7 @@ class CompareEmbeddingAlign(BaseCompare):
                 # diff_file = self.compare_data.files_found[diff_index]
                 # print(base_index, diff_index, base_file, diff_file, diff_score)
 
-                if diff_score > CompareEmbeddingAlign.THRESHHOLD_POTENTIAL_DUPLICATE:
+                if diff_score > CompareEmbeddingXVLM.THRESHHOLD_POTENTIAL_DUPLICATE:
                     base_file = self.compare_data.files_found[base_index]
                     diff_file = self.compare_data.files_found[diff_index]
                     if ((base_file, diff_file) not in self._probable_duplicates
@@ -236,7 +236,7 @@ class CompareEmbeddingAlign(BaseCompare):
                     self.compare_result.group_index += 1
                 elif f1_grouped:
                     existing_group_index, previous_diff_score = self.compare_result.files_grouped[base_index]
-                    if previous_diff_score - CompareEmbeddingAlign.THRESHHOLD_GROUP_CUTOFF > diff_score:
+                    if previous_diff_score - CompareEmbeddingXVLM.THRESHHOLD_GROUP_CUTOFF > diff_score:
                         # print(f"Previous: {previous_diff_score} , New: {diff_score}")
                         self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
                         self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
@@ -246,7 +246,7 @@ class CompareEmbeddingAlign(BaseCompare):
                             existing_group_index, diff_score)
                 else:
                     existing_group_index, previous_diff_score = self.compare_result.files_grouped[diff_index]
-                    if previous_diff_score - CompareEmbeddingAlign.THRESHHOLD_GROUP_CUTOFF > diff_score:
+                    if previous_diff_score - CompareEmbeddingXVLM.THRESHHOLD_GROUP_CUTOFF > diff_score:
                         # print(f"Previous: {previous_diff_score} , New: {diff_score}")
                         self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
                         self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
@@ -327,8 +327,8 @@ class CompareEmbeddingAlign(BaseCompare):
 
         self.compare_result.finalize_search_result(
             self.search_file_path, verbose=self.verbose, is_embedding=True,
-            threshold_duplicate=CompareEmbeddingAlign.THRESHHOLD_POTENTIAL_DUPLICATE,
-            threshold_related=CompareEmbeddingAlign.THRESHHOLD_PROBABLE_MATCH)
+            threshold_duplicate=CompareEmbeddingXVLM.THRESHHOLD_POTENTIAL_DUPLICATE,
+            threshold_related=CompareEmbeddingXVLM.THRESHHOLD_PROBABLE_MATCH)
         return {0: self.compare_result.files_grouped}
 
     def _run_search_on_path(self, search_file_path):
@@ -356,7 +356,7 @@ class CompareEmbeddingAlign(BaseCompare):
             if self.verbose:
                 print("Filepath not found in initial list - gathering new file data")
             try:
-                embedding = image_embeddings_align(search_file_path)
+                embedding = image_embeddings_xvlm(search_file_path)
             except OSError as e:
                 if self.verbose:
                     print(f"{search_file_path} - {e}")
@@ -452,8 +452,8 @@ class CompareEmbeddingAlign(BaseCompare):
         else:
             adjusted_threshold = self.embedding_similarity_threshold
         normalization_factor = self._compute_multiembedding_diff(positive_embeddings, negative_embeddings, adjusted_threshold)
-        adjusted_threshold_duplicate = CompareEmbeddingAlign.THRESHHOLD_POTENTIAL_DUPLICATE / normalization_factor
-        adjusted_threshold_match = CompareEmbeddingAlign.THRESHHOLD_PROBABLE_MATCH / normalization_factor
+        adjusted_threshold_duplicate = CompareEmbeddingXVLM.THRESHHOLD_POTENTIAL_DUPLICATE / normalization_factor
+        adjusted_threshold_match = CompareEmbeddingXVLM.THRESHHOLD_PROBABLE_MATCH / normalization_factor
 
         self.compare_result.finalize_search_result(
             self.search_file_path, args=self.args, verbose=self.verbose, is_embedding=True,
@@ -543,17 +543,17 @@ class CompareEmbeddingAlign(BaseCompare):
         return {0: files_grouped}
 
     def _tokenize_text(self, text, embeddings=[], descriptor="search text"):
-        if text in CompareEmbeddingAlign.TEXT_EMBEDDING_CACHE:
-            text_embedding = CompareEmbeddingAlign.TEXT_EMBEDDING_CACHE[text]
+        if text in CompareEmbeddingXVLM.TEXT_EMBEDDING_CACHE:
+            text_embedding = CompareEmbeddingXVLM.TEXT_EMBEDDING_CACHE[text]
             if text_embedding is not None:
-                embeddings.append(CompareEmbeddingAlign.TEXT_EMBEDDING_CACHE[text])
+                embeddings.append(CompareEmbeddingXVLM.TEXT_EMBEDDING_CACHE[text])
                 return
         if self.verbose:
             print(f"Tokenizing {descriptor}: \"{text}\"")
         try:
-            text_embedding = text_embeddings_align(text)
+            text_embedding = text_embeddings_xvlm(text)
             embeddings.append(text_embedding)
-            CompareEmbeddingAlign.TEXT_EMBEDDING_CACHE[text] = text_embedding
+            CompareEmbeddingXVLM.TEXT_EMBEDDING_CACHE[text] = text_embedding
         except OSError as e:
             if self.verbose:
                 print(f"{text} - {e}")
@@ -564,7 +564,7 @@ class CompareEmbeddingAlign(BaseCompare):
         if self.verbose:
             print(f"Tokenizing {descriptor}: \"{image_path}\"")
         try:
-            embedding = image_embeddings_align(image_path)
+            embedding = image_embeddings_xvlm(image_path)
             embeddings.append(embedding)
         except OSError as e:
             if self.verbose:
@@ -600,7 +600,7 @@ class CompareEmbeddingAlign(BaseCompare):
                 readded_indexes.append(len(self.compare_data.files_found))
                 self.compare_data.files_found.append(f)
                 try:
-                    embedding = image_embeddings_align(f)
+                    embedding = image_embeddings_xvlm(f)
                 except OSError as e:
                     print(f"Error generating embedding from file {f}: {e}")
                     continue
@@ -615,12 +615,12 @@ class CompareEmbeddingAlign(BaseCompare):
 
     @staticmethod
     def _get_text_embedding_from_cache(text):
-        if text in CompareEmbeddingAlign.TEXT_EMBEDDING_CACHE:
-            text_embedding = CompareEmbeddingAlign.TEXT_EMBEDDING_CACHE[text]
+        if text in CompareEmbeddingXVLM.TEXT_EMBEDDING_CACHE:
+            text_embedding = CompareEmbeddingXVLM.TEXT_EMBEDDING_CACHE[text]
         else:
             try:
-                text_embedding = text_embeddings_align(text)
-                CompareEmbeddingAlign.TEXT_EMBEDDING_CACHE[text] = text_embedding
+                text_embedding = text_embeddings_xvlm(text)
+                CompareEmbeddingXVLM.TEXT_EMBEDDING_CACHE[text] = text_embedding
             except OSError as e:
                 print(f"{text} - {e}")
                 raise AssertionError("Encountered an error generating text embedding.")
@@ -631,34 +631,34 @@ class CompareEmbeddingAlign(BaseCompare):
         print(f"Running text comparison for \"{image_path}\" - text = {texts_dict}")
         similarities = {}
         try:
-            image_embedding = image_embeddings_align(image_path)
+            image_embedding = image_embeddings_xvlm(image_path)
         except OSError as e:
             print(f"{image_path} - {e}")
             raise AssertionError(
                 f"Encountered an error accessing the provided file path {image_embeddings} in the file system.")
         for key, text in texts_dict.items():
-            similarities[key] = embedding_similarity(image_embedding, CompareEmbeddingAlign._get_text_embedding_from_cache(text))
+            similarities[key] = embedding_similarity(image_embedding, CompareEmbeddingXVLM._get_text_embedding_from_cache(text))
         return similarities
 
     @staticmethod
     def multi_text_compare(image_path, positives, negatives, threshold=0.3):
         key = (image_path, "::p", tuple(positives), "::n", tuple(negatives))
-        if key in CompareEmbeddingAlign.MULTI_EMBEDDING_CACHE:
-            return bool(CompareEmbeddingAlign.MULTI_EMBEDDING_CACHE[key] > threshold)
+        if key in CompareEmbeddingXVLM.MULTI_EMBEDDING_CACHE:
+            return bool(CompareEmbeddingXVLM.MULTI_EMBEDDING_CACHE[key] > threshold)
         positive_similarities = []
         negative_similarities = []
         try:
-            image_embedding = image_embeddings_align(image_path)
+            image_embedding = image_embeddings_xvlm(image_path)
         except OSError as e:
             print(f"{image_path} - {e}")
             raise AssertionError(
                 f"Encountered an error accessing the provided file path {image_path} in the file system.")
 
         for text in positives:
-            similarity = embedding_similarity(image_embedding, CompareEmbeddingAlign._get_text_embedding_from_cache(text))
+            similarity = embedding_similarity(image_embedding, CompareEmbeddingXVLM._get_text_embedding_from_cache(text))
             positive_similarities.append(float(similarity[0]))
         for text in negatives:
-            similarity = embedding_similarity(image_embedding, CompareEmbeddingAlign._get_text_embedding_from_cache(text))
+            similarity = embedding_similarity(image_embedding, CompareEmbeddingXVLM._get_text_embedding_from_cache(text))
             negative_similarities.append(1/float(similarity[0]))
 
         combined_positive_similarity = sum(positive_similarities)/max(len(positive_similarities),1)
@@ -669,14 +669,14 @@ class CompareEmbeddingAlign(BaseCompare):
             combined_similarity = combined_positive_similarity
         else:
             combined_similarity = 1 / combined_negative_similarity
-        CompareEmbeddingAlign.MULTI_EMBEDDING_CACHE[key] = combined_similarity
+        CompareEmbeddingXVLM.MULTI_EMBEDDING_CACHE[key] = combined_similarity
         return combined_similarity > threshold
 
     @staticmethod
     def is_related(image1, image2):
         try:
-            emb1 = image_embeddings_align(image1)
-            emb2 = image_embeddings_align(image2)
+            emb1 = image_embeddings_xvlm(image1)
+            emb2 = image_embeddings_xvlm(image2)
         except OSError as e:
             print(f"{search_file_path} - {e}")
             raise AssertionError(
@@ -756,7 +756,7 @@ if __name__ == "__main__":
             usage()
             exit(1)
 
-    compare = CompareEmbeddingAlign(base_dir,
+    compare = CompareEmbeddingXVLM(base_dir,
                                search_file_path=search_file_path,
                                counter_limit=counter_limit,
                                embedding_similarity_threshold=embedding_similarity_threshold,

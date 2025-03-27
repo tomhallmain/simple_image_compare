@@ -34,6 +34,7 @@ class CompareMode(Enum):
     SIGLIP_EMBEDDING = _("SIGLIP Embedding")
     FLAVA_EMBEDDING = _("FLAVA Embedding")
     ALIGN_EMBEDDING = _("Align Embedding")
+    XVLM_EMBEDDING = _("XVLM Embedding")
 #    PROMPTS = _("Prompts")
 
     def get_text(self):

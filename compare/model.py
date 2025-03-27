@@ -1,7 +1,9 @@
 from PIL import Image
 import torch
 import clip
-from transformers import AutoModel, AutoProcessor, FlavaProcessor, FlavaModel, AlignProcessor, AlignModel
+from transformers import AutoModel, AutoProcessor, FlavaProcessor, FlavaModel, AlignProcessor, AlignModel, BertTokenizer, BertModel
+from torchvision import transforms
+from models.xvlm import XVLMBase
 
 from image.frame_cache import FrameCache
 from utils.config import config
@@ -20,6 +22,11 @@ _flava_processor = None
 # Lazy initialization variables for ALIGN
 _align_model = None
 _align_processor = None
+
+# Lazy initialization variables for XVLM
+_xvlm_model = None
+_xvlm_tokenizer = None
+_xvlm_img_transform = None
 
 def _get_siglip_model():
     global _siglip_model
@@ -56,6 +63,43 @@ def _get_align_processor():
     if _align_processor is None:
         _align_processor = AlignProcessor.from_pretrained("kakaobrain/align-base")
     return _align_processor
+
+def _get_xvlm_model():
+    global _xvlm_model
+    if _xvlm_model is None:
+        # Initialize model with config
+        config = {
+            'vision_encoder': 'swin_base_patch4_window12_384',
+            'text_encoder': 'bert-base-uncased',
+            'embed_dim': 256,
+            'temp': 0.07,
+            'multi_grained': True
+        }
+        _xvlm_model = XVLMBase(config)
+        
+        # Load pretrained weights
+        checkpoint = torch.load(config.xvlm_checkpoint_path, map_location='cpu')
+        _xvlm_model.load_state_dict(checkpoint['model'], strict=False)
+        _xvlm_model.eval()
+        _xvlm_model = _xvlm_model.to(device)
+    return _xvlm_model
+
+def _get_xvlm_tokenizer():
+    global _xvlm_tokenizer
+    if _xvlm_tokenizer is None:
+        _xvlm_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    return _xvlm_tokenizer
+
+def _get_xvlm_img_transform():
+    global _xvlm_img_transform
+    if _xvlm_img_transform is None:
+        _xvlm_img_transform = transforms.Compose([
+            transforms.Resize((384, 384)),
+            transforms.ToTensor(),
+            transforms.Normalize((0.48145466, 0.4578275, 0.40821073), 
+                               (0.26862954, 0.26130258, 0.27577711))
+        ])
+    return _xvlm_img_transform
 
 def image_embeddings(image_path):
     try:
@@ -181,3 +225,34 @@ def embedding_similarity(embedding0, embedding1):
     t0 = torch.Tensor([list(embedding0)])
     t1 = torch.Tensor([list(embedding1)])
     return torch.nn.functional.cosine_similarity(t0, t1)
+
+def image_embeddings_xvlm(image_path):
+    try:
+        image = Image.open(image_path).convert("RGB")
+    except Exception as e:
+        image_path = FrameCache.get_image_path(image_path)
+        image = Image.open(image_path).convert("RGB")
+    
+    # Process image with XVLM transform
+    image_tensor = _get_xvlm_img_transform()(image).unsqueeze(0).to(device)
+    
+    with torch.no_grad():
+        # Get image features using XVLM model
+        image_embeds = _get_xvlm_model().vision_encoder(image_tensor)
+        image_feat = _get_xvlm_model().vision_proj(image_embeds[:, 0, :])
+        # Normalize the embeddings
+        image_feat = image_feat / image_feat.norm(dim=-1, keepdim=True)
+        return image_feat.tolist()[0]
+
+
+def text_embeddings_xvlm(text):
+    # Process text with XVLM tokenizer
+    inputs = _get_xvlm_tokenizer()(text, return_tensors='pt', padding=True, truncation=True).to(device)
+    
+    with torch.no_grad():
+        # Get text features using XVLM model
+        text_embeds = _get_xvlm_model().text_encoder(**inputs).last_hidden_state
+        text_feat = _get_xvlm_model().text_proj(text_embeds[:, 0, :])
+        # Normalize the embeddings
+        text_feat = text_feat / text_feat.norm(dim=-1, keepdim=True)
+        return text_feat.tolist()[0]
