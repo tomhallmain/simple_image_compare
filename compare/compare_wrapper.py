@@ -276,6 +276,9 @@ class CompareWrapper:
 
         if self._compare is None:
             raise Exception("No compare object created")
+        
+        if not self._compare.is_runnable():
+            raise Exception(f"Compare object of type {type(self._compare)} is not runnable, please see log and validate configuration.")
 
         if self._compare.is_run_search or args.search_text is not None:
             self._app_actions.set_mode(Mode.SEARCH, do_update=False)

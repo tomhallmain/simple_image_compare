@@ -1,7 +1,14 @@
-
 # Simple Image Compare Tool
 
-Simple image comparison tool that detects color and face similarities using CLIP embeddings (default) and color matching (separate optional mode).
+Simple image comparison tool that detects color and face similarities using CLIP embeddings (default) and color matching (separate optional mode). The tool now supports multiple embedding models:
+
+- CLIP (default): 512D embeddings, high zero-shot performance
+- SigLIP: 512D embeddings, excellent retrieval performance
+- ALIGN: 640D embeddings, high accuracy for retrieval
+- FLAVA: 768D embeddings, good for complex reasoning
+- X-VLM: 256D embeddings, efficient for region-text tasks - requires local copy of [X-VLM](https://github.com/zengyan-97/X-VLM)
+
+Each model offers different tradeoffs between accuracy, speed, and resource usage. The default CLIP model provides a good balance for most use cases.
 
 ## Image and Video Browser
 
@@ -48,9 +55,9 @@ Useful for detecting duplicates or finding associations between large unstructur
 
 Individual images can be passed to search against the full image data set by passing flag `--search` with the path of the search file, or setting a search file in the UI before running comparison.
 
-The color matching compare mode is faster than CLIP embedding but less robust. In the group comparison case, since every image must be compared to every other image the time complexity is $\mathcal{O}(n^2)$. To remedy this issue for large image sets, set the `store_checkpoints` config setting to enable process caching to close and pick up where you left off previously, but ensure no files are added or removed from the comparison directory before restarting a compare.
+The color matching compare mode is faster than embedding comparison but less robust. In the group comparison case, since every image must be compared to every other image the time complexity is $\mathcal{O}(n^2)$. To remedy this issue for large image sets, set the `store_checkpoints` config setting to enable process caching to close and pick up where you left off previously, but ensure no files are added or removed from the comparison directory before restarting a compare.
 
-When using CLIP embedding compare mode, you can search your images by text - both positive and negative. Commas will break the texts to search into multiple parts, to be combined in a final set of results. If there is a good CLIP signal for the search texts it will likely return the images you are looking for. It will take a while to load the first time as embeddings need to be generated. If a list of preset text searches is defined in your config JSON, you can cycle between them with the dedicated shortcut found below.
+When using embedding compare modes, you can search your images by text - both positive and negative. Commas will break the texts to search into multiple parts, to be combined in a final set of results. If there is a good embedding signal for the search texts it will likely return the images you are looking for. It will take a while to load the first time as embeddings need to be generated. If a list of preset text searches is defined in your config JSON, you can cycle between them with the dedicated shortcut found below.
 
 If a search image is set simultaneously with search text, its embedding will be factored into the search at a weight equal to a single search text part.
 </details>
@@ -58,7 +65,7 @@ If a search image is set simultaneously with search text, its embedding will be 
 ### Configuration
 
 <details>
-<summary>Expand Details</summary
+<summary>Expand Details</summary>
 `clip_model` defines the CLIP model to use for generating embeddings.
 
 `image_types` defines the allowed file extensions for gathering image files, while `video_types` defines the allowed file extensions for gathering video files - there are only valid if the `enable_videos` setting is enabled.

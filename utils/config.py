@@ -46,6 +46,9 @@ class Config:
         self.move_marks_overwrite_existing_file = False
         self.trash_folder = None
         self.sd_prompt_reader_loc = None
+        self.xvlm_loc = None
+        self.xvlm_model_loc = None
+        self.xvlm_model_size = "4m"
         self.always_open_new_windows = False
         self.image_types = [".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".bmp", ".heic", ".avif"]
         self.video_types = [".mp4", ".mkv", ".avi", ".wmv", ".mov", ".flv"]
@@ -116,6 +119,9 @@ class Config:
                             "file_paths_json_path",
                             "sd_runner_client_password",
                             "refacdir_client_password",
+                            "xvlm_loc",
+                            "xvlm_model_loc",
+                            "xvlm_model_size",
                             "gimp_exe_loc")
             self.set_values(bool,
                             "image_browse_recursive",

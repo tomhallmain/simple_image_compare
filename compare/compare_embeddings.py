@@ -8,7 +8,7 @@ import numpy as np
 from compare.base_compare import BaseCompare, gather_files
 from compare.compare_args import CompareArgs
 from compare.compare_result import CompareResult
-from compare.model import image_embeddings, text_embeddings, embedding_similarity
+from compare.model import image_embeddings_clip, text_embeddings_clip, embedding_similarity
 from utils.config import config
 from utils.constants import CompareMode
 from utils.translations import I18N
@@ -108,7 +108,7 @@ class CompareEmbedding(BaseCompare):
             else:
                 image_file_path = self.get_image_path(f)
                 try:
-                    embedding = image_embeddings(image_file_path)
+                    embedding = image_embeddings_clip(image_file_path)
                 except OSError as e:
                     print(f"{f} - {e}")
                     continue
@@ -356,7 +356,7 @@ class CompareEmbedding(BaseCompare):
             if self.verbose:
                 print("Filepath not found in initial list - gathering new file data")
             try:
-                embedding = image_embeddings(search_file_path)
+                embedding = image_embeddings_clip(search_file_path)
             except OSError as e:
                 if self.verbose:
                     print(f"{search_file_path} - {e}")
@@ -551,7 +551,7 @@ class CompareEmbedding(BaseCompare):
         if self.verbose:
             print(f"Tokenizing {descriptor}: \"{text}\"")
         try:
-            text_embedding = text_embeddings(text)
+            text_embedding = text_embeddings_clip(text)
             embeddings.append(text_embedding)
             CompareEmbedding.TEXT_EMBEDDING_CACHE[text] = text_embedding
         except OSError as e:
@@ -564,7 +564,7 @@ class CompareEmbedding(BaseCompare):
         if self.verbose:
             print(f"Tokenizing {descriptor}: \"{image_path}\"")
         try:
-            embedding = image_embeddings(image_path)
+            embedding = image_embeddings_clip(image_path)
             embeddings.append(embedding)
         except OSError as e:
             if self.verbose:
@@ -600,7 +600,7 @@ class CompareEmbedding(BaseCompare):
                 readded_indexes.append(len(self.compare_data.files_found))
                 self.compare_data.files_found.append(f)
                 try:
-                    embedding = image_embeddings(f)
+                    embedding = image_embeddings_clip(f)
                 except OSError as e:
                     print(f"Error generating embedding from file {f}: {e}")
                     continue
@@ -619,7 +619,7 @@ class CompareEmbedding(BaseCompare):
             text_embedding = CompareEmbedding.TEXT_EMBEDDING_CACHE[text]
         else:
             try:
-                text_embedding = text_embeddings(text)
+                text_embedding = text_embeddings_clip(text)
                 CompareEmbedding.TEXT_EMBEDDING_CACHE[text] = text_embedding
             except OSError as e:
                 print(f"{text} - {e}")
@@ -631,11 +631,11 @@ class CompareEmbedding(BaseCompare):
         print(f"Running text comparison for \"{image_path}\" - text = {texts_dict}")
         similarities = {}
         try:
-            image_embedding = image_embeddings(image_path)
+            image_embedding = image_embeddings_clip(image_path)
         except OSError as e:
             print(f"{image_path} - {e}")
             raise AssertionError(
-                f"Encountered an error accessing the provided file path {image_embeddings} in the file system.")
+                f"Encountered an error accessing the provided file path {image_embeddings_clip} in the file system.")
         for key, text in texts_dict.items():
             similarities[key] = embedding_similarity(image_embedding, CompareEmbedding._get_text_embedding_from_cache(text))
         return similarities
@@ -649,7 +649,7 @@ class CompareEmbedding(BaseCompare):
         positive_similarities = []
         negative_similarities = []
         try:
-            image_embedding = image_embeddings(image_path)
+            image_embedding = image_embeddings_clip(image_path)
         except OSError as e:
             print(f"{image_path} - {e}")
             raise AssertionError(
@@ -677,8 +677,8 @@ class CompareEmbedding(BaseCompare):
     @staticmethod
     def is_related(image1, image2):
         try:
-            emb1 = image_embeddings(image1)
-            emb2 = image_embeddings(image2)
+            emb1 = image_embeddings_clip(image1)
+            emb2 = image_embeddings_clip(image2)
         except OSError as e:
             print(f"{search_file_path} - {e}")
             raise AssertionError(

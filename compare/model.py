@@ -1,12 +1,30 @@
 from PIL import Image
 import torch
 import clip
-from transformers import AutoModel, AutoProcessor, FlavaProcessor, FlavaModel, AlignProcessor, AlignModel, BertTokenizer, BertModel
-from torchvision import transforms
-from models.xvlm import XVLMBase
+from transformers import AutoModel, AutoProcessor, FlavaProcessor, FlavaModel, AlignProcessor, AlignModel
 
 from image.frame_cache import FrameCache
 from utils.config import config
+from utils.utils import Utils
+
+# XVLM may not be loaded if the config.json file is not updated
+# or if the model files are not downloaded
+xvlm_loaded = False
+
+if config.xvlm_loc is not None:
+    Utils.log(f"Loading XVLM modules from {config.xvlm_loc}")
+    try:
+        import sys
+        from transformers import BertTokenizer, BertModel
+        from torchvision import transforms
+        sys.path.insert(0, config.xvlm_loc)
+        from models.xvlm import XVLMBase
+        Utils.log("XVLM modules loaded")
+        xvlm_loaded = True
+    except Exception as e:
+        Utils.log(f"Error loading XVLM modules: {e}")
+
+
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load(config.clip_model, device=device)
@@ -27,6 +45,8 @@ _align_processor = None
 _xvlm_model = None
 _xvlm_tokenizer = None
 _xvlm_img_transform = None
+
+# Model and processor access functions
 
 def _get_siglip_model():
     global _siglip_model
@@ -64,21 +84,37 @@ def _get_align_processor():
         _align_processor = AlignProcessor.from_pretrained("kakaobrain/align-base")
     return _align_processor
 
+# Define preset configs for 4m/16m (extracted from YAMLs)
+XVLM_CONFIGS = {
+    '4m': {
+        'vision_encoder': 'swin_base_patch4_window12_384',
+        'text_encoder': 'bert-base-uncased',
+        'embed_dim': 256,
+        'temp': 0.07,
+        'multi_grained': True,
+        'max_words': 40  # From 4m.yaml
+    },
+    '16m': {
+        'vision_encoder': 'swin_base_patch4_window12_384',
+        'text_encoder': 'bert-base-uncased',
+        'embed_dim': 256,
+        'temp': 0.07,
+        'multi_grained': True,
+        'max_words': 30  # From 16m.yaml
+    }
+}
+
 def _get_xvlm_model():
     global _xvlm_model
     if _xvlm_model is None:
         # Initialize model with config
-        config = {
-            'vision_encoder': 'swin_base_patch4_window12_384',
-            'text_encoder': 'bert-base-uncased',
-            'embed_dim': 256,
-            'temp': 0.07,
-            'multi_grained': True
-        }
+        if config.xvlm_model_size not in XVLM_CONFIGS:
+            raise ValueError(f"Invalid XVLM model size - update config.json: {config.xvlm_model_size}")
+        config = XVLM_CONFIGS[config.xvlm_model_size]
         _xvlm_model = XVLMBase(config)
         
         # Load pretrained weights
-        checkpoint = torch.load(config.xvlm_checkpoint_path, map_location='cpu')
+        checkpoint = torch.load(config.xvlm_model_loc, map_location='cpu')
         _xvlm_model.load_state_dict(checkpoint['model'], strict=False)
         _xvlm_model.eval()
         _xvlm_model = _xvlm_model.to(device)
@@ -101,7 +137,16 @@ def _get_xvlm_img_transform():
         ])
     return _xvlm_img_transform
 
-def image_embeddings(image_path):
+
+def embedding_similarity(embedding0, embedding1):
+    # TODO maybe find out a way to not have to reconvert back to tensor
+    # since this might be less efficient then a simple list
+    t0 = torch.Tensor([list(embedding0)])
+    t1 = torch.Tensor([list(embedding1)])
+    return torch.nn.functional.cosine_similarity(t0, t1)
+
+
+def image_embeddings_clip(image_path):
     try:
      image = preprocess(Image.open(image_path)).unsqueeze(0).to(device)
     except Exception as e:
@@ -113,7 +158,7 @@ def image_embeddings(image_path):
         return embedding.tolist()[0]
 
 
-def text_embeddings(text):
+def text_embeddings_clip(text):
     tokens = clip.tokenize([text]).to(device)
     with torch.no_grad():
         embedding = model.encode_text(tokens).float()
@@ -218,13 +263,6 @@ def text_embeddings_align(text):
         text_embed = text_embed / text_embed.norm(dim=-1, keepdim=True)
         return text_embed.tolist()[0]
 
-
-def embedding_similarity(embedding0, embedding1):
-    # TODO maybe find out a way to not have to reconvert back to tensor
-    # since this might be less efficient then a simple list
-    t0 = torch.Tensor([list(embedding0)])
-    t1 = torch.Tensor([list(embedding1)])
-    return torch.nn.functional.cosine_similarity(t0, t1)
 
 def image_embeddings_xvlm(image_path):
     try:

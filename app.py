@@ -1211,6 +1211,7 @@ class App():
                 exec_func(*args)
             except Exception:
                 traceback.print_exc()
+                self.alert(_("Error running compare"), traceback.format_exc())
             self.progress_bar.stop()
             self.progress_bar.grid_forget()
             self.destroy_grid_element("progress_bar")

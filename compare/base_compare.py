@@ -4,6 +4,7 @@ import random
 import sys
 
 import cv2
+import numpy as np
 
 from compare.compare_args import CompareArgs
 from compare.compare_data import CompareData
@@ -64,6 +65,9 @@ class BaseCompare:
         self.gather_files_func = gather_files_func
         self.compare_result = CompareResult(base_dir=self.args.base_dir)
 
+    def is_runnable(self):
+        return True
+
     @staticmethod
     def calculate_chunk_size(embeddings, max_mem_gb=None):
         """
@@ -77,6 +81,67 @@ class BaseCompare:
         bytes_per_row = d * embeddings.dtype.itemsize  # e.g., 512 * 4 bytes (float32)
         max_rows_per_chunk = int((max_mem_gb * 1e9) / (n * bytes_per_row))
         return max(1, max_rows_per_chunk)  # Ensure at least 1 row per chunk
+
+    @staticmethod
+    def chunked_similarity(embeddings, threshold=0.9):
+        """
+        Compute pairwise similarities in memory-efficient chunks.
+        NOTE: This is a performance-inefficient implementation for documentation purposes.
+        :returns: List of (i, j, similarity) tuples where similarity > threshold.
+        """
+        n = embeddings.shape[0]
+        memory = Utils.calculate_available_ram()
+        chunk_size = BaseCompare.calculate_chunk_size(embeddings, max_mem_gb=(memory / 2))
+        similar_pairs = []
+
+        for i_start in range(0, n, chunk_size):
+            i_end = min(i_start + chunk_size, n)
+            chunk = embeddings[i_start:i_end]  # M x D
+
+            # Compute similarities for this chunk against all embeddings
+            chunk_similarity = chunk @ embeddings.T  # M x N
+
+            # Find indices where similarity exceeds threshold (upper triangle only)
+            for i in range(i_start, i_end):
+                for j in range(i + 1, n):  # Upper triangle (i < j)
+                    sim = chunk_similarity[i - i_start, j]
+                    if sim > threshold:
+                        similar_pairs.append((i, j, sim))
+
+        return similar_pairs
+
+    @staticmethod
+    def chunked_similarity_vectorized(embeddings, threshold=0.9, decimals=9):
+        """
+        Compute pairwise similarities in memory-efficient chunks using vectorized operations.
+        :returns: List of (i, j, similarity) tuples where similarity > threshold.
+        """
+        n = embeddings.shape[0]
+        memory = Utils.calculate_available_ram()
+        chunk_size = BaseCompare.calculate_chunk_size(embeddings, max_mem_gb=(memory / 2))
+        similar_pairs = []
+
+        for i_start in range(0, n, chunk_size):
+            i_end = min(i_start + chunk_size, n)
+            chunk = embeddings[i_start:i_end]  # M x D
+
+            # Compute all similarities for this chunk (M x N)
+            chunk_sim = chunk @ embeddings.T
+
+            # Create mask for upper triangle (i < j) and threshold
+            j_indices = np.arange(n)
+            global_i = i_start + np.arange(chunk.shape[0])[:, None]  # Local to global row indices
+            mask = (j_indices > global_i) & (chunk_sim > threshold)
+
+            # Extract valid (i, j, sim) triplets
+            local_i, j = np.where(mask)
+            global_i = i_start + local_i
+            similarities = np.round(chunk_sim[mask], decimals=decimals)
+
+            # Extend results
+            similar_pairs.extend(zip(global_i, j, similarities))
+
+        return similar_pairs
 
     def get_similarity_threshold(self):
         return -1.0 # overridden method

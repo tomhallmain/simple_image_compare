@@ -8,7 +8,7 @@ import numpy as np
 from compare.base_compare import BaseCompare, gather_files
 from compare.compare_args import CompareArgs
 from compare.compare_result import CompareResult
-from compare.model import image_embeddings, text_embeddings, embedding_similarity
+from compare.model import image_embeddings_clip, text_embeddings_clip, embedding_similarity
 from utils.config import config
 from utils.constants import CompareMode
 from utils.translations import I18N
@@ -29,77 +29,6 @@ def usage():
     print("      --threshold=float  Embedding similarity threshold           0.9    ")
     print("  -v                     Verbose                                         ")
 
-
-def calculate_chunk_size(embeddings, max_mem_gb=4.0):
-    """
-    Calculate the number of rows (M) to process per chunk.
-    :param embeddings: N x D numpy array of embeddings.
-    :param max_mem_gb: Maximum memory to allocate for a chunk (e.g., 4 GB).
-    """
-    n, d = embeddings.shape
-    bytes_per_row = d * embeddings.dtype.itemsize  # e.g., 512 * 4 bytes (float32)
-    max_rows_per_chunk = int((max_mem_gb * 1e9) / (n * bytes_per_row))
-    return max(1, max_rows_per_chunk)  # Ensure at least 1 row per chunk
-
-
-def chunked_similarity(embeddings, threshold=0.9):
-    """
-    Compute pairwise similarities in memory-efficient chunks.
-    :returns: List of (i, j, similarity) tuples where similarity > threshold.
-    """
-    n = embeddings.shape[0]
-    memory = Utils.calculate_available_ram()
-    chunk_size = calculate_chunk_size(embeddings, max_mem_gb=(memory / 2))
-    similar_pairs = []
-
-    for i_start in range(0, n, chunk_size):
-        i_end = min(i_start + chunk_size, n)
-        chunk = embeddings[i_start:i_end]  # M x D
-
-        # Compute similarities for this chunk against all embeddings
-        chunk_similarity = chunk @ embeddings.T  # M x N
-
-        # Find indices where similarity exceeds threshold (upper triangle only)
-        for i in range(i_start, i_end):
-            for j in range(i + 1, n):  # Upper triangle (i < j)
-                sim = chunk_similarity[i - i_start, j]
-                if sim > threshold:
-                    similar_pairs.append((i, j, sim))
-
-    return similar_pairs
-
-
-def chunked_similarity_vectorized(embeddings, threshold=0.9, decimals=9):
-    """
-    Compute pairwise similarities in memory-efficient chunks using vectorized operations.
-    :returns: List of (i, j, similarity) tuples where similarity > threshold.
-    """
-    n = embeddings.shape[0]
-    memory = Utils.calculate_available_ram()
-    chunk_size = calculate_chunk_size(embeddings, max_mem_gb=(memory / 2))
-    similar_pairs = []
-
-    for i_start in range(0, n, chunk_size):
-        i_end = min(i_start + chunk_size, n)
-        chunk = embeddings[i_start:i_end]  # M x D
-
-        # Compute all similarities for this chunk (M x N)
-        chunk_sim = chunk @ embeddings.T
-
-        # Create mask for upper triangle (i < j) and threshold
-        j_indices = np.arange(n)
-        global_i = i_start + np.arange(chunk.shape[0])[:, None]  # Local to global row indices
-        mask = (j_indices > global_i) & (chunk_sim > threshold)
-
-        # Extract valid (i, j, sim) triplets
-        local_i, j = np.where(mask)
-        global_i = i_start + local_i
-        similarities = np.round(chunk_sim[mask], decimals=decimals)
-
-        # Extend results
-        similar_pairs.extend(zip(global_i, j, similarities))
-
-    return similar_pairs
 
 
 class CompareEmbeddingMatrix(BaseCompare):
@@ -180,7 +109,7 @@ class CompareEmbeddingMatrix(BaseCompare):
             else:
                 image_file_path = self.get_image_path(f)
                 try:
-                    embedding = image_embeddings(image_file_path)
+                    embedding = image_embeddings_clip(image_file_path)
                 except OSError as e:
                     print(f"{f} - {e}")
                     continue
@@ -262,7 +191,7 @@ class CompareEmbeddingMatrix(BaseCompare):
 
         # Compute all pairwise similarities in one step
         # similarity_matrix = self._file_embeddings @ self._file_embeddings.T
-        similarity_matrix = chunked_similarity_vectorized(self._file_embeddings, threshold=self.embedding_similarity_threshold)
+        similarity_matrix = BaseCompare.chunked_similarity_vectorized(self._file_embeddings, threshold=self.embedding_similarity_threshold)
 
         # with open(os.path.join(Utils.get_user_dir(), "simple_image_compare", "tests", "embeddings_matrix_output.json"), "w") as f:
         #     json.dump(similarity_matrix.tolist(), f)
@@ -412,7 +341,7 @@ class CompareEmbeddingMatrix(BaseCompare):
             if self.verbose:
                 print("Filepath not found in initial list - gathering new file data")
             try:
-                embedding = image_embeddings(search_file_path)
+                embedding = image_embeddings_clip(search_file_path)
             except OSError as e:
                 if self.verbose:
                     print(f"{search_file_path} - {e}")
@@ -607,7 +536,7 @@ class CompareEmbeddingMatrix(BaseCompare):
         if self.verbose:
             print(f"Tokenizing {descriptor}: \"{text}\"")
         try:
-            text_embedding = text_embeddings(text)
+            text_embedding = text_embeddings_clip(text)
             embeddings.append(text_embedding)
             CompareEmbeddingMatrix.TEXT_EMBEDDING_CACHE[text] = text_embedding
         except OSError as e:
@@ -620,7 +549,7 @@ class CompareEmbeddingMatrix(BaseCompare):
         if self.verbose:
             print(f"Tokenizing {descriptor}: \"{image_path}\"")
         try:
-            embedding = image_embeddings(image_path)
+            embedding = image_embeddings_clip(image_path)
             embeddings.append(embedding)
         except OSError as e:
             if self.verbose:
@@ -656,7 +585,7 @@ class CompareEmbeddingMatrix(BaseCompare):
                 readded_indexes.append(len(self.compare_data.files_found))
                 self.compare_data.files_found.append(f)
                 try:
-                    embedding = image_embeddings(f)
+                    embedding = image_embeddings_clip(f)
                 except OSError as e:
                     print(f"Error generating embedding from file {f}: {e}")
                     continue
@@ -675,7 +604,7 @@ class CompareEmbeddingMatrix(BaseCompare):
             text_embedding = CompareEmbeddingMatrix.TEXT_EMBEDDING_CACHE[text]
         else:
             try:
-                text_embedding = text_embeddings(text)
+                text_embedding = text_embeddings_clip(text)
                 CompareEmbeddingMatrix.TEXT_EMBEDDING_CACHE[text] = text_embedding
             except OSError as e:
                 print(f"{text} - {e}")
@@ -687,11 +616,11 @@ class CompareEmbeddingMatrix(BaseCompare):
         print(f"Running text comparison for \"{image_path}\" - text = {texts_dict}")
         similarities = {}
         try:
-            image_embedding = image_embeddings(image_path)
+            image_embedding = image_embeddings_clip(image_path)
         except OSError as e:
             print(f"{image_path} - {e}")
             raise AssertionError(
-                f"Encountered an error accessing the provided file path {image_embeddings} in the file system.")
+                f"Encountered an error accessing the provided file path {image_embeddings_clip} in the file system.")
         for key, text in texts_dict.items():
             similarities[key] = embedding_similarity(image_embedding, CompareEmbeddingMatrix._get_text_embedding_from_cache(text))
         return similarities
@@ -705,7 +634,7 @@ class CompareEmbeddingMatrix(BaseCompare):
         positive_similarities = []
         negative_similarities = []
         try:
-            image_embedding = image_embeddings(image_path)
+            image_embedding = image_embeddings_clip(image_path)
         except OSError as e:
             print(f"{image_path} - {e}")
             raise AssertionError(
@@ -733,8 +662,8 @@ class CompareEmbeddingMatrix(BaseCompare):
     @staticmethod
     def is_related(image1, image2):
         try:
-            emb1 = image_embeddings(image1)
-            emb2 = image_embeddings(image2)
+            emb1 = image_embeddings_clip(image1)
+            emb2 = image_embeddings_clip(image2)
         except OSError as e:
             print(f"{search_file_path} - {e}")
             raise AssertionError(

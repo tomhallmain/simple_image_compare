@@ -33,6 +33,9 @@
   "trash_folder": null,
   "always_open_new_windows": false,
   "sd_prompt_reader_loc": "{HOME}\\stable-diffusion-prompt-reader",
+  "xvlm_loc": null,
+  "xvlm_model_loc": null,
+  "xvlm_model_size": "4m",
   "tag_suggestions_file": "tag_suggestions.json",
   "image_types": [
     ".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".bmp", ".heic", ".avif", ".ico"

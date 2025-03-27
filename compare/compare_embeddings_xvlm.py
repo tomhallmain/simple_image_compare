@@ -8,7 +8,7 @@ import numpy as np
 from compare.base_compare import BaseCompare, gather_files
 from compare.compare_args import CompareArgs
 from compare.compare_result import CompareResult
-from compare.model import image_embeddings_xvlm, text_embeddings_xvlm, embedding_similarity
+from compare.model import xvlm_loaded, image_embeddings_xvlm, text_embeddings_xvlm, embedding_similarity
 from utils.config import config
 from utils.constants import CompareMode
 from utils.translations import I18N
@@ -47,6 +47,9 @@ class CompareEmbeddingXVLM(BaseCompare):
         self.gather_files_func = gather_files_func
         self._probable_duplicates = []
         self.segregation_map = {}
+
+    def is_runnable(self):
+        return xvlm_loaded
 
     def print_settings(self):
         print("\n\n|--------------------------------------------------------------------|")
