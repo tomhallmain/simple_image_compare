@@ -9,6 +9,7 @@ from compare.compare import Compare
 from compare.compare_args import CompareArgs
 from compare.compare_embeddings import CompareEmbedding
 from compare.compare_embeddings_matrix import CompareEmbeddingMatrix
+from compare.compare_embeddings_siglip import CompareEmbeddingSiglip
 from compare.prevalidations_window import PrevalidationAction, PrevalidationsWindow
 from image.frame_cache import FrameCache
 from utils.config import config
@@ -305,6 +306,8 @@ class CompareWrapper:
             self._compare = CompareEmbeddingMatrix(args)
         elif self.compare_mode == CompareMode.COLOR_MATCHING:
             self._compare = Compare(args, use_thumb=True)
+        elif self.compare_mode == CompareMode.SIGLIP_EMBEDDING:
+            self._compare = CompareEmbeddingSiglip(args)
 
     def run_search(self) -> None:
         assert self._compare is not None

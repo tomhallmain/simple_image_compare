@@ -1,12 +1,29 @@
 from PIL import Image
 import torch
 import clip
+from transformers import AutoModel, AutoProcessor
 
 from image.frame_cache import FrameCache
 from utils.config import config
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load(config.clip_model, device=device)
+
+# Lazy initialization variables for SIGLIP
+_siglip_model = None
+_siglip_processor = None
+
+def _get_siglip_model():
+    global _siglip_model
+    if _siglip_model is None:
+        _siglip_model = AutoModel.from_pretrained("google/siglip-base-patch16-224").to(device)
+    return _siglip_model
+
+def _get_siglip_processor():
+    global _siglip_processor
+    if _siglip_processor is None:
+        _siglip_processor = AutoProcessor.from_pretrained("google/siglip-base-patch16-224")
+    return _siglip_processor
 
 def image_embeddings(image_path):
     try:
@@ -26,6 +43,36 @@ def text_embeddings(text):
         embedding = model.encode_text(tokens).float()
         embedding /= embedding.norm(dim=-1, keepdim=True)
         return embedding.tolist()[0]
+
+
+def image_embeddings_siglip(image_path):
+    try:
+        image = Image.open(image_path)
+    except Exception as e:
+        image_path = FrameCache.get_image_path(image_path)
+        image = Image.open(image_path)
+    
+    # Process image with SIGLIP processor
+    inputs = _get_siglip_processor()(images=image, return_tensors="pt").to(device)
+    
+    with torch.no_grad():
+        # Get image features using SIGLIP model
+        outputs = _get_siglip_model().get_image_features(**inputs)
+        # Normalize the embeddings
+        outputs = outputs / outputs.norm(dim=-1, keepdim=True)
+        return outputs.tolist()[0]
+
+
+def text_embeddings_siglip(text):
+    # Process text with SIGLIP processor
+    inputs = _get_siglip_processor()(text=[text], padding="max_length", return_tensors="pt").to(device)
+    
+    with torch.no_grad():
+        # Get text features using SIGLIP model
+        outputs = _get_siglip_model().get_text_features(**inputs)
+        # Normalize the embeddings
+        outputs = outputs / outputs.norm(dim=-1, keepdim=True)
+        return outputs.tolist()[0]
 
 
 def embedding_similarity(embedding0, embedding1):

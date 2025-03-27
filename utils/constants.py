@@ -31,6 +31,7 @@ class CompareMode(Enum):
     COLOR_MATCHING = _("Color Matching")
     CLIP_EMBEDDING = _("CLIP Embedding")
     CLIP_EMBEDDING_MATRIX = _("CLIP Embedding Matrix")
+    SIGLIP_EMBEDDING = _("SIGLIP Embedding")
 #    PROMPTS = _("Prompts")
 
     def get_text(self):
@@ -40,6 +41,8 @@ class CompareMode(Enum):
             return _("CLIP Embedding")
         elif self == CompareMode.CLIP_EMBEDDING_MATRIX:
             return _("CLIP Embedding Matrix")
+        elif self == CompareMode.SIGLIP_EMBEDDING:
+            return _("SIGLIP Embedding")
 #        elif self == CompareMode.PROMPTS:
 #            return _("Prompts")
         raise Exception("Unhandled Compare Mode text: " + str(self))

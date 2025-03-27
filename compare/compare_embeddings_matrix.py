@@ -1,6 +1,4 @@
 import getopt
-# import csv # TODO remove, added for testing
-# import json # TODO remove, added for testing
 import os
 import sys
 
@@ -70,6 +68,38 @@ def chunked_similarity(embeddings, threshold=0.9):
 
     return similar_pairs
 
+
+def chunked_similarity_vectorized(embeddings, threshold=0.9, decimals=9):
+    """
+    Compute pairwise similarities in memory-efficient chunks using vectorized operations.
+    :returns: List of (i, j, similarity) tuples where similarity > threshold.
+    """
+    n = embeddings.shape[0]
+    memory = Utils.calculate_available_ram()
+    chunk_size = calculate_chunk_size(embeddings, max_mem_gb=(memory / 2))
+    similar_pairs = []
+
+    for i_start in range(0, n, chunk_size):
+        i_end = min(i_start + chunk_size, n)
+        chunk = embeddings[i_start:i_end]  # M x D
+
+        # Compute all similarities for this chunk (M x N)
+        chunk_sim = chunk @ embeddings.T
+
+        # Create mask for upper triangle (i < j) and threshold
+        j_indices = np.arange(n)
+        global_i = i_start + np.arange(chunk.shape[0])[:, None]  # Local to global row indices
+        mask = (j_indices > global_i) & (chunk_sim > threshold)
+
+        # Extract valid (i, j, sim) triplets
+        local_i, j = np.where(mask)
+        global_i = i_start + local_i
+        similarities = np.round(chunk_sim[mask], decimals=decimals)
+
+        # Extend results
+        similar_pairs.extend(zip(global_i, j, similarities))
+
+    return similar_pairs
 
 
 class CompareEmbeddingMatrix(BaseCompare):
@@ -231,7 +261,8 @@ class CompareEmbeddingMatrix(BaseCompare):
         # print("Min:", np.min(norms), "Max:", np.max(norms), "Mean:", np.mean(norms))
 
         # Compute all pairwise similarities in one step
-        similarity_matrix = self._file_embeddings @ self._file_embeddings.T
+        # similarity_matrix = self._file_embeddings @ self._file_embeddings.T
+        similarity_matrix = chunked_similarity_vectorized(self._file_embeddings, threshold=self.embedding_similarity_threshold)
 
         # with open(os.path.join(Utils.get_user_dir(), "simple_image_compare", "tests", "embeddings_matrix_output.json"), "w") as f:
         #     json.dump(similarity_matrix.tolist(), f)
