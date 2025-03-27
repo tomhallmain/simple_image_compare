@@ -958,8 +958,8 @@ class App():
             args.negative_search_file_path = None
 
         if args.search_text is not None or args.search_text_negative is not None:
-            self.compare_wrapper.validate_compare_mode(CompareMode.CLIP_EMBEDDING, _(
-                "Compare mode must be set to Clip embedding to search text embeddings"))
+            self.compare_wrapper.validate_compare_mode(CompareMode.embedding_modes(), _(
+                "Compare mode must be set to an embedding mode to search text embeddings"))
 
         if image_path is not None and not os.path.isfile(image_path):
             image_path = filedialog.askopenfilename(
@@ -1211,7 +1211,7 @@ class App():
                 exec_func(*args)
             except Exception:
                 traceback.print_exc()
-                self.alert(_("Error running compare"), traceback.format_exc())
+                self.alert(_("Error running compare"), traceback.format_exc(), kind="error")
             self.progress_bar.stop()
             self.progress_bar.grid_forget()
             self.destroy_grid_element("progress_bar")

@@ -61,7 +61,11 @@ class CompareWrapper:
         config.search_only_return_closest = not config.search_only_return_closest
 
     def validate_compare_mode(self, required_compare_mode, error_text):
-        if required_compare_mode != self.compare_mode:
+        if type(required_compare_mode) == list:
+            if self.compare_mode not in required_compare_mode:
+                self._app_actions.alert(_("Invalid mode"), error_text, kind="warning")
+                raise Exception(f"Invalid mode: {self.compare_mode}")
+        elif required_compare_mode != self.compare_mode:
             self._app_actions.alert(_("Invalid mode"), error_text, kind="warning")
             raise Exception(f"Invalid mode: {self.compare_mode}")
 

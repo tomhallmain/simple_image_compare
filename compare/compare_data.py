@@ -7,6 +7,10 @@ from utils.constants import CompareMode
 class CompareData:
 
     EMBEDDINGS_DATA = "image_embeddings.pkl"
+    EMBEDDINGS_SIGLIP_DATA = "image_embeddings_siglip.pkl"
+    EMBEDDINGS_FLAVA_DATA = "image_embeddings_flava.pkl"
+    EMBEDDINGS_ALIGN_DATA = "image_embeddings_align.pkl"
+    EMBEDDINGS_XVLM_DATA = "image_embeddings_xvlm.pkl"
     THUMB_COLORS_DATA = "image_thumb_colors.pkl"
     TOP_COLORS_DATA = "image_top_colors.pkl"
     FACES_DATA = "image_faces.pkl"
@@ -28,7 +32,20 @@ class CompareData:
                 self._file_data_filepath = os.path.join(
                     base_dir, CompareData.TOP_COLORS_DATA)
         elif mode.is_embedding():
-            self._file_data_filepath = os.path.join(
+            if mode == CompareMode.SIGLIP_EMBEDDING:
+                self._file_data_filepath = os.path.join(
+                    base_dir, CompareData.EMBEDDINGS_SIGLIP_DATA)
+            elif mode == CompareMode.FLAVA_EMBEDDING:
+                self._file_data_filepath = os.path.join(
+                    base_dir, CompareData.EMBEDDINGS_FLAVA_DATA)
+            elif mode == CompareMode.ALIGN_EMBEDDING:
+                self._file_data_filepath = os.path.join(
+                    base_dir, CompareData.EMBEDDINGS_ALIGN_DATA)
+            elif mode == CompareMode.XVLM_EMBEDDING:
+                self._file_data_filepath = os.path.join(
+                    base_dir, CompareData.EMBEDDINGS_XVLM_DATA)
+            else:
+                self._file_data_filepath = os.path.join(
                 base_dir, CompareData.EMBEDDINGS_DATA)
         else:
             raise Exception("Invalid mode")

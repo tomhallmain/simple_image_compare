@@ -46,6 +46,12 @@ class CompareMode(Enum):
             return _("CLIP Embedding Matrix")
         elif self == CompareMode.SIGLIP_EMBEDDING:
             return _("SIGLIP Embedding")
+        elif self == CompareMode.FLAVA_EMBEDDING:
+            return _("FLAVA Embedding")
+        elif self == CompareMode.ALIGN_EMBEDDING:
+            return _("Align Embedding")
+        elif self == CompareMode.XVLM_EMBEDDING:
+            return _("XVLM Embedding")
 #        elif self == CompareMode.PROMPTS:
 #            return _("Prompts")
         raise Exception("Unhandled Compare Mode text: " + str(self))
@@ -78,7 +84,10 @@ class CompareMode(Enum):
             return [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.925, 0.95, 0.98, 0.99]
 
     def is_embedding(self):
-        return self == CompareMode.CLIP_EMBEDDING or self == CompareMode.CLIP_EMBEDDING_MATRIX
+        return self != CompareMode.COLOR_MATCHING
+
+    def embedding_modes():
+        return [mode for mode in CompareMode if mode.is_embedding()]
 
 
 class SortBy(Enum):
