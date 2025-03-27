@@ -33,6 +33,7 @@
   "trash_folder": null,
   "always_open_new_windows": false,
   "sd_prompt_reader_loc": "{HOME}\\stable-diffusion-prompt-reader",
+  "siglip_enable_large_model": false,
   "xvlm_loc": null,
   "xvlm_model_loc": null,
   "xvlm_model_size": "4m",

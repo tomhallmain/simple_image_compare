@@ -51,13 +51,19 @@ _xvlm_img_transform = None
 def _get_siglip_model():
     global _siglip_model
     if _siglip_model is None:
-        _siglip_model = AutoModel.from_pretrained("google/siglip-base-patch16-224").to(device)
+        if config.siglip_enable_large_model:
+            _siglip_model = AutoModel.from_pretrained("google/siglip-large-patch16-384", torch_dtype=torch.float16).to(device)
+        else:
+            _siglip_model = AutoModel.from_pretrained("google/siglip-base-patch16-224").to(device)
     return _siglip_model
 
 def _get_siglip_processor():
     global _siglip_processor
     if _siglip_processor is None:
-        _siglip_processor = AutoProcessor.from_pretrained("google/siglip-base-patch16-224")
+        if config.siglip_enable_large_model:
+            _siglip_processor = AutoProcessor.from_pretrained("google/siglip-large-patch16-384", torch_dtype=torch.float16)
+        else:
+            _siglip_processor = AutoProcessor.from_pretrained("google/siglip-base-patch16-224")
     return _siglip_processor
 
 def _get_flava_model():
@@ -138,13 +144,18 @@ def _get_xvlm_img_transform():
     return _xvlm_img_transform
 
 
+# Embedding similarity
 def embedding_similarity(embedding0, embedding1):
     # TODO maybe find out a way to not have to reconvert back to tensor
     # since this might be less efficient then a simple list
     t0 = torch.Tensor([list(embedding0)])
     t1 = torch.Tensor([list(embedding1)])
+    # print(f"[SigLIP] Embedding 1 norm: {embedding0.norm().item():.4f}")
+    # print(f"[SigLIP] Embedding 2 norm: {embedding1.norm().item():.4f}")
     return torch.nn.functional.cosine_similarity(t0, t1)
 
+
+# CLIP embeddings
 
 def image_embeddings_clip(image_path):
     try:
@@ -166,6 +177,8 @@ def text_embeddings_clip(text):
         return embedding.tolist()[0]
 
 
+# SigLIP embeddings
+
 def image_embeddings_siglip(image_path):
     try:
         image = Image.open(image_path)
@@ -183,7 +196,6 @@ def image_embeddings_siglip(image_path):
         outputs = outputs / outputs.norm(dim=-1, keepdim=True)
         return outputs.tolist()[0]
 
-
 def text_embeddings_siglip(text):
     # Process text with SIGLIP processor
     inputs = _get_siglip_processor()(text=[text], padding="max_length", return_tensors="pt").to(device)
@@ -195,6 +207,8 @@ def text_embeddings_siglip(text):
         outputs = outputs / outputs.norm(dim=-1, keepdim=True)
         return outputs.tolist()[0]
 
+
+# FLAVA embeddings
 
 def image_embeddings_flava(image_path):
     try:
@@ -215,7 +229,6 @@ def image_embeddings_flava(image_path):
         image_embed = image_embed / image_embed.norm(dim=-1, keepdim=True)
         return image_embed.tolist()[0]
 
-
 def text_embeddings_flava(text):
     # Process text with FLAVA processor
     inputs = _get_flava_processor()(text=[text], return_tensors="pt", padding=True).to(device)
@@ -229,6 +242,8 @@ def text_embeddings_flava(text):
         text_embed = text_embed / text_embed.norm(dim=-1, keepdim=True)
         return text_embed.tolist()[0]
 
+
+# ALIGN embeddings
 
 def image_embeddings_align(image_path):
     try:
@@ -263,6 +278,8 @@ def text_embeddings_align(text):
         text_embed = text_embed / text_embed.norm(dim=-1, keepdim=True)
         return text_embed.tolist()[0]
 
+
+# X-VLM embeddings
 
 def image_embeddings_xvlm(image_path):
     try:

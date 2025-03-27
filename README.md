@@ -3,7 +3,7 @@
 Simple image comparison tool that detects color and face similarities using CLIP embeddings (default) and color matching (separate optional mode). The tool now supports multiple embedding models:
 
 - CLIP (default): 512D embeddings, high zero-shot performance
-- SigLIP: 512D embeddings, excellent retrieval performance
+- SigLIP: 768D or 1024D embeddings, excellent retrieval performance
 - ALIGN: 640D embeddings, high accuracy for retrieval
 - FLAVA: 768D embeddings, good for complex reasoning
 - X-VLM: 256D embeddings, efficient for region-text tasks - requires local copy of [X-VLM](https://github.com/zengyan-97/X-VLM)

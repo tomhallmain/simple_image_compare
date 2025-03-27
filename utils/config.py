@@ -46,6 +46,7 @@ class Config:
         self.move_marks_overwrite_existing_file = False
         self.trash_folder = None
         self.sd_prompt_reader_loc = None
+        self.siglip_enable_large_model = False
         self.xvlm_loc = None
         self.xvlm_model_loc = None
         self.xvlm_model_size = "4m"
@@ -137,6 +138,7 @@ class Config:
                             "delete_instantly",
                             "clear_marks_with_errors_after_move",
                             "move_marks_overwrite_existing_file",
+                            "siglip_enable_large_model",
                             "use_file_paths_json",
                             "text_embedding_search_presets_exclusive",
                             "store_checkpoints",
@@ -245,7 +247,8 @@ class Config:
         for name in names:
             if type:
                 try:
-                    setattr(self, name, type(self.dict[name]))
+                    if self.dict[name] is not None:
+                        setattr(self, name, type(self.dict[name]))
                 except Exception as e:
                     print(e)
                     print(f"Failed to set {name} from config.json file. Ensure the value is set and of the correct type.")

@@ -54,9 +54,9 @@ class CompareResult:
                         if is_embedding:
                             similarity = self.files_grouped[f]
                             if similarity > threshold_duplicate:
-                                line = "DUPLICATE: " + f
+                                line = f"DUPLICATE: {f} - similarity: {similarity}"
                             elif similarity > threshold_related:
-                                line = "PROBABLE MATCH: " + f
+                                line = f"PROBABLE MATCH: {f} - similarity: {similarity}"
                             else:
                                 line = f"{f} - similarity: {similarity}"
                         else:
