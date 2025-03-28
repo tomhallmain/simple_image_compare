@@ -3,8 +3,7 @@ import numpy as np
 from compare.base_compare import gather_files
 from compare.base_compare_embedding import BaseCompareEmbedding, main
 from compare.compare_args import CompareArgs
-from compare.compare_result import CompareResult
-from compare.model import image_embeddings_align, text_embeddings_align, embedding_similarity
+from compare.model import image_embeddings_align, text_embeddings_align
 from utils.config import config
 from utils.constants import CompareMode
 

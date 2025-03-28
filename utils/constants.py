@@ -33,7 +33,7 @@ class CompareMode(Enum):
     CLIP_EMBEDDING_MATRIX = _("CLIP Embedding Matrix")
     SIGLIP_EMBEDDING = _("SIGLIP Embedding")
     FLAVA_EMBEDDING = _("FLAVA Embedding")
-    ALIGN_EMBEDDING = _("Align Embedding")
+    ALIGN_EMBEDDING = _("ALIGN Embedding")
     XVLM_EMBEDDING = _("XVLM Embedding")
 #    PROMPTS = _("Prompts")
 
@@ -49,7 +49,7 @@ class CompareMode(Enum):
         elif self == CompareMode.FLAVA_EMBEDDING:
             return _("FLAVA Embedding")
         elif self == CompareMode.ALIGN_EMBEDDING:
-            return _("Align Embedding")
+            return _("ALIGN Embedding")
         elif self == CompareMode.XVLM_EMBEDDING:
             return _("XVLM Embedding")
 #        elif self == CompareMode.PROMPTS:

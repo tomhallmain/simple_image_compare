@@ -46,7 +46,7 @@ class CompareData:
                     base_dir, CompareData.EMBEDDINGS_XVLM_DATA)
             else:
                 self._file_data_filepath = os.path.join(
-                base_dir, CompareData.EMBEDDINGS_DATA)
+                    base_dir, CompareData.EMBEDDINGS_DATA)
         else:
             raise Exception("Invalid mode")
 

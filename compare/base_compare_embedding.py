@@ -49,6 +49,7 @@ class BaseCompareEmbedding(BaseCompare):
         print(f" include videos: {self.args.include_videos}")
         print(f" file embeddings filepath: {self.compare_data._file_data_filepath}")
         print(f" overwrite image data: {self.args.overwrite}")
+        print(f" compare mode: {self.COMPARE_MODE}")
         print("|--------------------------------------------------------------------|\n\n")
 
     def get_data(self):
@@ -108,9 +109,9 @@ class BaseCompareEmbedding(BaseCompare):
                 self.compare_data.has_new_file_data = True
 
             counter += 1
-            self._file_embeddings = np.append(self._file_embeddings, [embedding], 0)
+            self._file_embeddings = np.vstack((self._file_embeddings, [embedding]))
             if self.compare_faces:
-                self._file_faces = np.append(self._file_faces, [n_faces], 0)
+                self._file_faces = np.vstack((self._file_faces, [n_faces]))
             self.compare_data.files_found.append(f)
             self._handle_progress(counter, self.max_files_processed_even)
 
@@ -589,11 +590,11 @@ class BaseCompareEmbedding(BaseCompare):
                     print(f"Error generating embedding from file {f}: {e}")
                     continue
                 self.file_embeddings_dict[f] = embedding
-                self._file_embeddings = np.append(self._file_embeddings, [embedding], 0)
+                self._file_embeddings = np.vstack((self._file_embeddings, [embedding]))
                 if self.compare_faces:
                     n_faces = self.get_faces_count(f)
                     self.compare_data.file_faces_dict = n_faces
-                    self._file_faces = np.append(self._file_faces, [n_faces], 0)
+                    self._file_faces = np.vstack((self._file_faces, [n_faces]))
                 if self.verbose:
                     print(f"Readded file to compare: {f}")
 

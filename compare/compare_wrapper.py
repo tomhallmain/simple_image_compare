@@ -8,9 +8,11 @@ import pprint
 from compare.compare import Compare
 from compare.compare_args import CompareArgs
 from compare.compare_embeddings import CompareEmbedding
+from compare.compare_embeddings_align import CompareEmbeddingAlign
 from compare.compare_embeddings_flava import CompareEmbeddingFlava
 from compare.compare_embeddings_matrix import CompareEmbeddingMatrix
 from compare.compare_embeddings_siglip import CompareEmbeddingSiglip
+from compare.compare_embeddings_xvlm import CompareEmbeddingXVLM
 from compare.prevalidations_window import PrevalidationAction, PrevalidationsWindow
 from image.frame_cache import FrameCache
 from utils.config import config
@@ -318,6 +320,12 @@ class CompareWrapper:
             self._compare = CompareEmbeddingSiglip(args)
         elif self.compare_mode == CompareMode.FLAVA_EMBEDDING:
             self._compare = CompareEmbeddingFlava(args)
+        elif self.compare_mode == CompareMode.ALIGN_EMBEDDING:
+            self._compare = CompareEmbeddingAlign(args)
+        elif self.compare_mode == CompareMode.XVLM_EMBEDDING:
+            self._compare = CompareEmbeddingXVLM(args)
+        else:
+            raise Exception(f"Unhandled compare mode: {self.compare_mode}")
 
     def run_search(self) -> None:
         assert self._compare is not None
