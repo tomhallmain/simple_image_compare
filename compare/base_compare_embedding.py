@@ -6,6 +6,7 @@ import numpy as np
 
 from compare.base_compare import BaseCompare, gather_files
 from compare.compare_args import CompareArgs
+from compare.compare_result import CompareResult
 from compare.model import embedding_similarity
 from utils.config import config
 from utils.utils import Utils
@@ -153,14 +154,30 @@ class BaseCompareEmbedding(BaseCompare):
 
     def run_comparison(self, store_checkpoints=False):
         '''
-        Compare all found image arrays to each other by starting with the
-        base numpy array containing all image data and moving each array to
-        the next index.
+        Compare all found embeddings to each other using either matrix-based or
+        iterative comparison based on the use_matrix_comparison flag.
 
-        For example, if there are three images [X, Y, Z], there are two steps:
-            Step 1: [X, Y, Z] -> [Z, X, Y] (elementwise comparison)
-            Step 2: [X, Y, Z] -> [Y, Z, X] (elementwise comparison)
-            ^ At this point, all arrays have been compared.
+        For matrix comparison:
+            Group the embeddings E = [X, Y, Z]
+            Calculate L2-norm: N = L2(E)
+            If available RAM, simply multiply the normalized matrix by its transpose:
+                S = N * N.T
+            Otherwise, use chunking to compute the similarity matrix.
+                S = concat(chunk(N) * N.T) for each chunk(N)
+            Extract similars from the upper triangle:
+                i, j = np.triu_indices_from(S, k=1)
+            Group the similars by their similarity.
+
+        For iterative comparison:
+            Compare all found image arrays to each other by starting with the
+            base numpy array containing all image data and moving each array to
+            the next index.
+
+            For example, if there are three images [X, Y, Z], there are two steps:
+                Step 1: [X, Y, Z] -> [Z, X, Y] (elementwise comparison)
+                Step 2: [X, Y, Z] -> [Y, Z, X] (elementwise comparison)
+                ^ At this point, all arrays have been compared.
+                  Note it is inefficient as pairs are compared twice.
 
         files_grouped - Keys are the file indexes, values are tuple of the group index and diff score.
         file_groups - Keys are the group indexes, values are dicts with keys as the file in the group, values the diff score
@@ -170,93 +187,48 @@ class BaseCompareEmbedding(BaseCompare):
         self.compare_result = CompareResult.load(self.base_dir, self.compare_data.files_found, overwrite=overwrite)
         if self.compare_result.is_complete:
             return (self.compare_result.files_grouped, self.compare_result.file_groups)
-        n_files_found_even = Utils.round_up(self.compare_data.n_files_found, 5)
-        if self.compare_result.i > 1:
-            self._handle_progress(self.compare_result.i, n_files_found_even, gathering_data=False)
 
-        if self.compare_data.n_files_found > 5000:
-            print("\nWARNING: Large image file set found, comparison between all"
-                  + " images may take a while.\n")
         if self.verbose:
             print("Identifying groups of similar image files...")
         else:
             print("Identifying groups of similar image files", end="", flush=True)
-        
-        # check_matrix = [] # TODO remove
 
-        for i in range(self.compare_data.n_files_found):
-            if i == 0:  # At this roll index the data would compare to itself
-                continue
-            if store_checkpoints:
-                if i < self.compare_result.i:
+        if self.args.use_matrix_comparison:
+            similarity_matrix, _i, _j = self._compute_matrix_similarities()
+            for i, j in zip(_i, _j):
+                if i == j:  # exclude diagonal (self-comparisons)
                     continue
-                if i % 250 == 0 and i != self.compare_data.n_files_found and i > self.compare_result.i:
-                    self.compare_result.store()
-                self.compare_result.i = i
-            self._handle_progress(i, n_files_found_even, gathering_data=False)
+                base_index = i
+                diff_index = j
+                diff_score = similarity_matrix[base_index, diff_index]
+                if diff_score < self.embedding_similarity_threshold:
+                    continue
+                self._process_similarity_results(base_index, diff_index, diff_score)
+        else:
+            n_files_found_even = Utils.round_up(self.compare_data.n_files_found, 5)
+            if self.compare_result.i > 1:
+                self._handle_progress(self.compare_result.i, n_files_found_even, gathering_data=False)
 
-            compare_file_embeddings = np.roll(self._file_embeddings, i, 0)
-            color_similars = self._compute_embedding_diff(
-                self._file_embeddings, compare_file_embeddings, True)
-            # check_matrix.append(color_similars[1].tolist())
+            if self.compare_data.n_files_found > 5000:
+                print("\nWARNING: Large image file set found, comparison between all"
+                      + " images may take a while.\n")
 
-            if self.compare_faces:
-                compare_file_faces = np.roll(self._file_faces, i, 0)
-                face_comparisons = self._file_faces - compare_file_faces
-                face_similars = face_comparisons == 0
-                similars = np.nonzero(color_similars[0] * face_similars)
-            else:
-                similars = np.nonzero(color_similars[0])
-            
-            for base_index in similars[0]:
-                diff_index = ((base_index - i) % self.compare_data.n_files_found)
-                diff_score = color_similars[1][base_index]
-                f1_grouped = base_index in self.compare_result.files_grouped
-                f2_grouped = diff_index in self.compare_result.files_grouped
+            for i in range(self.compare_data.n_files_found):
+                if i == 0:  # At this roll index the data would compare to itself
+                    continue
+                if store_checkpoints:
+                    if i < self.compare_result.i:
+                        continue
+                    if i % 250 == 0 and i != self.compare_data.n_files_found and i > self.compare_result.i:
+                        self.compare_result.store()
+                    self.compare_result.i = i
+                self._handle_progress(i, n_files_found_even, gathering_data=False)
 
-                # base_file = self.compare_data.files_found[base_index]
-                # diff_file = self.compare_data.files_found[diff_index]
-                # print(base_index, diff_index, base_file, diff_file, diff_score)
-
-                if diff_score > self.threshold_duplicate:
-                    base_file = self.compare_data.files_found[base_index]
-                    diff_file = self.compare_data.files_found[diff_index]
-                    if ((base_file, diff_file) not in self._probable_duplicates
-                            and (diff_file, base_file) not in self._probable_duplicates):
-                        self._probable_duplicates.append((base_file, diff_file))
-
-                if not f1_grouped and not f2_grouped:
-                    self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
-                    self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
-                    self.compare_result.group_index += 1
-                elif f1_grouped:
-                    existing_group_index, previous_diff_score = self.compare_result.files_grouped[base_index]
-                    if previous_diff_score - self.threshold_group_cutoff > diff_score:
-                        # print(f"Previous: {previous_diff_score} , New: {diff_score}")
-                        self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
-                        self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
-                        self.compare_result.group_index += 1
-                    else:
-                        self.compare_result.files_grouped[diff_index] = (
-                            existing_group_index, diff_score)
-                else:
-                    existing_group_index, previous_diff_score = self.compare_result.files_grouped[diff_index]
-                    if previous_diff_score - self.threshold_group_cutoff > diff_score:
-                        # print(f"Previous: {previous_diff_score} , New: {diff_score}")
-                        self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
-                        self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
-                        self.compare_result.group_index += 1
-                    else:
-                        self.compare_result.files_grouped[base_index] = (existing_group_index, diff_score)
-
-        # with open(os.path.join(Utils.get_user_dir(), "simple_image_compare", "tests", "embeddings_output.json"), "w") as f:
-        #     json.dump(check_matrix, f)
-        
-        # with open(os.path.join(Utils.get_user_dir(), "simple_image_compare", "tests", "embeddings_output.csv"), "w") as f:
-        #     csvwriter = csv.writer(f)
-        #     for row in check_matrix:
-        #         csvwriter.writerow(row)
-
+                similars, diff_scores = self._compute_iterative_similarities(i)
+                for base_index in similars[0]:
+                    diff_index = ((base_index - i) % self.compare_data.n_files_found)
+                    diff_score = diff_scores[base_index]
+                    self._process_similarity_results(base_index, diff_index, diff_score)
 
         for file_index in self.compare_result.files_grouped:
             _file = self.compare_data.files_found[file_index]
@@ -267,6 +239,74 @@ class BaseCompareEmbedding(BaseCompare):
 
         self.compare_result.finalize_group_result()
         return (self.compare_result.files_grouped, self.compare_result.file_groups)
+
+    def _compute_matrix_similarities(self):
+        '''
+        Compute all pairwise similarities in one step using matrix multiplication.
+        Returns a tuple of (similarity_matrix, indices_i, indices_j) where indices
+        are the upper triangle indices of the matrix.
+        '''
+        similarity_matrix = BaseCompare.chunked_similarity_vectorized(self._file_embeddings, threshold=self.embedding_similarity_threshold)
+        _i, _j = np.triu_indices_from(similarity_matrix, k=1)
+        return similarity_matrix, _i, _j
+
+    def _compute_iterative_similarities(self, i):
+        '''
+        Compute similarities using iterative comparison with np.roll.
+        Returns a tuple of (similars, diff_scores) where similars is the array of
+        indices that meet the similarity threshold.
+        '''
+        compare_file_embeddings = np.roll(self._file_embeddings, i, 0)
+        color_similars = self._compute_embedding_diff(
+            self._file_embeddings, compare_file_embeddings, True)
+
+        if self.compare_faces:
+            compare_file_faces = np.roll(self._file_faces, i, 0)
+            face_comparisons = self._file_faces - compare_file_faces
+            face_similars = face_comparisons == 0
+            similars = np.nonzero(color_similars[0] * face_similars)
+        else:
+            similars = np.nonzero(color_similars[0])
+        
+        return similars, color_similars[1]
+
+    def _process_similarity_results(self, base_index, diff_index, diff_score):
+        '''
+        Process the results of a similarity comparison, updating the grouping
+        and duplicate detection.
+        '''
+        f1_grouped = base_index in self.compare_result.files_grouped
+        f2_grouped = diff_index in self.compare_result.files_grouped
+
+        if diff_score > self.threshold_duplicate:
+            base_file = self.compare_data.files_found[base_index]
+            diff_file = self.compare_data.files_found[diff_index]
+            if ((base_file, diff_file) not in self._probable_duplicates
+                    and (diff_file, base_file) not in self._probable_duplicates):
+                self._probable_duplicates.append((base_file, diff_file))
+
+        if not f1_grouped and not f2_grouped:
+            self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
+            self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
+            self.compare_result.group_index += 1
+        elif f1_grouped:
+            existing_group_index, previous_diff_score = self.compare_result.files_grouped[base_index]
+            if previous_diff_score - self.threshold_group_cutoff > diff_score:
+                self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
+                self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
+                self.compare_result.group_index += 1
+            else:
+                self.compare_result.files_grouped[diff_index] = (
+                    existing_group_index, diff_score)
+        else:
+            existing_group_index, previous_diff_score = self.compare_result.files_grouped[diff_index]
+            if previous_diff_score - self.threshold_group_cutoff > diff_score:
+                self.compare_result.files_grouped[base_index] = (self.compare_result.group_index, diff_score)
+                self.compare_result.files_grouped[diff_index] = (self.compare_result.group_index, diff_score)
+                self.compare_result.group_index += 1
+            else:
+                self.compare_result.files_grouped[base_index] = (existing_group_index, diff_score)
+
 
     def find_similars_to_image(self, search_path, search_file_index):
         '''

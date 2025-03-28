@@ -8,7 +8,8 @@ class CompareArgs:
     def __init__(self, base_dir=".", listener=None, mode=Mode.GROUP, compare_mode=CompareMode.CLIP_EMBEDDING,
                  recursive=True, searching_image=False, search_file_path=None, search_text=None, search_text_negative=None,
                  find_duplicates=False, counter_limit=config.file_counter_limit, compare_threshold=config.embedding_similarity_threshold,
-                 compare_faces=False, inclusion_pattern=None, overwrite=False, store_checkpoints=config.store_checkpoints):
+                 compare_faces=False, inclusion_pattern=None, overwrite=False, store_checkpoints=config.store_checkpoints,
+                 use_matrix_comparison=False):
         self.base_dir = base_dir
         self.listener = listener
         self.mode = mode
@@ -31,6 +32,7 @@ class CompareArgs:
         self.include_pdfs = config.enable_pdfs
         self.match_dims = False
         self.verbose = True
+        self.use_matrix_comparison = use_matrix_comparison
 
     def not_searching(self):
         return (self.search_file_path is None or self.search_file_path.strip() == "") and \
