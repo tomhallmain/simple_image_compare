@@ -4,9 +4,7 @@ import os
 
 from compare.compare_args import CompareArgs
 from compare.compare_embeddings import CompareEmbedding
-from compare.compare_embeddings_matrix import CompareEmbeddingMatrix
 from tests.analysis import print_formatted_table, convert_matrix_to_roll_index_output, table_elementwise_subtraction
-from utils.constants import CompareMode
 from utils.utils import Utils
 
 
@@ -17,9 +15,9 @@ def test_embeddings_matrix():
         raise FileNotFoundError(f"{directory_to_test} does not exist!")
     args = CompareArgs(base_dir=directory_to_test)
     args_clone = args.clone()
-    args_clone.compare_mode = CompareMode.CLIP_EMBEDDING_MATRIX
+    args_clone.use_matrix_comparison = True
     embedding_compare = CompareEmbedding(args=args)
-    embedding_compare_matrix = CompareEmbeddingMatrix(args=args_clone)
+    embedding_compare_matrix = CompareEmbedding(args=args_clone)
     embedding_compare.get_files()
     embedding_compare_matrix.get_files()
     embedding_compare.get_data()

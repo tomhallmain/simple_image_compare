@@ -30,11 +30,10 @@ class Mode(Enum):
 class CompareMode(Enum):
     COLOR_MATCHING = _("Color Matching")
     CLIP_EMBEDDING = _("CLIP Embedding")
-    CLIP_EMBEDDING_MATRIX = _("CLIP Embedding Matrix")
-    SIGLIP_EMBEDDING = _("SIGLIP Embedding")
+    SIGLIP_EMBEDDING = _("SigLIP Embedding")
     FLAVA_EMBEDDING = _("FLAVA Embedding")
     ALIGN_EMBEDDING = _("ALIGN Embedding")
-    XVLM_EMBEDDING = _("XVLM Embedding")
+    XVLM_EMBEDDING = _("X-VLM Embedding")
 #    PROMPTS = _("Prompts")
 
     def get_text(self):
@@ -42,16 +41,14 @@ class CompareMode(Enum):
             return _("Color Matching")
         elif self == CompareMode.CLIP_EMBEDDING:
             return _("CLIP Embedding")
-        elif self == CompareMode.CLIP_EMBEDDING_MATRIX:
-            return _("CLIP Embedding Matrix")
         elif self == CompareMode.SIGLIP_EMBEDDING:
-            return _("SIGLIP Embedding")
+            return _("SigLIP Embedding")
         elif self == CompareMode.FLAVA_EMBEDDING:
             return _("FLAVA Embedding")
         elif self == CompareMode.ALIGN_EMBEDDING:
             return _("ALIGN Embedding")
         elif self == CompareMode.XVLM_EMBEDDING:
-            return _("XVLM Embedding")
+            return _("X-VLM Embedding")
 #        elif self == CompareMode.PROMPTS:
 #            return _("Prompts")
         raise Exception("Unhandled Compare Mode text: " + str(self))

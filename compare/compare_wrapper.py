@@ -10,7 +10,6 @@ from compare.compare_args import CompareArgs
 from compare.compare_embeddings import CompareEmbedding
 from compare.compare_embeddings_align import CompareEmbeddingAlign
 from compare.compare_embeddings_flava import CompareEmbeddingFlava
-from compare.compare_embeddings_matrix import CompareEmbeddingMatrix
 from compare.compare_embeddings_siglip import CompareEmbeddingSiglip
 from compare.compare_embeddings_xvlm import CompareEmbeddingXVLM
 from compare.prevalidations_window import PrevalidationAction, PrevalidationsWindow
@@ -312,8 +311,6 @@ class CompareWrapper:
         args.compare_mode = self.compare_mode
         if self.compare_mode == CompareMode.CLIP_EMBEDDING:
             self._compare = CompareEmbedding(args)
-        elif self.compare_mode == CompareMode.CLIP_EMBEDDING_MATRIX:
-            self._compare = CompareEmbeddingMatrix(args)
         elif self.compare_mode == CompareMode.COLOR_MATCHING:
             self._compare = Compare(args, use_thumb=True)
         elif self.compare_mode == CompareMode.SIGLIP_EMBEDDING:
