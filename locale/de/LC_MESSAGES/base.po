@@ -1,12 +1,12 @@
 # APPLICATION TRANSLATIONS
-# THOMAS HALL <tomhall.main@gmail.com>, 2025.
+# AUTHOR NAME <author@example.com>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-03-27 22:16-0400\n"
-"PO-Revision-Date: 2025-03-27 22:16-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-03-31 16:52-0400\n"
+"PO-Revision-Date: 2025-03-31 16:52-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language: de\n"
 "Language-Team: de Team <<EMAIL>>\n"
 "MIME-Version: 1.0\n"
@@ -225,7 +225,7 @@ msgstr "Fehler beim Ausf\u00fchren des Vergleichs"
 #: .\app.py:1246
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
-"Sperre nach Diashow-\u00dcbergang l\u00f6schen\n"
+"Sperre nach Diashow-\u00dcbergang l\u00f6schen"
 "verhinderte das Hinzuf\u00fcgen einer Markierung"
 
 #: .\app.py:1257
@@ -259,7 +259,7 @@ msgstr "{0} Markierte Datei(en) verschieben"
 #: .\app.py:1348
 msgid "NO_MARKS_SET"
 msgstr ""
-"Es wurden {0} Markierungen gesetzt (>={1} erwartet).\n"
+"Es wurden {0} Markierungen gesetzt (>={1} erwartet)."
 "Verwenden Sie Shift+M, um eine Markierung zu setzen."
 
 #: .\app.py:1381
@@ -309,7 +309,7 @@ msgstr "Alle versteckten Bilder wurden gel\u00f6scht."
 #: .\app.py:1572
 msgid "DELETE_LOCK"
 msgstr ""
-"L\u00f6schsperre nach Diashow-\u00dcbergang\n"
+"L\u00f6schsperre nach Diashow-\u00dcbergang"
 "verhinderte L\u00f6schung"
 
 #: .\app.py:1590
@@ -359,7 +359,7 @@ msgstr "Fehler"
 #: .\app.py:1761
 msgid "GROUP_DETAILS"
 msgstr ""
-"Gruppe {0} von {1}\n"
+"Gruppe {0} von {1}"
 "Gr\u00f6\u00dfe: {2}"
 
 #: .\app.py:1765
@@ -721,13 +721,13 @@ msgstr "Gesamtmenge: {0}"
 #: .\files\marked_file_mover.py:122
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
-"Kein dauerhaftes Markierungsziel gesetzt!\n"
+"Kein dauerhaftes Markierungsziel gesetzt!"
 "Mit Strg+T im Fenster Markierungen setzen."
 
 #: .\files\marked_file_mover.py:134
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
-"Keine Hotkey-Aktion gesetzt f\u00fcr {0}!\n"
+"Keine Hotkey-Aktion gesetzt f\u00fcr {0}!"
 "Mit {1} im Fenster Markierungen einstellen."
 
 #: .\files\marked_file_mover.py:214 .\files\recent_directory_window.py:153
@@ -785,13 +785,13 @@ msgstr "Verschiebt"
 #: .\files\marked_file_mover.py:405
 msgid "Moved {0} files to {1}"
 msgstr ""
-"{0} Dateien nach\n"
+"{0} Dateien nach"
 "{1} verschoben"
 
 #: .\files\marked_file_mover.py:407
 msgid "Copied {0} files to {1}"
 msgstr ""
-"{0} Dateien nach\n"
+"{0} Dateien nach"
 "{1} kopiert"
 
 #: .\files\marked_file_mover.py:434
@@ -829,13 +829,13 @@ msgstr "Wo sollen die markierten Dateien hin?"
 #: .\files\marked_file_mover.py:494
 msgid "Moved back {0} files from {1}"
 msgstr ""
-"{0} Dateien von\n"
+"{0} Dateien von"
 "{1} zur\u00fcckgeschoben"
 
 #: .\files\marked_file_mover.py:496
 msgid "Removed {0} files from {1}"
 msgstr ""
-"{0} Dateien aus\n"
+"{0} Dateien aus"
 "{1} entfernt"
 
 #: .\files\marked_file_mover.py:513
@@ -1152,8 +1152,8 @@ msgid "CLIP Embedding"
 msgstr "CLIP-Einbettung"
 
 #: .\utils\constants.py:33 .\utils\constants.py:45
-msgid "SIGLIP Embedding"
-msgstr "SIGLIP-Einbettung"
+msgid "SigLIP Embedding"
+msgstr "SigLIP-Einbettung"
 
 #: .\utils\constants.py:34 .\utils\constants.py:47
 msgid "FLAVA Embedding"
@@ -1164,7 +1164,7 @@ msgid "ALIGN Embedding"
 msgstr "ALIGN-Einbettung"
 
 #: .\utils\constants.py:36 .\utils\constants.py:51
-msgid "XVLM Embedding"
+msgid "X-VLM Embedding"
 msgstr "X-VLM-Einbettung"
 
 #: .\utils\constants.py:72
@@ -1482,12 +1482,4 @@ msgstr "Bild-Tagging aktiviert"
 #: .\utils\help_and_config.py:151
 msgid "Escape Backslash Filepaths"
 msgstr "Escape Backslash-Dateipfade"
-
-#: .\utils\constants.py:33 .\utils\constants.py:45
-msgid "SigLIP Embedding"
-msgstr "SigLIP-Einbettung"
-
-#: .\utils\constants.py:36 .\utils\constants.py:51
-msgid "X-VLM Embedding"
-msgstr "X-VLM-Einbettung"
 

@@ -1,12 +1,12 @@
 # APPLICATION TRANSLATIONS
-# THOMAS HALL <tomhall.main@gmail.com>, 2025.
+# AUTHOR NAME <author@example.com>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-03-27 22:16-0400\n"
-"PO-Revision-Date: 2025-03-27 22:16-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-03-31 16:52-0400\n"
+"PO-Revision-Date: 2025-03-31 16:52-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language: fr\n"
 "Language-Team: fr Team <<EMAIL>>\n"
 "MIME-Version: 1.0\n"
@@ -225,7 +225,7 @@ msgstr "Erreur lors de l'ex\u00e9cution de la comparaison"
 #: .\app.py:1246
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
-"La suppression du verrou apr\u00e8s la transition\n"
+"La suppression du verrou apr\u00e8s la transition"
 "du diaporama a emp\u00each\u00e9 l'ajout d'une marque"
 
 #: .\app.py:1257
@@ -259,7 +259,7 @@ msgstr "D\u00e9placer {0} fichier(s) marqu\u00e9(s)"
 #: .\app.py:1348
 msgid "NO_MARKS_SET"
 msgstr ""
-"{0} points ont \u00e9t\u00e9 attribu\u00e9s (>={1} attendu).\n"
+"{0} points ont \u00e9t\u00e9 attribu\u00e9s (>={1} attendu)."
 "Utilisez Shift+M pour d\u00e9finir une marque."
 
 #: .\app.py:1381
@@ -309,7 +309,7 @@ msgstr "Efface toutes les images cach\u00e9es."
 #: .\app.py:1572
 msgid "DELETE_LOCK"
 msgstr ""
-"Le verrouillage de la suppression apr\u00e8s la\n"
+"Le verrouillage de la suppression apr\u00e8s la"
 "transition du diaporama a emp\u00each\u00e9 la suppression"
 
 #: .\app.py:1590
@@ -342,7 +342,7 @@ msgstr "D\u00e9placement de l'image de recherche dans "
 
 #: .\app.py:1686
 msgid "Running image gen: "
-msgstr "G\u00e9n\u00e9ration d'images en cours :"
+msgstr "G\u00e9n\u00e9ration d'images en cours : "
 
 #: .\app.py:1688
 msgid "Error running image generation:"
@@ -359,7 +359,7 @@ msgstr "Erreur"
 #: .\app.py:1761
 msgid "GROUP_DETAILS"
 msgstr ""
-"Groupe {0} de {1}\n"
+"Groupe {0} de {1}"
 "Taille: {2}"
 
 #: .\app.py:1765
@@ -507,7 +507,7 @@ msgstr " - saut\u00e9"
 #: .\compare\prevalidations_window.py:82 .\compare\prevalidations_window.py:88
 #: .\compare\prevalidations_window.py:99
 msgid " detected"
-msgstr "  d\u00e9tect\u00e9"
+msgstr " d\u00e9tect\u00e9"
 
 #: .\compare\prevalidations_window.py:80
 msgid " - hidden"
@@ -656,7 +656,7 @@ msgstr "Voir"
 
 #: .\files\file_actions_window.py:329
 msgid "Image does not exist: "
-msgstr "L'image n'existe pas :"
+msgstr "L'image n'existe pas : "
 
 #: .\files\file_actions_window.py:330 .\files\file_actions_window.py:341
 msgid "File Action Error"
@@ -676,8 +676,7 @@ msgstr "Aucun fichier n'a \u00e9t\u00e9 trouv\u00e9 pour les param\u00e8tres de 
 
 #: .\files\file_browser.py:197
 msgid "FILE_BROWSER_INDEX_DETAILS"
-msgstr ""
-"{0} fichiers sur {1} dans le r\u00e9pertoire, class\u00e9s par {3} de {2}"
+msgstr "{0} fichiers sur {1} dans le r\u00e9pertoire, class\u00e9s par {3} de {2}"
 
 #: .\files\file_browser.py:224
 msgid "Search text provided to file_browser.find() was invalid."
@@ -722,13 +721,13 @@ msgstr "Total des points: {0}"
 #: .\files\marked_file_mover.py:122
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
-"Aucune cible de marque permanente n'est d\u00e9finie !\n"
+"Aucune cible de marque permanente n'est d\u00e9finie !"
 "D\u00e9finir avec Ctrl+T dans la fen\u00eatre Marques."
 
 #: .\files\marked_file_mover.py:134
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
-"Aucune action de raccourci clavier n'est d\u00e9finie pour {0}.\n"
+"Aucune action de raccourci clavier n'est d\u00e9finie pour {0}."
 "D\u00e9finir avec {1} sur la fen\u00eatre Marks."
 
 #: .\files\marked_file_mover.py:214 .\files\recent_directory_window.py:153
@@ -786,13 +785,13 @@ msgstr "D\u00e9plac\u00e9"
 #: .\files\marked_file_mover.py:405
 msgid "Moved {0} files to {1}"
 msgstr ""
-"D\u00e9placement de {0} fichiers vers\n"
+"D\u00e9placement de {0} fichiers vers"
 "{1}"
 
 #: .\files\marked_file_mover.py:407
 msgid "Copied {0} files to {1}"
 msgstr ""
-"Copie de {0} fichiers sur\n"
+"Copie de {0} fichiers sur"
 "{1}"
 
 #: .\files\marked_file_mover.py:434
@@ -830,13 +829,13 @@ msgstr "O\u00f9 auraient d\u00fb se trouver les fichiers marqu\u00e9s ?"
 #: .\files\marked_file_mover.py:494
 msgid "Moved back {0} files from {1}"
 msgstr ""
-"Recule de {0} fichiers \u00e0 partir de\n"
+"Recule de {0} fichiers \u00e0 partir de"
 "{1}"
 
 #: .\files\marked_file_mover.py:496
 msgid "Removed {0} files from {1}"
 msgstr ""
-"Suppression de {0} fichiers de\n"
+"Suppression de {0} fichiers de"
 "{1}"
 
 #: .\files\marked_file_mover.py:513
@@ -1153,8 +1152,8 @@ msgid "CLIP Embedding"
 msgstr "Int\u00e9gration CLIP"
 
 #: .\utils\constants.py:33 .\utils\constants.py:45
-msgid "SIGLIP Embedding"
-msgstr "Int\u00e9gration SIGLIP"
+msgid "SigLIP Embedding"
+msgstr "Int\u00e9gration SigLIP"
 
 #: .\utils\constants.py:34 .\utils\constants.py:47
 msgid "FLAVA Embedding"
@@ -1165,7 +1164,7 @@ msgid "ALIGN Embedding"
 msgstr "Int\u00e9gration ALIGN"
 
 #: .\utils\constants.py:36 .\utils\constants.py:51
-msgid "XVLM Embedding"
+msgid "X-VLM Embedding"
 msgstr "Int\u00e9gration X-VLM"
 
 #: .\utils\constants.py:72
@@ -1483,12 +1482,4 @@ msgstr "Activation du balisage des images"
 #: .\utils\help_and_config.py:151
 msgid "Escape Backslash Filepaths"
 msgstr "\u00c9chapper \u00e0 la barre oblique inverse chemins d'acc\u00e8s aux fichiers"
-
-#: .\utils\constants.py:33 .\utils\constants.py:45
-msgid "SigLIP Embedding"
-msgstr "Int\u00e9gration SigLIP"
-
-#: .\utils\constants.py:36 .\utils\constants.py:51
-msgid "X-VLM Embedding"
-msgstr "Int\u00e9gration X-VLM"
 

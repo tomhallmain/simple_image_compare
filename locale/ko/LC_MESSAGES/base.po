@@ -7,8 +7,8 @@ msgstr ""
 "POT-Creation-Date: 2025-03-31 16:52-0400\n"
 "PO-Revision-Date: 2025-03-31 16:52-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
-"Language: es\n"
-"Language-Team: es Team <<EMAIL>>\n"
+"Language: ko\n"
+"Language-Team: ko Team <<EMAIL>>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=cp1252\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,1470 +16,1467 @@ msgstr ""
 
 #: .\app.py:91 .\app.py:866 .\app.py:1820
 msgid " Simple Image Compare "
-msgstr " Comparaci\u00f3n sencilla de im\u00e1genes "
+msgstr " \uac04\ub2e8\ud55c \uc774\ubbf8\uc9c0 \ube44\uad50 "
 
 #: .\app.py:150
 msgid "Theme switched to {0}."
-msgstr "Tema cambiado a {0}."
+msgstr "\ud14c\ub9c8\ub294 {0}\uc5d0 \uc804\ud658."
 
 #: .\app.py:233 .\compare\compare_wrapper.py:467
 msgid "Set a directory to run comparison."
-msgstr "Establece un directorio para ejecutar la comparaci\u00f3n."
+msgstr "\ube44\uad50\ub97c \uc2e4\ud589\ud558\ub824\uba74 \ub514\ub809\ud1a0\ub9ac\ub97c \uc124\uc815\ud569\ub2c8\ub2e4."
 
 #: .\app.py:240
 msgid "Toggle theme"
-msgstr "Alternar tema"
+msgstr "\uad00\ub828 \uae30\uc0ac"
 
 #: .\app.py:241
 msgid "Set directory"
-msgstr "Establecer directorio"
+msgstr "\uc124\uc815 \ub514\ub809\ud1a0\ub9ac"
 
 #: .\app.py:242
 msgid "Add dirpath..."
-msgstr "A\u00f1adir ruta al directorio..."
+msgstr "\ub514\ub809\ud1a0\ub9ac \uacbd\ub85c \ucd94\uac00..."
 
 #: .\app.py:245
 msgid "Set search file"
-msgstr "Establecer archivo de b\u00fasqueda"
+msgstr "\uc5f0\ub77d\ucc98"
 
 #: .\app.py:253
 msgid "Search text (embedding mode)"
-msgstr "Buscar texto (modo de incrustaci\u00f3n)"
+msgstr "\ud14d\uc2a4\ud2b8 \uac80\uc0c9(\uc784\ubca0\ub529 \ubaa8\ub4dc)"
 
 #: .\app.py:264
 msgid "Compare mode"
-msgstr "Modo Comparar"
+msgstr "\ube44\uad50 \ubaa8\ub4dc"
 
 #: .\app.py:282
 msgid "Compare faces"
-msgstr "Comparar caras"
+msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
 
 #: .\app.py:286
 msgid "Overwrite cache"
-msgstr "Sobrescribir cach\u00e9"
+msgstr "\uce90\uc2dc\ub97c \ub36e\uc5b4"
 
 #: .\app.py:290
 msgid "Store checkpoints"
-msgstr "Almacenar puntos de control"
+msgstr "\ub9e4\uc7a5 \ucc3e\uae30"
 
 #: .\app.py:294
 msgid "Max files to compare"
-msgstr "M\u00e1ximo de archivos a comparar"
+msgstr "\ucd5c\ub300 \ud30c\uc77c \ube44\uad50"
 
 #: .\app.py:300
 msgid "Filter files by glob pattern"
-msgstr "Filtrar archivos por patr\u00f3n glob"
+msgstr "\uae00\ub85c\ube0c \ud328\ud134\uc73c\ub85c \ud30c\uc77c \ud544\ud130\ub9c1"
 
 #: .\app.py:307
 msgid "Browsing mode - Sort by"
-msgstr "Modo de navegaci\u00f3n - Ordenar por"
+msgstr "\ube0c\ub77c\uc6b0\uc9d5 \ubaa8\ub4dc - \uc815\ub82c \uae30\uc900"
 
 #: .\app.py:314
 msgid "Recurse subdirectories"
-msgstr "Buscar en subdirectorios"
+msgstr "\ud558\uc704 \ub514\ub809\ud130\ub9ac \uc7ac\uadc0"
 
 #: .\app.py:319
 msgid "Image resize to full window"
-msgstr "Imagen redimensionada a ventana completa"
+msgstr "\uc804\uccb4 \ucc3d\uc5d0 \uc774\ubbf8\uc9c0 \ud06c\uae30"
 
 #: .\app.py:323
 msgid "Search only return closest"
-msgstr "Buscar s\u00f3lo devuelve lo m\u00e1s cercano"
+msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
 
 #: .\app.py:330
 msgid "Run image compare"
-msgstr "Comparar im\u00e1genes"
+msgstr "\uc774\ubbf8\uc9c0 \ube44\uad50 \uc2e4\ud589"
 
 #: .\app.py:332
 msgid "Find duplicates"
-msgstr "Buscar duplicados"
+msgstr "\uc911\ubcf5 \ucc3e\uae30"
 
 #: .\app.py:334 .\image\image_details.py:62
 msgid "Image details"
-msgstr "Detalles de la imagen"
+msgstr "\uc774\ubbf8\uc9c0 \uc138\ubd80 \uc815\ubcf4"
 
 #: .\app.py:345
 msgid "Search current image"
-msgstr "Buscar imagen actual"
+msgstr "\ud604\uc7ac \uc774\ubbf8\uc9c0 \uac80\uc0c9"
 
 #: .\app.py:346 .\utils\help_and_config.py:75
 msgid "Open image location"
-msgstr "Abrir ubicaci\u00f3n de la imagen"
+msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
 
 #: .\app.py:347
 msgid "Copy image path"
-msgstr "Copiar ruta de imagen"
+msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
 
 #: .\app.py:348
 msgid "---- DELETE ----"
-msgstr "---- BORRAR ----"
+msgstr "---- \uc885\ub8cc ----"
 
 #: .\app.py:484
 msgid "Confirm Quit"
-msgstr "Confirmar Salir"
+msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
 
 #: .\app.py:484
 msgid "Would you like to quit the application?"
-msgstr "\u00bfDesea abandonar la aplicaci\u00f3n?"
+msgstr "\uc751\uc6a9 \ud504\ub85c\uadf8\ub7a8\uc744 \uc885\ub8cc\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?"
 
 #: .\app.py:577
 msgid "Ended slideshows"
-msgstr "Presentaciones finalizadas"
+msgstr "\uc2ac\ub77c\uc774\ub4dc \uc1fc \uc885\ub8cc"
 
 #: .\app.py:630
 msgid "No files found in directory after refresh."
-msgstr "No se han encontrado archivos en el directorio tras la actualizaci\u00f3n."
+msgstr "\uc0c8\ub85c \uace0\uce68 \ud6c4 \ub514\ub809\ud1a0\ub9ac\uc5d0 \ud30c\uc77c\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
 
 #: .\app.py:630 .\app.py:1629 .\app.py:1688
 msgid "Warning"
-msgstr "Advertencia"
+msgstr "\uacbd\uace0"
 
 #: .\app.py:653
 msgid "Slideshow for new images started"
-msgstr "Iniciada la presentaci\u00f3n de nuevas im\u00e1genes"
+msgstr "\uc0c8 \uc774\ubbf8\uc9c0 \uc2ac\ub77c\uc774\ub4dc\uc1fc \uc2dc\uc791"
 
 #: .\app.py:655
 msgid "Slideshow started"
-msgstr "Presentaci\u00f3n de diapositivas iniciada"
+msgstr "\uc2ac\ub77c\uc774\ub4dc\uc1fc \uc2dc\uc791"
 
 #: .\app.py:658
 msgid "Slideshows ended"
-msgstr "Fin de las presentaciones"
+msgstr "\uc2ac\ub77c\uc774\ub4dc \uc1fc \uc885\ub8cc"
 
 #: .\app.py:671
 msgid "Browsing mode set."
-msgstr "Modo de navegaci\u00f3n establecido."
+msgstr "\uac80\uc0c9 \ubaa8\ub4dc \uc124\uc815."
 
 #: .\app.py:705
 msgid "(Open this image as part of a directory to see index details.)"
-msgstr "(Abra esta imagen como parte de un directorio para ver los detalles del \u00edndice)."
+msgstr "(\uc778\ub371\uc2a4 \uc138\ubd80 \uc815\ubcf4\ub97c \ubcf4\ub824\uba74 \uc774 \uc774\ubbf8\uc9c0\ub97c \ub514\ub809\ud1a0\ub9ac\uc758 \uc77c\ubd80\ub85c \uc5fd\ub2c8\ub2e4.)"
 
 #: .\app.py:738
 msgid "Many Files"
-msgstr "Muchos archivos"
+msgstr "\ub9ce\uc740 \ud30c\uc77c"
 
 #: .\app.py:764
 msgid "No downstream related image(s) found in {0}"
-msgstr "No se han encontrado im\u00e1genes relacionadas con el flujo descendente en {0}"
+msgstr "{0} \uc5d0\uc11c \ub2e4\uc6b4\uc2a4\ud2b8\ub9bc \uad00\ub828 \uc774\ubbf8\uc9c0\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
 
 #: .\app.py:785
 msgid "{0} file marks set"
-msgstr "Se establecen {0} marcas de archivo"
+msgstr "{0} \ud30c\uc77c \ud45c\uc2dc \uc138\ud2b8"
 
 #: .\app.py:791
 msgid "Help and Config"
-msgstr "Ayuda y configuraci\u00f3n"
+msgstr "\ub3c4\uc6c0\ub9d0 \ubc0f \ubd88\ub9cc"
 
 #: .\app.py:871
 msgid "Set Image Comparison Directory"
-msgstr "Establecer directorio de comparaci\u00f3n de im\u00e1genes"
+msgstr "\uc774\ubbf8\uc9c0 \ube44\uad50 \ub514\ub809\ud1a0\ub9ac \uc124\uc815"
 
 #: .\app.py:909
 msgid "Counter limit must be an integer value."
-msgstr "El l\u00edmite del contador debe ser un valor entero."
+msgstr "\uce74\uc6b4\ud130 \uc81c\ud55c\uc740 \uc815\uc218 \uac12\uc774\uc5b4\uc57c \ud569\ub2c8\ub2e4."
 
 #: .\app.py:909 .\app.py:924
 msgid "Invalid Setting"
-msgstr "Ajuste no v\u00e1lido"
+msgstr "\uc798\ubabb\ub41c \uc124\uc815"
 
 #: .\app.py:924
 msgid "No image selected."
-msgstr "No hay imagen seleccionada."
+msgstr "\uc120\ud0dd\ub41c \uc774\ubbf8\uc9c0 \uc5c6\uc74c."
 
 #: .\app.py:961
 msgid "Compare mode must be set to an embedding mode to search text embeddings"
-msgstr "El modo de comparaci\u00f3n debe configurarse en un modo de incrustaci\u00f3n para buscar incrustaciones de texto"
+msgstr "\ud14d\uc2a4\ud2b8 \uc784\ubca0\ub529\uc744 \uac80\uc0c9\ud558\ub824\uba74 \ube44\uad50 \ubaa8\ub4dc\ub97c \uc784\ubca0\ub529 \ubaa8\ub4dc\ub85c \uc124\uc815\ud574\uc57c \ud569\ub2c8\ub2e4."
 
 #: .\app.py:966
 msgid "Select image file"
-msgstr "Seleccionar archivo de imagen"
+msgstr "\uc774\ubbf8\uc9c0 \ud30c\uc77c \uc120\ud0dd"
 
 #: .\app.py:995
 msgid "Somehow, the search file is invalid"
-msgstr "De alguna manera, el archivo de b\u00fasqueda no es v\u00e1lido"
+msgstr "Somehow, \uac80\uc0c9 \ud30c\uc77c\uc774 \uc798\ubabb\ub418\uc5c8\uc2b5\ub2c8\ub2e4."
 
 #: .\app.py:1080 .\app.py:1104
 msgid "Failed to get active image filepath"
-msgstr "Error al obtener la ruta de archivo de la imagen activa"
+msgstr "Active image filepath\ub97c \uc5bb\ub294 \uc2e4\ud328"
 
 #: .\app.py:1186
 msgid "{0}: {1}% complete"
-msgstr "{0}: {1}% completado"
+msgstr "{0}: {1}% \uc644\ub8cc"
 
 #: .\app.py:1192
 msgid "Confirm comparison"
-msgstr "Confirmar comparaci\u00f3n"
+msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
 
 #: .\app.py:1193
 msgid "No base directory has been set, will use current base directory of "
-msgstr "No se ha establecido ning\u00fan directorio base, se utilizar\u00e1 el directorio base actual de "
+msgstr "\uae30\ubcf8 \ub514\ub809\ud130\ub9ac\uac00 \uc124\uc815\ub418\uc9c0 \uc54a\uc740 \uacbd\uc6b0 \ud604\uc7ac \uae30\ubcf8 \ub514\ub809\ud130\ub9ac\ub97c \uc0ac\uc6a9\ud569\ub2c8\ub2e4: "
 
 #: .\app.py:1194
 msgid "Are you sure you want to proceed?"
-msgstr "\u00bfEst\u00e1s seguro de que quieres continuar?"
+msgstr "\uc9c4\ud589\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?"
 
 #: .\app.py:1214
 msgid "Error running compare"
-msgstr "Error al ejecutar la comparaci\u00f3n"
+msgstr "\uc624\ub958 \uc2e4\ud589 \ube44\uad50"
 
 #: .\app.py:1246
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
-"Borrar bloqueo despu\u00e9s de diapositivas"
-"transici\u00f3n impidi\u00f3 a00f1adir marca"
+"\uc2ac\ub77c\uc774\ub4dc \uc1fc \ud6c4 \uc7a0\uae08 \uc0ad\uc81c"
+"\uc804\ud658 \ubc29\uc9c0 \ud45c\uc2dc"
 
 #: .\app.py:1257
 msgid "Mark removed. Remaining: {0}"
-msgstr "Marca eliminada. Restante: {0}"
+msgstr "\ub9c8\ud06c\uac00 \uc81c\uac70\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ub0a8\uc544\uc788\uc74c: {0}"
 
 #: .\app.py:1261
 msgid "Mark added. Total set: {0}"
-msgstr "Marca a00f1adida. Conjunto total: {0}"
+msgstr "\ub9c8\ud06c\uac00 \ucd94\uac00\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ucd1d \uc9d1\ud569\uc785\ub2c8\ub2e4: {0}"
 
 #: .\app.py:1278
 msgid "Marks added. Total set: {0}"
-msgstr "Marcas a00f1adidas. Conjunto total: {0}"
+msgstr "\ub9c8\ud06c\uac00 \ucd94\uac00\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ucd1d \uc9d1\ud569\uc785\ub2c8\ub2e4: {0}"
 
 #: .\app.py:1287
 msgid "First sorted mark"
-msgstr "Primera marca clasificada"
+msgstr "\uccab \ubc88\uc9f8 \uc815\ub82c \ub9c8\ud06c"
 
 #: .\app.py:1294
 msgid "Only one marked file set."
-msgstr "S\u00f3lo un conjunto de archivos marcados."
+msgstr "1\uac1c\uc758 \ud45c\uc2dc\ub41c \ud30c\uc77c \uc138\ud2b8\ub9cc."
 
 #: .\app.py:1305
 msgid "Including marks: {0}"
-msgstr "Marcas incluidas: {0}"
+msgstr "\ub9c8\ud06c \ud3ec\ud568: {0}"
 
 #: .\app.py:1313
 msgid "Move {0} Marked File(s)"
-msgstr "Mover {0} Archivo(s) marcado(s)"
+msgstr "{0} \uac1c\uc758 \ud45c\uc2dc\ub41c \ud30c\uc77c\uc744 \uc774\ub3d9\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?"
 
 #: .\app.py:1348
 msgid "NO_MARKS_SET"
 msgstr ""
-"Se han fijado {0} marcas (>={1} esperado)."
-"Utiliza May\u00fas+M para fijar una marca."
+"{0}\uac1c\uc758 \ub9c8\ud06c\uac00 \uc124\uc815\ub418\uc5c8\uc2b5\ub2c8\ub2e4. ({1}\uac1c \uc774\uc0c1\uc774 \uc608\uc0c1\ub429\ub2c8\ub2e4.)"
+"Shift+M\uc744 \ub204\ub974\uba74 \ub9c8\ud06c\ub97c \uc124\uc815\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4."
 
 #: .\app.py:1381
 msgid "Prevalidations now running"
-msgstr "Prevalidaciones en curso"
+msgstr "\uc9c0\uae08 \uc2e4\ud589"
 
 #: .\app.py:1381
 msgid "Prevalidations turned off"
-msgstr "Prevalidaciones desactivadas"
+msgstr "\uc0ac\uc804 \uac80\uc99d"
 
 #: .\app.py:1406
 msgid "File not found"
-msgstr "Archivo no encontrado"
+msgstr "\ucc3e\uc744 \uc218 \uc5c6\uc74c"
 
 #: .\app.py:1406
 msgid "No file was found for the search text: \"{0}\""
-msgstr "No se ha encontrado ning\u00fan archivo para el texto buscado: \u00ab{0}\u00bb"
+msgstr "\uac80\uc0c9 \ud14d\uc2a4\ud2b8\uc5d0 \ub300\ud55c \ud30c\uc77c\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4: \"{0}\\u201d"
 
 #: .\app.py:1420
 msgid "No image selected"
-msgstr "Ninguna imagen seleccionada"
+msgstr "\uc120\ud0dd \uc5c6\uc74c"
 
 #: .\app.py:1420
 msgid "No image was selected for comparison"
-msgstr "No se ha seleccionado ninguna imagen para la comparaci\u00f3n"
+msgstr "\uc774\ubbf8\uc9c0\ub294 \ube44\uad50\ub97c \uc704\ud574 \uc120\uc815\ub418\uc5c8\uc2b5\ub2c8\ub2e4"
 
 #: .\app.py:1433
 msgid "No Text Search Presets Found"
-msgstr "No se han encontrado preajustes de b\u00fasqueda de texto"
+msgstr "\ud14d\uc2a4\ud2b8 \uac80\uc0c9 \uc0ac\uc804 \uc124\uc815\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc74c"
 
 #: .\app.py:1433
 msgid "No text embedding search presets found. Set them in the config.json file."
-msgstr "No se han encontrado preajustes de b\u00fasqueda de texto incrustado. Config\u00farelos en el archivo config.json."
+msgstr "\ud14d\uc2a4\ud2b8 \uc784\ubca0\ub529 \uac80\uc0c9 \uc0ac\uc804 \uc124\uc815\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4. config.json \ud30c\uc77c\uc5d0\uc11c \uc124\uc815\ud558\uc138\uc694."
 
 #: .\app.py:1533
 msgid "Failed to open location of current file, unable to get valid filepath"
-msgstr "No se ha podido abrir la ubicaci\u00f3n del archivo actual, no se ha podido obtener una ruta de archivo v\u00e1lida."
+msgstr "\ud604\uc7ac \ud30c\uc77c\uc758 \uc704\uce58\ub97c \uc5f4\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4. \uc720\ud6a8\ud55c \ud30c\uc77c \uacbd\ub85c\ub97c \uac00\uc838\uc62c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
 
 #: .\app.py:1544
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
-msgstr "Error al abrir el archivo actual en GIMP, no se puede obtener una ruta de archivo v\u00e1lida."
+msgstr "\uae40\ud504\uc5d0\uc11c \ud604\uc7ac \ud30c\uc77c\uc744 \uc5f4\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4. \uc720\ud6a8\ud55c \ud30c\uc77c \uacbd\ub85c\ub97c \uac00\uc838\uc62c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
 
 #: .\app.py:1565
 msgid "Cleared all hidden images."
-msgstr "Borrado de todas las im\u00e1genes ocultas."
+msgstr "\uc228\uaca8\uc9c4 \uc774\ubbf8\uc9c0\ub97c \ubaa8\ub450 \uc9c0\uc6e0\uc2b5\ub2c8\ub2e4."
 
 #: .\app.py:1572
 msgid "DELETE_LOCK"
 msgstr ""
-"El bloqueo de borrado tras la transici\u00f3n"
-"de diapositivas imped\u00eda el borrado"
+"\uc2ac\ub77c\uc774\ub4dc \uc1fc \ud6c4 \uc7a0\uae08 \uc0ad\uc81c"
+"\uc804\ud658 \ubc29\uc9c0 \ud0c8\ucde8"
 
 #: .\app.py:1590
 msgid "Invalid action, no files found to delete"
-msgstr "Acci\u00f3n no v\u00e1lida, no se han encontrado archivos para eliminar"
+msgstr "\uc798\ubabb\ub41c \uc791\uc5c5, \uc0ad\uc81c\ud560 \ud30c\uc77c\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc74c"
 
 #: .\app.py:1593
 msgid "Invalid action, search image not found"
-msgstr "Acci\u00f3n no v\u00e1lida, imagen de b\u00fasqueda no encontrada"
+msgstr "\uc798\ubabb\ub41c \uc791\uc5c5, \uac80\uc0c9 \uc774\ubbf8\uc9c0\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc74c"
 
 #: .\app.py:1608
 msgid "Failed to delete current file, unable to get valid filepath"
-msgstr "No se ha podido eliminar el archivo actual, no se ha podido obtener una ruta de archivo v\u00e1lida."
+msgstr "\ud604\uc7ac \ud30c\uc77c\uc744 \uc0ad\uc81c\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4. \uc720\ud6a8\ud55c \ud30c\uc77c \uacbd\ub85c\ub97c \uac00\uc838\uc62c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
 
 #: .\app.py:1613
 msgid "Removing file: {0}"
-msgstr "Eliminando archivo: {0}"
+msgstr "\ud30c\uc77c\uc744 \uc81c\uac70 \uc911\uc785\ub2c8\ub2e4: {0}"
 
 #: .\app.py:1630
 msgid "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."
-msgstr "No se ha podido enviar el archivo a la papelera, por lo que se eliminar\u00e1. Instale pip send2trash o establezca una carpeta espec\u00edfica en config.json."
+msgstr "\ud30c\uc77c\uc744 \ud734\uc9c0\ud1b5\uc73c\ub85c \ubcf4\ub0b4\uc9c0 \ubabb\ud588\uc73c\ubbc0\ub85c \uc0ad\uc81c\ub429\ub2c8\ub2e4. pip\uc5d0\uc11c send2trash\ub97c \uc124\uce58\ud558\uac70\ub098 config.json\uc5d0\uc11c \ud2b9\uc815 \ud734\uc9c0\ud1b5 \ud3f4\ub354\ub97c \uc124\uc815\ud558\uc138\uc694."
 
 #: .\app.py:1647
 msgid "Invalid target filepath for replacement: "
-msgstr "Ruta de archivo de destino no v\u00e1lida para la sustituci\u00f3n: "
+msgstr "\uad50\uccb4\ud560 \ub300\uc0c1 \ud30c\uc77c \uacbd\ub85c\uac00 \uc798\ubabb\ub418\uc5c8\uc2b5\ub2c8\ub2e4: "
 
 #: .\app.py:1651
 msgid "Moved search image to "
-msgstr "Imagen de b\u00fasqueda trasladada a "
+msgstr "\ub85c \uac80\uc0c9 \uc774\ubbf8\uc9c0\ub97c \uc774\ub3d9\ud588\uc2b5\ub2c8\ub2e4: "
 
 #: .\app.py:1686
 msgid "Running image gen: "
-msgstr "Ejecutar la generaci\u00f3n de im\u00e1genes: "
+msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131 \uc2e4\ud589 : "
 
 #: .\app.py:1688
 msgid "Error running image generation:"
-msgstr "Error al generar la imagen:"
+msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131 \uc2e4\ud589 \uc911 \uc624\ub958 \ubc1c\uc0dd:"
 
 #: .\app.py:1693
 msgid "Running refacdir"
-msgstr "Ejecuci\u00f3n de la aplicaci\u00f3n refacdir"
+msgstr "refacdir \uc2e4\ud589"
 
 #: .\app.py:1698
 msgid "Error"
-msgstr "Error"
+msgstr "\uacc4\uc815 \uc815\ubcf4"
 
 #: .\app.py:1761
 msgid "GROUP_DETAILS"
 msgstr ""
-"Grupo {0} de {1}"
-"Tama00f1o: {2}"
+" \uadf8\ub8f9 {0} \uc911 {1}"
+"\ud06c\uae30: {2}"
 
 #: .\app.py:1765
 msgid "No image files found"
-msgstr "No se han encontrado archivos de imagen"
+msgstr "\uc774\ubbf8\uc9c0 \ud30c\uc77c \uc5c6\uc74c"
 
 #: .\app.py:1767
 msgid "1 image file found"
-msgstr "1 archivo de imagen encontrado"
+msgstr "1 \uc774\ubbf8\uc9c0 \ud30c\uc77c"
 
 #: .\app.py:1767
 msgid "{0} image files found"
-msgstr "{0} archivos de imagen encontrados"
+msgstr "{0} \uc774\ubbf8\uc9c0 \ud30c\uc77c \ucc3e\uc558\uc2b5\ub2c8\ub2e4"
 
 #: .\app.py:1770
 msgid "(filtered)"
-msgstr "(filtrado)"
+msgstr "(\ud544\ud130)"
 
 #: .\compare\base_compare.py:226
 msgid "Image comparison"
-msgstr "Comparaci\u00f3n de im\u00e1genes"
+msgstr "\uc774\ubbf8\uc9c0 \ube44\uad50"
 
 #: .\compare\base_compare.py:226
 msgid "Image data collection"
-msgstr "Recopilaci\u00f3n de datos de im\u00e1genes"
+msgstr "\uc774\ubbf8\uc9c0 \ub370\uc774\ud130 \uc218\uc9d1"
 
 #: .\compare\compare_wrapper.py:68 .\compare\compare_wrapper.py:71
 msgid "Invalid mode"
-msgstr "Modo no v\u00e1lido"
+msgstr "\uc720\ud6a8\ud558\uc9c0 \uc54a\uc740 \ubaa8\ub4dc"
 
 #: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
 msgid "No matches found. Search again to find potential matches."
-msgstr "No se han encontrado coincidencias. Vuelva a buscar para encontrar posibles coincidencias."
+msgstr "\uc77c\uce58\ud558\ub294 \ud56d\ubaa9\uc774 \uc5c6\uc2b5\ub2c8\ub2e4. \ub2e4\uc2dc \uac80\uc0c9\ud558\uc5ec \uc77c\uce58\ud558\ub294 \ud56d\ubaa9\uc744 \ucc3e\uc544\ubcf4\uc138\uc694."
 
 #: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
 msgid "Search required"
-msgstr "B\u00fasqueda obligatoria"
+msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
 
 #: .\compare\compare_wrapper.py:159
 msgid "Skipped %s images."
-msgstr "Se han omitido {0} im\u00e1genes."
+msgstr "{0} \uc774\ubbf8\uc9c0\ub97c \uac74\ub108\ub6f0\uc5c8\uc2b5\ub2c8\ub2e4."
 
 #: .\compare\compare_wrapper.py:165
 msgid "No Unrelated Images"
-msgstr "Sin im\u00e1genes no relacionadas"
+msgstr "\uad00\ub828 \uc774\ubbf8\uc9c0 \uc5c6\uc74c"
 
 #: .\compare\compare_wrapper.py:165
 msgid "No unrelated images found."
-msgstr "No se han encontrado im\u00e1genes no relacionadas."
+msgstr "\uad00\ub828 \uc774\ubbf8\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4."
 
 #: .\compare\compare_wrapper.py:202 .\compare\compare_wrapper.py:364
 msgid "No Groups Found"
-msgstr "No se han encontrado grupos"
+msgstr "\uadf8\ub8f9 \uc5c6\uc74c"
 
 #: .\compare\compare_wrapper.py:272
 msgid "Gathering image data... setup may take a while depending on number of files involved."
-msgstr "Recopilaci\u00f3n de datos de imagen... la configuraci\u00f3n puede llevar un tiempo dependiendo del n\u00famero de archivos implicados."
+msgstr "\uc774\ubbf8\uc9c0 \ub370\uc774\ud130 \uc218\uc9d1... \uad00\ub828\ub41c \ud30c\uc77c \uc218\uc5d0 \ub530\ub77c \uc124\uc815\ud558\ub294 \ub370 \uc2dc\uac04\uc774 \uac78\ub9b4 \uc218 \uc788\uc2b5\ub2c8\ub2e4."
 
 #: .\compare\compare_wrapper.py:294
 msgid "Confirm group run"
-msgstr "Confirmar la ejecuci\u00f3n en grupo"
+msgstr "\uadf8\ub8f9 \uc2e4\ud589 \ud655\uc778"
 
 #: .\compare\compare_wrapper.py:295
 msgid "Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."
-msgstr "Modo de b\u00fasqueda detectado, por favor confirme el cambio a modo de grupo antes de ejecutar. El modo de grupo tardar\u00e1 m\u00e1s tiempo, ya que se comparan todas las im\u00e1genes del directorio base."
+msgstr "\uac80\uc0c9 \ubaa8\ub4dc\uac00 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \uc2e4\ud589\ud558\uae30 \uc804\uc5d0 \uadf8\ub8f9 \ubaa8\ub4dc\ub85c \uc804\ud658\uc744 \ud655\uc778\ud558\uc138\uc694. \uadf8\ub8f9 \ubaa8\ub4dc\ub294 \uae30\ubcf8 \ub514\ub809\ud130\ub9ac\uc758 \ubaa8\ub4e0 \uc774\ubbf8\uc9c0\ub97c \ube44\uad50\ud558\ubbc0\ub85c \uc2dc\uac04\uc774 \ub354 \uc624\ub798 \uac78\ub9bd\ub2c8\ub2e4."
 
 #: .\compare\compare_wrapper.py:302
 msgid "Gathering image data for comparison"
-msgstr "Recopilaci\u00f3n de datos de im\u00e1genes para su comparaci\u00f3n"
+msgstr "\ube44\uad50\ub97c \uc704\ud55c \uc774\ubbf8\uc9c0 \ub370\uc774\ud130 \uc218\uc9d1"
 
 #: .\compare\compare_wrapper.py:330
 msgid "Searching images..."
-msgstr "Buscando im\u00e1genes..."
+msgstr "\uc774\ubbf8\uc9c0 \uac80\uc0c9..."
 
 #: .\compare\compare_wrapper.py:336
 msgid "Set a directory and search file or search text."
-msgstr "Establece un directorio y un archivo de b\u00fasqueda o un texto de b\u00fasqueda."
+msgstr "\ub514\ub809\ud130\ub9ac\ub97c \uc124\uc815\ud558\uace0 \ud30c\uc77c \ub610\ub294 \uac80\uc0c9 \ud14d\uc2a4\ud2b8\ub97c \uac80\uc0c9\ud569\ub2c8\ub2e4."
 
 #: .\compare\compare_wrapper.py:337
 msgid "No Match Found"
-msgstr "No se han encontrado coincidencias"
+msgstr "\uc778\uae30 \uc0c1\ud488"
 
 #: .\compare\compare_wrapper.py:337
 msgid "None of the files match the search filters with current settings."
-msgstr "Ninguno de los archivos coincide con los filtros de b\u00fasqueda con la configuraci\u00f3n actual."
+msgstr "\ud604\uc7ac \uc124\uc815\uc73c\ub85c \uac80\uc0c9 \ud544\ud130\uc640 \uc77c\uce58\ud558\ub294 \ud30c\uc77c\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
 
 #: .\compare\compare_wrapper.py:350
 msgid "%s possibly related images found."
-msgstr "{0} im\u00e1genes posiblemente relacionadas encontradas."
+msgstr "{0} \uc544\ub9c8\ub3c4 \uad00\ub828 \uc774\ubbf8\uc9c0\uac00 \ubc1c\uacac\ub418\uc5c8\uc2b5\ub2c8\ub2e4."
 
 #: .\compare\compare_wrapper.py:358
 msgid "Running image comparisons..."
-msgstr "Ejecutar comparaciones de im\u00e1genes..."
+msgstr "\uc774\ubbf8\uc9c0 \ube44\uad50 \uc2e4\ud589 \uc911..."
 
 #: .\compare\compare_wrapper.py:363 .\compare\compare_wrapper.py:378
 msgid "Set a directory and search file."
-msgstr "Establece un directorio y un archivo de b\u00fasqueda."
+msgstr "\ub514\ub809\ud1a0\ub9ac \ubc0f \uac80\uc0c9 \ud30c\uc77c\uc744 \uc124\uc815\ud569\ub2c8\ub2e4."
 
 #: .\compare\compare_wrapper.py:364
 msgid "None of the files can be grouped with current settings."
-msgstr "No se puede agrupar ninguno de los archivos con la configuraci\u00f3n actual."
+msgstr "\ud604\uc7ac \uc124\uc815\uc73c\ub85c\ub294 \uc5b4\ub5a4 \ud30c\uc77c\ub3c4 \uadf8\ub8f9\ud654\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
 
 #: .\compare\compare_wrapper.py:379
 msgid "No Duplicates Found"
-msgstr "No se han encontrado duplicados"
+msgstr "\ubc1c\uacac \uc5c6\uc74c"
 
 #: .\compare\compare_wrapper.py:379
 msgid "None of the files appear to be duplicates based on the current settings."
-msgstr "Ninguno de los archivos parece estar duplicado seg\u00fan la configuraci\u00f3n actual."
+msgstr "\ud604\uc7ac \uc124\uc815\uc5d0 \ub530\ub974\uba74 \uc911\ubcf5\ub41c \ud30c\uc77c\uc740 \uc5c6\ub294 \uac83\uc73c\ub85c \ubcf4\uc785\ub2c8\ub2e4."
 
 #: .\compare\compare_wrapper.py:403
 msgid "Some group members were left stranded by the grouping process."
-msgstr "Algunos miembros del grupo quedaron desamparados por el proceso de agrupaci\u00f3n."
+msgstr "\uc77c\ubd80 \uadf8\ub8f9 \uad6c\uc131\uc6d0\uc740 \uadf8\ub8f9\ud654 \uacfc\uc815\uc5d0\uc11c \ubc1c\uc774 \ubb36\uc600\uc2b5\ub2c8\ub2e4."
 
 #: .\compare\compare_wrapper.py:403
 msgid "Stranded Group Members Found"
-msgstr "Stranded Group Members Found"
+msgstr "\uc88c\ucd08\ub41c \uadf8\ub8f9 \uad6c\uc131\uc6d0 \ubc1c\uacac"
 
 #: .\compare\compare_wrapper.py:458
 msgid "No More Groups"
-msgstr "Encontrados los miembros del grupo varados"
+msgstr "\ub354 \ub9ce\uc740 \uadf8\ub8f9 \uc5c6\uc74c"
 
 #: .\compare\compare_wrapper.py:459
 msgid "There are no more image groups remaining for this directory and current filter settings."
-msgstr "No quedan m\u00e1s grupos de im\u00e1genes para este directorio y la configuraci\u00f3n actual del filtro."
+msgstr "\uc774 \ub514\ub809\ud130\ub9ac \ubc0f \ud604\uc7ac \ud544\ud130 \uc124\uc815\uc5d0 \ub354 \uc774\uc0c1 \uc774\ubbf8\uc9c0 \uadf8\ub8f9\uc774 \ub0a8\uc544 \uc788\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4."
 
 #: .\compare\prevalidations_window.py:23
 msgid "(no positives set)"
-msgstr "(ning\u00fan positivo fijado)"
+msgstr "(\ud3ec\uc9c0\ud2f0\ube0c \uc124\uc815 \uc5c6\uc74c)"
 
 #: .\compare\prevalidations_window.py:24
 msgid "(no negatives set)"
-msgstr "(ning\u00fan negativo fijado)"
+msgstr "(\ub124\uac70\ud2f0\ube0c \uc124\uc815 \uc5c6\uc74c)"
 
 #: .\compare\prevalidations_window.py:26
 #: .\compare\prevalidations_window.py:197
 msgid "New Prevalidation"
-msgstr "Nueva Prevalidaci\u00f3ns"
+msgstr "\uc0c8\ub85c\uc6b4 \uc720\ud6a8\uc131"
 
 #: .\compare\prevalidations_window.py:77
 msgid " - skipped"
-msgstr " - omitido"
+msgstr " - \uac74\ub108\ub6f0\uae30"
 
 #: .\compare\prevalidations_window.py:77 .\compare\prevalidations_window.py:80
 #: .\compare\prevalidations_window.py:82 .\compare\prevalidations_window.py:88
 #: .\compare\prevalidations_window.py:99
 msgid " detected"
-msgstr " detectado"
+msgstr " \uad00\ub828 \uae30\uc0ac"
 
 #: .\compare\prevalidations_window.py:80
 msgid " - hidden"
-msgstr " - oculto"
+msgstr " - \uc228\uaca8\uc9c4"
 
 #: .\compare\prevalidations_window.py:88
 msgid "Moving file: "
-msgstr "Moviendo archivo: "
+msgstr "\ud30c\uc77c \uc774\ub3d9: "
 
 #: .\compare\prevalidations_window.py:99
 msgid "Deleting file: "
-msgstr "Borrar archivo: "
+msgstr "\ud30c\uc77c \uc0ad\uc81c: "
 
 #: .\compare\prevalidations_window.py:172
 msgid " testing classifier {0} for {1}"
-msgstr " probando clasificador {0} para {1}"
+msgstr " {1}\uc5d0 \ub300\ud55c \ubd84\ub958\uc790 {0} \ud14c\uc2a4\ud2b8"
 
 #: .\compare\prevalidations_window.py:174
 msgid " ({0} positives, {1} negatives)"
-msgstr " ({0} positivos, {1} negativos)"
+msgstr " ({0} \ud3ec\uc9c0\ud2f0\ube0c, {1} \ub124\uac70\ud2f0\ube0c)"
 
 #: .\compare\prevalidations_window.py:187
 msgid "Modify Prevalidation"
-msgstr "Modificar la prevalidaci\u00f3n"
+msgstr "\uc218\uc815\ud558\uae30"
 
 #: .\compare\prevalidations_window.py:196
 msgid "Prevalidation Name"
-msgstr "Prevalidaci\u00f3n Nombre"
+msgstr "\uc720\ud6a8\uc131 \uac80\uc0ac \uc774\ub984"
 
 #: .\compare\prevalidations_window.py:203
 msgid "Positives"
-msgstr "Positivos"
+msgstr "\uae0d\uc815\uc801"
 
 #: .\compare\prevalidations_window.py:210
 msgid "Negatives"
-msgstr "Negativos"
+msgstr "\ub124\uac70\ud2f0\ube0c"
 
 #: .\compare\prevalidations_window.py:217
 msgid "Threshold"
-msgstr "Umbral"
+msgstr "\uc784\uacc4\uac12"
 
 #: .\compare\prevalidations_window.py:224
 msgid "Action"
-msgstr "Acci\u00f3n"
+msgstr "\uc561\uc158"
 
 #: .\compare\prevalidations_window.py:234
 msgid "Action Modifier"
-msgstr "Modificador de acci\u00f3n"
+msgstr "\uc561\uc158 \uc218\uc815\uc790"
 
 #: .\compare\prevalidations_window.py:241
 msgid "Run on Directory"
-msgstr "Ejecutar en directorio"
+msgstr "\uc5f0\ub77d\ucc98"
 
 #: .\compare\prevalidations_window.py:248
 msgid "Image Classifier Name"
-msgstr "Nombre del clasificador de im\u00e1genes"
+msgstr "\uc774\ubbf8\uc9c0 \ubd84\ub958\uae30 \uc774\ub984"
 
 #: .\compare\prevalidations_window.py:259
 msgid "Image Classifier Selected Category"
-msgstr "Clasificador de im\u00e1genes Categor\u00eda seleccionada"
+msgstr "\uc774\ubbf8\uc9c0 \ubd84\ub958\uae30 \uc120\ud0dd \uce74\ud14c\uace0\ub9ac"
 
 #: .\compare\prevalidations_window.py:263
 msgid "Select Categories..."
-msgstr "Seleccionar categor\u00edas..."
+msgstr "\uce74\ud14c\uace0\ub9ac \uc120\ud0dd..."
 
 #: .\compare\prevalidations_window.py:269
 msgid "Done"
-msgstr "Hecho"
+msgstr "\uc644\ub8cc"
 
 #: .\compare\prevalidations_window.py:401
 msgid "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
-msgstr "No se ha encontrado ninguna prevalidaci\u00f3n con el nombre: {0}. Establ\u00e9zcalo en la Ventana de Prevalidaciones."
+msgstr "\uc774\ub984: {0}\uc5d0 \ub300\ud55c \uc720\ud6a8\uc131 \uac80\uc0ac\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4. \uc720\ud6a8\uc131 \uac80\uc0ac \ucc3d\uc5d0\uc11c \uc124\uc815\ud558\uc138\uc694."
 
 #: .\compare\prevalidations_window.py:412
 msgid "Prevalidations"
-msgstr "Prevalidaciones"
+msgstr "\ubc95\uc801\uace0\uc9c0"
 
 #: .\compare\prevalidations_window.py:435
 msgid "Set Prevalidations"
-msgstr "Establecer prevalidaciones"
+msgstr "\uc124\uc815 \uc720\ud6a8\uc131"
 
 #: .\compare\prevalidations_window.py:437
 msgid "Add prevalidation"
-msgstr "A\u00f1adir prevalidaci\u00f3n"
+msgstr "\uc0ac\uc804 \uac80\uc99d"
 
 #: .\compare\prevalidations_window.py:439
 msgid "Clear prevalidations"
-msgstr "Prevalencias claras"
+msgstr "\ucde8\uc18c \uc815\ucc45"
 
 #: .\compare\prevalidations_window.py:475 .\files\hotkey_actions_window.py:95
 msgid "Set"
-msgstr "Fije"
+msgstr "\uc124\uce58\ud558\uae30"
 
 #: .\compare\prevalidations_window.py:483 .\files\file_actions_window.py:269
 #: .\files\file_actions_window.py:312
 msgid "Modify"
-msgstr "Modifique"
+msgstr "\uc218\uc815\ud558\uae30"
 
 #: .\compare\prevalidations_window.py:490
 msgid "Delete"
-msgstr "Borrar"
+msgstr "\uc0ad\uc81c"
 
 #: .\compare\prevalidations_window.py:497
 msgid "Move down"
-msgstr "Baja"
+msgstr "\ub9e8 \uc704\ub85c"
 
 #: .\extensions\sd_runner_client.py:59
 msgid "Image does not contain a prompt to redo!"
-msgstr "\u00a1La imagen no contiene un aviso para rehacer!"
+msgstr "\uc774\ubbf8\uc9c0\uc5d0 \ub2e4\uc2dc \uc2e4\ud589\ud558\ub77c\ub294 \uba54\uc2dc\uc9c0\uac00 \ud45c\uc2dc\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4!"
 
 #: .\files\file_actions_window.py:201
 msgid "File Actions"
-msgstr "Acciones de archivo"
+msgstr "\ud30c\uc77c \uc791\uc5c5"
 
 #: .\files\file_actions_window.py:223
 msgid "File Action History"
-msgstr "Historial de acciones de archivo"
+msgstr "\ud30c\uc77c \uc791\uc5c5 \uae30\ub85d"
 
 #: .\files\file_actions_window.py:225
 msgid "Search Image"
-msgstr "Buscar imagen"
+msgstr "\uc774\ubbf8\uc9c0 \uac80\uc0c9"
 
 #: .\files\file_actions_window.py:227
 msgid "Clear History"
-msgstr "Borrar la historia"
+msgstr "\uae30\ub85d \uc9c0\uc6b0\uae30"
 
 #: .\files\file_actions_window.py:253
 msgid " ({0} files)"
-msgstr " ({0} archivos)"
+msgstr " ({0} \ud30c\uc77c)"
 
 #: .\files\file_actions_window.py:258 .\files\marked_file_mover.py:264
 msgid "Move"
-msgstr "Mover"
+msgstr "\uc774\ub3d9"
 
 #: .\files\file_actions_window.py:258 .\files\marked_file_mover.py:271
 msgid "Copy"
-msgstr "Copia"
+msgstr "\ubcf5\uc0ac"
 
 #: .\files\file_actions_window.py:261 .\files\file_actions_window.py:304
 msgid "Undo"
-msgstr "Deshacer"
+msgstr "\uc2e4\ud589 \ucde8\uc18c"
 
 #: .\files\file_actions_window.py:296
 msgid "View"
-msgstr "Ver"
+msgstr "\ubcf4\uae30"
 
 #: .\files\file_actions_window.py:329
 msgid "Image does not exist: "
-msgstr "La imagen no existe: "
+msgstr "\uc774\ubbf8\uc9c0\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4: "
 
 #: .\files\file_actions_window.py:330 .\files\file_actions_window.py:341
 msgid "File Action Error"
-msgstr "Error de acci\u00f3n de archivo"
+msgstr "\ud30c\uc77c \uc791\uc5c5 \uc624\ub958"
 
 #: .\files\file_actions_window.py:340
 msgid "Images not found"
-msgstr "Im\u00e1genes no encontradas"
+msgstr "\uc774\ubbf8\uc9c0\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4"
 
 #: .\files\file_browser.py:151 .\files\file_browser.py:163
 msgid " (try setting recursive to True)"
-msgstr " (pruebe a establecer recursivo en True)"
+msgstr " (\uc7ac\uadc0\ub97c True\ub85c \uc124\uc815\ud574 \ubcf4\uc138\uc694.)"
 
 #: .\files\file_browser.py:152 .\files\file_browser.py:164
 msgid "No files found for current browsing settings."
-msgstr "No se han encontrado archivos para la configuraci\u00f3n de navegaci\u00f3n actual."
+msgstr "\ud604\uc7ac \ube0c\ub77c\uc6b0\uc9d5 \uc124\uc815\uc5d0 \ub300\ud55c \ud30c\uc77c\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
 
 #: .\files\file_browser.py:197
 msgid "FILE_BROWSER_INDEX_DETAILS"
-msgstr "{0} de {1} ficheros en el directorio, ordenados por {2} {3}"
+msgstr "\ub514\ub809\ud130\ub9ac\uc5d0 \uc788\ub294 \ud30c\uc77c {1}\uac1c \uc911 {0}\uac1c, {2}\ubcc4\ub85c \uc815\ub82c{3}"
 
 #: .\files\file_browser.py:224
 msgid "Search text provided to file_browser.find() was invalid."
-msgstr "El texto de b\u00fasqueda proporcionado a file_browser.find() no era v\u00e1lido."
+msgstr "file_browser.find()\uc5d0 \uc81c\uacf5\ub41c \uac80\uc0c9 \ud14d\uc2a4\ud2b8\uac00 \uc720\ud6a8\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4."
 
 #: .\files\go_to_file.py:22
 msgid "Go To File"
-msgstr "Ir al archivo"
+msgstr "\ud30c\uc77c\ub85c \uc774\ub3d9"
 
 #: .\files\go_to_file.py:47
 msgid "Invalid search string, please enter some text."
-msgstr "Cadena de b\u00fasqueda no v\u00e1lida, por favor introduzca alg\u00fan texto."
+msgstr "\uc798\ubabb\ub41c \uac80\uc0c9 \ubb38\uc790\uc5f4\uc785\ub2c8\ub2e4. \ud14d\uc2a4\ud2b8\ub97c \uc785\ub825\ud558\uc138\uc694."
 
 #: .\files\hotkey_actions_window.py:25
 msgid "Hotkey Actions"
-msgstr "Acciones de teclas r\u00e1pidas"
+msgstr "\ub2e8\ucd95\ud0a4 \uc791\uc5c5"
 
 #: .\files\hotkey_actions_window.py:49
 msgid "Key name"
-msgstr "Nombre clave"
+msgstr "\ud0a4 \uc774\ub984"
 
 #: .\files\hotkey_actions_window.py:53
 msgid "Target directory"
-msgstr "Directorio de destino"
+msgstr "\ub300\uc0c1 \ub514\ub809\ud130\ub9ac"
 
 #: .\files\hotkey_actions_window.py:85 .\files\hotkey_actions_window.py:90
 msgid "(unset)"
-msgstr "(sin fijar)"
+msgstr "(\ubbf8\uc124\uc815)"
 
 #: .\files\marked_file_mover.py:88 .\files\marked_file_mover.py:876
 msgid "Marks cleared."
-msgstr "Marcas limpias."
+msgstr "\ud45c\uc2dc\uac00 \uc9c0\uc6cc\uc84c\uc2b5\ub2c8\ub2e4."
 
 #: .\files\marked_file_mover.py:95
 msgid "Set current marks from previous."
-msgstr "Establece las marcas actuales a partir de las anteriores."
+msgstr "\uc774\uc804 \ub9c8\ud06c\uc5d0\uc11c \ud604\uc7ac \ub9c8\ud06c\ub97c \uc124\uc815\ud569\ub2c8\ub2e4."
 
 #: .\files\marked_file_mover.py:95
 msgid "Total set: {0}"
-msgstr "Conjunto total: {0}"
+msgstr "\ucd1d \uc9d1\ud569\uc785\ub2c8\ub2e4: {0}"
 
 #: .\files\marked_file_mover.py:122
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
-"No se ha fijado ning\u00fan objetivo de marca permanente."
-"F\u00edjelo con Ctrl+T en la ventana de Marcas."
+"\uc601\uad6c \ub9c8\ud06c \ub300\uc0c1\uc774 \uc5c6\uc2b5\ub2c8\ub2e4!"
+"Marks \ucc3d\uc5d0\uc11c Ctrl+T\ub85c \uc124\uc815\ud558\uc2ed\uc2dc\uc624."
 
 #: .\files\marked_file_mover.py:134
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
-"No hay acci\u00f3n r\u00e1pida establecida para {0}."
-"Establecer con {1} en la ventana de Marcas."
+"no hotkey action set for {0}."
+"Marks \ucc3d\uc5d0\uc11c {1}\ub85c \uc124\uc815\ud558\uc2ed\uc2dc\uc624."
 
 #: .\files\marked_file_mover.py:214 .\files\recent_directory_window.py:153
 msgid "Set a new target directory"
-msgstr "Establecer un nuevo directorio de destino"
+msgstr "\uc0c8 \ub300\uc0c1 \ub514\ub809\ud130\ub9ac \uc124\uc815"
 
 #: .\files\marked_file_mover.py:216
 msgid "MOVE"
-msgstr "MOVER"
+msgstr "\uc774\ub3d9"
 
 #: .\files\marked_file_mover.py:220
 msgid "COPY"
-msgstr "COPIA"
+msgstr "\ubcf5\uc0ac"
 
 #: .\files\marked_file_mover.py:222
 msgid "DELETE"
-msgstr "BORRAR"
+msgstr "\uc0ad\uc81c"
 
 #: .\files\marked_file_mover.py:224 .\files\recent_directory_window.py:157
 msgid "Add directories from parent"
-msgstr "A00f1adir directorios desde el padre"
+msgstr "\uc0c1\uc704 \ub514\ub809\ud130\ub9ac\uc5d0\uc11c \ub514\ub809\ud130\ub9ac \ucd94\uac00"
 
 #: .\files\marked_file_mover.py:227 .\files\recent_directory_window.py:159
 msgid "Clear targets"
-msgstr "Objetivos claros"
+msgstr "\ubaa9\ud45c \uc9c0\uc6b0\uae30"
 
 #: .\files\marked_file_mover.py:291 .\files\marked_file_mover.py:297
 msgid "Recording next mark target and action."
-msgstr "Grabaci\u00f3n de la siguiente marca objetivo y acci\u00f3n."
+msgstr "\ub2e4\uc74c \ub9c8\ud06c \ub300\uc0c1 \ubc0f \uc791\uc5c5\uc744 \uae30\ub85d\ud569\ub2c8\ub2e4."
 
 #: .\files\marked_file_mover.py:310 .\files\recent_directory_window.py:203
 msgid "Invalid directory: %s"
-msgstr "Directorio inv\u00e1lido: {0}"
+msgstr "\uc798\ubabb\ub41c \ub514\ub809\ud130\ub9ac\uc785\ub2c8\ub2e4: {0}"
 
 #: .\files\marked_file_mover.py:312
 msgid "Select target directory for marked files"
-msgstr "Seleccione el directorio de destino para los archivos marcados"
+msgstr "\ud45c\uc2dc\ub41c \ud30c\uc77c\uc758 \ub300\uc0c1 \ub514\ub809\ud130\ub9ac \uc120\ud0dd"
 
 #: .\files\marked_file_mover.py:367
 msgid "Copying"
-msgstr "Copia de"
+msgstr "\uad00\ub828 \uae30\uc0ac"
 
 #: .\files\marked_file_mover.py:367
 msgid "Moving"
-msgstr "En movimiento"
+msgstr "\uae30\ud0c0"
 
 #: .\files\marked_file_mover.py:368
 msgid "Copied"
-msgstr "Copiado"
+msgstr "\ub6b1 \ubca0\uc5b4"
 
 #: .\files\marked_file_mover.py:368
 msgid "Moved"
-msgstr "Movido"
+msgstr "\uc9c0\uc6d0\ud558\ub2e4"
 
 #: .\files\marked_file_mover.py:405
 msgid "Moved {0} files to {1}"
 msgstr ""
-"Movidos {0} archivos a"
+" \ud30c\uc77c {0}\uac1c\ub97c"
 "{1}"
+"\ub85c \uc62e\uacbc\uc2b5\ub2c8\ub2e4."
 
 #: .\files\marked_file_mover.py:407
 msgid "Copied {0} files to {1}"
 msgstr ""
-"Copiados {0} archivos a"
-"{1}"
+" {1}"
+"\uc5d0 \ud30c\uc77c {0}\uac1c\ub97c \ubcf5\uc0ac\ud588\uc2b5\ub2c8\ub2e4."
 
 #: .\files\marked_file_mover.py:434
 msgid "Existing filenames match!"
-msgstr "\u00a1Los nombres de archivo existentes coinciden!"
+msgstr "\uae30\uc874 \ud30c\uc77c \uc774\ub984\uc774 \uc77c\uce58\ud569\ub2c8\ub2e4!"
 
 #: .\files\marked_file_mover.py:436
 msgid "WARNING: Exact file match."
-msgstr "ADVERTENCIA: Coincidencia exacta de archivo."
+msgstr "\uacbd\uace0: \uc815\ud655\ud55c \ud30c\uc77c \uc77c\uce58."
 
 #: .\files\marked_file_mover.py:438 .\files\marked_file_mover.py:789
 msgid "WARNING: Short filenames."
-msgstr "ADVERTENCIA: Nombres de archivo cortos."
+msgstr "\uacbd\uace0: \uc9e7\uc740 \ud30c\uc77c\uba85."
 
 #: .\files\marked_file_mover.py:462
 msgid "Moving back"
-msgstr "Retroceder"
+msgstr "\ub4a4\ub85c \uc774\ub3d9"
 
 #: .\files\marked_file_mover.py:462
 msgid "Removing"
-msgstr "Eliminaci\u00f3n de"
+msgstr "\ub6b1 \ubca0\uc5b4"
 
 #: .\files\marked_file_mover.py:463
 msgid "Moved back"
-msgstr "Moved back"
+msgstr "\ub4a4\ub85c \uc774\ub3d9"
 
 #: .\files\marked_file_mover.py:463
 msgid "Removed"
-msgstr "Eliminado"
+msgstr "\uae30\ud0c0 \uc81c\ud488"
 
 #: .\files\marked_file_mover.py:469
 msgid "Where should the marked files have gone?"
-msgstr "\u00bfD\u00f3nde deber\u00edan haber ido a parar los archivos marcados?"
+msgstr "\ud45c\uc2dc\ub41c \ud30c\uc77c\uc740 \uc5b4\ub514\ub85c \uac14\uc744\uae4c\uc694?"
 
 #: .\files\marked_file_mover.py:494
 msgid "Moved back {0} files from {1}"
-msgstr ""
-"Movidos de nuevo {0} archivos desde"
-"{1}"
+msgstr " {1}\uc5d0\uc11c \ud30c\uc77c {0}\uac1c \ub2e4\uc2dc \uc62e\uae30\uae30"
 
 #: .\files\marked_file_mover.py:496
 msgid "Removed {0} files from {1}"
-msgstr ""
-"Eliminados {0} archivos de"
-"{1}"
+msgstr " {1}\uc5d0\uc11c \ud30c\uc77c {0}\uac1c \uc81c\uac70"
 
 #: .\files\marked_file_mover.py:513
 msgid "Select parent directory for target directories"
-msgstr "Seleccione el directorio principal para los directorios de destino"
+msgstr "\ub300\uc0c1 \ub514\ub809\ud1a0\ub9ac \uc120\ud0dd"
 
 #: .\files\marked_file_mover.py:673
 msgid "Sorted directories by embedding comparison."
-msgstr "Directorios ordenados por comparaci\u00f3n de incrustaci\u00f3n."
+msgstr "\ubd84\ub958 \ub41c \uac10\ub3c5 by embedding \ube44\uad50."
 
 #: .\files\marked_file_mover.py:693
 msgid "Confirm Delete"
-msgstr "Confirmar Borrar"
+msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
 
 #: .\files\marked_file_mover.py:694
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
-msgstr "Eliminaci\u00f3n de {0} archivos marcados - \u00bfEst\u00e1 seguro de que desea continuar?"
+msgstr "\uc0ad\uc81c {0} \ud45c\uc2dc\ub41c \ud30c\uc77c - \uc9c4\ud589\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?"
 
 #: .\files\marked_file_mover.py:714
 msgid "Delete Failed"
-msgstr "Borrado fallido"
+msgstr "\uc2e4\ud328 \uc0ad\uc81c"
 
 #: .\files\marked_file_mover.py:715
 msgid "Failed to delete %s files - check log for details."
-msgstr "Error al borrar {0} archivos - compruebe el registro para m\u00e1s detalles."
+msgstr "{0} \ud30c\uc77c\uc744 \uc0ad\uc81c \ucde8\uc18c - \uc138\ubd80 \uc0ac\ud56d\uc5d0 \ub300\ud55c \ub85c\uadf8 \ud655\uc778."
 
 #: .\files\marked_file_mover.py:718
 msgid "Deleted %s marked files."
-msgstr "Eliminados {0} archivos marcados."
+msgstr "Deleted {0} \ud30c\uc77c \ud45c\uc2dc."
 
 #: .\files\marked_file_mover.py:783
 msgid "Existing filenames found!"
-msgstr "Se han encontrado nombres de archivo."
+msgstr "\ubc1c\uacac \ub41c \ud30c\uc77c \uc774\ub984!"
 
 #: .\files\marked_file_mover.py:785
 msgid "WARNING: All file hashes match."
-msgstr "ADVERTENCIA: Todos los hashes de los archivos coinciden."
+msgstr "\uacbd\uace0: \ubaa8\ub4e0 \ud30c\uc77c hashes \uc77c\uce58."
 
 #: .\files\marked_file_mover.py:787
 msgid "WARNING: %s of %s file hashes match."
-msgstr "ADVERTENCIA: {0} de {1} hashes de archivos coinciden."
+msgstr "\uacbd\uace0: {0} \uc758 {1} \ud30c\uc77c hashes \uc77c\uce58."
 
 #: .\files\marked_file_mover.py:793
 msgid "No existing filenames found."
-msgstr "No se ha encontrado ning\u00fan nombre de archivo."
+msgstr "\ucc3e\uc744 \uc218 \uc5c6\uc74c."
 
 #: .\files\marked_file_mover.py:821
 msgid "Found %s downstream related images"
-msgstr "Encontradas {0} im\u00e1genes relacionadas con la corriente descendente"
+msgstr "Found {0} downstream \uad00\ub828 \uc774\ubbf8\uc9c0"
 
 #: .\files\marked_file_mover.py:823
 msgid "No downstream related images found"
-msgstr "No se han encontrado im\u00e1genes relacionadas con la corriente descendente"
+msgstr "\ucc3e\uc744 \uc218 \uc5c6\uc74c downstream \uad00\ub828 \uc774\ubbf8\uc9c0"
 
 #: .\files\marked_file_mover.py:834
 msgid "Cleared marked file"
-msgstr "Archivo marcado borrado"
+msgstr "\ud45c\uc2dc\ub41c \ud30c\uc77c"
 
 #: .\files\marked_file_mover.py:878
 msgid "Removed {0} marks"
-msgstr "Eliminadas {0} marcas"
+msgstr "\uc81c\uac70 {0} \ud45c"
 
 #: .\files\recent_directory_window.py:155
 msgid "Add directory"
-msgstr "A00f1adir directorio"
+msgstr "\ub514\ub809\ud1a0\ub9ac"
 
 #: .\files\recent_directory_window.py:205
 msgid "Set image comparison directory"
-msgstr "Establecer directorio de comparaci\u00f3n de im\u00e1genes"
+msgstr "\uc124\uc815 \uc774\ubbf8\uc9c0 \ube44\uad50 \ub514\ub809\ud1a0\ub9ac"
 
 #: .\files\type_configuration_window.py:61
 msgid "Media Type Configuration"
-msgstr "Configuraci\u00f3n del tipo de medio"
+msgstr "Media Type \uad6c\uc131"
 
 #: .\files\type_configuration_window.py:74
 msgid "Configure Media Types"
-msgstr "Configurar Tipos de Medios"
+msgstr "\ubbf8\ub514\uc5b4 \uc720\ud615 \uad6c\uc131"
 
 #: .\files\type_configuration_window.py:107
 msgid "Apply Changes"
-msgstr "Aplicar Cambios"
+msgstr "\ubcc0\uacbd \uc0ac\ud56d"
 
 #: .\files\type_configuration_window.py:149
 msgid "Confirm Changes"
-msgstr "Confirmar Cambios"
+msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
 
 #: .\files\type_configuration_window.py:150
 msgid "This will clear all existing compares in open windows. Continue?"
-msgstr "Esto borrar\u00e1 todas las comparaciones existentes en ventanas abiertas. \u00bfContinuar?"
+msgstr "\uc774 \ucc3d\uc5d0\uc11c \ubaa8\ub4e0 \uae30\uc874 \ube44\uad50\ub97c \uba85\ud655\ud558\uac8c\ud569\ub2c8\ub2e4. \uacc4\uc18d?"
 
 #: .\files\type_configuration_window.py:200
 msgid "Media type configuration updated"
-msgstr "Configuraci\u00f3n del tipo de medio actualizada"
+msgstr "Media Type \uc124\uc815 \uc5c5\ub370\uc774\ud2b8"
 
 #: .\image\image_details.py:115
 msgid "Image Path"
-msgstr "Ruta de imagen"
+msgstr "\uc774\ubbf8\uc9c0 \uacbd\ub85c"
 
 #: .\image\image_details.py:117
 msgid "File Index"
-msgstr "\u00cdndice de archivos"
+msgstr "\ud30c\uc77c \uc0c9\uc778"
 
 #: .\image\image_details.py:119
 msgid "Color Mode"
-msgstr "Modo de color"
+msgstr "\uc0c9\uae54 \ud615\ud0dc"
 
 #: .\image\image_details.py:121
 msgid "Dimensions"
-msgstr "Dimensiones"
+msgstr "\ud06c\uae30 (mm)"
 
 #: .\image\image_details.py:123 .\utils\constants.py:96
 #: .\utils\constants.py:113
 msgid "Size"
-msgstr "Tama00f1o"
+msgstr "\ud06c\uae30 (mm)"
 
 #: .\image\image_details.py:125
 msgid "Modification Time"
-msgstr "Tiempo de modificaci\u00f3n"
+msgstr "\uc218\uc815 \uc2dc\uac04"
 
 #: .\image\image_details.py:127
 msgid "Positive"
-msgstr "Positivo"
+msgstr "\uc9c0\uc6d0\ud558\ub2e4"
 
 #: .\image\image_details.py:129
 msgid "Negative"
-msgstr "Negativo"
+msgstr "\uc774\ub984 *"
 
 #: .\image\image_details.py:130
 msgid "(negative prompt not shown by config setting)"
-msgstr "(el mensaje negativo no aparece en la configuraci\u00f3n)"
+msgstr "(config \uc124\uc815\uc5d0 \uc758\ud574 \ud45c\uc2dc\ub418\uc9c0 \uc54a\ub294 \ub124\uac70\ud2f0\ube0c \ud504\ub86c\ud504\ud2b8)"
 
 #: .\image\image_details.py:131
 msgid "Models"
-msgstr "Modelos"
+msgstr "\ubaa8\ub378 \ubc88\ud638:"
 
 #: .\image\image_details.py:133
 msgid "LoRAs"
-msgstr "LoRAs"
+msgstr "\ub85c\uadf8\uc544\uc6c3"
 
 #: .\image\image_details.py:138
 msgid "Copy Prompt"
-msgstr "Aviso de copia"
+msgstr "\ubcf5\uc0ac Prompt"
 
 #: .\image\image_details.py:139
 msgid "Copy Prompt No BREAK"
-msgstr "Copie el aviso sin \u00abBREAK\u00bb."
+msgstr "\ubcf5\uc0ac \uae08\uc9c0 \uc5c6\uc74c BREAK"
 
 #: .\image\image_details.py:143
 msgid "Rotate Image Left"
-msgstr "Girar imagen a la izquierda"
+msgstr "\uc790\uc804 \uc774\ubbf8\uc9c0 \uc67c\ucabd"
 
 #: .\image\image_details.py:144
 msgid "Rotate Image Right"
-msgstr "Girar imagen al derecho"
+msgstr "Rotate \uc774\ubbf8\uc9c0 \uad8c\ub9ac"
 
 #: .\image\image_details.py:148
 msgid "Crop Image (Smart Detect)"
-msgstr "Recortar imagen (Detecci\u00f3n inteligente)"
+msgstr "\uc790\ub974\uae30 \uc774\ubbf8\uc9c0 (Smart Detect)"
 
 #: .\image\image_details.py:149
 msgid "Enhance Image"
-msgstr "Mejorar la imagen"
+msgstr "\ud5a5\uc0c1\ub41c \uc774\ubbf8\uc9c0"
 
 #: .\image\image_details.py:153
 msgid "Random Crop"
-msgstr "Recortar al azar"
+msgstr "\ubb34\uc791\uc704 Crop"
 
 #: .\image\image_details.py:154
 msgid "Randomly Modify"
-msgstr "Modificar al azar"
+msgstr "\ubb34\uc791\uc704 \uc218\uc815"
 
 #: .\image\image_details.py:158
 msgid "Flip Image Horizontally"
-msgstr "Voltear imagen horizontalmente"
+msgstr "\ud50c\ub9bd \uc774\ubbf8\uc9c0 \uc218\ud3c9\uc73c\ub85c"
 
 #: .\image\image_details.py:159
 msgid "Flip Image Vertically"
-msgstr "Voltear imagen verticalmente"
+msgstr "Flip \uc774\ubbf8\uc9c0 \uc218\uc9c1\uc73c\ub85c"
 
 #: .\image\image_details.py:162
 msgid "Show Metadata"
-msgstr "Mostrar metadatos"
+msgstr "Metadata \ubcf4\uae30"
 
 #: .\image\image_details.py:166
 msgid "Open Related Image"
-msgstr "Abrir Imagen relacionada"
+msgstr "\uad00\ub828 \uc774\ubbf8\uc9c0"
 
 #: .\image\image_details.py:175
 msgid "Image Generation"
-msgstr "Generaci\u00f3n de im\u00e1genes"
+msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131"
 
 #: .\image\image_details.py:183
 msgid "Run Image Generation"
-msgstr "Ejecutar la generaci\u00f3n de im\u00e1genes"
+msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131"
 
 #: .\image\image_details.py:185
 msgid "Press Shift+I on a main app window to run this"
-msgstr "Pulsa May\u00fas+I en una ventana de la aplicaci\u00f3n principal para ejecutar esto"
+msgstr "\ud504\ub808\uc2a4 Shift+ \ub098\ub294 \uba54\uc778 \uc571 \ucc3d\uc5d0\uc11c \uc774\uac83\uc744 \uc2e4\ud589"
 
 #: .\image\image_details.py:188
 msgid "Redo Prompt"
-msgstr "Rehacer el aviso"
+msgstr "\ub808\ub4dc\uc624 Prompt"
 
 #: .\image\image_details.py:192
 msgid "Tags"
-msgstr "Etiquetas"
+msgstr "\uc774\ub984 *"
 
 #: .\image\image_details.py:202
 msgid "Update Tags"
-msgstr "Actualizar etiquetas"
+msgstr "\uc5c5\ub370\uc774\ud2b8"
 
 #: .\image\image_details.py:265
 msgid "Copied prompt"
-msgstr "Copiado el aviso"
+msgstr "\ube44\ubc00\ubc88\ud638"
 
 #: .\image\image_details.py:274 .\image\image_details.py:284
 msgid "Copied prompt without BREAK"
-msgstr "Copiado el aviso sin \u00abBREAK\u00bb."
+msgstr "BREAK\uc5c6\uc774 \ubcf5\uc0ac \ub41c \ud504\ub86c\ud504\ud2b8"
 
 #: .\image\image_details.py:302
 msgid "Rotated image left"
-msgstr "Imagen girada a la izquierda"
+msgstr "\uc67c\ucabd\ub41c \uc774\ubbf8\uc9c0"
 
 #: .\image\image_details.py:302
 msgid "Rotated image right"
-msgstr "Imagen girada a la derecha"
+msgstr "\uc5f0\ub77d\ucc98"
 
 #: .\image\image_details.py:311
 msgid "Cropped image"
-msgstr "Imagen recortada"
+msgstr "Cropped \uc774\ubbf8\uc9c0"
 
 #: .\image\image_details.py:313
 msgid "No crops found"
-msgstr "No se ha encontrado ning\u00fan recorte de imagen"
+msgstr "\ubc1c\uacac\ub418\uc9c0 \uc54a\uc740 \uc791\ubb3c"
 
 #: .\image\image_details.py:320
 msgid "Enhanced image"
-msgstr "Imagen mejorada"
+msgstr "\ud5a5\uc0c1\ub41c \uc774\ubbf8\uc9c0"
 
 #: .\image\image_details.py:325
 msgid "Randomly cropped image"
-msgstr "Imagen recortada al azar"
+msgstr "\ubb34\uc791\uc704 \uc774\ubbf8\uc9c0"
 
 #: .\image\image_details.py:334
 msgid "Randomly modified image"
-msgstr "Imagen modificada al azar"
+msgstr "\ubb34\uc791\uc704 \uc774\ubbf8\uc9c0"
 
 #: .\image\image_details.py:339
 msgid "Flipped image"
-msgstr "Imagen invertida"
+msgstr "\uc88b\uc740 \uc774\ubbf8\uc9c0"
 
 #: .\image\image_details.py:344
 msgid "No metadata found"
-msgstr "No se han encontrado metadatos"
+msgstr "\uba54\ud0c0\ub370\uc774\ud130 \uc5c6\uc74c"
 
 #: .\image\image_details.py:358 .\image\image_details.py:416
 msgid " (Exact Match Not Found)"
-msgstr " (Coincidencia exacta no encontrada)"
+msgstr " (Exact Match \ucc3e\uc744 \uc218 \uc5c6\uc74c)"
 
 #: .\image\image_details.py:360 .\image\image_details.py:413
 msgid "(No related image found)"
-msgstr "(No se ha encontrado ninguna imagen relacionada)"
+msgstr "(\ucc3e\uc740 \uad00\ub828 \uc774\ubbf8\uc9c0 \uc5c6\uc74c)"
 
 #: .\image\image_details.py:475 .\image\image_details.py:482
 msgid "%s downstream image(s) found."
-msgstr "Se han encontrado {0} im\u00e1genes relacionadas con la corriente descendente."
+msgstr "{0} \ub2e4\uc6b4\uc2a4\ud2b8\ub9bc \uc774\ubbf8\uc9c0(s)\uac00 \uc788\uc2b5\ub2c8\ub2e4."
 
 #: .\image\image_details.py:478
 msgid "%s (cached) downstream image(s) found."
-msgstr "{0} (en cach\u00e9) imagen(es) relacionada(s) con la corriente descendente encontrada(s)."
+msgstr "{0} (\uc608\uc815) \ub2e4\uc6b4\uc2a4\ud2b8\ub9bc \uc774\ubbf8\uc9c0(s) \ubc1c\uacac."
 
 #: .\image\image_details.py:484
 msgid "No downstream related images found in"
-msgstr "No se han encontrado im\u00e1genes relacionadas con la corriente descendente en"
+msgstr "downstream \uad00\ub828 \uc774\ubbf8\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4."
 
 #: .\image\image_details.py:544
 msgid "Updated tags for %s"
-msgstr "Etiquetas actualizadas para {0}"
+msgstr "{0}\uc5d0 \ub300\ud55c \uc5c5\ub370\uc774\ud2b8 \ub41c \ud0dc\uadf8"
 
 #: .\image\metadata_viewer_window.py:31
 msgid "Raw Image Metadata"
-msgstr "Metadatos de im\u00e1genes sin procesar"
+msgstr "\uc88b\uc740 \uc774\ubbf8\uc9c0 Metadata"
 
 #: .\image\metadata_viewer_window.py:49
 msgid "Metadata Viewer"
-msgstr "Visor de metadatos"
+msgstr "Metadata \ubdf0\uc5b4"
 
 #: .\image\temp_image_canvas.py:104
 msgid "Open a new related image with Shift+R on main window"
-msgstr "Abrir una nueva imagen relacionada con May\u00fas+R en la ventana principal"
+msgstr "\uba54\uc778 \ucc3d\uc5d0\uc11c Shift+R\ub85c \uc0c8\ub85c\uc6b4 \uad00\ub828 \uc774\ubbf8\uc9c0\ub97c \uc5fd\ub2c8\ub2e4."
 
 #: .\utils\constants.py:8 .\utils\constants.py:17
 msgid "Browsing Mode"
-msgstr "Modo de navegaci\u00f3n"
+msgstr "\uac80\uc0c9 \ubaa8\ub4dc"
 
 #: .\utils\constants.py:9 .\utils\constants.py:19
 msgid "Searching Mode"
-msgstr "Modo de b\u00fasqueda"
+msgstr "\uac80\uc0c9 \ubaa8\ub4dc"
 
 #: .\utils\constants.py:10 .\utils\constants.py:21
 msgid "Group Comparison Mode"
-msgstr "Modo de comparaci\u00f3n de grupos"
+msgstr "\uadf8\ub8f9 \ube44\uad50 \ubaa8\ub4dc"
 
 #: .\utils\constants.py:11 .\utils\constants.py:23
 msgid "Duplicate Detection Mode"
-msgstr "Modo de detecci\u00f3n de duplicados"
+msgstr "\uc911\ubcf5 \uac10\uc9c0 \ubaa8\ub4dc"
 
 #: .\utils\constants.py:31 .\utils\constants.py:41
 msgid "Color Matching"
-msgstr "Combinaci\u00f3n de colores"
+msgstr "\uc0c9\uae54 \uc77c\uce58"
 
 #: .\utils\constants.py:32 .\utils\constants.py:43
 msgid "CLIP Embedding"
-msgstr "Incrustaci\u00f3n CLIP"
+msgstr "\uacf5\uc9c0\uc0ac\ud56d \uc635\uc158 \uc815\ubcf4"
 
 #: .\utils\constants.py:33 .\utils\constants.py:45
 msgid "SigLIP Embedding"
-msgstr "Incrustaci\u00f3n SigLIP"
+msgstr "\uc0ac\uc774\ud2b8\ub9f5 \uc635\uc158 \uc815\ubcf4"
 
 #: .\utils\constants.py:34 .\utils\constants.py:47
 msgid "FLAVA Embedding"
-msgstr "Incrustaci\u00f3n FLAVA"
+msgstr "\uc0ac\uc774\ud2b8\ub9f5 \uc635\uc158 \uc815\ubcf4"
 
 #: .\utils\constants.py:35 .\utils\constants.py:49
 msgid "ALIGN Embedding"
-msgstr "Incrustaci\u00f3n ALIGN"
+msgstr "\uc0ac\uc774\ud2b8\ub9f5 \uc635\uc158 \uc815\ubcf4"
 
 #: .\utils\constants.py:36 .\utils\constants.py:51
 msgid "X-VLM Embedding"
-msgstr "Incrustaci\u00f3n X-VLM"
+msgstr "X-VLM\uc758 \ud2b9\uc9d5 \uc635\uc158 \uc815\ubcf4"
 
 #: .\utils\constants.py:72
 msgid "Color diff threshold"
-msgstr "Umbral de diferencia de color"
+msgstr "\uc0c9\uae54 diff \ubb38\ud131"
 
 #: .\utils\constants.py:74
 msgid "Embedding similarity threshold"
-msgstr "Umbral de similitud de incrustaci\u00f3n"
+msgstr "\uad00\ub828 \ubb38\ud5cc"
 
 #: .\utils\constants.py:91 .\utils\constants.py:103
 msgid "Name"
-msgstr "Nombre"
+msgstr "\uc774\ub984 *"
 
 #: .\utils\constants.py:92 .\utils\constants.py:105
 msgid "Full Path"
-msgstr "Ruta completa"
+msgstr "\uc804\uccb4 \uacbd\ub85c"
 
 #: .\utils\constants.py:93 .\utils\constants.py:107
 msgid "Creation Time"
-msgstr "Tiempo de creaci\u00f3n"
+msgstr "\ucc3d\uc870 \uc2dc\uac04"
 
 #: .\utils\constants.py:94 .\utils\constants.py:109
 msgid "Modify Time"
-msgstr "Modificar la hora"
+msgstr "\uc218\uc815 \uc2dc\uac04"
 
 #: .\utils\constants.py:95 .\utils\constants.py:111
 msgid "Type"
-msgstr "Tipo"
+msgstr "\uc81c\ud488\uc815\ubcf4"
 
 #: .\utils\constants.py:97 .\utils\constants.py:115
 msgid "Name Length"
-msgstr "Nombre Longitud"
+msgstr "\uc774\ub984 \uae38\uc774"
 
 #: .\utils\constants.py:98 .\utils\constants.py:117
 msgid "Related Image"
-msgstr "Imagen relacionada"
+msgstr "\uad00\ub828 \uc774\ubbf8\uc9c0"
 
 #: .\utils\constants.py:99 .\utils\constants.py:119
 msgid "Random"
-msgstr "Al azar"
+msgstr "\ud55c\uad6d\uc5b4"
 
 #: .\utils\constants.py:138
 msgid "ascending"
-msgstr "ascendente"
+msgstr "\uc774\ub984 *"
 
 #: .\utils\constants.py:139
 msgid "descending"
-msgstr "descendente"
+msgstr "\ub6b1 \ubca0\uc5b4"
 
 #: .\utils\constants.py:140
 msgid "random"
-msgstr "al azar"
+msgstr "\ud55c\uad6d\uc5b4"
 
 #: .\utils\constants.py:192
 msgid "Image"
-msgstr "Imagen"
+msgstr "\uc774\ub984 *"
 
 #: .\utils\constants.py:194
 msgid "GIF"
-msgstr "GIF"
+msgstr "\ubb34\ub8cc \ubc30\uc1a1"
 
 #: .\utils\constants.py:196
 msgid "Video"
-msgstr "video"
+msgstr "(\uc8fc)"
 
 #: .\utils\constants.py:198
 msgid "PDF"
-msgstr "PDF"
+msgstr "PDF \ud30c\uc77c"
 
 #: .\utils\constants.py:200
 msgid "SVG"
-msgstr "SVG"
+msgstr "\uc0ac\uc774\ud2b8\ub9f5"
 
 #: .\utils\help_and_config.py:34
 msgid "Command"
-msgstr "Comando"
+msgstr "\uc774\ub984 *"
 
 #: .\utils\help_and_config.py:34
 msgid "Description"
-msgstr "Descripci\u00f3n"
+msgstr "\uc774\ub984 *"
 
 #: .\utils\help_and_config.py:35
 msgid "Search current image in new window"
-msgstr "Buscar la imagen actual en una nueva ventana"
+msgstr "\uc0c8 \ucc3d\uc5d0\uc11c \ud604\uc7ac \uc774\ubbf8\uc9c0\ub97c \uac80\uc0c9"
 
 #: .\utils\help_and_config.py:36
 msgid "Return to Browsing mode"
-msgstr "Volver al modo de navegaci\u00f3n"
+msgstr "\uac80\uc0c9 \ubaa8\ub4dc\ub85c \ub3cc\uc544\uac00\uae30"
 
 #: .\utils\help_and_config.py:37
 msgid "Copy marks list"
-msgstr "Copiar lista de marcas"
+msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
 
 #: .\utils\help_and_config.py:38
 msgid "Set current marks from previous marks list"
-msgstr "Establecer las marcas actuales a partir de la lista de marcas anteriores"
+msgstr "\uc774\uc804 \ud45c\uc2dc \ubaa9\ub85d\uc5d0\uc11c \ud604\uc7ac \ud45c\uc2dc \uc124\uc815"
 
 #: .\utils\help_and_config.py:39
 msgid "Run penultimate marks action"
-msgstr "Ejecutar pen\u00faltima acci\u00f3n de marcas"
+msgstr "\uc2e4\ud589 penultimate \ud45c \ud65c\ub3d9"
 
 #: .\utils\help_and_config.py:40
 msgid "Open Go to file window"
-msgstr "Abrir la ventana Ir al archivo"
+msgstr "\uae30\ud0c0 \ud30c\uc77c \ucc3d\uc73c\ub85c \uc774\ub3d9"
 
 #: .\utils\help_and_config.py:41
 msgid "Hide/show sidebar"
-msgstr "Ocultar/mostrar barra lateral"
+msgstr "\uc228\uae30\uae30 / \uc1fc sidebar"
 
 #: .\utils\help_and_config.py:42
 msgid "Open hotkeys window (*when marks window open)"
-msgstr "Abrir ventana de teclas r\u00e1pidas (*cuando se abre la ventana de marcas)"
+msgstr "\uc5f4\uae30 \ub2e8\ucd95\ud0a4 \ucc3d (*when \ub9c8\ud06c \ucc3d\uc774 \uc5f4\ub9bd\ub2c8\ub2e4)"
 
 #: .\utils\help_and_config.py:43
 msgid "Open content filters window"
-msgstr "Abrir la ventana de filtros de contenido"
+msgstr "\ucf58\ud150\uce20 \ud544\ud130 \ucc3d \uc5f4\uae30"
 
 #: .\utils\help_and_config.py:44
 msgid "Open marks window (no GUI)"
-msgstr "Abrir ventana de marcas (sin GUI)"
+msgstr "\ub9c8\ud06c \ucc3d \uc5f4\uae30 ( GUI \uc5c6\uc74c)"
 
 #: .\utils\help_and_config.py:45
 msgid "Open marks window"
-msgstr "Abrir ventana de marcas"
+msgstr "\uc5f4\ub9b0 \ud45c \ucc3d"
 
 #: .\utils\help_and_config.py:46
 msgid "Open marks action history window"
-msgstr "Abrir la ventana del historial de acciones de marcas"
+msgstr "\uc5f4\ub9b0 \ud45c \ud65c\ub3d9 \uae30\ub85d \ucc3d"
 
 #: .\utils\help_and_config.py:47
 msgid "Quit"
-msgstr "Deja"
+msgstr "\ub6b1 \ubca0\uc5b4"
 
 #: .\utils\help_and_config.py:48
 msgid "Run previous marks action"
-msgstr "Ejecutar la acci\u00f3n de marcas anteriores"
+msgstr "\uc774\uc804 \ud45c\uc2dc \ub3d9\uc791\uc744 \uc2e4\ud589"
 
 #: .\utils\help_and_config.py:49
 msgid "Continue image generation"
-msgstr "Continuar la generaci\u00f3n de im\u00e1genes"
+msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131 \uacc4\uc18d"
 
 #: .\utils\help_and_config.py:50
 msgid "Cancel image generation"
-msgstr "Cancelar la generaci\u00f3n de im\u00e1genes"
+msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131"
 
 #: .\utils\help_and_config.py:51
 msgid "Run next text embedding search preset"
-msgstr "Ejecutar el siguiente preajuste de b\u00fasqueda de texto incrustado"
+msgstr "\ub2e4\uc74c \ud14d\uc2a4\ud2b8 embedding \uac80\uc0c9 preset"
 
 #: .\utils\help_and_config.py:52
 msgid "Run permanent marks action"
-msgstr "Ejecutar la acci\u00f3n de marcas permanentes"
+msgstr "\uc601\uad6c \ub9c8\ud06c \ub3d9\uc791"
 
 #: .\utils\help_and_config.py:53
 msgid "Open type configuration window"
-msgstr "Abre el tipo de configuraci\u00f3n ventana"
+msgstr "\uc5f4\ub9b0 \uc720\ud615 \uc124\uc815 \ucc3d"
 
 #: .\utils\help_and_config.py:54
 msgid "Open new compare window"
-msgstr "Abrir nueva ventana de comparaci\u00f3n"
+msgstr "\uc0c8 \ube44\uad50 \ucc3d \uc5f4\uae30"
 
 #: .\utils\help_and_config.py:55
 msgid "Move previous marks to a different directory"
-msgstr "Mover las marcas anteriores a un directorio diferente"
+msgstr "\ub2e4\ub978 \ub514\ub809\ud1a0\ub9ac\uc5d0 \uc774\uc804 \ud45c\uc2dc\ub97c \uc774\ub3d9"
 
 #: .\utils\help_and_config.py:56 .\utils\help_and_config.py:84
 msgid "Undo previous marks changes"
-msgstr "Deshacer cambios de marcas anteriores"
+msgstr "\uc774\uc804 \ud45c \ubcc0\uacbd"
 
 #: .\utils\help_and_config.py:57
 msgid "Toggle fullscreen"
-msgstr "Pantalla completa"
+msgstr "\uc804\uccb4 \ud654\uba74"
 
 #: .\utils\help_and_config.py:58
 msgid "Go to first sorted image"
-msgstr "Ir a la primera imagen ordenada"
+msgstr "\uccab \ubc88\uc9f8 \uc815\ub82c \uc774\ubbf8\uc9c0"
 
 #: .\utils\help_and_config.py:59
 msgid "Go to last sorted image"
-msgstr "Ir a la \u00faltima imagen ordenada"
+msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
 
 #: .\utils\help_and_config.py:60
 msgid "Show previous/next image"
-msgstr "Mostrar imagen anterior/siguiente"
+msgstr "\uc774\uc804/\ub2e4\uc74c \uc774\ubbf8\uc9c0\ubcf4\uae30"
 
 #: .\utils\help_and_config.py:61
 msgid "Page through images"
-msgstr "Pasar im\u00e1genes"
+msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
 
 #: .\utils\help_and_config.py:62
 msgid "Search current image in current window"
-msgstr "Buscar la imagen actual en la ventana actual"
+msgstr "\ud604\uc7ac \ucc3d\uc5d0\uc11c \ud604\uc7ac \uc774\ubbf8\uc9c0 \uac80\uc0c9"
 
 #: .\utils\help_and_config.py:63
 msgid "Clear all hidden images"
-msgstr "Borrar todas las im\u00e1genes ocultas"
+msgstr "\ubaa8\ub4e0 \uc228\uaca8\uc9c4 \uc774\ubbf8\uc9c0"
 
 #: .\utils\help_and_config.py:64
 msgid "Clear marks list"
-msgstr "Borrar lista de marcas"
+msgstr "\uba85\ud655\ud55c \ud45c \uba85\ubd80"
 
 #: .\utils\help_and_config.py:65
 msgid "Show image details"
-msgstr "Mostrar detalles de la imagen"
+msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
 
 #: .\utils\help_and_config.py:66
 msgid "Delete image (or marked file group if marks window selected)"
-msgstr "Borrar imagen (o grupo de archivos marcados si se ha seleccionado la ventana de marcas)"
+msgstr "\uc774\ubbf8\uc9c0 \uc0ad\uc81c (\ub610\ub294 \ud45c\uc2dc\ub41c \ud30c\uc77c \uadf8\ub8f9 \ud45c\uc2dc \ucc3d \uc120\ud0dd)"
 
 #: .\utils\help_and_config.py:67
 msgid "Go to next mark"
-msgstr "Ir a la siguiente marca"
+msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
 
 #: .\utils\help_and_config.py:68
 msgid "Show help window"
-msgstr "Mostrar ventana de ayuda"
+msgstr "\uacf5\uc9c0\uc0ac\ud56d"
 
 #: .\utils\help_and_config.py:69
 msgid "Run image generation"
-msgstr "Ejecutar la generaci\u00f3n de im\u00e1genes"
+msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131"
 
 #: .\utils\help_and_config.py:70
 msgid "Run content filters for all files in the current directory"
-msgstr "Ejecutar filtros de contenido para todos los archivos del directorio actual"
+msgstr "\ud604\uc7ac \ub514\ub809\ud1a0\ub9ac\uc758 \ubaa8\ub4e0 \ud30c\uc77c\uc5d0 \ub300\ud55c \ucf58\ud150\uce20 \ud544\ud130 \uc2e4\ud589"
 
 #: .\utils\help_and_config.py:71
 msgid "View last moved image mark"
-msgstr "Ver la \u00faltima marca de imagen movida"
+msgstr "\ub9c8\uc9c0\ub9c9 \uc774\ub3d9 \uc774\ubbf8\uc9c0 \ud45c\uc2dc"
 
 #: .\utils\help_and_config.py:72
 msgid "Toggle content filters"
-msgstr "Alternar filtros de contenido"
+msgstr "\ucf58\ud150\uce20 \ud544\ud130"
 
 #: .\utils\help_and_config.py:73
 msgid "Add or remove a mark for current image"
-msgstr "A\u00f1adir o eliminar una marca para la imagen actual"
+msgstr "\ud604\uc7ac \uc774\ubbf8\uc9c0\uc758 \ud45c\uc2dc \ub610\ub294 \uc81c\uac70"
 
 #: .\utils\help_and_config.py:74
 msgid "Add all marks between most recently set and current selected inclusive, or all marks in current group"
-msgstr "A\u00f1adir todas las marcas entre la \u00faltima establecida y la actual seleccionada inclusive, o todas las marcas del grupo actual"
+msgstr "\uac00\uc7a5 \ucd5c\uadfc \uc124\uc815 \ubc0f \ud604\uc7ac \uc120\ud0dd\ub41c \ud3ec\uad04\uc801 \uc778 \uc0ac\uc774 \ubaa8\ub4e0 \ud45c\uc2dc, \ub610\ub294 \ud604\uc7ac \uadf8\ub8f9\uc758 \ubaa8\ub4e0 \ud45c\uc2dc"
 
 #: .\utils\help_and_config.py:76
 msgid "Open image in GIMP"
-msgstr "Abrir imagen en GIMP"
+msgstr "GIMP\uc5d0\uc11c \uc774\ubbf8\uc9c0 \uc5f4\uae30"
 
 #: .\utils\help_and_config.py:77
 msgid "Randomly modify image"
-msgstr "Modificar la imagen aleatoriamente"
+msgstr "\ubb34\uc791\uc704 \uc774\ubbf8\uc9c0 \uc218\uc815"
 
 #: .\utils\help_and_config.py:78
 msgid "View related image (controlnet, etc.)"
-msgstr "Ver imagen relacionada (controlnet, etc.)"
+msgstr "\uad00\ub828 \uc774\ubbf8\uc9c0 \ubcf4\uae30 (controlnet, \ub4f1)"
 
 #: .\utils\help_and_config.py:79
 msgid "Toggle slideshow"
-msgstr "Alternar presentaci\u00f3n de diapositivas"
+msgstr "\uc2ac\ub77c\uc774\ub4dc \uc1fc"
 
 #: .\utils\help_and_config.py:80
 msgid "Find related images in open window"
-msgstr "Buscar im\u00e1genes relacionadas en ventana abierta"
+msgstr "\uc5f4\ub9b0 \ucc3d\uc5d0\uc11c \uad00\ub828 \uc774\ubbf8\uc9c0 \ucc3e\uae30"
 
 #: .\utils\help_and_config.py:81
 msgid "Run refacdir"
-msgstr "Ejecutar refacdir"
+msgstr "\ud30c\uc77c \ud615\uc2dd"
 
 #: .\utils\help_and_config.py:82
 msgid "Hide current image"
-msgstr "Ocultar la imagen actual"
+msgstr "\ud604\uc7ac \uc774\ubbf8\uc9c0 \uc228\uae30\uae30"
 
 #: .\utils\help_and_config.py:83
 msgid "Set marks from downstream related images"
-msgstr "Establecer marcas a partir de im\u00e1genes relacionadas aguas abajo"
+msgstr "downstream \uad00\ub828 \uc774\ubbf8\uc9c0 \uc124\uc815"
 
 #: .\utils\help_and_config.py:85
 msgid "Show previous/next group"
-msgstr "Mostrar grupo anterior/siguiente"
+msgstr "\uc774\uc804/\ub2e4\uc74c \uadf8\ub8f9\ubcf4\uae30"
 
 #: .\utils\help_and_config.py:133
 msgid "Show Toasts"
-msgstr "Mostrar brindis"
+msgstr "Toasts \uc18c\uac1c"
 
 #: .\utils\help_and_config.py:135
 msgid "Slideshow Interval (sec)"
-msgstr "Intervalo de diapositivas (seg)"
+msgstr "\uc2ac\ub77c\uc774\ub4dc \uc1fc \uac04\uaca9 (sec)"
 
 #: .\utils\help_and_config.py:137
 msgid "File Check Interval (sec)"
-msgstr "Intervalo de comprobaci\u00f3n de archivos (seg)"
+msgstr "\ud30c\uc77c \ud655\uc778 Interval (sec)"
 
 #: .\utils\help_and_config.py:139
 msgid "Max Search Results"
-msgstr "Resultados de la b\u00fasqueda Max"
+msgstr "Max \uac80\uc0c9 \uacb0\uacfc"
 
 #: .\utils\help_and_config.py:141
 msgid "Sort By"
-msgstr "Ordenar por"
+msgstr "\uc815\ub82c \uae30\uc900"
 
 #: .\utils\help_and_config.py:143
 msgid "Toasts Persist (sec)"
-msgstr "Los brindis persisten (seg)"
+msgstr "\ud1a0\uc2a4\ud2b8 \ud37c\uc2a4\ud2b8 (sec)"
 
 #: .\utils\help_and_config.py:145
 msgid "Delete Instantly"
-msgstr "Borrar al instante"
+msgstr "\uc989\uc2dc \uc0ad\uc81c"
 
 #: .\utils\help_and_config.py:147
 msgid "Trash Folder"
-msgstr "Carpeta Papelera"
+msgstr "\uc4f0\ub808\uae30 \ud3f4\ub354"
 
 #: .\utils\help_and_config.py:149
 msgid "Image Tagging Enabled"
-msgstr "Etiquetado de im\u00e1genes activado"
+msgstr "\uc774\ubbf8\uc9c0 \ud0dc\uadf8 Enabled"
 
 #: .\utils\help_and_config.py:151
 msgid "Escape Backslash Filepaths"
-msgstr "Escape de la barra invertida Filepaths"
+msgstr "Backslash \ud30c\uc77c \uacbd\ub85c \ud0c8\ucd9c"
 
