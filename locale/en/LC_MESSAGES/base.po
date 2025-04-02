@@ -1,18 +1,16 @@
-# APPLICATION TRANSLATIONS
-# THOMAS HALL <tomhall.main@gmail.com>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-03-27 22:14-0400\n"
-"PO-Revision-Date: 2025-03-27 22:14-0400\n"
+"POT-Creation-Date: 2025-04-02 13:01-0400\n"
+"PO-Revision-Date: 2025-04-02 13:01-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
-"Language: en\n"
 "Language-Team: en Team <<EMAIL>>\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=cp1252\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: .\app.py:91 .\app.py:866 .\app.py:1820
 msgid " Simple Image Compare "
@@ -187,8 +185,10 @@ msgid "No image selected."
 msgstr "No image selected."
 
 #: .\app.py:961
-msgid "Compare mode must be set to an embedding mode to search text embeddings"
-msgstr "Compare mode must be set to an embedding mode to search text embeddings"
+msgid ""
+"Compare mode must be set to an embedding mode to search text embeddings"
+msgstr ""
+"Compare mode must be set to an embedding mode to search text embeddings"
 
 #: .\app.py:966
 msgid "Select image file"
@@ -291,8 +291,10 @@ msgid "No Text Search Presets Found"
 msgstr "No Text Search Presets Found"
 
 #: .\app.py:1433
-msgid "No text embedding search presets found. Set them in the config.json file."
-msgstr "No text embedding search presets found. Set them in the config.json file."
+msgid ""
+"No text embedding search presets found. Set them in the config.json file."
+msgstr ""
+"No text embedding search presets found. Set them in the config.json file."
 
 #: .\app.py:1533
 msgid "Failed to open location of current file, unable to get valid filepath"
@@ -301,6 +303,14 @@ msgstr "Failed to open location of current file, unable to get valid filepath"
 #: .\app.py:1544
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "Failed to open current file in GIMP, unable to get valid filepath"
+
+#: .\app.py:1560
+msgid ""
+"Hid current image.\n"
+"To unhide, press Shift+B."
+msgstr ""
+"Hid current image.\n"
+"To unhide, press Shift+B."
 
 #: .\app.py:1565
 msgid "Cleared all hidden images."
@@ -329,8 +339,12 @@ msgid "Removing file: {0}"
 msgstr "Removing file: {0}"
 
 #: .\app.py:1630
-msgid "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."
-msgstr "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."
+msgid ""
+"Failed to send file to the trash, so it will be deleted. Either pip install "
+"send2trash or set a specific trash folder in config.json."
+msgstr ""
+"Failed to send file to the trash, so it will be deleted. Either pip install "
+"send2trash or set a specific trash folder in config.json."
 
 #: .\app.py:1647
 msgid "Invalid target filepath for replacement: "
@@ -415,16 +429,24 @@ msgid "No Groups Found"
 msgstr "No Groups Found"
 
 #: .\compare\compare_wrapper.py:272
-msgid "Gathering image data... setup may take a while depending on number of files involved."
-msgstr "Gathering image data... setup may take a while depending on number of files involved."
+msgid ""
+"Gathering image data... setup may take a while depending on number of files "
+"involved."
+msgstr ""
+"Gathering image data... setup may take a while depending on number of files "
+"involved."
 
 #: .\compare\compare_wrapper.py:294
 msgid "Confirm group run"
 msgstr "Confirm group run"
 
 #: .\compare\compare_wrapper.py:295
-msgid "Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."
-msgstr "Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."
+msgid ""
+"Search mode detected, please confirm switch to group mode before run. Group "
+"mode will take longer as all images in the base directory are compared."
+msgstr ""
+"Search mode detected, please confirm switch to group mode before run. Group "
+"mode will take longer as all images in the base directory are compared."
 
 #: .\compare\compare_wrapper.py:302
 msgid "Gathering image data for comparison"
@@ -467,8 +489,10 @@ msgid "No Duplicates Found"
 msgstr "No Duplicates Found"
 
 #: .\compare\compare_wrapper.py:379
-msgid "None of the files appear to be duplicates based on the current settings."
-msgstr "None of the files appear to be duplicates based on the current settings."
+msgid ""
+"None of the files appear to be duplicates based on the current settings."
+msgstr ""
+"None of the files appear to be duplicates based on the current settings."
 
 #: .\compare\compare_wrapper.py:403
 msgid "Some group members were left stranded by the grouping process."
@@ -483,8 +507,12 @@ msgid "No More Groups"
 msgstr "No More Groups"
 
 #: .\compare\compare_wrapper.py:459
-msgid "There are no more image groups remaining for this directory and current filter settings."
-msgstr "There are no more image groups remaining for this directory and current filter settings."
+msgid ""
+"There are no more image groups remaining for this directory and current "
+"filter settings."
+msgstr ""
+"There are no more image groups remaining for this directory and current "
+"filter settings."
 
 #: .\compare\prevalidations_window.py:23
 msgid "(no positives set)"
@@ -578,8 +606,10 @@ msgid "Done"
 msgstr "Done"
 
 #: .\compare\prevalidations_window.py:401
-msgid "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
-msgstr "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
+msgid ""
+"No prevalidation found with name: {0}. Set it on the Prevalidations Window."
+msgstr ""
+"No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 
 #: .\compare\prevalidations_window.py:412
 msgid "Prevalidations"
@@ -1152,8 +1182,8 @@ msgid "CLIP Embedding"
 msgstr "CLIP Embedding"
 
 #: .\utils\constants.py:33 .\utils\constants.py:45
-msgid "SIGLIP Embedding"
-msgstr "SIGLIP Embedding"
+msgid "SigLIP Embedding"
+msgstr "SigLIP Embedding"
 
 #: .\utils\constants.py:34 .\utils\constants.py:47
 msgid "FLAVA Embedding"
@@ -1164,8 +1194,8 @@ msgid "ALIGN Embedding"
 msgstr "ALIGN Embedding"
 
 #: .\utils\constants.py:36 .\utils\constants.py:51
-msgid "XVLM Embedding"
-msgstr "XVLM Embedding"
+msgid "X-VLM Embedding"
+msgstr "X-VLM Embedding"
 
 #: .\utils\constants.py:72
 msgid "Color diff threshold"
@@ -1404,8 +1434,12 @@ msgid "Add or remove a mark for current image"
 msgstr "Add or remove a mark for current image"
 
 #: .\utils\help_and_config.py:74
-msgid "Add all marks between most recently set and current selected inclusive, or all marks in current group"
-msgstr "Add all marks between most recently set and current selected inclusive, or all marks in current group"
+msgid ""
+"Add all marks between most recently set and current selected inclusive, or "
+"all marks in current group"
+msgstr ""
+"Add all marks between most recently set and current selected inclusive, or "
+"all marks in current group"
 
 #: .\utils\help_and_config.py:76
 msgid "Open image in GIMP"
@@ -1482,12 +1516,3 @@ msgstr "Image Tagging Enabled"
 #: .\utils\help_and_config.py:151
 msgid "Escape Backslash Filepaths"
 msgstr "Escape Backslash Filepaths"
-
-#: .\utils\constants.py:33 .\utils\constants.py:45
-msgid "SigLIP Embedding"
-msgstr "SigLIP Embedding"
-
-#: .\utils\constants.py:36 .\utils\constants.py:51
-msgid "X-VLM Embedding"
-msgstr "X-VLM Embedding"
-

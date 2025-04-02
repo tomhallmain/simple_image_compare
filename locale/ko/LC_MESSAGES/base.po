@@ -1,1482 +1,1508 @@
-# APPLICATION TRANSLATIONS
-# AUTHOR NAME <author@example.com>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-03-31 16:52-0400\n"
-"PO-Revision-Date: 2025-03-31 16:52-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
-"Language: ko\n"
+"POT-Creation-Date: 2025-04-02 13:01-0400\n"
+"PO-Revision-Date: 2025-04-02 13:01-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=cp1252\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: .\app.py:91 .\app.py:866 .\app.py:1820
 msgid " Simple Image Compare "
-msgstr " \uac04\ub2e8\ud55c \uc774\ubbf8\uc9c0 \ube44\uad50 "
+msgstr " 간단한 이미지 비교 "
 
 #: .\app.py:150
 msgid "Theme switched to {0}."
-msgstr "\ud14c\ub9c8\ub294 {0}\uc5d0 \uc804\ud658."
+msgstr "테마는 {0}에 전환."
 
 #: .\app.py:233 .\compare\compare_wrapper.py:467
 msgid "Set a directory to run comparison."
-msgstr "\ube44\uad50\ub97c \uc2e4\ud589\ud558\ub824\uba74 \ub514\ub809\ud1a0\ub9ac\ub97c \uc124\uc815\ud569\ub2c8\ub2e4."
+msgstr "비교를 실행하려면 디렉토리를 설정합니다."
 
 #: .\app.py:240
 msgid "Toggle theme"
-msgstr "\uad00\ub828 \uae30\uc0ac"
+msgstr "관련 기사"
 
 #: .\app.py:241
 msgid "Set directory"
-msgstr "\uc124\uc815 \ub514\ub809\ud1a0\ub9ac"
+msgstr "설정 디렉토리"
 
 #: .\app.py:242
 msgid "Add dirpath..."
-msgstr "\ub514\ub809\ud1a0\ub9ac \uacbd\ub85c \ucd94\uac00..."
+msgstr "디렉토리 경로 추가..."
 
 #: .\app.py:245
 msgid "Set search file"
-msgstr "\uc5f0\ub77d\ucc98"
+msgstr "연락처"
 
 #: .\app.py:253
 msgid "Search text (embedding mode)"
-msgstr "\ud14d\uc2a4\ud2b8 \uac80\uc0c9(\uc784\ubca0\ub529 \ubaa8\ub4dc)"
+msgstr "텍스트 검색(임베딩 모드)"
 
 #: .\app.py:264
 msgid "Compare mode"
-msgstr "\ube44\uad50 \ubaa8\ub4dc"
+msgstr "비교 모드"
 
 #: .\app.py:282
 msgid "Compare faces"
-msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
+msgstr "자주 묻는 질문"
 
 #: .\app.py:286
 msgid "Overwrite cache"
-msgstr "\uce90\uc2dc\ub97c \ub36e\uc5b4"
+msgstr "캐시를 덮어"
 
 #: .\app.py:290
 msgid "Store checkpoints"
-msgstr "\ub9e4\uc7a5 \ucc3e\uae30"
+msgstr "매장 찾기"
 
 #: .\app.py:294
 msgid "Max files to compare"
-msgstr "\ucd5c\ub300 \ud30c\uc77c \ube44\uad50"
+msgstr "최대 파일 비교"
 
 #: .\app.py:300
 msgid "Filter files by glob pattern"
-msgstr "\uae00\ub85c\ube0c \ud328\ud134\uc73c\ub85c \ud30c\uc77c \ud544\ud130\ub9c1"
+msgstr "글로브 패턴으로 파일 필터링"
 
 #: .\app.py:307
 msgid "Browsing mode - Sort by"
-msgstr "\ube0c\ub77c\uc6b0\uc9d5 \ubaa8\ub4dc - \uc815\ub82c \uae30\uc900"
+msgstr "브라우징 모드 - 정렬 기준"
 
 #: .\app.py:314
 msgid "Recurse subdirectories"
-msgstr "\ud558\uc704 \ub514\ub809\ud130\ub9ac \uc7ac\uadc0"
+msgstr "하위 디렉터리 재귀"
 
 #: .\app.py:319
 msgid "Image resize to full window"
-msgstr "\uc804\uccb4 \ucc3d\uc5d0 \uc774\ubbf8\uc9c0 \ud06c\uae30"
+msgstr "전체 창에 이미지 크기"
 
 #: .\app.py:323
 msgid "Search only return closest"
-msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
+msgstr "자주 묻는 질문"
 
 #: .\app.py:330
 msgid "Run image compare"
-msgstr "\uc774\ubbf8\uc9c0 \ube44\uad50 \uc2e4\ud589"
+msgstr "이미지 비교 실행"
 
 #: .\app.py:332
 msgid "Find duplicates"
-msgstr "\uc911\ubcf5 \ucc3e\uae30"
+msgstr "중복 찾기"
 
 #: .\app.py:334 .\image\image_details.py:62
 msgid "Image details"
-msgstr "\uc774\ubbf8\uc9c0 \uc138\ubd80 \uc815\ubcf4"
+msgstr "이미지 세부 정보"
 
 #: .\app.py:345
 msgid "Search current image"
-msgstr "\ud604\uc7ac \uc774\ubbf8\uc9c0 \uac80\uc0c9"
+msgstr "현재 이미지 검색"
 
 #: .\app.py:346 .\utils\help_and_config.py:75
 msgid "Open image location"
-msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
+msgstr "본문 바로가기"
 
 #: .\app.py:347
 msgid "Copy image path"
-msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
+msgstr "본문 바로가기"
 
 #: .\app.py:348
 msgid "---- DELETE ----"
-msgstr "---- \uc885\ub8cc ----"
+msgstr "---- 종료 ----"
 
 #: .\app.py:484
 msgid "Confirm Quit"
-msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
+msgstr "자주 묻는 질문"
 
 #: .\app.py:484
 msgid "Would you like to quit the application?"
-msgstr "\uc751\uc6a9 \ud504\ub85c\uadf8\ub7a8\uc744 \uc885\ub8cc\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?"
+msgstr "응용 프로그램을 종료하시겠습니까?"
 
 #: .\app.py:577
 msgid "Ended slideshows"
-msgstr "\uc2ac\ub77c\uc774\ub4dc \uc1fc \uc885\ub8cc"
+msgstr "슬라이드 쇼 종료"
 
 #: .\app.py:630
 msgid "No files found in directory after refresh."
-msgstr "\uc0c8\ub85c \uace0\uce68 \ud6c4 \ub514\ub809\ud1a0\ub9ac\uc5d0 \ud30c\uc77c\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
+msgstr "새로 고침 후 디렉토리에 파일을 찾을 수 없습니다."
 
 #: .\app.py:630 .\app.py:1629 .\app.py:1688
 msgid "Warning"
-msgstr "\uacbd\uace0"
+msgstr "경고"
 
 #: .\app.py:653
 msgid "Slideshow for new images started"
-msgstr "\uc0c8 \uc774\ubbf8\uc9c0 \uc2ac\ub77c\uc774\ub4dc\uc1fc \uc2dc\uc791"
+msgstr "새 이미지 슬라이드쇼 시작"
 
 #: .\app.py:655
 msgid "Slideshow started"
-msgstr "\uc2ac\ub77c\uc774\ub4dc\uc1fc \uc2dc\uc791"
+msgstr "슬라이드쇼 시작"
 
 #: .\app.py:658
 msgid "Slideshows ended"
-msgstr "\uc2ac\ub77c\uc774\ub4dc \uc1fc \uc885\ub8cc"
+msgstr "슬라이드 쇼 종료"
 
 #: .\app.py:671
 msgid "Browsing mode set."
-msgstr "\uac80\uc0c9 \ubaa8\ub4dc \uc124\uc815."
+msgstr "검색 모드 설정."
 
 #: .\app.py:705
 msgid "(Open this image as part of a directory to see index details.)"
-msgstr "(\uc778\ub371\uc2a4 \uc138\ubd80 \uc815\ubcf4\ub97c \ubcf4\ub824\uba74 \uc774 \uc774\ubbf8\uc9c0\ub97c \ub514\ub809\ud1a0\ub9ac\uc758 \uc77c\ubd80\ub85c \uc5fd\ub2c8\ub2e4.)"
+msgstr "(인덱스 세부 정보를 보려면 이 이미지를 디렉토리의 일부로 엽니다.)"
 
 #: .\app.py:738
 msgid "Many Files"
-msgstr "\ub9ce\uc740 \ud30c\uc77c"
+msgstr "많은 파일"
 
 #: .\app.py:764
 msgid "No downstream related image(s) found in {0}"
-msgstr "{0} \uc5d0\uc11c \ub2e4\uc6b4\uc2a4\ud2b8\ub9bc \uad00\ub828 \uc774\ubbf8\uc9c0\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
+msgstr "{0} 에서 다운스트림 관련 이미지를 찾을 수 없습니다."
 
 #: .\app.py:785
 msgid "{0} file marks set"
-msgstr "{0} \ud30c\uc77c \ud45c\uc2dc \uc138\ud2b8"
+msgstr "{0} 파일 표시 세트"
 
 #: .\app.py:791
 msgid "Help and Config"
-msgstr "\ub3c4\uc6c0\ub9d0 \ubc0f \ubd88\ub9cc"
+msgstr "도움말 및 불만"
 
 #: .\app.py:871
 msgid "Set Image Comparison Directory"
-msgstr "\uc774\ubbf8\uc9c0 \ube44\uad50 \ub514\ub809\ud1a0\ub9ac \uc124\uc815"
+msgstr "이미지 비교 디렉토리 설정"
 
 #: .\app.py:909
 msgid "Counter limit must be an integer value."
-msgstr "\uce74\uc6b4\ud130 \uc81c\ud55c\uc740 \uc815\uc218 \uac12\uc774\uc5b4\uc57c \ud569\ub2c8\ub2e4."
+msgstr "카운터 제한은 정수 값이어야 합니다."
 
 #: .\app.py:909 .\app.py:924
 msgid "Invalid Setting"
-msgstr "\uc798\ubabb\ub41c \uc124\uc815"
+msgstr "잘못된 설정"
 
 #: .\app.py:924
 msgid "No image selected."
-msgstr "\uc120\ud0dd\ub41c \uc774\ubbf8\uc9c0 \uc5c6\uc74c."
+msgstr "선택된 이미지 없음."
 
 #: .\app.py:961
-msgid "Compare mode must be set to an embedding mode to search text embeddings"
-msgstr "\ud14d\uc2a4\ud2b8 \uc784\ubca0\ub529\uc744 \uac80\uc0c9\ud558\ub824\uba74 \ube44\uad50 \ubaa8\ub4dc\ub97c \uc784\ubca0\ub529 \ubaa8\ub4dc\ub85c \uc124\uc815\ud574\uc57c \ud569\ub2c8\ub2e4."
+msgid ""
+"Compare mode must be set to an embedding mode to search text embeddings"
+msgstr "텍스트 임베딩을 검색하려면 비교 모드를 임베딩 모드로 설정해야 합니다."
 
 #: .\app.py:966
 msgid "Select image file"
-msgstr "\uc774\ubbf8\uc9c0 \ud30c\uc77c \uc120\ud0dd"
+msgstr "이미지 파일 선택"
 
 #: .\app.py:995
 msgid "Somehow, the search file is invalid"
-msgstr "Somehow, \uac80\uc0c9 \ud30c\uc77c\uc774 \uc798\ubabb\ub418\uc5c8\uc2b5\ub2c8\ub2e4."
+msgstr "Somehow, 검색 파일이 잘못되었습니다."
 
 #: .\app.py:1080 .\app.py:1104
 msgid "Failed to get active image filepath"
-msgstr "Active image filepath\ub97c \uc5bb\ub294 \uc2e4\ud328"
+msgstr "Active image filepath를 얻는 실패"
 
 #: .\app.py:1186
 msgid "{0}: {1}% complete"
-msgstr "{0}: {1}% \uc644\ub8cc"
+msgstr "{0}: {1}% 완료"
 
 #: .\app.py:1192
 msgid "Confirm comparison"
-msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
+msgstr "자주 묻는 질문"
 
 #: .\app.py:1193
 msgid "No base directory has been set, will use current base directory of "
-msgstr "\uae30\ubcf8 \ub514\ub809\ud130\ub9ac\uac00 \uc124\uc815\ub418\uc9c0 \uc54a\uc740 \uacbd\uc6b0 \ud604\uc7ac \uae30\ubcf8 \ub514\ub809\ud130\ub9ac\ub97c \uc0ac\uc6a9\ud569\ub2c8\ub2e4: "
+msgstr "기본 디렉터리가 설정되지 않은 경우 현재 기본 디렉터리를 사용합니다: "
 
 #: .\app.py:1194
 msgid "Are you sure you want to proceed?"
-msgstr "\uc9c4\ud589\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?"
+msgstr "진행하시겠습니까?"
 
 #: .\app.py:1214
 msgid "Error running compare"
-msgstr "\uc624\ub958 \uc2e4\ud589 \ube44\uad50"
+msgstr "오류 실행 비교"
 
 #: .\app.py:1246
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
-"\uc2ac\ub77c\uc774\ub4dc \uc1fc \ud6c4 \uc7a0\uae08 \uc0ad\uc81c"
-"\uc804\ud658 \ubc29\uc9c0 \ud45c\uc2dc"
+"슬라이드쇼 후 잠금 삭제\n"
+"전환으로 마크 추가 방지"
 
 #: .\app.py:1257
 msgid "Mark removed. Remaining: {0}"
-msgstr "\ub9c8\ud06c\uac00 \uc81c\uac70\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ub0a8\uc544\uc788\uc74c: {0}"
+msgstr "마크가 제거되었습니다. 남아있음: {0}"
 
 #: .\app.py:1261
 msgid "Mark added. Total set: {0}"
-msgstr "\ub9c8\ud06c\uac00 \ucd94\uac00\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ucd1d \uc9d1\ud569\uc785\ub2c8\ub2e4: {0}"
+msgstr "마크가 추가되었습니다. 총 집합입니다: {0}"
 
 #: .\app.py:1278
 msgid "Marks added. Total set: {0}"
-msgstr "\ub9c8\ud06c\uac00 \ucd94\uac00\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ucd1d \uc9d1\ud569\uc785\ub2c8\ub2e4: {0}"
+msgstr "마크가 추가되었습니다. 총 집합입니다: {0}"
 
 #: .\app.py:1287
 msgid "First sorted mark"
-msgstr "\uccab \ubc88\uc9f8 \uc815\ub82c \ub9c8\ud06c"
+msgstr "첫 번째 정렬 마크"
 
 #: .\app.py:1294
 msgid "Only one marked file set."
-msgstr "1\uac1c\uc758 \ud45c\uc2dc\ub41c \ud30c\uc77c \uc138\ud2b8\ub9cc."
+msgstr "1개의 표시된 파일 세트만."
 
 #: .\app.py:1305
 msgid "Including marks: {0}"
-msgstr "\ub9c8\ud06c \ud3ec\ud568: {0}"
+msgstr "마크 포함: {0}"
 
 #: .\app.py:1313
 msgid "Move {0} Marked File(s)"
-msgstr "{0} \uac1c\uc758 \ud45c\uc2dc\ub41c \ud30c\uc77c\uc744 \uc774\ub3d9\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?"
+msgstr "{0} 개의 표시된 파일을 이동하시겠습니까?"
 
 #: .\app.py:1348
 msgid "NO_MARKS_SET"
 msgstr ""
-"{0}\uac1c\uc758 \ub9c8\ud06c\uac00 \uc124\uc815\ub418\uc5c8\uc2b5\ub2c8\ub2e4. ({1}\uac1c \uc774\uc0c1\uc774 \uc608\uc0c1\ub429\ub2c8\ub2e4.)"
-"Shift+M\uc744 \ub204\ub974\uba74 \ub9c8\ud06c\ub97c \uc124\uc815\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4."
+"{0} 마크가 설정되었습니다(>={1} 예상).\n"
+"Shift+M을 사용하여 마크를 설정합니다."
 
 #: .\app.py:1381
 msgid "Prevalidations now running"
-msgstr "\uc9c0\uae08 \uc2e4\ud589"
+msgstr "지금 실행"
 
 #: .\app.py:1381
 msgid "Prevalidations turned off"
-msgstr "\uc0ac\uc804 \uac80\uc99d"
+msgstr "사전 검증"
 
 #: .\app.py:1406
 msgid "File not found"
-msgstr "\ucc3e\uc744 \uc218 \uc5c6\uc74c"
+msgstr "찾을 수 없음"
 
 #: .\app.py:1406
 msgid "No file was found for the search text: \"{0}\""
-msgstr "\uac80\uc0c9 \ud14d\uc2a4\ud2b8\uc5d0 \ub300\ud55c \ud30c\uc77c\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4: \"{0}\\u201d"
+msgstr "검색 텍스트에 대한 파일을 찾을 수 없습니다: \"{0}”"
 
 #: .\app.py:1420
 msgid "No image selected"
-msgstr "\uc120\ud0dd \uc5c6\uc74c"
+msgstr "선택 없음"
 
 #: .\app.py:1420
 msgid "No image was selected for comparison"
-msgstr "\uc774\ubbf8\uc9c0\ub294 \ube44\uad50\ub97c \uc704\ud574 \uc120\uc815\ub418\uc5c8\uc2b5\ub2c8\ub2e4"
+msgstr "이미지는 비교를 위해 선정되었습니다"
 
 #: .\app.py:1433
 msgid "No Text Search Presets Found"
-msgstr "\ud14d\uc2a4\ud2b8 \uac80\uc0c9 \uc0ac\uc804 \uc124\uc815\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc74c"
+msgstr "텍스트 검색 사전 설정을 찾을 수 없음"
 
 #: .\app.py:1433
-msgid "No text embedding search presets found. Set them in the config.json file."
-msgstr "\ud14d\uc2a4\ud2b8 \uc784\ubca0\ub529 \uac80\uc0c9 \uc0ac\uc804 \uc124\uc815\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4. config.json \ud30c\uc77c\uc5d0\uc11c \uc124\uc815\ud558\uc138\uc694."
+msgid ""
+"No text embedding search presets found. Set them in the config.json file."
+msgstr "텍스트 임베딩 검색 사전 설정을 찾을 수 없습니다. config.json 파일에서 설정하세요."
 
 #: .\app.py:1533
 msgid "Failed to open location of current file, unable to get valid filepath"
-msgstr "\ud604\uc7ac \ud30c\uc77c\uc758 \uc704\uce58\ub97c \uc5f4\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4. \uc720\ud6a8\ud55c \ud30c\uc77c \uacbd\ub85c\ub97c \uac00\uc838\uc62c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
+msgstr "현재 파일의 위치를 열지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
 #: .\app.py:1544
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
-msgstr "\uae40\ud504\uc5d0\uc11c \ud604\uc7ac \ud30c\uc77c\uc744 \uc5f4\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4. \uc720\ud6a8\ud55c \ud30c\uc77c \uacbd\ub85c\ub97c \uac00\uc838\uc62c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
+msgstr "김프에서 현재 파일을 열지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
+
+#: .\app.py:1560
+msgid ""
+"Hid current image.\n"
+"To unhide, press Shift+B."
+msgstr ""
+"현재 이미지를 숨겼습니다.\n"
+"숨기기를 해제하려면 Shift+B를 누릅니다."
 
 #: .\app.py:1565
 msgid "Cleared all hidden images."
-msgstr "\uc228\uaca8\uc9c4 \uc774\ubbf8\uc9c0\ub97c \ubaa8\ub450 \uc9c0\uc6e0\uc2b5\ub2c8\ub2e4."
+msgstr "숨겨진 이미지를 모두 지웠습니다."
 
 #: .\app.py:1572
 msgid "DELETE_LOCK"
 msgstr ""
-"\uc2ac\ub77c\uc774\ub4dc \uc1fc \ud6c4 \uc7a0\uae08 \uc0ad\uc81c"
-"\uc804\ud658 \ubc29\uc9c0 \ud0c8\ucde8"
+"슬라이드쇼 후 잠금 삭제\n"
+"전환 후 삭제 방지"
 
 #: .\app.py:1590
 msgid "Invalid action, no files found to delete"
-msgstr "\uc798\ubabb\ub41c \uc791\uc5c5, \uc0ad\uc81c\ud560 \ud30c\uc77c\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc74c"
+msgstr "잘못된 작업, 삭제할 파일을 찾을 수 없음"
 
 #: .\app.py:1593
 msgid "Invalid action, search image not found"
-msgstr "\uc798\ubabb\ub41c \uc791\uc5c5, \uac80\uc0c9 \uc774\ubbf8\uc9c0\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc74c"
+msgstr "잘못된 작업, 검색 이미지를 찾을 수 없음"
 
 #: .\app.py:1608
 msgid "Failed to delete current file, unable to get valid filepath"
-msgstr "\ud604\uc7ac \ud30c\uc77c\uc744 \uc0ad\uc81c\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4. \uc720\ud6a8\ud55c \ud30c\uc77c \uacbd\ub85c\ub97c \uac00\uc838\uc62c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
+msgstr "현재 파일을 삭제하지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
 #: .\app.py:1613
 msgid "Removing file: {0}"
-msgstr "\ud30c\uc77c\uc744 \uc81c\uac70 \uc911\uc785\ub2c8\ub2e4: {0}"
+msgstr "파일을 제거 중입니다: {0}"
 
 #: .\app.py:1630
-msgid "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."
-msgstr "\ud30c\uc77c\uc744 \ud734\uc9c0\ud1b5\uc73c\ub85c \ubcf4\ub0b4\uc9c0 \ubabb\ud588\uc73c\ubbc0\ub85c \uc0ad\uc81c\ub429\ub2c8\ub2e4. pip\uc5d0\uc11c send2trash\ub97c \uc124\uce58\ud558\uac70\ub098 config.json\uc5d0\uc11c \ud2b9\uc815 \ud734\uc9c0\ud1b5 \ud3f4\ub354\ub97c \uc124\uc815\ud558\uc138\uc694."
+msgid ""
+"Failed to send file to the trash, so it will be deleted. Either pip install "
+"send2trash or set a specific trash folder in config.json."
+msgstr ""
+"파일을 휴지통으로 보내지 못했으므로 삭제됩니다. pip에서 send2trash를 설치하거나 config.json에서 특정 휴지통 폴더를 "
+"설정하세요."
 
 #: .\app.py:1647
 msgid "Invalid target filepath for replacement: "
-msgstr "\uad50\uccb4\ud560 \ub300\uc0c1 \ud30c\uc77c \uacbd\ub85c\uac00 \uc798\ubabb\ub418\uc5c8\uc2b5\ub2c8\ub2e4: "
+msgstr "교체할 대상 파일 경로가 잘못되었습니다: "
 
 #: .\app.py:1651
 msgid "Moved search image to "
-msgstr "\ub85c \uac80\uc0c9 \uc774\ubbf8\uc9c0\ub97c \uc774\ub3d9\ud588\uc2b5\ub2c8\ub2e4: "
+msgstr "로 검색 이미지를 이동했습니다: "
 
 #: .\app.py:1686
 msgid "Running image gen: "
-msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131 \uc2e4\ud589 : "
+msgstr "이미지 생성 실행 : "
 
 #: .\app.py:1688
 msgid "Error running image generation:"
-msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131 \uc2e4\ud589 \uc911 \uc624\ub958 \ubc1c\uc0dd:"
+msgstr "이미지 생성 실행 중 오류 발생:"
 
 #: .\app.py:1693
 msgid "Running refacdir"
-msgstr "refacdir \uc2e4\ud589"
+msgstr "refacdir 실행"
 
 #: .\app.py:1698
 msgid "Error"
-msgstr "\uacc4\uc815 \uc815\ubcf4"
+msgstr "계정 정보"
 
 #: .\app.py:1761
 msgid "GROUP_DETAILS"
 msgstr ""
-" \uadf8\ub8f9 {0} \uc911 {1}"
-"\ud06c\uae30: {2}"
+"그룹 {0} 중 {1}\n"
+"크기: {2}"
 
 #: .\app.py:1765
 msgid "No image files found"
-msgstr "\uc774\ubbf8\uc9c0 \ud30c\uc77c \uc5c6\uc74c"
+msgstr "이미지 파일 없음"
 
 #: .\app.py:1767
 msgid "1 image file found"
-msgstr "1 \uc774\ubbf8\uc9c0 \ud30c\uc77c"
+msgstr "1 이미지 파일"
 
 #: .\app.py:1767
 msgid "{0} image files found"
-msgstr "{0} \uc774\ubbf8\uc9c0 \ud30c\uc77c \ucc3e\uc558\uc2b5\ub2c8\ub2e4"
+msgstr "{0} 이미지 파일 찾았습니다"
 
 #: .\app.py:1770
 msgid "(filtered)"
-msgstr "(\ud544\ud130)"
+msgstr "(필터)"
 
 #: .\compare\base_compare.py:226
 msgid "Image comparison"
-msgstr "\uc774\ubbf8\uc9c0 \ube44\uad50"
+msgstr "이미지 비교"
 
 #: .\compare\base_compare.py:226
 msgid "Image data collection"
-msgstr "\uc774\ubbf8\uc9c0 \ub370\uc774\ud130 \uc218\uc9d1"
+msgstr "이미지 데이터 수집"
 
 #: .\compare\compare_wrapper.py:68 .\compare\compare_wrapper.py:71
 msgid "Invalid mode"
-msgstr "\uc720\ud6a8\ud558\uc9c0 \uc54a\uc740 \ubaa8\ub4dc"
+msgstr "유효하지 않은 모드"
 
 #: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
 msgid "No matches found. Search again to find potential matches."
-msgstr "\uc77c\uce58\ud558\ub294 \ud56d\ubaa9\uc774 \uc5c6\uc2b5\ub2c8\ub2e4. \ub2e4\uc2dc \uac80\uc0c9\ud558\uc5ec \uc77c\uce58\ud558\ub294 \ud56d\ubaa9\uc744 \ucc3e\uc544\ubcf4\uc138\uc694."
+msgstr "일치하는 항목이 없습니다. 다시 검색하여 일치하는 항목을 찾아보세요."
 
 #: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
 msgid "Search required"
-msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
+msgstr "자주 묻는 질문"
 
 #: .\compare\compare_wrapper.py:159
 msgid "Skipped %s images."
-msgstr "{0} \uc774\ubbf8\uc9c0\ub97c \uac74\ub108\ub6f0\uc5c8\uc2b5\ub2c8\ub2e4."
+msgstr "{0} 이미지를 건너뛰었습니다."
 
 #: .\compare\compare_wrapper.py:165
 msgid "No Unrelated Images"
-msgstr "\uad00\ub828 \uc774\ubbf8\uc9c0 \uc5c6\uc74c"
+msgstr "관련 이미지 없음"
 
 #: .\compare\compare_wrapper.py:165
 msgid "No unrelated images found."
-msgstr "\uad00\ub828 \uc774\ubbf8\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4."
+msgstr "관련 이미지가 없습니다."
 
 #: .\compare\compare_wrapper.py:202 .\compare\compare_wrapper.py:364
 msgid "No Groups Found"
-msgstr "\uadf8\ub8f9 \uc5c6\uc74c"
+msgstr "그룹 없음"
 
 #: .\compare\compare_wrapper.py:272
-msgid "Gathering image data... setup may take a while depending on number of files involved."
-msgstr "\uc774\ubbf8\uc9c0 \ub370\uc774\ud130 \uc218\uc9d1... \uad00\ub828\ub41c \ud30c\uc77c \uc218\uc5d0 \ub530\ub77c \uc124\uc815\ud558\ub294 \ub370 \uc2dc\uac04\uc774 \uac78\ub9b4 \uc218 \uc788\uc2b5\ub2c8\ub2e4."
+msgid ""
+"Gathering image data... setup may take a while depending on number of files "
+"involved."
+msgstr "이미지 데이터 수집... 관련된 파일 수에 따라 설정하는 데 시간이 걸릴 수 있습니다."
 
 #: .\compare\compare_wrapper.py:294
 msgid "Confirm group run"
-msgstr "\uadf8\ub8f9 \uc2e4\ud589 \ud655\uc778"
+msgstr "그룹 실행 확인"
 
 #: .\compare\compare_wrapper.py:295
-msgid "Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."
-msgstr "\uac80\uc0c9 \ubaa8\ub4dc\uac00 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \uc2e4\ud589\ud558\uae30 \uc804\uc5d0 \uadf8\ub8f9 \ubaa8\ub4dc\ub85c \uc804\ud658\uc744 \ud655\uc778\ud558\uc138\uc694. \uadf8\ub8f9 \ubaa8\ub4dc\ub294 \uae30\ubcf8 \ub514\ub809\ud130\ub9ac\uc758 \ubaa8\ub4e0 \uc774\ubbf8\uc9c0\ub97c \ube44\uad50\ud558\ubbc0\ub85c \uc2dc\uac04\uc774 \ub354 \uc624\ub798 \uac78\ub9bd\ub2c8\ub2e4."
+msgid ""
+"Search mode detected, please confirm switch to group mode before run. Group "
+"mode will take longer as all images in the base directory are compared."
+msgstr ""
+"검색 모드가 감지되었습니다. 실행하기 전에 그룹 모드로 전환을 확인하세요. 그룹 모드는 기본 디렉터리의 모든 이미지를 비교하므로 시간이 "
+"더 오래 걸립니다."
 
 #: .\compare\compare_wrapper.py:302
 msgid "Gathering image data for comparison"
-msgstr "\ube44\uad50\ub97c \uc704\ud55c \uc774\ubbf8\uc9c0 \ub370\uc774\ud130 \uc218\uc9d1"
+msgstr "비교를 위한 이미지 데이터 수집"
 
 #: .\compare\compare_wrapper.py:330
 msgid "Searching images..."
-msgstr "\uc774\ubbf8\uc9c0 \uac80\uc0c9..."
+msgstr "이미지 검색..."
 
 #: .\compare\compare_wrapper.py:336
 msgid "Set a directory and search file or search text."
-msgstr "\ub514\ub809\ud130\ub9ac\ub97c \uc124\uc815\ud558\uace0 \ud30c\uc77c \ub610\ub294 \uac80\uc0c9 \ud14d\uc2a4\ud2b8\ub97c \uac80\uc0c9\ud569\ub2c8\ub2e4."
+msgstr "디렉터리를 설정하고 파일 또는 검색 텍스트를 검색합니다."
 
 #: .\compare\compare_wrapper.py:337
 msgid "No Match Found"
-msgstr "\uc778\uae30 \uc0c1\ud488"
+msgstr "인기 상품"
 
 #: .\compare\compare_wrapper.py:337
 msgid "None of the files match the search filters with current settings."
-msgstr "\ud604\uc7ac \uc124\uc815\uc73c\ub85c \uac80\uc0c9 \ud544\ud130\uc640 \uc77c\uce58\ud558\ub294 \ud30c\uc77c\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
+msgstr "현재 설정으로 검색 필터와 일치하는 파일이 없습니다."
 
 #: .\compare\compare_wrapper.py:350
 msgid "%s possibly related images found."
-msgstr "{0} \uc544\ub9c8\ub3c4 \uad00\ub828 \uc774\ubbf8\uc9c0\uac00 \ubc1c\uacac\ub418\uc5c8\uc2b5\ub2c8\ub2e4."
+msgstr "{0} 아마도 관련 이미지가 발견되었습니다."
 
 #: .\compare\compare_wrapper.py:358
 msgid "Running image comparisons..."
-msgstr "\uc774\ubbf8\uc9c0 \ube44\uad50 \uc2e4\ud589 \uc911..."
+msgstr "이미지 비교 실행 중..."
 
 #: .\compare\compare_wrapper.py:363 .\compare\compare_wrapper.py:378
 msgid "Set a directory and search file."
-msgstr "\ub514\ub809\ud1a0\ub9ac \ubc0f \uac80\uc0c9 \ud30c\uc77c\uc744 \uc124\uc815\ud569\ub2c8\ub2e4."
+msgstr "디렉토리 및 검색 파일을 설정합니다."
 
 #: .\compare\compare_wrapper.py:364
 msgid "None of the files can be grouped with current settings."
-msgstr "\ud604\uc7ac \uc124\uc815\uc73c\ub85c\ub294 \uc5b4\ub5a4 \ud30c\uc77c\ub3c4 \uadf8\ub8f9\ud654\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
+msgstr "현재 설정으로는 어떤 파일도 그룹화할 수 없습니다."
 
 #: .\compare\compare_wrapper.py:379
 msgid "No Duplicates Found"
-msgstr "\ubc1c\uacac \uc5c6\uc74c"
+msgstr "발견 없음"
 
 #: .\compare\compare_wrapper.py:379
-msgid "None of the files appear to be duplicates based on the current settings."
-msgstr "\ud604\uc7ac \uc124\uc815\uc5d0 \ub530\ub974\uba74 \uc911\ubcf5\ub41c \ud30c\uc77c\uc740 \uc5c6\ub294 \uac83\uc73c\ub85c \ubcf4\uc785\ub2c8\ub2e4."
+msgid ""
+"None of the files appear to be duplicates based on the current settings."
+msgstr "현재 설정에 따르면 중복된 파일은 없는 것으로 보입니다."
 
 #: .\compare\compare_wrapper.py:403
 msgid "Some group members were left stranded by the grouping process."
-msgstr "\uc77c\ubd80 \uadf8\ub8f9 \uad6c\uc131\uc6d0\uc740 \uadf8\ub8f9\ud654 \uacfc\uc815\uc5d0\uc11c \ubc1c\uc774 \ubb36\uc600\uc2b5\ub2c8\ub2e4."
+msgstr "일부 그룹 구성원은 그룹화 과정에서 발이 묶였습니다."
 
 #: .\compare\compare_wrapper.py:403
 msgid "Stranded Group Members Found"
-msgstr "\uc88c\ucd08\ub41c \uadf8\ub8f9 \uad6c\uc131\uc6d0 \ubc1c\uacac"
+msgstr "좌초된 그룹 구성원 발견"
 
 #: .\compare\compare_wrapper.py:458
 msgid "No More Groups"
-msgstr "\ub354 \ub9ce\uc740 \uadf8\ub8f9 \uc5c6\uc74c"
+msgstr "더 많은 그룹 없음"
 
 #: .\compare\compare_wrapper.py:459
-msgid "There are no more image groups remaining for this directory and current filter settings."
-msgstr "\uc774 \ub514\ub809\ud130\ub9ac \ubc0f \ud604\uc7ac \ud544\ud130 \uc124\uc815\uc5d0 \ub354 \uc774\uc0c1 \uc774\ubbf8\uc9c0 \uadf8\ub8f9\uc774 \ub0a8\uc544 \uc788\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4."
+msgid ""
+"There are no more image groups remaining for this directory and current "
+"filter settings."
+msgstr "이 디렉터리 및 현재 필터 설정에 더 이상 이미지 그룹이 남아 있지 않습니다."
 
 #: .\compare\prevalidations_window.py:23
 msgid "(no positives set)"
-msgstr "(\ud3ec\uc9c0\ud2f0\ube0c \uc124\uc815 \uc5c6\uc74c)"
+msgstr "(포지티브 설정 없음)"
 
 #: .\compare\prevalidations_window.py:24
 msgid "(no negatives set)"
-msgstr "(\ub124\uac70\ud2f0\ube0c \uc124\uc815 \uc5c6\uc74c)"
+msgstr "(네거티브 설정 없음)"
 
 #: .\compare\prevalidations_window.py:26
 #: .\compare\prevalidations_window.py:197
 msgid "New Prevalidation"
-msgstr "\uc0c8\ub85c\uc6b4 \uc720\ud6a8\uc131"
+msgstr "새로운 유효성"
 
 #: .\compare\prevalidations_window.py:77
 msgid " - skipped"
-msgstr " - \uac74\ub108\ub6f0\uae30"
+msgstr " - 건너뛰기"
 
 #: .\compare\prevalidations_window.py:77 .\compare\prevalidations_window.py:80
 #: .\compare\prevalidations_window.py:82 .\compare\prevalidations_window.py:88
 #: .\compare\prevalidations_window.py:99
 msgid " detected"
-msgstr " \uad00\ub828 \uae30\uc0ac"
+msgstr " 관련 기사"
 
 #: .\compare\prevalidations_window.py:80
 msgid " - hidden"
-msgstr " - \uc228\uaca8\uc9c4"
+msgstr " - 숨겨진"
 
 #: .\compare\prevalidations_window.py:88
 msgid "Moving file: "
-msgstr "\ud30c\uc77c \uc774\ub3d9: "
+msgstr "파일 이동: "
 
 #: .\compare\prevalidations_window.py:99
 msgid "Deleting file: "
-msgstr "\ud30c\uc77c \uc0ad\uc81c: "
+msgstr "파일 삭제: "
 
 #: .\compare\prevalidations_window.py:172
 msgid " testing classifier {0} for {1}"
-msgstr " {1}\uc5d0 \ub300\ud55c \ubd84\ub958\uc790 {0} \ud14c\uc2a4\ud2b8"
+msgstr " {1}에 대한 분류자 {0} 테스트"
 
 #: .\compare\prevalidations_window.py:174
 msgid " ({0} positives, {1} negatives)"
-msgstr " ({0} \ud3ec\uc9c0\ud2f0\ube0c, {1} \ub124\uac70\ud2f0\ube0c)"
+msgstr " ({0} 포지티브, {1} 네거티브)"
 
 #: .\compare\prevalidations_window.py:187
 msgid "Modify Prevalidation"
-msgstr "\uc218\uc815\ud558\uae30"
+msgstr "수정하기"
 
 #: .\compare\prevalidations_window.py:196
 msgid "Prevalidation Name"
-msgstr "\uc720\ud6a8\uc131 \uac80\uc0ac \uc774\ub984"
+msgstr "유효성 검사 이름"
 
 #: .\compare\prevalidations_window.py:203
 msgid "Positives"
-msgstr "\uae0d\uc815\uc801"
+msgstr "긍정적"
 
 #: .\compare\prevalidations_window.py:210
 msgid "Negatives"
-msgstr "\ub124\uac70\ud2f0\ube0c"
+msgstr "네거티브"
 
 #: .\compare\prevalidations_window.py:217
 msgid "Threshold"
-msgstr "\uc784\uacc4\uac12"
+msgstr "임계값"
 
 #: .\compare\prevalidations_window.py:224
 msgid "Action"
-msgstr "\uc561\uc158"
+msgstr "액션"
 
 #: .\compare\prevalidations_window.py:234
 msgid "Action Modifier"
-msgstr "\uc561\uc158 \uc218\uc815\uc790"
+msgstr "액션 수정자"
 
 #: .\compare\prevalidations_window.py:241
 msgid "Run on Directory"
-msgstr "\uc5f0\ub77d\ucc98"
+msgstr "연락처"
 
 #: .\compare\prevalidations_window.py:248
 msgid "Image Classifier Name"
-msgstr "\uc774\ubbf8\uc9c0 \ubd84\ub958\uae30 \uc774\ub984"
+msgstr "이미지 분류기 이름"
 
 #: .\compare\prevalidations_window.py:259
 msgid "Image Classifier Selected Category"
-msgstr "\uc774\ubbf8\uc9c0 \ubd84\ub958\uae30 \uc120\ud0dd \uce74\ud14c\uace0\ub9ac"
+msgstr "이미지 분류기 선택 카테고리"
 
 #: .\compare\prevalidations_window.py:263
 msgid "Select Categories..."
-msgstr "\uce74\ud14c\uace0\ub9ac \uc120\ud0dd..."
+msgstr "카테고리 선택..."
 
 #: .\compare\prevalidations_window.py:269
 msgid "Done"
-msgstr "\uc644\ub8cc"
+msgstr "완료"
 
 #: .\compare\prevalidations_window.py:401
-msgid "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
-msgstr "\uc774\ub984: {0}\uc5d0 \ub300\ud55c \uc720\ud6a8\uc131 \uac80\uc0ac\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4. \uc720\ud6a8\uc131 \uac80\uc0ac \ucc3d\uc5d0\uc11c \uc124\uc815\ud558\uc138\uc694."
+msgid ""
+"No prevalidation found with name: {0}. Set it on the Prevalidations Window."
+msgstr "이름: {0}에 대한 유효성 검사를 찾을 수 없습니다. 유효성 검사 창에서 설정하세요."
 
 #: .\compare\prevalidations_window.py:412
 msgid "Prevalidations"
-msgstr "\ubc95\uc801\uace0\uc9c0"
+msgstr "법적고지"
 
 #: .\compare\prevalidations_window.py:435
 msgid "Set Prevalidations"
-msgstr "\uc124\uc815 \uc720\ud6a8\uc131"
+msgstr "설정 유효성"
 
 #: .\compare\prevalidations_window.py:437
 msgid "Add prevalidation"
-msgstr "\uc0ac\uc804 \uac80\uc99d"
+msgstr "사전 검증"
 
 #: .\compare\prevalidations_window.py:439
 msgid "Clear prevalidations"
-msgstr "\ucde8\uc18c \uc815\ucc45"
+msgstr "취소 정책"
 
 #: .\compare\prevalidations_window.py:475 .\files\hotkey_actions_window.py:95
 msgid "Set"
-msgstr "\uc124\uce58\ud558\uae30"
+msgstr "설치하기"
 
 #: .\compare\prevalidations_window.py:483 .\files\file_actions_window.py:269
 #: .\files\file_actions_window.py:312
 msgid "Modify"
-msgstr "\uc218\uc815\ud558\uae30"
+msgstr "수정하기"
 
 #: .\compare\prevalidations_window.py:490
 msgid "Delete"
-msgstr "\uc0ad\uc81c"
+msgstr "삭제"
 
 #: .\compare\prevalidations_window.py:497
 msgid "Move down"
-msgstr "\ub9e8 \uc704\ub85c"
+msgstr "맨 위로"
 
 #: .\extensions\sd_runner_client.py:59
 msgid "Image does not contain a prompt to redo!"
-msgstr "\uc774\ubbf8\uc9c0\uc5d0 \ub2e4\uc2dc \uc2e4\ud589\ud558\ub77c\ub294 \uba54\uc2dc\uc9c0\uac00 \ud45c\uc2dc\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4!"
+msgstr "이미지에 다시 실행하라는 메시지가 표시되지 않습니다!"
 
 #: .\files\file_actions_window.py:201
 msgid "File Actions"
-msgstr "\ud30c\uc77c \uc791\uc5c5"
+msgstr "파일 작업"
 
 #: .\files\file_actions_window.py:223
 msgid "File Action History"
-msgstr "\ud30c\uc77c \uc791\uc5c5 \uae30\ub85d"
+msgstr "파일 작업 기록"
 
 #: .\files\file_actions_window.py:225
 msgid "Search Image"
-msgstr "\uc774\ubbf8\uc9c0 \uac80\uc0c9"
+msgstr "이미지 검색"
 
 #: .\files\file_actions_window.py:227
 msgid "Clear History"
-msgstr "\uae30\ub85d \uc9c0\uc6b0\uae30"
+msgstr "기록 지우기"
 
 #: .\files\file_actions_window.py:253
 msgid " ({0} files)"
-msgstr " ({0} \ud30c\uc77c)"
+msgstr " ({0} 파일)"
 
 #: .\files\file_actions_window.py:258 .\files\marked_file_mover.py:264
 msgid "Move"
-msgstr "\uc774\ub3d9"
+msgstr "이동"
 
 #: .\files\file_actions_window.py:258 .\files\marked_file_mover.py:271
 msgid "Copy"
-msgstr "\ubcf5\uc0ac"
+msgstr "복사"
 
 #: .\files\file_actions_window.py:261 .\files\file_actions_window.py:304
 msgid "Undo"
-msgstr "\uc2e4\ud589 \ucde8\uc18c"
+msgstr "실행 취소"
 
 #: .\files\file_actions_window.py:296
 msgid "View"
-msgstr "\ubcf4\uae30"
+msgstr "보기"
 
 #: .\files\file_actions_window.py:329
 msgid "Image does not exist: "
-msgstr "\uc774\ubbf8\uc9c0\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4: "
+msgstr "이미지가 존재하지 않습니다: "
 
 #: .\files\file_actions_window.py:330 .\files\file_actions_window.py:341
 msgid "File Action Error"
-msgstr "\ud30c\uc77c \uc791\uc5c5 \uc624\ub958"
+msgstr "파일 작업 오류"
 
 #: .\files\file_actions_window.py:340
 msgid "Images not found"
-msgstr "\uc774\ubbf8\uc9c0\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4"
+msgstr "이미지를 찾을 수 없습니다"
 
 #: .\files\file_browser.py:151 .\files\file_browser.py:163
 msgid " (try setting recursive to True)"
-msgstr " (\uc7ac\uadc0\ub97c True\ub85c \uc124\uc815\ud574 \ubcf4\uc138\uc694.)"
+msgstr " (재귀를 True로 설정해 보세요.)"
 
 #: .\files\file_browser.py:152 .\files\file_browser.py:164
 msgid "No files found for current browsing settings."
-msgstr "\ud604\uc7ac \ube0c\ub77c\uc6b0\uc9d5 \uc124\uc815\uc5d0 \ub300\ud55c \ud30c\uc77c\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
+msgstr "현재 브라우징 설정에 대한 파일을 찾을 수 없습니다."
 
 #: .\files\file_browser.py:197
 msgid "FILE_BROWSER_INDEX_DETAILS"
-msgstr "\ub514\ub809\ud130\ub9ac\uc5d0 \uc788\ub294 \ud30c\uc77c {1}\uac1c \uc911 {0}\uac1c, {2}\ubcc4\ub85c \uc815\ub82c{3}"
+msgstr "디렉터리에 있는 파일 {1}개 중 {0}개, {2}별로 정렬{3}"
 
 #: .\files\file_browser.py:224
 msgid "Search text provided to file_browser.find() was invalid."
-msgstr "file_browser.find()\uc5d0 \uc81c\uacf5\ub41c \uac80\uc0c9 \ud14d\uc2a4\ud2b8\uac00 \uc720\ud6a8\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4."
+msgstr "file_browser.find()에 제공된 검색 텍스트가 유효하지 않습니다."
 
 #: .\files\go_to_file.py:22
 msgid "Go To File"
-msgstr "\ud30c\uc77c\ub85c \uc774\ub3d9"
+msgstr "파일로 이동"
 
 #: .\files\go_to_file.py:47
 msgid "Invalid search string, please enter some text."
-msgstr "\uc798\ubabb\ub41c \uac80\uc0c9 \ubb38\uc790\uc5f4\uc785\ub2c8\ub2e4. \ud14d\uc2a4\ud2b8\ub97c \uc785\ub825\ud558\uc138\uc694."
+msgstr "잘못된 검색 문자열입니다. 텍스트를 입력하세요."
 
 #: .\files\hotkey_actions_window.py:25
 msgid "Hotkey Actions"
-msgstr "\ub2e8\ucd95\ud0a4 \uc791\uc5c5"
+msgstr "단축키 작업"
 
 #: .\files\hotkey_actions_window.py:49
 msgid "Key name"
-msgstr "\ud0a4 \uc774\ub984"
+msgstr "키 이름"
 
 #: .\files\hotkey_actions_window.py:53
 msgid "Target directory"
-msgstr "\ub300\uc0c1 \ub514\ub809\ud130\ub9ac"
+msgstr "대상 디렉터리"
 
 #: .\files\hotkey_actions_window.py:85 .\files\hotkey_actions_window.py:90
 msgid "(unset)"
-msgstr "(\ubbf8\uc124\uc815)"
+msgstr "(미설정)"
 
 #: .\files\marked_file_mover.py:88 .\files\marked_file_mover.py:876
 msgid "Marks cleared."
-msgstr "\ud45c\uc2dc\uac00 \uc9c0\uc6cc\uc84c\uc2b5\ub2c8\ub2e4."
+msgstr "표시가 지워졌습니다."
 
 #: .\files\marked_file_mover.py:95
 msgid "Set current marks from previous."
-msgstr "\uc774\uc804 \ub9c8\ud06c\uc5d0\uc11c \ud604\uc7ac \ub9c8\ud06c\ub97c \uc124\uc815\ud569\ub2c8\ub2e4."
+msgstr "이전 마크에서 현재 마크를 설정합니다."
 
 #: .\files\marked_file_mover.py:95
 msgid "Total set: {0}"
-msgstr "\ucd1d \uc9d1\ud569\uc785\ub2c8\ub2e4: {0}"
+msgstr "총 집합입니다: {0}"
 
 #: .\files\marked_file_mover.py:122
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
-"\uc601\uad6c \ub9c8\ud06c \ub300\uc0c1\uc774 \uc5c6\uc2b5\ub2c8\ub2e4!"
-"Marks \ucc3d\uc5d0\uc11c Ctrl+T\ub85c \uc124\uc815\ud558\uc2ed\uc2dc\uc624."
+"영구 마크 대상이 없습니다!\n"
+"Marks 창에서 Ctrl+T로 설정하십시오."
 
 #: .\files\marked_file_mover.py:134
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
-"no hotkey action set for {0}."
-"Marks \ucc3d\uc5d0\uc11c {1}\ub85c \uc124\uc815\ud558\uc2ed\uc2dc\uc624."
+"{0}에 대해 설정된 단축키 동작이 없습니다.\n"
+"마크 창에서 {1}로 설정합니다."
 
 #: .\files\marked_file_mover.py:214 .\files\recent_directory_window.py:153
 msgid "Set a new target directory"
-msgstr "\uc0c8 \ub300\uc0c1 \ub514\ub809\ud130\ub9ac \uc124\uc815"
+msgstr "새 대상 디렉터리 설정"
 
 #: .\files\marked_file_mover.py:216
 msgid "MOVE"
-msgstr "\uc774\ub3d9"
+msgstr "이동"
 
 #: .\files\marked_file_mover.py:220
 msgid "COPY"
-msgstr "\ubcf5\uc0ac"
+msgstr "복사"
 
 #: .\files\marked_file_mover.py:222
 msgid "DELETE"
-msgstr "\uc0ad\uc81c"
+msgstr "삭제"
 
 #: .\files\marked_file_mover.py:224 .\files\recent_directory_window.py:157
 msgid "Add directories from parent"
-msgstr "\uc0c1\uc704 \ub514\ub809\ud130\ub9ac\uc5d0\uc11c \ub514\ub809\ud130\ub9ac \ucd94\uac00"
+msgstr "상위 디렉터리에서 디렉터리 추가"
 
 #: .\files\marked_file_mover.py:227 .\files\recent_directory_window.py:159
 msgid "Clear targets"
-msgstr "\ubaa9\ud45c \uc9c0\uc6b0\uae30"
+msgstr "목표 지우기"
 
 #: .\files\marked_file_mover.py:291 .\files\marked_file_mover.py:297
 msgid "Recording next mark target and action."
-msgstr "\ub2e4\uc74c \ub9c8\ud06c \ub300\uc0c1 \ubc0f \uc791\uc5c5\uc744 \uae30\ub85d\ud569\ub2c8\ub2e4."
+msgstr "다음 마크 대상 및 작업을 기록합니다."
 
 #: .\files\marked_file_mover.py:310 .\files\recent_directory_window.py:203
 msgid "Invalid directory: %s"
-msgstr "\uc798\ubabb\ub41c \ub514\ub809\ud130\ub9ac\uc785\ub2c8\ub2e4: {0}"
+msgstr "잘못된 디렉터리입니다: {0}"
 
 #: .\files\marked_file_mover.py:312
 msgid "Select target directory for marked files"
-msgstr "\ud45c\uc2dc\ub41c \ud30c\uc77c\uc758 \ub300\uc0c1 \ub514\ub809\ud130\ub9ac \uc120\ud0dd"
+msgstr "표시된 파일의 대상 디렉터리 선택"
 
 #: .\files\marked_file_mover.py:367
 msgid "Copying"
-msgstr "\uad00\ub828 \uae30\uc0ac"
+msgstr "관련 기사"
 
 #: .\files\marked_file_mover.py:367
 msgid "Moving"
-msgstr "\uae30\ud0c0"
+msgstr "기타"
 
 #: .\files\marked_file_mover.py:368
 msgid "Copied"
-msgstr "\ub6b1 \ubca0\uc5b4"
+msgstr "뚱 베어"
 
 #: .\files\marked_file_mover.py:368
 msgid "Moved"
-msgstr "\uc9c0\uc6d0\ud558\ub2e4"
+msgstr "지원하다"
 
 #: .\files\marked_file_mover.py:405
 msgid "Moved {0} files to {1}"
 msgstr ""
-" \ud30c\uc77c {0}\uac1c\ub97c"
-"{1}"
-"\ub85c \uc62e\uacbc\uc2b5\ub2c8\ub2e4."
+"파일 {0}개를\n"
+"{1}로 옮겼습니다."
 
 #: .\files\marked_file_mover.py:407
 msgid "Copied {0} files to {1}"
 msgstr ""
-" {1}"
-"\uc5d0 \ud30c\uc77c {0}\uac1c\ub97c \ubcf5\uc0ac\ud588\uc2b5\ub2c8\ub2e4."
+"{1}\n"
+"에 파일 {0}개를 복사했습니다."
 
 #: .\files\marked_file_mover.py:434
 msgid "Existing filenames match!"
-msgstr "\uae30\uc874 \ud30c\uc77c \uc774\ub984\uc774 \uc77c\uce58\ud569\ub2c8\ub2e4!"
+msgstr "기존 파일 이름이 일치합니다!"
 
 #: .\files\marked_file_mover.py:436
 msgid "WARNING: Exact file match."
-msgstr "\uacbd\uace0: \uc815\ud655\ud55c \ud30c\uc77c \uc77c\uce58."
+msgstr "경고: 정확한 파일 일치."
 
 #: .\files\marked_file_mover.py:438 .\files\marked_file_mover.py:789
 msgid "WARNING: Short filenames."
-msgstr "\uacbd\uace0: \uc9e7\uc740 \ud30c\uc77c\uba85."
+msgstr "경고: 짧은 파일명."
 
 #: .\files\marked_file_mover.py:462
 msgid "Moving back"
-msgstr "\ub4a4\ub85c \uc774\ub3d9"
+msgstr "뒤로 이동"
 
 #: .\files\marked_file_mover.py:462
 msgid "Removing"
-msgstr "\ub6b1 \ubca0\uc5b4"
+msgstr "뚱 베어"
 
 #: .\files\marked_file_mover.py:463
 msgid "Moved back"
-msgstr "\ub4a4\ub85c \uc774\ub3d9"
+msgstr "뒤로 이동"
 
 #: .\files\marked_file_mover.py:463
 msgid "Removed"
-msgstr "\uae30\ud0c0 \uc81c\ud488"
+msgstr "기타 제품"
 
 #: .\files\marked_file_mover.py:469
 msgid "Where should the marked files have gone?"
-msgstr "\ud45c\uc2dc\ub41c \ud30c\uc77c\uc740 \uc5b4\ub514\ub85c \uac14\uc744\uae4c\uc694?"
+msgstr "표시된 파일은 어디로 갔을까요?"
 
 #: .\files\marked_file_mover.py:494
 msgid "Moved back {0} files from {1}"
-msgstr " {1}\uc5d0\uc11c \ud30c\uc77c {0}\uac1c \ub2e4\uc2dc \uc62e\uae30\uae30"
+msgstr ""
+"{1}\n"
+"에서 파일 {0}개 다시 옮기기"
 
 #: .\files\marked_file_mover.py:496
 msgid "Removed {0} files from {1}"
-msgstr " {1}\uc5d0\uc11c \ud30c\uc77c {0}\uac1c \uc81c\uac70"
+msgstr ""
+"{1}\n"
+"에서 파일 {0}개 제거"
 
 #: .\files\marked_file_mover.py:513
 msgid "Select parent directory for target directories"
-msgstr "\ub300\uc0c1 \ub514\ub809\ud1a0\ub9ac \uc120\ud0dd"
+msgstr "대상 디렉토리 선택"
 
 #: .\files\marked_file_mover.py:673
 msgid "Sorted directories by embedding comparison."
-msgstr "\ubd84\ub958 \ub41c \uac10\ub3c5 by embedding \ube44\uad50."
+msgstr "분류 된 감독 by embedding 비교."
 
 #: .\files\marked_file_mover.py:693
 msgid "Confirm Delete"
-msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
+msgstr "자주 묻는 질문"
 
 #: .\files\marked_file_mover.py:694
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
-msgstr "\uc0ad\uc81c {0} \ud45c\uc2dc\ub41c \ud30c\uc77c - \uc9c4\ud589\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?"
+msgstr "삭제 {0} 표시된 파일 - 진행하시겠습니까?"
 
 #: .\files\marked_file_mover.py:714
 msgid "Delete Failed"
-msgstr "\uc2e4\ud328 \uc0ad\uc81c"
+msgstr "실패 삭제"
 
 #: .\files\marked_file_mover.py:715
 msgid "Failed to delete %s files - check log for details."
-msgstr "{0} \ud30c\uc77c\uc744 \uc0ad\uc81c \ucde8\uc18c - \uc138\ubd80 \uc0ac\ud56d\uc5d0 \ub300\ud55c \ub85c\uadf8 \ud655\uc778."
+msgstr "{0} 파일을 삭제 취소 - 세부 사항에 대한 로그 확인."
 
 #: .\files\marked_file_mover.py:718
 msgid "Deleted %s marked files."
-msgstr "Deleted {0} \ud30c\uc77c \ud45c\uc2dc."
+msgstr "Deleted {0} 파일 표시."
 
 #: .\files\marked_file_mover.py:783
 msgid "Existing filenames found!"
-msgstr "\ubc1c\uacac \ub41c \ud30c\uc77c \uc774\ub984!"
+msgstr "발견 된 파일 이름!"
 
 #: .\files\marked_file_mover.py:785
 msgid "WARNING: All file hashes match."
-msgstr "\uacbd\uace0: \ubaa8\ub4e0 \ud30c\uc77c hashes \uc77c\uce58."
+msgstr "경고: 모든 파일 hashes 일치."
 
 #: .\files\marked_file_mover.py:787
 msgid "WARNING: %s of %s file hashes match."
-msgstr "\uacbd\uace0: {0} \uc758 {1} \ud30c\uc77c hashes \uc77c\uce58."
+msgstr "경고: {0} 의 {1} 파일 hashes 일치."
 
 #: .\files\marked_file_mover.py:793
 msgid "No existing filenames found."
-msgstr "\ucc3e\uc744 \uc218 \uc5c6\uc74c."
+msgstr "찾을 수 없음."
 
 #: .\files\marked_file_mover.py:821
 msgid "Found %s downstream related images"
-msgstr "Found {0} downstream \uad00\ub828 \uc774\ubbf8\uc9c0"
+msgstr "Found {0} downstream 관련 이미지"
 
 #: .\files\marked_file_mover.py:823
 msgid "No downstream related images found"
-msgstr "\ucc3e\uc744 \uc218 \uc5c6\uc74c downstream \uad00\ub828 \uc774\ubbf8\uc9c0"
+msgstr "찾을 수 없음 downstream 관련 이미지"
 
 #: .\files\marked_file_mover.py:834
 msgid "Cleared marked file"
-msgstr "\ud45c\uc2dc\ub41c \ud30c\uc77c"
+msgstr "표시된 파일"
 
 #: .\files\marked_file_mover.py:878
 msgid "Removed {0} marks"
-msgstr "\uc81c\uac70 {0} \ud45c"
+msgstr "제거 {0} 표"
 
 #: .\files\recent_directory_window.py:155
 msgid "Add directory"
-msgstr "\ub514\ub809\ud1a0\ub9ac"
+msgstr "디렉토리"
 
 #: .\files\recent_directory_window.py:205
 msgid "Set image comparison directory"
-msgstr "\uc124\uc815 \uc774\ubbf8\uc9c0 \ube44\uad50 \ub514\ub809\ud1a0\ub9ac"
+msgstr "설정 이미지 비교 디렉토리"
 
 #: .\files\type_configuration_window.py:61
 msgid "Media Type Configuration"
-msgstr "Media Type \uad6c\uc131"
+msgstr "Media Type 구성"
 
 #: .\files\type_configuration_window.py:74
 msgid "Configure Media Types"
-msgstr "\ubbf8\ub514\uc5b4 \uc720\ud615 \uad6c\uc131"
+msgstr "미디어 유형 구성"
 
 #: .\files\type_configuration_window.py:107
 msgid "Apply Changes"
-msgstr "\ubcc0\uacbd \uc0ac\ud56d"
+msgstr "변경 사항"
 
 #: .\files\type_configuration_window.py:149
 msgid "Confirm Changes"
-msgstr "\uc790\uc8fc \ubb3b\ub294 \uc9c8\ubb38"
+msgstr "자주 묻는 질문"
 
 #: .\files\type_configuration_window.py:150
 msgid "This will clear all existing compares in open windows. Continue?"
-msgstr "\uc774 \ucc3d\uc5d0\uc11c \ubaa8\ub4e0 \uae30\uc874 \ube44\uad50\ub97c \uba85\ud655\ud558\uac8c\ud569\ub2c8\ub2e4. \uacc4\uc18d?"
+msgstr "이 창에서 모든 기존 비교를 명확하게합니다. 계속?"
 
 #: .\files\type_configuration_window.py:200
 msgid "Media type configuration updated"
-msgstr "Media Type \uc124\uc815 \uc5c5\ub370\uc774\ud2b8"
+msgstr "Media Type 설정 업데이트"
 
 #: .\image\image_details.py:115
 msgid "Image Path"
-msgstr "\uc774\ubbf8\uc9c0 \uacbd\ub85c"
+msgstr "이미지 경로"
 
 #: .\image\image_details.py:117
 msgid "File Index"
-msgstr "\ud30c\uc77c \uc0c9\uc778"
+msgstr "파일 색인"
 
 #: .\image\image_details.py:119
 msgid "Color Mode"
-msgstr "\uc0c9\uae54 \ud615\ud0dc"
+msgstr "색깔 형태"
 
 #: .\image\image_details.py:121
 msgid "Dimensions"
-msgstr "\ud06c\uae30 (mm)"
+msgstr "크기 (mm)"
 
 #: .\image\image_details.py:123 .\utils\constants.py:96
 #: .\utils\constants.py:113
 msgid "Size"
-msgstr "\ud06c\uae30 (mm)"
+msgstr "크기 (mm)"
 
 #: .\image\image_details.py:125
 msgid "Modification Time"
-msgstr "\uc218\uc815 \uc2dc\uac04"
+msgstr "수정 시간"
 
 #: .\image\image_details.py:127
 msgid "Positive"
-msgstr "\uc9c0\uc6d0\ud558\ub2e4"
+msgstr "지원하다"
 
 #: .\image\image_details.py:129
 msgid "Negative"
-msgstr "\uc774\ub984 *"
+msgstr "이름 *"
 
 #: .\image\image_details.py:130
 msgid "(negative prompt not shown by config setting)"
-msgstr "(config \uc124\uc815\uc5d0 \uc758\ud574 \ud45c\uc2dc\ub418\uc9c0 \uc54a\ub294 \ub124\uac70\ud2f0\ube0c \ud504\ub86c\ud504\ud2b8)"
+msgstr "(config 설정에 의해 표시되지 않는 네거티브 프롬프트)"
 
 #: .\image\image_details.py:131
 msgid "Models"
-msgstr "\ubaa8\ub378 \ubc88\ud638:"
+msgstr "모델 번호:"
 
 #: .\image\image_details.py:133
 msgid "LoRAs"
-msgstr "\ub85c\uadf8\uc544\uc6c3"
+msgstr "로그아웃"
 
 #: .\image\image_details.py:138
 msgid "Copy Prompt"
-msgstr "\ubcf5\uc0ac Prompt"
+msgstr "복사 Prompt"
 
 #: .\image\image_details.py:139
 msgid "Copy Prompt No BREAK"
-msgstr "\ubcf5\uc0ac \uae08\uc9c0 \uc5c6\uc74c BREAK"
+msgstr "복사 금지 없음 BREAK"
 
 #: .\image\image_details.py:143
 msgid "Rotate Image Left"
-msgstr "\uc790\uc804 \uc774\ubbf8\uc9c0 \uc67c\ucabd"
+msgstr "자전 이미지 왼쪽"
 
 #: .\image\image_details.py:144
 msgid "Rotate Image Right"
-msgstr "Rotate \uc774\ubbf8\uc9c0 \uad8c\ub9ac"
+msgstr "Rotate 이미지 권리"
 
 #: .\image\image_details.py:148
 msgid "Crop Image (Smart Detect)"
-msgstr "\uc790\ub974\uae30 \uc774\ubbf8\uc9c0 (Smart Detect)"
+msgstr "자르기 이미지 (Smart Detect)"
 
 #: .\image\image_details.py:149
 msgid "Enhance Image"
-msgstr "\ud5a5\uc0c1\ub41c \uc774\ubbf8\uc9c0"
+msgstr "향상된 이미지"
 
 #: .\image\image_details.py:153
 msgid "Random Crop"
-msgstr "\ubb34\uc791\uc704 Crop"
+msgstr "무작위 Crop"
 
 #: .\image\image_details.py:154
 msgid "Randomly Modify"
-msgstr "\ubb34\uc791\uc704 \uc218\uc815"
+msgstr "무작위 수정"
 
 #: .\image\image_details.py:158
 msgid "Flip Image Horizontally"
-msgstr "\ud50c\ub9bd \uc774\ubbf8\uc9c0 \uc218\ud3c9\uc73c\ub85c"
+msgstr "플립 이미지 수평으로"
 
 #: .\image\image_details.py:159
 msgid "Flip Image Vertically"
-msgstr "Flip \uc774\ubbf8\uc9c0 \uc218\uc9c1\uc73c\ub85c"
+msgstr "Flip 이미지 수직으로"
 
 #: .\image\image_details.py:162
 msgid "Show Metadata"
-msgstr "Metadata \ubcf4\uae30"
+msgstr "Metadata 보기"
 
 #: .\image\image_details.py:166
 msgid "Open Related Image"
-msgstr "\uad00\ub828 \uc774\ubbf8\uc9c0"
+msgstr "관련 이미지"
 
 #: .\image\image_details.py:175
 msgid "Image Generation"
-msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131"
+msgstr "이미지 생성"
 
 #: .\image\image_details.py:183
 msgid "Run Image Generation"
-msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131"
+msgstr "이미지 생성"
 
 #: .\image\image_details.py:185
 msgid "Press Shift+I on a main app window to run this"
-msgstr "\ud504\ub808\uc2a4 Shift+ \ub098\ub294 \uba54\uc778 \uc571 \ucc3d\uc5d0\uc11c \uc774\uac83\uc744 \uc2e4\ud589"
+msgstr "프레스 Shift+ 나는 메인 앱 창에서 이것을 실행"
 
 #: .\image\image_details.py:188
 msgid "Redo Prompt"
-msgstr "\ub808\ub4dc\uc624 Prompt"
+msgstr "레드오 Prompt"
 
 #: .\image\image_details.py:192
 msgid "Tags"
-msgstr "\uc774\ub984 *"
+msgstr "이름 *"
 
 #: .\image\image_details.py:202
 msgid "Update Tags"
-msgstr "\uc5c5\ub370\uc774\ud2b8"
+msgstr "업데이트"
 
 #: .\image\image_details.py:265
 msgid "Copied prompt"
-msgstr "\ube44\ubc00\ubc88\ud638"
+msgstr "비밀번호"
 
 #: .\image\image_details.py:274 .\image\image_details.py:284
 msgid "Copied prompt without BREAK"
-msgstr "BREAK\uc5c6\uc774 \ubcf5\uc0ac \ub41c \ud504\ub86c\ud504\ud2b8"
+msgstr "BREAK없이 복사 된 프롬프트"
 
 #: .\image\image_details.py:302
 msgid "Rotated image left"
-msgstr "\uc67c\ucabd\ub41c \uc774\ubbf8\uc9c0"
+msgstr "왼쪽된 이미지"
 
 #: .\image\image_details.py:302
 msgid "Rotated image right"
-msgstr "\uc5f0\ub77d\ucc98"
+msgstr "연락처"
 
 #: .\image\image_details.py:311
 msgid "Cropped image"
-msgstr "Cropped \uc774\ubbf8\uc9c0"
+msgstr "Cropped 이미지"
 
 #: .\image\image_details.py:313
 msgid "No crops found"
-msgstr "\ubc1c\uacac\ub418\uc9c0 \uc54a\uc740 \uc791\ubb3c"
+msgstr "발견되지 않은 작물"
 
 #: .\image\image_details.py:320
 msgid "Enhanced image"
-msgstr "\ud5a5\uc0c1\ub41c \uc774\ubbf8\uc9c0"
+msgstr "향상된 이미지"
 
 #: .\image\image_details.py:325
 msgid "Randomly cropped image"
-msgstr "\ubb34\uc791\uc704 \uc774\ubbf8\uc9c0"
+msgstr "무작위 이미지"
 
 #: .\image\image_details.py:334
 msgid "Randomly modified image"
-msgstr "\ubb34\uc791\uc704 \uc774\ubbf8\uc9c0"
+msgstr "무작위 이미지"
 
 #: .\image\image_details.py:339
 msgid "Flipped image"
-msgstr "\uc88b\uc740 \uc774\ubbf8\uc9c0"
+msgstr "좋은 이미지"
 
 #: .\image\image_details.py:344
 msgid "No metadata found"
-msgstr "\uba54\ud0c0\ub370\uc774\ud130 \uc5c6\uc74c"
+msgstr "메타데이터 없음"
 
 #: .\image\image_details.py:358 .\image\image_details.py:416
 msgid " (Exact Match Not Found)"
-msgstr " (Exact Match \ucc3e\uc744 \uc218 \uc5c6\uc74c)"
+msgstr " (Exact Match 찾을 수 없음)"
 
 #: .\image\image_details.py:360 .\image\image_details.py:413
 msgid "(No related image found)"
-msgstr "(\ucc3e\uc740 \uad00\ub828 \uc774\ubbf8\uc9c0 \uc5c6\uc74c)"
+msgstr "(찾은 관련 이미지 없음)"
 
 #: .\image\image_details.py:475 .\image\image_details.py:482
 msgid "%s downstream image(s) found."
-msgstr "{0} \ub2e4\uc6b4\uc2a4\ud2b8\ub9bc \uc774\ubbf8\uc9c0(s)\uac00 \uc788\uc2b5\ub2c8\ub2e4."
+msgstr "{0} 다운스트림 이미지(s)가 있습니다."
 
 #: .\image\image_details.py:478
 msgid "%s (cached) downstream image(s) found."
-msgstr "{0} (\uc608\uc815) \ub2e4\uc6b4\uc2a4\ud2b8\ub9bc \uc774\ubbf8\uc9c0(s) \ubc1c\uacac."
+msgstr "{0} (예정) 다운스트림 이미지(s) 발견."
 
 #: .\image\image_details.py:484
 msgid "No downstream related images found in"
-msgstr "downstream \uad00\ub828 \uc774\ubbf8\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4."
+msgstr "downstream 관련 이미지가 없습니다."
 
 #: .\image\image_details.py:544
 msgid "Updated tags for %s"
-msgstr "{0}\uc5d0 \ub300\ud55c \uc5c5\ub370\uc774\ud2b8 \ub41c \ud0dc\uadf8"
+msgstr "{0}에 대한 업데이트 된 태그"
 
 #: .\image\metadata_viewer_window.py:31
 msgid "Raw Image Metadata"
-msgstr "\uc88b\uc740 \uc774\ubbf8\uc9c0 Metadata"
+msgstr "좋은 이미지 Metadata"
 
 #: .\image\metadata_viewer_window.py:49
 msgid "Metadata Viewer"
-msgstr "Metadata \ubdf0\uc5b4"
+msgstr "Metadata 뷰어"
 
 #: .\image\temp_image_canvas.py:104
 msgid "Open a new related image with Shift+R on main window"
-msgstr "\uba54\uc778 \ucc3d\uc5d0\uc11c Shift+R\ub85c \uc0c8\ub85c\uc6b4 \uad00\ub828 \uc774\ubbf8\uc9c0\ub97c \uc5fd\ub2c8\ub2e4."
+msgstr "메인 창에서 Shift+R로 새로운 관련 이미지를 엽니다."
 
 #: .\utils\constants.py:8 .\utils\constants.py:17
 msgid "Browsing Mode"
-msgstr "\uac80\uc0c9 \ubaa8\ub4dc"
+msgstr "검색 모드"
 
 #: .\utils\constants.py:9 .\utils\constants.py:19
 msgid "Searching Mode"
-msgstr "\uac80\uc0c9 \ubaa8\ub4dc"
+msgstr "검색 모드"
 
 #: .\utils\constants.py:10 .\utils\constants.py:21
 msgid "Group Comparison Mode"
-msgstr "\uadf8\ub8f9 \ube44\uad50 \ubaa8\ub4dc"
+msgstr "그룹 비교 모드"
 
 #: .\utils\constants.py:11 .\utils\constants.py:23
 msgid "Duplicate Detection Mode"
-msgstr "\uc911\ubcf5 \uac10\uc9c0 \ubaa8\ub4dc"
+msgstr "중복 감지 모드"
 
 #: .\utils\constants.py:31 .\utils\constants.py:41
 msgid "Color Matching"
-msgstr "\uc0c9\uae54 \uc77c\uce58"
+msgstr "색깔 일치"
 
 #: .\utils\constants.py:32 .\utils\constants.py:43
 msgid "CLIP Embedding"
-msgstr "\uacf5\uc9c0\uc0ac\ud56d \uc635\uc158 \uc815\ubcf4"
+msgstr "공지사항 옵션 정보"
 
 #: .\utils\constants.py:33 .\utils\constants.py:45
 msgid "SigLIP Embedding"
-msgstr "\uc0ac\uc774\ud2b8\ub9f5 \uc635\uc158 \uc815\ubcf4"
+msgstr "사이트맵 옵션 정보"
 
 #: .\utils\constants.py:34 .\utils\constants.py:47
 msgid "FLAVA Embedding"
-msgstr "\uc0ac\uc774\ud2b8\ub9f5 \uc635\uc158 \uc815\ubcf4"
+msgstr "사이트맵 옵션 정보"
 
 #: .\utils\constants.py:35 .\utils\constants.py:49
 msgid "ALIGN Embedding"
-msgstr "\uc0ac\uc774\ud2b8\ub9f5 \uc635\uc158 \uc815\ubcf4"
+msgstr "사이트맵 옵션 정보"
 
 #: .\utils\constants.py:36 .\utils\constants.py:51
 msgid "X-VLM Embedding"
-msgstr "X-VLM\uc758 \ud2b9\uc9d5 \uc635\uc158 \uc815\ubcf4"
+msgstr "X-VLM의 특징 옵션 정보"
 
 #: .\utils\constants.py:72
 msgid "Color diff threshold"
-msgstr "\uc0c9\uae54 diff \ubb38\ud131"
+msgstr "색깔 diff 문턱"
 
 #: .\utils\constants.py:74
 msgid "Embedding similarity threshold"
-msgstr "\uad00\ub828 \ubb38\ud5cc"
+msgstr "관련 문헌"
 
 #: .\utils\constants.py:91 .\utils\constants.py:103
 msgid "Name"
-msgstr "\uc774\ub984 *"
+msgstr "이름 *"
 
 #: .\utils\constants.py:92 .\utils\constants.py:105
 msgid "Full Path"
-msgstr "\uc804\uccb4 \uacbd\ub85c"
+msgstr "전체 경로"
 
 #: .\utils\constants.py:93 .\utils\constants.py:107
 msgid "Creation Time"
-msgstr "\ucc3d\uc870 \uc2dc\uac04"
+msgstr "창조 시간"
 
 #: .\utils\constants.py:94 .\utils\constants.py:109
 msgid "Modify Time"
-msgstr "\uc218\uc815 \uc2dc\uac04"
+msgstr "수정 시간"
 
 #: .\utils\constants.py:95 .\utils\constants.py:111
 msgid "Type"
-msgstr "\uc81c\ud488\uc815\ubcf4"
+msgstr "제품정보"
 
 #: .\utils\constants.py:97 .\utils\constants.py:115
 msgid "Name Length"
-msgstr "\uc774\ub984 \uae38\uc774"
+msgstr "이름 길이"
 
 #: .\utils\constants.py:98 .\utils\constants.py:117
 msgid "Related Image"
-msgstr "\uad00\ub828 \uc774\ubbf8\uc9c0"
+msgstr "관련 이미지"
 
 #: .\utils\constants.py:99 .\utils\constants.py:119
 msgid "Random"
-msgstr "\ud55c\uad6d\uc5b4"
+msgstr "한국어"
 
 #: .\utils\constants.py:138
 msgid "ascending"
-msgstr "\uc774\ub984 *"
+msgstr "이름 *"
 
 #: .\utils\constants.py:139
 msgid "descending"
-msgstr "\ub6b1 \ubca0\uc5b4"
+msgstr "뚱 베어"
 
 #: .\utils\constants.py:140
 msgid "random"
-msgstr "\ud55c\uad6d\uc5b4"
+msgstr "한국어"
 
 #: .\utils\constants.py:192
 msgid "Image"
-msgstr "\uc774\ub984 *"
+msgstr "이름 *"
 
 #: .\utils\constants.py:194
 msgid "GIF"
-msgstr "\ubb34\ub8cc \ubc30\uc1a1"
+msgstr "무료 배송"
 
 #: .\utils\constants.py:196
 msgid "Video"
-msgstr "(\uc8fc)"
+msgstr "(주)"
 
 #: .\utils\constants.py:198
 msgid "PDF"
-msgstr "PDF \ud30c\uc77c"
+msgstr "PDF 파일"
 
 #: .\utils\constants.py:200
 msgid "SVG"
-msgstr "\uc0ac\uc774\ud2b8\ub9f5"
+msgstr "사이트맵"
 
 #: .\utils\help_and_config.py:34
 msgid "Command"
-msgstr "\uc774\ub984 *"
+msgstr "이름 *"
 
 #: .\utils\help_and_config.py:34
 msgid "Description"
-msgstr "\uc774\ub984 *"
+msgstr "이름 *"
 
 #: .\utils\help_and_config.py:35
 msgid "Search current image in new window"
-msgstr "\uc0c8 \ucc3d\uc5d0\uc11c \ud604\uc7ac \uc774\ubbf8\uc9c0\ub97c \uac80\uc0c9"
+msgstr "새 창에서 현재 이미지를 검색"
 
 #: .\utils\help_and_config.py:36
 msgid "Return to Browsing mode"
-msgstr "\uac80\uc0c9 \ubaa8\ub4dc\ub85c \ub3cc\uc544\uac00\uae30"
+msgstr "검색 모드로 돌아가기"
 
 #: .\utils\help_and_config.py:37
 msgid "Copy marks list"
-msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
+msgstr "본문 바로가기"
 
 #: .\utils\help_and_config.py:38
 msgid "Set current marks from previous marks list"
-msgstr "\uc774\uc804 \ud45c\uc2dc \ubaa9\ub85d\uc5d0\uc11c \ud604\uc7ac \ud45c\uc2dc \uc124\uc815"
+msgstr "이전 표시 목록에서 현재 표시 설정"
 
 #: .\utils\help_and_config.py:39
 msgid "Run penultimate marks action"
-msgstr "\uc2e4\ud589 penultimate \ud45c \ud65c\ub3d9"
+msgstr "실행 penultimate 표 활동"
 
 #: .\utils\help_and_config.py:40
 msgid "Open Go to file window"
-msgstr "\uae30\ud0c0 \ud30c\uc77c \ucc3d\uc73c\ub85c \uc774\ub3d9"
+msgstr "기타 파일 창으로 이동"
 
 #: .\utils\help_and_config.py:41
 msgid "Hide/show sidebar"
-msgstr "\uc228\uae30\uae30 / \uc1fc sidebar"
+msgstr "숨기기 / 쇼 sidebar"
 
 #: .\utils\help_and_config.py:42
 msgid "Open hotkeys window (*when marks window open)"
-msgstr "\uc5f4\uae30 \ub2e8\ucd95\ud0a4 \ucc3d (*when \ub9c8\ud06c \ucc3d\uc774 \uc5f4\ub9bd\ub2c8\ub2e4)"
+msgstr "열기 단축키 창 (*when 마크 창이 열립니다)"
 
 #: .\utils\help_and_config.py:43
 msgid "Open content filters window"
-msgstr "\ucf58\ud150\uce20 \ud544\ud130 \ucc3d \uc5f4\uae30"
+msgstr "콘텐츠 필터 창 열기"
 
 #: .\utils\help_and_config.py:44
 msgid "Open marks window (no GUI)"
-msgstr "\ub9c8\ud06c \ucc3d \uc5f4\uae30 ( GUI \uc5c6\uc74c)"
+msgstr "마크 창 열기 ( GUI 없음)"
 
 #: .\utils\help_and_config.py:45
 msgid "Open marks window"
-msgstr "\uc5f4\ub9b0 \ud45c \ucc3d"
+msgstr "열린 표 창"
 
 #: .\utils\help_and_config.py:46
 msgid "Open marks action history window"
-msgstr "\uc5f4\ub9b0 \ud45c \ud65c\ub3d9 \uae30\ub85d \ucc3d"
+msgstr "열린 표 활동 기록 창"
 
 #: .\utils\help_and_config.py:47
 msgid "Quit"
-msgstr "\ub6b1 \ubca0\uc5b4"
+msgstr "뚱 베어"
 
 #: .\utils\help_and_config.py:48
 msgid "Run previous marks action"
-msgstr "\uc774\uc804 \ud45c\uc2dc \ub3d9\uc791\uc744 \uc2e4\ud589"
+msgstr "이전 표시 동작을 실행"
 
 #: .\utils\help_and_config.py:49
 msgid "Continue image generation"
-msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131 \uacc4\uc18d"
+msgstr "이미지 생성 계속"
 
 #: .\utils\help_and_config.py:50
 msgid "Cancel image generation"
-msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131"
+msgstr "이미지 생성"
 
 #: .\utils\help_and_config.py:51
 msgid "Run next text embedding search preset"
-msgstr "\ub2e4\uc74c \ud14d\uc2a4\ud2b8 embedding \uac80\uc0c9 preset"
+msgstr "다음 텍스트 embedding 검색 preset"
 
 #: .\utils\help_and_config.py:52
 msgid "Run permanent marks action"
-msgstr "\uc601\uad6c \ub9c8\ud06c \ub3d9\uc791"
+msgstr "영구 마크 동작"
 
 #: .\utils\help_and_config.py:53
 msgid "Open type configuration window"
-msgstr "\uc5f4\ub9b0 \uc720\ud615 \uc124\uc815 \ucc3d"
+msgstr "열린 유형 설정 창"
 
 #: .\utils\help_and_config.py:54
 msgid "Open new compare window"
-msgstr "\uc0c8 \ube44\uad50 \ucc3d \uc5f4\uae30"
+msgstr "새 비교 창 열기"
 
 #: .\utils\help_and_config.py:55
 msgid "Move previous marks to a different directory"
-msgstr "\ub2e4\ub978 \ub514\ub809\ud1a0\ub9ac\uc5d0 \uc774\uc804 \ud45c\uc2dc\ub97c \uc774\ub3d9"
+msgstr "다른 디렉토리에 이전 표시를 이동"
 
 #: .\utils\help_and_config.py:56 .\utils\help_and_config.py:84
 msgid "Undo previous marks changes"
-msgstr "\uc774\uc804 \ud45c \ubcc0\uacbd"
+msgstr "이전 표 변경"
 
 #: .\utils\help_and_config.py:57
 msgid "Toggle fullscreen"
-msgstr "\uc804\uccb4 \ud654\uba74"
+msgstr "전체 화면"
 
 #: .\utils\help_and_config.py:58
 msgid "Go to first sorted image"
-msgstr "\uccab \ubc88\uc9f8 \uc815\ub82c \uc774\ubbf8\uc9c0"
+msgstr "첫 번째 정렬 이미지"
 
 #: .\utils\help_and_config.py:59
 msgid "Go to last sorted image"
-msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
+msgstr "본문 바로가기"
 
 #: .\utils\help_and_config.py:60
 msgid "Show previous/next image"
-msgstr "\uc774\uc804/\ub2e4\uc74c \uc774\ubbf8\uc9c0\ubcf4\uae30"
+msgstr "이전/다음 이미지보기"
 
 #: .\utils\help_and_config.py:61
 msgid "Page through images"
-msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
+msgstr "본문 바로가기"
 
 #: .\utils\help_and_config.py:62
 msgid "Search current image in current window"
-msgstr "\ud604\uc7ac \ucc3d\uc5d0\uc11c \ud604\uc7ac \uc774\ubbf8\uc9c0 \uac80\uc0c9"
+msgstr "현재 창에서 현재 이미지 검색"
 
 #: .\utils\help_and_config.py:63
 msgid "Clear all hidden images"
-msgstr "\ubaa8\ub4e0 \uc228\uaca8\uc9c4 \uc774\ubbf8\uc9c0"
+msgstr "모든 숨겨진 이미지"
 
 #: .\utils\help_and_config.py:64
 msgid "Clear marks list"
-msgstr "\uba85\ud655\ud55c \ud45c \uba85\ubd80"
+msgstr "명확한 표 명부"
 
 #: .\utils\help_and_config.py:65
 msgid "Show image details"
-msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
+msgstr "본문 바로가기"
 
 #: .\utils\help_and_config.py:66
 msgid "Delete image (or marked file group if marks window selected)"
-msgstr "\uc774\ubbf8\uc9c0 \uc0ad\uc81c (\ub610\ub294 \ud45c\uc2dc\ub41c \ud30c\uc77c \uadf8\ub8f9 \ud45c\uc2dc \ucc3d \uc120\ud0dd)"
+msgstr "이미지 삭제 (또는 표시된 파일 그룹 표시 창 선택)"
 
 #: .\utils\help_and_config.py:67
 msgid "Go to next mark"
-msgstr "\ubcf8\ubb38 \ubc14\ub85c\uac00\uae30"
+msgstr "본문 바로가기"
 
 #: .\utils\help_and_config.py:68
 msgid "Show help window"
-msgstr "\uacf5\uc9c0\uc0ac\ud56d"
+msgstr "공지사항"
 
 #: .\utils\help_and_config.py:69
 msgid "Run image generation"
-msgstr "\uc774\ubbf8\uc9c0 \uc0dd\uc131"
+msgstr "이미지 생성"
 
 #: .\utils\help_and_config.py:70
 msgid "Run content filters for all files in the current directory"
-msgstr "\ud604\uc7ac \ub514\ub809\ud1a0\ub9ac\uc758 \ubaa8\ub4e0 \ud30c\uc77c\uc5d0 \ub300\ud55c \ucf58\ud150\uce20 \ud544\ud130 \uc2e4\ud589"
+msgstr "현재 디렉토리의 모든 파일에 대한 콘텐츠 필터 실행"
 
 #: .\utils\help_and_config.py:71
 msgid "View last moved image mark"
-msgstr "\ub9c8\uc9c0\ub9c9 \uc774\ub3d9 \uc774\ubbf8\uc9c0 \ud45c\uc2dc"
+msgstr "마지막 이동 이미지 표시"
 
 #: .\utils\help_and_config.py:72
 msgid "Toggle content filters"
-msgstr "\ucf58\ud150\uce20 \ud544\ud130"
+msgstr "콘텐츠 필터"
 
 #: .\utils\help_and_config.py:73
 msgid "Add or remove a mark for current image"
-msgstr "\ud604\uc7ac \uc774\ubbf8\uc9c0\uc758 \ud45c\uc2dc \ub610\ub294 \uc81c\uac70"
+msgstr "현재 이미지의 표시 또는 제거"
 
 #: .\utils\help_and_config.py:74
-msgid "Add all marks between most recently set and current selected inclusive, or all marks in current group"
-msgstr "\uac00\uc7a5 \ucd5c\uadfc \uc124\uc815 \ubc0f \ud604\uc7ac \uc120\ud0dd\ub41c \ud3ec\uad04\uc801 \uc778 \uc0ac\uc774 \ubaa8\ub4e0 \ud45c\uc2dc, \ub610\ub294 \ud604\uc7ac \uadf8\ub8f9\uc758 \ubaa8\ub4e0 \ud45c\uc2dc"
+msgid ""
+"Add all marks between most recently set and current selected inclusive, or "
+"all marks in current group"
+msgstr "가장 최근 설정 및 현재 선택된 포괄적 인 사이 모든 표시, 또는 현재 그룹의 모든 표시"
 
 #: .\utils\help_and_config.py:76
 msgid "Open image in GIMP"
-msgstr "GIMP\uc5d0\uc11c \uc774\ubbf8\uc9c0 \uc5f4\uae30"
+msgstr "GIMP에서 이미지 열기"
 
 #: .\utils\help_and_config.py:77
 msgid "Randomly modify image"
-msgstr "\ubb34\uc791\uc704 \uc774\ubbf8\uc9c0 \uc218\uc815"
+msgstr "무작위 이미지 수정"
 
 #: .\utils\help_and_config.py:78
 msgid "View related image (controlnet, etc.)"
-msgstr "\uad00\ub828 \uc774\ubbf8\uc9c0 \ubcf4\uae30 (controlnet, \ub4f1)"
+msgstr "관련 이미지 보기 (controlnet, 등)"
 
 #: .\utils\help_and_config.py:79
 msgid "Toggle slideshow"
-msgstr "\uc2ac\ub77c\uc774\ub4dc \uc1fc"
+msgstr "슬라이드 쇼"
 
 #: .\utils\help_and_config.py:80
 msgid "Find related images in open window"
-msgstr "\uc5f4\ub9b0 \ucc3d\uc5d0\uc11c \uad00\ub828 \uc774\ubbf8\uc9c0 \ucc3e\uae30"
+msgstr "열린 창에서 관련 이미지 찾기"
 
 #: .\utils\help_and_config.py:81
 msgid "Run refacdir"
-msgstr "\ud30c\uc77c \ud615\uc2dd"
+msgstr "파일 형식"
 
 #: .\utils\help_and_config.py:82
 msgid "Hide current image"
-msgstr "\ud604\uc7ac \uc774\ubbf8\uc9c0 \uc228\uae30\uae30"
+msgstr "현재 이미지 숨기기"
 
 #: .\utils\help_and_config.py:83
 msgid "Set marks from downstream related images"
-msgstr "downstream \uad00\ub828 \uc774\ubbf8\uc9c0 \uc124\uc815"
+msgstr "downstream 관련 이미지 설정"
 
 #: .\utils\help_and_config.py:85
 msgid "Show previous/next group"
-msgstr "\uc774\uc804/\ub2e4\uc74c \uadf8\ub8f9\ubcf4\uae30"
+msgstr "이전/다음 그룹보기"
 
 #: .\utils\help_and_config.py:133
 msgid "Show Toasts"
-msgstr "Toasts \uc18c\uac1c"
+msgstr "Toasts 소개"
 
 #: .\utils\help_and_config.py:135
 msgid "Slideshow Interval (sec)"
-msgstr "\uc2ac\ub77c\uc774\ub4dc \uc1fc \uac04\uaca9 (sec)"
+msgstr "슬라이드 쇼 간격 (sec)"
 
 #: .\utils\help_and_config.py:137
 msgid "File Check Interval (sec)"
-msgstr "\ud30c\uc77c \ud655\uc778 Interval (sec)"
+msgstr "파일 확인 Interval (sec)"
 
 #: .\utils\help_and_config.py:139
 msgid "Max Search Results"
-msgstr "Max \uac80\uc0c9 \uacb0\uacfc"
+msgstr "Max 검색 결과"
 
 #: .\utils\help_and_config.py:141
 msgid "Sort By"
-msgstr "\uc815\ub82c \uae30\uc900"
+msgstr "정렬 기준"
 
 #: .\utils\help_and_config.py:143
 msgid "Toasts Persist (sec)"
-msgstr "\ud1a0\uc2a4\ud2b8 \ud37c\uc2a4\ud2b8 (sec)"
+msgstr "토스트 퍼스트 (sec)"
 
 #: .\utils\help_and_config.py:145
 msgid "Delete Instantly"
-msgstr "\uc989\uc2dc \uc0ad\uc81c"
+msgstr "즉시 삭제"
 
 #: .\utils\help_and_config.py:147
 msgid "Trash Folder"
-msgstr "\uc4f0\ub808\uae30 \ud3f4\ub354"
+msgstr "쓰레기 폴더"
 
 #: .\utils\help_and_config.py:149
 msgid "Image Tagging Enabled"
-msgstr "\uc774\ubbf8\uc9c0 \ud0dc\uadf8 Enabled"
+msgstr "이미지 태그 Enabled"
 
 #: .\utils\help_and_config.py:151
 msgid "Escape Backslash Filepaths"
-msgstr "Backslash \ud30c\uc77c \uacbd\ub85c \ud0c8\ucd9c"
-
+msgstr "Backslash 파일 경로 탈출"

@@ -1,1481 +1,1505 @@
-# APPLICATION TRANSLATIONS
-# AUTHOR NAME <author@example.com>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-03-31 16:52-0400\n"
-"PO-Revision-Date: 2025-03-31 16:52-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
-"Language: zh\n"
+"POT-Creation-Date: 2025-04-02 13:01-0400\n"
+"PO-Revision-Date: 2025-04-02 13:01-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
+"Language: zh\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=cp1252\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: .\app.py:91 .\app.py:866 .\app.py:1820
 msgid " Simple Image Compare "
-msgstr " \u7b80\u5355\u56fe\u50cf\u6bd4\u8f83 "
+msgstr " 简单图像比较 "
 
 #: .\app.py:150
 msgid "Theme switched to {0}."
-msgstr "\u4e3b\u9898\u5207\u6362\u5230{0} \u3002"
+msgstr "主题切换到{0} 。"
 
 #: .\app.py:233 .\compare\compare_wrapper.py:467
 msgid "Set a directory to run comparison."
-msgstr "\u8bbe\u7f6e\u76ee\u5f55\u4ee5\u8fd0\u884c\u6bd4\u8f83 \u3002"
+msgstr "设置目录以运行比较 。"
 
 #: .\app.py:240
 msgid "Toggle theme"
-msgstr "\u5207\u6362\u4e3b\u9898"
+msgstr "切换主题"
 
 #: .\app.py:241
 msgid "Set directory"
-msgstr "\u8bbe\u7f6e\u76ee\u5f55"
+msgstr "设置目录"
 
 #: .\app.py:242
 msgid "Add dirpath..."
-msgstr "\u6dfb\u52a0\u76ee\u5f55\u8def\u5f84..."
+msgstr "添加目录路径..."
 
 #: .\app.py:245
 msgid "Set search file"
-msgstr "\u8bbe\u5b9a\u641c\u7d22\u6587\u4ef6"
+msgstr "设定搜索文件"
 
 #: .\app.py:253
 msgid "Search text (embedding mode)"
-msgstr "\u641c\u7d22\u6587\u672c\uff08\u5d4c\u5165\u6a21\u5f0f\uff09"
+msgstr "搜索文本（嵌入模式）"
 
 #: .\app.py:264
 msgid "Compare mode"
-msgstr "\u6bd4\u8f83\u6a21\u5f0f"
+msgstr "比较模式"
 
 #: .\app.py:282
 msgid "Compare faces"
-msgstr "\u6bd4\u8f83\u9762\u5b54"
+msgstr "比较面孔"
 
 #: .\app.py:286
 msgid "Overwrite cache"
-msgstr "\u8986\u76d6\u7f13\u5b58"
+msgstr "覆盖缓存"
 
 #: .\app.py:290
 msgid "Store checkpoints"
-msgstr "\u50a8\u5b58\u68c0\u67e5\u7ad9"
+msgstr "储存检查站"
 
 #: .\app.py:294
 msgid "Max files to compare"
-msgstr "\u8981\u6bd4\u8f83\u7684\u6700\u5927\u6587\u4ef6"
+msgstr "要比较的最大文件"
 
 #: .\app.py:300
 msgid "Filter files by glob pattern"
-msgstr "\u7528 glob \u6a21\u5f0f\u7b5b\u9009\u6587\u4ef6"
+msgstr "用 glob 模式筛选文件"
 
 #: .\app.py:307
 msgid "Browsing mode - Sort by"
-msgstr "\u6d4f\u89c8\u6a21\u5f0f - \u6392\u5e8f"
+msgstr "浏览模式 - 排序"
 
 #: .\app.py:314
 msgid "Recurse subdirectories"
-msgstr "\u9012\u5f52\u5b50\u76ee\u5f55"
+msgstr "递归子目录"
 
 #: .\app.py:319
 msgid "Image resize to full window"
-msgstr "\u56fe\u50cf\u5927\u5c0f\u8c03\u6574\u5230\u5168\u7a97\u53e3"
+msgstr "图像大小调整到全窗口"
 
 #: .\app.py:323
 msgid "Search only return closest"
-msgstr "\u4ec5\u6700\u63a5\u8fd1\u8fd4\u56de"
+msgstr "仅最接近返回"
 
 #: .\app.py:330
 msgid "Run image compare"
-msgstr "\u8fd0\u884c\u56fe\u50cf\u5bf9\u6bd4"
+msgstr "运行图像对比"
 
 #: .\app.py:332
 msgid "Find duplicates"
-msgstr "\u67e5\u627e\u590d\u5236\u4ef6"
+msgstr "查找复制件"
 
 #: .\app.py:334 .\image\image_details.py:62
 msgid "Image details"
-msgstr "\u56fe\u7247\u8be6\u60c5"
+msgstr "图片详情"
 
 #: .\app.py:345
 msgid "Search current image"
-msgstr "\u641c\u7d22\u5f53\u524d\u56fe\u50cf"
+msgstr "搜索当前图像"
 
 #: .\app.py:346 .\utils\help_and_config.py:75
 msgid "Open image location"
-msgstr "\u6253\u5f00\u56fe\u50cf\u4f4d\u7f6e"
+msgstr "打开图像位置"
 
 #: .\app.py:347
 msgid "Copy image path"
-msgstr "\u590d\u5236\u56fe\u50cf\u8def\u5f84"
+msgstr "复制图像路径"
 
 #: .\app.py:348
 msgid "---- DELETE ----"
-msgstr "---- \u5220\u9664 ----"
+msgstr "---- 删除 ----"
 
 #: .\app.py:484
 msgid "Confirm Quit"
-msgstr "\u786e\u8ba4\u9000\u51fa"
+msgstr "确认退出"
 
 #: .\app.py:484
 msgid "Would you like to quit the application?"
-msgstr "\u60a8\u60f3\u8981\u9000\u51fa\u7533\u8bf7\u5417 ?"
+msgstr "您想要退出申请吗 ?"
 
 #: .\app.py:577
 msgid "Ended slideshows"
-msgstr "\u7ed3\u675f\u5e7b\u706f\u7247\u653e\u6620"
+msgstr "结束幻灯片放映"
 
 #: .\app.py:630
 msgid "No files found in directory after refresh."
-msgstr "\u5237\u65b0\u540e\u5728\u76ee\u5f55\u4e2d\u672a\u53d1\u73b0\u6587\u4ef6\u3002"
+msgstr "刷新后在目录中未发现文件。"
 
 #: .\app.py:630 .\app.py:1629 .\app.py:1688
 msgid "Warning"
-msgstr "\u8b66\u544a"
+msgstr "警告"
 
 #: .\app.py:653
 msgid "Slideshow for new images started"
-msgstr "\u5f00\u59cb\u64ad\u653e\u65b0\u56fe\u50cf\u7684\u5e7b\u706f\u7247"
+msgstr "开始播放新图像的幻灯片"
 
 #: .\app.py:655
 msgid "Slideshow started"
-msgstr "\u5e7b\u706f\u7247\u64ad\u653e\u5f00\u59cb"
+msgstr "幻灯片播放开始"
 
 #: .\app.py:658
 msgid "Slideshows ended"
-msgstr "\u5e7b\u706f\u7247\u653e\u6620\u7ed3\u675f"
+msgstr "幻灯片放映结束"
 
 #: .\app.py:671
 msgid "Browsing mode set."
-msgstr "\u6d4f\u89c8\u6a21\u5f0f\u8bbe\u7f6e \u3002"
+msgstr "浏览模式设置 。"
 
 #: .\app.py:705
 msgid "(Open this image as part of a directory to see index details.)"
-msgstr "(\u5c06\u6b64\u56fe\u7247\u4f5c\u4e3a\u76ee\u5f55\u7684\u4e00\u90e8\u5206\u6253\u5f00\uff0c\u53ef\u67e5\u770b\u7d22\u5f15\u8be6\u60c5\uff09\u3002)"
+msgstr "(将此图片作为目录的一部分打开，可查看索引详情）。"
 
 #: .\app.py:738
 msgid "Many Files"
-msgstr "\u8bb8\u591a\u6587\u4ef6"
+msgstr "许多文件"
 
 #: .\app.py:764
 msgid "No downstream related image(s) found in {0}"
-msgstr "\u5728 {0} \u4e2d\u672a\u53d1\u73b0\u4e0e\u4e0b\u6e38\u76f8\u5173\u7684\u56fe\u50cf"
+msgstr "在 {0} 中未发现与下游相关的图像"
 
 #: .\app.py:785
 msgid "{0} file marks set"
-msgstr "{0} \u6587\u4ef6\u6807\u8bb0\u8bbe\u5b9a"
+msgstr "{0} 文件标记设定"
 
 #: .\app.py:791
 msgid "Help and Config"
-msgstr "\u5e2e\u52a9\u548c\u914d\u7f6e"
+msgstr "帮助和配置"
 
 #: .\app.py:871
 msgid "Set Image Comparison Directory"
-msgstr "\u8bbe\u7f6e\u56fe\u50cf\u6bd4\u8f83\u76ee\u5f55"
+msgstr "设置图像比较目录"
 
 #: .\app.py:909
 msgid "Counter limit must be an integer value."
-msgstr "\u8ba1\u6570\u5668\u9650\u503c\u5fc5\u987b\u662f\u6574\u6570\u3002"
+msgstr "计数器限值必须是整数。"
 
 #: .\app.py:909 .\app.py:924
 msgid "Invalid Setting"
-msgstr "\u65e0\u6548\u8bbe\u7f6e"
+msgstr "无效设置"
 
 #: .\app.py:924
 msgid "No image selected."
-msgstr "\u672a\u9009\u62e9\u56fe\u50cf \u3002"
+msgstr "未选择图像 。"
 
 #: .\app.py:961
-msgid "Compare mode must be set to an embedding mode to search text embeddings"
-msgstr "\u6bd4\u8f83\u6a21\u5f0f\u5fc5\u987b\u8bbe\u7f6e\u4e3a\u5d4c\u5165\u6a21\u5f0f\uff0c\u624d\u80fd\u641c\u7d22\u6587\u672c\u5d4c\u5165\u5185\u5bb9"
+msgid ""
+"Compare mode must be set to an embedding mode to search text embeddings"
+msgstr "比较模式必须设置为嵌入模式，才能搜索文本嵌入内容"
 
 #: .\app.py:966
 msgid "Select image file"
-msgstr "\u9009\u62e9\u56fe\u50cf\u6587\u4ef6"
+msgstr "选择图像文件"
 
 #: .\app.py:995
 msgid "Somehow, the search file is invalid"
-msgstr "\u4e0d\u77e5\u4f55\u6545, \u641c\u7d22\u6587\u4ef6\u65e0\u6548"
+msgstr "不知何故, 搜索文件无效"
 
 #: .\app.py:1080 .\app.py:1104
 msgid "Failed to get active image filepath"
-msgstr "\u83b7\u53d6\u6d3b\u52a8\u56fe\u50cf\u6587\u4ef6\u8def\u5f84\u5931\u8d25"
+msgstr "获取活动图像文件路径失败"
 
 #: .\app.py:1186
 msgid "{0}: {1}% complete"
-msgstr "{0} : {1} \u5b8c\u6210"
+msgstr "{0} : {1} 完成"
 
 #: .\app.py:1192
 msgid "Confirm comparison"
-msgstr "\u786e\u8ba4\u6bd4\u8f83"
+msgstr "确认比较"
 
 #: .\app.py:1193
 msgid "No base directory has been set, will use current base directory of "
-msgstr "\u672a\u8bbe\u7f6e\u57fa\u672c\u76ee\u5f55\uff0c\u5c06\u4f7f\u7528\u5f53\u524d\u57fa\u672c\u76ee\u5f55\uff1a "
+msgstr "未设置基本目录，将使用当前基本目录： "
 
 #: .\app.py:1194
 msgid "Are you sure you want to proceed?"
-msgstr "\u4f60\u786e\u5b9a\u8981\u7ee7\u7eed\u5417?"
+msgstr "你确定要继续吗?"
 
 #: .\app.py:1214
 msgid "Error running compare"
-msgstr "\u8fd0\u884c\u6bd4\u8f83\u51fa\u9519"
+msgstr "运行比较出错"
 
 #: .\app.py:1246
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
-"\u5728\u5e7b\u706f\u7247\u653e\u6620\u540e\u5220\u9664\u9501\u5b9a"
-"\u65e0\u6cd5\u6dfb\u52a0\u6807\u8bb0"
+"幻灯片放映后删除锁定\n"
+"过渡时无法添加标记"
 
 #: .\app.py:1257
 msgid "Mark removed. Remaining: {0}"
-msgstr "\u6807\u8bb0\u5df2\u53bb\u9664\u3002\u5269\u4f59 {0}"
+msgstr "标记已去除。剩余 {0}"
 
 #: .\app.py:1261
 msgid "Mark added. Total set: {0}"
-msgstr "\u9a6c\u514b\u8865\u5145\u9053\u3002\u5168\u5957 {0}"
+msgstr "马克补充道。全套 {0}"
 
 #: .\app.py:1278
 msgid "Marks added. Total set: {0}"
-msgstr "\u6807\u8bb0\u5df2\u6dfb\u52a0\u3002\u603b\u5206 {0}"
+msgstr "标记已添加。总分 {0}"
 
 #: .\app.py:1287
 msgid "First sorted mark"
-msgstr "\u7b2c\u4e00\u4e2a\u6392\u5e8f\u6807\u8bb0"
+msgstr "第一个排序标记"
 
 #: .\app.py:1294
 msgid "Only one marked file set."
-msgstr "\u53ea\u6709\u4e00\u4e2a\u6807\u8bb0\u7684\u6587\u4ef6\u96c6 \u3002"
+msgstr "只有一个标记的文件集 。"
 
 #: .\app.py:1305
 msgid "Including marks: {0}"
-msgstr "\u5305\u62ec\u6807\u8bb0\uff1a{0}"
+msgstr "包括标记：{0}"
 
 #: .\app.py:1313
 msgid "Move {0} Marked File(s)"
-msgstr "\u79fb\u52a8 {0} \u4e2a\u6807\u8bb0\u6587\u4ef6\uff1f"
+msgstr "移动 {0} 个标记文件？"
 
 #: .\app.py:1348
 msgid "NO_MARKS_SET"
 msgstr ""
-"{0}\u4e2a\u6807\u8bb0\u5df2\u7ecf\u8bbe\u7f6e\u5b8c\u6210\uff08>= {1}\u4e2a\u9884\u671f\uff09\u3002"
-"\u4f7f\u7528Shift+M\u6765\u8bbe\u7f6e\u4e00\u4e2a\u6807\u8bb0\u3002"
+"已设置 {0} 标记（预计 >={1}）。\n"
+"使用 Shift+M 设置标记。"
 
 #: .\app.py:1381
 msgid "Prevalidations now running"
-msgstr "\u524d\u7f00\u6b63\u5728\u8fd0\u884c"
+msgstr "前缀正在运行"
 
 #: .\app.py:1381
 msgid "Prevalidations turned off"
-msgstr "\u5173\u95ed\u524d\u7f00"
+msgstr "关闭前缀"
 
 #: .\app.py:1406
 msgid "File not found"
-msgstr "\u672a\u627e\u5230\u6587\u4ef6"
+msgstr "未找到文件"
 
 #: .\app.py:1406
 msgid "No file was found for the search text: \"{0}\""
-msgstr "\u6ca1\u6709\u627e\u5230\u641c\u7d22\u6587\u672c\u7684\u6587\u4ef6 \"{0}\\u201d"
+msgstr "没有找到搜索文本的文件 \"{0}”"
 
 #: .\app.py:1420
 msgid "No image selected"
-msgstr "\u672a\u9009\u62e9\u56fe\u50cf"
+msgstr "未选择图像"
 
 #: .\app.py:1420
 msgid "No image was selected for comparison"
-msgstr "\u6ca1\u6709\u9009\u62e9\u56fe\u50cf\u8fdb\u884c\u6bd4\u8f83"
+msgstr "没有选择图像进行比较"
 
 #: .\app.py:1433
 msgid "No Text Search Presets Found"
-msgstr "\u672a\u627e\u5230\u6587\u672c\u641c\u7d22\u9884\u8bbe"
+msgstr "未找到文本搜索预设"
 
 #: .\app.py:1433
-msgid "No text embedding search presets found. Set them in the config.json file."
-msgstr "\u672a\u627e\u5230\u6587\u672c\u5d4c\u5165\u641c\u7d22\u9884\u8bbe\u3002\u8bf7\u5728 config.json \u6587\u4ef6\u4e2d\u8fdb\u884c\u8bbe\u7f6e\u3002"
+msgid ""
+"No text embedding search presets found. Set them in the config.json file."
+msgstr "未找到文本嵌入搜索预设。请在 config.json 文件中进行设置。"
 
 #: .\app.py:1533
 msgid "Failed to open location of current file, unable to get valid filepath"
-msgstr "\u6253\u5f00\u5f53\u524d\u6587\u4ef6\u4f4d\u7f6e\u5931\u8d25\uff0c\u65e0\u6cd5\u83b7\u53d6\u6709\u6548\u7684\u6587\u4ef6\u8def\u5f84"
+msgstr "打开当前文件位置失败，无法获取有效的文件路径"
 
 #: .\app.py:1544
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
-msgstr "\u5728 GIMP \u4e2d\u6253\u5f00\u5f53\u524d\u6587\u4ef6\u5931\u8d25\uff0c\u65e0\u6cd5\u83b7\u53d6\u6709\u6548\u7684\u6587\u4ef6\u8def\u5f84"
+msgstr "在 GIMP 中打开当前文件失败，无法获取有效的文件路径"
+
+#: .\app.py:1560
+msgid ""
+"Hid current image.\n"
+"To unhide, press Shift+B."
+msgstr ""
+"隐藏当前图像。\n"
+"要取消隐藏，请按 Shift+B。"
 
 #: .\app.py:1565
 msgid "Cleared all hidden images."
-msgstr "\u6e05\u9664\u6240\u6709\u9690\u85cf\u56fe\u50cf"
+msgstr "清除所有隐藏图像"
 
 #: .\app.py:1572
 msgid "DELETE_LOCK"
 msgstr ""
-"\u5728\u5e7b\u706f\u7247\u653e\u6620\u540e\u5220\u9664\u9501\u5b9a"
-"\u65e0\u6cd5\u5220\u9664"
+"幻灯片放映后删除锁定\n"
+"过渡阻止删除"
 
 #: .\app.py:1590
 msgid "Invalid action, no files found to delete"
-msgstr "\u65e0\u6548\u64cd\u4f5c\uff0c\u672a\u627e\u5230\u8981\u5220\u9664\u7684\u6587\u4ef6"
+msgstr "无效操作，未找到要删除的文件"
 
 #: .\app.py:1593
 msgid "Invalid action, search image not found"
-msgstr "\u65e0\u6548\u64cd\u4f5c\uff0c\u672a\u627e\u5230\u641c\u7d22\u56fe\u50cf"
+msgstr "无效操作，未找到搜索图像"
 
 #: .\app.py:1608
 msgid "Failed to delete current file, unable to get valid filepath"
-msgstr "\u5220\u9664\u5f53\u524d\u6587\u4ef6\u5931\u8d25\uff0c\u65e0\u6cd5\u83b7\u53d6\u6709\u6548\u7684\u6587\u4ef6\u8def\u5f84"
+msgstr "删除当前文件失败，无法获取有效的文件路径"
 
 #: .\app.py:1613
 msgid "Removing file: {0}"
-msgstr "\u5220\u9664\u6587\u4ef6\uff1a {0}"
+msgstr "删除文件： {0}"
 
 #: .\app.py:1630
-msgid "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."
-msgstr "\u53d1\u9001\u6587\u4ef6\u5230\u5783\u573e\u7bb1\u5931\u8d25\uff0c\u56e0\u6b64\u6587\u4ef6\u5c06\u88ab\u5220\u9664\u3002\u8981\u4e48\u7528 pip \u5b89\u88c5 send2trash\uff0c\u8981\u4e48\u5728 config.json \u4e2d\u8bbe\u7f6e\u7279\u5b9a\u7684\u5783\u573e\u6587\u4ef6\u5939\u3002"
+msgid ""
+"Failed to send file to the trash, so it will be deleted. Either pip install "
+"send2trash or set a specific trash folder in config.json."
+msgstr ""
+"发送文件到垃圾箱失败，因此文件将被删除。要么用 pip 安装 send2trash，要么在 config.json 中设置特定的垃圾文件夹。"
 
 #: .\app.py:1647
 msgid "Invalid target filepath for replacement: "
-msgstr "\u66ff\u6362\u7684\u76ee\u6807\u6587\u4ef6\u8def\u5f84\u65e0\u6548\uff1a "
+msgstr "替换的目标文件路径无效： "
 
 #: .\app.py:1651
 msgid "Moved search image to "
-msgstr "\u5c06\u641c\u7d22\u56fe\u50cf\u79fb\u81f3 \uff1a "
+msgstr "将搜索图像移至 ： "
 
 #: .\app.py:1686
 msgid "Running image gen: "
-msgstr "\u8fd0\u884c\u56fe\u50cf\u57fa\u56e0 \uff1a "
+msgstr "运行图像基因 ： "
 
 #: .\app.py:1688
 msgid "Error running image generation:"
-msgstr "\u751f\u6210\u56fe\u50cf\u65f6\u51fa\u9519\uff1a"
+msgstr "生成图像时出错："
 
 #: .\app.py:1693
 msgid "Running refacdir"
-msgstr "\u6b63\u5728\u8fd0\u884c reacdir"
+msgstr "正在运行 reacdir"
 
 #: .\app.py:1698
 msgid "Error"
-msgstr "\u9519\u8bef"
+msgstr "错误"
 
 #: .\app.py:1761
 msgid "GROUP_DETAILS"
 msgstr ""
-" \u7b2c {0} \u7ec4 {1}"
-"\u5927\u5c0f\uff1a {2}"
+"第 {0} 组 {1}\n"
+"大小： {2}"
 
 #: .\app.py:1765
 msgid "No image files found"
-msgstr "\u672a\u627e\u5230\u56fe\u50cf\u6587\u4ef6"
+msgstr "未找到图像文件"
 
 #: .\app.py:1767
 msgid "1 image file found"
-msgstr "\u627e\u5230\u4e00\u4e2a\u56fe\u50cf\u6587\u4ef6"
+msgstr "找到一个图像文件"
 
 #: .\app.py:1767
 msgid "{0} image files found"
-msgstr "\u627e\u5230 {0} \u56fe\u50cf\u6587\u4ef6"
+msgstr "找到 {0} 图像文件"
 
 #: .\app.py:1770
 msgid "(filtered)"
-msgstr "(\u8fc7\u6ee4)"
+msgstr "(过滤)"
 
 #: .\compare\base_compare.py:226
 msgid "Image comparison"
-msgstr "\u56fe\u7247\u5bf9\u6bd4"
+msgstr "图片对比"
 
 #: .\compare\base_compare.py:226
 msgid "Image data collection"
-msgstr "\u56fe\u50cf\u6570\u636e\u6536\u96c6"
+msgstr "图像数据收集"
 
 #: .\compare\compare_wrapper.py:68 .\compare\compare_wrapper.py:71
 msgid "Invalid mode"
-msgstr "\u65e0\u6548\u6a21\u5f0f"
+msgstr "无效模式"
 
 #: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
 msgid "No matches found. Search again to find potential matches."
-msgstr "\u672a\u627e\u5230\u5339\u914d\u9879\u3002\u8bf7\u518d\u6b21\u641c\u7d22\uff0c\u4ee5\u627e\u5230\u53ef\u80fd\u7684\u5339\u914d\u9879\u3002"
+msgstr "未找到匹配项。请再次搜索，以找到可能的匹配项。"
 
 #: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
 msgid "Search required"
-msgstr "\u9700\u8981\u641c\u7d22"
+msgstr "需要搜索"
 
 #: .\compare\compare_wrapper.py:159
 msgid "Skipped %s images."
-msgstr "\u8df3\u8fc7 {0} \u5e45\u56fe\u50cf\u3002"
+msgstr "跳过 {0} 幅图像。"
 
 #: .\compare\compare_wrapper.py:165
 msgid "No Unrelated Images"
-msgstr "\u65e0\u4e0d\u76f8\u5173\u7684\u56fe\u50cf"
+msgstr "无不相关的图像"
 
 #: .\compare\compare_wrapper.py:165
 msgid "No unrelated images found."
-msgstr "\u672a\u627e\u5230\u4e0d\u76f8\u5173\u7684\u56fe\u50cf \u3002"
+msgstr "未找到不相关的图像 。"
 
 #: .\compare\compare_wrapper.py:202 .\compare\compare_wrapper.py:364
 msgid "No Groups Found"
-msgstr "\u6ca1\u6709\u627e\u5230\u7ec4"
+msgstr "没有找到组"
 
 #: .\compare\compare_wrapper.py:272
-msgid "Gathering image data... setup may take a while depending on number of files involved."
-msgstr "\u6536\u96c6\u56fe\u50cf\u6570\u636e......\u6839\u636e\u6240\u6d89\u53ca\u6587\u4ef6\u7684\u6570\u91cf\uff0c\u8bbe\u7f6e\u53ef\u80fd\u9700\u8981\u4e00\u6bb5\u65f6\u95f4\u3002"
+msgid ""
+"Gathering image data... setup may take a while depending on number of files "
+"involved."
+msgstr "收集图像数据......根据所涉及文件的数量，设置可能需要一段时间。"
 
 #: .\compare\compare_wrapper.py:294
 msgid "Confirm group run"
-msgstr "\u786e\u8ba4\u5c0f\u7ec4\u8fd0\u884c"
+msgstr "确认小组运行"
 
 #: .\compare\compare_wrapper.py:295
-msgid "Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."
-msgstr "\u68c0\u6d4b\u5230\u641c\u7d22\u6a21\u5f0f\uff0c\u8bf7\u786e\u8ba4\u5207\u6362\u5230\u7ec4\u6a21\u5f0f\u540e\u518d\u8fd0\u884c\u3002\u7fa4\u7ec4\u6a21\u5f0f\u5c06\u9700\u8981\u66f4\u957f\u7684\u65f6\u95f4\uff0c\u56e0\u4e3a\u8981\u5bf9\u57fa\u672c\u76ee\u5f55\u4e2d\u7684\u6240\u6709\u56fe\u50cf\u8fdb\u884c\u6bd4\u8f83\u3002"
+msgid ""
+"Search mode detected, please confirm switch to group mode before run. Group "
+"mode will take longer as all images in the base directory are compared."
+msgstr "检测到搜索模式，请确认切换到组模式后再运行。群组模式将需要更长的时间，因为要对基本目录中的所有图像进行比较。"
 
 #: .\compare\compare_wrapper.py:302
 msgid "Gathering image data for comparison"
-msgstr "\u6536\u96c6\u56fe\u50cf\u6570\u636e\u8fdb\u884c\u6bd4\u8f83"
+msgstr "收集图像数据进行比较"
 
 #: .\compare\compare_wrapper.py:330
 msgid "Searching images..."
-msgstr "\u6b63\u5728\u641c\u7d22\u56fe\u50cf..."
+msgstr "正在搜索图像..."
 
 #: .\compare\compare_wrapper.py:336
 msgid "Set a directory and search file or search text."
-msgstr "\u8bbe\u7f6e\u76ee\u5f55\u548c\u641c\u7d22\u6587\u4ef6\u6216\u641c\u7d22\u6587\u672c\u3002"
+msgstr "设置目录和搜索文件或搜索文本。"
 
 #: .\compare\compare_wrapper.py:337
 msgid "No Match Found"
-msgstr "\u627e\u4e0d\u5230\u5339\u914d"
+msgstr "找不到匹配"
 
 #: .\compare\compare_wrapper.py:337
 msgid "None of the files match the search filters with current settings."
-msgstr "\u5728\u5f53\u524d\u8bbe\u7f6e\u4e0b\uff0c\u6ca1\u6709\u4efb\u4f55\u6587\u4ef6\u7b26\u5408\u641c\u7d22\u7b5b\u9009\u6761\u4ef6\u3002"
+msgstr "在当前设置下，没有任何文件符合搜索筛选条件。"
 
 #: .\compare\compare_wrapper.py:350
 msgid "%s possibly related images found."
-msgstr "{0} \u53ef\u80fd\u627e\u5230\u76f8\u5173\u7684\u56fe\u50cf \u3002"
+msgstr "{0} 可能找到相关的图像 。"
 
 #: .\compare\compare_wrapper.py:358
 msgid "Running image comparisons..."
-msgstr "\u8fd0\u884c\u56fe\u50cf\u6bd4\u8f83..."
+msgstr "运行图像比较..."
 
 #: .\compare\compare_wrapper.py:363 .\compare\compare_wrapper.py:378
 msgid "Set a directory and search file."
-msgstr "\u8bbe\u7f6e\u76ee\u5f55\u548c\u641c\u7d22\u6587\u4ef6 \u3002"
+msgstr "设置目录和搜索文件 。"
 
 #: .\compare\compare_wrapper.py:364
 msgid "None of the files can be grouped with current settings."
-msgstr "\u6240\u6709\u6587\u4ef6\u90fd\u65e0\u6cd5\u6309\u5f53\u524d\u8bbe\u7f6e\u8fdb\u884c\u5206\u7ec4\u3002"
+msgstr "所有文件都无法按当前设置进行分组。"
 
 #: .\compare\compare_wrapper.py:379
 msgid "No Duplicates Found"
-msgstr "\u672a\u627e\u5230\u590d\u5236\u4ef6"
+msgstr "未找到复制件"
 
 #: .\compare\compare_wrapper.py:379
-msgid "None of the files appear to be duplicates based on the current settings."
-msgstr "\u6839\u636e\u5f53\u524d\u8bbe\u7f6e\uff0c\u6ca1\u6709\u4efb\u4f55\u6587\u4ef6\u770b\u8d77\u6765\u662f\u91cd\u590d\u7684\u3002"
+msgid ""
+"None of the files appear to be duplicates based on the current settings."
+msgstr "根据当前设置，没有任何文件看起来是重复的。"
 
 #: .\compare\compare_wrapper.py:403
 msgid "Some group members were left stranded by the grouping process."
-msgstr "\u4e00\u4e9b\u5c0f\u7ec4\u6210\u5458\u5728\u5206\u7ec4\u8fc7\u7a0b\u4e2d\u9677\u5165\u56f0\u5883\u3002"
+msgstr "一些小组成员在分组过程中陷入困境。"
 
 #: .\compare\compare_wrapper.py:403
 msgid "Stranded Group Members Found"
-msgstr "\u627e\u5230\u53d7\u56f0\u7684\u5c0f\u7ec4\u6210\u5458"
+msgstr "找到受困的小组成员"
 
 #: .\compare\compare_wrapper.py:458
 msgid "No More Groups"
-msgstr "\u6ca1\u6709\u66f4\u591a\u7ec4"
+msgstr "没有更多组"
 
 #: .\compare\compare_wrapper.py:459
-msgid "There are no more image groups remaining for this directory and current filter settings."
-msgstr "\u6b64\u76ee\u5f55\u548c\u5f53\u524d\u8fc7\u6ee4\u5668\u8bbe\u7f6e\u5df2\u6ca1\u6709\u5269\u4f59\u7684\u56fe\u50cf\u7ec4\u3002"
+msgid ""
+"There are no more image groups remaining for this directory and current "
+"filter settings."
+msgstr "此目录和当前过滤器设置已没有剩余的图像组。"
 
 #: .\compare\prevalidations_window.py:23
 msgid "(no positives set)"
-msgstr "(\u65e0\u6b63\u7247\u8bbe\u7f6e\uff09"
+msgstr "(无正片设置）"
 
 #: .\compare\prevalidations_window.py:24
 msgid "(no negatives set)"
-msgstr "(\u6ca1\u6709\u5e95\u7247\uff09"
+msgstr "(没有底片）"
 
 #: .\compare\prevalidations_window.py:26
 #: .\compare\prevalidations_window.py:197
 msgid "New Prevalidation"
-msgstr "\u65b0\u5efa\u524d\u7f00"
+msgstr "新建前缀"
 
 #: .\compare\prevalidations_window.py:77
 msgid " - skipped"
-msgstr " - \u8df3\u8fc7"
+msgstr " - 跳过"
 
 #: .\compare\prevalidations_window.py:77 .\compare\prevalidations_window.py:80
 #: .\compare\prevalidations_window.py:82 .\compare\prevalidations_window.py:88
 #: .\compare\prevalidations_window.py:99
 msgid " detected"
-msgstr " \u68c0\u6d4b"
+msgstr " 检测"
 
 #: .\compare\prevalidations_window.py:80
 msgid " - hidden"
-msgstr " - \u9690\u85cf"
+msgstr " - 隐藏"
 
 #: .\compare\prevalidations_window.py:88
 msgid "Moving file: "
-msgstr "\u79fb\u52a8\u6587\u4ef6 : "
+msgstr "移动文件 : "
 
 #: .\compare\prevalidations_window.py:99
 msgid "Deleting file: "
-msgstr "\u5220\u9664\u6587\u4ef6 : "
+msgstr "删除文件 : "
 
 #: .\compare\prevalidations_window.py:172
 msgid " testing classifier {0} for {1}"
-msgstr " \u5bf9{1}\u8fdb\u884c{0}\u6d4b\u8bd5"
+msgstr " 对{1}进行{0}测试"
 
 #: .\compare\prevalidations_window.py:174
 msgid " ({0} positives, {1} negatives)"
-msgstr " ({0}\u9633\u6027\uff0c{1}\u9634\u6027)"
+msgstr " ({0}阳性，{1}阴性)"
 
 #: .\compare\prevalidations_window.py:187
 msgid "Modify Prevalidation"
-msgstr "\u4fee\u6539\u524d\u7f00"
+msgstr "修改前缀"
 
 #: .\compare\prevalidations_window.py:196
 msgid "Prevalidation Name"
-msgstr "\u9884\u9a8c\u8bc1\u540d\u79f0"
+msgstr "预验证名称"
 
 #: .\compare\prevalidations_window.py:203
 msgid "Positives"
-msgstr "\u79ef\u6781\u65b9\u9762"
+msgstr "积极方面"
 
 #: .\compare\prevalidations_window.py:210
 msgid "Negatives"
-msgstr "\u5e95\u7247"
+msgstr "底片"
 
 #: .\compare\prevalidations_window.py:217
 msgid "Threshold"
-msgstr "\u9608\u503c"
+msgstr "阈值"
 
 #: .\compare\prevalidations_window.py:224
 msgid "Action"
-msgstr "\u884c\u52a8"
+msgstr "行动"
 
 #: .\compare\prevalidations_window.py:234
 msgid "Action Modifier"
-msgstr "\u52a8\u4f5c\u4fee\u6539\u5668"
+msgstr "动作修改器"
 
 #: .\compare\prevalidations_window.py:241
 msgid "Run on Directory"
-msgstr "\u5728\u76ee\u5f55\u4e0a\u8fd0\u884c"
+msgstr "在目录上运行"
 
 #: .\compare\prevalidations_window.py:248
 msgid "Image Classifier Name"
-msgstr "\u56fe\u50cf\u5206\u7c7b\u5668\u540d\u79f0"
+msgstr "图像分类器名称"
 
 #: .\compare\prevalidations_window.py:259
 msgid "Image Classifier Selected Category"
-msgstr "\u56fe\u50cf\u5206\u7c7b\u5668\u9009\u5b9a\u7c7b\u522b"
+msgstr "图像分类器选定类别"
 
 #: .\compare\prevalidations_window.py:263
 msgid "Select Categories..."
-msgstr "\u9009\u62e9\u7c7b\u522b..."
+msgstr "选择类别..."
 
 #: .\compare\prevalidations_window.py:269
 msgid "Done"
-msgstr "\u5df2\u5b8c\u6210"
+msgstr "已完成"
 
 #: .\compare\prevalidations_window.py:401
-msgid "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
-msgstr "\u672a\u627e\u5230\u540d\u79f0\u4e3a {0} \u7684\u9884\u5ba1\u3002\u8bf7\u5728\u9884\u9a8c\u8bc1\u7a97\u53e3\u4e2d\u8fdb\u884c\u8bbe\u7f6e\u3002"
+msgid ""
+"No prevalidation found with name: {0}. Set it on the Prevalidations Window."
+msgstr "未找到名称为 {0} 的预审。请在预验证窗口中进行设置。"
 
 #: .\compare\prevalidations_window.py:412
 msgid "Prevalidations"
-msgstr "\u524d\u8a00"
+msgstr "前言"
 
 #: .\compare\prevalidations_window.py:435
 msgid "Set Prevalidations"
-msgstr "\u8bbe\u7f6e\u524d\u7f00"
+msgstr "设置前缀"
 
 #: .\compare\prevalidations_window.py:437
 msgid "Add prevalidation"
-msgstr "\u6dfb\u52a0\u9884\u9a8c\u8bc1"
+msgstr "添加预验证"
 
 #: .\compare\prevalidations_window.py:439
 msgid "Clear prevalidations"
-msgstr "\u6e05\u9664\u9884\u5148\u9a8c\u8bc1"
+msgstr "清除预先验证"
 
 #: .\compare\prevalidations_window.py:475 .\files\hotkey_actions_window.py:95
 msgid "Set"
-msgstr "\u8bbe\u5b9a"
+msgstr "设定"
 
 #: .\compare\prevalidations_window.py:483 .\files\file_actions_window.py:269
 #: .\files\file_actions_window.py:312
 msgid "Modify"
-msgstr "\u4fee\u6539"
+msgstr "修改"
 
 #: .\compare\prevalidations_window.py:490
 msgid "Delete"
-msgstr "\u5220\u9664"
+msgstr "删除"
 
 #: .\compare\prevalidations_window.py:497
 msgid "Move down"
-msgstr "\u5411\u4e0b\u79fb\u52a8"
+msgstr "向下移动"
 
 #: .\extensions\sd_runner_client.py:59
 msgid "Image does not contain a prompt to redo!"
-msgstr "\u56fe\u50cf\u4e0d\u5305\u542b\u91cd\u505a\u63d0\u793a\uff01"
+msgstr "图像不包含重做提示！"
 
 #: .\files\file_actions_window.py:201
 msgid "File Actions"
-msgstr "\u6587\u4ef6\u64cd\u4f5c"
+msgstr "文件操作"
 
 #: .\files\file_actions_window.py:223
 msgid "File Action History"
-msgstr "\u6587\u4ef6\u64cd\u4f5c\u5386\u53f2"
+msgstr "文件操作历史"
 
 #: .\files\file_actions_window.py:225
 msgid "Search Image"
-msgstr "\u641c\u7d22\u56fe\u7247"
+msgstr "搜索图片"
 
 #: .\files\file_actions_window.py:227
 msgid "Clear History"
-msgstr "\u6e05\u9664\u5386\u53f2\u8bb0\u5f55"
+msgstr "清除历史记录"
 
 #: .\files\file_actions_window.py:253
 msgid " ({0} files)"
-msgstr " ({0} \u6587\u4ef6)"
+msgstr " ({0} 文件)"
 
 #: .\files\file_actions_window.py:258 .\files\marked_file_mover.py:264
 msgid "Move"
-msgstr "\u79fb\u52a8"
+msgstr "移动"
 
 #: .\files\file_actions_window.py:258 .\files\marked_file_mover.py:271
 msgid "Copy"
-msgstr "\u590d\u5236"
+msgstr "复制"
 
 #: .\files\file_actions_window.py:261 .\files\file_actions_window.py:304
 msgid "Undo"
-msgstr "\u64a4\u9500"
+msgstr "撤销"
 
 #: .\files\file_actions_window.py:296
 msgid "View"
-msgstr "\u89c6\u56fe"
+msgstr "视图"
 
 #: .\files\file_actions_window.py:329
 msgid "Image does not exist: "
-msgstr "\u56fe\u50cf\u4e0d\u5b58\u5728 : "
+msgstr "图像不存在 : "
 
 #: .\files\file_actions_window.py:330 .\files\file_actions_window.py:341
 msgid "File Action Error"
-msgstr "\u6587\u4ef6\u52a8\u4f5c\u9519\u8bef"
+msgstr "文件动作错误"
 
 #: .\files\file_actions_window.py:340
 msgid "Images not found"
-msgstr "\u672a\u627e\u5230\u56fe\u50cf"
+msgstr "未找到图像"
 
 #: .\files\file_browser.py:151 .\files\file_browser.py:163
 msgid " (try setting recursive to True)"
-msgstr " (\u5c1d\u8bd5\u5c06\u9012\u5f52\u8bbe\u7f6e\u4e3a True\uff09"
+msgstr " (尝试将递归设置为 True）"
 
 #: .\files\file_browser.py:152 .\files\file_browser.py:164
 msgid "No files found for current browsing settings."
-msgstr "\u5f53\u524d\u6d4f\u89c8\u8bbe\u7f6e\u672a\u627e\u5230\u6587\u4ef6\u3002"
+msgstr "当前浏览设置未找到文件。"
 
 #: .\files\file_browser.py:197
 msgid "FILE_BROWSER_INDEX_DETAILS"
-msgstr "\u76ee\u5f55\u4e2d {1} \u4e2a\u6587\u4ef6\u4e2d\u7684 {0} \u4e2a\uff0c\u6309{2}{3}\u6392\u5e8f"
+msgstr "目录中 {1} 个文件中的 {0} 个，按{2}{3}排序"
 
 #: .\files\file_browser.py:224
 msgid "Search text provided to file_browser.find() was invalid."
-msgstr "\u63d0\u4f9b\u7ed9 file_browser.find() \u7684\u641c\u7d22\u6587\u672c\u65e0\u6548\u3002"
+msgstr "提供给 file_browser.find() 的搜索文本无效。"
 
 #: .\files\go_to_file.py:22
 msgid "Go To File"
-msgstr "\u8f6c\u5230\u6587\u4ef6"
+msgstr "转到文件"
 
 #: .\files\go_to_file.py:47
 msgid "Invalid search string, please enter some text."
-msgstr "\u641c\u7d22\u5b57\u7b26\u4e32\u65e0\u6548\uff0c\u8bf7\u8f93\u5165\u4e00\u4e9b\u6587\u672c\u3002"
+msgstr "搜索字符串无效，请输入一些文本。"
 
 #: .\files\hotkey_actions_window.py:25
 msgid "Hotkey Actions"
-msgstr "\u70ed\u952e\u64cd\u4f5c"
+msgstr "热键操作"
 
 #: .\files\hotkey_actions_window.py:49
 msgid "Key name"
-msgstr "\u5173\u952e\u540d\u79f0"
+msgstr "关键名称"
 
 #: .\files\hotkey_actions_window.py:53
 msgid "Target directory"
-msgstr "\u76ee\u6807\u76ee\u5f55"
+msgstr "目标目录"
 
 #: .\files\hotkey_actions_window.py:85 .\files\hotkey_actions_window.py:90
 msgid "(unset)"
-msgstr "(\u672a\u8bbe\u5b9a)"
+msgstr "(未设定)"
 
 #: .\files\marked_file_mover.py:88 .\files\marked_file_mover.py:876
 msgid "Marks cleared."
-msgstr "\u6807\u8bb0\u6e05\u9664\u3002"
+msgstr "标记清除。"
 
 #: .\files\marked_file_mover.py:95
 msgid "Set current marks from previous."
-msgstr "\u4ece\u4e0a\u4e00\u4e2a\u6807\u8bb0\u8bbe\u7f6e\u5f53\u524d\u6807\u8bb0\u3002"
+msgstr "从上一个标记设置当前标记。"
 
 #: .\files\marked_file_mover.py:95
 msgid "Total set: {0}"
-msgstr "\u5168\u5957\uff1a {0}"
+msgstr "全套： {0}"
 
 #: .\files\marked_file_mover.py:122
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
-"\u6ca1\u6709\u8bbe\u5b9a\u6c38\u4e45\u6807\u8bb0\u76ee\u6807 !\ n"
-"\u5728Marks\u7a97\u53e3\u4e0a\u8bbe\u5b9a Ctrl+T \u3002"
+"没有设定永久标记目标 !\n"
+"在Marks窗口上设定 Ctrl+T 。"
 
 #: .\files\marked_file_mover.py:134
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
-"\u6ca1\u6709\u4e3a {0}.\ n \u8bbe\u7f6e\u70ed\u952e\u52a8\u4f5c"
-"\u5728 Marks \u7a97\u53e3\u4e0a\u8bbe\u5b9a {1} \u3002"
+"未为 {0} 设置热键操作。\n"
+"在标记窗口中用 {1} 设置。"
 
 #: .\files\marked_file_mover.py:214 .\files\recent_directory_window.py:153
 msgid "Set a new target directory"
-msgstr "\u8bbe\u7f6e\u65b0\u7684\u76ee\u6807\u76ee\u5f55"
+msgstr "设置新的目标目录"
 
 #: .\files\marked_file_mover.py:216
 msgid "MOVE"
-msgstr "\u79fb\u52a8"
+msgstr "移动"
 
 #: .\files\marked_file_mover.py:220
 msgid "COPY"
-msgstr "\u590d\u5236"
+msgstr "复制"
 
 #: .\files\marked_file_mover.py:222
 msgid "DELETE"
-msgstr "\u5220\u9664"
+msgstr "删除"
 
 #: .\files\marked_file_mover.py:224 .\files\recent_directory_window.py:157
 msgid "Add directories from parent"
-msgstr "\u4ece\u7236\u76ee\u5f55\u6dfb\u52a0\u76ee\u5f55"
+msgstr "从父目录添加目录"
 
 #: .\files\marked_file_mover.py:227 .\files\recent_directory_window.py:159
 msgid "Clear targets"
-msgstr "\u660e\u786e\u76ee\u6807"
+msgstr "明确目标"
 
 #: .\files\marked_file_mover.py:291 .\files\marked_file_mover.py:297
 msgid "Recording next mark target and action."
-msgstr "\u8bb0\u5f55\u4e0b\u4e00\u4e2a\u6807\u8bb0\u76ee\u6807\u548c\u884c\u52a8\u3002"
+msgstr "记录下一个标记目标和行动。"
 
 #: .\files\marked_file_mover.py:310 .\files\recent_directory_window.py:203
 msgid "Invalid directory: %s"
-msgstr "\u65e0\u6548\u76ee\u5f55\uff1a {0}"
+msgstr "无效目录： {0}"
 
 #: .\files\marked_file_mover.py:312
 msgid "Select target directory for marked files"
-msgstr "\u4e3a\u6807\u8bb0\u6587\u4ef6\u9009\u62e9\u76ee\u6807\u76ee\u5f55"
+msgstr "为标记文件选择目标目录"
 
 #: .\files\marked_file_mover.py:367
 msgid "Copying"
-msgstr "\u590d\u5236"
+msgstr "复制"
 
 #: .\files\marked_file_mover.py:367
 msgid "Moving"
-msgstr "\u79fb\u52a8"
+msgstr "移动"
 
 #: .\files\marked_file_mover.py:368
 msgid "Copied"
-msgstr "\u590d\u5236"
+msgstr "复制"
 
 #: .\files\marked_file_mover.py:368
 msgid "Moved"
-msgstr "\u79fb\u52a8"
+msgstr "移动"
 
 #: .\files\marked_file_mover.py:405
 msgid "Moved {0} files to {1}"
 msgstr ""
-" \u5c06 {0} \u6587\u4ef6\u79fb\u81f3"
-" {1}"
+"将 {0} 文件移至\n"
+"{1}"
 
 #: .\files\marked_file_mover.py:407
 msgid "Copied {0} files to {1}"
 msgstr ""
-" \u5c06 {0} \u4e2a\u6587\u4ef6\u590d\u5236\u5230"
+"将 {0} 个文件复制到\n"
 "{1}"
 
 #: .\files\marked_file_mover.py:434
 msgid "Existing filenames match!"
-msgstr "\u73b0\u6709\u6587\u4ef6\u540d\u5339\u914d\uff01"
+msgstr "现有文件名匹配！"
 
 #: .\files\marked_file_mover.py:436
 msgid "WARNING: Exact file match."
-msgstr "\u8b66\u544a\uff1a\u6587\u4ef6\u5b8c\u5168\u5339\u914d\u3002"
+msgstr "警告：文件完全匹配。"
 
 #: .\files\marked_file_mover.py:438 .\files\marked_file_mover.py:789
 msgid "WARNING: Short filenames."
-msgstr "\u8b66\u544a:\u6587\u4ef6\u77ed\u3002"
+msgstr "警告:文件短。"
 
 #: .\files\marked_file_mover.py:462
 msgid "Moving back"
-msgstr "\u5411\u540e\u79fb\u52a8"
+msgstr "向后移动"
 
 #: .\files\marked_file_mover.py:462
 msgid "Removing"
-msgstr "\u5220\u9664"
+msgstr "删除"
 
 #: .\files\marked_file_mover.py:463
 msgid "Moved back"
-msgstr "\u5411\u540e\u79fb\u52a8"
+msgstr "向后移动"
 
 #: .\files\marked_file_mover.py:463
 msgid "Removed"
-msgstr "\u5df2\u5220\u9664"
+msgstr "已删除"
 
 #: .\files\marked_file_mover.py:469
 msgid "Where should the marked files have gone?"
-msgstr "\u505a\u4e86\u6807\u8bb0\u7684\u6587\u4ef6\u5e94\u8be5\u653e\u5728\u54ea\u91cc\uff1f"
+msgstr "做了标记的文件应该放在哪里？"
 
 #: .\files\marked_file_mover.py:494
 msgid "Moved back {0} files from {1}"
-msgstr " \u4ece {1} \u79fb\u56de {0} \u4e2a\u6587\u4ef6"
+msgstr ""
+"从 {1}\n"
+"移回 {0} 个文件"
 
 #: .\files\marked_file_mover.py:496
 msgid "Removed {0} files from {1}"
-msgstr " \u4ece {1} \u79fb\u9664 {0} \u4e2a\u6587\u4ef6"
+msgstr ""
+"从 {1}\n"
+"移除 {0} 个文件"
 
 #: .\files\marked_file_mover.py:513
 msgid "Select parent directory for target directories"
-msgstr "\u9009\u62e9\u76ee\u6807\u76ee\u5f55\u7684\u7236\u76ee\u5f55"
+msgstr "选择目标目录的父目录"
 
 #: .\files\marked_file_mover.py:673
 msgid "Sorted directories by embedding comparison."
-msgstr "\u901a\u8fc7\u5d4c\u5165\u6bd4\u8f83\u6392\u5e8f\u76ee\u5f55 \u3002"
+msgstr "通过嵌入比较排序目录 。"
 
 #: .\files\marked_file_mover.py:693
 msgid "Confirm Delete"
-msgstr "\u786e\u8ba4\u5220\u9664"
+msgstr "确认删除"
 
 #: .\files\marked_file_mover.py:694
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
-msgstr "\u5220\u9664{0} \u6807\u8bb0\u7684\u6587\u4ef6 - \u60a8\u786e\u5b9a\u8981\u7ee7\u7eed\u5417 ?"
+msgstr "删除{0} 标记的文件 - 您确定要继续吗 ?"
 
 #: .\files\marked_file_mover.py:714
 msgid "Delete Failed"
-msgstr "\u5220\u9664\u5931\u8d25"
+msgstr "删除失败"
 
 #: .\files\marked_file_mover.py:715
 msgid "Failed to delete %s files - check log for details."
-msgstr "\u5220\u9664 {0} \u6587\u4ef6 - \u68c0\u67e5\u65e5\u5fd7\u4ee5\u83b7\u53d6\u7ec6\u8282\u5931\u8d25 \u3002"
+msgstr "删除 {0} 文件 - 检查日志以获取细节失败 。"
 
 #: .\files\marked_file_mover.py:718
 msgid "Deleted %s marked files."
-msgstr "\u5220\u9664{0} \u6807\u8bb0\u7684\u6587\u4ef6 \u3002"
+msgstr "删除{0} 标记的文件 。"
 
 #: .\files\marked_file_mover.py:783
 msgid "Existing filenames found!"
-msgstr "\u627e\u5230\u5df2\u6709\u6587\u4ef6\u540d !"
+msgstr "找到已有文件名 !"
 
 #: .\files\marked_file_mover.py:785
 msgid "WARNING: All file hashes match."
-msgstr "\u6240\u6709\u6863\u6848\u90fd\u5339\u914d"
+msgstr "所有档案都匹配"
 
 #: .\files\marked_file_mover.py:787
 msgid "WARNING: %s of %s file hashes match."
-msgstr "\u8b66\u544a : {0} {1} \u6587\u4ef6\u6563\u5217\u5339\u914d \u3002"
+msgstr "警告 : {0} {1} 文件散列匹配 。"
 
 #: .\files\marked_file_mover.py:793
 msgid "No existing filenames found."
-msgstr "\u672a\u627e\u5230\u73b0\u6709\u6587\u4ef6\u540d \u3002"
+msgstr "未找到现有文件名 。"
 
 #: .\files\marked_file_mover.py:821
 msgid "Found %s downstream related images"
-msgstr "\u627e\u5230 {0} \u4e0b\u6e38\u76f8\u5173\u56fe\u50cf"
+msgstr "找到 {0} 下游相关图像"
 
 #: .\files\marked_file_mover.py:823
 msgid "No downstream related images found"
-msgstr "\u672a\u627e\u5230\u4e0b\u6e38\u76f8\u5173\u56fe\u50cf"
+msgstr "未找到下游相关图像"
 
 #: .\files\marked_file_mover.py:834
 msgid "Cleared marked file"
-msgstr "\u6e05\u9664\u5df2\u6807\u8bb0\u7684\u6587\u4ef6"
+msgstr "清除已标记的文件"
 
 #: .\files\marked_file_mover.py:878
 msgid "Removed {0} marks"
-msgstr "\u5220\u9664{0}\u6807\u8bb0"
+msgstr "删除{0}标记"
 
 #: .\files\recent_directory_window.py:155
 msgid "Add directory"
-msgstr "\u6dfb\u52a0\u76ee\u5f55"
+msgstr "添加目录"
 
 #: .\files\recent_directory_window.py:205
 msgid "Set image comparison directory"
-msgstr "\u8bbe\u5b9a\u56fe\u50cf\u6bd4\u8f83\u76ee\u5f55"
+msgstr "设定图像比较目录"
 
 #: .\files\type_configuration_window.py:61
 msgid "Media Type Configuration"
-msgstr "\u5a92\u4f53\u7c7b\u578b\u914d\u7f6e"
+msgstr "媒体类型配置"
 
 #: .\files\type_configuration_window.py:74
 msgid "Configure Media Types"
-msgstr "\u914d\u7f6e\u5a92\u4f53\u7c7b\u578b"
+msgstr "配置媒体类型"
 
 #: .\files\type_configuration_window.py:107
 msgid "Apply Changes"
-msgstr "\u5e94\u7528\u66f4\u6539"
+msgstr "应用更改"
 
 #: .\files\type_configuration_window.py:149
 msgid "Confirm Changes"
-msgstr "\u786e\u8ba4\u66f4\u6539"
+msgstr "确认更改"
 
 #: .\files\type_configuration_window.py:150
 msgid "This will clear all existing compares in open windows. Continue?"
-msgstr "\u8fd9\u5c06\u6e05\u9664\u6240\u6709\u5728\u5f00\u653e\u7a97\u53e3\u4e2d\u7684\u6bd4\u8f83 \u3002 \u7ee7\u7eed?"
+msgstr "这将清除所有在开放窗口中的比较 。 继续?"
 
 #: .\files\type_configuration_window.py:200
 msgid "Media type configuration updated"
-msgstr "\u66f4\u65b0\u5a92\u4f53\u7c7b\u578b\u914d\u7f6e"
+msgstr "更新媒体类型配置"
 
 #: .\image\image_details.py:115
 msgid "Image Path"
-msgstr "\u56fe\u50cf\u8def\u5f84"
+msgstr "图像路径"
 
 #: .\image\image_details.py:117
 msgid "File Index"
-msgstr "\u6587\u4ef6\u7d22\u5f15"
+msgstr "文件索引"
 
 #: .\image\image_details.py:119
 msgid "Color Mode"
-msgstr "\u989c\u8272\u6a21\u5f0f"
+msgstr "颜色模式"
 
 #: .\image\image_details.py:121
 msgid "Dimensions"
-msgstr "\u5c3a\u5bf8"
+msgstr "尺寸"
 
 #: .\image\image_details.py:123 .\utils\constants.py:96
 #: .\utils\constants.py:113
 msgid "Size"
-msgstr "\u5927\u5c0f"
+msgstr "大小"
 
 #: .\image\image_details.py:125
 msgid "Modification Time"
-msgstr "\u4fee\u6539\u65f6\u95f4"
+msgstr "修改时间"
 
 #: .\image\image_details.py:127
 msgid "Positive"
-msgstr "\u9633\u6027"
+msgstr "阳性"
 
 #: .\image\image_details.py:129
 msgid "Negative"
-msgstr "\u8d1f\u6570"
+msgstr "负数"
 
 #: .\image\image_details.py:130
 msgid "(negative prompt not shown by config setting)"
-msgstr "(\u914d\u7f6e\u8bbe\u7f6e\u672a\u663e\u793a\u7684\u8d1f\u63d0\u793a)"
+msgstr "(配置设置未显示的负提示)"
 
 #: .\image\image_details.py:131
 msgid "Models"
-msgstr "\u6a21\u578b"
+msgstr "模型"
 
 #: .\image\image_details.py:133
 msgid "LoRAs"
-msgstr "\u4e50\u56e2"
+msgstr "乐团"
 
 #: .\image\image_details.py:138
 msgid "Copy Prompt"
-msgstr "\u590d\u5236\u63d0\u793a"
+msgstr "复制提示"
 
 #: .\image\image_details.py:139
 msgid "Copy Prompt No BREAK"
-msgstr "\u590d\u5236\u63d0\u793a\u4e0d\u4e2d\u65ad"
+msgstr "复制提示不中断"
 
 #: .\image\image_details.py:143
 msgid "Rotate Image Left"
-msgstr "\u5411\u5de6\u65cb\u8f6c\u56fe\u50cf"
+msgstr "向左旋转图像"
 
 #: .\image\image_details.py:144
 msgid "Rotate Image Right"
-msgstr "\u5411\u53f3\u65cb\u8f6c\u56fe\u50cf"
+msgstr "向右旋转图像"
 
 #: .\image\image_details.py:148
 msgid "Crop Image (Smart Detect)"
-msgstr "\u88c1\u526a\u56fe\u50cf( \u667a\u80fd\u68c0\u6d4b)"
+msgstr "裁剪图像( 智能检测)"
 
 #: .\image\image_details.py:149
 msgid "Enhance Image"
-msgstr "\u589e\u5f3a\u56fe\u50cf"
+msgstr "增强图像"
 
 #: .\image\image_details.py:153
 msgid "Random Crop"
-msgstr "\u968f\u673a\u88c1\u526a"
+msgstr "随机裁剪"
 
 #: .\image\image_details.py:154
 msgid "Randomly Modify"
-msgstr "\u968f\u673a\u4fee\u6539"
+msgstr "随机修改"
 
 #: .\image\image_details.py:158
 msgid "Flip Image Horizontally"
-msgstr "\u6c34\u5e73\u7ffb\u8f6c\u56fe\u50cf"
+msgstr "水平翻转图像"
 
 #: .\image\image_details.py:159
 msgid "Flip Image Vertically"
-msgstr "\u5782\u76f4\u7ffb\u8f6c\u56fe\u50cf"
+msgstr "垂直翻转图像"
 
 #: .\image\image_details.py:162
 msgid "Show Metadata"
-msgstr "\u663e\u793a\u5143\u6570\u636e"
+msgstr "显示元数据"
 
 #: .\image\image_details.py:166
 msgid "Open Related Image"
-msgstr "\u6253\u5f00\u76f8\u5173\u56fe\u50cf"
+msgstr "打开相关图像"
 
 #: .\image\image_details.py:175
 msgid "Image Generation"
-msgstr "\u56fe\u50cf\u751f\u6210"
+msgstr "图像生成"
 
 #: .\image\image_details.py:183
 msgid "Run Image Generation"
-msgstr "\u8fd0\u884c\u56fe\u50cf\u751f\u6210"
+msgstr "运行图像生成"
 
 #: .\image\image_details.py:185
 msgid "Press Shift+I on a main app window to run this"
-msgstr "\u6309Shift+\u952e \u6211\u5728\u4e3b\u5e94\u7528\u7a97\u53e3\u8fd0\u884c\u8fd9\u4e2a"
+msgstr "按Shift+键 我在主应用窗口运行这个"
 
 #: .\image\image_details.py:188
 msgid "Redo Prompt"
-msgstr "\u91cd\u505a\u63d0\u793a"
+msgstr "重做提示"
 
 #: .\image\image_details.py:192
 msgid "Tags"
-msgstr "\u6807\u8bb0"
+msgstr "标记"
 
 #: .\image\image_details.py:202
 msgid "Update Tags"
-msgstr "\u66f4\u65b0\u6807\u8bb0"
+msgstr "更新标记"
 
 #: .\image\image_details.py:265
 msgid "Copied prompt"
-msgstr "\u590d\u5236\u63d0\u793a"
+msgstr "复制提示"
 
 #: .\image\image_details.py:274 .\image\image_details.py:284
 msgid "Copied prompt without BREAK"
-msgstr "\u590d\u5236\u7684\u5feb\u901f\u65e0\u963b"
+msgstr "复制的快速无阻"
 
 #: .\image\image_details.py:302
 msgid "Rotated image left"
-msgstr "\u5de6\u65cb\u56fe\u50cf"
+msgstr "左旋图像"
 
 #: .\image\image_details.py:302
 msgid "Rotated image right"
-msgstr "\u5411\u53f3\u65cb\u8f6c\u56fe\u50cf"
+msgstr "向右旋转图像"
 
 #: .\image\image_details.py:311
 msgid "Cropped image"
-msgstr "\u526a\u5207\u56fe\u50cf"
+msgstr "剪切图像"
 
 #: .\image\image_details.py:313
 msgid "No crops found"
-msgstr "\u6ca1\u6709\u627e\u5230\u4f5c\u7269"
+msgstr "没有找到作物"
 
 #: .\image\image_details.py:320
 msgid "Enhanced image"
-msgstr "\u589e\u5f3a\u56fe\u50cf"
+msgstr "增强图像"
 
 #: .\image\image_details.py:325
 msgid "Randomly cropped image"
-msgstr "\u968f\u673a\u88c1\u526a\u7684\u56fe\u50cf"
+msgstr "随机裁剪的图像"
 
 #: .\image\image_details.py:334
 msgid "Randomly modified image"
-msgstr "\u968f\u673a\u4fee\u6539\u7684\u56fe\u50cf"
+msgstr "随机修改的图像"
 
 #: .\image\image_details.py:339
 msgid "Flipped image"
-msgstr "\u7ffb\u8f6c\u56fe\u50cf"
+msgstr "翻转图像"
 
 #: .\image\image_details.py:344
 msgid "No metadata found"
-msgstr "\u672a\u627e\u5230\u5143\u6570\u636e"
+msgstr "未找到元数据"
 
 #: .\image\image_details.py:358 .\image\image_details.py:416
 msgid " (Exact Match Not Found)"
-msgstr " (\u6ca1\u6709\u627e\u5230\u7cbe\u786e\u5339\u914d)"
+msgstr " (没有找到精确匹配)"
 
 #: .\image\image_details.py:360 .\image\image_details.py:413
 msgid "(No related image found)"
-msgstr "(\u6ca1\u6709\u627e\u5230\u76f8\u5173\u7684\u56fe\u50cf)"
+msgstr "(没有找到相关的图像)"
 
 #: .\image\image_details.py:475 .\image\image_details.py:482
 msgid "%s downstream image(s) found."
-msgstr "{0} \u627e\u5230\u4e0b\u6e38\u56fe\u50cf \u3002"
+msgstr "{0} 找到下游图像 。"
 
 #: .\image\image_details.py:478
 msgid "%s (cached) downstream image(s) found."
-msgstr "{0} (cached) \u4e0b\u6e38\u56fe\u50cf\u627e\u5230 \u3002"
+msgstr "{0} (cached) 下游图像找到 。"
 
 #: .\image\image_details.py:484
 msgid "No downstream related images found in"
-msgstr "\u627e\u4e0d\u5230\u4e0b\u6e38\u76f8\u5173\u56fe\u50cf"
+msgstr "找不到下游相关图像"
 
 #: .\image\image_details.py:544
 msgid "Updated tags for %s"
-msgstr "{0} \u7684\u66f4\u65b0\u6807\u7b7e"
+msgstr "{0} 的更新标签"
 
 #: .\image\metadata_viewer_window.py:31
 msgid "Raw Image Metadata"
-msgstr "Raw \u56fe\u50cf\u5143\u6570\u636e"
+msgstr "Raw 图像元数据"
 
 #: .\image\metadata_viewer_window.py:49
 msgid "Metadata Viewer"
-msgstr "\u5143\u6570\u636e\u67e5\u770b\u5668"
+msgstr "元数据查看器"
 
 #: .\image\temp_image_canvas.py:104
 msgid "Open a new related image with Shift+R on main window"
-msgstr "\u5728\u4e3b\u7a97\u53e3\u6253\u5f00 Shift+R \u7684\u65b0\u56fe\u50cf"
+msgstr "在主窗口打开 Shift+R 的新图像"
 
 #: .\utils\constants.py:8 .\utils\constants.py:17
 msgid "Browsing Mode"
-msgstr "\u6d4f\u89c8\u6a21\u5f0f"
+msgstr "浏览模式"
 
 #: .\utils\constants.py:9 .\utils\constants.py:19
 msgid "Searching Mode"
-msgstr "\u641c\u7d22\u6a21\u5f0f"
+msgstr "搜索模式"
 
 #: .\utils\constants.py:10 .\utils\constants.py:21
 msgid "Group Comparison Mode"
-msgstr "\u7ec4\u5408\u6bd4\u8f83\u6a21\u5f0f"
+msgstr "组合比较模式"
 
 #: .\utils\constants.py:11 .\utils\constants.py:23
 msgid "Duplicate Detection Mode"
-msgstr "\u590d\u5236\u68c0\u6d4b\u6a21\u5f0f"
+msgstr "复制检测模式"
 
 #: .\utils\constants.py:31 .\utils\constants.py:41
 msgid "Color Matching"
-msgstr "\u989c\u8272\u5339\u914d"
+msgstr "颜色匹配"
 
 #: .\utils\constants.py:32 .\utils\constants.py:43
 msgid "CLIP Embedding"
-msgstr "\u300a\u5211\u6cd5\u300b \u5d4c\u5165"
+msgstr "《刑法》 嵌入"
 
 #: .\utils\constants.py:33 .\utils\constants.py:45
 msgid "SigLIP Embedding"
-msgstr "\u9521\u683c\u5229\u666e \u5d4c\u5165"
+msgstr "锡格利普 嵌入"
 
 #: .\utils\constants.py:34 .\utils\constants.py:47
 msgid "FLAVA Embedding"
-msgstr "\u6cd5\u56fd \u5d4c\u5165"
+msgstr "法国 嵌入"
 
 #: .\utils\constants.py:35 .\utils\constants.py:49
 msgid "ALIGN Embedding"
-msgstr "\u963f\u8054\u914b \u5d4c\u5165"
+msgstr "阿联酋 嵌入"
 
 #: .\utils\constants.py:36 .\utils\constants.py:51
 msgid "X-VLM Embedding"
-msgstr "X-VLM \u5e38\u89c4 \u5d4c\u5165"
+msgstr "X-VLM 常规 嵌入"
 
 #: .\utils\constants.py:72
 msgid "Color diff threshold"
-msgstr "\u989c\u8272 diff \u9608\u503c"
+msgstr "颜色 diff 阈值"
 
 #: .\utils\constants.py:74
 msgid "Embedding similarity threshold"
-msgstr "\u5d4c\u5165\u7c7b\u4f3c\u9608\u503c"
+msgstr "嵌入类似阈值"
 
 #: .\utils\constants.py:91 .\utils\constants.py:103
 msgid "Name"
-msgstr "\u540d\u79f0"
+msgstr "名称"
 
 #: .\utils\constants.py:92 .\utils\constants.py:105
 msgid "Full Path"
-msgstr "\u5b8c\u6574\u8def\u5f84"
+msgstr "完整路径"
 
 #: .\utils\constants.py:93 .\utils\constants.py:107
 msgid "Creation Time"
-msgstr "\u521b\u5efa\u65f6\u95f4"
+msgstr "创建时间"
 
 #: .\utils\constants.py:94 .\utils\constants.py:109
 msgid "Modify Time"
-msgstr "\u4fee\u6539\u65f6\u95f4"
+msgstr "修改时间"
 
 #: .\utils\constants.py:95 .\utils\constants.py:111
 msgid "Type"
-msgstr "\u7c7b\u578b"
+msgstr "类型"
 
 #: .\utils\constants.py:97 .\utils\constants.py:115
 msgid "Name Length"
-msgstr "\u540d\u79f0\u957f\u5ea6"
+msgstr "名称长度"
 
 #: .\utils\constants.py:98 .\utils\constants.py:117
 msgid "Related Image"
-msgstr "\u76f8\u5173\u56fe\u50cf"
+msgstr "相关图像"
 
 #: .\utils\constants.py:99 .\utils\constants.py:119
 msgid "Random"
-msgstr "\u968f\u673a"
+msgstr "随机"
 
 #: .\utils\constants.py:138
 msgid "ascending"
-msgstr "\u5347\u804c"
+msgstr "升职"
 
 #: .\utils\constants.py:139
 msgid "descending"
-msgstr "\u4e0b\u964d"
+msgstr "下降"
 
 #: .\utils\constants.py:140
 msgid "random"
-msgstr "\u968f\u673a"
+msgstr "随机"
 
 #: .\utils\constants.py:192
 msgid "Image"
-msgstr "\u56fe\u50cf"
+msgstr "图像"
 
 #: .\utils\constants.py:194
 msgid "GIF"
-msgstr "\u5168\u7403\u6295\u8d44\u6846\u67b6"
+msgstr "全球投资框架"
 
 #: .\utils\constants.py:196
 msgid "Video"
-msgstr "\u89c6\u9891"
+msgstr "视频"
 
 #: .\utils\constants.py:198
 msgid "PDF"
-msgstr "\u4e13\u9898\u62a5\u544a"
+msgstr "专题报告"
 
 #: .\utils\constants.py:200
 msgid "SVG"
-msgstr "\u7279\u522b\u5fd7\u613f\u4eba\u5458\u5c0f\u7ec4"
+msgstr "特别志愿人员小组"
 
 #: .\utils\help_and_config.py:34
 msgid "Command"
-msgstr "\u547d\u4ee4"
+msgstr "命令"
 
 #: .\utils\help_and_config.py:34
 msgid "Description"
-msgstr "\u8bf4\u660e"
+msgstr "说明"
 
 #: .\utils\help_and_config.py:35
 msgid "Search current image in new window"
-msgstr "\u5728\u65b0\u7a97\u53e3\u4e2d\u641c\u7d22\u5f53\u524d\u56fe\u50cf"
+msgstr "在新窗口中搜索当前图像"
 
 #: .\utils\help_and_config.py:36
 msgid "Return to Browsing mode"
-msgstr "\u8fd4\u56de\u6d4f\u89c8\u6a21\u5f0f"
+msgstr "返回浏览模式"
 
 #: .\utils\help_and_config.py:37
 msgid "Copy marks list"
-msgstr "\u590d\u5236\u6807\u8bb0\u5217\u8868"
+msgstr "复制标记列表"
 
 #: .\utils\help_and_config.py:38
 msgid "Set current marks from previous marks list"
-msgstr "\u4ece\u5148\u524d\u7684\u6807\u8bb0\u5217\u8868\u4e2d\u8bbe\u5b9a\u5f53\u524d\u6807\u8bb0"
+msgstr "从先前的标记列表中设定当前标记"
 
 #: .\utils\help_and_config.py:39
 msgid "Run penultimate marks action"
-msgstr "\u8fd0\u884c\u5012\u6570\u7b2c\u4e8c\u4e2a\u6807\u8bb0\u52a8\u4f5c"
+msgstr "运行倒数第二个标记动作"
 
 #: .\utils\help_and_config.py:40
 msgid "Open Go to file window"
-msgstr "\u6253\u5f00 \u8f6c\u5230\u6587\u4ef6\u7a97\u53e3"
+msgstr "打开 转到文件窗口"
 
 #: .\utils\help_and_config.py:41
 msgid "Hide/show sidebar"
-msgstr "\u9690\u85cf/ \u663e\u793a\u4fa7\u8fb9\u680f"
+msgstr "隐藏/ 显示侧边栏"
 
 #: .\utils\help_and_config.py:42
 msgid "Open hotkeys window (*when marks window open)"
-msgstr "\u6253\u5f00\u70ed\u952e\u7a97\u53e3(* \u5f53\u6807\u8bb0\u7a97\u53e3\u6253\u5f00\u65f6)"
+msgstr "打开热键窗口(* 当标记窗口打开时)"
 
 #: .\utils\help_and_config.py:43
 msgid "Open content filters window"
-msgstr "\u6253\u5f00\u5185\u5bb9\u8fc7\u6ee4\u7a97\u53e3"
+msgstr "打开内容过滤窗口"
 
 #: .\utils\help_and_config.py:44
 msgid "Open marks window (no GUI)"
-msgstr "\u6253\u5f00\u6807\u8bb0\u7a97\u53e3( \u65e0\u56fe\u5f62\u754c\u9762)"
+msgstr "打开标记窗口( 无图形界面)"
 
 #: .\utils\help_and_config.py:45
 msgid "Open marks window"
-msgstr "\u6253\u5f00\u6807\u8bb0\u7a97\u53e3"
+msgstr "打开标记窗口"
 
 #: .\utils\help_and_config.py:46
 msgid "Open marks action history window"
-msgstr "\u6253\u5f00\u6807\u8bb0\u52a8\u4f5c\u5386\u53f2\u7a97\u53e3"
+msgstr "打开标记动作历史窗口"
 
 #: .\utils\help_and_config.py:47
 msgid "Quit"
-msgstr "\u9000\u51fa"
+msgstr "退出"
 
 #: .\utils\help_and_config.py:48
 msgid "Run previous marks action"
-msgstr "\u8fd0\u884c\u4e0a\u4e00\u4e2a\u6807\u8bb0\u52a8\u4f5c"
+msgstr "运行上一个标记动作"
 
 #: .\utils\help_and_config.py:49
 msgid "Continue image generation"
-msgstr "\u7ee7\u7eed\u56fe\u50cf\u751f\u6210"
+msgstr "继续图像生成"
 
 #: .\utils\help_and_config.py:50
 msgid "Cancel image generation"
-msgstr "\u53d6\u6d88\u56fe\u50cf\u751f\u6210"
+msgstr "取消图像生成"
 
 #: .\utils\help_and_config.py:51
 msgid "Run next text embedding search preset"
-msgstr "\u8fd0\u884c\u4e0b\u4e00\u4e2a\u5d4c\u5165\u641c\u7d22\u9884\u8bbe\u7684\u6587\u672c"
+msgstr "运行下一个嵌入搜索预设的文本"
 
 #: .\utils\help_and_config.py:52
 msgid "Run permanent marks action"
-msgstr "\u8fd0\u884c\u6c38\u4e45\u6807\u8bb0\u52a8\u4f5c"
+msgstr "运行永久标记动作"
 
 #: .\utils\help_and_config.py:53
 msgid "Open type configuration window"
-msgstr "\u6253\u5f00\u7c7b\u578b\u914d\u7f6e\u7a97\u53e3"
+msgstr "打开类型配置窗口"
 
 #: .\utils\help_and_config.py:54
 msgid "Open new compare window"
-msgstr "\u6253\u5f00\u65b0\u6bd4\u8f83\u7a97\u53e3"
+msgstr "打开新比较窗口"
 
 #: .\utils\help_and_config.py:55
 msgid "Move previous marks to a different directory"
-msgstr "\u5c06\u4e0a\u4e00\u4e2a\u6807\u8bb0\u79fb\u52a8\u5230\u4e0d\u540c\u7684\u76ee\u5f55"
+msgstr "将上一个标记移动到不同的目录"
 
 #: .\utils\help_and_config.py:56 .\utils\help_and_config.py:84
 msgid "Undo previous marks changes"
-msgstr "\u64a4\u6d88\u5148\u524d\u7684\u6807\u8bb0\u66f4\u6539"
+msgstr "撤消先前的标记更改"
 
 #: .\utils\help_and_config.py:57
 msgid "Toggle fullscreen"
-msgstr "\u5207\u6362\u5168\u5c4f"
+msgstr "切换全屏"
 
 #: .\utils\help_and_config.py:58
 msgid "Go to first sorted image"
-msgstr "\u8f6c\u5230\u7b2c\u4e00\u4e2a\u6392\u5e8f\u7684\u56fe\u50cf"
+msgstr "转到第一个排序的图像"
 
 #: .\utils\help_and_config.py:59
 msgid "Go to last sorted image"
-msgstr "\u8f6c\u5230\u4e0a\u6b21\u6392\u5e8f\u7684\u56fe\u50cf"
+msgstr "转到上次排序的图像"
 
 #: .\utils\help_and_config.py:60
 msgid "Show previous/next image"
-msgstr "\u663e\u793a\u4e0a\u4e00\u4e2a/ \u4e0b\u4e00\u4e2a\u56fe\u50cf"
+msgstr "显示上一个/ 下一个图像"
 
 #: .\utils\help_and_config.py:61
 msgid "Page through images"
-msgstr "\u901a\u8fc7\u56fe\u50cf\u9875\u9762"
+msgstr "通过图像页面"
 
 #: .\utils\help_and_config.py:62
 msgid "Search current image in current window"
-msgstr "\u5728\u5f53\u524d\u7a97\u53e3\u4e2d\u641c\u7d22\u5f53\u524d\u56fe\u50cf"
+msgstr "在当前窗口中搜索当前图像"
 
 #: .\utils\help_and_config.py:63
 msgid "Clear all hidden images"
-msgstr "\u6e05\u9664\u6240\u6709\u9690\u85cf\u7684\u56fe\u50cf"
+msgstr "清除所有隐藏的图像"
 
 #: .\utils\help_and_config.py:64
 msgid "Clear marks list"
-msgstr "\u6e05\u9664\u6807\u8bb0\u5217\u8868"
+msgstr "清除标记列表"
 
 #: .\utils\help_and_config.py:65
 msgid "Show image details"
-msgstr "\u663e\u793a\u56fe\u50cf\u7ec6\u8282"
+msgstr "显示图像细节"
 
 #: .\utils\help_and_config.py:66
 msgid "Delete image (or marked file group if marks window selected)"
-msgstr "\u5220\u9664\u56fe\u50cf( \u5982\u679c\u9009\u4e2d\u6807\u8bb0\u7a97\u53e3, \u5219\u6807\u8bb0\u6587\u4ef6\u7ec4)"
+msgstr "删除图像( 如果选中标记窗口, 则标记文件组)"
 
 #: .\utils\help_and_config.py:67
 msgid "Go to next mark"
-msgstr "\u8f6c\u5230\u4e0b\u4e00\u4e2a\u6807\u8bb0"
+msgstr "转到下一个标记"
 
 #: .\utils\help_and_config.py:68
 msgid "Show help window"
-msgstr "\u663e\u793a\u5e2e\u52a9\u7a97\u53e3"
+msgstr "显示帮助窗口"
 
 #: .\utils\help_and_config.py:69
 msgid "Run image generation"
-msgstr "\u8fd0\u884c\u56fe\u50cf\u751f\u6210"
+msgstr "运行图像生成"
 
 #: .\utils\help_and_config.py:70
 msgid "Run content filters for all files in the current directory"
-msgstr "\u8fd0\u884c\u5f53\u524d\u76ee\u5f55\u4e2d\u6240\u6709\u6587\u4ef6\u7684\u5185\u5bb9\u8fc7\u6ee4\u5668"
+msgstr "运行当前目录中所有文件的内容过滤器"
 
 #: .\utils\help_and_config.py:71
 msgid "View last moved image mark"
-msgstr "\u67e5\u770b\u4e0a\u6b21\u79fb\u52a8\u7684\u56fe\u50cf\u6807\u8bb0"
+msgstr "查看上次移动的图像标记"
 
 #: .\utils\help_and_config.py:72
 msgid "Toggle content filters"
-msgstr "\u5207\u6362\u5185\u5bb9\u8fc7\u6ee4\u5668"
+msgstr "切换内容过滤器"
 
 #: .\utils\help_and_config.py:73
 msgid "Add or remove a mark for current image"
-msgstr "\u6dfb\u52a0\u6216\u5220\u9664\u5f53\u524d\u56fe\u50cf\u7684\u6807\u8bb0"
+msgstr "添加或删除当前图像的标记"
 
 #: .\utils\help_and_config.py:74
-msgid "Add all marks between most recently set and current selected inclusive, or all marks in current group"
-msgstr "\u5728\u6700\u8fd1\u8bbe\u7f6e\u548c\u5f53\u524d\u9009\u4e2d\u7684\u5305\u542b\u4e4b\u95f4\u6dfb\u52a0\u6240\u6709\u6807\u8bb0, \u6216\u8005\u5728\u5f53\u524d\u7ec4\u4e2d\u6dfb\u52a0\u6240\u6709\u6807\u8bb0"
+msgid ""
+"Add all marks between most recently set and current selected inclusive, or "
+"all marks in current group"
+msgstr "在最近设置和当前选中的包含之间添加所有标记, 或者在当前组中添加所有标记"
 
 #: .\utils\help_and_config.py:76
 msgid "Open image in GIMP"
-msgstr "\u5728 GIMP \u4e2d\u6253\u5f00\u56fe\u50cf"
+msgstr "在 GIMP 中打开图像"
 
 #: .\utils\help_and_config.py:77
 msgid "Randomly modify image"
-msgstr "\u968f\u673a\u4fee\u6539\u56fe\u50cf"
+msgstr "随机修改图像"
 
 #: .\utils\help_and_config.py:78
 msgid "View related image (controlnet, etc.)"
-msgstr "\u67e5\u770b\u76f8\u5173\u7684\u56fe\u50cf( \u63a7\u5236\u7f51\u7b49)"
+msgstr "查看相关的图像( 控制网等)"
 
 #: .\utils\help_and_config.py:79
 msgid "Toggle slideshow"
-msgstr "\u5207\u6362\u5e7b\u706f\u7247\u653e\u6620"
+msgstr "切换幻灯片放映"
 
 #: .\utils\help_and_config.py:80
 msgid "Find related images in open window"
-msgstr "\u5728\u6253\u5f00\u7684\u7a97\u53e3\u4e2d\u67e5\u627e\u76f8\u5173\u7684\u56fe\u50cf"
+msgstr "在打开的窗口中查找相关的图像"
 
 #: .\utils\help_and_config.py:81
 msgid "Run refacdir"
-msgstr "\u8fd0\u884c reacdir"
+msgstr "运行 reacdir"
 
 #: .\utils\help_and_config.py:82
 msgid "Hide current image"
-msgstr "\u9690\u85cf\u5f53\u524d\u56fe\u50cf"
+msgstr "隐藏当前图像"
 
 #: .\utils\help_and_config.py:83
 msgid "Set marks from downstream related images"
-msgstr "\u4ece\u4e0b\u6e38\u76f8\u5173\u56fe\u50cf\u8bbe\u7f6e\u6807\u8bb0"
+msgstr "从下游相关图像设置标记"
 
 #: .\utils\help_and_config.py:85
 msgid "Show previous/next group"
-msgstr "\u663e\u793a\u4e0a/\u4e0b\u4e00\u7ec4"
+msgstr "显示上/下一组"
 
 #: .\utils\help_and_config.py:133
 msgid "Show Toasts"
-msgstr "\u663e\u793a\u70e4\u9762\u5305"
+msgstr "显示烤面包"
 
 #: .\utils\help_and_config.py:135
 msgid "Slideshow Interval (sec)"
-msgstr "\u5e7b\u706f\u7247\u653e\u6620\u95f4\u9694( \u79d2)"
+msgstr "幻灯片放映间隔( 秒)"
 
 #: .\utils\help_and_config.py:137
 msgid "File Check Interval (sec)"
-msgstr "\u6587\u4ef6\u68c0\u67e5\u95f4\u9694( \u79d2)"
+msgstr "文件检查间隔( 秒)"
 
 #: .\utils\help_and_config.py:139
 msgid "Max Search Results"
-msgstr "\u6700\u5927\u641c\u7d22\u7ed3\u679c"
+msgstr "最大搜索结果"
 
 #: .\utils\help_and_config.py:141
 msgid "Sort By"
-msgstr "\u6309"
+msgstr "按"
 
 #: .\utils\help_and_config.py:143
 msgid "Toasts Persist (sec)"
-msgstr "\u5410\u53f8\u575a\u5b88( \u79d2)"
+msgstr "吐司坚守( 秒)"
 
 #: .\utils\help_and_config.py:145
 msgid "Delete Instantly"
-msgstr "\u7acb\u5373\u5220\u9664"
+msgstr "立即删除"
 
 #: .\utils\help_and_config.py:147
 msgid "Trash Folder"
-msgstr "\u56de\u6536\u6587\u4ef6\u5939"
+msgstr "回收文件夹"
 
 #: .\utils\help_and_config.py:149
 msgid "Image Tagging Enabled"
-msgstr "\u56fe\u50cf\u6807\u7b7e\u5df2\u542f\u7528"
+msgstr "图像标签已启用"
 
 #: .\utils\help_and_config.py:151
 msgid "Escape Backslash Filepaths"
-msgstr "\u9003\u9038\u53cd\u659c\u6587\u4ef6\u8def\u5f84"
-
+msgstr "逃逸反斜文件路径"

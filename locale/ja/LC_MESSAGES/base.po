@@ -1,1486 +1,1506 @@
-# APPLICATION TRANSLATIONS
-# AUTHOR NAME <author@example.com>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-03-31 16:52-0400\n"
-"PO-Revision-Date: 2025-03-31 16:52-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
-"Language: ja\n"
+"POT-Creation-Date: 2025-04-02 13:01-0400\n"
+"PO-Revision-Date: 2025-04-02 13:01-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=cp1252\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: .\app.py:91 .\app.py:866 .\app.py:1820
 msgid " Simple Image Compare "
-msgstr " \u30b7\u30f3\u30d7\u30eb\u306a\u753b\u50cf\u6bd4\u8f03 "
+msgstr " シンプルな画像比較 "
 
 #: .\app.py:150
 msgid "Theme switched to {0}."
-msgstr "\u30c6\u30fc\u30de\u3092{0}\u306b\u5207\u308a\u66ff\u3048\u307e\u3059\u3002"
+msgstr "テーマを{0}に切り替えます。"
 
 #: .\app.py:233 .\compare\compare_wrapper.py:467
 msgid "Set a directory to run comparison."
-msgstr "\u6bd4\u8f03\u3092\u5b9f\u884c\u3059\u308b\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3092\u8a2d\u5b9a\u3057\u307e\u3059\u3002"
+msgstr "比較を実行するディレクトリを設定します。"
 
 #: .\app.py:240
 msgid "Toggle theme"
-msgstr "\u30c8\u30b0\u30eb\u30c6\u30fc\u30de"
+msgstr "トグルテーマ"
 
 #: .\app.py:241
 msgid "Set directory"
-msgstr "\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3092\u8a2d\u5b9a\u3059\u308b"
+msgstr "ディレクトリを設定する"
 
 #: .\app.py:242
 msgid "Add dirpath..."
-msgstr "\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u30d1\u30b9\u306e\u8ffd\u52a0..."
+msgstr "ディレクトリパスの追加..."
 
 #: .\app.py:245
 msgid "Set search file"
-msgstr "\u691c\u7d22\u30d5\u30a1\u30a4\u30eb\u3092\u8a2d\u5b9a\u3059\u308b"
+msgstr "検索ファイルを設定する"
 
 #: .\app.py:253
 msgid "Search text (embedding mode)"
-msgstr "\u691c\u7d22\u30c6\u30ad\u30b9\u30c8\uff08\u57cb\u3081\u8fbc\u307f\u30e2\u30fc\u30c9\uff09"
+msgstr "検索テキスト（埋め込みモード）"
 
 #: .\app.py:264
 msgid "Compare mode"
-msgstr "\u6bd4\u8f03\u30e2\u30fc\u30c9"
+msgstr "比較モード"
 
 #: .\app.py:282
 msgid "Compare faces"
-msgstr "\u9854\u306e\u6bd4\u8f03"
+msgstr "顔の比較"
 
 #: .\app.py:286
 msgid "Overwrite cache"
-msgstr "\u30ad\u30e3\u30c3\u30b7\u30e5\u3092\u4e0a\u66f8\u304d"
+msgstr "キャッシュを上書き"
 
 #: .\app.py:290
 msgid "Store checkpoints"
-msgstr "\u30b9\u30c8\u30a2\u30c1\u30a7\u30c3\u30af\u30dd\u30a4\u30f3\u30c8"
+msgstr "ストアチェックポイント"
 
 #: .\app.py:294
 msgid "Max files to compare"
-msgstr "\u6bd4\u8f03\u3059\u308b\u6700\u5927\u30d5\u30a1\u30a4\u30eb"
+msgstr "比較する最大ファイル"
 
 #: .\app.py:300
 msgid "Filter files by glob pattern"
-msgstr "\u30b0\u30ed\u30d6\u30d1\u30bf\u30fc\u30f3\u306b\u3088\u308b\u30d5\u30a1\u30a4\u30eb\u306e\u30d5\u30a3\u30eb\u30bf\u30ea\u30f3\u30b0"
+msgstr "グロブパターンによるファイルのフィルタリング"
 
 #: .\app.py:307
 msgid "Browsing mode - Sort by"
-msgstr "\u95b2\u89a7\u30e2\u30fc\u30c9 - \u4e26\u3079\u66ff\u3048"
+msgstr "閲覧モード - 並べ替え"
 
 #: .\app.py:314
 msgid "Recurse subdirectories"
-msgstr "\u30b5\u30d6\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3092\u518d\u5e30\u3059\u308b"
+msgstr "サブディレクトリを再帰する"
 
 #: .\app.py:319
 msgid "Image resize to full window"
-msgstr "\u30d5\u30eb\u30a6\u30a3\u30f3\u30c9\u30a6\u306b\u753b\u50cf\u306e\u30b5\u30a4\u30ba\u3092\u5909\u66f4"
+msgstr "フルウィンドウに画像のサイズを変更"
 
 #: .\app.py:323
 msgid "Search only return closest"
-msgstr "\u4e00\u756a\u8fd1\u3044\u9806\u306b\u691c\u7d22"
+msgstr "一番近い順に検索"
 
 #: .\app.py:330
 msgid "Run image compare"
-msgstr "\u753b\u50cf\u6bd4\u8f03\u306e\u5b9f\u884c"
+msgstr "画像比較の実行"
 
 #: .\app.py:332
 msgid "Find duplicates"
-msgstr "\u91cd\u8907\u3092\u898b\u3064\u3051\u308b"
+msgstr "重複を見つける"
 
 #: .\app.py:334 .\image\image_details.py:62
 msgid "Image details"
-msgstr "\u753b\u50cf\u8a73\u7d30"
+msgstr "画像詳細"
 
 #: .\app.py:345
 msgid "Search current image"
-msgstr "\u73fe\u5728\u306e\u753b\u50cf\u3092\u691c\u7d22"
+msgstr "現在の画像を検索"
 
 #: .\app.py:346 .\utils\help_and_config.py:75
 msgid "Open image location"
-msgstr "\u753b\u50cf\u306e\u5834\u6240\u3092\u958b\u304f"
+msgstr "画像の場所を開く"
 
 #: .\app.py:347
 msgid "Copy image path"
-msgstr "\u30b3\u30d4\u30fc\u30a4\u30e1\u30fc\u30b8\u30d1\u30b9"
+msgstr "コピーイメージパス"
 
 #: .\app.py:348
 msgid "---- DELETE ----"
-msgstr "---- \u67d3\u6599 ----"
+msgstr "---- 染料 ----"
 
 #: .\app.py:484
 msgid "Confirm Quit"
-msgstr "\u7d42\u4e86\u3092\u78ba\u8a8d\u3059\u308b"
+msgstr "終了を確認する"
 
 #: .\app.py:484
 msgid "Would you like to quit the application?"
-msgstr "\u5fdc\u52df\u3092\u304a\u9858\u3044\u3057\u305f\u3044\u3067\u3059\u304b?"
+msgstr "応募をお願いしたいですか?"
 
 #: .\app.py:577
 msgid "Ended slideshows"
-msgstr "\u7d42\u4e86\u3057\u305f\u30b9\u30e9\u30a4\u30c9\u30b7\u30e7\u30fc"
+msgstr "終了したスライドショー"
 
 #: .\app.py:630
 msgid "No files found in directory after refresh."
-msgstr "\u66f4\u65b0\u5f8c\u3001\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u306b\u30d5\u30a1\u30a4\u30eb\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002"
+msgstr "更新後、ディレクトリにファイルが見つかりません。"
 
 #: .\app.py:630 .\app.py:1629 .\app.py:1688
 msgid "Warning"
-msgstr "\u8b66\u544a"
+msgstr "警告"
 
 #: .\app.py:653
 msgid "Slideshow for new images started"
-msgstr "\u65b0\u3057\u3044\u753b\u50cf\u306e\u30b9\u30e9\u30a4\u30c9\u30b7\u30e7\u30fc\u958b\u59cb"
+msgstr "新しい画像のスライドショー開始"
 
 #: .\app.py:655
 msgid "Slideshow started"
-msgstr "\u30b9\u30e9\u30a4\u30c9\u30b7\u30e7\u30fc\u958b\u59cb"
+msgstr "スライドショー開始"
 
 #: .\app.py:658
 msgid "Slideshows ended"
-msgstr "\u30b9\u30e9\u30a4\u30c9\u30b7\u30e7\u30fc\u7d42\u4e86"
+msgstr "スライドショー終了"
 
 #: .\app.py:671
 msgid "Browsing mode set."
-msgstr "\u30d6\u30e9\u30a6\u30b8\u30f3\u30b0\u30e2\u30fc\u30c9\u30bb\u30c3\u30c8\u3002"
+msgstr "ブラウジングモードセット。"
 
 #: .\app.py:705
 msgid "(Open this image as part of a directory to see index details.)"
-msgstr "(\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306e\u8a73\u7d30\u3092\u898b\u308b\u306b\u306f\u3001\u3053\u306e\u753b\u50cf\u3092\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u306e\u4e00\u90e8\u3068\u3057\u3066\u958b\u3044\u3066\u304f\u3060\u3055\u3044\uff09\u3002)"
+msgstr "(インデックスの詳細を見るには、この画像をディレクトリの一部として開いてください）。"
 
 #: .\app.py:738
 msgid "Many Files"
-msgstr "\u591a\u304f\u306e\u30d5\u30a1\u30a4\u30eb"
+msgstr "多くのファイル"
 
 #: .\app.py:764
 msgid "No downstream related image(s) found in {0}"
-msgstr "{0} \u306b\u4e0b\u6d41\u95a2\u9023\u306e\u753b\u50cf\u306f\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f\u3002"
+msgstr "{0} に下流関連の画像は見つかりませんでした。"
 
 #: .\app.py:785
 msgid "{0} file marks set"
-msgstr "{0} \u30d5\u30a1\u30a4\u30eb \u30de\u30fc\u30af \u30bb\u30c3\u30c8"
+msgstr "{0} ファイル マーク セット"
 
 #: .\app.py:791
 msgid "Help and Config"
-msgstr "\u30d8\u30eb\u30d7\u3068\u8a2d\u5b9a"
+msgstr "ヘルプと設定"
 
 #: .\app.py:871
 msgid "Set Image Comparison Directory"
-msgstr "\u753b\u50cf\u6bd4\u8f03\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u306e\u8a2d\u5b9a"
+msgstr "画像比較ディレクトリの設定"
 
 #: .\app.py:909
 msgid "Counter limit must be an integer value."
-msgstr "\u30ab\u30a6\u30f3\u30bf\u30fc\u306e\u4e0a\u9650\u306f\u6574\u6570\u5024\u3067\u306a\u3051\u308c\u3070\u306a\u3089\u306a\u3044\u3002"
+msgstr "カウンターの上限は整数値でなければならない。"
 
 #: .\app.py:909 .\app.py:924
 msgid "Invalid Setting"
-msgstr "\u7121\u52b9\u306a\u8a2d\u5b9a"
+msgstr "無効な設定"
 
 #: .\app.py:924
 msgid "No image selected."
-msgstr "\u9078\u629e\u3057\u305f\u753b\u50cf\u306f\u3042\u308a\u307e\u305b\u3093\u3002"
+msgstr "選択した画像はありません。"
 
 #: .\app.py:961
-msgid "Compare mode must be set to an embedding mode to search text embeddings"
-msgstr "\u30c6\u30ad\u30b9\u30c8\u57cb\u3081\u8fbc\u307f\u3092\u691c\u7d22\u3059\u308b\u306b\u306f\u3001\u6bd4\u8f03\u30e2\u30fc\u30c9\u3092\u57cb\u3081\u8fbc\u307f\u30e2\u30fc\u30c9\u306b\u8a2d\u5b9a\u3059\u308b\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059\u3002"
+msgid ""
+"Compare mode must be set to an embedding mode to search text embeddings"
+msgstr "テキスト埋め込みを検索するには、比較モードを埋め込みモードに設定する必要があります。"
 
 #: .\app.py:966
 msgid "Select image file"
-msgstr "\u753b\u50cf\u30d5\u30a1\u30a4\u30eb\u306e\u9078\u629e"
+msgstr "画像ファイルの選択"
 
 #: .\app.py:995
 msgid "Somehow, the search file is invalid"
-msgstr "\u3069\u3046\u3044\u3046\u308f\u3051\u304b\u3001\u691c\u7d22\u30d5\u30a1\u30a4\u30eb\u304c\u7121\u52b9\u3067\u3059"
+msgstr "どういうわけか、検索ファイルが無効です"
 
 #: .\app.py:1080 .\app.py:1104
 msgid "Failed to get active image filepath"
-msgstr "\u30a2\u30af\u30c6\u30a3\u30d6\u306a\u30a4\u30e1\u30fc\u30b8\u30d5\u30a1\u30a4\u30eb\u30d1\u30b9\u3092\u53d6\u5f97\u3059\u308b\u5931\u6557"
+msgstr "アクティブなイメージファイルパスを取得する失敗"
 
 #: .\app.py:1186
 msgid "{0}: {1}% complete"
-msgstr "{0}: {1}% \u5b8c\u4e86"
+msgstr "{0}: {1}% 完了"
 
 #: .\app.py:1192
 msgid "Confirm comparison"
-msgstr "\u6bd4\u8f03\u78ba\u8a8d"
+msgstr "比較確認"
 
 #: .\app.py:1193
 msgid "No base directory has been set, will use current base directory of "
-msgstr "\u30d9\u30fc\u30b9\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u304c\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u306a\u3044\u306e\u3067\u3001\u73fe\u5728\u306e\u30d9\u30fc\u30b9\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3092\u4f7f\u7528\u3059\u308b\uff1a "
+msgstr "ベースディレクトリが設定されていないので、現在のベースディレクトリを使用する： "
 
 #: .\app.py:1194
 msgid "Are you sure you want to proceed?"
-msgstr "\u7d9a\u884c\u3057\u305f\u3044\u3067\u3059\u304b?"
+msgstr "続行したいですか?"
 
 #: .\app.py:1214
 msgid "Error running compare"
-msgstr "\u30a8\u30e9\u30fc\u5b9f\u884c\u6bd4\u8f03"
+msgstr "エラー実行比較"
 
 #: .\app.py:1246
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
-"Slideshow"
-" \u306e\u5f8c\u306e\u30ed\u30c3\u30af\u306e\u524a\u9664"
-"\u79fb\u884c \u7981\u6b62 \u30de\u30fc\u30af\u306e\u8ffd\u52a0"
+"スライドショーの後にロックを削除\n"
+"トランジションでマークが付かない"
 
 #: .\app.py:1257
 msgid "Mark removed. Remaining: {0}"
-msgstr "\u30de\u30fc\u30af\u524a\u9664 \u6b8b\u3063\u3066\u3044\u308b {0}"
+msgstr "マーク削除 残っている {0}"
 
 #: .\app.py:1261
 msgid "Mark added. Total set: {0}"
-msgstr "\u30de\u30fc\u30af\u304c\u4ed8\u3051\u52a0\u3048\u305f\u3002\u5408\u8a08\u30bb\u30c3\u30c8\uff1a {0}"
+msgstr "マークが付け加えた。合計セット： {0}"
 
 #: .\app.py:1278
 msgid "Marks added. Total set: {0}"
-msgstr "\u30de\u30fc\u30af\u304c\u8ffd\u52a0\u3055\u308c\u305f\u3002\u5408\u8a08\u30bb\u30c3\u30c8\uff1a {0}"
+msgstr "マークが追加された。合計セット： {0}"
 
 #: .\app.py:1287
 msgid "First sorted mark"
-msgstr "\u30d5\u30a1\u30fc\u30b9\u30c8\u30bd\u30fc\u30c8\u30de\u30fc\u30af"
+msgstr "ファーストソートマーク"
 
 #: .\app.py:1294
 msgid "Only one marked file set."
-msgstr "1\u3064\u306e\u30de\u30fc\u30af\u4ed8\u304d\u30d5\u30a1\u30a4\u30eb\u30bb\u30c3\u30c8\u306e\u307f\u3002"
+msgstr "1つのマーク付きファイルセットのみ。"
 
 #: .\app.py:1305
 msgid "Including marks: {0}"
-msgstr "\u30de\u30fc\u30af\u3092\u542b\u3080\uff1a{0}"
+msgstr "マークを含む：{0}"
 
 #: .\app.py:1313
 msgid "Move {0} Marked File(s)"
-msgstr "{0} \u3064\u306e\u30de\u30fc\u30af\u3055\u308c\u305f\u30d5\u30a1\u30a4\u30eb\u3092\u79fb\u52d5\u3057\u307e\u3059\u304b\uff1f"
+msgstr "{0} つのマークされたファイルを移動しますか？"
 
 #: .\app.py:1348
 msgid "NO_MARKS_SET"
 msgstr ""
-"{0} \u500b\u306e\u30de\u30fc\u30af\u304c\u8a2d\u5b9a\u3055\u308c\u307e\u3057\u305f\uff08>= {1} \u500b\u5fc5\u8981\u3067\u3059\uff09\u3002"
-"Shift+M \u3092\u4f7f\u3063\u3066\u30de\u30fc\u30af\u3092\u8a2d\u5b9a\u3057\u3066\u304f\u3060\u3055\u3044\u3002"
+"{0}マークが設定された（>={1}の予定）。\n"
+"マークを設定するには Shift+M を使用します。"
 
 #: .\app.py:1381
 msgid "Prevalidations now running"
-msgstr "\u4eca\u3059\u3050\u5b9f\u884c\u3059\u308b\u6e96\u5099"
+msgstr "今すぐ実行する準備"
 
 #: .\app.py:1381
 msgid "Prevalidations turned off"
-msgstr "\u7121\u52b9\u5316\u304c\u30aa\u30d5"
+msgstr "無効化がオフ"
 
 #: .\app.py:1406
 msgid "File not found"
-msgstr "\u30d5\u30a1\u30a4\u30eb\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093"
+msgstr "ファイルが見つかりません"
 
 #: .\app.py:1406
 msgid "No file was found for the search text: \"{0}\""
-msgstr "\u691c\u7d22\u30c6\u30ad\u30b9\u30c8\u306b\u8a72\u5f53\u3059\u308b\u30d5\u30a1\u30a4\u30eb\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f\uff1a \"{0}\""
+msgstr "検索テキストに該当するファイルが見つかりませんでした： \"{0}\""
 
 #: .\app.py:1420
 msgid "No image selected"
-msgstr "\u9078\u629e\u3057\u305f\u753b\u50cf\u306a\u3057"
+msgstr "選択した画像なし"
 
 #: .\app.py:1420
 msgid "No image was selected for comparison"
-msgstr "\u6bd4\u8f03\u306e\u305f\u3081\u306b\u753b\u50cf\u304c\u9078\u629e\u3055\u308c\u3066\u3044\u306a\u3044"
+msgstr "比較のために画像が選択されていない"
 
 #: .\app.py:1433
 msgid "No Text Search Presets Found"
-msgstr "\u30c6\u30ad\u30b9\u30c8\u691c\u7d22\u30d7\u30ea\u30bb\u30c3\u30c8\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093"
+msgstr "テキスト検索プリセットが見つかりません"
 
 #: .\app.py:1433
-msgid "No text embedding search presets found. Set them in the config.json file."
-msgstr "\u30c6\u30ad\u30b9\u30c8\u57cb\u3081\u8fbc\u307f\u691c\u7d22\u30d7\u30ea\u30bb\u30c3\u30c8\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002config.json\u30d5\u30a1\u30a4\u30eb\u306b\u8a2d\u5b9a\u3057\u3066\u304f\u3060\u3055\u3044\u3002"
+msgid ""
+"No text embedding search presets found. Set them in the config.json file."
+msgstr "テキスト埋め込み検索プリセットが見つかりません。config.jsonファイルに設定してください。"
 
 #: .\app.py:1533
 msgid "Failed to open location of current file, unable to get valid filepath"
-msgstr "\u6709\u52b9\u306a\u30d5\u30a1\u30a4\u30eb\u30d1\u30b9\u304c\u53d6\u5f97\u3067\u304d\u305a\u3001\u73fe\u5728\u306e\u30d5\u30a1\u30a4\u30eb\u306e\u5834\u6240\u3092\u958b\u304f\u3053\u3068\u304c\u3067\u304d\u307e\u305b\u3093\u3002"
+msgstr "有効なファイルパスが取得できず、現在のファイルの場所を開くことができません。"
 
 #: .\app.py:1544
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
-msgstr "GIMP\u3067\u73fe\u5728\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u958b\u304f\u306e\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002"
+msgstr "GIMPで現在のファイルを開くのに失敗しました。"
+
+#: .\app.py:1560
+msgid ""
+"Hid current image.\n"
+"To unhide, press Shift+B."
+msgstr ""
+"現在の画像を隠す。\n"
+"非表示を解除するには、Shift+Bキーを押します。"
 
 #: .\app.py:1565
 msgid "Cleared all hidden images."
-msgstr "\u3059\u3079\u3066\u306e\u96a0\u3057\u753b\u50cf\u3092\u6d88\u53bb\u3002"
+msgstr "すべての隠し画像を消去。"
 
 #: .\app.py:1572
 msgid "DELETE_LOCK"
 msgstr ""
-"Slideshow"
-" \u306e\u5f8c\u306e\u30ed\u30c3\u30af\u306e\u524a\u9664"
-"\u79fb\u884c\u9632\u6b62\u524a\u9664"
+"スライドショーの後にロックを削除\n"
+"トランジションが削除を阻止"
 
 #: .\app.py:1590
 msgid "Invalid action, no files found to delete"
-msgstr "\u7121\u52b9\u306a\u30a2\u30af\u30b7\u30e7\u30f3\u3067\u3059\u3002"
+msgstr "無効なアクションです。"
 
 #: .\app.py:1593
 msgid "Invalid action, search image not found"
-msgstr "\u7121\u52b9\u306a\u30a2\u30af\u30b7\u30e7\u30f3\u3067\u3059\u3002"
+msgstr "無効なアクションです。"
 
 #: .\app.py:1608
 msgid "Failed to delete current file, unable to get valid filepath"
-msgstr "\u6709\u52b9\u306a\u30d5\u30a1\u30a4\u30eb\u30d1\u30b9\u304c\u53d6\u5f97\u3067\u304d\u305a\u3001\u73fe\u5728\u306e\u30d5\u30a1\u30a4\u30eb\u306e\u524a\u9664\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002"
+msgstr "有効なファイルパスが取得できず、現在のファイルの削除に失敗しました。"
 
 #: .\app.py:1613
 msgid "Removing file: {0}"
-msgstr "\u30d5\u30a1\u30a4\u30eb\u3092\u524a\u9664\u3057\u3066\u3044\u307e\u3059\uff1a {0}"
+msgstr "ファイルを削除しています： {0}"
 
 #: .\app.py:1630
-msgid "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."
-msgstr "\u30b4\u30df\u7bb1\u3078\u306e\u30d5\u30a1\u30a4\u30eb\u9001\u4fe1\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002pip\u3067send2trash\u3092\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u3059\u308b\u304b\u3001config.json\u3067\u30b4\u30df\u7bb1\u30d5\u30a9\u30eb\u30c0\u3092\u6307\u5b9a\u3057\u3066\u304f\u3060\u3055\u3044\u3002"
+msgid ""
+"Failed to send file to the trash, so it will be deleted. Either pip install "
+"send2trash or set a specific trash folder in config.json."
+msgstr ""
+"ゴミ箱へのファイル送信に失敗しました。pipでsend2trashをインストールするか、config.jsonでゴミ箱フォルダを指定してください。"
 
 #: .\app.py:1647
 msgid "Invalid target filepath for replacement: "
-msgstr "\u7f6e\u63db\u5bfe\u8c61\u306e\u30d5\u30a1\u30a4\u30eb\u30d1\u30b9\u304c\u7121\u52b9\u3067\u3059\uff1a "
+msgstr "置換対象のファイルパスが無効です： "
 
 #: .\app.py:1651
 msgid "Moved search image to "
-msgstr "\u691c\u7d22\u753b\u50cf\u3092\uff1a "
+msgstr "検索画像を： "
 
 #: .\app.py:1686
 msgid "Running image gen: "
-msgstr "\u30a4\u30e1\u30fc\u30b8\u30fb\u30b8\u30a7\u30cd\u30ec\u30fc\u30b7\u30e7\u30f3\u306e\u5b9f\u884c\uff1a "
+msgstr "イメージ・ジェネレーションの実行： "
 
 #: .\app.py:1688
 msgid "Error running image generation:"
-msgstr "\u753b\u50cf\u751f\u6210\u306e\u5b9f\u884c\u30a8\u30e9\u30fc\uff1a"
+msgstr "画像生成の実行エラー："
 
 #: .\app.py:1693
 msgid "Running refacdir"
-msgstr "\u30e9\u30f3\u30cb\u30f3\u30b0 refacdir"
+msgstr "ランニング refacdir"
 
 #: .\app.py:1698
 msgid "Error"
-msgstr "\u30a8\u30e9\u30fc"
+msgstr "エラー"
 
 #: .\app.py:1761
 msgid "GROUP_DETAILS"
 msgstr ""
-" \u30b0\u30eb\u30fc\u30d7{0}/{1}"
-"\u30b5\u30a4\u30ba\uff1a{2}"
+"グループ{0}/{1}\n"
+"サイズ：{2}"
 
 #: .\app.py:1765
 msgid "No image files found"
-msgstr "\u753b\u50cf\u30d5\u30a1\u30a4\u30eb\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093"
+msgstr "画像ファイルが見つかりません"
 
 #: .\app.py:1767
 msgid "1 image file found"
-msgstr "1 \u898b\u3064\u304b\u3063\u305f\u753b\u50cf\u30d5\u30a1\u30a4\u30eb"
+msgstr "1 見つかった画像ファイル"
 
 #: .\app.py:1767
 msgid "{0} image files found"
-msgstr "{0} \u30a4\u30e1\u30fc\u30b8\u30d5\u30a1\u30a4\u30eb\u304c\u898b\u3064\u304b\u308a\u307e\u3057\u305f"
+msgstr "{0} イメージファイルが見つかりました"
 
 #: .\app.py:1770
 msgid "(filtered)"
-msgstr "(\u30d5\u30a3\u30eb\u30bf\u30ea\u30f3\u30b0)"
+msgstr "(フィルタリング)"
 
 #: .\compare\base_compare.py:226
 msgid "Image comparison"
-msgstr "\u753b\u50cf\u6bd4\u8f03"
+msgstr "画像比較"
 
 #: .\compare\base_compare.py:226
 msgid "Image data collection"
-msgstr "\u753b\u50cf\u30c7\u30fc\u30bf\u53ce\u96c6"
+msgstr "画像データ収集"
 
 #: .\compare\compare_wrapper.py:68 .\compare\compare_wrapper.py:71
 msgid "Invalid mode"
-msgstr "\u7121\u52b9\u306a\u30e2\u30fc\u30c9"
+msgstr "無効なモード"
 
 #: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
 msgid "No matches found. Search again to find potential matches."
-msgstr "\u8a72\u5f53\u3059\u308b\u691c\u7d22\u7d50\u679c\u304c\u3042\u308a\u307e\u305b\u3093\u3002\u3082\u3046\u4e00\u5ea6\u691c\u7d22\u3057\u3066\u4e00\u81f4\u3059\u308b\u53ef\u80fd\u6027\u306e\u3042\u308b\u3082\u306e\u3092\u63a2\u3057\u3066\u304f\u3060\u3055\u3044\u3002"
+msgstr "該当する検索結果がありません。もう一度検索して一致する可能性のあるものを探してください。"
 
 #: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
 msgid "Search required"
-msgstr "\u5fc5\u9808\u691c\u7d22"
+msgstr "必須検索"
 
 #: .\compare\compare_wrapper.py:159
 msgid "Skipped %s images."
-msgstr "{0}\u679a\u306e\u753b\u50cf\u3092\u30b9\u30ad\u30c3\u30d7\u3057\u307e\u3057\u305f\u3002"
+msgstr "{0}枚の画像をスキップしました。"
 
 #: .\compare\compare_wrapper.py:165
 msgid "No Unrelated Images"
-msgstr "\u975e\u95a2\u9023\u753b\u50cf\u306a\u3057"
+msgstr "非関連画像なし"
 
 #: .\compare\compare_wrapper.py:165
 msgid "No unrelated images found."
-msgstr "\u95a2\u4fc2\u306e\u306a\u3044\u753b\u50cf\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002"
+msgstr "関係のない画像が見つかりません。"
 
 #: .\compare\compare_wrapper.py:202 .\compare\compare_wrapper.py:364
 msgid "No Groups Found"
-msgstr "\u30b0\u30eb\u30fc\u30d7\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093"
+msgstr "グループが見つかりません"
 
 #: .\compare\compare_wrapper.py:272
-msgid "Gathering image data... setup may take a while depending on number of files involved."
-msgstr "\u753b\u50cf\u30c7\u30fc\u30bf\u306e\u53ce\u96c6...\u30d5\u30a1\u30a4\u30eb\u6570\u306b\u3088\u3063\u3066\u306f\u30bb\u30c3\u30c8\u30a2\u30c3\u30d7\u306b\u6642\u9593\u304c\u304b\u304b\u308b\u3002"
+msgid ""
+"Gathering image data... setup may take a while depending on number of files "
+"involved."
+msgstr "画像データの収集...ファイル数によってはセットアップに時間がかかる。"
 
 #: .\compare\compare_wrapper.py:294
 msgid "Confirm group run"
-msgstr "\u30b0\u30eb\u30fc\u30d7\u8d70\u884c\u306e\u78ba\u8a8d"
+msgstr "グループ走行の確認"
 
 #: .\compare\compare_wrapper.py:295
-msgid "Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."
-msgstr "\u691c\u7d22\u30e2\u30fc\u30c9\u304c\u691c\u51fa\u3055\u308c\u305f\u305f\u3081\u3001\u5b9f\u884c\u524d\u306b\u30b0\u30eb\u30fc\u30d7\u30e2\u30fc\u30c9\u3078\u306e\u5207\u308a\u66ff\u3048\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u30b0\u30eb\u30fc\u30d7\u30e2\u30fc\u30c9\u3067\u306f\u3001\u30d9\u30fc\u30b9\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u5185\u306e\u3059\u3079\u3066\u306e\u753b\u50cf\u3092\u6bd4\u8f03\u3059\u308b\u305f\u3081\u3001\u6642\u9593\u304c\u304b\u304b\u308a\u307e\u3059\u3002"
+msgid ""
+"Search mode detected, please confirm switch to group mode before run. Group "
+"mode will take longer as all images in the base directory are compared."
+msgstr ""
+"検索モードが検出されたため、実行前にグループモードへの切り替えを確認してください。グループモードでは、ベースディレクトリ内のすべての画像を比較するため、時間がかかります。"
 
 #: .\compare\compare_wrapper.py:302
 msgid "Gathering image data for comparison"
-msgstr "\u6bd4\u8f03\u306e\u305f\u3081\u306e\u753b\u50cf\u30c7\u30fc\u30bf\u53ce\u96c6"
+msgstr "比較のための画像データ収集"
 
 #: .\compare\compare_wrapper.py:330
 msgid "Searching images..."
-msgstr "\u753b\u50cf\u691c\u7d22..."
+msgstr "画像検索..."
 
 #: .\compare\compare_wrapper.py:336
 msgid "Set a directory and search file or search text."
-msgstr "\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3068\u691c\u7d22\u30d5\u30a1\u30a4\u30eb\u307e\u305f\u306f\u691c\u7d22\u30c6\u30ad\u30b9\u30c8\u3092\u8a2d\u5b9a\u3057\u307e\u3059\u3002"
+msgstr "ディレクトリと検索ファイルまたは検索テキストを設定します。"
 
 #: .\compare\compare_wrapper.py:337
 msgid "No Match Found"
-msgstr "\u30de\u30c3\u30c1\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093"
+msgstr "マッチが見つかりません"
 
 #: .\compare\compare_wrapper.py:337
 msgid "None of the files match the search filters with current settings."
-msgstr "\u73fe\u5728\u306e\u8a2d\u5b9a\u3067\u306f\u3001\u691c\u7d22\u30d5\u30a3\u30eb\u30bf\u30fc\u306b\u4e00\u81f4\u3059\u308b\u30d5\u30a1\u30a4\u30eb\u306f\u3042\u308a\u307e\u305b\u3093\u3002"
+msgstr "現在の設定では、検索フィルターに一致するファイルはありません。"
 
 #: .\compare\compare_wrapper.py:350
 msgid "%s possibly related images found."
-msgstr "{0} \u95a2\u9023\u306e\u753b\u50cf\u304c\u898b\u3064\u304b\u308b\u53ef\u80fd\u6027\u304c\u3042\u308a\u307e\u3059\u3002"
+msgstr "{0} 関連の画像が見つかる可能性があります。"
 
 #: .\compare\compare_wrapper.py:358
 msgid "Running image comparisons..."
-msgstr "\u5b9f\u884c\u30a4\u30e1\u30fc\u30b8\u306e\u6bd4\u8f03..."
+msgstr "実行イメージの比較..."
 
 #: .\compare\compare_wrapper.py:363 .\compare\compare_wrapper.py:378
 msgid "Set a directory and search file."
-msgstr "\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3068\u691c\u7d22\u30d5\u30a1\u30a4\u30eb\u3092\u8a2d\u5b9a\u3057\u307e\u3059\u3002"
+msgstr "ディレクトリと検索ファイルを設定します。"
 
 #: .\compare\compare_wrapper.py:364
 msgid "None of the files can be grouped with current settings."
-msgstr "\u73fe\u5728\u306e\u8a2d\u5b9a\u3067\u306f\u3001\u3069\u306e\u30d5\u30a1\u30a4\u30eb\u3082\u30b0\u30eb\u30fc\u30d7\u5316\u3067\u304d\u306a\u3044\u3002"
+msgstr "現在の設定では、どのファイルもグループ化できない。"
 
 #: .\compare\compare_wrapper.py:379
 msgid "No Duplicates Found"
-msgstr "\u91cd\u8907\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093"
+msgstr "重複が見つかりません"
 
 #: .\compare\compare_wrapper.py:379
-msgid "None of the files appear to be duplicates based on the current settings."
-msgstr "\u73fe\u5728\u306e\u8a2d\u5b9a\u3067\u306f\u3001\u3069\u306e\u30d5\u30a1\u30a4\u30eb\u3082\u91cd\u8907\u3057\u3066\u3044\u306a\u3044\u3088\u3046\u3067\u3059\u3002"
+msgid ""
+"None of the files appear to be duplicates based on the current settings."
+msgstr "現在の設定では、どのファイルも重複していないようです。"
 
 #: .\compare\compare_wrapper.py:403
 msgid "Some group members were left stranded by the grouping process."
-msgstr "\u30b0\u30eb\u30fc\u30d7\u5206\u3051\u306e\u904e\u7a0b\u3067\u53d6\u308a\u6b8b\u3055\u308c\u305f\u30e1\u30f3\u30d0\u30fc\u3082\u3044\u305f\u3002"
+msgstr "グループ分けの過程で取り残されたメンバーもいた。"
 
 #: .\compare\compare_wrapper.py:403
 msgid "Stranded Group Members Found"
-msgstr "\u53d6\u308a\u6b8b\u3055\u308c\u305f\u30b0\u30eb\u30fc\u30d7\u30e1\u30f3\u30d0\u30fc\u767a\u898b"
+msgstr "取り残されたグループメンバー発見"
 
 #: .\compare\compare_wrapper.py:458
 msgid "No More Groups"
-msgstr "\u30b0\u30eb\u30fc\u30d7\u306a\u3057"
+msgstr "グループなし"
 
 #: .\compare\compare_wrapper.py:459
-msgid "There are no more image groups remaining for this directory and current filter settings."
-msgstr "\u3053\u306e\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3068\u73fe\u5728\u306e\u30d5\u30a3\u30eb\u30bf\u30fc\u8a2d\u5b9a\u306b\u5bfe\u5fdc\u3059\u308b\u753b\u50cf\u30b0\u30eb\u30fc\u30d7\u306f\u3082\u3046\u6b8b\u3063\u3066\u3044\u307e\u305b\u3093\u3002"
+msgid ""
+"There are no more image groups remaining for this directory and current "
+"filter settings."
+msgstr "このディレクトリと現在のフィルター設定に対応する画像グループはもう残っていません。"
 
 #: .\compare\prevalidations_window.py:23
 msgid "(no positives set)"
-msgstr "(\u30dd\u30b8\u306a\u3057\uff09"
+msgstr "(ポジなし）"
 
 #: .\compare\prevalidations_window.py:24
 msgid "(no negatives set)"
-msgstr "(\u30cd\u30ac\u306a\u3057\uff09"
+msgstr "(ネガなし）"
 
 #: .\compare\prevalidations_window.py:26
 #: .\compare\prevalidations_window.py:197
 msgid "New Prevalidation"
-msgstr "\u65b0\u898f\u767b\u9332"
+msgstr "新規登録"
 
 #: .\compare\prevalidations_window.py:77
 msgid " - skipped"
-msgstr " - \u30b9\u30ad\u30c3\u30d7"
+msgstr " - スキップ"
 
 #: .\compare\prevalidations_window.py:77 .\compare\prevalidations_window.py:80
 #: .\compare\prevalidations_window.py:82 .\compare\prevalidations_window.py:88
 #: .\compare\prevalidations_window.py:99
 msgid " detected"
-msgstr " \u691c\u51fa\u3059\u308b"
+msgstr " 検出する"
 
 #: .\compare\prevalidations_window.py:80
 msgid " - hidden"
-msgstr " - \u96a0\u3057"
+msgstr " - 隠し"
 
 #: .\compare\prevalidations_window.py:88
 msgid "Moving file: "
-msgstr "\u30d5\u30a1\u30a4\u30eb\u306e\u79fb\u52d5: "
+msgstr "ファイルの移動: "
 
 #: .\compare\prevalidations_window.py:99
 msgid "Deleting file: "
-msgstr "\u30d5\u30a1\u30a4\u30eb\u306e\u524a\u9664: "
+msgstr "ファイルの削除: "
 
 #: .\compare\prevalidations_window.py:172
 msgid " testing classifier {0} for {1}"
-msgstr " {1}\u306b\u5bfe\u3059\u308b\u30c6\u30b9\u30c8\u5206\u985e\u5668{0}\u3002"
+msgstr " {1}に対するテスト分類器{0}。"
 
 #: .\compare\prevalidations_window.py:174
 msgid " ({0} positives, {1} negatives)"
-msgstr " ({0} \u967d\u6027\u3001{1} \u9670\u6027)"
+msgstr " ({0} 陽性、{1} 陰性)"
 
 #: .\compare\prevalidations_window.py:187
 msgid "Modify Prevalidation"
-msgstr "\u7121\u52b9\u5316\u306e\u4fee\u6b63"
+msgstr "無効化の修正"
 
 #: .\compare\prevalidations_window.py:196
 msgid "Prevalidation Name"
-msgstr "\u30d0\u30ea\u30c7\u30fc\u30b7\u30e7\u30f3\u540d"
+msgstr "バリデーション名"
 
 #: .\compare\prevalidations_window.py:203
 msgid "Positives"
-msgstr "\u30dd\u30b8\u30c6\u30a3\u30d6"
+msgstr "ポジティブ"
 
 #: .\compare\prevalidations_window.py:210
 msgid "Negatives"
-msgstr "\u30cd\u30ac\u30c6\u30a3\u30d6"
+msgstr "ネガティブ"
 
 #: .\compare\prevalidations_window.py:217
 msgid "Threshold"
-msgstr "\u3057\u304d\u3044\u5024"
+msgstr "しきい値"
 
 #: .\compare\prevalidations_window.py:224
 msgid "Action"
-msgstr "\u30a2\u30af\u30b7\u30e7\u30f3"
+msgstr "アクション"
 
 #: .\compare\prevalidations_window.py:234
 msgid "Action Modifier"
-msgstr "\u30a2\u30af\u30b7\u30e7\u30f3\u4fee\u98fe\u5b50"
+msgstr "アクション修飾子"
 
 #: .\compare\prevalidations_window.py:241
 msgid "Run on Directory"
-msgstr "\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3067\u5b9f\u884c"
+msgstr "ディレクトリで実行"
 
 #: .\compare\prevalidations_window.py:248
 msgid "Image Classifier Name"
-msgstr "\u753b\u50cf\u5206\u985e\u5668\u540d"
+msgstr "画像分類器名"
 
 #: .\compare\prevalidations_window.py:259
 msgid "Image Classifier Selected Category"
-msgstr "\u753b\u50cf\u5206\u985e\u5668 \u9078\u629e\u3055\u308c\u305f\u30ab\u30c6\u30b4\u30ea\u30fc"
+msgstr "画像分類器 選択されたカテゴリー"
 
 #: .\compare\prevalidations_window.py:263
 msgid "Select Categories..."
-msgstr "\u30ab\u30c6\u30b4\u30ea\u30fc\u3092\u9078\u629e..."
+msgstr "カテゴリーを選択..."
 
 #: .\compare\prevalidations_window.py:269
 msgid "Done"
-msgstr "\u5b8c\u4e86"
+msgstr "完了"
 
 #: .\compare\prevalidations_window.py:401
-msgid "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
-msgstr "\u540d\u524d\uff1a{0} \u306e\u30d7\u30ea\u30d0\u30ea\u30c7\u30fc\u30b7\u30e7\u30f3\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002\u30d7\u30ea\u30d0\u30ea\u30c7\u30fc\u30b7\u30e7\u30f3\u30a6\u30a3\u30f3\u30c9\u30a6\u3067\u8a2d\u5b9a\u3057\u3066\u304f\u3060\u3055\u3044\u3002"
+msgid ""
+"No prevalidation found with name: {0}. Set it on the Prevalidations Window."
+msgstr "名前：{0} のプリバリデーションが見つかりません。プリバリデーションウィンドウで設定してください。"
 
 #: .\compare\prevalidations_window.py:412
 msgid "Prevalidations"
-msgstr "\u4e8b\u524d\u691c\u8a3c"
+msgstr "事前検証"
 
 #: .\compare\prevalidations_window.py:435
 msgid "Set Prevalidations"
-msgstr "\u30d7\u30ea\u30bb\u30c3\u30c8"
+msgstr "プリセット"
 
 #: .\compare\prevalidations_window.py:437
 msgid "Add prevalidation"
-msgstr "\u512a\u5148\u6a29\u3092\u8ffd\u52a0"
+msgstr "優先権を追加"
 
 #: .\compare\prevalidations_window.py:439
 msgid "Clear prevalidations"
-msgstr "\u660e\u78ba\u306a\u512a\u5148\u9806\u4f4d"
+msgstr "明確な優先順位"
 
 #: .\compare\prevalidations_window.py:475 .\files\hotkey_actions_window.py:95
 msgid "Set"
-msgstr "\u30bb\u30c3\u30c8"
+msgstr "セット"
 
 #: .\compare\prevalidations_window.py:483 .\files\file_actions_window.py:269
 #: .\files\file_actions_window.py:312
 msgid "Modify"
-msgstr "\u5909\u66f4\u3059\u308b"
+msgstr "変更する"
 
 #: .\compare\prevalidations_window.py:490
 msgid "Delete"
-msgstr "\u524a\u9664"
+msgstr "削除"
 
 #: .\compare\prevalidations_window.py:497
 msgid "Move down"
-msgstr "\u79fb\u52d5\u3059\u308b"
+msgstr "移動する"
 
 #: .\extensions\sd_runner_client.py:59
 msgid "Image does not contain a prompt to redo!"
-msgstr "\u753b\u50cf\u306b\u306f\u3084\u308a\u76f4\u3057\u306e\u6307\u793a\u304c\u306a\u3044\uff01"
+msgstr "画像にはやり直しの指示がない！"
 
 #: .\files\file_actions_window.py:201
 msgid "File Actions"
-msgstr "\u30d5\u30a1\u30a4\u30eb\u64cd\u4f5c"
+msgstr "ファイル操作"
 
 #: .\files\file_actions_window.py:223
 msgid "File Action History"
-msgstr "\u30d5\u30a1\u30a4\u30eb\u64cd\u4f5c\u5c65\u6b74"
+msgstr "ファイル操作履歴"
 
 #: .\files\file_actions_window.py:225
 msgid "Search Image"
-msgstr "\u753b\u50cf\u691c\u7d22"
+msgstr "画像検索"
 
 #: .\files\file_actions_window.py:227
 msgid "Clear History"
-msgstr "\u660e\u78ba\u306a\u6b74\u53f2"
+msgstr "明確な歴史"
 
 #: .\files\file_actions_window.py:253
 msgid " ({0} files)"
-msgstr " ({0} \u30d5\u30a1\u30a4\u30eb)"
+msgstr " ({0} ファイル)"
 
 #: .\files\file_actions_window.py:258 .\files\marked_file_mover.py:264
 msgid "Move"
-msgstr "\u4ea4\u901a\u30a2\u30af\u30bb\u30b9"
+msgstr "交通アクセス"
 
 #: .\files\file_actions_window.py:258 .\files\marked_file_mover.py:271
 msgid "Copy"
-msgstr "\u30b3\u30d4\u30fc"
+msgstr "コピー"
 
 #: .\files\file_actions_window.py:261 .\files\file_actions_window.py:304
 msgid "Undo"
-msgstr "\u30ed\u30b0\u30a4\u30f3"
+msgstr "ログイン"
 
 #: .\files\file_actions_window.py:296
 msgid "View"
-msgstr "\u30cb\u30e5\u30fc\u30b9"
+msgstr "ニュース"
 
 #: .\files\file_actions_window.py:329
 msgid "Image does not exist: "
-msgstr "\u753b\u50cf\u304c\u5b58\u5728\u3057\u307e\u305b\u3093\u3002 "
+msgstr "画像が存在しません。 "
 
 #: .\files\file_actions_window.py:330 .\files\file_actions_window.py:341
 msgid "File Action Error"
-msgstr "\u30d5\u30a1\u30a4\u30eb\u30a2\u30af\u30b7\u30e7\u30f3\u30a8\u30e9\u30fc"
+msgstr "ファイルアクションエラー"
 
 #: .\files\file_actions_window.py:340
 msgid "Images not found"
-msgstr "\u898b\u3064\u304b\u3089\u306a\u3044\u753b\u50cf"
+msgstr "見つからない画像"
 
 #: .\files\file_browser.py:151 .\files\file_browser.py:163
 msgid " (try setting recursive to True)"
-msgstr " (\u518d\u5e30\u3092True\u306b\u8a2d\u5b9a\u3057\u3066\u307f\u3066\u304f\u3060\u3055\u3044)"
+msgstr " (再帰をTrueに設定してみてください)"
 
 #: .\files\file_browser.py:152 .\files\file_browser.py:164
 msgid "No files found for current browsing settings."
-msgstr "\u73fe\u5728\u306e\u95b2\u89a7\u8a2d\u5b9a\u306b\u8a72\u5f53\u3059\u308b\u30d5\u30a1\u30a4\u30eb\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002"
+msgstr "現在の閲覧設定に該当するファイルが見つかりません。"
 
 #: .\files\file_browser.py:197
 msgid "FILE_BROWSER_INDEX_DETAILS"
-msgstr "\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u5185\u306e{1}\u30d5\u30a1\u30a4\u30eb\u4e2d{0}\u30d5\u30a1\u30a4\u30eb\u3092{2}\u9806{3}\u3067\u30bd\u30fc\u30c8"
+msgstr "ディレクトリ内の{1}ファイル中{0}ファイルを{2}順{3}でソート"
 
 #: .\files\file_browser.py:224
 msgid "Search text provided to file_browser.find() was invalid."
-msgstr "file_browser.find() \u306b\u6307\u5b9a\u3055\u308c\u305f\u691c\u7d22\u30c6\u30ad\u30b9\u30c8\u304c\u7121\u52b9\u3067\u3057\u305f\u3002"
+msgstr "file_browser.find() に指定された検索テキストが無効でした。"
 
 #: .\files\go_to_file.py:22
 msgid "Go To File"
-msgstr "\u30d5\u30a1\u30a4\u30eb\u306b\u79fb\u52d5"
+msgstr "ファイルに移動"
 
 #: .\files\go_to_file.py:47
 msgid "Invalid search string, please enter some text."
-msgstr "\u691c\u7d22\u6587\u5b57\u5217\u304c\u7121\u52b9\u3067\u3059\u3002"
+msgstr "検索文字列が無効です。"
 
 #: .\files\hotkey_actions_window.py:25
 msgid "Hotkey Actions"
-msgstr "\u30db\u30c3\u30c8\u30ad\u30fc\u30a2\u30af\u30b7\u30e7\u30f3"
+msgstr "ホットキーアクション"
 
 #: .\files\hotkey_actions_window.py:49
 msgid "Key name"
-msgstr "\u30ad\u30fc\u540d"
+msgstr "キー名"
 
 #: .\files\hotkey_actions_window.py:53
 msgid "Target directory"
-msgstr "\u5bfe\u8c61\u30c7\u30a3\u30ec\u30af\u30c8\u30ea"
+msgstr "対象ディレクトリ"
 
 #: .\files\hotkey_actions_window.py:85 .\files\hotkey_actions_window.py:90
 msgid "(unset)"
-msgstr "(\u672a\u8a2d\u5b9a)"
+msgstr "(未設定)"
 
 #: .\files\marked_file_mover.py:88 .\files\marked_file_mover.py:876
 msgid "Marks cleared."
-msgstr "\u30de\u30fc\u30af\u306f\u30af\u30ea\u30a2\u3002"
+msgstr "マークはクリア。"
 
 #: .\files\marked_file_mover.py:95
 msgid "Set current marks from previous."
-msgstr "\u524d\u306e\u30de\u30fc\u30af\u304b\u3089\u73fe\u5728\u306e\u30de\u30fc\u30af\u3092\u8a2d\u5b9a\u3059\u308b\u3002"
+msgstr "前のマークから現在のマークを設定する。"
 
 #: .\files\marked_file_mover.py:95
 msgid "Total set: {0}"
-msgstr "\u5408\u8a08\u30bb\u30c3\u30c8 {0}"
+msgstr "合計セット {0}"
 
 #: .\files\marked_file_mover.py:122
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
-"\u6c38\u4e45\u30de\u30fc\u30af\u30bf\u30fc\u30b2\u30c3\u30c8\u30bb\u30c3\u30c8\u306a\u3057!"
-"Marks\u30a6\u30a3\u30f3\u30c9\u30a6\u306eCtrl+T\u3067\u8a2d\u5b9a\u3057\u307e\u3059\u3002"
+"永久マークターゲットセットなし!\n"
+"MarksウィンドウのCtrl+Tで設定します。"
 
 #: .\files\marked_file_mover.py:134
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
-"{0}."
-" \u306b\u30db\u30c3\u30c8\u30ad\u30fc\u30a2\u30af\u30b7\u30e7\u30f3\u304c\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u306a\u3044"
-"Marks\u30a6\u30a3\u30f3\u30c9\u30a6\u306b{1}\u3092\u8a2d\u5b9a\u3002"
+"{0}にホットキーアクションが設定されていません。\n"
+"マークスウィンドウの {1} で設定します。"
 
 #: .\files\marked_file_mover.py:214 .\files\recent_directory_window.py:153
 msgid "Set a new target directory"
-msgstr "\u65b0\u3057\u3044\u30bf\u30fc\u30b2\u30c3\u30c8\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3092\u8a2d\u5b9a\u3059\u308b"
+msgstr "新しいターゲットディレクトリを設定する"
 
 #: .\files\marked_file_mover.py:216
 msgid "MOVE"
-msgstr "\u30e0\u30fc\u30f4"
+msgstr "ムーヴ"
 
 #: .\files\marked_file_mover.py:220
 msgid "COPY"
-msgstr "\u30b3\u30d4\u30fc"
+msgstr "コピー"
 
 #: .\files\marked_file_mover.py:222
 msgid "DELETE"
-msgstr "\u524a\u9664"
+msgstr "削除"
 
 #: .\files\marked_file_mover.py:224 .\files\recent_directory_window.py:157
 msgid "Add directories from parent"
-msgstr "\u89aa\u304b\u3089\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3092\u8ffd\u52a0\u3059\u308b"
+msgstr "親からディレクトリを追加する"
 
 #: .\files\marked_file_mover.py:227 .\files\recent_directory_window.py:159
 msgid "Clear targets"
-msgstr "\u660e\u78ba\u306a\u76ee\u6a19"
+msgstr "明確な目標"
 
 #: .\files\marked_file_mover.py:291 .\files\marked_file_mover.py:297
 msgid "Recording next mark target and action."
-msgstr "\u8bb0\u5f55\u4e0b\u4e00\u4e2a\u6807\u8bb0\u76ee\u6807\u548c\u884c\u52a8\u3002"
+msgstr "记录下一个标记目标和行动。"
 
 #: .\files\marked_file_mover.py:310 .\files\recent_directory_window.py:203
 msgid "Invalid directory: %s"
-msgstr "\u7121\u52b9\u306a\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3067\u3059\uff1a {0}"
+msgstr "無効なディレクトリです： {0}"
 
 #: .\files\marked_file_mover.py:312
 msgid "Select target directory for marked files"
-msgstr "\u30de\u30fc\u30af\u3055\u308c\u305f\u30d5\u30a1\u30a4\u30eb\u306e\u30bf\u30fc\u30b2\u30c3\u30c8\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3092\u9078\u629e"
+msgstr "マークされたファイルのターゲットディレクトリを選択"
 
 #: .\files\marked_file_mover.py:367
 msgid "Copying"
-msgstr "\u30b3\u30d4\u30fc"
+msgstr "コピー"
 
 #: .\files\marked_file_mover.py:367
 msgid "Moving"
-msgstr "\u30a2\u30af\u30bb\u30b9"
+msgstr "アクセス"
 
 #: .\files\marked_file_mover.py:368
 msgid "Copied"
-msgstr "\u30b3\u30d4\u30c3\u30c9"
+msgstr "コピッド"
 
 #: .\files\marked_file_mover.py:368
 msgid "Moved"
-msgstr "\u79fb\u52d5\u3059\u308b"
+msgstr "移動する"
 
 #: .\files\marked_file_mover.py:405
 msgid "Moved {0} files to {1}"
 msgstr ""
-" {0}\u30d5\u30a1\u30a4\u30eb\u3092"
-"{1}"
-"\u306b\u79fb\u52d5"
+"{0}ファイルを\n"
+"{1}に移動"
 
 #: .\files\marked_file_mover.py:407
 msgid "Copied {0} files to {1}"
 msgstr ""
-" {0}\u3064\u306e\u30d5\u30a1\u30a4\u30eb\u3092"
-"{1}"
-"\u306b\u30b3\u30d4\u30fc"
+"{0}つのファイルを\n"
+"{1}にコピー"
 
 #: .\files\marked_file_mover.py:434
 msgid "Existing filenames match!"
-msgstr "\u65e2\u5b58\u306e\u30d5\u30a1\u30a4\u30eb\u540d\u304c\u4e00\u81f4\u3059\u308b\uff01"
+msgstr "既存のファイル名が一致する！"
 
 #: .\files\marked_file_mover.py:436
 msgid "WARNING: Exact file match."
-msgstr "\u8b66\u544a\uff1a\u30d5\u30a1\u30a4\u30eb\u306e\u5b8c\u5168\u4e00\u81f4\u3002"
+msgstr "警告：ファイルの完全一致。"
 
 #: .\files\marked_file_mover.py:438 .\files\marked_file_mover.py:789
 msgid "WARNING: Short filenames."
-msgstr "\u8b66\u544a:\u77ed\u3044\u30d5\u30a1\u30a4\u30eb\u540d\u3002"
+msgstr "警告:短いファイル名。"
 
 #: .\files\marked_file_mover.py:462
 msgid "Moving back"
-msgstr "\u79fb\u52d5\u30d0\u30c3\u30af"
+msgstr "移動バック"
 
 #: .\files\marked_file_mover.py:462
 msgid "Removing"
-msgstr "\u30ea\u30e0\u30fc\u30d6"
+msgstr "リムーブ"
 
 #: .\files\marked_file_mover.py:463
 msgid "Moved back"
-msgstr "\u623b\u308b"
+msgstr "戻る"
 
 #: .\files\marked_file_mover.py:463
 msgid "Removed"
-msgstr "\u524a\u9664"
+msgstr "削除"
 
 #: .\files\marked_file_mover.py:469
 msgid "Where should the marked files have gone?"
-msgstr "\u30de\u30fc\u30af\u3055\u308c\u305f\u30d5\u30a1\u30a4\u30eb\u306f\u3069\u3053\u306b\u884c\u304f\u3079\u304d\u3060\u3063\u305f\u306e\u304b\uff1f"
+msgstr "マークされたファイルはどこに行くべきだったのか？"
 
 #: .\files\marked_file_mover.py:494
 msgid "Moved back {0} files from {1}"
-msgstr " {1}\u304b\u3089{0}\u30d5\u30a1\u30a4\u30eb\u623b\u3057"
+msgstr ""
+"{1}\n"
+"から{0}ファイル戻し"
 
 #: .\files\marked_file_mover.py:496
 msgid "Removed {0} files from {1}"
-msgstr " {1}\u304b\u3089{0}\u3064\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u524a\u9664"
+msgstr ""
+"{1}\n"
+"から{0}つのファイルを削除"
 
 #: .\files\marked_file_mover.py:513
 msgid "Select parent directory for target directories"
-msgstr "\u5bfe\u8c61\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u306e\u89aa\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3092\u9078\u629e"
+msgstr "対象ディレクトリの親ディレクトリを選択"
 
 #: .\files\marked_file_mover.py:673
 msgid "Sorted directories by embedding comparison."
-msgstr "\u6bd4\u8f03\u3092\u57cb\u3081\u8fbc\u3080\u3053\u3068\u3067\u30bd\u30fc\u30c8\u3055\u308c\u305f\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3002"
+msgstr "比較を埋め込むことでソートされたディレクトリ。"
 
 #: .\files\marked_file_mover.py:693
 msgid "Confirm Delete"
-msgstr "\u524a\u9664\u3092\u78ba\u8a8d\u3059\u308b"
+msgstr "削除を確認する"
 
 #: .\files\marked_file_mover.py:694
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
-msgstr "{0}\u30de\u30fc\u30af\u3055\u308c\u305f\u30d5\u30a1\u30a4\u30eb\u3092\u524a\u9664\u3059\u308b - \u7d9a\u884c\u3057\u305f\u3044\u3067\u3059\u304b?"
+msgstr "{0}マークされたファイルを削除する - 続行したいですか?"
 
 #: .\files\marked_file_mover.py:714
 msgid "Delete Failed"
-msgstr "\u5931\u6557\u3057\u305f\u524a\u9664"
+msgstr "失敗した削除"
 
 #: .\files\marked_file_mover.py:715
 msgid "Failed to delete %s files - check log for details."
-msgstr "{0}\u30d5\u30a1\u30a4\u30eb\u3092\u524a\u9664\u3059\u308b\u5931\u6557 - \u8a73\u7d30\u306f\u30ed\u30b0\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002"
+msgstr "{0}ファイルを削除する失敗 - 詳細はログを確認してください。"
 
 #: .\files\marked_file_mover.py:718
 msgid "Deleted %s marked files."
-msgstr "\u524a\u9664\u3055\u308c\u305f {0} \u30de\u30fc\u30af\u3055\u308c\u305f\u30d5\u30a1\u30a4\u30eb\u3002"
+msgstr "削除された {0} マークされたファイル。"
 
 #: .\files\marked_file_mover.py:783
 msgid "Existing filenames found!"
-msgstr "\u65e2\u5b58\u306e\u30d5\u30a1\u30a4\u30eb\u540d\u304c\u898b\u3064\u304b\u308a\u307e\u3059!"
+msgstr "既存のファイル名が見つかります!"
 
 #: .\files\marked_file_mover.py:785
 msgid "WARNING: All file hashes match."
-msgstr "\u8b66\u544a:\u3059\u3079\u3066\u306e\u30d5\u30a1\u30a4\u30eb\u30cf\u30c3\u30b7\u30e5\u30de\u30c3\u30c1\u3002"
+msgstr "警告:すべてのファイルハッシュマッチ。"
 
 #: .\files\marked_file_mover.py:787
 msgid "WARNING: %s of %s file hashes match."
-msgstr "\u8b66\u544a: {1} \u30d5\u30a1\u30a4\u30eb\u306e\u30cf\u30c3\u30b7\u30e5\u30de\u30c3\u30c1\u306e {0}\u3002"
+msgstr "警告: {1} ファイルのハッシュマッチの {0}。"
 
 #: .\files\marked_file_mover.py:793
 msgid "No existing filenames found."
-msgstr "\u65e2\u5b58\u306e\u30d5\u30a1\u30a4\u30eb\u540d\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002"
+msgstr "既存のファイル名が見つかりません。"
 
 #: .\files\marked_file_mover.py:821
 msgid "Found %s downstream related images"
-msgstr "{0}\u4e0b\u6d41\u95a2\u9023\u753b\u50cf\u304c\u898b\u3064\u304b\u308a\u307e\u3057\u305f"
+msgstr "{0}下流関連画像が見つかりました"
 
 #: .\files\marked_file_mover.py:823
 msgid "No downstream related images found"
-msgstr "\u4e0b\u6d41\u95a2\u9023\u753b\u50cf\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093"
+msgstr "下流関連画像が見つかりません"
 
 #: .\files\marked_file_mover.py:834
 msgid "Cleared marked file"
-msgstr "\u30de\u30fc\u30af\u3055\u308c\u305f\u30d5\u30a1\u30a4\u30eb\u3092\u30af\u30ea\u30a2"
+msgstr "マークされたファイルをクリア"
 
 #: .\files\marked_file_mover.py:878
 msgid "Removed {0} marks"
-msgstr "{0}\u30de\u30fc\u30af\u3092\u524a\u9664"
+msgstr "{0}マークを削除"
 
 #: .\files\recent_directory_window.py:155
 msgid "Add directory"
-msgstr "\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u306e\u8ffd\u52a0"
+msgstr "ディレクトリの追加"
 
 #: .\files\recent_directory_window.py:205
 msgid "Set image comparison directory"
-msgstr "\u753b\u50cf\u6bd4\u8f03\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u306e\u8a2d\u5b9a"
+msgstr "画像比較ディレクトリの設定"
 
 #: .\files\type_configuration_window.py:61
 msgid "Media Type Configuration"
-msgstr "\u5a92\u4f53\u306e\u30bf\u30a4\u30d7\u69cb\u6210"
+msgstr "媒体のタイプ構成"
 
 #: .\files\type_configuration_window.py:74
 msgid "Configure Media Types"
-msgstr "\u30e1\u30c7\u30a3\u30a2\u30bf\u30a4\u30d7\u306e\u8a2d\u5b9a"
+msgstr "メディアタイプの設定"
 
 #: .\files\type_configuration_window.py:107
 msgid "Apply Changes"
-msgstr "\u5909\u66f4\u3092\u52a0\u3048\u308b"
+msgstr "変更を加える"
 
 #: .\files\type_configuration_window.py:149
 msgid "Confirm Changes"
-msgstr "\u5909\u66f4\u3092\u78ba\u8a8d\u3059\u308b"
+msgstr "変更を確認する"
 
 #: .\files\type_configuration_window.py:150
 msgid "This will clear all existing compares in open windows. Continue?"
-msgstr "\u3053\u308c\u306f\u3001\u30aa\u30fc\u30d7\u30f3\u30a6\u30a3\u30f3\u30c9\u30a6\u306e\u3059\u3079\u3066\u306e\u65e2\u5b58\u306e\u6bd4\u8f03\u3092\u30af\u30ea\u30a2\u3057\u307e\u3059\u3002 \u304a\u554f\u3044\u5408\u308f\u305b"
+msgstr "これは、オープンウィンドウのすべての既存の比較をクリアします。 お問い合わせ"
 
 #: .\files\type_configuration_window.py:200
 msgid "Media type configuration updated"
-msgstr "\u30e1\u30c7\u30a3\u30a2\u30bf\u30a4\u30d7\u69cb\u6210\u66f4\u65b0"
+msgstr "メディアタイプ構成更新"
 
 #: .\image\image_details.py:115
 msgid "Image Path"
-msgstr "\u30a4\u30e1\u30fc\u30b8\u30d1\u30b9"
+msgstr "イメージパス"
 
 #: .\image\image_details.py:117
 msgid "File Index"
-msgstr "\u30d5\u30a1\u30a4\u30eb\u30a4\u30f3\u30c7\u30c3\u30af\u30b9"
+msgstr "ファイルインデックス"
 
 #: .\image\image_details.py:119
 msgid "Color Mode"
-msgstr "\u8272\u30e2\u30fc\u30c9"
+msgstr "色モード"
 
 #: .\image\image_details.py:121
 msgid "Dimensions"
-msgstr "\u30b5\u30a4\u30ba:"
+msgstr "サイズ:"
 
 #: .\image\image_details.py:123 .\utils\constants.py:96
 #: .\utils\constants.py:113
 msgid "Size"
-msgstr "\u30b5\u30a4\u30ba:"
+msgstr "サイズ:"
 
 #: .\image\image_details.py:125
 msgid "Modification Time"
-msgstr "\u5909\u66f4\u306e\u6642\u9593"
+msgstr "変更の時間"
 
 #: .\image\image_details.py:127
 msgid "Positive"
-msgstr "\u30dd\u30b8\u30c6\u30a3\u30d6"
+msgstr "ポジティブ"
 
 #: .\image\image_details.py:129
 msgid "Negative"
-msgstr "\u30ed\u30b0\u30a4\u30f3"
+msgstr "ログイン"
 
 #: .\image\image_details.py:130
 msgid "(negative prompt not shown by config setting)"
-msgstr "(\u30b3\u30f3\u30d5\u30a3\u30b0\u8a2d\u5b9a\u3067\u793a\u3055\u306a\u3044\u30cd\u30ac\u30c6\u30a3\u30d6\u30d7\u30ed\u30f3\u30d7\u30c8)"
+msgstr "(コンフィグ設定で示さないネガティブプロンプト)"
 
 #: .\image\image_details.py:131
 msgid "Models"
-msgstr "\u30e2\u30c7\u30eb"
+msgstr "モデル"
 
 #: .\image\image_details.py:133
 msgid "LoRAs"
-msgstr "\u30ed\u30e9"
+msgstr "ロラ"
 
 #: .\image\image_details.py:138
 msgid "Copy Prompt"
-msgstr "\u30b3\u30d4\u30fc\u30d7\u30ed\u30f3\u30d7\u30c8"
+msgstr "コピープロンプト"
 
 #: .\image\image_details.py:139
 msgid "Copy Prompt No BREAK"
-msgstr "\u30b3\u30d4\u30fc \u30d7\u30ed\u30f3\u30d7\u30c8 \u3044\u3044\u3048 \u30d6\u30ec\u30a4\u30af"
+msgstr "コピー プロンプト いいえ ブレイク"
 
 #: .\image\image_details.py:143
 msgid "Rotate Image Left"
-msgstr "\u5de6\u306b\u30a4\u30e1\u30fc\u30b8\u3092\u56de\u8ee2\u3055\u305b\u308b"
+msgstr "左にイメージを回転させる"
 
 #: .\image\image_details.py:144
 msgid "Rotate Image Right"
-msgstr "\u753b\u50cf\u3092\u53f3\u306b\u56de\u8ee2\u3055\u305b\u308b"
+msgstr "画像を右に回転させる"
 
 #: .\image\image_details.py:148
 msgid "Crop Image (Smart Detect)"
-msgstr "\u4f5c\u7269\u306e\u30a4\u30e1\u30fc\u30b8(\u30b9\u30de\u30fc\u30c8\u306a\u691c\u51fa)"
+msgstr "作物のイメージ(スマートな検出)"
 
 #: .\image\image_details.py:149
 msgid "Enhance Image"
-msgstr "\u30a4\u30e1\u30fc\u30b8\u306e\u5f37\u5316"
+msgstr "イメージの強化"
 
 #: .\image\image_details.py:153
 msgid "Random Crop"
-msgstr "\u30e9\u30f3\u30c0\u30e0\u30af\u30ed\u30c3\u30d7"
+msgstr "ランダムクロップ"
 
 #: .\image\image_details.py:154
 msgid "Randomly Modify"
-msgstr "\u30e9\u30f3\u30c0\u30e0\u4fee\u6b63"
+msgstr "ランダム修正"
 
 #: .\image\image_details.py:158
 msgid "Flip Image Horizontally"
-msgstr "\u6a2a\u306e\u30d5\u30ea\u30c3\u30d7 \u30a4\u30e1\u30fc\u30b8"
+msgstr "横のフリップ イメージ"
 
 #: .\image\image_details.py:159
 msgid "Flip Image Vertically"
-msgstr "\u7e26\u306b\u30d5\u30ea\u30c3\u30d7 \u30a4\u30e1\u30fc\u30b8"
+msgstr "縦にフリップ イメージ"
 
 #: .\image\image_details.py:162
 msgid "Show Metadata"
-msgstr "\u30e1\u30bf\u30c7\u30fc\u30bf\u3092\u8868\u793a\u3059\u308b"
+msgstr "メタデータを表示する"
 
 #: .\image\image_details.py:166
 msgid "Open Related Image"
-msgstr "\u95a2\u9023\u3059\u308b\u753b\u50cf\u3092\u958b\u304f"
+msgstr "関連する画像を開く"
 
 #: .\image\image_details.py:175
 msgid "Image Generation"
-msgstr "\u753b\u50cf\u751f\u6210"
+msgstr "画像生成"
 
 #: .\image\image_details.py:183
 msgid "Run Image Generation"
-msgstr "\u6620\u50cf\u751f\u6210\u306e\u5b9f\u884c"
+msgstr "映像生成の実行"
 
 #: .\image\image_details.py:185
 msgid "Press Shift+I on a main app window to run this"
-msgstr "\u30d7\u30ec\u30b9\u30b7\u30d5\u30c8+ \u79c1\u306f\u30e1\u30a4\u30f3\u30a2\u30d7\u30ea\u30a6\u30a3\u30f3\u30c9\u30a6\u3067\u3053\u308c\u3092\u5b9f\u884c\u3057\u307e\u3059"
+msgstr "プレスシフト+ 私はメインアプリウィンドウでこれを実行します"
 
 #: .\image\image_details.py:188
 msgid "Redo Prompt"
-msgstr "Redo\u306e\u30d7\u30ed\u30f3\u30d7\u30c8"
+msgstr "Redoのプロンプト"
 
 #: .\image\image_details.py:192
 msgid "Tags"
-msgstr "\u30cb\u30e5\u30fc\u30b9"
+msgstr "ニュース"
 
 #: .\image\image_details.py:202
 msgid "Update Tags"
-msgstr "\u66f4\u65b0\u30bf\u30b0"
+msgstr "更新タグ"
 
 #: .\image\image_details.py:265
 msgid "Copied prompt"
-msgstr "Copied\u306e\u30d7\u30ed\u30f3\u30d7\u30c8"
+msgstr "Copiedのプロンプト"
 
 #: .\image\image_details.py:274 .\image\image_details.py:284
 msgid "Copied prompt without BREAK"
-msgstr "BREAK\u306a\u3057\u3067\u30b3\u30d4\u30fc\u3055\u308c\u305f\u30d7\u30ed\u30f3\u30d7\u30c8"
+msgstr "BREAKなしでコピーされたプロンプト"
 
 #: .\image\image_details.py:302
 msgid "Rotated image left"
-msgstr "\u5de6\u306b\u56de\u8ee2\u3057\u305f\u753b\u50cf"
+msgstr "左に回転した画像"
 
 #: .\image\image_details.py:302
 msgid "Rotated image right"
-msgstr "\u53f3\u306b\u56de\u8ee2\u3057\u305f\u753b\u50cf"
+msgstr "右に回転した画像"
 
 #: .\image\image_details.py:311
 msgid "Cropped image"
-msgstr "Cropped\u30a4\u30e1\u30fc\u30b8"
+msgstr "Croppedイメージ"
 
 #: .\image\image_details.py:313
 msgid "No crops found"
-msgstr "\u4f5c\u7269\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093"
+msgstr "作物が見つかりません"
 
 #: .\image\image_details.py:320
 msgid "Enhanced image"
-msgstr "\u9ad8\u3081\u3089\u308c\u305f\u30a4\u30e1\u30fc\u30b8"
+msgstr "高められたイメージ"
 
 #: .\image\image_details.py:325
 msgid "Randomly cropped image"
-msgstr "\u30e9\u30f3\u30c0\u30e0\u306b\u30af\u30ed\u30c3\u30d7\u3055\u308c\u305f\u753b\u50cf"
+msgstr "ランダムにクロップされた画像"
 
 #: .\image\image_details.py:334
 msgid "Randomly modified image"
-msgstr "\u30e9\u30f3\u30c0\u30e0\u306b\u4fee\u6b63\u3055\u308c\u305f\u753b\u50cf"
+msgstr "ランダムに修正された画像"
 
 #: .\image\image_details.py:339
 msgid "Flipped image"
-msgstr "\u30d5\u30ea\u30c3\u30d7\u30a4\u30e1\u30fc\u30b8"
+msgstr "フリップイメージ"
 
 #: .\image\image_details.py:344
 msgid "No metadata found"
-msgstr "\u30e1\u30bf\u30c7\u30fc\u30bf\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093"
+msgstr "メタデータが見つかりません"
 
 #: .\image\image_details.py:358 .\image\image_details.py:416
 msgid " (Exact Match Not Found)"
-msgstr " (\u6b63\u78ba\u306a\u30de\u30c3\u30c1\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093)"
+msgstr " (正確なマッチが見つかりません)"
 
 #: .\image\image_details.py:360 .\image\image_details.py:413
 msgid "(No related image found)"
-msgstr "(\u95a2\u9023\u753b\u50cf\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093)"
+msgstr "(関連画像が見つかりません)"
 
 #: .\image\image_details.py:475 .\image\image_details.py:482
 msgid "%s downstream image(s) found."
-msgstr "{0} \u4e0b\u6d41\u753b\u50cf(s)\u304c\u898b\u3064\u304b\u308a\u307e\u3059\u3002"
+msgstr "{0} 下流画像(s)が見つかります。"
 
 #: .\image\image_details.py:478
 msgid "%s (cached) downstream image(s) found."
-msgstr "{0} (\u30ad\u30e3\u30c3\u30b7\u30e5\u6e08\u307f) \u30c0\u30a6\u30f3\u30b9\u30c8\u30ea\u30fc\u30e0\u753b\u50cf\u304c\u898b\u3064\u304b\u308a\u307e\u3057\u305f\u3002"
+msgstr "{0} (キャッシュ済み) ダウンストリーム画像が見つかりました。"
 
 #: .\image\image_details.py:484
 msgid "No downstream related images found in"
-msgstr "\u4e0b\u6d41\u95a2\u9023\u306e\u753b\u50cf\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093"
+msgstr "下流関連の画像が見つかりません"
 
 #: .\image\image_details.py:544
 msgid "Updated tags for %s"
-msgstr "{0} \u306e\u30bf\u30b0\u3092\u66f4\u65b0"
+msgstr "{0} のタグを更新"
 
 #: .\image\metadata_viewer_window.py:31
 msgid "Raw Image Metadata"
-msgstr "\u751f\u753b\u50cf\u30e1\u30bf\u30c7\u30fc\u30bf"
+msgstr "生画像メタデータ"
 
 #: .\image\metadata_viewer_window.py:49
 msgid "Metadata Viewer"
-msgstr "\u30e1\u30bf\u30c7\u30fc\u30bf\u30d3\u30e5\u30fc\u30a2"
+msgstr "メタデータビューア"
 
 #: .\image\temp_image_canvas.py:104
 msgid "Open a new related image with Shift+R on main window"
-msgstr "\u30e1\u30a4\u30f3\u30a6\u30a3\u30f3\u30c9\u30a6\u3067Shift+R\u3067\u65b0\u3057\u3044\u95a2\u9023\u753b\u50cf\u3092\u958b\u304d\u307e\u3059"
+msgstr "メインウィンドウでShift+Rで新しい関連画像を開きます"
 
 #: .\utils\constants.py:8 .\utils\constants.py:17
 msgid "Browsing Mode"
-msgstr "\u30d6\u30e9\u30a6\u30b8\u30f3\u30b0\u30e2\u30fc\u30c9"
+msgstr "ブラウジングモード"
 
 #: .\utils\constants.py:9 .\utils\constants.py:19
 msgid "Searching Mode"
-msgstr "\u30e2\u30fc\u30c9\u691c\u7d22"
+msgstr "モード検索"
 
 #: .\utils\constants.py:10 .\utils\constants.py:21
 msgid "Group Comparison Mode"
-msgstr "\u30b0\u30eb\u30fc\u30d7\u6bd4\u8f03\u30e2\u30fc\u30c9"
+msgstr "グループ比較モード"
 
 #: .\utils\constants.py:11 .\utils\constants.py:23
 msgid "Duplicate Detection Mode"
-msgstr "\u91cd\u8907\u691c\u51fa\u30e2\u30fc\u30c9"
+msgstr "重複検出モード"
 
 #: .\utils\constants.py:31 .\utils\constants.py:41
 msgid "Color Matching"
-msgstr "\u8272\u306e\u4e00\u81f4"
+msgstr "色の一致"
 
 #: .\utils\constants.py:32 .\utils\constants.py:43
 msgid "CLIP Embedding"
-msgstr "\u30ed\u30b0\u30a4\u30f3 \u30a8\u30f3\u30d9\u30c7\u30a3\u30f3\u30b0"
+msgstr "ログイン エンベディング"
 
 #: .\utils\constants.py:33 .\utils\constants.py:45
 msgid "SigLIP Embedding"
-msgstr "\u30b7\u30b0\u30ea\u30c3\u30d7 \u30a8\u30f3\u30d9\u30c7\u30a3\u30f3\u30b0"
+msgstr "シグリップ エンベディング"
 
 #: .\utils\constants.py:34 .\utils\constants.py:47
 msgid "FLAVA Embedding"
-msgstr "\u30d5\u30e9\u30f4\u30a1 \u30a8\u30f3\u30d9\u30c7\u30a3\u30f3\u30b0"
+msgstr "フラヴァ エンベディング"
 
 #: .\utils\constants.py:35 .\utils\constants.py:49
 msgid "ALIGN Embedding"
-msgstr "\u304a\u554f\u3044\u5408\u308f\u305b \u30a8\u30f3\u30d9\u30c7\u30a3\u30f3\u30b0"
+msgstr "お問い合わせ エンベディング"
 
 #: .\utils\constants.py:36 .\utils\constants.py:51
 msgid "X-VLM Embedding"
-msgstr "X-VLM\u30b7\u30ea\u30fc\u30ba \u30a8\u30f3\u30d9\u30c7\u30a3\u30f3\u30b0"
+msgstr "X-VLMシリーズ エンベディング"
 
 #: .\utils\constants.py:72
 msgid "Color diff threshold"
-msgstr "\u8272\u306e\u76f8\u9055\u306e\u3057\u304d\u3044\u5024"
+msgstr "色の相違のしきい値"
 
 #: .\utils\constants.py:74
 msgid "Embedding similarity threshold"
-msgstr "\u985e\u4f3c\u6027\u3057\u304d\u3044\u5024\u306e\u57cb\u3081\u8fbc\u307f"
+msgstr "類似性しきい値の埋め込み"
 
 #: .\utils\constants.py:91 .\utils\constants.py:103
 msgid "Name"
-msgstr "\u304a\u540d\u524d (\u5fc5\u9808)"
+msgstr "お名前 (必須)"
 
 #: .\utils\constants.py:92 .\utils\constants.py:105
 msgid "Full Path"
-msgstr "\u5b8c\u5168\u306a\u9053"
+msgstr "完全な道"
 
 #: .\utils\constants.py:93 .\utils\constants.py:107
 msgid "Creation Time"
-msgstr "\u5236\u4f5c\u6642\u9593"
+msgstr "制作時間"
 
 #: .\utils\constants.py:94 .\utils\constants.py:109
 msgid "Modify Time"
-msgstr "\u6642\u9593\u306e\u5909\u66f4"
+msgstr "時間の変更"
 
 #: .\utils\constants.py:95 .\utils\constants.py:111
 msgid "Type"
-msgstr "\u30bf\u30a4\u30d7:"
+msgstr "タイプ:"
 
 #: .\utils\constants.py:97 .\utils\constants.py:115
 msgid "Name Length"
-msgstr "\u540d\u524d \u9577\u3055"
+msgstr "名前 長さ"
 
 #: .\utils\constants.py:98 .\utils\constants.py:117
 msgid "Related Image"
-msgstr "\u95a2\u9023\u753b\u50cf"
+msgstr "関連画像"
 
 #: .\utils\constants.py:99 .\utils\constants.py:119
 msgid "Random"
-msgstr "\u30e9\u30f3\u30c0\u30e0"
+msgstr "ランダム"
 
 #: .\utils\constants.py:138
 msgid "ascending"
-msgstr "\u30a2\u30bb\u30f3\u30b7\u30f3\u30b0"
+msgstr "アセンシング"
 
 #: .\utils\constants.py:139
 msgid "descending"
-msgstr "\u964d\u4e0b\u964d\u4e0b"
+msgstr "降下降下"
 
 #: .\utils\constants.py:140
 msgid "random"
-msgstr "\u30e9\u30f3\u30c0\u30e0"
+msgstr "ランダム"
 
 #: .\utils\constants.py:192
 msgid "Image"
-msgstr "\u30b5\u30a4\u30c8\u30de\u30c3\u30d7"
+msgstr "サイトマップ"
 
 #: .\utils\constants.py:194
 msgid "GIF"
-msgstr "\u30ae\u30d5\u30c8"
+msgstr "ギフト"
 
 #: .\utils\constants.py:196
 msgid "Video"
-msgstr "\u30d3\u30c7\u30aa"
+msgstr "ビデオ"
 
 #: .\utils\constants.py:198
 msgid "PDF"
-msgstr "\u30b5\u30a4\u30c8\u30de\u30c3\u30d7"
+msgstr "サイトマップ"
 
 #: .\utils\constants.py:200
 msgid "SVG"
-msgstr "SVG\u306e\u7279\u9577"
+msgstr "SVGの特長"
 
 #: .\utils\help_and_config.py:34
 msgid "Command"
-msgstr "\u30b3\u30de\u30f3\u30c9"
+msgstr "コマンド"
 
 #: .\utils\help_and_config.py:34
 msgid "Description"
-msgstr "\u30b3\u30f3\u30c6\u30f3\u30c4"
+msgstr "コンテンツ"
 
 #: .\utils\help_and_config.py:35
 msgid "Search current image in new window"
-msgstr "\u65b0\u3057\u3044\u30a6\u30a3\u30f3\u30c9\u30a6\u3067\u73fe\u5728\u306e\u753b\u50cf\u3092\u691c\u7d22"
+msgstr "新しいウィンドウで現在の画像を検索"
 
 #: .\utils\help_and_config.py:36
 msgid "Return to Browsing mode"
-msgstr "\u30d6\u30e9\u30a6\u30b8\u30f3\u30b0\u30e2\u30fc\u30c9\u306b\u623b\u308b"
+msgstr "ブラウジングモードに戻る"
 
 #: .\utils\help_and_config.py:37
 msgid "Copy marks list"
-msgstr "\u30de\u30fc\u30af\u30ea\u30b9\u30c8\u306e\u30b3\u30d4\u30fc"
+msgstr "マークリストのコピー"
 
 #: .\utils\help_and_config.py:38
 msgid "Set current marks from previous marks list"
-msgstr "\u524d\u306e\u30de\u30fc\u30af\u30ea\u30b9\u30c8\u304b\u3089\u73fe\u5728\u306e\u30de\u30fc\u30af\u3092\u8a2d\u5b9a\u3059\u308b"
+msgstr "前のマークリストから現在のマークを設定する"
 
 #: .\utils\help_and_config.py:39
 msgid "Run penultimate marks action"
-msgstr "\u8cab\u901a\u30de\u30fc\u30af\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b9f\u884c"
+msgstr "貫通マークアクションを実行"
 
 #: .\utils\help_and_config.py:40
 msgid "Open Go to file window"
-msgstr "\u30aa\u30fc\u30d7\u30f3 \u30d5\u30a1\u30a4\u30eb\u30a6\u30a3\u30f3\u30c9\u30a6\u306b\u79fb\u52d5"
+msgstr "オープン ファイルウィンドウに移動"
 
 #: .\utils\help_and_config.py:41
 msgid "Hide/show sidebar"
-msgstr "\u30b5\u30a4\u30c9\u30d0\u30fc\u3092\u975e\u8868\u793a/\u8868\u793a"
+msgstr "サイドバーを非表示/表示"
 
 #: .\utils\help_and_config.py:42
 msgid "Open hotkeys window (*when marks window open)"
-msgstr "\u30db\u30c3\u30c8\u30ad\u30fc\u30a6\u30a3\u30f3\u30c9\u30a6\u3092\u958b\u304d\u307e\u3059(*\u30de\u30fc\u30af\u30a6\u30a3\u30f3\u30c9\u30a6\u304c\u958b\u304d\u307e\u3059)"
+msgstr "ホットキーウィンドウを開きます(*マークウィンドウが開きます)"
 
 #: .\utils\help_and_config.py:43
 msgid "Open content filters window"
-msgstr "\u30b3\u30f3\u30c6\u30f3\u30c4\u30d5\u30a3\u30eb\u30bf\u30fc\u30a6\u30a3\u30f3\u30c9\u30a6\u3092\u958b\u304f"
+msgstr "コンテンツフィルターウィンドウを開く"
 
 #: .\utils\help_and_config.py:44
 msgid "Open marks window (no GUI)"
-msgstr "\u30de\u30fc\u30af\u30a6\u30a3\u30f3\u30c9\u30a6\u3092\u958b\u304f(GUI\u306a\u3057)"
+msgstr "マークウィンドウを開く(GUIなし)"
 
 #: .\utils\help_and_config.py:45
 msgid "Open marks window"
-msgstr "\u30de\u30fc\u30af\u30a6\u30a3\u30f3\u30c9\u30a6\u3092\u958b\u304f"
+msgstr "マークウィンドウを開く"
 
 #: .\utils\help_and_config.py:46
 msgid "Open marks action history window"
-msgstr "\u30de\u30fc\u30af\u30a2\u30af\u30b7\u30e7\u30f3\u5c65\u6b74\u30a6\u30a3\u30f3\u30c9\u30a6\u3092\u958b\u304f"
+msgstr "マークアクション履歴ウィンドウを開く"
 
 #: .\utils\help_and_config.py:47
 msgid "Quit"
-msgstr "\u30ed\u30b0\u30a4\u30f3"
+msgstr "ログイン"
 
 #: .\utils\help_and_config.py:48
 msgid "Run previous marks action"
-msgstr "\u524d\u306e\u30de\u30fc\u30af\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b9f\u884c\u3059\u308b"
+msgstr "前のマークアクションを実行する"
 
 #: .\utils\help_and_config.py:49
 msgid "Continue image generation"
-msgstr "\u753b\u50cf\u751f\u6210\u306e\u7d99\u7d9a"
+msgstr "画像生成の継続"
 
 #: .\utils\help_and_config.py:50
 msgid "Cancel image generation"
-msgstr "\u753b\u50cf\u751f\u6210\u3092\u30ad\u30e3\u30f3\u30bb\u30eb"
+msgstr "画像生成をキャンセル"
 
 #: .\utils\help_and_config.py:51
 msgid "Run next text embedding search preset"
-msgstr "\u6b21\u306e\u30c6\u30ad\u30b9\u30c8\u57cb\u3081\u8fbc\u307f\u691c\u7d22\u30d7\u30ea\u30bb\u30c3\u30c8\u3092\u5b9f\u884c\u3057\u307e\u3059"
+msgstr "次のテキスト埋め込み検索プリセットを実行します"
 
 #: .\utils\help_and_config.py:52
 msgid "Run permanent marks action"
-msgstr "\u6c38\u4e45\u7684\u306a\u5370\u306e\u884c\u70ba\u3092\u5b9f\u884c\u3057\u3066\u4e0b\u3055\u3044"
+msgstr "永久的な印の行為を実行して下さい"
 
 #: .\utils\help_and_config.py:53
 msgid "Open type configuration window"
-msgstr "\u30bf\u30a4\u30d7\u69cb\u6210\u30a6\u30a3\u30f3\u30c9\u30a6\u3092\u958b\u304f"
+msgstr "タイプ構成ウィンドウを開く"
 
 #: .\utils\help_and_config.py:54
 msgid "Open new compare window"
-msgstr "\u65b0\u3057\u3044\u6bd4\u8f03\u30a6\u30a3\u30f3\u30c9\u30a6\u3092\u958b\u304f"
+msgstr "新しい比較ウィンドウを開く"
 
 #: .\utils\help_and_config.py:55
 msgid "Move previous marks to a different directory"
-msgstr "\u524d\u306e\u30de\u30fc\u30af\u3092\u5225\u306e\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u306b\u79fb\u52d5\u3059\u308b"
+msgstr "前のマークを別のディレクトリに移動する"
 
 #: .\utils\help_and_config.py:56 .\utils\help_and_config.py:84
 msgid "Undo previous marks changes"
-msgstr "\u524d\u306e\u30de\u30fc\u30af\u304c\u5909\u66f4\u3055\u308c\u306a\u3044"
+msgstr "前のマークが変更されない"
 
 #: .\utils\help_and_config.py:57
 msgid "Toggle fullscreen"
-msgstr "\u30d5\u30eb\u30b9\u30af\u30ea\u30fc\u30f3\u3092\u30c8\u30b0\u30eb"
+msgstr "フルスクリーンをトグル"
 
 #: .\utils\help_and_config.py:58
 msgid "Go to first sorted image"
-msgstr "\u6700\u521d\u306b\u30bd\u30fc\u30c8\u3055\u308c\u305f\u753b\u50cf\u306b\u79fb\u52d5"
+msgstr "最初にソートされた画像に移動"
 
 #: .\utils\help_and_config.py:59
 msgid "Go to last sorted image"
-msgstr "\u6700\u5f8c\u306e\u4e26\u3079\u66ff\u3048\u753b\u50cf\u306b\u79fb\u52d5"
+msgstr "最後の並べ替え画像に移動"
 
 #: .\utils\help_and_config.py:60
 msgid "Show previous/next image"
-msgstr "\u524d\u306e\u753b\u50cf/\u6b21\u306e\u753b\u50cf\u3092\u8868\u793a"
+msgstr "前の画像/次の画像を表示"
 
 #: .\utils\help_and_config.py:61
 msgid "Page through images"
-msgstr "\u30b5\u30a4\u30c8\u30de\u30c3\u30d7"
+msgstr "サイトマップ"
 
 #: .\utils\help_and_config.py:62
 msgid "Search current image in current window"
-msgstr "\u73fe\u5728\u306e\u30a6\u30a3\u30f3\u30c9\u30a6\u3067\u73fe\u5728\u306e\u753b\u50cf\u3092\u691c\u7d22"
+msgstr "現在のウィンドウで現在の画像を検索"
 
 #: .\utils\help_and_config.py:63
 msgid "Clear all hidden images"
-msgstr "\u3059\u3079\u3066\u306e\u96a0\u3055\u308c\u305f\u753b\u50cf\u3092\u30af\u30ea\u30a2"
+msgstr "すべての隠された画像をクリア"
 
 #: .\utils\help_and_config.py:64
 msgid "Clear marks list"
-msgstr "\u30af\u30ea\u30a2\u30de\u30fc\u30af\u30ea\u30b9\u30c8"
+msgstr "クリアマークリスト"
 
 #: .\utils\help_and_config.py:65
 msgid "Show image details"
-msgstr "\u753b\u50cf\u306e\u8a73\u7d30\u3092\u8868\u793a"
+msgstr "画像の詳細を表示"
 
 #: .\utils\help_and_config.py:66
 msgid "Delete image (or marked file group if marks window selected)"
-msgstr "\u524a\u9664\u30a4\u30e1\u30fc\u30b8(\u307e\u305f\u306f\u30de\u30fc\u30af\u3055\u308c\u305f\u30d5\u30a1\u30a4\u30eb\u30b0\u30eb\u30fc\u30d7\u3092\u9078\u629e\u3057\u305f\u5834\u5408)"
+msgstr "削除イメージ(またはマークされたファイルグループを選択した場合)"
 
 #: .\utils\help_and_config.py:67
 msgid "Go to next mark"
-msgstr "\u6b21\u306e\u30de\u30fc\u30af\u3078"
+msgstr "次のマークへ"
 
 #: .\utils\help_and_config.py:68
 msgid "Show help window"
-msgstr "\u30d8\u30eb\u30d7\u30a6\u30a3\u30f3\u30c9\u30a6\u3092\u8868\u793a"
+msgstr "ヘルプウィンドウを表示"
 
 #: .\utils\help_and_config.py:69
 msgid "Run image generation"
-msgstr "\u753b\u50cf\u751f\u6210\u3092\u5b9f\u884c"
+msgstr "画像生成を実行"
 
 #: .\utils\help_and_config.py:70
 msgid "Run content filters for all files in the current directory"
-msgstr "\u73fe\u5728\u306e\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u5185\u306e\u3059\u3079\u3066\u306e\u30d5\u30a1\u30a4\u30eb\u306b\u5bfe\u3057\u3066\u30b3\u30f3\u30c6\u30f3\u30c4\u30d5\u30a3\u30eb\u30bf\u3092\u5b9f\u884c\u3059\u308b"
+msgstr "現在のディレクトリ内のすべてのファイルに対してコンテンツフィルタを実行する"
 
 #: .\utils\help_and_config.py:71
 msgid "View last moved image mark"
-msgstr "\u6700\u7d42\u79fb\u52d5\u30a4\u30e1\u30fc\u30b8\u30de\u30fc\u30af\u3092\u898b\u308b"
+msgstr "最終移動イメージマークを見る"
 
 #: .\utils\help_and_config.py:72
 msgid "Toggle content filters"
-msgstr "\u30b3\u30f3\u30c6\u30f3\u30c4\u30d5\u30a3\u30eb\u30bf\u306e\u5207\u308a\u66ff\u3048"
+msgstr "コンテンツフィルタの切り替え"
 
 #: .\utils\help_and_config.py:73
 msgid "Add or remove a mark for current image"
-msgstr "\u73fe\u5728\u306e\u753b\u50cf\u306e\u30de\u30fc\u30af\u306e\u8ffd\u52a0\u307e\u305f\u306f\u524a\u9664"
+msgstr "現在の画像のマークの追加または削除"
 
 #: .\utils\help_and_config.py:74
-msgid "Add all marks between most recently set and current selected inclusive, or all marks in current group"
-msgstr "\u6700\u8fd1\u8a2d\u5b9a\u3057\u305f\u3059\u3079\u3066\u306e\u30de\u30fc\u30af\u3068\u3001\u73fe\u5728\u306e\u30b0\u30eb\u30fc\u30d7\u3067\u9078\u629e\u3057\u305f\u3059\u3079\u3066\u306e\u30de\u30fc\u30af\u3092\u8ffd\u52a0\u3057\u307e\u3059\u3002"
+msgid ""
+"Add all marks between most recently set and current selected inclusive, or "
+"all marks in current group"
+msgstr "最近設定したすべてのマークと、現在のグループで選択したすべてのマークを追加します。"
 
 #: .\utils\help_and_config.py:76
 msgid "Open image in GIMP"
-msgstr "GIMP\u3067\u753b\u50cf\u3092\u958b\u304f"
+msgstr "GIMPで画像を開く"
 
 #: .\utils\help_and_config.py:77
 msgid "Randomly modify image"
-msgstr "\u30e9\u30f3\u30c0\u30e0\u306b\u753b\u50cf\u3092\u5909\u66f4"
+msgstr "ランダムに画像を変更"
 
 #: .\utils\help_and_config.py:78
 msgid "View related image (controlnet, etc.)"
-msgstr "\u95a2\u9023\u753b\u50cf(\u30b3\u30f3\u30c8\u30ed\u30fc\u30eb\u30cd\u30c3\u30c8\u306a\u3069)\u3092\u898b\u308b"
+msgstr "関連画像(コントロールネットなど)を見る"
 
 #: .\utils\help_and_config.py:79
 msgid "Toggle slideshow"
-msgstr "\u30c8\u30b0\u30eb\u30b9\u30e9\u30a4\u30c9\u30b7\u30e7\u30fc"
+msgstr "トグルスライドショー"
 
 #: .\utils\help_and_config.py:80
 msgid "Find related images in open window"
-msgstr "\u958b\u3044\u305f\u30a6\u30a3\u30f3\u30c9\u30a6\u3067\u95a2\u9023\u753b\u50cf\u3092\u63a2\u3059"
+msgstr "開いたウィンドウで関連画像を探す"
 
 #: .\utils\help_and_config.py:81
 msgid "Run refacdir"
-msgstr "refacdir \u3092\u5b9f\u884c"
+msgstr "refacdir を実行"
 
 #: .\utils\help_and_config.py:82
 msgid "Hide current image"
-msgstr "\u73fe\u5728\u306e\u30a4\u30e1\u30fc\u30b8\u3092\u96a0\u3059"
+msgstr "現在のイメージを隠す"
 
 #: .\utils\help_and_config.py:83
 msgid "Set marks from downstream related images"
-msgstr "\u4e0b\u6d41\u95a2\u9023\u753b\u50cf\u304b\u3089\u30de\u30fc\u30af\u3092\u8a2d\u5b9a\u3059\u308b"
+msgstr "下流関連画像からマークを設定する"
 
 #: .\utils\help_and_config.py:85
 msgid "Show previous/next group"
-msgstr "\u524d\u306e\u30b0\u30eb\u30fc\u30d7\u3092\u8868\u793a"
+msgstr "前のグループを表示"
 
 #: .\utils\help_and_config.py:133
 msgid "Show Toasts"
-msgstr "\u30c8\u30fc\u30b9\u30c8\u30b7\u30e7\u30fc"
+msgstr "トーストショー"
 
 #: .\utils\help_and_config.py:135
 msgid "Slideshow Interval (sec)"
-msgstr "\u30b9\u30e9\u30a4\u30c9\u30b7\u30e7\u30fc\u30a4\u30f3\u30bf\u30fc\u30d0\u30eb(\u79d2)"
+msgstr "スライドショーインターバル(秒)"
 
 #: .\utils\help_and_config.py:137
 msgid "File Check Interval (sec)"
-msgstr "\u30d5\u30a1\u30a4\u30eb\u30c1\u30a7\u30c3\u30af\u30a4\u30f3\u30bf\u30fc\u30d0\u30eb (\u79d2)"
+msgstr "ファイルチェックインターバル (秒)"
 
 #: .\utils\help_and_config.py:139
 msgid "Max Search Results"
-msgstr "\u6700\u9ad8\u306e\u691c\u7d22\u7d50\u679c"
+msgstr "最高の検索結果"
 
 #: .\utils\help_and_config.py:141
 msgid "Sort By"
-msgstr "\u4e26\u3073\u66ff\u3048"
+msgstr "並び替え"
 
 #: .\utils\help_and_config.py:143
 msgid "Toasts Persist (sec)"
-msgstr "\u30c8\u30fc\u30b9\u30c8\u30fb\u30da\u30eb\u30b7\u30b9\u30c8(\u79d2)"
+msgstr "トースト・ペルシスト(秒)"
 
 #: .\utils\help_and_config.py:145
 msgid "Delete Instantly"
-msgstr "\u5373\u6642\u524a\u9664"
+msgstr "即時削除"
 
 #: .\utils\help_and_config.py:147
 msgid "Trash Folder"
-msgstr "\u30b4\u30df\u7bb1\u30d5\u30a9\u30eb\u30c0"
+msgstr "ゴミ箱フォルダ"
 
 #: .\utils\help_and_config.py:149
 msgid "Image Tagging Enabled"
-msgstr "\u753b\u50cf\u30bf\u30b0\u306e\u6709\u52b9\u5316"
+msgstr "画像タグの有効化"
 
 #: .\utils\help_and_config.py:151
 msgid "Escape Backslash Filepaths"
-msgstr "\u30a8\u30b9\u30b1\u30fc\u30d7\u30d0\u30c3\u30af\u30b9\u30e9\u30c3\u30b7\u30e5\u30d5\u30a1\u30a4\u30eb\u30d1\u30b9"
-
+msgstr "エスケープバックスラッシュファイルパス"

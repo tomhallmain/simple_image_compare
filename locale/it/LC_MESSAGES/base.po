@@ -1,18 +1,16 @@
-# APPLICATION TRANSLATIONS
-# AUTHOR NAME <author@example.com>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-03-31 16:52-0400\n"
-"PO-Revision-Date: 2025-03-31 16:52-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
-"Language: it\n"
+"POT-Creation-Date: 2025-04-02 13:01-0400\n"
+"PO-Revision-Date: 2025-04-02 13:01-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: it Team <<EMAIL>>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=cp1252\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: .\app.py:91 .\app.py:866 .\app.py:1820
 msgid " Simple Image Compare "
@@ -20,7 +18,7 @@ msgstr " Confronto semplice delle immagini "
 
 #: .\app.py:150
 msgid "Theme switched to {0}."
-msgstr "Il tema \u00e8 passato a {0}."
+msgstr "Il tema è passato a {0}."
 
 #: .\app.py:233 .\compare\compare_wrapper.py:467
 msgid "Set a directory to run comparison."
@@ -44,11 +42,11 @@ msgstr "Impostare il file di ricerca"
 
 #: .\app.py:253
 msgid "Search text (embedding mode)"
-msgstr "Testo di ricerca (modalit\u00e0 embedding)"
+msgstr "Testo di ricerca (modalità embedding)"
 
 #: .\app.py:264
 msgid "Compare mode"
-msgstr "Modalit\u00e0 di confronto"
+msgstr "Modalità di confronto"
 
 #: .\app.py:282
 msgid "Compare faces"
@@ -72,7 +70,7 @@ msgstr "Filtrare i file per modello glob"
 
 #: .\app.py:307
 msgid "Browsing mode - Sort by"
-msgstr "Modalit\u00e0 di navigazione - Ordinamento per"
+msgstr "Modalità di navigazione - Ordinamento per"
 
 #: .\app.py:314
 msgid "Recurse subdirectories"
@@ -84,7 +82,7 @@ msgstr "Ridimensionamento dell'immagine alla finestra intera"
 
 #: .\app.py:323
 msgid "Search only return closest"
-msgstr "La ricerca restituisce solo i risultati pi\u00f9 vicini"
+msgstr "La ricerca restituisce solo i risultati più vicini"
 
 #: .\app.py:330
 msgid "Run image compare"
@@ -148,11 +146,13 @@ msgstr "Le presentazioni sono terminate"
 
 #: .\app.py:671
 msgid "Browsing mode set."
-msgstr "Modalit\u00e0 di navigazione impostata."
+msgstr "Modalità di navigazione impostata."
 
 #: .\app.py:705
 msgid "(Open this image as part of a directory to see index details.)"
-msgstr "(Aprire questa immagine come parte di una cartella per vedere i dettagli dell'indice)."
+msgstr ""
+"(Aprire questa immagine come parte di una cartella per vedere i dettagli "
+"dell'indice)."
 
 #: .\app.py:738
 msgid "Many Files"
@@ -184,11 +184,14 @@ msgstr "Impostazione non valida"
 
 #: .\app.py:924
 msgid "No image selected."
-msgstr "Non \u00e8 stata selezionata alcuna immagine."
+msgstr "Non è stata selezionata alcuna immagine."
 
 #: .\app.py:961
-msgid "Compare mode must be set to an embedding mode to search text embeddings"
-msgstr "La modalit\u00e0 di confronto deve essere impostata a una modalit\u00e0 inserimenti per cercare gli inserimenti testuali."
+msgid ""
+"Compare mode must be set to an embedding mode to search text embeddings"
+msgstr ""
+"La modalità di confronto deve essere impostata a una modalità inserimenti "
+"per cercare gli inserimenti testuali."
 
 #: .\app.py:966
 msgid "Select image file"
@@ -196,7 +199,7 @@ msgstr "Selezionare il file immagine"
 
 #: .\app.py:995
 msgid "Somehow, the search file is invalid"
-msgstr "Il file di ricerca non \u00e8 valido"
+msgstr "Il file di ricerca non è valido"
 
 #: .\app.py:1080 .\app.py:1104
 msgid "Failed to get active image filepath"
@@ -212,11 +215,13 @@ msgstr "Confermare il confronto"
 
 #: .\app.py:1193
 msgid "No base directory has been set, will use current base directory of "
-msgstr "Non \u00e8 stata impostata alcuna cartella di base, verr\u00e0 utilizzata la cartella di base corrente di "
+msgstr ""
+"Non è stata impostata alcuna cartella di base, verrà utilizzata la cartella "
+"di base corrente di "
 
 #: .\app.py:1194
 msgid "Are you sure you want to proceed?"
-msgstr "\u00c8 sicuro di voler procedere?"
+msgstr "È sicuro di voler procedere?"
 
 #: .\app.py:1214
 msgid "Error running compare"
@@ -225,7 +230,7 @@ msgstr "Errore durante l'esecuzione di confrontare"
 #: .\app.py:1246
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
-"Cancellare il blocco dopo la presentazione"
+"Cancellare il blocco dopo la presentazione\n"
 "La transizione ha impedito l'aggiunta del marchio"
 
 #: .\app.py:1257
@@ -259,7 +264,7 @@ msgstr "Spostare {0} i file contrassegnati"
 #: .\app.py:1348
 msgid "NO_MARKS_SET"
 msgstr ""
-"Sono stati assegnati {0} voti (>={1} previsto)."
+"Sono stati assegnati {0} voti (>={1} previsto).\n"
 "Usare Maiusc+M per impostare un segno."
 
 #: .\app.py:1381
@@ -276,7 +281,7 @@ msgstr "File non trovato"
 
 #: .\app.py:1406
 msgid "No file was found for the search text: \"{0}\""
-msgstr "Non \u00e8 stato trovato alcun file per il testo di ricerca: \u201c{0}\u201d"
+msgstr "Non è stato trovato alcun file per il testo di ricerca: “{0}”"
 
 #: .\app.py:1420
 msgid "No image selected"
@@ -284,23 +289,38 @@ msgstr "Nessuna immagine selezionata"
 
 #: .\app.py:1420
 msgid "No image was selected for comparison"
-msgstr "Non \u00e8 stata selezionata alcuna immagine per il confronto"
+msgstr "Non è stata selezionata alcuna immagine per il confronto"
 
 #: .\app.py:1433
 msgid "No Text Search Presets Found"
 msgstr "Nessuna preimpostazione di ricerca testo trovata"
 
 #: .\app.py:1433
-msgid "No text embedding search presets found. Set them in the config.json file."
-msgstr "Non sono state trovate preimpostazioni di ricerca per l'incorporazione del testo. Impostarle nel file config.json."
+msgid ""
+"No text embedding search presets found. Set them in the config.json file."
+msgstr ""
+"Non sono state trovate preimpostazioni di ricerca per l'incorporazione del "
+"testo. Impostarle nel file config.json."
 
 #: .\app.py:1533
 msgid "Failed to open location of current file, unable to get valid filepath"
-msgstr "Impossibile aprire la posizione del file corrente, non \u00e8 possibile ottenere un percorso valido per il file"
+msgstr ""
+"Impossibile aprire la posizione del file corrente, non è possibile ottenere "
+"un percorso valido per il file"
 
 #: .\app.py:1544
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
-msgstr "Impossibile aprire il file corrente in GIMP, non \u00e8 stato possibile ottenere un percorso file valido."
+msgstr ""
+"Impossibile aprire il file corrente in GIMP, non è stato possibile ottenere "
+"un percorso file valido."
+
+#: .\app.py:1560
+msgid ""
+"Hid current image.\n"
+"To unhide, press Shift+B."
+msgstr ""
+"Nasconde l'immagine corrente.\n"
+"Per nasconderla, premere Maiusc+B."
 
 #: .\app.py:1565
 msgid "Cleared all hidden images."
@@ -309,7 +329,7 @@ msgstr "Cancella tutte le immagini nascoste."
 #: .\app.py:1572
 msgid "DELETE_LOCK"
 msgstr ""
-"Cancellare il blocco dopo la presentazione"
+"Cancellare il blocco dopo la presentazione\n"
 "la transizione ha impedito la cancellazione"
 
 #: .\app.py:1590
@@ -322,15 +342,22 @@ msgstr "Azione non valida, immagine di ricerca non trovata"
 
 #: .\app.py:1608
 msgid "Failed to delete current file, unable to get valid filepath"
-msgstr "Impossibile cancellare il file corrente, non \u00e8 stato possibile ottenere un percorso di file valido."
+msgstr ""
+"Impossibile cancellare il file corrente, non è stato possibile ottenere un "
+"percorso di file valido."
 
 #: .\app.py:1613
 msgid "Removing file: {0}"
 msgstr "Rimozione del file: {0}"
 
 #: .\app.py:1630
-msgid "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."
-msgstr "Non \u00e8 riuscito a inviare il file al cestino, quindi sar\u00e0 cancellato. Installare con pip send2trash o impostare una cartella specifica per il cestino in config.json."
+msgid ""
+"Failed to send file to the trash, so it will be deleted. Either pip install "
+"send2trash or set a specific trash folder in config.json."
+msgstr ""
+"Non è riuscito a inviare il file al cestino, quindi sarà cancellato. "
+"Installare con pip send2trash o impostare una cartella specifica per il "
+"cestino in config.json."
 
 #: .\app.py:1647
 msgid "Invalid target filepath for replacement: "
@@ -359,7 +386,7 @@ msgstr "Errore"
 #: .\app.py:1761
 msgid "GROUP_DETAILS"
 msgstr ""
-"Gruppo {0} di {1}"
+"Gruppo {0} di {1}\n"
 "Dimensione: {2}"
 
 #: .\app.py:1765
@@ -388,11 +415,13 @@ msgstr "Raccolta dati immagine"
 
 #: .\compare\compare_wrapper.py:68 .\compare\compare_wrapper.py:71
 msgid "Invalid mode"
-msgstr "Modalit\u00e0 non valida"
+msgstr "Modalità non valida"
 
 #: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
 msgid "No matches found. Search again to find potential matches."
-msgstr "Nessuna corrispondenza trovata. Effettuare una nuova ricerca per trovare potenziali corrispondenze."
+msgstr ""
+"Nessuna corrispondenza trovata. Effettuare una nuova ricerca per trovare "
+"potenziali corrispondenze."
 
 #: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
 msgid "Search required"
@@ -415,16 +444,25 @@ msgid "No Groups Found"
 msgstr "Nessun gruppo trovato"
 
 #: .\compare\compare_wrapper.py:272
-msgid "Gathering image data... setup may take a while depending on number of files involved."
-msgstr "Raccolta dei dati delle immagini... La configurazione pu\u00f2 richiedere un po' di tempo, a seconda del numero di file coinvolti."
+msgid ""
+"Gathering image data... setup may take a while depending on number of files "
+"involved."
+msgstr ""
+"Raccolta dei dati delle immagini... La configurazione può richiedere un po' "
+"di tempo, a seconda del numero di file coinvolti."
 
 #: .\compare\compare_wrapper.py:294
 msgid "Confirm group run"
 msgstr "Confermare l'esecuzione del gruppo"
 
 #: .\compare\compare_wrapper.py:295
-msgid "Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."
-msgstr "Rilevata la modalit\u00e0 di ricerca, confermare il passaggio alla modalit\u00e0 di gruppo prima dell'esecuzione. La modalit\u00e0 gruppo richiede pi\u00f9 tempo perch\u00e9 vengono confrontate tutte le immagini nella cartella di base."
+msgid ""
+"Search mode detected, please confirm switch to group mode before run. Group "
+"mode will take longer as all images in the base directory are compared."
+msgstr ""
+"Rilevata la modalità di ricerca, confermare il passaggio alla modalità di "
+"gruppo prima dell'esecuzione. La modalità gruppo richiede più tempo perché "
+"vengono confrontate tutte le immagini nella cartella di base."
 
 #: .\compare\compare_wrapper.py:302
 msgid "Gathering image data for comparison"
@@ -444,7 +482,9 @@ msgstr "Nessuna corrispondenza trovata"
 
 #: .\compare\compare_wrapper.py:337
 msgid "None of the files match the search filters with current settings."
-msgstr "Nessuno dei file corrisponde ai filtri di ricerca con le impostazioni attuali."
+msgstr ""
+"Nessuno dei file corrisponde ai filtri di ricerca con le impostazioni "
+"attuali."
 
 #: .\compare\compare_wrapper.py:350
 msgid "%s possibly related images found."
@@ -460,19 +500,24 @@ msgstr "Impostare una cartella e un file di ricerca."
 
 #: .\compare\compare_wrapper.py:364
 msgid "None of the files can be grouped with current settings."
-msgstr "Nessuno dei file pu\u00f2 essere raggruppato con le impostazioni attuali."
+msgstr "Nessuno dei file può essere raggruppato con le impostazioni attuali."
 
 #: .\compare\compare_wrapper.py:379
 msgid "No Duplicates Found"
 msgstr "Nessun duplicato trovato"
 
 #: .\compare\compare_wrapper.py:379
-msgid "None of the files appear to be duplicates based on the current settings."
-msgstr "In base alle impostazioni correnti, nessuno dei file sembra essere un duplicato."
+msgid ""
+"None of the files appear to be duplicates based on the current settings."
+msgstr ""
+"In base alle impostazioni correnti, nessuno dei file sembra essere un "
+"duplicato."
 
 #: .\compare\compare_wrapper.py:403
 msgid "Some group members were left stranded by the grouping process."
-msgstr "Alcuni membri del gruppo sono stati lasciati a piedi dal processo di raggruppamento."
+msgstr ""
+"Alcuni membri del gruppo sono stati lasciati a piedi dal processo di "
+"raggruppamento."
 
 #: .\compare\compare_wrapper.py:403
 msgid "Stranded Group Members Found"
@@ -480,11 +525,15 @@ msgstr "Ritrovati i membri del gruppo bloccati"
 
 #: .\compare\compare_wrapper.py:458
 msgid "No More Groups"
-msgstr "Niente pi\u00f9 gruppi"
+msgstr "Niente più gruppi"
 
 #: .\compare\compare_wrapper.py:459
-msgid "There are no more image groups remaining for this directory and current filter settings."
-msgstr "Non ci sono pi\u00f9 gruppi di immagini per questa cartella e per le impostazioni correnti del filtro."
+msgid ""
+"There are no more image groups remaining for this directory and current "
+"filter settings."
+msgstr ""
+"Non ci sono più gruppi di immagini per questa cartella e per le impostazioni"
+" correnti del filtro."
 
 #: .\compare\prevalidations_window.py:23
 msgid "(no positives set)"
@@ -578,8 +627,11 @@ msgid "Done"
 msgstr "Fatto"
 
 #: .\compare\prevalidations_window.py:401
-msgid "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
-msgstr "Non \u00e8 stata trovata alcuna prevalidazione con il nome: {0}. Impostarla nella finestra Prevalidazioni."
+msgid ""
+"No prevalidation found with name: {0}. Set it on the Prevalidations Window."
+msgstr ""
+"Non è stata trovata alcuna prevalidazione con il nome: {0}. Impostarla nella"
+" finestra Prevalidazioni."
 
 #: .\compare\prevalidations_window.py:412
 msgid "Prevalidations"
@@ -721,13 +773,13 @@ msgstr "Set totale: {0}"
 #: .\files\marked_file_mover.py:122
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
-"Non \u00e8 stato impostato un bersaglio permanente per i segni!"
+"Non è stato impostato un bersaglio permanente per i segni!\n"
 "Impostato con Ctrl+T nella finestra Marchi."
 
 #: .\files\marked_file_mover.py:134
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
-"Non \u00e8 stato impostato alcun tasto di scelta rapida per {0}."
+"Non è stato impostato alcun tasto di scelta rapida per {0}.\n"
 "Impostato con {1} sulla finestra di Marks."
 
 #: .\files\marked_file_mover.py:214 .\files\recent_directory_window.py:153
@@ -785,13 +837,13 @@ msgstr "Trasferito"
 #: .\files\marked_file_mover.py:405
 msgid "Moved {0} files to {1}"
 msgstr ""
-"Spostati {0} file in"
+"Spostati {0} file in\n"
 "{1}"
 
 #: .\files\marked_file_mover.py:407
 msgid "Copied {0} files to {1}"
 msgstr ""
-"Copia di {0} file in"
+"Copia di {0} file in\n"
 "{1}"
 
 #: .\files\marked_file_mover.py:434
@@ -829,13 +881,13 @@ msgstr "Dove sono finiti i file contrassegnati?"
 #: .\files\marked_file_mover.py:494
 msgid "Moved back {0} files from {1}"
 msgstr ""
-"Ha spostato indietro {0} file da"
+"Ha spostato indietro {0} file da\n"
 "{1}"
 
 #: .\files\marked_file_mover.py:496
 msgid "Removed {0} files from {1}"
 msgstr ""
-"Rimosso {0} file da"
+"Rimosso {0} file da\n"
 "{1}"
 
 #: .\files\marked_file_mover.py:513
@@ -852,7 +904,8 @@ msgstr "Conferma Eliminazione"
 
 #: .\files\marked_file_mover.py:694
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
-msgstr "Eliminazione di {0} file contrassegnati - Siete sicuri di voler procedere?"
+msgstr ""
+"Eliminazione di {0} file contrassegnati - Siete sicuri di voler procedere?"
 
 #: .\files\marked_file_mover.py:714
 msgid "Delete Failed"
@@ -860,7 +913,8 @@ msgstr "Eliminazione non riuscita"
 
 #: .\files\marked_file_mover.py:715
 msgid "Failed to delete %s files - check log for details."
-msgstr "Cancellazione fallita di {0} file - controllare il registro per i dettagli."
+msgstr ""
+"Cancellazione fallita di {0} file - controllare il registro per i dettagli."
 
 #: .\files\marked_file_mover.py:718
 msgid "Deleted %s marked files."
@@ -924,7 +978,9 @@ msgstr "Conferma modifiche"
 
 #: .\files\type_configuration_window.py:150
 msgid "This will clear all existing compares in open windows. Continue?"
-msgstr "Questa eliminer\u00e0 tutte le compari esistenti nelle finestre aperte. Proseguire?"
+msgstr ""
+"Questa eliminerà tutte le compari esistenti nelle finestre aperte. "
+"Proseguire?"
 
 #: .\files\type_configuration_window.py:200
 msgid "Media type configuration updated"
@@ -940,7 +996,7 @@ msgstr "Indice dei file"
 
 #: .\image\image_details.py:119
 msgid "Color Mode"
-msgstr "Modalit\u00e0 colore"
+msgstr "Modalità colore"
 
 #: .\image\image_details.py:121
 msgid "Dimensions"
@@ -965,7 +1021,9 @@ msgstr "Negativo"
 
 #: .\image\image_details.py:130
 msgid "(negative prompt not shown by config setting)"
-msgstr "(la richiesta negativa non viene visualizzata dall'impostazione della configurazione)"
+msgstr ""
+"(la richiesta negativa non viene visualizzata dall'impostazione della "
+"configurazione)"
 
 #: .\image\image_details.py:131
 msgid "Models"
@@ -1033,7 +1091,9 @@ msgstr "Eseguire la generazione di immagini"
 
 #: .\image\image_details.py:185
 msgid "Press Shift+I on a main app window to run this"
-msgstr "Premete Maiusc+I in una finestra dell'applicazione principale per eseguire questa operazione"
+msgstr ""
+"Premete Maiusc+I in una finestra dell'applicazione principale per eseguire "
+"questa operazione"
 
 #: .\image\image_details.py:188
 msgid "Redo Prompt"
@@ -1125,23 +1185,24 @@ msgstr "Visualizzatore di metadati"
 
 #: .\image\temp_image_canvas.py:104
 msgid "Open a new related image with Shift+R on main window"
-msgstr "Aprire una nuova immagine correlata con Shift+R nella finestra principale."
+msgstr ""
+"Aprire una nuova immagine correlata con Shift+R nella finestra principale."
 
 #: .\utils\constants.py:8 .\utils\constants.py:17
 msgid "Browsing Mode"
-msgstr "Modalit\u00e0 di navigazione"
+msgstr "Modalità di navigazione"
 
 #: .\utils\constants.py:9 .\utils\constants.py:19
 msgid "Searching Mode"
-msgstr "Modalit\u00e0 di ricerca"
+msgstr "Modalità di ricerca"
 
 #: .\utils\constants.py:10 .\utils\constants.py:21
 msgid "Group Comparison Mode"
-msgstr "Modalit\u00e0 di confronto tra gruppi"
+msgstr "Modalità di confronto tra gruppi"
 
 #: .\utils\constants.py:11 .\utils\constants.py:23
 msgid "Duplicate Detection Mode"
-msgstr "Modalit\u00e0 di rilevamento dei duplicati"
+msgstr "Modalità di rilevamento dei duplicati"
 
 #: .\utils\constants.py:31 .\utils\constants.py:41
 msgid "Color Matching"
@@ -1253,7 +1314,7 @@ msgstr "Cerca l'immagine corrente in una nuova finestra"
 
 #: .\utils\help_and_config.py:36
 msgid "Return to Browsing mode"
-msgstr "Ritorno alla modalit\u00e0 di navigazione"
+msgstr "Ritorno alla modalità di navigazione"
 
 #: .\utils\help_and_config.py:37
 msgid "Copy marks list"
@@ -1277,7 +1338,9 @@ msgstr "Nascondere/mostrare la barra laterale"
 
 #: .\utils\help_and_config.py:42
 msgid "Open hotkeys window (*when marks window open)"
-msgstr "Aprire la finestra dei tasti di scelta rapida (*quando la finestra dei segni \u00e8 aperta)"
+msgstr ""
+"Aprire la finestra dei tasti di scelta rapida (*quando la finestra dei segni"
+" è aperta)"
 
 #: .\utils\help_and_config.py:43
 msgid "Open content filters window"
@@ -1313,7 +1376,8 @@ msgstr "Annullamento della generazione di immagini"
 
 #: .\utils\help_and_config.py:51
 msgid "Run next text embedding search preset"
-msgstr "Eseguire la prossima preimpostazione di ricerca di incorporamento del testo"
+msgstr ""
+"Eseguire la prossima preimpostazione di ricerca di incorporamento del testo"
 
 #: .\utils\help_and_config.py:52
 msgid "Run permanent marks action"
@@ -1353,7 +1417,7 @@ msgstr "Mostra l'immagine precedente/successiva"
 
 #: .\utils\help_and_config.py:61
 msgid "Page through images"
-msgstr "et\u00e0 attraverso le immagini"
+msgstr "età attraverso le immagini"
 
 #: .\utils\help_and_config.py:62
 msgid "Search current image in current window"
@@ -1373,7 +1437,9 @@ msgstr "Mostra i dettagli dell'immagine"
 
 #: .\utils\help_and_config.py:66
 msgid "Delete image (or marked file group if marks window selected)"
-msgstr "Elimina l'immagine (o il gruppo di file contrassegnati se la finestra dei contrassegni \u00e8 selezionata)"
+msgstr ""
+"Elimina l'immagine (o il gruppo di file contrassegnati se la finestra dei "
+"contrassegni è selezionata)"
 
 #: .\utils\help_and_config.py:67
 msgid "Go to next mark"
@@ -1389,7 +1455,8 @@ msgstr "Eseguire la generazione dell'immagine"
 
 #: .\utils\help_and_config.py:70
 msgid "Run content filters for all files in the current directory"
-msgstr "Eseguire i filtri di contenuto per tutti i file nella directory corrente"
+msgstr ""
+"Eseguire i filtri di contenuto per tutti i file nella directory corrente"
 
 #: .\utils\help_and_config.py:71
 msgid "View last moved image mark"
@@ -1404,8 +1471,12 @@ msgid "Add or remove a mark for current image"
 msgstr "Aggiungere o rimuovere un contrassegno per l'immagine corrente"
 
 #: .\utils\help_and_config.py:74
-msgid "Add all marks between most recently set and current selected inclusive, or all marks in current group"
-msgstr "Aggiungere tutti i voti tra l'ultimo impostato e l'attuale selezionato compreso, o tutti i voti del gruppo attuale"
+msgid ""
+"Add all marks between most recently set and current selected inclusive, or "
+"all marks in current group"
+msgstr ""
+"Aggiungere tutti i voti tra l'ultimo impostato e l'attuale selezionato "
+"compreso, o tutti i voti del gruppo attuale"
 
 #: .\utils\help_and_config.py:76
 msgid "Open image in GIMP"
@@ -1482,4 +1553,3 @@ msgstr "Tagging delle immagini abilitato"
 #: .\utils\help_and_config.py:151
 msgid "Escape Backslash Filepaths"
 msgstr "Fuga dei percorsi dei file con backslash"
-
