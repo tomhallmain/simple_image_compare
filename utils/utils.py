@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 from enum import Enum
 import logging
 import re
@@ -7,69 +6,9 @@ import psutil
 import shutil
 import subprocess
 import sys
-from pathlib import Path
-import getopt
-import glob
 
-from utils.custom_formatter import CustomFormatter
 from utils.running_tasks_registry import start_thread
-
-# create logger
-logger = logging.getLogger("simple_image_compare")
-logger.setLevel(logging.DEBUG)
-logger.propagate = False
-
-# create console handler with a higher log level
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-ch.setFormatter(CustomFormatter())
-logger.addHandler(ch)
-
-# Create log file in ApplicationData
-appdata_dir = os.getenv('APPDATA') if sys.platform == 'win32' else os.path.expanduser('~/.local/share')
-log_dir = Path(appdata_dir) / 'simple_image_compare' / 'logs'
-log_dir.mkdir(parents=True, exist_ok=True)
-
-def _cleanup_old_logs():
-    """
-    Clean up log files that are older than 30 days if there are more than 10 log files.
-    """
-    try:
-        log_files = list(log_dir.glob('simple_image_compare_*.log'))
-        if len(log_files) <= 10:
-            return
-
-        current_time = datetime.now()
-        cutoff_date = current_time - timedelta(days=30)
-        
-        for log_file in log_files:
-            try:
-                # Extract date from filename (format: simple_image_compare_YYYY-MM-DD.log)
-                date_str = log_file.stem.split('_')[-1]
-                file_date = datetime.strptime(date_str, '%Y-%m-%d')
-                
-                if file_date < cutoff_date:
-                    log_file.unlink()
-                    logger.debug(f"Deleted old log file: {log_file}")
-            except (ValueError, IndexError):
-                # Skip files that don't match the expected format
-                continue
-    except Exception as e:
-        logger.error(f"Error cleaning up old log files: {e}")
-
-# Clean up old logs before creating new one
-_cleanup_old_logs()
-
-date_str = datetime.now().strftime("%Y-%m-%d")
-log_file = log_dir / f'simple_image_compare_{date_str}.log'
-
-# Add file handler
-fh = logging.FileHandler(log_file, mode='w+', encoding='utf-8')
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(CustomFormatter())
-logger.addHandler(fh)
-
-
+from utils.logging_setup import logger, log_file
 
 class Utils:
     @staticmethod
