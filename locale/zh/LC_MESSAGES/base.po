@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-04-02 13:01-0400\n"
-"PO-Revision-Date: 2025-04-02 13:01-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-04-05 15:52-0400\n"
+"PO-Revision-Date: 2025-04-05 15:52-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\app.py:91 .\app.py:866 .\app.py:1820
+#: .\app.py:91 .\app.py:867 .\app.py:1821
 msgid " Simple Image Compare "
 msgstr " 简单图像比较 "
 
@@ -20,7 +20,7 @@ msgstr " 简单图像比较 "
 msgid "Theme switched to {0}."
 msgstr "主题切换到{0} 。"
 
-#: .\app.py:233 .\compare\compare_wrapper.py:467
+#: .\app.py:233 .\compare\compare_wrapper.py:466
 msgid "Set a directory to run comparison."
 msgstr "设置目录以运行比较 。"
 
@@ -112,197 +112,197 @@ msgstr "复制图像路径"
 msgid "---- DELETE ----"
 msgstr "---- 删除 ----"
 
-#: .\app.py:484
+#: .\app.py:485
 msgid "Confirm Quit"
 msgstr "确认退出"
 
-#: .\app.py:484
+#: .\app.py:485
 msgid "Would you like to quit the application?"
 msgstr "您想要退出申请吗 ?"
 
-#: .\app.py:577
+#: .\app.py:578
 msgid "Ended slideshows"
 msgstr "结束幻灯片放映"
 
-#: .\app.py:630
+#: .\app.py:631
 msgid "No files found in directory after refresh."
 msgstr "刷新后在目录中未发现文件。"
 
-#: .\app.py:630 .\app.py:1629 .\app.py:1688
+#: .\app.py:631 .\app.py:1630 .\app.py:1689
 msgid "Warning"
 msgstr "警告"
 
-#: .\app.py:653
+#: .\app.py:654
 msgid "Slideshow for new images started"
 msgstr "开始播放新图像的幻灯片"
 
-#: .\app.py:655
+#: .\app.py:656
 msgid "Slideshow started"
 msgstr "幻灯片播放开始"
 
-#: .\app.py:658
+#: .\app.py:659
 msgid "Slideshows ended"
 msgstr "幻灯片放映结束"
 
-#: .\app.py:671
+#: .\app.py:672
 msgid "Browsing mode set."
 msgstr "浏览模式设置 。"
 
-#: .\app.py:705
+#: .\app.py:706
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(将此图片作为目录的一部分打开，可查看索引详情）。"
 
-#: .\app.py:738
+#: .\app.py:739
 msgid "Many Files"
 msgstr "许多文件"
 
-#: .\app.py:764
+#: .\app.py:765
 msgid "No downstream related image(s) found in {0}"
 msgstr "在 {0} 中未发现与下游相关的图像"
 
-#: .\app.py:785
+#: .\app.py:786
 msgid "{0} file marks set"
 msgstr "{0} 文件标记设定"
 
-#: .\app.py:791
+#: .\app.py:792
 msgid "Help and Config"
 msgstr "帮助和配置"
 
-#: .\app.py:871
+#: .\app.py:872
 msgid "Set Image Comparison Directory"
 msgstr "设置图像比较目录"
 
-#: .\app.py:909
+#: .\app.py:910
 msgid "Counter limit must be an integer value."
 msgstr "计数器限值必须是整数。"
 
-#: .\app.py:909 .\app.py:924
+#: .\app.py:910 .\app.py:925
 msgid "Invalid Setting"
 msgstr "无效设置"
 
-#: .\app.py:924
+#: .\app.py:925
 msgid "No image selected."
 msgstr "未选择图像 。"
 
-#: .\app.py:961
+#: .\app.py:962
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "比较模式必须设置为嵌入模式，才能搜索文本嵌入内容"
 
-#: .\app.py:966
+#: .\app.py:967
 msgid "Select image file"
 msgstr "选择图像文件"
 
-#: .\app.py:995
+#: .\app.py:996
 msgid "Somehow, the search file is invalid"
 msgstr "不知何故, 搜索文件无效"
 
-#: .\app.py:1080 .\app.py:1104
+#: .\app.py:1081 .\app.py:1105
 msgid "Failed to get active image filepath"
 msgstr "获取活动图像文件路径失败"
 
-#: .\app.py:1186
+#: .\app.py:1187
 msgid "{0}: {1}% complete"
 msgstr "{0} : {1} 完成"
 
-#: .\app.py:1192
+#: .\app.py:1193
 msgid "Confirm comparison"
 msgstr "确认比较"
 
-#: .\app.py:1193
+#: .\app.py:1194
 msgid "No base directory has been set, will use current base directory of "
 msgstr "未设置基本目录，将使用当前基本目录： "
 
-#: .\app.py:1194
+#: .\app.py:1195
 msgid "Are you sure you want to proceed?"
 msgstr "你确定要继续吗?"
 
-#: .\app.py:1214
+#: .\app.py:1215
 msgid "Error running compare"
 msgstr "运行比较出错"
 
-#: .\app.py:1246
+#: .\app.py:1247
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡时无法添加标记"
 
-#: .\app.py:1257
+#: .\app.py:1258
 msgid "Mark removed. Remaining: {0}"
 msgstr "标记已去除。剩余 {0}"
 
-#: .\app.py:1261
+#: .\app.py:1262
 msgid "Mark added. Total set: {0}"
 msgstr "马克补充道。全套 {0}"
 
-#: .\app.py:1278
+#: .\app.py:1279
 msgid "Marks added. Total set: {0}"
 msgstr "标记已添加。总分 {0}"
 
-#: .\app.py:1287
+#: .\app.py:1288
 msgid "First sorted mark"
 msgstr "第一个排序标记"
 
-#: .\app.py:1294
+#: .\app.py:1295
 msgid "Only one marked file set."
 msgstr "只有一个标记的文件集 。"
 
-#: .\app.py:1305
+#: .\app.py:1306
 msgid "Including marks: {0}"
 msgstr "包括标记：{0}"
 
-#: .\app.py:1313
+#: .\app.py:1314
 msgid "Move {0} Marked File(s)"
 msgstr "移动 {0} 个标记文件？"
 
-#: .\app.py:1348
+#: .\app.py:1349
 msgid "NO_MARKS_SET"
 msgstr ""
 "已设置 {0} 标记（预计 >={1}）。\n"
 "使用 Shift+M 设置标记。"
 
-#: .\app.py:1381
+#: .\app.py:1382
 msgid "Prevalidations now running"
 msgstr "前缀正在运行"
 
-#: .\app.py:1381
+#: .\app.py:1382
 msgid "Prevalidations turned off"
 msgstr "关闭前缀"
 
-#: .\app.py:1406
+#: .\app.py:1407
 msgid "File not found"
 msgstr "未找到文件"
 
-#: .\app.py:1406
+#: .\app.py:1407
 msgid "No file was found for the search text: \"{0}\""
 msgstr "没有找到搜索文本的文件 \"{0}”"
 
-#: .\app.py:1420
+#: .\app.py:1421
 msgid "No image selected"
 msgstr "未选择图像"
 
-#: .\app.py:1420
+#: .\app.py:1421
 msgid "No image was selected for comparison"
 msgstr "没有选择图像进行比较"
 
-#: .\app.py:1433
+#: .\app.py:1434
 msgid "No Text Search Presets Found"
 msgstr "未找到文本搜索预设"
 
-#: .\app.py:1433
+#: .\app.py:1434
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "未找到文本嵌入搜索预设。请在 config.json 文件中进行设置。"
 
-#: .\app.py:1533
+#: .\app.py:1534
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "打开当前文件位置失败，无法获取有效的文件路径"
 
-#: .\app.py:1544
+#: .\app.py:1545
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "在 GIMP 中打开当前文件失败，无法获取有效的文件路径"
 
-#: .\app.py:1560
+#: .\app.py:1561
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -310,82 +310,82 @@ msgstr ""
 "隐藏当前图像。\n"
 "要取消隐藏，请按 Shift+B。"
 
-#: .\app.py:1565
+#: .\app.py:1566
 msgid "Cleared all hidden images."
 msgstr "清除所有隐藏图像"
 
-#: .\app.py:1572
+#: .\app.py:1573
 msgid "DELETE_LOCK"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡阻止删除"
 
-#: .\app.py:1590
+#: .\app.py:1591
 msgid "Invalid action, no files found to delete"
 msgstr "无效操作，未找到要删除的文件"
 
-#: .\app.py:1593
+#: .\app.py:1594
 msgid "Invalid action, search image not found"
 msgstr "无效操作，未找到搜索图像"
 
-#: .\app.py:1608
+#: .\app.py:1609
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "删除当前文件失败，无法获取有效的文件路径"
 
-#: .\app.py:1613
+#: .\app.py:1614
 msgid "Removing file: {0}"
 msgstr "删除文件： {0}"
 
-#: .\app.py:1630
+#: .\app.py:1631
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "发送文件到垃圾箱失败，因此文件将被删除。要么用 pip 安装 send2trash，要么在 config.json 中设置特定的垃圾文件夹。"
 
-#: .\app.py:1647
+#: .\app.py:1648
 msgid "Invalid target filepath for replacement: "
 msgstr "替换的目标文件路径无效： "
 
-#: .\app.py:1651
+#: .\app.py:1652
 msgid "Moved search image to "
 msgstr "将搜索图像移至 ： "
 
-#: .\app.py:1686
+#: .\app.py:1687
 msgid "Running image gen: "
 msgstr "运行图像基因 ： "
 
-#: .\app.py:1688
+#: .\app.py:1689
 msgid "Error running image generation:"
 msgstr "生成图像时出错："
 
-#: .\app.py:1693
+#: .\app.py:1694
 msgid "Running refacdir"
 msgstr "正在运行 reacdir"
 
-#: .\app.py:1698
+#: .\app.py:1699
 msgid "Error"
 msgstr "错误"
 
-#: .\app.py:1761
+#: .\app.py:1762
 msgid "GROUP_DETAILS"
 msgstr ""
 "第 {0} 组 {1}\n"
 "大小： {2}"
 
-#: .\app.py:1765
+#: .\app.py:1766
 msgid "No image files found"
 msgstr "未找到图像文件"
 
-#: .\app.py:1767
+#: .\app.py:1768
 msgid "1 image file found"
 msgstr "找到一个图像文件"
 
-#: .\app.py:1767
+#: .\app.py:1768
 msgid "{0} image files found"
 msgstr "找到 {0} 图像文件"
 
-#: .\app.py:1770
+#: .\app.py:1771
 msgid "(filtered)"
 msgstr "(过滤)"
 
@@ -397,108 +397,108 @@ msgstr "图片对比"
 msgid "Image data collection"
 msgstr "图像数据收集"
 
-#: .\compare\compare_wrapper.py:68 .\compare\compare_wrapper.py:71
+#: .\compare\compare_wrapper.py:67 .\compare\compare_wrapper.py:70
 msgid "Invalid mode"
 msgstr "无效模式"
 
-#: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
+#: .\compare\compare_wrapper.py:100 .\compare\compare_wrapper.py:117
 msgid "No matches found. Search again to find potential matches."
 msgstr "未找到匹配项。请再次搜索，以找到可能的匹配项。"
 
-#: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
+#: .\compare\compare_wrapper.py:100 .\compare\compare_wrapper.py:117
 msgid "Search required"
 msgstr "需要搜索"
 
-#: .\compare\compare_wrapper.py:159
+#: .\compare\compare_wrapper.py:158
 msgid "Skipped %s images."
 msgstr "跳过 {0} 幅图像。"
 
-#: .\compare\compare_wrapper.py:165
+#: .\compare\compare_wrapper.py:164
 msgid "No Unrelated Images"
 msgstr "无不相关的图像"
 
-#: .\compare\compare_wrapper.py:165
+#: .\compare\compare_wrapper.py:164
 msgid "No unrelated images found."
 msgstr "未找到不相关的图像 。"
 
-#: .\compare\compare_wrapper.py:202 .\compare\compare_wrapper.py:364
+#: .\compare\compare_wrapper.py:201 .\compare\compare_wrapper.py:363
 msgid "No Groups Found"
 msgstr "没有找到组"
 
-#: .\compare\compare_wrapper.py:272
+#: .\compare\compare_wrapper.py:271
 msgid ""
 "Gathering image data... setup may take a while depending on number of files "
 "involved."
 msgstr "收集图像数据......根据所涉及文件的数量，设置可能需要一段时间。"
 
-#: .\compare\compare_wrapper.py:294
+#: .\compare\compare_wrapper.py:293
 msgid "Confirm group run"
 msgstr "确认小组运行"
 
-#: .\compare\compare_wrapper.py:295
+#: .\compare\compare_wrapper.py:294
 msgid ""
 "Search mode detected, please confirm switch to group mode before run. Group "
 "mode will take longer as all images in the base directory are compared."
 msgstr "检测到搜索模式，请确认切换到组模式后再运行。群组模式将需要更长的时间，因为要对基本目录中的所有图像进行比较。"
 
-#: .\compare\compare_wrapper.py:302
+#: .\compare\compare_wrapper.py:301
 msgid "Gathering image data for comparison"
 msgstr "收集图像数据进行比较"
 
-#: .\compare\compare_wrapper.py:330
+#: .\compare\compare_wrapper.py:329
 msgid "Searching images..."
 msgstr "正在搜索图像..."
 
-#: .\compare\compare_wrapper.py:336
+#: .\compare\compare_wrapper.py:335
 msgid "Set a directory and search file or search text."
 msgstr "设置目录和搜索文件或搜索文本。"
 
-#: .\compare\compare_wrapper.py:337
+#: .\compare\compare_wrapper.py:336
 msgid "No Match Found"
 msgstr "找不到匹配"
 
-#: .\compare\compare_wrapper.py:337
+#: .\compare\compare_wrapper.py:336
 msgid "None of the files match the search filters with current settings."
 msgstr "在当前设置下，没有任何文件符合搜索筛选条件。"
 
-#: .\compare\compare_wrapper.py:350
+#: .\compare\compare_wrapper.py:349
 msgid "%s possibly related images found."
 msgstr "{0} 可能找到相关的图像 。"
 
-#: .\compare\compare_wrapper.py:358
+#: .\compare\compare_wrapper.py:357
 msgid "Running image comparisons..."
 msgstr "运行图像比较..."
 
-#: .\compare\compare_wrapper.py:363 .\compare\compare_wrapper.py:378
+#: .\compare\compare_wrapper.py:362 .\compare\compare_wrapper.py:377
 msgid "Set a directory and search file."
 msgstr "设置目录和搜索文件 。"
 
-#: .\compare\compare_wrapper.py:364
+#: .\compare\compare_wrapper.py:363
 msgid "None of the files can be grouped with current settings."
 msgstr "所有文件都无法按当前设置进行分组。"
 
-#: .\compare\compare_wrapper.py:379
+#: .\compare\compare_wrapper.py:378
 msgid "No Duplicates Found"
 msgstr "未找到复制件"
 
-#: .\compare\compare_wrapper.py:379
+#: .\compare\compare_wrapper.py:378
 msgid ""
 "None of the files appear to be duplicates based on the current settings."
 msgstr "根据当前设置，没有任何文件看起来是重复的。"
 
-#: .\compare\compare_wrapper.py:403
+#: .\compare\compare_wrapper.py:402
 msgid "Some group members were left stranded by the grouping process."
 msgstr "一些小组成员在分组过程中陷入困境。"
 
-#: .\compare\compare_wrapper.py:403
+#: .\compare\compare_wrapper.py:402
 msgid "Stranded Group Members Found"
 msgstr "找到受困的小组成员"
 
-#: .\compare\compare_wrapper.py:458
+#: .\compare\compare_wrapper.py:457
 msgid "No More Groups"
 msgstr "没有更多组"
 
-#: .\compare\compare_wrapper.py:459
+#: .\compare\compare_wrapper.py:458
 msgid ""
 "There are no more image groups remaining for this directory and current "
 "filter settings."
@@ -966,7 +966,7 @@ msgid "Dimensions"
 msgstr "尺寸"
 
 #: .\image\image_details.py:123 .\utils\constants.py:96
-#: .\utils\constants.py:113
+#: .\utils\constants.py:116
 msgid "Size"
 msgstr "大小"
 
@@ -1194,67 +1194,67 @@ msgstr "颜色 diff 阈值"
 msgid "Embedding similarity threshold"
 msgstr "嵌入类似阈值"
 
-#: .\utils\constants.py:91 .\utils\constants.py:103
+#: .\utils\constants.py:91 .\utils\constants.py:106
 msgid "Name"
 msgstr "名称"
 
-#: .\utils\constants.py:92 .\utils\constants.py:105
+#: .\utils\constants.py:92 .\utils\constants.py:108
 msgid "Full Path"
 msgstr "完整路径"
 
-#: .\utils\constants.py:93 .\utils\constants.py:107
+#: .\utils\constants.py:93 .\utils\constants.py:110
 msgid "Creation Time"
 msgstr "创建时间"
 
-#: .\utils\constants.py:94 .\utils\constants.py:109
+#: .\utils\constants.py:94 .\utils\constants.py:112
 msgid "Modify Time"
 msgstr "修改时间"
 
-#: .\utils\constants.py:95 .\utils\constants.py:111
+#: .\utils\constants.py:95 .\utils\constants.py:114
 msgid "Type"
 msgstr "类型"
 
-#: .\utils\constants.py:97 .\utils\constants.py:115
+#: .\utils\constants.py:97 .\utils\constants.py:118
 msgid "Name Length"
 msgstr "名称长度"
 
-#: .\utils\constants.py:98 .\utils\constants.py:117
+#: .\utils\constants.py:98 .\utils\constants.py:120
 msgid "Related Image"
 msgstr "相关图像"
 
-#: .\utils\constants.py:99 .\utils\constants.py:119
+#: .\utils\constants.py:99 .\utils\constants.py:122
 msgid "Random"
 msgstr "随机"
 
-#: .\utils\constants.py:138
+#: .\utils\constants.py:147
 msgid "ascending"
 msgstr "升职"
 
-#: .\utils\constants.py:139
+#: .\utils\constants.py:148
 msgid "descending"
 msgstr "下降"
 
-#: .\utils\constants.py:140
+#: .\utils\constants.py:149
 msgid "random"
 msgstr "随机"
 
-#: .\utils\constants.py:192
+#: .\utils\constants.py:201
 msgid "Image"
 msgstr "图像"
 
-#: .\utils\constants.py:194
+#: .\utils\constants.py:203
 msgid "GIF"
 msgstr "全球投资框架"
 
-#: .\utils\constants.py:196
+#: .\utils\constants.py:205
 msgid "Video"
 msgstr "视频"
 
-#: .\utils\constants.py:198
+#: .\utils\constants.py:207
 msgid "PDF"
 msgstr "专题报告"
 
-#: .\utils\constants.py:200
+#: .\utils\constants.py:209
 msgid "SVG"
 msgstr "特别志愿人员小组"
 
@@ -1503,3 +1503,15 @@ msgstr "图像标签已启用"
 #: .\utils\help_and_config.py:151
 msgid "Escape Backslash Filepaths"
 msgstr "逃逸反斜文件路径"
+
+#: .\utils\constants.py:100 .\utils\constants.py:124
+msgid "Image Pixels"
+msgstr "图像像素"
+
+#: .\utils\constants.py:101 .\utils\constants.py:126
+msgid "Image Height"
+msgstr "图像高度"
+
+#: .\utils\constants.py:102 .\utils\constants.py:128
+msgid "Image Width"
+msgstr "图像宽度"

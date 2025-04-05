@@ -97,6 +97,9 @@ class SortBy(Enum):
     NAME_LENGTH = _("Name Length")
     RELATED_IMAGE = _("Related Image")
     RANDOMIZE = _("Random")
+    IMAGE_PIXELS = _("Image Pixels")
+    IMAGE_HEIGHT = _("Image Height")
+    IMAGE_WIDTH = _("Image Width")
 
     def get_text(self):
         if self == SortBy.NAME:
@@ -117,6 +120,12 @@ class SortBy(Enum):
             return _("Related Image")
         elif self == SortBy.RANDOMIZE:
             return _("Random")
+        elif self == SortBy.IMAGE_PIXELS:
+            return _("Image Pixels")
+        elif self == SortBy.IMAGE_HEIGHT:
+            return _("Image Height")
+        elif self == SortBy.IMAGE_WIDTH:
+            return _("Image Width")
         raise Exception("Unhandled Sort By text: " + str(self))
 
     def __str__(self):

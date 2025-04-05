@@ -1,8 +1,9 @@
 from datetime import datetime
 import os
 
-from image.image_data_extractor import image_data_extractor
+from PIL import Image
 
+from image.frame_cache import FrameCache
 
 class SortableFile:
     def __init__(self, full_file_path):
@@ -12,6 +13,7 @@ class SortableFile:
         self.root, self.extension = os.path.splitext(self.basename)
         self.related_image_path = None
         self.related_image_path_key = self.full_file_path
+        self._image_dimensions = None
         try:
             stat_obj = os.stat(full_file_path)
             self.ctime = datetime.fromtimestamp(stat_obj.st_ctime)
@@ -65,3 +67,49 @@ class SortableFile:
 
     def __hash__(self):
         return hash((self.full_file_path, self.ctime, self.mtime, self.size))
+
+    def get_image_dimensions(self):
+        """
+        Get the image dimensions (width, height) for this file.
+        Returns (width, height) tuple or None if not an image or dimensions can't be determined.
+        """
+        if self._image_dimensions is None:
+            try:
+                self._image_dimensions = Image.open(self.full_file_path).size
+            except Exception:
+                try:
+                    image_path = FrameCache.get_image_path(self.full_file_path)
+                    self._image_dimensions = Image.open(image_path).size
+                except Exception:
+                    self._image_dimensions = (0, 0)
+        return self._image_dimensions
+
+    def get_image_pixels(self):
+        """
+        Get the total number of pixels in the image (width * height).
+        Returns 0 if not an image or dimensions can't be determined.
+        """
+        dimensions = self.get_image_dimensions()
+        if dimensions is None:
+            return 0
+        return dimensions[0] * dimensions[1]
+
+    def get_image_height(self):
+        """
+        Get the image height.
+        Returns 0 if not an image or dimensions can't be determined.
+        """
+        dimensions = self.get_image_dimensions()
+        if dimensions is None:
+            return 0
+        return dimensions[1]
+
+    def get_image_width(self):
+        """
+        Get the image width.
+        Returns 0 if not an image or dimensions can't be determined.
+        """
+        dimensions = self.get_image_dimensions()
+        if dimensions is None:
+            return 0
+        return dimensions[0]

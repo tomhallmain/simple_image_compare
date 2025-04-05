@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-04-02 13:01-0400\n"
-"PO-Revision-Date: 2025-04-02 13:01-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-04-05 15:52-0400\n"
+"PO-Revision-Date: 2025-04-05 15:52-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: es Team <<EMAIL>>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\app.py:91 .\app.py:866 .\app.py:1820
+#: .\app.py:91 .\app.py:867 .\app.py:1821
 msgid " Simple Image Compare "
 msgstr " Comparación sencilla de imágenes "
 
@@ -20,7 +20,7 @@ msgstr " Comparación sencilla de imágenes "
 msgid "Theme switched to {0}."
 msgstr "Tema cambiado a {0}."
 
-#: .\app.py:233 .\compare\compare_wrapper.py:467
+#: .\app.py:233 .\compare\compare_wrapper.py:466
 msgid "Set a directory to run comparison."
 msgstr "Establece un directorio para ejecutar la comparación."
 
@@ -112,210 +112,210 @@ msgstr "Copiar ruta de imagen"
 msgid "---- DELETE ----"
 msgstr "---- BORRAR ----"
 
-#: .\app.py:484
+#: .\app.py:485
 msgid "Confirm Quit"
 msgstr "Confirmar Salir"
 
-#: .\app.py:484
+#: .\app.py:485
 msgid "Would you like to quit the application?"
 msgstr "¿Desea abandonar la aplicación?"
 
-#: .\app.py:577
+#: .\app.py:578
 msgid "Ended slideshows"
 msgstr "Presentaciones finalizadas"
 
-#: .\app.py:630
+#: .\app.py:631
 msgid "No files found in directory after refresh."
 msgstr "No se han encontrado archivos en el directorio tras la actualización."
 
-#: .\app.py:630 .\app.py:1629 .\app.py:1688
+#: .\app.py:631 .\app.py:1630 .\app.py:1689
 msgid "Warning"
 msgstr "Advertencia"
 
-#: .\app.py:653
+#: .\app.py:654
 msgid "Slideshow for new images started"
 msgstr "Iniciada la presentación de nuevas imágenes"
 
-#: .\app.py:655
+#: .\app.py:656
 msgid "Slideshow started"
 msgstr "Presentación de diapositivas iniciada"
 
-#: .\app.py:658
+#: .\app.py:659
 msgid "Slideshows ended"
 msgstr "Fin de las presentaciones"
 
-#: .\app.py:671
+#: .\app.py:672
 msgid "Browsing mode set."
 msgstr "Modo de navegación establecido."
 
-#: .\app.py:705
+#: .\app.py:706
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr ""
 "(Abra esta imagen como parte de un directorio para ver los detalles del "
 "índice)."
 
-#: .\app.py:738
+#: .\app.py:739
 msgid "Many Files"
 msgstr "Muchos archivos"
 
-#: .\app.py:764
+#: .\app.py:765
 msgid "No downstream related image(s) found in {0}"
 msgstr ""
 "No se han encontrado imágenes relacionadas con el flujo descendente en {0}"
 
-#: .\app.py:785
+#: .\app.py:786
 msgid "{0} file marks set"
 msgstr "Se establecen {0} marcas de archivo"
 
-#: .\app.py:791
+#: .\app.py:792
 msgid "Help and Config"
 msgstr "Ayuda y configuración"
 
-#: .\app.py:871
+#: .\app.py:872
 msgid "Set Image Comparison Directory"
 msgstr "Establecer directorio de comparación de imágenes"
 
-#: .\app.py:909
+#: .\app.py:910
 msgid "Counter limit must be an integer value."
 msgstr "El límite del contador debe ser un valor entero."
 
-#: .\app.py:909 .\app.py:924
+#: .\app.py:910 .\app.py:925
 msgid "Invalid Setting"
 msgstr "Ajuste no válido"
 
-#: .\app.py:924
+#: .\app.py:925
 msgid "No image selected."
 msgstr "No hay imagen seleccionada."
 
-#: .\app.py:961
+#: .\app.py:962
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr ""
 "El modo de comparación debe configurarse en un modo de incrustación para "
 "buscar incrustaciones de texto"
 
-#: .\app.py:966
+#: .\app.py:967
 msgid "Select image file"
 msgstr "Seleccionar archivo de imagen"
 
-#: .\app.py:995
+#: .\app.py:996
 msgid "Somehow, the search file is invalid"
 msgstr "De alguna manera, el archivo de búsqueda no es válido"
 
-#: .\app.py:1080 .\app.py:1104
+#: .\app.py:1081 .\app.py:1105
 msgid "Failed to get active image filepath"
 msgstr "Error al obtener la ruta de archivo de la imagen activa"
 
-#: .\app.py:1186
+#: .\app.py:1187
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% completado"
 
-#: .\app.py:1192
+#: .\app.py:1193
 msgid "Confirm comparison"
 msgstr "Confirmar comparación"
 
-#: .\app.py:1193
+#: .\app.py:1194
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 "No se ha establecido ningún directorio base, se utilizará el directorio base"
 " actual de "
 
-#: .\app.py:1194
+#: .\app.py:1195
 msgid "Are you sure you want to proceed?"
 msgstr "¿Estás seguro de que quieres continuar?"
 
-#: .\app.py:1214
+#: .\app.py:1215
 msgid "Error running compare"
 msgstr "Error al ejecutar la comparación"
 
-#: .\app.py:1246
+#: .\app.py:1247
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "Borrar bloqueo después de diapositivas\n"
 "transición impidió a00f1adir marca"
 
-#: .\app.py:1257
+#: .\app.py:1258
 msgid "Mark removed. Remaining: {0}"
 msgstr "Marca eliminada. Restante: {0}"
 
-#: .\app.py:1261
+#: .\app.py:1262
 msgid "Mark added. Total set: {0}"
 msgstr "Marca a00f1adida. Conjunto total: {0}"
 
-#: .\app.py:1278
+#: .\app.py:1279
 msgid "Marks added. Total set: {0}"
 msgstr "Marcas a00f1adidas. Conjunto total: {0}"
 
-#: .\app.py:1287
+#: .\app.py:1288
 msgid "First sorted mark"
 msgstr "Primera marca clasificada"
 
-#: .\app.py:1294
+#: .\app.py:1295
 msgid "Only one marked file set."
 msgstr "Sólo un conjunto de archivos marcados."
 
-#: .\app.py:1305
+#: .\app.py:1306
 msgid "Including marks: {0}"
 msgstr "Marcas incluidas: {0}"
 
-#: .\app.py:1313
+#: .\app.py:1314
 msgid "Move {0} Marked File(s)"
 msgstr "Mover {0} Archivo(s) marcado(s)"
 
-#: .\app.py:1348
+#: .\app.py:1349
 msgid "NO_MARKS_SET"
 msgstr ""
 "Se han fijado {0} marcas (>={1} esperado).\n"
 "Utiliza Mayús+M para fijar una marca."
 
-#: .\app.py:1381
+#: .\app.py:1382
 msgid "Prevalidations now running"
 msgstr "Prevalidaciones en curso"
 
-#: .\app.py:1381
+#: .\app.py:1382
 msgid "Prevalidations turned off"
 msgstr "Prevalidaciones desactivadas"
 
-#: .\app.py:1406
+#: .\app.py:1407
 msgid "File not found"
 msgstr "Archivo no encontrado"
 
-#: .\app.py:1406
+#: .\app.py:1407
 msgid "No file was found for the search text: \"{0}\""
 msgstr "No se ha encontrado ningún archivo para el texto buscado: «{0}»"
 
-#: .\app.py:1420
+#: .\app.py:1421
 msgid "No image selected"
 msgstr "Ninguna imagen seleccionada"
 
-#: .\app.py:1420
+#: .\app.py:1421
 msgid "No image was selected for comparison"
 msgstr "No se ha seleccionado ninguna imagen para la comparación"
 
-#: .\app.py:1433
+#: .\app.py:1434
 msgid "No Text Search Presets Found"
 msgstr "No se han encontrado preajustes de búsqueda de texto"
 
-#: .\app.py:1433
+#: .\app.py:1434
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 "No se han encontrado preajustes de búsqueda de texto incrustado. "
 "Configúrelos en el archivo config.json."
 
-#: .\app.py:1533
+#: .\app.py:1534
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr ""
 "No se ha podido abrir la ubicación del archivo actual, no se ha podido "
 "obtener una ruta de archivo válida."
 
-#: .\app.py:1544
+#: .\app.py:1545
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 "Error al abrir el archivo actual en GIMP, no se puede obtener una ruta de "
 "archivo válida."
 
-#: .\app.py:1560
+#: .\app.py:1561
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -323,35 +323,35 @@ msgstr ""
 "Oculta la imagen actual.\n"
 "Para desocultar, pulse Mayús+B."
 
-#: .\app.py:1565
+#: .\app.py:1566
 msgid "Cleared all hidden images."
 msgstr "Borrado de todas las imágenes ocultas."
 
-#: .\app.py:1572
+#: .\app.py:1573
 msgid "DELETE_LOCK"
 msgstr ""
 "El bloqueo de borrado tras la transición\n"
 "de diapositivas impedía el borrado"
 
-#: .\app.py:1590
+#: .\app.py:1591
 msgid "Invalid action, no files found to delete"
 msgstr "Acción no válida, no se han encontrado archivos para eliminar"
 
-#: .\app.py:1593
+#: .\app.py:1594
 msgid "Invalid action, search image not found"
 msgstr "Acción no válida, imagen de búsqueda no encontrada"
 
-#: .\app.py:1608
+#: .\app.py:1609
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 "No se ha podido eliminar el archivo actual, no se ha podido obtener una ruta"
 " de archivo válida."
 
-#: .\app.py:1613
+#: .\app.py:1614
 msgid "Removing file: {0}"
 msgstr "Eliminando archivo: {0}"
 
-#: .\app.py:1630
+#: .\app.py:1631
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -359,49 +359,49 @@ msgstr ""
 "No se ha podido enviar el archivo a la papelera, por lo que se eliminará. "
 "Instale pip send2trash o establezca una carpeta específica en config.json."
 
-#: .\app.py:1647
+#: .\app.py:1648
 msgid "Invalid target filepath for replacement: "
 msgstr "Ruta de archivo de destino no válida para la sustitución: "
 
-#: .\app.py:1651
+#: .\app.py:1652
 msgid "Moved search image to "
 msgstr "Imagen de búsqueda trasladada a "
 
-#: .\app.py:1686
+#: .\app.py:1687
 msgid "Running image gen: "
 msgstr "Ejecutar la generación de imágenes: "
 
-#: .\app.py:1688
+#: .\app.py:1689
 msgid "Error running image generation:"
 msgstr "Error al generar la imagen:"
 
-#: .\app.py:1693
+#: .\app.py:1694
 msgid "Running refacdir"
 msgstr "Ejecución de la aplicación refacdir"
 
-#: .\app.py:1698
+#: .\app.py:1699
 msgid "Error"
 msgstr "Error"
 
-#: .\app.py:1761
+#: .\app.py:1762
 msgid "GROUP_DETAILS"
 msgstr ""
 "Grupo {0} de {1}\n"
 "Tamaño: {2}"
 
-#: .\app.py:1765
+#: .\app.py:1766
 msgid "No image files found"
 msgstr "No se han encontrado archivos de imagen"
 
-#: .\app.py:1767
+#: .\app.py:1768
 msgid "1 image file found"
 msgstr "1 archivo de imagen encontrado"
 
-#: .\app.py:1767
+#: .\app.py:1768
 msgid "{0} image files found"
 msgstr "{0} archivos de imagen encontrados"
 
-#: .\app.py:1770
+#: .\app.py:1771
 msgid "(filtered)"
 msgstr "(filtrado)"
 
@@ -413,37 +413,37 @@ msgstr "Comparación de imágenes"
 msgid "Image data collection"
 msgstr "Recopilación de datos de imágenes"
 
-#: .\compare\compare_wrapper.py:68 .\compare\compare_wrapper.py:71
+#: .\compare\compare_wrapper.py:67 .\compare\compare_wrapper.py:70
 msgid "Invalid mode"
 msgstr "Modo no válido"
 
-#: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
+#: .\compare\compare_wrapper.py:100 .\compare\compare_wrapper.py:117
 msgid "No matches found. Search again to find potential matches."
 msgstr ""
 "No se han encontrado coincidencias. Vuelva a buscar para encontrar posibles "
 "coincidencias."
 
-#: .\compare\compare_wrapper.py:101 .\compare\compare_wrapper.py:118
+#: .\compare\compare_wrapper.py:100 .\compare\compare_wrapper.py:117
 msgid "Search required"
 msgstr "Búsqueda obligatoria"
 
-#: .\compare\compare_wrapper.py:159
+#: .\compare\compare_wrapper.py:158
 msgid "Skipped %s images."
 msgstr "Se han omitido {0} imágenes."
 
-#: .\compare\compare_wrapper.py:165
+#: .\compare\compare_wrapper.py:164
 msgid "No Unrelated Images"
 msgstr "Sin imágenes no relacionadas"
 
-#: .\compare\compare_wrapper.py:165
+#: .\compare\compare_wrapper.py:164
 msgid "No unrelated images found."
 msgstr "No se han encontrado imágenes no relacionadas."
 
-#: .\compare\compare_wrapper.py:202 .\compare\compare_wrapper.py:364
+#: .\compare\compare_wrapper.py:201 .\compare\compare_wrapper.py:363
 msgid "No Groups Found"
 msgstr "No se han encontrado grupos"
 
-#: .\compare\compare_wrapper.py:272
+#: .\compare\compare_wrapper.py:271
 msgid ""
 "Gathering image data... setup may take a while depending on number of files "
 "involved."
@@ -451,11 +451,11 @@ msgstr ""
 "Recopilación de datos de imagen... la configuración puede llevar un tiempo "
 "dependiendo del número de archivos implicados."
 
-#: .\compare\compare_wrapper.py:294
+#: .\compare\compare_wrapper.py:293
 msgid "Confirm group run"
 msgstr "Confirmar la ejecución en grupo"
 
-#: .\compare\compare_wrapper.py:295
+#: .\compare\compare_wrapper.py:294
 msgid ""
 "Search mode detected, please confirm switch to group mode before run. Group "
 "mode will take longer as all images in the base directory are compared."
@@ -464,72 +464,72 @@ msgstr ""
 "antes de ejecutar. El modo de grupo tardará más tiempo, ya que se comparan "
 "todas las imágenes del directorio base."
 
-#: .\compare\compare_wrapper.py:302
+#: .\compare\compare_wrapper.py:301
 msgid "Gathering image data for comparison"
 msgstr "Recopilación de datos de imágenes para su comparación"
 
-#: .\compare\compare_wrapper.py:330
+#: .\compare\compare_wrapper.py:329
 msgid "Searching images..."
 msgstr "Buscando imágenes..."
 
-#: .\compare\compare_wrapper.py:336
+#: .\compare\compare_wrapper.py:335
 msgid "Set a directory and search file or search text."
 msgstr ""
 "Establece un directorio y un archivo de búsqueda o un texto de búsqueda."
 
-#: .\compare\compare_wrapper.py:337
+#: .\compare\compare_wrapper.py:336
 msgid "No Match Found"
 msgstr "No se han encontrado coincidencias"
 
-#: .\compare\compare_wrapper.py:337
+#: .\compare\compare_wrapper.py:336
 msgid "None of the files match the search filters with current settings."
 msgstr ""
 "Ninguno de los archivos coincide con los filtros de búsqueda con la "
 "configuración actual."
 
-#: .\compare\compare_wrapper.py:350
+#: .\compare\compare_wrapper.py:349
 msgid "%s possibly related images found."
 msgstr "{0} imágenes posiblemente relacionadas encontradas."
 
-#: .\compare\compare_wrapper.py:358
+#: .\compare\compare_wrapper.py:357
 msgid "Running image comparisons..."
 msgstr "Ejecutar comparaciones de imágenes..."
 
-#: .\compare\compare_wrapper.py:363 .\compare\compare_wrapper.py:378
+#: .\compare\compare_wrapper.py:362 .\compare\compare_wrapper.py:377
 msgid "Set a directory and search file."
 msgstr "Establece un directorio y un archivo de búsqueda."
 
-#: .\compare\compare_wrapper.py:364
+#: .\compare\compare_wrapper.py:363
 msgid "None of the files can be grouped with current settings."
 msgstr ""
 "No se puede agrupar ninguno de los archivos con la configuración actual."
 
-#: .\compare\compare_wrapper.py:379
+#: .\compare\compare_wrapper.py:378
 msgid "No Duplicates Found"
 msgstr "No se han encontrado duplicados"
 
-#: .\compare\compare_wrapper.py:379
+#: .\compare\compare_wrapper.py:378
 msgid ""
 "None of the files appear to be duplicates based on the current settings."
 msgstr ""
 "Ninguno de los archivos parece estar duplicado según la configuración "
 "actual."
 
-#: .\compare\compare_wrapper.py:403
+#: .\compare\compare_wrapper.py:402
 msgid "Some group members were left stranded by the grouping process."
 msgstr ""
 "Algunos miembros del grupo quedaron desamparados por el proceso de "
 "agrupación."
 
-#: .\compare\compare_wrapper.py:403
+#: .\compare\compare_wrapper.py:402
 msgid "Stranded Group Members Found"
 msgstr "Stranded Group Members Found"
 
-#: .\compare\compare_wrapper.py:458
+#: .\compare\compare_wrapper.py:457
 msgid "No More Groups"
 msgstr "Encontrados los miembros del grupo varados"
 
-#: .\compare\compare_wrapper.py:459
+#: .\compare\compare_wrapper.py:458
 msgid ""
 "There are no more image groups remaining for this directory and current "
 "filter settings."
@@ -1008,7 +1008,7 @@ msgid "Dimensions"
 msgstr "Dimensiones"
 
 #: .\image\image_details.py:123 .\utils\constants.py:96
-#: .\utils\constants.py:113
+#: .\utils\constants.py:116
 msgid "Size"
 msgstr "Tama00f1o"
 
@@ -1242,67 +1242,67 @@ msgstr "Umbral de diferencia de color"
 msgid "Embedding similarity threshold"
 msgstr "Umbral de similitud de incrustación"
 
-#: .\utils\constants.py:91 .\utils\constants.py:103
+#: .\utils\constants.py:91 .\utils\constants.py:106
 msgid "Name"
 msgstr "Nombre"
 
-#: .\utils\constants.py:92 .\utils\constants.py:105
+#: .\utils\constants.py:92 .\utils\constants.py:108
 msgid "Full Path"
 msgstr "Ruta completa"
 
-#: .\utils\constants.py:93 .\utils\constants.py:107
+#: .\utils\constants.py:93 .\utils\constants.py:110
 msgid "Creation Time"
 msgstr "Tiempo de creación"
 
-#: .\utils\constants.py:94 .\utils\constants.py:109
+#: .\utils\constants.py:94 .\utils\constants.py:112
 msgid "Modify Time"
 msgstr "Modificar la hora"
 
-#: .\utils\constants.py:95 .\utils\constants.py:111
+#: .\utils\constants.py:95 .\utils\constants.py:114
 msgid "Type"
 msgstr "Tipo"
 
-#: .\utils\constants.py:97 .\utils\constants.py:115
+#: .\utils\constants.py:97 .\utils\constants.py:118
 msgid "Name Length"
 msgstr "Nombre Longitud"
 
-#: .\utils\constants.py:98 .\utils\constants.py:117
+#: .\utils\constants.py:98 .\utils\constants.py:120
 msgid "Related Image"
 msgstr "Imagen relacionada"
 
-#: .\utils\constants.py:99 .\utils\constants.py:119
+#: .\utils\constants.py:99 .\utils\constants.py:122
 msgid "Random"
 msgstr "Al azar"
 
-#: .\utils\constants.py:138
+#: .\utils\constants.py:147
 msgid "ascending"
 msgstr "ascendente"
 
-#: .\utils\constants.py:139
+#: .\utils\constants.py:148
 msgid "descending"
 msgstr "descendente"
 
-#: .\utils\constants.py:140
+#: .\utils\constants.py:149
 msgid "random"
 msgstr "al azar"
 
-#: .\utils\constants.py:192
+#: .\utils\constants.py:201
 msgid "Image"
 msgstr "Imagen"
 
-#: .\utils\constants.py:194
+#: .\utils\constants.py:203
 msgid "GIF"
 msgstr "GIF"
 
-#: .\utils\constants.py:196
+#: .\utils\constants.py:205
 msgid "Video"
 msgstr "video"
 
-#: .\utils\constants.py:198
+#: .\utils\constants.py:207
 msgid "PDF"
 msgstr "PDF"
 
-#: .\utils\constants.py:200
+#: .\utils\constants.py:209
 msgid "SVG"
 msgstr "SVG"
 
@@ -1558,3 +1558,15 @@ msgstr "Etiquetado de imágenes activado"
 #: .\utils\help_and_config.py:151
 msgid "Escape Backslash Filepaths"
 msgstr "Escape de la barra invertida Filepaths"
+
+#: .\utils\constants.py:100 .\utils\constants.py:124
+msgid "Image Pixels"
+msgstr "Pixels de imagen"
+
+#: .\utils\constants.py:101 .\utils\constants.py:126
+msgid "Image Height"
+msgstr "Altura de imagen"
+
+#: .\utils\constants.py:102 .\utils\constants.py:128
+msgid "Image Width"
+msgstr "Imagen ancho"

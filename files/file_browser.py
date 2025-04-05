@@ -341,6 +341,18 @@ class FileBrowser:
                 # Sort by full path first, then by name length
                 sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=reverse)
                 sortable_files.sort(key=lambda sf: sf.name_length, reverse=reverse)
+            elif self.sort_by == SortBy.IMAGE_PIXELS:
+                # Sort by full path first, then by total pixels
+                sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=reverse)
+                sortable_files.sort(key=lambda sf: sf.get_image_pixels(), reverse=reverse)
+            elif self.sort_by == SortBy.IMAGE_HEIGHT:
+                # Sort by full path first, then by height
+                sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=reverse)
+                sortable_files.sort(key=lambda sf: sf.get_image_height(), reverse=reverse)
+            elif self.sort_by == SortBy.IMAGE_WIDTH:
+                # Sort by full path first, then by width
+                sortable_files.sort(key=lambda sf: sf.full_file_path.lower(), reverse=reverse)
+                sortable_files.sort(key=lambda sf: sf.get_image_width(), reverse=reverse)
             elif self.sort_by == SortBy.RELATED_IMAGE:
                 sortable_files.sort(key=lambda sf: sf.get_related_image_or_self(), reverse=reverse)
 
