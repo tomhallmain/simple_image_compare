@@ -412,6 +412,7 @@ class App():
         self.master.bind("<Control-s>", self.next_text_embedding_preset)
         self.master.bind("<Control-b>", self.return_to_browsing_mode)
         self.master.bind("<Control-v>", self.open_type_configuration_window)
+        self.master.bind("<Control-L>", lambda event: Utils.open_log_file())
         self.master.bind("<Home>", self.home)
         self.master.bind("<End>", lambda event: self.home(last_file=True))
         self.master.bind("<Prior>", self.page_up)
