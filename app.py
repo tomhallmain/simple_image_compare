@@ -559,7 +559,12 @@ class App():
             self.show_next_media()
 
     def set_compare_mode(self, event):
-        self.compare_wrapper.compare_mode = CompareMode.get(self.compare_mode_var.get())
+        try:
+            mode = CompareMode.get(self.compare_mode_var.get())
+        except Exception as e:
+            Utils.log_red(f"Compare mode not set: {e}")
+            return
+        self.compare_wrapper.compare_mode = mode
         self.label_compare_threshold["text"] = self.compare_wrapper.compare_mode.threshold_str()
         if self.compare_wrapper.compare_mode == CompareMode.COLOR_MATCHING:
             default_val = config.color_diff_threshold
@@ -844,16 +849,16 @@ class App():
             self.file_browser.set_recursive(recursive)
         try:
             if compare_mode != self.compare_wrapper.compare_mode.get_text():
-                self.compare_mode_var.set(compare_mode)
                 self.compare_wrapper.compare_mode = CompareMode.get(compare_mode)
+                self.compare_mode_var.set(compare_mode)
         except Exception as e:
-            Utils.log_red("Error setting stored compare mode: " + str(e))
+            Utils.log_red(f"Error setting stored compare mode: {e}")
         try:
             if sort_by != self.sort_by.get():
                 self.sort_by.set(sort_by)
                 self.file_browser.set_sort_by(SortBy.get(sort_by))
         except Exception as e:
-            Utils.log_red("Error setting stored sort by: " + str(e))
+            Utils.log_red(f"Error setting stored sort by: {e}")
         if not self.compare_wrapper.has_compare():
             self.set_mode(Mode.BROWSE)
             previous_file = app_info_cache.get(self.base_dir, "image_cursor")

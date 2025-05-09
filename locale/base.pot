@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-04-05 15:50-0400\n"
+"POT-Creation-Date: 2025-04-07 10:34-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: .\app.py:91 .\app.py:867 .\app.py:1821
+#: .\app.py:91 .\app.py:872 .\app.py:1826
 msgid " Simple Image Compare "
 msgstr ""
 
@@ -123,257 +123,257 @@ msgstr ""
 msgid "Would you like to quit the application?"
 msgstr ""
 
-#: .\app.py:578
+#: .\app.py:583
 msgid "Ended slideshows"
 msgstr ""
 
-#: .\app.py:631
+#: .\app.py:636
 msgid "No files found in directory after refresh."
 msgstr ""
 
-#: .\app.py:631 .\app.py:1630 .\app.py:1689
+#: .\app.py:636 .\app.py:1635 .\app.py:1694
 msgid "Warning"
 msgstr ""
 
-#: .\app.py:654
+#: .\app.py:659
 msgid "Slideshow for new images started"
 msgstr ""
 
-#: .\app.py:656
+#: .\app.py:661
 msgid "Slideshow started"
 msgstr ""
 
-#: .\app.py:659
+#: .\app.py:664
 msgid "Slideshows ended"
 msgstr ""
 
-#: .\app.py:672
+#: .\app.py:677
 msgid "Browsing mode set."
 msgstr ""
 
-#: .\app.py:706
+#: .\app.py:711
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr ""
 
-#: .\app.py:739
+#: .\app.py:744
 msgid "Many Files"
 msgstr ""
 
-#: .\app.py:765
+#: .\app.py:770
 msgid "No downstream related image(s) found in {0}"
 msgstr ""
 
-#: .\app.py:786
+#: .\app.py:791
 msgid "{0} file marks set"
 msgstr ""
 
-#: .\app.py:792
+#: .\app.py:797
 msgid "Help and Config"
 msgstr ""
 
-#: .\app.py:872
+#: .\app.py:877
 msgid "Set Image Comparison Directory"
 msgstr ""
 
-#: .\app.py:910
+#: .\app.py:915
 msgid "Counter limit must be an integer value."
 msgstr ""
 
-#: .\app.py:910 .\app.py:925
+#: .\app.py:915 .\app.py:930
 msgid "Invalid Setting"
 msgstr ""
 
-#: .\app.py:925
+#: .\app.py:930
 msgid "No image selected."
 msgstr ""
 
-#: .\app.py:962
+#: .\app.py:967
 msgid "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr ""
 
-#: .\app.py:967
+#: .\app.py:972
 msgid "Select image file"
 msgstr ""
 
-#: .\app.py:996
+#: .\app.py:1001
 msgid "Somehow, the search file is invalid"
 msgstr ""
 
-#: .\app.py:1081 .\app.py:1105
+#: .\app.py:1086 .\app.py:1110
 msgid "Failed to get active image filepath"
 msgstr ""
 
-#: .\app.py:1187
+#: .\app.py:1192
 msgid "{0}: {1}% complete"
 msgstr ""
 
-#: .\app.py:1193
+#: .\app.py:1198
 msgid "Confirm comparison"
 msgstr ""
 
-#: .\app.py:1194
+#: .\app.py:1199
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 
-#: .\app.py:1195
+#: .\app.py:1200
 msgid "Are you sure you want to proceed?"
 msgstr ""
 
-#: .\app.py:1215
+#: .\app.py:1220
 msgid "Error running compare"
 msgstr ""
 
-#: .\app.py:1247
+#: .\app.py:1252
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 
-#: .\app.py:1258
+#: .\app.py:1263
 msgid "Mark removed. Remaining: {0}"
 msgstr ""
 
-#: .\app.py:1262
+#: .\app.py:1267
 msgid "Mark added. Total set: {0}"
 msgstr ""
 
-#: .\app.py:1279
+#: .\app.py:1284
 msgid "Marks added. Total set: {0}"
 msgstr ""
 
-#: .\app.py:1288
+#: .\app.py:1293
 msgid "First sorted mark"
 msgstr ""
 
-#: .\app.py:1295
+#: .\app.py:1300
 msgid "Only one marked file set."
 msgstr ""
 
-#: .\app.py:1306
+#: .\app.py:1311
 msgid "Including marks: {0}"
 msgstr ""
 
-#: .\app.py:1314
+#: .\app.py:1319
 msgid "Move {0} Marked File(s)"
 msgstr ""
 
-#: .\app.py:1349
+#: .\app.py:1354
 msgid "NO_MARKS_SET"
 msgstr ""
 
-#: .\app.py:1382
+#: .\app.py:1387
 msgid "Prevalidations now running"
 msgstr ""
 
-#: .\app.py:1382
+#: .\app.py:1387
 msgid "Prevalidations turned off"
 msgstr ""
 
-#: .\app.py:1407
+#: .\app.py:1412
 msgid "File not found"
 msgstr ""
 
-#: .\app.py:1407
+#: .\app.py:1412
 msgid "No file was found for the search text: \"{0}\""
 msgstr ""
 
-#: .\app.py:1421
+#: .\app.py:1426
 msgid "No image selected"
 msgstr ""
 
-#: .\app.py:1421
+#: .\app.py:1426
 msgid "No image was selected for comparison"
 msgstr ""
 
-#: .\app.py:1434
+#: .\app.py:1439
 msgid "No Text Search Presets Found"
 msgstr ""
 
-#: .\app.py:1434
+#: .\app.py:1439
 msgid "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 
-#: .\app.py:1534
+#: .\app.py:1539
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr ""
 
-#: .\app.py:1545
+#: .\app.py:1550
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 
-#: .\app.py:1561
+#: .\app.py:1566
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
 msgstr ""
 
-#: .\app.py:1566
+#: .\app.py:1571
 msgid "Cleared all hidden images."
 msgstr ""
 
-#: .\app.py:1573
+#: .\app.py:1578
 msgid "DELETE_LOCK"
 msgstr ""
 
-#: .\app.py:1591
+#: .\app.py:1596
 msgid "Invalid action, no files found to delete"
 msgstr ""
 
-#: .\app.py:1594
+#: .\app.py:1599
 msgid "Invalid action, search image not found"
 msgstr ""
 
-#: .\app.py:1609
+#: .\app.py:1614
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 
-#: .\app.py:1614
+#: .\app.py:1619
 msgid "Removing file: {0}"
 msgstr ""
 
-#: .\app.py:1631
+#: .\app.py:1636
 msgid "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."
 msgstr ""
 
-#: .\app.py:1648
+#: .\app.py:1653
 msgid "Invalid target filepath for replacement: "
 msgstr ""
 
-#: .\app.py:1652
+#: .\app.py:1657
 msgid "Moved search image to "
 msgstr ""
 
-#: .\app.py:1687
+#: .\app.py:1692
 msgid "Running image gen: "
 msgstr ""
 
-#: .\app.py:1689
+#: .\app.py:1694
 msgid "Error running image generation:"
 msgstr ""
 
-#: .\app.py:1694
+#: .\app.py:1699
 msgid "Running refacdir"
 msgstr ""
 
-#: .\app.py:1699
+#: .\app.py:1704
 msgid "Error"
 msgstr ""
 
-#: .\app.py:1762
+#: .\app.py:1767
 msgid "GROUP_DETAILS"
 msgstr ""
 
-#: .\app.py:1766
+#: .\app.py:1771
 msgid "No image files found"
 msgstr ""
 
-#: .\app.py:1768
+#: .\app.py:1773
 msgid "1 image file found"
 msgstr ""
 
-#: .\app.py:1768
+#: .\app.py:1773
 msgid "{0} image files found"
 msgstr ""
 
-#: .\app.py:1771
+#: .\app.py:1776
 msgid "(filtered)"
 msgstr ""
 

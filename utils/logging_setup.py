@@ -6,7 +6,7 @@ from pathlib import Path
 
 from utils.custom_formatter import CustomFormatter
 
-def _cleanup_old_logs(log_dir):
+def _cleanup_old_logs(log_dir, logger):
     """
     Clean up log files that are older than 30 days if there are more than 10 log files.
     """
@@ -55,7 +55,7 @@ def setup_logging():
     log_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean up old logs before creating new one
-    _cleanup_old_logs(log_dir)
+    _cleanup_old_logs(log_dir, logger)
 
     date_str = datetime.now().strftime("%Y-%m-%d")
     log_file = log_dir / f'simple_image_compare_{date_str}.log'

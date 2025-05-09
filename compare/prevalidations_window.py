@@ -129,6 +129,17 @@ class Prevalidation:
         if self.run_on_folder is not None and not os.path.isdir(self.run_on_folder):
             raise Exception('Run on folder must be a valid directory: ' + self.run_on_folder)
 
+    def validate_dirs(self):
+        errors = []
+        if self.action_modifier and self.action_modifier != "" and not os.path.isdir(self.action_modifier):
+            errors.append(_("Action modifier is not a valid directory: ") + self.action_modifier)
+        if self.run_on_folder and self.run_on_folder != "" and not os.path.isdir(self.run_on_folder):
+            errors.append(_("Run on folder is not a valid directory: ") + self.run_on_folder)
+        if len(errors) > 0:
+            Utils.log_red(_("Invalid prevalidation {0}, may cause errors or be unable to run!").format(self.name))
+            for error in errors:
+                Utils.log_yellow(error)
+
     def is_move_action(self):
         return self.action == PrevalidationAction.MOVE or self.action == PrevalidationAction.COPY
 
@@ -382,6 +393,7 @@ class PrevalidationsWindow():
     def set_prevalidations():
         for prevalidation_dict in list(app_info_cache.get_meta("recent_prevalidations", default_val=[])):
             prevalidation = Prevalidation.from_dict(prevalidation_dict)
+            prevalidation.validate_dirs()
             PrevalidationsWindow.prevalidations.append(prevalidation)
             if prevalidation.is_move_action():
                 PrevalidationsWindow.directories_to_exclude.append(prevalidation.action_modifier)
