@@ -41,7 +41,25 @@ The UI can be used as a media file browser. The following features are available
 
 Zoom and drag functionality is available in both browsing mode, as well as when viewing grouped media after a comparison has been run.
 
-Note that in order to view videos and GIFs, you must set the `enable_videos` setting in the config file.
+Note that by default videos, GIFs, PDFs and SVGs are not included, you will need to open the filetype configuration window with Ctrl+J and turn them on.
+
+## Prevalidation Rules
+
+The tool includes a powerful prevalidation system that can automatically process media before they're shown to the user. This is useful for:
+
+- Automatically skipping, hiding, or deleting unwanted media
+- Moving or copying media to specific directories based on content
+- Filtering media using either CLIP embeddings or H5 image classifiers
+- Setting up rules that apply to specific directories
+
+Prevalidation rules can be configured with:
+- Positive and negative text prompts for embedding-based rules
+- Custom thresholds for matching
+- Different actions (skip, hide, notify, move, copy, delete)
+- Directory-specific rules
+- H5 model-based classification rules
+
+This feature is particularly useful for maintaining clean media collections and automating content filtering.
 
 ## Usage
 
@@ -77,6 +95,14 @@ If a search image is set simultaneously with search text, its embedding will be 
 `sort_by` defines the default image browsing sort setting upon starting the application.
 
 `trash_folder` defines the target folder for image deletion. If not set, deletion will send the image to your system's default trash folder.
+
+`enable_prevalidations` enables the prevalidation system. When enabled, prevalidation rules will be applied to media before they are shown.
+
+`image_classifier_h5_models` defines a list of H5 models that can be used for prevalidation rules. Each model should specify:
+- `model_name`: A unique name for the model
+- `model_location`: Path to the .h5 model file
+- `model_categories`: List of categories the model can classify
+- `use_hub_keras_layers`: Whether to use Keras hub layers
 
 If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) then opening image details for an image with a stable diffusion prompt will give prompt information found in the image.
 
