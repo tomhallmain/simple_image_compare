@@ -40,7 +40,7 @@ class Config:
         self.default_main_window_size = "1400x950"
         self.default_secondary_window_size = "600x700"
         self.sort_by = SortBy.NAME
-        self.toasts_persist_seconds = 2
+        self.toasts_persist_seconds = 5
         self.delete_instantly = False
         self.clear_marks_with_errors_after_move = False
         self.move_marks_overwrite_existing_file = False

@@ -26,7 +26,7 @@
   "default_main_window_size": "1400x950",
   "default_secondary_window_size": "600x700",
   "sort_by": "CREATION_TIME",
-  "toasts_persist_seconds": 2,
+  "toasts_persist_seconds": 5,
   "delete_instantly": false,
   "clear_marks_with_errors_after_move": false,
   "move_marks_overwrite_existing_file": false,

@@ -1479,15 +1479,15 @@ class App():
 
     def home(self, event=None, last_file=False):
         if self.mode == Mode.BROWSE:
-            self.file_browser.refresh()
             current_file = self.get_active_media_filepath()
+            self.file_browser.refresh()
             if current_file is None:
                 raise Exception("No active image file.")
             if last_file:
                 last_image = self.file_browser.last_file()
                 while self.compare_wrapper.skip_image(last_image) and last_image != current_file:
                     last_image = self.file_browser.previous_file()
-                self.create_image(self.file_browser.last_file())
+                self.create_image(last_image)
                 if len(MarkedFiles.file_marks) == 1 and self.file_browser.has_file(MarkedFiles.file_marks[0]):
                     self._add_all_marks_from_last_or_current_group()
                 self.direction = Direction.BACKWARD
