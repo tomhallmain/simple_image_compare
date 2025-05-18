@@ -162,9 +162,6 @@ class App():
         self.window_id = window_id
         self.base_title = ""
 
-        # Set up notification manager callback
-        notification_manager.set_app_actions(self.app_actions, self.window_id)
-
         if not self.is_secondary():
             TypeConfigurationWindow.load_pending_changes() # cannot be in load_info_cache because it is called before file_browser initialization
             TypeConfigurationWindow.apply_changes()
@@ -220,6 +217,9 @@ class App():
             "_add_buttons_for_mode": self._add_buttons_for_mode,
         }
         self.app_actions = AppActions(actions=app_actions)
+
+        # Set up notification manager callback
+        notification_manager.set_app_actions(self.app_actions, self.window_id)
 
         self.base_dir = Utils.get_user_dir() if base_dir is None else base_dir
         self.search_dir = Utils.get_user_dir()
@@ -488,6 +488,8 @@ class App():
             self.file_check_config.end_filecheck()
             self.slideshow_config.end_slideshows()
         else:
+            # Clean up notification manager threads for main window
+            notification_manager.cleanup_threads()
             for _app in App.open_windows:
                 _app.store_info_cache()
         self.master.destroy()
@@ -1633,7 +1635,7 @@ class App():
     def _handle_delete(self, filepath, toast=True, manual_delete=True):
         MarkedFiles.set_delete_lock()  # Undo deleting action is not supported
         if toast and manual_delete:
-            self.toast(_("Removing file: {0}").format(filepath))
+            self.title_notify(_("Removing file: {0}").format(filepath), action_type=ActionType.REMOVE_FILE)
         else:
             Utils.log("Removing file: " + filepath)
         if config.delete_instantly:

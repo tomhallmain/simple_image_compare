@@ -1,11 +1,13 @@
 import time
 from threading import Lock, Timer
 from typing import List, Optional
+from utils.config import config
 from utils.constants import ActionType
 
 def debug_log(msg: str):
     """Debug logging function"""
-    print(f"[NotificationManager] {msg}")
+    if config.debug:
+        print(f"[NotificationManager] {msg}")
 
 class Notification:
     def __init__(self, message: str, base_message: Optional[str] = None, duration: float = 5.0,
@@ -60,6 +62,13 @@ class NotificationManager:
         """Set the app_actions for a specific window."""
         debug_log(f"Setting app_actions for window {window_id}")
         self._app_actions[window_id] = app_actions
+
+    def cleanup_threads(self):
+        """Clean up all threads."""
+        debug_log("Cleaning up all threads")
+        if self._timer:
+            self._timer.cancel()
+        self._timer = None
 
     def _schedule_cleanup(self) -> None:
         """Schedule periodic cleanup of old notifications."""
@@ -141,7 +150,13 @@ class NotificationManager:
         if current_title is not None:
             for window_id, app_actions in self._app_actions.items():
                 debug_log(f"Calling title update callback for window {window_id}")
-                app_actions.title(current_title)
+                try:
+                    app_actions.title(current_title)
+                except Exception as e:
+                    debug_log(f"Failed to update title for window {window_id}: {e}")
+                    # Window may have been closed, remove its callbacks
+                    self._app_actions.pop(window_id, None)
+                    self._current_titles.pop(window_id, None)
         
         # Schedule next update outside the lock if needed
         if needs_update:
