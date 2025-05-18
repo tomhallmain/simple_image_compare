@@ -1774,7 +1774,7 @@ class App():
         if sys.platform == "darwin":
             self.media_canvas.focus()
 
-    def title_notify(self, message, base_message="", time_in_seconds=config.toasts_persist_seconds,
+    def title_notify(self, message, base_message="", time_in_seconds=0,
                      action_type=ActionType.SYSTEM, is_manual=True):
         """
         Temporarily modifies the window title to show a notification message.
@@ -1783,6 +1783,9 @@ class App():
         # Utils.log("Title notification: " + message.replace("\n", " "))
         if not config.show_toasts:
             return
+
+        if time_in_seconds == 0:
+            time_in_seconds = config.title_notify_persist_seconds
 
         # Update the notification manager with current title and new notification
         notification_manager.set_current_title(self.get_title_from_base_dir(), window_id=self.window_id)

@@ -1,8 +1,12 @@
 import time
 from threading import Lock, Timer
 from typing import List, Optional
+
+from tkinter import TclError
+
 from utils.config import config
 from utils.constants import ActionType
+from utils.utils import Utils
 
 def debug_log(msg: str):
     """Debug logging function"""
@@ -65,7 +69,7 @@ class NotificationManager:
 
     def cleanup_threads(self):
         """Clean up all threads."""
-        debug_log("Cleaning up all threads")
+        Utils.log("Cleaning up all threads")
         if self._timer:
             self._timer.cancel()
         self._timer = None
@@ -148,15 +152,19 @@ class NotificationManager:
         
         # Update the title using all callbacks outside the lock
         if current_title is not None:
-            for window_id, app_actions in self._app_actions.items():
+            # Create a copy of items to safely iterate while potentially modifying the dict
+            for window_id, app_actions in list(self._app_actions.items()):
                 debug_log(f"Calling title update callback for window {window_id}")
                 try:
                     app_actions.title(current_title)
                 except Exception as e:
                     debug_log(f"Failed to update title for window {window_id}: {e}")
-                    # Window may have been closed, remove its callbacks
-                    self._app_actions.pop(window_id, None)
-                    self._current_titles.pop(window_id, None)
+                    # Only remove callbacks for Tkinter-specific errors as window may have been closed
+                    if isinstance(e, TclError) and "bad window path name" in str(e):
+                        self._app_actions.pop(window_id, None)
+                        self._current_titles.pop(window_id, None)
+                    else:
+                        Utils.log_red(f"Failed to update title for window {window_id}: {e}")
         
         # Schedule next update outside the lock if needed
         if needs_update:
