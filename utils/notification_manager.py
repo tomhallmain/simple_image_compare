@@ -128,7 +128,7 @@ class NotificationManager:
     def _update_title(self) -> None:
         """Update the title based on current notifications."""
         debug_log("Starting title update")
-        current_title = None
+        current_titles = {}
         
         with self._lock:
             debug_log("Acquired lock for title update")
@@ -144,27 +144,29 @@ class NotificationManager:
             self._notifications = [n for n in self._notifications if n.expires_at > current_time]
             debug_log(f"Number of notifications after filtering: {len(self._notifications)}")
             
-            # Get the title while we still have the lock
-            current_title = self.get_display_title()
+            # Get the title for each window while we still have the lock
+            for window_id in self._app_actions.keys():
+                current_titles[window_id] = self.get_display_title(window_id)
             
             # Check if we need to schedule another update
             needs_update = bool(self._notifications)
         
         # Update the title using all callbacks outside the lock
-        if current_title is not None:
+        if current_titles:
             # Create a copy of items to safely iterate while potentially modifying the dict
             for window_id, app_actions in list(self._app_actions.items()):
-                debug_log(f"Calling title update callback for window {window_id}")
-                try:
-                    app_actions.title(current_title)
-                except Exception as e:
-                    debug_log(f"Failed to update title for window {window_id}: {e}")
-                    # Only remove callbacks for Tkinter-specific errors as window may have been closed
-                    if isinstance(e, TclError) and "bad window path name" in str(e):
-                        self._app_actions.pop(window_id, None)
-                        self._current_titles.pop(window_id, None)
-                    else:
-                        Utils.log_red(f"Failed to update title for window {window_id}: {e}")
+                if window_id in current_titles:
+                    debug_log(f"Calling title update callback for window {window_id}")
+                    try:
+                        app_actions.title(current_titles[window_id])
+                    except Exception as e:
+                        debug_log(f"Failed to update title for window {window_id}: {e}")
+                        # Only remove callbacks for Tkinter-specific errors as window may have been closed
+                        if isinstance(e, TclError) and "bad window path name" in str(e):
+                            self._app_actions.pop(window_id, None)
+                            self._current_titles.pop(window_id, None)
+                        else:
+                            Utils.log_red(f"Failed to update title for window {window_id}: {e}")
         
         # Schedule next update outside the lock if needed
         if needs_update:
