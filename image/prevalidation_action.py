@@ -15,10 +15,10 @@ class PrevalidationAction(Enum):
 
     @staticmethod
     def get_action(action_name):
-        for name, value in PrevalidationAction.__members__:
-            if upper(action_name) == name:
+        for name, value in PrevalidationAction.__members__.items():
+            if action_name.upper() == name:
                 return value
-
+        raise Exception("Invalid prevalidation action: " + action_name)
 
 
 

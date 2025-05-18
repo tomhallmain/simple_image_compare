@@ -209,3 +209,41 @@ class CompareMediaType(Enum):
             return _("SVG")
         raise Exception("Unhandled media type translation: " + str(self))
 
+
+class ActionType(Enum):
+    """Enumeration of supported action types for notifications."""
+    MOVE_FILE = "move_file"
+    COPY_FILE = "copy_file"
+    REMOVE_FILE = "remove_file"
+    MARK_FILE = "mark_file"
+    UNMARK_FILE = "unmark_file"
+    SEARCH_FILE = "search_file"
+    COMPARE_FILES = "compare_files"
+    GENERATE_IMAGE = "generate_image"
+    CHANGE_DIRECTORY = "change_directory"
+    SYSTEM = "system"  # For general system notifications
+
+    def get_translation(self):
+        """Get the translated string for this action type."""
+        if self == ActionType.MOVE_FILE:
+            return _("Moved files")
+        elif self == ActionType.COPY_FILE:
+            return _("Copied files")
+        elif self == ActionType.REMOVE_FILE:
+            return _("Removed files")
+        elif self == ActionType.MARK_FILE:
+            return _("Marked files")
+        elif self == ActionType.UNMARK_FILE:
+            return _("Unmarked files")
+        elif self == ActionType.SEARCH_FILE:
+            return _("Searched files")
+        elif self == ActionType.COMPARE_FILES:
+            return _("Compared files")
+        elif self == ActionType.GENERATE_IMAGE:
+            return _("Generated images")
+        elif self == ActionType.CHANGE_DIRECTORY:
+            return _("Changed directory")
+        elif self == ActionType.SYSTEM:
+            return _("System")
+        raise Exception("Unhandled action type translation: " + str(self))
+

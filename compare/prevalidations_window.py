@@ -13,6 +13,7 @@ from lib.multiselect_dropdown import MultiSelectDropdown
 from utils.app_style import AppStyle
 from utils.app_info_cache import app_info_cache
 from utils.config import config
+from utils.constants import ActionType
 from utils.translations import I18N
 from utils.utils import Utils
 
@@ -65,27 +66,31 @@ class Prevalidation:
     def is_selected_category_unset(self):
         return len(self.image_classifier_selected_categories) > 0
 
-    def run_on_image_path(self, image_path, hide_callback, toast_callback):
+    def run_on_image_path(self, image_path, hide_callback, notify_callback):
         if self.image_classifier is not None:
             is_above_threshold = self.image_classifier.test_image_for_categories(image_path, self.image_classifier_selected_categories)
         else:
             is_above_threshold = CompareEmbedding.multi_text_compare(image_path, self.positives, self.negatives, self.threshold)
-        return self.run_action(image_path, hide_callback, toast_callback) if is_above_threshold else None
+        return self.run_action(image_path, hide_callback, notify_callback) if is_above_threshold else None
 
-    def run_action(self, image_path, hide_callback, toast_callback):
+    def run_action(self, image_path, hide_callback, notify_callback):
+        base_message = self.name + _(" detected")
         if self.action == PrevalidationAction.SKIP:
-            toast_callback(self.name +  _(" detected") +  _(" - skipped"))
+            notify_callback(_(" - skipped"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
         elif self.action == PrevalidationAction.HIDE:
             hide_callback(image_path)
-            toast_callback(self.name + _(" detected") + _(" - hidden"))
+            notify_callback(_(" - hidden"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
         elif self.action == PrevalidationAction.NOTIFY:
-            toast_callback(self.name + _(" detected"))
+            notify_callback(base_message, base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
         elif self.action == PrevalidationAction.MOVE or self.action == PrevalidationAction.COPY:
             if self.action_modifier is not None and len(self.action_modifier) > 0:
                 if not os.path.exists(self.action_modifier):
                     raise Exception("Invalid move target directory for prevalidation " + self.name + ": " + self.action_modifier)
-                if not os.path.normpath(os.path.dirname(image_path)) == os.path.normpath(self.action_modifier):
-                    toast_callback(self.name + _(" detected") + "\n" + _("Moving file: ") + image_path)
+                if os.path.normpath(os.path.dirname(image_path)) != os.path.normpath(self.action_modifier):
+                    action_type = ActionType.MOVE_FILE if self.action == PrevalidationAction.MOVE else ActionType.COPY_FILE
+                    specific_message = _("Moving file: ") + image_path
+                    notify_callback("\n" + specific_message, base_message=base_message,
+                                    action_type=action_type, is_manual=False)
                     try:
                         FileActionsWindow.add_file_action(
                             Utils.move_file if self.action == PrevalidationAction.MOVE else Utils.copy_file,
@@ -96,12 +101,13 @@ class Prevalidation:
             else:
                 raise Exception("Target directory not defined on prevalidation "  + self.name)
         elif self.action == PrevalidationAction.DELETE:
-            toast_callback(self.name + _(" detected") + "\n" + _("Deleting file: ") + image_path)
-            try:
+            notify_callback("\n" + _("Deleting file: ") + image_path, base_message=base_message,
+                            action_type=ActionType.REMOVE_FILE, is_manual=False)
+            try:    
                 os.remove(image_path)
-                print("Deleted file at " + image_path)
+                Utils.log("Deleted file at " + image_path)
             except Exception as e:
-                print(e)
+                Utils.log_red("Error deleting file at " + image_path + ": " + str(e))
         return self.action
 
     def get_negatives_str(self):
@@ -367,7 +373,7 @@ class PrevalidationsWindow():
     COL_0_WIDTH = 600
 
     @staticmethod
-    def prevalidate(image_path, get_base_dir_func, hide_callback, toast_callback):
+    def prevalidate(image_path, get_base_dir_func, hide_callback, notify_callback):
         base_dir = get_base_dir_func()
         if len(PrevalidationsWindow.directories_to_exclude) > 0:
             if base_dir in PrevalidationsWindow.directories_to_exclude:
@@ -380,7 +386,7 @@ class PrevalidationsWindow():
                         continue
                     if prevalidation.run_on_folder is not None and base_dir != prevalidation.run_on_folder:
                         continue
-                    prevalidation_action = prevalidation.run_on_image_path(image_path, hide_callback, toast_callback)
+                    prevalidation_action = prevalidation.run_on_image_path(image_path, hide_callback, notify_callback)
                     if prevalidation_action is not None:
                         break
             if prevalidation_action is None or prevalidation_action.is_cache_type():

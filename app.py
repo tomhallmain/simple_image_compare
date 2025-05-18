@@ -28,8 +28,9 @@ from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config, FileCheckConfig, SlideshowConfig
-from utils.constants import Mode, CompareMode, Direction
+from utils.constants import Mode, CompareMode, Direction, ActionType
 from utils.help_and_config import HelpAndConfig
+from utils.notification_manager import notification_manager
 from utils.running_tasks_registry import periodic, start_thread
 from utils.translations import I18N
 from utils.utils import Utils, ModifierKey
@@ -159,6 +160,10 @@ class App():
         self.master.rowconfigure(0, weight=1)
         self.master.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.window_id = window_id
+        self.base_title = ""
+
+        # Set up notification manager callback
+        notification_manager.set_title_update_callback(self.master.title)
 
         if not self.is_secondary():
             TypeConfigurationWindow.load_pending_changes() # cannot be in load_info_cache because it is called before file_browser initialization
@@ -189,6 +194,7 @@ class App():
             "refresh_all_compares": App.refresh_all_compares,
             "find_window_with_compare": App.find_window_with_compare,
             "toast": self.toast,
+            "title_notify": self.title_notify,
             "alert": self.alert,
             "refresh": self.refresh,
             "refocus": self.refocus,
@@ -813,6 +819,13 @@ class App():
             except Exception:
                 pass
 
+    def get_title_from_base_dir(self, overwrite=False) -> str:
+        """Generate the window title based on the current base directory."""
+        if overwrite:
+            relative_dirpath = Utils.get_relative_dirpath(self.base_dir, levels=2)
+            self.base_title = _(" Simple Image Compare ") + "- " + relative_dirpath
+        return self.base_title
+
     def set_base_dir(self, base_dir_from_dir_window=None) -> None:
         '''
         Change the base directory to the value provided in the UI.
@@ -868,8 +881,7 @@ class App():
             else:
                 self.show_next_media()
             self._set_label_state()
-        relative_dirpath = Utils.get_relative_dirpath(self.base_dir, levels=2)
-        self.master.title(_(" Simple Image Compare ") + "- " + relative_dirpath)
+        self.master.title(self.get_title_from_base_dir(overwrite=True))
         self.master.update()
 
     def open_recent_directory_window(self, event=None, open_gui=True, run_compare_image=None, extra_callback_args=None):
@@ -1754,6 +1766,20 @@ class App():
         start_thread(self_destruct_after, use_asyncio=False, args=[time_in_seconds])
         if sys.platform == "darwin":
             self.media_canvas.focus()
+
+    def title_notify(self, message, base_message="", time_in_seconds=config.toasts_persist_seconds,
+                     action_type=ActionType.SYSTEM, is_manual=True):
+        """
+        Temporarily modifies the window title to show a notification message.
+        The original title is restored after the specified time.
+        """
+        # Utils.log("Title notification: " + message.replace("\n", " "))
+        if not config.show_toasts:
+            return
+
+        # Update the notification manager with current title and new notification
+        notification_manager.set_current_title(self.get_title_from_base_dir())
+        notification_manager.add_notification(message, base_message, time_in_seconds, action_type, is_manual)
 
     def _set_label_state(self, text=None, group_number=None, size=-1):
         if text is not None:

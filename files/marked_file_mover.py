@@ -15,7 +15,7 @@ from image.image_data_extractor import image_data_extractor
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
-from utils.constants import Mode
+from utils.constants import Mode, ActionType
 from utils.translations import I18N
 from utils.utils import Utils, ModifierKey
 
@@ -401,12 +401,13 @@ class MarkedFiles():
             return False, False
         if len(exceptions) < len(files_to_move):
             FileActionsWindow.update_history(action)
+            action_type = ActionType.MOVE_FILE if is_moving else ActionType.COPY_FILE
             if is_moving:
                 message = _("Moved {0} files to {1}").format(len(files_to_move) - len(exceptions), target_dir)
             else:
                 message = _("Copied {0} files to {1}").format(len(files_to_move) - len(exceptions), target_dir)
             Utils.log_yellow(message.replace("\n", " "))
-            app_actions.toast(message)
+            app_actions.title_notify(message, action_type=action_type)
             MarkedFiles.delete_lock = False
         MarkedFiles.file_marks.clear()
         exceptions_present = len(exceptions) > 0
