@@ -163,7 +163,7 @@ class App():
         self.base_title = ""
 
         # Set up notification manager callback
-        notification_manager.set_title_update_callback(self.master.title, self.window_id)
+        notification_manager.set_app_actions(self.app_actions, self.window_id)
 
         if not self.is_secondary():
             TypeConfigurationWindow.load_pending_changes() # cannot be in load_info_cache because it is called before file_browser initialization
@@ -189,6 +189,7 @@ class App():
         Style().configure(".", font=('Helvetica', config.font_size))
 
         app_actions = {
+            "title": self.master.title,
             "new_window": App.add_secondary_window,
             "get_window": App.get_window,
             "refresh_all_compares": App.refresh_all_compares,
@@ -199,6 +200,7 @@ class App():
             "refresh": self.refresh,
             "refocus": self.refocus,
             "set_mode": self.set_mode,
+            "is_fullscreen": self.is_fullscreen,
             "get_active_media_filepath": self.get_active_media_filepath,
             "create_image": self.create_image,
             "show_next_media": self.show_next_media,
@@ -470,6 +472,9 @@ class App():
 
     def is_secondary(self):
         return self.window_id > 0
+
+    def is_fullscreen(self): # TODO: Maybe for OS X should check if the window is in full screen mode
+        return self.fullscreen
 
     def on_closing(self):
         self.store_info_cache(store_window_state=not self.is_secondary())

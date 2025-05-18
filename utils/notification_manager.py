@@ -47,19 +47,19 @@ class NotificationManager:
         self._timer: Optional[Timer] = None
         self._current_titles = {}  # Dictionary of current titles keyed by window ID
         self._base_group_window = 3.0  # Base time window in seconds to group similar notifications
-        self._current_group_window = self._base_group_window
+        self._current_group_window = self._base_group_window # NOTE: Maybe make this a map too
         self._max_group_window = 10.0  # Maximum time window in seconds
         self._window_expansion_rate = 1.5  # How much to expand the window when notifications arrive
         self._window_contraction_rate = 0.8  # How much to contract the window when no notifications arrive
         self._last_notification_time = 0.0
         self._cleanup_interval = 60.0  # Clean up notifications every 60 seconds
-        self._title_update_callbacks = {}  # Dictionary of callbacks keyed by window ID
+        self._app_actions = {}  # Dictionary of app_actions keyed by window ID
         self._schedule_cleanup()
 
-    def set_title_update_callback(self, callback, window_id=0):
-        """Set the callback function to update the window title for a specific window."""
-        debug_log(f"Setting title update callback for window {window_id}")
-        self._title_update_callbacks[window_id] = callback
+    def set_app_actions(self, app_actions, window_id=0):
+        """Set the app_actions for a specific window."""
+        debug_log(f"Setting app_actions for window {window_id}")
+        self._app_actions[window_id] = app_actions
 
     def _schedule_cleanup(self) -> None:
         """Schedule periodic cleanup of old notifications."""
@@ -139,9 +139,9 @@ class NotificationManager:
         
         # Update the title using all callbacks outside the lock
         if current_title is not None:
-            for window_id, callback in self._title_update_callbacks.items():
+            for window_id, app_actions in self._app_actions.items():
                 debug_log(f"Calling title update callback for window {window_id}")
-                callback(current_title)
+                app_actions.title(current_title)
         
         # Schedule next update outside the lock if needed
         if needs_update:
@@ -205,9 +205,14 @@ class NotificationManager:
             self._schedule_update()
 
         # Update title outside the lock
-        if should_update and current_title is not None and window_id in self._title_update_callbacks:
-            debug_log(f"Calling title update callback for window {window_id}")
-            self._title_update_callbacks[window_id](current_title)
+        if should_update and current_title is not None and window_id in self._app_actions:
+            app_actions = self._app_actions[window_id]
+            if app_actions.is_fullscreen():
+                debug_log(f"Calling toast callback for window {window_id}")
+                app_actions.toast(message, duration)
+            else:
+                debug_log(f"Calling title update callback for window {window_id}")
+                app_actions.title(current_title)
         debug_log("Notification addition completed")
 
     def set_current_title(self, title: str, window_id: int = 0) -> None:

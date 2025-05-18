@@ -79,7 +79,7 @@ def main():
     print("\n=== Starting Notification Manager Test ===")
     
     # Set up the mock callback
-    notification_manager.set_title_update_callback(mock_title_callback)
+    # notification_manager.set_title_update_callback(mock_title_callback)
     
     # Set initial title
     notification_manager.set_current_title("Simple Image Compare - C:/test/images")
