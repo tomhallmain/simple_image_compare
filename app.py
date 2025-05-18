@@ -163,7 +163,7 @@ class App():
         self.base_title = ""
 
         # Set up notification manager callback
-        notification_manager.set_title_update_callback(self.master.title)
+        notification_manager.set_title_update_callback(self.master.title, self.window_id)
 
         if not self.is_secondary():
             TypeConfigurationWindow.load_pending_changes() # cannot be in load_info_cache because it is called before file_browser initialization
@@ -1778,8 +1778,8 @@ class App():
             return
 
         # Update the notification manager with current title and new notification
-        notification_manager.set_current_title(self.get_title_from_base_dir())
-        notification_manager.add_notification(message, base_message, time_in_seconds, action_type, is_manual)
+        notification_manager.set_current_title(self.get_title_from_base_dir(), window_id=self.window_id)
+        notification_manager.add_notification(message, base_message, time_in_seconds, action_type, is_manual, window_id=self.window_id)
 
     def _set_label_state(self, text=None, group_number=None, size=-1):
         if text is not None:

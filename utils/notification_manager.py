@@ -9,7 +9,7 @@ def debug_log(msg: str):
 
 class Notification:
     def __init__(self, message: str, base_message: Optional[str] = None, duration: float = 5.0,
-                 action_type: ActionType = ActionType.SYSTEM, is_manual: bool = True):
+                 action_type: ActionType = ActionType.SYSTEM, is_manual: bool = True, window_id: int = 0):
         self.message = message.replace("\n", " ") # TODO remove this when all translations have newline removed
         self.base_message = base_message
         self.duration = duration
@@ -20,6 +20,7 @@ class Notification:
         self.count = 1  # Track number of similar notifications
         self.auto_count = 0 if is_manual else 1  # Track number of auto notifications
         self.manual_count = 1 if is_manual else 0  # Track number of manual notifications
+        self.window_id = window_id  # Track which window generated this notification
         self.shown = False  # Track whether this notification has been displayed
 
     def get_display_message(self) -> str:
@@ -44,7 +45,7 @@ class NotificationManager:
         self._notifications: List[Notification] = []
         self._lock = Lock()
         self._timer: Optional[Timer] = None
-        self._current_title: Optional[str] = None
+        self._current_titles = {}  # Dictionary of current titles keyed by window ID
         self._base_group_window = 3.0  # Base time window in seconds to group similar notifications
         self._current_group_window = self._base_group_window
         self._max_group_window = 10.0  # Maximum time window in seconds
@@ -52,13 +53,13 @@ class NotificationManager:
         self._window_contraction_rate = 0.8  # How much to contract the window when no notifications arrive
         self._last_notification_time = 0.0
         self._cleanup_interval = 60.0  # Clean up notifications every 60 seconds
-        self._title_update_callback = None
+        self._title_update_callbacks = {}  # Dictionary of callbacks keyed by window ID
         self._schedule_cleanup()
 
-    def set_title_update_callback(self, callback):
-        """Set the callback function to update the window title."""
-        debug_log("Setting title update callback")
-        self._title_update_callback = callback
+    def set_title_update_callback(self, callback, window_id=0):
+        """Set the callback function to update the window title for a specific window."""
+        debug_log(f"Setting title update callback for window {window_id}")
+        self._title_update_callbacks[window_id] = callback
 
     def _schedule_cleanup(self) -> None:
         """Schedule periodic cleanup of old notifications."""
@@ -115,7 +116,6 @@ class NotificationManager:
         """Update the title based on current notifications."""
         debug_log("Starting title update")
         current_title = None
-        needs_update = False
         
         with self._lock:
             debug_log("Acquired lock for title update")
@@ -137,10 +137,11 @@ class NotificationManager:
             # Check if we need to schedule another update
             needs_update = bool(self._notifications)
         
-        # Update the title using the callback outside the lock
-        if self._title_update_callback and current_title is not None:
-            debug_log("Calling title update callback")
-            self._title_update_callback(current_title)
+        # Update the title using all callbacks outside the lock
+        if current_title is not None:
+            for window_id, callback in self._title_update_callbacks.items():
+                debug_log(f"Calling title update callback for window {window_id}")
+                callback(current_title)
         
         # Schedule next update outside the lock if needed
         if needs_update:
@@ -150,9 +151,9 @@ class NotificationManager:
         debug_log("Title update completed")
 
     def add_notification(self, message: str, base_message: Optional[str] = "", duration: float = 5.0,
-                         action_type: ActionType = ActionType.SYSTEM, is_manual: bool = True) -> None:
+                         action_type: ActionType = ActionType.SYSTEM, is_manual: bool = True, window_id: int = 0) -> None:
         """Add a new notification to the queue."""
-        debug_log(f"Adding notification: {message}")
+        debug_log(f"Adding notification for window {window_id}: {message}")
         current_time = time.time()
         should_update = False
         current_title = None
@@ -173,6 +174,7 @@ class NotificationManager:
             for notification in self._notifications:
                 if (notification.action_type == action_type and
                     notification.base_message == base_message and
+                    notification.window_id == window_id and
                     current_time - notification.created_at < self._current_group_window):
                     # Update the existing notification
                     debug_log("Updating existing notification")
@@ -191,58 +193,59 @@ class NotificationManager:
             if not should_update:
                 # If no similar notification found, create a new one
                 debug_log("Creating new notification")
-                notification = Notification(message, base_message, duration, action_type, is_manual)
+                notification = Notification(message, base_message, duration, action_type, is_manual, window_id)
                 self._notifications.append(notification)
                 debug_log(f"New notification expires at: {notification.expires_at}")
                 should_update = True
 
         if should_update:
             # Get the title while we still have the lock
-            current_title = self.get_display_title()
+            current_title = self.get_display_title(window_id)
             # Schedule cleanup
             self._schedule_update()
 
         # Update title outside the lock
-        if should_update and current_title is not None and self._title_update_callback:
-            debug_log("Calling title update callback")
-            self._title_update_callback(current_title)
+        if should_update and current_title is not None and window_id in self._title_update_callbacks:
+            debug_log(f"Calling title update callback for window {window_id}")
+            self._title_update_callbacks[window_id](current_title)
         debug_log("Notification addition completed")
 
-    def set_current_title(self, title: str) -> None:
+    def set_current_title(self, title: str, window_id: int = 0) -> None:
         """Set the current window title."""
-        debug_log(f"Setting current title: {title}")
+        debug_log(f"Setting current title for window {window_id}: {title}")
         with self._lock:
-            self._current_title = title
+            self._current_titles[window_id] = title
 
-    def get_display_title(self) -> str:
+    def get_display_title(self, window_id: int = 0) -> str:
         """Get the title that should be displayed, including any active notifications."""
-        debug_log("Getting display title")
+        debug_log(f"Getting display title for window {window_id}")
         # Note: This method assumes it's being called while the lock is already held
-        if not self._notifications:
-            debug_log("No notifications, returning base title")
-            return self._current_title or ""
+        window_notifications = [n for n in self._notifications if n.window_id == window_id]
+        if not window_notifications:
+            debug_log(f"No notifications for window {window_id}, returning base title")
+            return self._current_titles.get(window_id, "")
 
         # Filter out expired notifications
         current_time = time.time()
         debug_log(f"Current time in get_display_title: {current_time}")
-        debug_log(f"Number of notifications before filtering: {len(self._notifications)}")
+        debug_log(f"Number of notifications before filtering: {len(window_notifications)}")
         
         # Log each notification's expiration time
-        for n in self._notifications:
+        for n in window_notifications:
             debug_log(f"Notification expires at: {n.expires_at} (in {n.expires_at - current_time:.2f} seconds)")
         
-        self._notifications = [n for n in self._notifications if n.expires_at > current_time]
-        debug_log(f"Number of notifications after filtering: {len(self._notifications)}")
+        window_notifications = [n for n in window_notifications if n.expires_at > current_time]
+        debug_log(f"Number of notifications after filtering: {len(window_notifications)}")
         
-        if not self._notifications:
-            debug_log("No active notifications after filtering")
-            return self._current_title or ""
+        if not window_notifications:
+            debug_log(f"No active notifications after filtering for window {window_id}")
+            return self._current_titles.get(window_id, "")
 
         # Sort notifications by creation time (newest first)
-        sorted_notifications = sorted(self._notifications, key=lambda n: n.created_at, reverse=True)
+        sorted_notifications = sorted(window_notifications, key=lambda n: n.created_at, reverse=True)
         
         # Start with the base title
-        title = self._current_title or ""
+        title = self._current_titles.get(window_id, "")
         remaining_length = 250 - len(title) - 3  # Reserve space for " - " and potential "etc."
         
         # Add notifications until we hit the length limit
