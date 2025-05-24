@@ -1,5 +1,6 @@
 import os
 import tempfile
+import asyncio
 from typing import Dict
 
 import cv2
@@ -18,6 +19,13 @@ try:
 except ImportError:
     pass
 
+has_imported_pyppeteer = False
+try:
+    from pyppeteer import launch
+    has_imported_pyppeteer = True
+except ImportError:
+    pass
+
 from utils.config import config
 from utils.utils import Utils
 from utils.constants import CompareMediaType
@@ -25,7 +33,7 @@ from utils.constants import CompareMediaType
 
 class FrameCache:
     """
-    A cache for extracting and storing the first frame from various media types (videos, GIFs, PDFs, SVGs).
+    A cache for extracting and storing the first frame from various media types (videos, GIFs, PDFs, SVGs, HTMLs).
     This helps improve performance by avoiding repeated frame extraction operations.
 
     TODO support getting an "average" frame from a video, or at least an average embedding
@@ -36,7 +44,7 @@ class FrameCache:
     @classmethod
     def get_image_path(cls, media_path: str) -> str:
         """
-        Get the image path for a media file. If it's a video/GIF/PDF/SVG, extracts the first frame.
+        Get the image path for a media file. If it's a video/GIF/PDF/SVG/HTML, extracts the first frame.
         Otherwise returns the original path.
 
         Args:
@@ -64,6 +72,16 @@ class FrameCache:
                     return cls.get_first_frame(media_path, CompareMediaType.PDF)
                 else:
                     raise ImportError("Unable to extract PDF frame: pypdfium2 is not installed")
+            else:
+                return media_path
+
+        # Check for HTML files
+        if media_path_lower.endswith('.html') or media_path_lower.endswith('.htm'):
+            if config.enable_html:
+                if has_imported_pyppeteer:
+                    return cls.get_first_frame(media_path, CompareMediaType.HTML)
+                else:
+                    raise ImportError("Unable to convert HTML to image: pyppeteer is not installed")
             else:
                 return media_path
 
@@ -105,6 +123,8 @@ class FrameCache:
                 cls._extract_pdf_frame(media_path)
             elif media_type == CompareMediaType.SVG:
                 cls._extract_svg_frame(media_path)
+            elif media_type == CompareMediaType.HTML:
+                cls._extract_html_frame(media_path)
             else:
                 cls._extract_video_frame(media_path)
         except Exception as e:
@@ -157,6 +177,61 @@ class FrameCache:
             cls.cache[svg_path] = frame_path
         except Exception as e:
             Utils.log(f"Error processing SVG {svg_path}: {str(e)}")
+            raise
+
+    @classmethod
+    def _extract_html_frame(cls, html_path: str) -> None:
+        """
+        Convert an HTML file to a PDF and then extract its first page as an image.
+
+        Args:
+            html_path: Path to the HTML file
+        """
+        try:
+            Utils.log(f"Converting HTML to image: {html_path}")
+            # First convert HTML to PDF
+            pdf_path = os.path.join(cls.temporary_directory.name, 
+                                  os.path.splitext(os.path.basename(html_path))[0] + ".pdf")
+            
+            # Convert HTML to PDF using Pyppeteer
+            async def convert_html_to_pdf():
+                browser = await launch(headless=True)
+                page = await browser.newPage()
+                
+                # Read the HTML file
+                with open(html_path, 'r', encoding='utf-8') as f:
+                    html_content = f.read()
+                
+                # Set the content and wait for network idle
+                await page.setContent(html_content, {'waitUntil': 'networkidle0'})
+                
+                # Generate PDF with good quality settings
+                await page.pdf({
+                    'path': pdf_path,
+                    'format': 'A4',
+                    'printBackground': True,
+                    'margin': {
+                        'top': '0',
+                        'right': '0',
+                        'bottom': '0',
+                        'left': '0'
+                    }
+                })
+                
+                await browser.close()
+            
+            # Run the async function
+            asyncio.get_event_loop().run_until_complete(convert_html_to_pdf())
+            
+            # Now extract the first page as an image using our existing PDF extraction
+            cls._extract_pdf_frame(pdf_path)
+            
+            # Update cache to point to the HTML file instead of the temporary PDF
+            cls.cache[html_path] = cls.cache[pdf_path]
+            del cls.cache[pdf_path]
+            
+        except Exception as e:
+            Utils.log(f"Error processing HTML {html_path}: {str(e)}")
             raise
 
     @classmethod

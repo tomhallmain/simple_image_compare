@@ -6,6 +6,11 @@ from utils.app_info_cache import app_info_cache
 from utils.config import config
 from utils.constants import CompareMediaType
 from utils.translations import I18N
+from image.frame_cache import (
+    has_imported_pypdfium2,
+    has_imported_cairosvg,
+    has_imported_pyppeteer
+)
 
 _ = I18N._
 
@@ -15,6 +20,35 @@ class TypeConfigurationWindow:
     COL_0_WIDTH = 600
     _pending_changes = {}  # Store pending changes until confirmed
     _original_config = {}  # Store original config state for comparison
+
+    # Media type descriptions
+    MEDIA_TYPE_DESCRIPTIONS = {
+        CompareMediaType.IMAGE: _("Basic image files (PNG, JPG, etc.)"),
+        CompareMediaType.VIDEO: _("Video files (MP4, AVI, etc.) - First frame will be extracted"),
+        CompareMediaType.GIF: _("Animated GIF files - First frame will be extracted"),
+        CompareMediaType.PDF: _("PDF documents - First page will be extracted"),
+        CompareMediaType.SVG: _("Vector graphics - Will be converted to raster image"),
+        CompareMediaType.HTML: _("HTML files - Will be rendered and converted to image")
+    }
+
+    # Dependency information
+    DEPENDENCY_INFO = {
+        CompareMediaType.PDF: {
+            'available': has_imported_pypdfium2,
+            'package': 'pypdfium2',
+            'description': _("PDF support requires pypdfium2 package")
+        },
+        CompareMediaType.SVG: {
+            'available': has_imported_cairosvg,
+            'package': 'cairosvg',
+            'description': _("SVG support requires cairosvg package")
+        },
+        CompareMediaType.HTML: {
+            'available': has_imported_pyppeteer,
+            'package': 'pyppeteer',
+            'description': _("HTML support requires pyppeteer package")
+        }
+    }
 
     @classmethod
     def load_pending_changes(cls):
@@ -35,8 +69,8 @@ class TypeConfigurationWindow:
 
     @staticmethod
     def get_geometry():
-        width = 600
-        height = 250  # Increased height for better spacing
+        width = 700  # Increased width for better readability
+        height = 450  # Increased height for dependency info
         return f"{width}x{height}"
 
     @classmethod
@@ -55,6 +89,7 @@ class TypeConfigurationWindow:
             CompareMediaType.GIF: config.enable_gifs,
             CompareMediaType.PDF: config.enable_pdfs,
             CompareMediaType.SVG: config.enable_svgs,
+            CompareMediaType.HTML: config.enable_html,
         }
             
         cls.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
@@ -69,23 +104,60 @@ class TypeConfigurationWindow:
         main_frame.columnconfigure(0, weight=1)
         main_frame.rowconfigure(1, weight=1)  # Make the content area expandable
 
-        # Title label with increased font size and padding
-        title_label = Label(main_frame, font=('Helvetica', 12, 'bold'))
+        # Title and description
+        title_frame = Frame(main_frame, bg=AppStyle.BG_COLOR)
+        title_frame.grid(column=0, row=0, sticky='ew', pady=(0, 15))
+        title_frame.columnconfigure(0, weight=1)
+
+        title_label = Label(title_frame, font=('Helvetica', 14, 'bold'))
         title_label['text'] = _("Configure Media Types")
-        title_label.grid(column=0, row=0, sticky=W, pady=(0, 15))
-        title_label.config(wraplength=cls.COL_0_WIDTH, justify=LEFT, bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        title_label.grid(column=0, row=0, sticky=W)
+        title_label.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+
+        description_label = Label(title_frame, font=('Helvetica', 10))
+        description_label['text'] = _("Select which types of media files you want to compare. "
+                                    "Changes will require a refresh of open comparisons but "
+                                    "files in browsing mode should update automatically.")
+        description_label.grid(column=0, row=1, sticky=W, pady=(5, 0))
+        description_label.config(wraplength=cls.COL_0_WIDTH, justify=LEFT, bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
 
         # Content frame for checkboxes
         content_frame = Frame(main_frame, bg=AppStyle.BG_COLOR)
         content_frame.grid(column=0, row=1, sticky='nsew')
         content_frame.columnconfigure(0, weight=1)
 
-        # Create checkboxes for each media type with consistent spacing
+        # Create checkboxes for each media type with descriptions
         row = 0
         for media_type in CompareMediaType:
+            # Container for each media type
+            media_frame = Frame(content_frame, bg=AppStyle.BG_COLOR)
+            media_frame.grid(column=0, row=row, sticky='ew', pady=5)
+            media_frame.columnconfigure(1, weight=1)
+
+            # Checkbox
             var = cls._get_media_type_var(media_type)
-            check = Checkbutton(content_frame, text=media_type.get_translation(), variable=var)
-            check.grid(column=0, row=row, sticky=W, pady=5)
+            check = Checkbutton(media_frame, text=media_type.get_translation(), variable=var)
+            check.grid(column=0, row=0, sticky=W)
+            
+            # Description and dependency info
+            desc_frame = Frame(media_frame, bg=AppStyle.BG_COLOR)
+            desc_frame.grid(column=1, row=0, sticky='w', padx=(5, 0))
+            desc_frame.columnconfigure(0, weight=1)
+            
+            # Description
+            desc_label = Label(desc_frame, text=cls.MEDIA_TYPE_DESCRIPTIONS[media_type],
+                             font=('Helvetica', 9), fg=AppStyle.FG_COLOR, bg=AppStyle.BG_COLOR)
+            desc_label.grid(column=0, row=0, sticky=W)
+            
+            # Dependency info if applicable
+            if media_type in cls.DEPENDENCY_INFO:
+                dep_info = cls.DEPENDENCY_INFO[media_type]
+                if not dep_info['available']:
+                    dep_label = Label(desc_frame, 
+                                    text=f"⚠️ {dep_info['description']} (pip install {dep_info['package']})",
+                                    font=('Helvetica', 9), fg='#FFA500', bg=AppStyle.BG_COLOR)
+                    dep_label.grid(column=0, row=1, sticky=W, pady=(2, 0))
+                    check.state(['disabled'])
             
             if media_type == CompareMediaType.IMAGE:
                 check.state(['disabled'])  # Disable the checkbox
@@ -99,14 +171,19 @@ class TypeConfigurationWindow:
         separator = Separator(main_frame, orient='horizontal')
         separator.grid(column=0, row=2, sticky='ew', pady=15)
 
-        # Button frame for better alignment
+        # Button frame
         button_frame = Frame(main_frame, bg=AppStyle.BG_COLOR)
         button_frame.grid(column=0, row=3, sticky='e')
         
-        # Add confirmation button with padding
+        # Cancel button
+        cancel_button = Button(button_frame, text=_("Cancel"), 
+                             command=cls.on_closing)
+        cancel_button.grid(column=0, row=0, padx=5)
+        
+        # Apply button
         confirm_button = Button(button_frame, text=_("Apply Changes"), 
                               command=lambda: cls._confirm_changes(app_actions))
-        confirm_button.grid(column=0, row=0, padx=5)
+        confirm_button.grid(column=1, row=0, padx=5)
 
         main_frame.after(1, lambda: main_frame.focus_force())
 
@@ -194,6 +271,15 @@ class TypeConfigurationWindow:
                     config.file_types.append(".svg")
                 elif not config.enable_svgs and ".svg" in config.file_types:
                     config.file_types.remove(".svg")
+            elif media_type == CompareMediaType.HTML:
+                config.enable_html = enabled
+                if config.enable_html:
+                    for ext in ['.html', '.htm']:
+                        if ext not in config.file_types:
+                            config.file_types.append(ext)
+                else:
+                    config.file_types = [ext for ext in config.file_types 
+                                       if ext not in ['.html', '.htm']]
 
         if app_actions is not None:
             app_actions.refresh_all_compares()
@@ -216,4 +302,6 @@ class TypeConfigurationWindow:
             var.set(config.enable_pdfs)
         elif media_type == CompareMediaType.SVG:
             var.set(config.enable_svgs)
+        elif media_type == CompareMediaType.HTML:
+            var.set(config.enable_html)
         return var 

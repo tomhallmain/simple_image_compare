@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-05-18 19:31-0400\n"
-"PO-Revision-Date: 2025-05-18 19:31-0400\n"
+"POT-Creation-Date: 2025-05-24 15:44-0400\n"
+"PO-Revision-Date: 2025-05-24 15:44-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
@@ -124,13 +124,13 @@ msgstr "您想要退出申请吗 ?"
 msgid "Ended slideshows"
 msgstr "结束幻灯片放映"
 
-#: app.py:649
-msgid "No files found in directory after refresh."
-msgstr "刷新后在目录中未发现文件。"
-
 #: app.py:649 app.py:1654 app.py:1713
 msgid "Warning"
 msgstr "警告"
+
+#: app.py:649
+msgid "No files found in directory after refresh."
+msgstr "刷新后在目录中未发现文件。"
 
 #: app.py:672
 msgid "Slideshow for new images started"
@@ -389,25 +389,25 @@ msgstr "找到 {0} 图像文件"
 msgid "(filtered)"
 msgstr "(过滤)"
 
-#: compare/base_compare.py:227
-msgid "Image comparison"
-msgstr "图片对比"
-
 #: compare/base_compare.py:226
 msgid "Image data collection"
 msgstr "图像数据收集"
+
+#: compare/base_compare.py:227
+msgid "Image comparison"
+msgstr "图片对比"
 
 #: compare/compare_wrapper.py:67 compare/compare_wrapper.py:70
 msgid "Invalid mode"
 msgstr "无效模式"
 
 #: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
-msgid "No matches found. Search again to find potential matches."
-msgstr "未找到匹配项。请再次搜索，以找到可能的匹配项。"
-
-#: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
 msgid "Search required"
 msgstr "需要搜索"
+
+#: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
+msgid "No matches found. Search again to find potential matches."
+msgstr "未找到匹配项。请再次搜索，以找到可能的匹配项。"
 
 #: compare/compare_wrapper.py:158
 msgid "Skipped %s images."
@@ -487,12 +487,12 @@ msgid ""
 msgstr "根据当前设置，没有任何文件看起来是重复的。"
 
 #: compare/compare_wrapper.py:402
-msgid "Some group members were left stranded by the grouping process."
-msgstr "一些小组成员在分组过程中陷入困境。"
-
-#: compare/compare_wrapper.py:402
 msgid "Stranded Group Members Found"
 msgstr "找到受困的小组成员"
+
+#: compare/compare_wrapper.py:402
+msgid "Some group members were left stranded by the grouping process."
+msgstr "一些小组成员在分组过程中陷入困境。"
 
 #: compare/compare_wrapper.py:457
 msgid "No More Groups"
@@ -516,13 +516,13 @@ msgstr "(没有底片）"
 msgid "New Prevalidation"
 msgstr "新建前缀"
 
-#: compare/prevalidations_window.py:79
-msgid " - skipped"
-msgstr " - 跳过"
-
 #: compare/prevalidations_window.py:77
 msgid " detected"
 msgstr " 检测"
+
+#: compare/prevalidations_window.py:79
+msgid " - skipped"
+msgstr " - 跳过"
 
 #: compare/prevalidations_window.py:82
 msgid " - hidden"
@@ -535,6 +535,18 @@ msgstr "移动文件 : "
 #: compare/prevalidations_window.py:104
 msgid "Deleting file: "
 msgstr "删除文件 : "
+
+#: compare/prevalidations_window.py:141
+msgid "Action modifier is not a valid directory: "
+msgstr "修改动作不是一个有效的目录 : "
+
+#: compare/prevalidations_window.py:143
+msgid "Run on folder is not a valid directory: "
+msgstr "在文件夹上运行不是一个有效的目录 : "
+
+#: compare/prevalidations_window.py:145
+msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
+msgstr "无效的预先验证{0}, 可能导致错误或无法运行 !"
 
 #: compare/prevalidations_window.py:189
 msgid " testing classifier {0} for {1}"
@@ -783,20 +795,20 @@ msgid "Select target directory for marked files"
 msgstr "为标记文件选择目标目录"
 
 #: files/marked_file_mover.py:367
-msgid "Copying"
-msgstr "复制"
-
-#: files/marked_file_mover.py:367
 msgid "Moving"
 msgstr "移动"
 
-#: files/marked_file_mover.py:368
-msgid "Copied"
+#: files/marked_file_mover.py:367
+msgid "Copying"
 msgstr "复制"
 
 #: files/marked_file_mover.py:368
 msgid "Moved"
 msgstr "移动"
+
+#: files/marked_file_mover.py:368
+msgid "Copied"
+msgstr "复制"
 
 #: files/marked_file_mover.py:406
 msgid "Moved {0} files to {1}"
@@ -922,27 +934,27 @@ msgstr "添加目录"
 msgid "Set image comparison directory"
 msgstr "设定图像比较目录"
 
-#: files/type_configuration_window.py:61
+#: files/type_configuration_window.py:96
 msgid "Media Type Configuration"
 msgstr "媒体类型配置"
 
-#: files/type_configuration_window.py:74
+#: files/type_configuration_window.py:113
 msgid "Configure Media Types"
 msgstr "配置媒体类型"
 
-#: files/type_configuration_window.py:107
+#: files/type_configuration_window.py:184
 msgid "Apply Changes"
 msgstr "应用更改"
 
-#: files/type_configuration_window.py:149
+#: files/type_configuration_window.py:226
 msgid "Confirm Changes"
 msgstr "确认更改"
 
-#: files/type_configuration_window.py:150
+#: files/type_configuration_window.py:227
 msgid "This will clear all existing compares in open windows. Continue?"
 msgstr "这将清除所有在开放窗口中的比较 。 继续?"
 
-#: files/type_configuration_window.py:200
+#: files/type_configuration_window.py:286
 msgid "Media type configuration updated"
 msgstr "更新媒体类型配置"
 
@@ -1071,12 +1083,12 @@ msgid "Copied prompt without BREAK"
 msgstr "复制的快速无阻"
 
 #: image/image_details.py:302
-msgid "Rotated image left"
-msgstr "左旋图像"
-
-#: image/image_details.py:302
 msgid "Rotated image right"
 msgstr "向右旋转图像"
+
+#: image/image_details.py:302
+msgid "Rotated image left"
+msgstr "左旋图像"
 
 #: image/image_details.py:311
 msgid "Cropped image"
@@ -1246,25 +1258,65 @@ msgstr "下降"
 msgid "random"
 msgstr "随机"
 
-#: utils/constants.py:201
+#: utils/constants.py:202
 msgid "Image"
 msgstr "图像"
 
-#: utils/constants.py:203
+#: utils/constants.py:204
 msgid "GIF"
 msgstr "全球投资框架"
 
-#: utils/constants.py:205
+#: utils/constants.py:206
 msgid "Video"
 msgstr "视频"
 
-#: utils/constants.py:207
+#: utils/constants.py:208
 msgid "PDF"
 msgstr "专题报告"
 
-#: utils/constants.py:209
+#: utils/constants.py:210
 msgid "SVG"
 msgstr "特别志愿人员小组"
+
+#: utils/constants.py:232
+msgid "Moved files"
+msgstr "已移动文件"
+
+#: utils/constants.py:234
+msgid "Copied files"
+msgstr "复制文件"
+
+#: utils/constants.py:236
+msgid "Removed files"
+msgstr "删除的文件"
+
+#: utils/constants.py:238
+msgid "Marked files"
+msgstr "标记文件"
+
+#: utils/constants.py:240
+msgid "Unmarked files"
+msgstr "未标记的文件"
+
+#: utils/constants.py:242
+msgid "Searched files"
+msgstr "已搜索文件"
+
+#: utils/constants.py:244
+msgid "Compared files"
+msgstr "比较文件"
+
+#: utils/constants.py:246
+msgid "Generated images"
+msgstr "生成图像"
+
+#: utils/constants.py:248
+msgid "Changed directory"
+msgstr "更改目录"
+
+#: utils/constants.py:250
+msgid "System"
+msgstr "系统"
 
 #: utils/help_and_config.py:34
 msgid "Command"
@@ -1496,6 +1548,10 @@ msgstr "按"
 msgid "Toasts Persist (sec)"
 msgstr "吐司坚守( 秒)"
 
+#: utils/help_and_config.py:148
+msgid "Title Notify Persist (sec)"
+msgstr "标题 通知 持久 (秒)"
+
 #: utils/help_and_config.py:150
 msgid "Delete Instantly"
 msgstr "立即删除"
@@ -1512,58 +1568,53 @@ msgstr "图像标签已启用"
 msgid "Escape Backslash Filepaths"
 msgstr "逃逸反斜文件路径"
 
-#: compare/prevalidations_window.py:141
-msgid "Action modifier is not a valid directory: "
-msgstr "修改动作不是一个有效的目录 : "
+#: files/type_configuration_window.py:26
+msgid "Basic image files (PNG, JPG, etc.)"
+msgstr "基本图片文件（PNG、JPG 等）"
 
-#: compare/prevalidations_window.py:143
-msgid "Run on folder is not a valid directory: "
-msgstr "在文件夹上运行不是一个有效的目录 : "
+#: files/type_configuration_window.py:27
+msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
+msgstr "视频文件( MP4, AVI等) - 将提取第一帧"
 
-#: compare/prevalidations_window.py:145
-msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
-msgstr "无效的预先验证{0}, 可能导致错误或无法运行 !"
+#: files/type_configuration_window.py:28
+msgid "Animated GIF files - First frame will be extracted"
+msgstr "GIF 动画文件 - 第一个框架将被提取"
 
-#: utils/constants.py:229
-msgid "Moved files"
-msgstr "已移动文件"
+#: files/type_configuration_window.py:29
+msgid "PDF documents - First page will be extracted"
+msgstr "PDF 文档 - 将提取第一页"
 
-#: utils/constants.py:231
-msgid "Copied files"
-msgstr "复制文件"
+#: files/type_configuration_window.py:30
+msgid "Vector graphics - Will be converted to raster image"
+msgstr "矢量图形 - 将转换为光栅图像"
 
-#: utils/constants.py:233
-msgid "Removed files"
-msgstr "删除的文件"
+#: files/type_configuration_window.py:31
+msgid "HTML files - Will be rendered and converted to image"
+msgstr "HTML 文件 - 将渲染并转换成图像"
 
-#: utils/constants.py:235
-msgid "Marked files"
-msgstr "标记文件"
+#: files/type_configuration_window.py:39
+msgid "PDF support requires pypdfium2 package"
+msgstr "PDF 支持需要 pypdfium2 软件包"
 
-#: utils/constants.py:237
-msgid "Unmarked files"
-msgstr "未标记的文件"
+#: files/type_configuration_window.py:44
+msgid "SVG support requires cairosvg package"
+msgstr "SVG 支持需要 cairosvg 软件包"
 
-#: utils/constants.py:239
-msgid "Searched files"
-msgstr "已搜索文件"
+#: files/type_configuration_window.py:49
+msgid "HTML support requires pyppeteer package"
+msgstr "HTML 支持需要 pyppeter 软件包"
 
-#: utils/constants.py:241
-msgid "Compared files"
-msgstr "比较文件"
+#: files/type_configuration_window.py:118
+msgid ""
+"Select which types of media files you want to compare. Changes will require "
+"a refresh of open comparisons but files in browsing mode should update "
+"automatically."
+msgstr "选择要比较的媒体文件类型。更改将需要刷新打开的比较，但浏览模式下的文件应会自动更新。"
 
-#: utils/constants.py:243
-msgid "Generated images"
-msgstr "生成图像"
+#: files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "取消"
 
-#: utils/constants.py:245
-msgid "Changed directory"
-msgstr "更改目录"
-
-#: utils/constants.py:247
-msgid "System"
-msgstr "系统"
-
-#: utils/help_and_config.py:148
-msgid "Title Notify Persist (sec)"
-msgstr "标题 通知 持久 (秒)"
+#: utils/constants.py:212
+msgid "HTML"
+msgstr "HTML"

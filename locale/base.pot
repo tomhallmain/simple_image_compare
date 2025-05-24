@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: APPLICATION 1.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translator@example.com>\n"
-"POT-Creation-Date: 2025-05-18 19:07-0400\n"
-"PO-Revision-Date: 2025-05-18 19:07-0400\n"
+"POT-Creation-Date: 2025-05-24 15:36-0400\n"
+"PO-Revision-Date: 2025-05-24 15:36-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -906,27 +906,73 @@ msgstr ""
 msgid "Set image comparison directory"
 msgstr ""
 
-#: files/type_configuration_window.py:61
+#: files/type_configuration_window.py:26
+msgid "Basic image files (PNG, JPG, etc.)"
+msgstr ""
+
+#: files/type_configuration_window.py:27
+msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
+msgstr ""
+
+#: files/type_configuration_window.py:28
+msgid "Animated GIF files - First frame will be extracted"
+msgstr ""
+
+#: files/type_configuration_window.py:29
+msgid "PDF documents - First page will be extracted"
+msgstr ""
+
+#: files/type_configuration_window.py:30
+msgid "Vector graphics - Will be converted to raster image"
+msgstr ""
+
+#: files/type_configuration_window.py:31
+msgid "HTML files - Will be rendered and converted to image"
+msgstr ""
+
+#: files/type_configuration_window.py:39
+msgid "PDF support requires pypdfium2 package"
+msgstr ""
+
+#: files/type_configuration_window.py:44
+msgid "SVG support requires cairosvg package"
+msgstr ""
+
+#: files/type_configuration_window.py:49
+msgid "HTML support requires pyppeteer package"
+msgstr ""
+
+#: files/type_configuration_window.py:96
 msgid "Media Type Configuration"
 msgstr ""
 
-#: files/type_configuration_window.py:74
+#: files/type_configuration_window.py:113
 msgid "Configure Media Types"
 msgstr ""
 
-#: files/type_configuration_window.py:107
+#: files/type_configuration_window.py:118
+msgid ""
+"Select which types of media files you want to compare. Changes will require a refresh of open comparisons but files "
+"in browsing mode should update automatically."
+msgstr ""
+
+#: files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr ""
+
+#: files/type_configuration_window.py:184
 msgid "Apply Changes"
 msgstr ""
 
-#: files/type_configuration_window.py:149
+#: files/type_configuration_window.py:226
 msgid "Confirm Changes"
 msgstr ""
 
-#: files/type_configuration_window.py:150
+#: files/type_configuration_window.py:227
 msgid "This will clear all existing compares in open windows. Continue?"
 msgstr ""
 
-#: files/type_configuration_window.py:200
+#: files/type_configuration_window.py:286
 msgid "Media type configuration updated"
 msgstr ""
 
@@ -1230,63 +1276,67 @@ msgstr ""
 msgid "random"
 msgstr ""
 
-#: utils/constants.py:201
+#: utils/constants.py:202
 msgid "Image"
 msgstr ""
 
-#: utils/constants.py:203
+#: utils/constants.py:204
 msgid "GIF"
 msgstr ""
 
-#: utils/constants.py:205
+#: utils/constants.py:206
 msgid "Video"
 msgstr ""
 
-#: utils/constants.py:207
+#: utils/constants.py:208
 msgid "PDF"
 msgstr ""
 
-#: utils/constants.py:209
+#: utils/constants.py:210
 msgid "SVG"
 msgstr ""
 
-#: utils/constants.py:229
+#: utils/constants.py:212
+msgid "HTML"
+msgstr ""
+
+#: utils/constants.py:232
 msgid "Moved files"
 msgstr ""
 
-#: utils/constants.py:231
+#: utils/constants.py:234
 msgid "Copied files"
 msgstr ""
 
-#: utils/constants.py:233
+#: utils/constants.py:236
 msgid "Removed files"
 msgstr ""
 
-#: utils/constants.py:235
+#: utils/constants.py:238
 msgid "Marked files"
 msgstr ""
 
-#: utils/constants.py:237
+#: utils/constants.py:240
 msgid "Unmarked files"
 msgstr ""
 
-#: utils/constants.py:239
+#: utils/constants.py:242
 msgid "Searched files"
 msgstr ""
 
-#: utils/constants.py:241
+#: utils/constants.py:244
 msgid "Compared files"
 msgstr ""
 
-#: utils/constants.py:243
+#: utils/constants.py:246
 msgid "Generated images"
 msgstr ""
 
-#: utils/constants.py:245
+#: utils/constants.py:248
 msgid "Changed directory"
 msgstr ""
 
-#: utils/constants.py:247
+#: utils/constants.py:250
 msgid "System"
 msgstr ""
 

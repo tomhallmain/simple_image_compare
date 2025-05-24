@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-05-18 19:31-0400\n"
-"PO-Revision-Date: 2025-05-18 19:31-0400\n"
+"POT-Creation-Date: 2025-05-24 15:44-0400\n"
+"PO-Revision-Date: 2025-05-24 15:44-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
 "Language: ko\n"
@@ -124,13 +124,13 @@ msgstr "응용 프로그램을 종료하시겠습니까?"
 msgid "Ended slideshows"
 msgstr "슬라이드 쇼 종료"
 
-#: app.py:649
-msgid "No files found in directory after refresh."
-msgstr "새로 고침 후 디렉토리에 파일을 찾을 수 없습니다."
-
 #: app.py:649 app.py:1654 app.py:1713
 msgid "Warning"
 msgstr "경고"
+
+#: app.py:649
+msgid "No files found in directory after refresh."
+msgstr "새로 고침 후 디렉토리에 파일을 찾을 수 없습니다."
 
 #: app.py:672
 msgid "Slideshow for new images started"
@@ -390,25 +390,25 @@ msgstr "{0} 이미지 파일 찾았습니다"
 msgid "(filtered)"
 msgstr "(필터)"
 
-#: compare/base_compare.py:227
-msgid "Image comparison"
-msgstr "이미지 비교"
-
 #: compare/base_compare.py:226
 msgid "Image data collection"
 msgstr "이미지 데이터 수집"
+
+#: compare/base_compare.py:227
+msgid "Image comparison"
+msgstr "이미지 비교"
 
 #: compare/compare_wrapper.py:67 compare/compare_wrapper.py:70
 msgid "Invalid mode"
 msgstr "유효하지 않은 모드"
 
 #: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
-msgid "No matches found. Search again to find potential matches."
-msgstr "일치하는 항목이 없습니다. 다시 검색하여 일치하는 항목을 찾아보세요."
-
-#: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
 msgid "Search required"
 msgstr "자주 묻는 질문"
+
+#: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
+msgid "No matches found. Search again to find potential matches."
+msgstr "일치하는 항목이 없습니다. 다시 검색하여 일치하는 항목을 찾아보세요."
 
 #: compare/compare_wrapper.py:158
 msgid "Skipped %s images."
@@ -490,12 +490,12 @@ msgid ""
 msgstr "현재 설정에 따르면 중복된 파일은 없는 것으로 보입니다."
 
 #: compare/compare_wrapper.py:402
-msgid "Some group members were left stranded by the grouping process."
-msgstr "일부 그룹 구성원은 그룹화 과정에서 발이 묶였습니다."
-
-#: compare/compare_wrapper.py:402
 msgid "Stranded Group Members Found"
 msgstr "좌초된 그룹 구성원 발견"
+
+#: compare/compare_wrapper.py:402
+msgid "Some group members were left stranded by the grouping process."
+msgstr "일부 그룹 구성원은 그룹화 과정에서 발이 묶였습니다."
 
 #: compare/compare_wrapper.py:457
 msgid "No More Groups"
@@ -519,13 +519,13 @@ msgstr "(네거티브 설정 없음)"
 msgid "New Prevalidation"
 msgstr "새로운 유효성"
 
-#: compare/prevalidations_window.py:79
-msgid " - skipped"
-msgstr " - 건너뛰기"
-
 #: compare/prevalidations_window.py:77
 msgid " detected"
 msgstr " 관련 기사"
+
+#: compare/prevalidations_window.py:79
+msgid " - skipped"
+msgstr " - 건너뛰기"
 
 #: compare/prevalidations_window.py:82
 msgid " - hidden"
@@ -538,6 +538,18 @@ msgstr "파일 이동: "
 #: compare/prevalidations_window.py:104
 msgid "Deleting file: "
 msgstr "파일 삭제: "
+
+#: compare/prevalidations_window.py:141
+msgid "Action modifier is not a valid directory: "
+msgstr "작업 수정자가 유효한 디렉터리가 아닙니다 : "
+
+#: compare/prevalidations_window.py:143
+msgid "Run on folder is not a valid directory: "
+msgstr "실행 위치 폴더가 올바른 디렉터리가 아닙니다 : "
+
+#: compare/prevalidations_window.py:145
+msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
+msgstr "유효성 검사 {0}이(가) 잘못되어 오류가 발생하거나 실행할 수 없습니다!"
 
 #: compare/prevalidations_window.py:189
 msgid " testing classifier {0} for {1}"
@@ -786,20 +798,20 @@ msgid "Select target directory for marked files"
 msgstr "표시된 파일의 대상 디렉터리 선택"
 
 #: files/marked_file_mover.py:367
-msgid "Copying"
-msgstr "관련 기사"
-
-#: files/marked_file_mover.py:367
 msgid "Moving"
 msgstr "기타"
 
-#: files/marked_file_mover.py:368
-msgid "Copied"
-msgstr "뚱 베어"
+#: files/marked_file_mover.py:367
+msgid "Copying"
+msgstr "관련 기사"
 
 #: files/marked_file_mover.py:368
 msgid "Moved"
 msgstr "지원하다"
+
+#: files/marked_file_mover.py:368
+msgid "Copied"
+msgstr "뚱 베어"
 
 #: files/marked_file_mover.py:406
 msgid "Moved {0} files to {1}"
@@ -925,27 +937,27 @@ msgstr "디렉토리"
 msgid "Set image comparison directory"
 msgstr "설정 이미지 비교 디렉토리"
 
-#: files/type_configuration_window.py:61
+#: files/type_configuration_window.py:96
 msgid "Media Type Configuration"
 msgstr "Media Type 구성"
 
-#: files/type_configuration_window.py:74
+#: files/type_configuration_window.py:113
 msgid "Configure Media Types"
 msgstr "미디어 유형 구성"
 
-#: files/type_configuration_window.py:107
+#: files/type_configuration_window.py:184
 msgid "Apply Changes"
 msgstr "변경 사항"
 
-#: files/type_configuration_window.py:149
+#: files/type_configuration_window.py:226
 msgid "Confirm Changes"
 msgstr "자주 묻는 질문"
 
-#: files/type_configuration_window.py:150
+#: files/type_configuration_window.py:227
 msgid "This will clear all existing compares in open windows. Continue?"
 msgstr "이 창에서 모든 기존 비교를 명확하게합니다. 계속?"
 
-#: files/type_configuration_window.py:200
+#: files/type_configuration_window.py:286
 msgid "Media type configuration updated"
 msgstr "Media Type 설정 업데이트"
 
@@ -1074,12 +1086,12 @@ msgid "Copied prompt without BREAK"
 msgstr "BREAK없이 복사 된 프롬프트"
 
 #: image/image_details.py:302
-msgid "Rotated image left"
-msgstr "왼쪽된 이미지"
-
-#: image/image_details.py:302
 msgid "Rotated image right"
 msgstr "연락처"
+
+#: image/image_details.py:302
+msgid "Rotated image left"
+msgstr "왼쪽된 이미지"
 
 #: image/image_details.py:311
 msgid "Cropped image"
@@ -1249,25 +1261,65 @@ msgstr "뚱 베어"
 msgid "random"
 msgstr "한국어"
 
-#: utils/constants.py:201
+#: utils/constants.py:202
 msgid "Image"
 msgstr "이름 *"
 
-#: utils/constants.py:203
+#: utils/constants.py:204
 msgid "GIF"
 msgstr "무료 배송"
 
-#: utils/constants.py:205
+#: utils/constants.py:206
 msgid "Video"
 msgstr "(주)"
 
-#: utils/constants.py:207
+#: utils/constants.py:208
 msgid "PDF"
 msgstr "PDF 파일"
 
-#: utils/constants.py:209
+#: utils/constants.py:210
 msgid "SVG"
 msgstr "사이트맵"
+
+#: utils/constants.py:232
+msgid "Moved files"
+msgstr "파일 이동"
+
+#: utils/constants.py:234
+msgid "Copied files"
+msgstr "Copied 파일"
+
+#: utils/constants.py:236
+msgid "Removed files"
+msgstr "제거된 파일"
+
+#: utils/constants.py:238
+msgid "Marked files"
+msgstr "표시된 파일"
+
+#: utils/constants.py:240
+msgid "Unmarked files"
+msgstr "미표시된 파일들"
+
+#: utils/constants.py:242
+msgid "Searched files"
+msgstr "관련 파일"
+
+#: utils/constants.py:244
+msgid "Compared files"
+msgstr "관련 파일"
+
+#: utils/constants.py:246
+msgid "Generated images"
+msgstr "생성된 이미지"
+
+#: utils/constants.py:248
+msgid "Changed directory"
+msgstr "관련 링크"
+
+#: utils/constants.py:250
+msgid "System"
+msgstr "시스템"
 
 #: utils/help_and_config.py:34
 msgid "Command"
@@ -1499,6 +1551,10 @@ msgstr "정렬 기준"
 msgid "Toasts Persist (sec)"
 msgstr "토스트 퍼스트 (sec)"
 
+#: utils/help_and_config.py:148
+msgid "Title Notify Persist (sec)"
+msgstr "제목 알림 지속 (초)"
+
 #: utils/help_and_config.py:150
 msgid "Delete Instantly"
 msgstr "즉시 삭제"
@@ -1515,58 +1571,54 @@ msgstr "이미지 태그 Enabled"
 msgid "Escape Backslash Filepaths"
 msgstr "Backslash 파일 경로 탈출"
 
-#: compare/prevalidations_window.py:141
-msgid "Action modifier is not a valid directory: "
-msgstr "작업 수정자가 유효한 디렉터리가 아닙니다 : "
+#: files/type_configuration_window.py:26
+msgid "Basic image files (PNG, JPG, etc.)"
+msgstr "기본 이미지 파일 (PNG, JPG 등)"
 
-#: compare/prevalidations_window.py:143
-msgid "Run on folder is not a valid directory: "
-msgstr "실행 위치 폴더가 올바른 디렉터리가 아닙니다 : "
+#: files/type_configuration_window.py:27
+msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
+msgstr "비디오 파일 (MP4, AVI 등) - 첫 번째 프레임은 추출 될 것이다"
 
-#: compare/prevalidations_window.py:145
-msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
-msgstr "유효성 검사 {0}이(가) 잘못되어 오류가 발생하거나 실행할 수 없습니다!"
+#: files/type_configuration_window.py:28
+msgid "Animated GIF files - First frame will be extracted"
+msgstr "애니메이션 GIF 파일 - 첫 번째 프레임은 추출 될 것이다"
 
-#: utils/constants.py:229
-msgid "Moved files"
-msgstr "파일 이동"
+#: files/type_configuration_window.py:29
+msgid "PDF documents - First page will be extracted"
+msgstr "PDF 문서 - 첫 페이지는 추출됩니다"
 
-#: utils/constants.py:231
-msgid "Copied files"
-msgstr "Copied 파일"
+#: files/type_configuration_window.py:30
+msgid "Vector graphics - Will be converted to raster image"
+msgstr "벡터 그래픽 - 래스터 이미지로 변환 될 것입니다"
 
-#: utils/constants.py:233
-msgid "Removed files"
-msgstr "제거된 파일"
+#: files/type_configuration_window.py:31
+msgid "HTML files - Will be rendered and converted to image"
+msgstr "HTML 파일 - 렌더링되고 이미지로 변환됩니다"
 
-#: utils/constants.py:235
-msgid "Marked files"
-msgstr "표시된 파일"
+#: files/type_configuration_window.py:39
+msgid "PDF support requires pypdfium2 package"
+msgstr "PDF 지원은 pypdfium2 포장을 요구합니다"
 
-#: utils/constants.py:237
-msgid "Unmarked files"
-msgstr "미표시된 파일들"
+#: files/type_configuration_window.py:44
+msgid "SVG support requires cairosvg package"
+msgstr "SVG 지원은 cairosvg 포장을 요구합니다"
 
-#: utils/constants.py:239
-msgid "Searched files"
-msgstr "관련 파일"
+#: files/type_configuration_window.py:49
+msgid "HTML support requires pyppeteer package"
+msgstr "HTML 지원은 pyppeteer 패키지를 요구합니다"
 
-#: utils/constants.py:241
-msgid "Compared files"
-msgstr "관련 파일"
+#: files/type_configuration_window.py:118
+msgid ""
+"Select which types of media files you want to compare. Changes will require "
+"a refresh of open comparisons but files in browsing mode should update "
+"automatically."
+msgstr ""
+"어떤 유형의 미디어 파일을 선택하여 비교합니다. 변경은 오픈 비교의 새로이 필요하지만 검색 모드에서 파일이 자동으로 업데이트되어야합니다."
 
-#: utils/constants.py:243
-msgid "Generated images"
-msgstr "생성된 이미지"
+#: files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "취소"
 
-#: utils/constants.py:245
-msgid "Changed directory"
-msgstr "관련 링크"
-
-#: utils/constants.py:247
-msgid "System"
-msgstr "시스템"
-
-#: utils/help_and_config.py:148
-msgid "Title Notify Persist (sec)"
-msgstr "제목 알림 지속 (초)"
+#: utils/constants.py:212
+msgid "HTML"
+msgstr "HTML"

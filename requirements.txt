@@ -4,6 +4,7 @@ matplotlib>=3.8.0
 numpy>=1.26.1
 openai-clip
 opencv-python>=4.8.1.78
+pyppeteer
 Pillow>=9.5.0
 pillow-avif-plugin
 pillow-heif

@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-05-18 19:31-0400\n"
-"PO-Revision-Date: 2025-05-18 19:31-0400\n"
+"POT-Creation-Date: 2025-05-24 15:44-0400\n"
+"PO-Revision-Date: 2025-05-24 15:44-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: fr Team <<EMAIL>>\n"
 "Language: fr\n"
@@ -124,14 +124,14 @@ msgstr "Souhaitez-vous quitter l'application ?"
 msgid "Ended slideshows"
 msgstr "Diaporamas terminés"
 
+#: app.py:649 app.py:1654 app.py:1713
+msgid "Warning"
+msgstr "Avertissement"
+
 #: app.py:649
 msgid "No files found in directory after refresh."
 msgstr ""
 "Aucun fichier n'a été trouvé dans le répertoire après l'actualisation."
-
-#: app.py:649 app.py:1654 app.py:1713
-msgid "Warning"
-msgstr "Avertissement"
 
 #: app.py:672
 msgid "Slideshow for new images started"
@@ -404,27 +404,27 @@ msgstr "{0} fichiers images trouvés"
 msgid "(filtered)"
 msgstr "(filtré)"
 
-#: compare/base_compare.py:227
-msgid "Image comparison"
-msgstr "Comparaison d'images"
-
 #: compare/base_compare.py:226
 msgid "Image data collection"
 msgstr "Collecte de données d'image"
+
+#: compare/base_compare.py:227
+msgid "Image comparison"
+msgstr "Comparaison d'images"
 
 #: compare/compare_wrapper.py:67 compare/compare_wrapper.py:70
 msgid "Invalid mode"
 msgstr "Mode non valide"
 
 #: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
+msgid "Search required"
+msgstr "Recherche nécessaire"
+
+#: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
 msgid "No matches found. Search again to find potential matches."
 msgstr ""
 "Aucune correspondance n'a été trouvée. Effectuez une nouvelle recherche pour"
 " trouver des correspondances potentielles."
-
-#: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
-msgid "Search required"
-msgstr "Recherche nécessaire"
 
 #: compare/compare_wrapper.py:158
 msgid "Skipped %s images."
@@ -513,14 +513,14 @@ msgstr ""
 "Aucun des fichiers ne semble être en double d'après les paramètres actuels."
 
 #: compare/compare_wrapper.py:402
+msgid "Stranded Group Members Found"
+msgstr "Les membres du groupe en détresse retrouvés"
+
+#: compare/compare_wrapper.py:402
 msgid "Some group members were left stranded by the grouping process."
 msgstr ""
 "Certains membres du groupe ont été laissés en plan par le processus de "
 "regroupement."
-
-#: compare/compare_wrapper.py:402
-msgid "Stranded Group Members Found"
-msgstr "Les membres du groupe en détresse retrouvés"
 
 #: compare/compare_wrapper.py:457
 msgid "No More Groups"
@@ -546,13 +546,13 @@ msgstr "(pas d'ensemble de négatifs)"
 msgid "New Prevalidation"
 msgstr "Nouvelle prévalidation"
 
-#: compare/prevalidations_window.py:79
-msgid " - skipped"
-msgstr " - sauté"
-
 #: compare/prevalidations_window.py:77
 msgid " detected"
 msgstr " détecté"
+
+#: compare/prevalidations_window.py:79
+msgid " - skipped"
+msgstr " - sauté"
 
 #: compare/prevalidations_window.py:82
 msgid " - hidden"
@@ -565,6 +565,20 @@ msgstr "Déplacement d'un fichier : "
 #: compare/prevalidations_window.py:104
 msgid "Deleting file: "
 msgstr "Suppression d'un fichier : "
+
+#: compare/prevalidations_window.py:141
+msgid "Action modifier is not a valid directory: "
+msgstr "Le modificateur d'action n'est pas un répertoire valide : "
+
+#: compare/prevalidations_window.py:143
+msgid "Run on folder is not a valid directory: "
+msgstr "Exécuter sur le dossier n'est pas un répertoire valide : "
+
+#: compare/prevalidations_window.py:145
+msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
+msgstr ""
+"Prévalidation invalide {0}, peut causer des erreurs ou être incapable de "
+"courir!"
 
 #: compare/prevalidations_window.py:189
 msgid " testing classifier {0} for {1}"
@@ -817,20 +831,20 @@ msgid "Select target directory for marked files"
 msgstr "Sélection du répertoire cible pour les fichiers marqués"
 
 #: files/marked_file_mover.py:367
-msgid "Copying"
-msgstr "Copie"
-
-#: files/marked_file_mover.py:367
 msgid "Moving"
 msgstr "Déplacement"
 
-#: files/marked_file_mover.py:368
-msgid "Copied"
-msgstr "Copié"
+#: files/marked_file_mover.py:367
+msgid "Copying"
+msgstr "Copie"
 
 #: files/marked_file_mover.py:368
 msgid "Moved"
 msgstr "Déplacé"
+
+#: files/marked_file_mover.py:368
+msgid "Copied"
+msgstr "Copié"
 
 #: files/marked_file_mover.py:406
 msgid "Moved {0} files to {1}"
@@ -959,29 +973,29 @@ msgstr "Ajouter un répertoire"
 msgid "Set image comparison directory"
 msgstr "Définir le répertoire de comparaison des images"
 
-#: files/type_configuration_window.py:61
+#: files/type_configuration_window.py:96
 msgid "Media Type Configuration"
 msgstr "Configuration du type de média"
 
-#: files/type_configuration_window.py:74
+#: files/type_configuration_window.py:113
 msgid "Configure Media Types"
 msgstr "Configurer les types de médias"
 
-#: files/type_configuration_window.py:107
+#: files/type_configuration_window.py:184
 msgid "Apply Changes"
 msgstr "Appliquer les modifications"
 
-#: files/type_configuration_window.py:149
+#: files/type_configuration_window.py:226
 msgid "Confirm Changes"
 msgstr "Confirmer les modifications"
 
-#: files/type_configuration_window.py:150
+#: files/type_configuration_window.py:227
 msgid "This will clear all existing compares in open windows. Continue?"
 msgstr ""
 "Cela effacera toutes les comparaisons déjà effectuées dans les fenêtres "
 "ouvertes. Continuer ?"
 
-#: files/type_configuration_window.py:200
+#: files/type_configuration_window.py:286
 msgid "Media type configuration updated"
 msgstr "Configuration du type de média mise à jour"
 
@@ -1112,12 +1126,12 @@ msgid "Copied prompt without BREAK"
 msgstr "Copie de l'invite sans « BREAK »"
 
 #: image/image_details.py:302
-msgid "Rotated image left"
-msgstr "Rotation de l'image à gauche"
-
-#: image/image_details.py:302
 msgid "Rotated image right"
 msgstr "Rotation de l'image à droite"
+
+#: image/image_details.py:302
+msgid "Rotated image left"
+msgstr "Rotation de l'image à gauche"
 
 #: image/image_details.py:311
 msgid "Cropped image"
@@ -1288,25 +1302,65 @@ msgstr "ordre décroissant"
 msgid "random"
 msgstr "au hasard"
 
-#: utils/constants.py:201
+#: utils/constants.py:202
 msgid "Image"
 msgstr "Image"
 
-#: utils/constants.py:203
+#: utils/constants.py:204
 msgid "GIF"
 msgstr "GIF"
 
-#: utils/constants.py:205
+#: utils/constants.py:206
 msgid "Video"
 msgstr "Vidéo"
 
-#: utils/constants.py:207
+#: utils/constants.py:208
 msgid "PDF"
 msgstr "PDF"
 
-#: utils/constants.py:209
+#: utils/constants.py:210
 msgid "SVG"
 msgstr "SVG"
+
+#: utils/constants.py:232
+msgid "Moved files"
+msgstr "Fichiers déplacés"
+
+#: utils/constants.py:234
+msgid "Copied files"
+msgstr "Fichiers copiés"
+
+#: utils/constants.py:236
+msgid "Removed files"
+msgstr "Fichiers supprimés"
+
+#: utils/constants.py:238
+msgid "Marked files"
+msgstr "Fichiers marqués"
+
+#: utils/constants.py:240
+msgid "Unmarked files"
+msgstr "Fichiers non marqués"
+
+#: utils/constants.py:242
+msgid "Searched files"
+msgstr "Fichiers recherchés"
+
+#: utils/constants.py:244
+msgid "Compared files"
+msgstr "Fichiers comparés"
+
+#: utils/constants.py:246
+msgid "Generated images"
+msgstr "Images générées"
+
+#: utils/constants.py:248
+msgid "Changed directory"
+msgstr "Répertoire modifié"
+
+#: utils/constants.py:250
+msgid "System"
+msgstr "Système"
 
 #: utils/help_and_config.py:34
 msgid "Command"
@@ -1546,6 +1600,10 @@ msgstr "Trier par"
 msgid "Toasts Persist (sec)"
 msgstr "Les toasts persistent (sec)"
 
+#: utils/help_and_config.py:148
+msgid "Title Notify Persist (sec)"
+msgstr "Titre Notifier Persister (s)"
+
 #: utils/help_and_config.py:150
 msgid "Delete Instantly"
 msgstr "Supprimer instantanément"
@@ -1562,60 +1620,57 @@ msgstr "Activation du balisage des images"
 msgid "Escape Backslash Filepaths"
 msgstr "Échapper à la barre oblique inverse chemins d'accès aux fichiers"
 
-#: compare/prevalidations_window.py:141
-msgid "Action modifier is not a valid directory: "
-msgstr "Le modificateur d'action n'est pas un répertoire valide : "
+#: files/type_configuration_window.py:26
+msgid "Basic image files (PNG, JPG, etc.)"
+msgstr "Fichiers images de base (PNG, JPG, etc.)"
 
-#: compare/prevalidations_window.py:143
-msgid "Run on folder is not a valid directory: "
-msgstr "Exécuter sur le dossier n'est pas un répertoire valide : "
+#: files/type_configuration_window.py:27
+msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
+msgstr "Fichiers vidéo (MP4, AVI, etc.) - Le premier cadre sera extrait"
 
-#: compare/prevalidations_window.py:145
-msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
+#: files/type_configuration_window.py:28
+msgid "Animated GIF files - First frame will be extracted"
+msgstr "Fichiers GIF animés - Le premier cadre sera extrait"
+
+#: files/type_configuration_window.py:29
+msgid "PDF documents - First page will be extracted"
+msgstr "Documents PDF - La première page sera extraite"
+
+#: files/type_configuration_window.py:30
+msgid "Vector graphics - Will be converted to raster image"
+msgstr "Graphique vectoriel - Sera converti en image raster"
+
+#: files/type_configuration_window.py:31
+msgid "HTML files - Will be rendered and converted to image"
+msgstr "Fichiers HTML - Sera rendu et converti en image"
+
+#: files/type_configuration_window.py:39
+msgid "PDF support requires pypdfium2 package"
+msgstr "Le support PDF nécessite un paquet pypdfium2"
+
+#: files/type_configuration_window.py:44
+msgid "SVG support requires cairosvg package"
+msgstr "Le support SVG nécessite un paquet cairosvg"
+
+#: files/type_configuration_window.py:49
+msgid "HTML support requires pyppeteer package"
+msgstr "Le support HTML nécessite un paquet pyppeteer"
+
+#: files/type_configuration_window.py:118
+msgid ""
+"Select which types of media files you want to compare. Changes will require "
+"a refresh of open comparisons but files in browsing mode should update "
+"automatically."
 msgstr ""
-"Prévalidation invalide {0}, peut causer des erreurs ou être incapable de "
-"courir!"
+"Sélectionnez les types de fichiers multimédia que vous souhaitez comparer. "
+"Les modifications nécessiteront un rafraîchissement des comparaisons "
+"ouvertes, mais les fichiers en mode navigation devraient se mettre à jour "
+"automatiquement."
 
-#: utils/constants.py:229
-msgid "Moved files"
-msgstr "Fichiers déplacés"
+#: files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "Annuler"
 
-#: utils/constants.py:231
-msgid "Copied files"
-msgstr "Fichiers copiés"
-
-#: utils/constants.py:233
-msgid "Removed files"
-msgstr "Fichiers supprimés"
-
-#: utils/constants.py:235
-msgid "Marked files"
-msgstr "Fichiers marqués"
-
-#: utils/constants.py:237
-msgid "Unmarked files"
-msgstr "Fichiers non marqués"
-
-#: utils/constants.py:239
-msgid "Searched files"
-msgstr "Fichiers recherchés"
-
-#: utils/constants.py:241
-msgid "Compared files"
-msgstr "Fichiers comparés"
-
-#: utils/constants.py:243
-msgid "Generated images"
-msgstr "Images générées"
-
-#: utils/constants.py:245
-msgid "Changed directory"
-msgstr "Répertoire modifié"
-
-#: utils/constants.py:247
-msgid "System"
-msgstr "Système"
-
-#: utils/help_and_config.py:148
-msgid "Title Notify Persist (sec)"
-msgstr "Titre Notifier Persister (s)"
+#: utils/constants.py:212
+msgid "HTML"
+msgstr "HTML"

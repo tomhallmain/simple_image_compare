@@ -39,13 +39,13 @@ The UI can be used as a media file browser. The following features are available
 </ul>
 </details>
 
-Zoom and drag functionality is available in both browsing mode, as well as when viewing grouped media after a comparison has been run.
+For image files, zoom and drag functionality is available in both browsing mode as well as when viewing grouped media after a comparison has been run.
 
-Note that by default videos, GIFs, PDFs and SVGs are not included, you will need to open the filetype configuration window with Ctrl+J and turn them on.
+Note that depending on your configuration videos, GIFs, PDFs, SVGs and HTMLs may not be included, you may need to open the filetype configuration window with Ctrl+J and turn them on.
 
 ## Prevalidation Rules
 
-The tool includes a powerful prevalidation system that can automatically process media before they're shown to the user. This is useful for:
+The tool includes a prevalidation system that can automatically process media before they're shown to the user. This is useful for:
 
 - Automatically skipping, hiding, or deleting unwanted media
 - Moving or copying media to specific directories based on content
@@ -59,7 +59,7 @@ Prevalidation rules can be configured with:
 - Directory-specific rules
 - H5 model-based classification rules
 
-This feature is particularly useful for maintaining clean media collections and automating content filtering.
+This feature is particularly useful for maintaining clean media collections and automating content filtering. You can find an example H5 classifier that is known to work [here](https://github.com/FurkanGozukara/nsfw_model).
 
 ## Usage
 
@@ -84,6 +84,16 @@ If a search image is set simultaneously with search text, its embedding will be 
 
 <details>
 <summary>Expand Details</summary>
+`locale` supports any of the following locales:
+- en (English)
+- de (Deutsh)
+- fr (Français)
+- es (Español)
+- it (Italiano)
+- ja (日本語)
+- ko (한국어)
+- zh (中文)
+
 `clip_model` defines the CLIP model to use for generating embeddings.
 
 `image_types` defines the allowed file extensions for gathering image files, while `video_types` defines the allowed file extensions for gathering video files - there are only valid if the `enable_videos` setting is enabled.
@@ -122,6 +132,8 @@ While the UI elements support normal usage in most cases, there are many binding
 Press Shift+H to open up a help window with all key bindings. A directory with images must be set before most of the bindings will have any effect. The group bindings are only functional in GROUP mode after a comparison has been run.
 
 ### Move Marks Window
+
+This window helps with efficient filing of file marks.
 
 <details>
 <summary>Expand Details</summary>

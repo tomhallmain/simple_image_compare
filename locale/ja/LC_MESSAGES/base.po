@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-05-18 19:31-0400\n"
-"PO-Revision-Date: 2025-05-18 19:31-0400\n"
+"POT-Creation-Date: 2025-05-24 15:44-0400\n"
+"PO-Revision-Date: 2025-05-24 15:44-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
@@ -124,13 +124,13 @@ msgstr "応募をお願いしたいですか?"
 msgid "Ended slideshows"
 msgstr "終了したスライドショー"
 
-#: app.py:649
-msgid "No files found in directory after refresh."
-msgstr "更新後、ディレクトリにファイルが見つかりません。"
-
 #: app.py:649 app.py:1654 app.py:1713
 msgid "Warning"
 msgstr "警告"
+
+#: app.py:649
+msgid "No files found in directory after refresh."
+msgstr "更新後、ディレクトリにファイルが見つかりません。"
 
 #: app.py:672
 msgid "Slideshow for new images started"
@@ -389,25 +389,25 @@ msgstr "{0} イメージファイルが見つかりました"
 msgid "(filtered)"
 msgstr "(フィルタリング)"
 
-#: compare/base_compare.py:227
-msgid "Image comparison"
-msgstr "画像比較"
-
 #: compare/base_compare.py:226
 msgid "Image data collection"
 msgstr "画像データ収集"
+
+#: compare/base_compare.py:227
+msgid "Image comparison"
+msgstr "画像比較"
 
 #: compare/compare_wrapper.py:67 compare/compare_wrapper.py:70
 msgid "Invalid mode"
 msgstr "無効なモード"
 
 #: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
-msgid "No matches found. Search again to find potential matches."
-msgstr "該当する検索結果がありません。もう一度検索して一致する可能性のあるものを探してください。"
-
-#: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
 msgid "Search required"
 msgstr "必須検索"
+
+#: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
+msgid "No matches found. Search again to find potential matches."
+msgstr "該当する検索結果がありません。もう一度検索して一致する可能性のあるものを探してください。"
 
 #: compare/compare_wrapper.py:158
 msgid "Skipped %s images."
@@ -488,12 +488,12 @@ msgid ""
 msgstr "現在の設定では、どのファイルも重複していないようです。"
 
 #: compare/compare_wrapper.py:402
-msgid "Some group members were left stranded by the grouping process."
-msgstr "グループ分けの過程で取り残されたメンバーもいた。"
-
-#: compare/compare_wrapper.py:402
 msgid "Stranded Group Members Found"
 msgstr "取り残されたグループメンバー発見"
+
+#: compare/compare_wrapper.py:402
+msgid "Some group members were left stranded by the grouping process."
+msgstr "グループ分けの過程で取り残されたメンバーもいた。"
 
 #: compare/compare_wrapper.py:457
 msgid "No More Groups"
@@ -517,13 +517,13 @@ msgstr "(ネガなし）"
 msgid "New Prevalidation"
 msgstr "新規登録"
 
-#: compare/prevalidations_window.py:79
-msgid " - skipped"
-msgstr " - スキップ"
-
 #: compare/prevalidations_window.py:77
 msgid " detected"
 msgstr " 検出する"
+
+#: compare/prevalidations_window.py:79
+msgid " - skipped"
+msgstr " - スキップ"
 
 #: compare/prevalidations_window.py:82
 msgid " - hidden"
@@ -536,6 +536,18 @@ msgstr "ファイルの移動: "
 #: compare/prevalidations_window.py:104
 msgid "Deleting file: "
 msgstr "ファイルの削除: "
+
+#: compare/prevalidations_window.py:141
+msgid "Action modifier is not a valid directory: "
+msgstr "アクション修飾子は有効なディレクトリではありません : "
+
+#: compare/prevalidations_window.py:143
+msgid "Run on folder is not a valid directory: "
+msgstr "フォルダ上で実行することは有効なディレクトリではありません : "
+
+#: compare/prevalidations_window.py:145
+msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
+msgstr "無効な優先値 {0} は、エラーや実行できません。"
 
 #: compare/prevalidations_window.py:189
 msgid " testing classifier {0} for {1}"
@@ -784,20 +796,20 @@ msgid "Select target directory for marked files"
 msgstr "マークされたファイルのターゲットディレクトリを選択"
 
 #: files/marked_file_mover.py:367
-msgid "Copying"
-msgstr "コピー"
-
-#: files/marked_file_mover.py:367
 msgid "Moving"
 msgstr "アクセス"
 
-#: files/marked_file_mover.py:368
-msgid "Copied"
-msgstr "コピッド"
+#: files/marked_file_mover.py:367
+msgid "Copying"
+msgstr "コピー"
 
 #: files/marked_file_mover.py:368
 msgid "Moved"
 msgstr "移動する"
+
+#: files/marked_file_mover.py:368
+msgid "Copied"
+msgstr "コピッド"
 
 #: files/marked_file_mover.py:406
 msgid "Moved {0} files to {1}"
@@ -923,27 +935,27 @@ msgstr "ディレクトリの追加"
 msgid "Set image comparison directory"
 msgstr "画像比較ディレクトリの設定"
 
-#: files/type_configuration_window.py:61
+#: files/type_configuration_window.py:96
 msgid "Media Type Configuration"
 msgstr "媒体のタイプ構成"
 
-#: files/type_configuration_window.py:74
+#: files/type_configuration_window.py:113
 msgid "Configure Media Types"
 msgstr "メディアタイプの設定"
 
-#: files/type_configuration_window.py:107
+#: files/type_configuration_window.py:184
 msgid "Apply Changes"
 msgstr "変更を加える"
 
-#: files/type_configuration_window.py:149
+#: files/type_configuration_window.py:226
 msgid "Confirm Changes"
 msgstr "変更を確認する"
 
-#: files/type_configuration_window.py:150
+#: files/type_configuration_window.py:227
 msgid "This will clear all existing compares in open windows. Continue?"
 msgstr "これは、オープンウィンドウのすべての既存の比較をクリアします。 お問い合わせ"
 
-#: files/type_configuration_window.py:200
+#: files/type_configuration_window.py:286
 msgid "Media type configuration updated"
 msgstr "メディアタイプ構成更新"
 
@@ -1072,12 +1084,12 @@ msgid "Copied prompt without BREAK"
 msgstr "BREAKなしでコピーされたプロンプト"
 
 #: image/image_details.py:302
-msgid "Rotated image left"
-msgstr "左に回転した画像"
-
-#: image/image_details.py:302
 msgid "Rotated image right"
 msgstr "右に回転した画像"
+
+#: image/image_details.py:302
+msgid "Rotated image left"
+msgstr "左に回転した画像"
 
 #: image/image_details.py:311
 msgid "Cropped image"
@@ -1247,25 +1259,65 @@ msgstr "降下降下"
 msgid "random"
 msgstr "ランダム"
 
-#: utils/constants.py:201
+#: utils/constants.py:202
 msgid "Image"
 msgstr "サイトマップ"
 
-#: utils/constants.py:203
+#: utils/constants.py:204
 msgid "GIF"
 msgstr "ギフト"
 
-#: utils/constants.py:205
+#: utils/constants.py:206
 msgid "Video"
 msgstr "ビデオ"
 
-#: utils/constants.py:207
+#: utils/constants.py:208
 msgid "PDF"
 msgstr "サイトマップ"
 
-#: utils/constants.py:209
+#: utils/constants.py:210
 msgid "SVG"
 msgstr "SVGの特長"
+
+#: utils/constants.py:232
+msgid "Moved files"
+msgstr "ファイルの移動"
+
+#: utils/constants.py:234
+msgid "Copied files"
+msgstr "コピーされたファイル"
+
+#: utils/constants.py:236
+msgid "Removed files"
+msgstr "削除されたファイル"
+
+#: utils/constants.py:238
+msgid "Marked files"
+msgstr "マークされたファイル"
+
+#: utils/constants.py:240
+msgid "Unmarked files"
+msgstr "注目のファイル"
+
+#: utils/constants.py:242
+msgid "Searched files"
+msgstr "ファイル検索"
+
+#: utils/constants.py:244
+msgid "Compared files"
+msgstr "比較ファイル"
+
+#: utils/constants.py:246
+msgid "Generated images"
+msgstr "生成された画像"
+
+#: utils/constants.py:248
+msgid "Changed directory"
+msgstr "変更ディレクトリ"
+
+#: utils/constants.py:250
+msgid "System"
+msgstr "システム"
 
 #: utils/help_and_config.py:34
 msgid "Command"
@@ -1497,6 +1549,10 @@ msgstr "並び替え"
 msgid "Toasts Persist (sec)"
 msgstr "トースト・ペルシスト(秒)"
 
+#: utils/help_and_config.py:148
+msgid "Title Notify Persist (sec)"
+msgstr "タイトル ペルシストを通知 (秒)"
+
 #: utils/help_and_config.py:150
 msgid "Delete Instantly"
 msgstr "即時削除"
@@ -1513,58 +1569,54 @@ msgstr "画像タグの有効化"
 msgid "Escape Backslash Filepaths"
 msgstr "エスケープバックスラッシュファイルパス"
 
-#: compare/prevalidations_window.py:141
-msgid "Action modifier is not a valid directory: "
-msgstr "アクション修飾子は有効なディレクトリではありません : "
+#: files/type_configuration_window.py:26
+msgid "Basic image files (PNG, JPG, etc.)"
+msgstr "基本的な画像ファイル (PNG、JPGなど)"
 
-#: compare/prevalidations_window.py:143
-msgid "Run on folder is not a valid directory: "
-msgstr "フォルダ上で実行することは有効なディレクトリではありません : "
+#: files/type_configuration_window.py:27
+msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
+msgstr "動画ファイル (MP4、AVIなど) - 1番目のフレームが抽出されます。"
 
-#: compare/prevalidations_window.py:145
-msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
-msgstr "無効な優先値 {0} は、エラーや実行できません。"
+#: files/type_configuration_window.py:28
+msgid "Animated GIF files - First frame will be extracted"
+msgstr "アニメーションGIFファイル - 最初のフレームが抽出されます"
 
-#: utils/constants.py:229
-msgid "Moved files"
-msgstr "ファイルの移動"
+#: files/type_configuration_window.py:29
+msgid "PDF documents - First page will be extracted"
+msgstr "PDF ドキュメント - 最初のページが抽出されます"
 
-#: utils/constants.py:231
-msgid "Copied files"
-msgstr "コピーされたファイル"
+#: files/type_configuration_window.py:30
+msgid "Vector graphics - Will be converted to raster image"
+msgstr "ベクトルグラフィックス - ラスターイメージに変換されます。"
 
-#: utils/constants.py:233
-msgid "Removed files"
-msgstr "削除されたファイル"
+#: files/type_configuration_window.py:31
+msgid "HTML files - Will be rendered and converted to image"
+msgstr "HTMLファイル - レンダリングされ、画像に変換されます"
 
-#: utils/constants.py:235
-msgid "Marked files"
-msgstr "マークされたファイル"
+#: files/type_configuration_window.py:39
+msgid "PDF support requires pypdfium2 package"
+msgstr "PDFサポートはpypdfium2パッケージを必要とします"
 
-#: utils/constants.py:237
-msgid "Unmarked files"
-msgstr "注目のファイル"
+#: files/type_configuration_window.py:44
+msgid "SVG support requires cairosvg package"
+msgstr "SVG サポートは cairosvg パッケージを要求します"
 
-#: utils/constants.py:239
-msgid "Searched files"
-msgstr "ファイル検索"
+#: files/type_configuration_window.py:49
+msgid "HTML support requires pyppeteer package"
+msgstr "HTMLサポートは、pyppeteerパッケージが必要です"
 
-#: utils/constants.py:241
-msgid "Compared files"
-msgstr "比較ファイル"
+#: files/type_configuration_window.py:118
+msgid ""
+"Select which types of media files you want to compare. Changes will require "
+"a refresh of open comparisons but files in browsing mode should update "
+"automatically."
+msgstr ""
+"どの種類のメディアファイルを比較したいですか？変更は、オープンな比較をリフレッシュする必要がありますが、ブラウジングモードにあるファイルは自動的に更新されるはずです。"
 
-#: utils/constants.py:243
-msgid "Generated images"
-msgstr "生成された画像"
+#: files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "キャンセル"
 
-#: utils/constants.py:245
-msgid "Changed directory"
-msgstr "変更ディレクトリ"
-
-#: utils/constants.py:247
-msgid "System"
-msgstr "システム"
-
-#: utils/help_and_config.py:148
-msgid "Title Notify Persist (sec)"
-msgstr "タイトル ペルシストを通知 (秒)"
+#: utils/constants.py:212
+msgid "HTML"
+msgstr "HTML"
