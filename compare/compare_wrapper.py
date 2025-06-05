@@ -5,8 +5,8 @@ from tkinter import messagebox
 
 import pprint
 
-from compare.compare import Compare
 from compare.compare_args import CompareArgs
+from compare.compare_colors import CompareColors
 from compare.compare_embeddings_align import CompareEmbeddingAlign
 from compare.compare_embeddings_clip import CompareEmbeddingClip
 from compare.compare_embeddings_flava import CompareEmbeddingFlava
@@ -151,7 +151,7 @@ class CompareWrapper:
             return
         while not found_unrelated_image:
             next_image = file_browser.next_file() if forward else file_browser.previous_file()
-            if (self.compare_mode == CompareMode.COLOR_MATCHING and not Compare.is_related(previous_image, next_image)) or \
+            if (self.compare_mode == CompareMode.COLOR_MATCHING and not CompareColors.is_related(previous_image, next_image)) or \
                     (self.compare_mode == CompareMode.CLIP_EMBEDDING and not CompareEmbeddingClip.is_related(previous_image, next_image)):
                 found_unrelated_image = True
                 self._app_actions.create_image(next_image)
@@ -312,7 +312,7 @@ class CompareWrapper:
         if self.compare_mode == CompareMode.CLIP_EMBEDDING:
             self._compare = CompareEmbeddingClip(args)
         elif self.compare_mode == CompareMode.COLOR_MATCHING:
-            self._compare = Compare(args, use_thumb=True)
+            self._compare = CompareColors(args, use_thumb=True)
         elif self.compare_mode == CompareMode.SIGLIP_EMBEDDING:
             self._compare = CompareEmbeddingSiglip(args)
         elif self.compare_mode == CompareMode.FLAVA_EMBEDDING:

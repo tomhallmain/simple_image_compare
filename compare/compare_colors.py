@@ -151,7 +151,7 @@ def get_image_array(filepath):
     return image
 
 
-class Compare(BaseCompare):
+class CompareColors(BaseCompare):
     COMPARE_MODE = CompareMode.COLOR_MATCHING
     THRESHHOLD_POTENTIAL_DUPLICATE = 50
     THRESHHOLD_PROBABLE_MATCH = 1000
@@ -348,8 +348,8 @@ class Compare(BaseCompare):
             sorted(files_grouped.items(), key=lambda item: item[1]))
         self.compare_result.finalize_search_result(
             self.search_file_path, verbose=self.verbose, is_embedding=False,
-            threshold_duplicate=Compare.THRESHHOLD_POTENTIAL_DUPLICATE,
-            threshold_related=Compare.THRESHHOLD_PROBABLE_MATCH)
+            threshold_duplicate=CompareColors.THRESHHOLD_POTENTIAL_DUPLICATE,
+            threshold_related=CompareColors.THRESHHOLD_PROBABLE_MATCH)
         return {0: files_grouped}
 
     def _run_search_on_path(self, search_file_path):
@@ -472,7 +472,7 @@ class Compare(BaseCompare):
                 f1_grouped = base_index in self.compare_result.files_grouped
                 f2_grouped = diff_index in self.compare_result.files_grouped
 
-                if diff_score < Compare.THRESHHOLD_POTENTIAL_DUPLICATE:
+                if diff_score < CompareColors.THRESHHOLD_POTENTIAL_DUPLICATE:
                     base_file = self.compare_data.files_found[base_index]
                     diff_file = self.compare_data.files_found[diff_index]
                     if ((base_file, diff_file) not in self._probable_duplicates
@@ -489,7 +489,7 @@ class Compare(BaseCompare):
                 elif f1_grouped:
                     existing_group_index, previous_diff_score = self.compare_result.files_grouped[
                         base_index]
-                    if previous_diff_score - Compare.THRESHHOLD_GROUP_CUTOFF > diff_score:
+                    if previous_diff_score - CompareColors.THRESHHOLD_GROUP_CUTOFF > diff_score:
                         # print(f"Previous: {previous_diff_score} , New: {diff_score}")
                         self.compare_result.files_grouped[base_index] = (
                             self.compare_result.group_index, diff_score)
@@ -502,7 +502,7 @@ class Compare(BaseCompare):
                 else:
                     existing_group_index, previous_diff_score = self.compare_result.files_grouped[
                         diff_index]
-                    if previous_diff_score - Compare.THRESHHOLD_GROUP_CUTOFF > diff_score:
+                    if previous_diff_score - CompareColors.THRESHHOLD_GROUP_CUTOFF > diff_score:
                         # print(f"Previous: {previous_diff_score} , New: {diff_score}")
                         self.compare_result.files_grouped[base_index] = (
                             self.compare_result.group_index, diff_score)
@@ -645,7 +645,7 @@ if __name__ == "__main__":
             usage()
             exit(1)
 
-    compare = Compare(base_dir,
+    compare = CompareColors(base_dir,
                       search_file_path=search_file_path,
                       counter_limit=counter_limit,
                       use_thumb=use_thumb,
