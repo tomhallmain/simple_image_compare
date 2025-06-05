@@ -5,7 +5,7 @@ from tkinter import Toplevel, Frame, Label, Scale, Checkbutton, BooleanVar, Stri
 import tkinter.font as fnt
 from tkinter.ttk import Entry, Button, Combobox
 
-from compare.compare_embeddings import CompareEmbedding
+from compare.compare_embeddings_clip import CompareEmbeddingClip
 from files.file_actions_window import FileActionsWindow
 from image.image_classifier_manager import image_classifier_manager
 from image.prevalidation_action import PrevalidationAction
@@ -70,7 +70,7 @@ class Prevalidation:
         if self.image_classifier is not None:
             is_above_threshold = self.image_classifier.test_image_for_categories(image_path, self.image_classifier_selected_categories)
         else:
-            is_above_threshold = CompareEmbedding.multi_text_compare(image_path, self.positives, self.negatives, self.threshold)
+            is_above_threshold = CompareEmbeddingClip.multi_text_compare(image_path, self.positives, self.negatives, self.threshold)
         return self.run_action(image_path, hide_callback, notify_callback) if is_above_threshold else None
 
     def run_action(self, image_path, hide_callback, notify_callback):

@@ -24,10 +24,11 @@ if config.xvlm_loc is not None:
     except Exception as e:
         Utils.log(f"Error loading XVLM modules: {e}")
 
-
-
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model, preprocess = clip.load(config.clip_model, device=device)
+
+# Lazy initialization variables for CLIP
+_clip_model = None
+_clip_preprocess = None
 
 # Lazy initialization variables for SIGLIP
 _siglip_model = None
@@ -47,6 +48,18 @@ _xvlm_tokenizer = None
 _xvlm_img_transform = None
 
 # Model and processor access functions
+
+def _get_clip_model():
+    global _clip_model
+    if _clip_model is None:
+        _clip_model, _ = clip.load(config.clip_model, device=device)
+    return _clip_model
+
+def _get_clip_preprocess():
+    global _clip_preprocess
+    if _clip_preprocess is None:
+        _, _clip_preprocess = clip.load(config.clip_model, device=device)
+    return _clip_preprocess
 
 def _get_siglip_model():
     global _siglip_model
@@ -159,12 +172,12 @@ def embedding_similarity(embedding0, embedding1):
 
 def image_embeddings_clip(image_path):
     try:
-     image = preprocess(Image.open(image_path)).unsqueeze(0).to(device)
+        image = _get_clip_preprocess()(Image.open(image_path)).unsqueeze(0).to(device)
     except Exception as e:
         image_path = FrameCache.get_image_path(image_path)
-        image = preprocess(Image.open(image_path)).unsqueeze(0).to(device)
+        image = _get_clip_preprocess()(Image.open(image_path)).unsqueeze(0).to(device)
     with torch.no_grad():
-        embedding = model.encode_image(image)
+        embedding = _get_clip_model().encode_image(image)
         embedding /= embedding.norm(dim=-1, keepdim=True)
         return embedding.tolist()[0]
 
@@ -172,7 +185,7 @@ def image_embeddings_clip(image_path):
 def text_embeddings_clip(text):
     tokens = clip.tokenize([text]).to(device)
     with torch.no_grad():
-        embedding = model.encode_text(tokens).float()
+        embedding = _get_clip_model().encode_text(tokens).float()
         embedding /= embedding.norm(dim=-1, keepdim=True)
         return embedding.tolist()[0]
 

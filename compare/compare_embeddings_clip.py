@@ -3,12 +3,12 @@ import numpy as np
 from compare.base_compare import gather_files
 from compare.base_compare_embedding import BaseCompareEmbedding, main
 from compare.compare_args import CompareArgs
-from compare.model import image_embeddings_clip, text_embeddings_clip, embedding_similarity
+from compare.model import image_embeddings_clip, text_embeddings_clip
 from utils.config import config
 from utils.constants import CompareMode
 
 
-class CompareEmbedding(BaseCompareEmbedding):
+class CompareEmbeddingClip(BaseCompareEmbedding):
     COMPARE_MODE = CompareMode.CLIP_EMBEDDING
     THRESHHOLD_POTENTIAL_DUPLICATE = config.threshold_potential_duplicate_embedding
     THRESHHOLD_PROBABLE_MATCH = 0.98
@@ -20,19 +20,19 @@ class CompareEmbedding(BaseCompareEmbedding):
         super().__init__(args, gather_files_func)
         self._file_embeddings = np.empty((0, 512))
         self._file_faces = np.empty((0))
-        self.threshold_duplicate = CompareEmbedding.THRESHHOLD_POTENTIAL_DUPLICATE
-        self.threshold_probable_match = CompareEmbedding.THRESHHOLD_PROBABLE_MATCH
-        self.threshold_group_cutoff = CompareEmbedding.THRESHHOLD_GROUP_CUTOFF
+        self.threshold_duplicate = CompareEmbeddingClip.THRESHHOLD_POTENTIAL_DUPLICATE
+        self.threshold_probable_match = CompareEmbeddingClip.THRESHHOLD_PROBABLE_MATCH
+        self.threshold_group_cutoff = CompareEmbeddingClip.THRESHHOLD_GROUP_CUTOFF
         self.image_embeddings_func = image_embeddings_clip
         self.text_embeddings_func = text_embeddings_clip
-        self.text_embedding_cache = CompareEmbedding.TEXT_EMBEDDING_CACHE
-        self.multi_embedding_cache = CompareEmbedding.MULTI_EMBEDDING_CACHE
+        self.text_embedding_cache = CompareEmbeddingClip.TEXT_EMBEDDING_CACHE
+        self.multi_embedding_cache = CompareEmbeddingClip.MULTI_EMBEDDING_CACHE
 
     @staticmethod
     def _get_text_embedding_from_cache(text):
         return BaseCompareEmbedding._get_text_embedding_from_cache(
             text, 
-            CompareEmbedding.TEXT_EMBEDDING_CACHE,
+            CompareEmbeddingClip.TEXT_EMBEDDING_CACHE,
             text_embeddings_clip
         )
 
@@ -42,7 +42,7 @@ class CompareEmbedding(BaseCompareEmbedding):
             image_path,
             texts_dict,
             image_embeddings_clip,
-            CompareEmbedding.TEXT_EMBEDDING_CACHE,
+            CompareEmbeddingClip.TEXT_EMBEDDING_CACHE,
             text_embeddings_clip
         )
 
@@ -53,9 +53,9 @@ class CompareEmbedding(BaseCompareEmbedding):
             positives,
             negatives,
             image_embeddings_clip,
-            CompareEmbedding.TEXT_EMBEDDING_CACHE,
+            CompareEmbeddingClip.TEXT_EMBEDDING_CACHE,
             text_embeddings_clip,
-            CompareEmbedding.MULTI_EMBEDDING_CACHE,
+            CompareEmbeddingClip.MULTI_EMBEDDING_CACHE,
             threshold
         )
 
@@ -69,5 +69,5 @@ class CompareEmbedding(BaseCompareEmbedding):
 
 
 if __name__ == "__main__":
-    main(CompareEmbedding)
+    main(CompareEmbeddingClip)
 

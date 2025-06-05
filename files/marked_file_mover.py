@@ -7,7 +7,7 @@ from typing import Tuple
 from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
-from compare.compare_embeddings import CompareEmbedding
+from compare.compare_embeddings_clip import CompareEmbeddingClip
 from files.file_actions_window import Action, FileActionsWindow
 from files.file_browser import FileBrowser
 from files.hotkey_actions_window import HotkeyActionsWindow
@@ -664,7 +664,7 @@ class MarkedFiles():
             embedding_text = self._get_embedding_text_for_dirpath(d)
             if embedding_text is not None and embedding_text.strip() != "":
                 embedding_texts[d] = embedding_text
-        similarities = CompareEmbedding.single_text_compare(self.single_image, embedding_texts)
+        similarities = CompareEmbeddingClip.single_text_compare(self.single_image, embedding_texts)
         sorted_dirs = []
         for dirpath, similarity in sorted(similarities.items(), key=lambda x: -x[1]):
             sorted_dirs.append(dirpath)

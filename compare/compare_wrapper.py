@@ -7,8 +7,8 @@ import pprint
 
 from compare.compare import Compare
 from compare.compare_args import CompareArgs
-from compare.compare_embeddings import CompareEmbedding
 from compare.compare_embeddings_align import CompareEmbeddingAlign
+from compare.compare_embeddings_clip import CompareEmbeddingClip
 from compare.compare_embeddings_flava import CompareEmbeddingFlava
 from compare.compare_embeddings_siglip import CompareEmbeddingSiglip
 from compare.compare_embeddings_xvlm import CompareEmbeddingXVLM
@@ -152,7 +152,7 @@ class CompareWrapper:
         while not found_unrelated_image:
             next_image = file_browser.next_file() if forward else file_browser.previous_file()
             if (self.compare_mode == CompareMode.COLOR_MATCHING and not Compare.is_related(previous_image, next_image)) or \
-                    (self.compare_mode == CompareMode.CLIP_EMBEDDING and not CompareEmbedding.is_related(previous_image, next_image)):
+                    (self.compare_mode == CompareMode.CLIP_EMBEDDING and not CompareEmbeddingClip.is_related(previous_image, next_image)):
                 found_unrelated_image = True
                 self._app_actions.create_image(next_image)
                 self._app_actions.toast(_("Skipped %s images.").format(skip_count))
@@ -310,7 +310,7 @@ class CompareWrapper:
     def new_compare(self, args):
         args.compare_mode = self.compare_mode
         if self.compare_mode == CompareMode.CLIP_EMBEDDING:
-            self._compare = CompareEmbedding(args)
+            self._compare = CompareEmbeddingClip(args)
         elif self.compare_mode == CompareMode.COLOR_MATCHING:
             self._compare = Compare(args, use_thumb=True)
         elif self.compare_mode == CompareMode.SIGLIP_EMBEDDING:
