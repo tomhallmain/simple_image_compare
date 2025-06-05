@@ -28,6 +28,13 @@ class Utils:
         Utils.log(message, logging.WARNING)
 
     @staticmethod
+    def safe_write(textfile, data):
+        try:
+            textfile.write(data)
+        except UnicodeEncodeError as e:
+            Utils.log_red(e)
+
+    @staticmethod
     def trace(frame, event, arg):
         if event != 'call':
             return

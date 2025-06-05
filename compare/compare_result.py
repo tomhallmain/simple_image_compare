@@ -1,14 +1,10 @@
 import os
 import pickle
 
+from utils.translations import I18N
 from utils.utils import Utils
 
-
-def safe_write(textfile, data):
-    try:
-        textfile.write(data)
-    except UnicodeEncodeError as e:
-        print(e)
+_ = I18N._
 
 
 class CompareResult:
@@ -46,7 +42,7 @@ class CompareResult:
                     header = header[:-2] + "):\n"
                 else:
                     header = f"Possibly related images to \"{search_path}\":\n"
-                safe_write(textfile, header)
+                Utils.safe_write(textfile, header)
                 if verbose:
                     print(header)
 
@@ -71,15 +67,15 @@ class CompareResult:
                                 similarity_score = str(
                                     round(1000/diff_score, 4))
                                 line = f + " - similarity: " + similarity_score
-                        safe_write(textfile, line + "\n")
+                        Utils.safe_write(textfile, line + "\n")
                         if verbose:
                             print(line)
             if verbose:
-                print("\nThis output data saved to file at "
-                      + self.search_output_path)
+                Utils.log("\nThis output data saved to file at "
+                          + self.search_output_path)
         elif verbose:
-            print("No similar images to \"" + search_path
-                  + "\" identified with current params.")
+            Utils.log_yellow("No similar images to \"" + search_path
+                             + "\" identified with current params.")
 
     def finalize_group_result(self, verbose=False, store_checkpoints=False):
         if not verbose:
@@ -108,20 +104,20 @@ class CompareResult:
                         print("(etc.)")
                         to_print_etc = False
                     for f in sorted(group, key=lambda f: group[f]):
-                        safe_write(textfile, f + "\n")
+                        Utils.safe_write(textfile, f + "\n")
                         if group_counter <= group_print_cutoff:
                             print(f)
 
-            print("\nFound " + str(group_counter)
-                  + " image groups with current parameters.")
-            print("\nPrinted up to first " + str(group_print_cutoff)
+            Utils.log("\nFound " + str(group_counter)
+                      + " image groups with current parameters.")
+            Utils.log("\nPrinted up to first " + str(group_print_cutoff)
                   + " groups identified. All group data saved to file at "
                   + self.groups_output_path)
             if store_checkpoints:
                 self.is_complete = True
                 self.store()
         else:
-            print("No similar images identified with current params.")
+            Utils.log_yellow("No similar images identified with current params.")
 
     def sort_groups(self, file_groups):
         return sorted(file_groups,
