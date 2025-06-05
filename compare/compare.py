@@ -435,6 +435,13 @@ class Compare(BaseCompare):
         else:
             print("Identifying groups of similar image files", end="", flush=True)
 
+        # Ensure we have correct counts of data compared to files found
+        if len(self.compare_data.files_found) != len(self._file_colors):
+            Utils.log_red(f"Warning: Mismatch between files_found ({len(self.compare_data.files_found)}) and file_colors ({len(self._file_colors)})")
+
+        if self.compare_faces and len(self.compare_data.files_found) != len(self._file_faces):
+            Utils.log_red(f"Warning: Mismatch between files_found ({len(self.compare_data.files_found)}) and file_faces ({len(self._file_faces)})")
+
         for i in range(self.compare_data.n_files_found):
             if i == 0:  # At this roll index the data would compare to itself
                 continue
@@ -505,6 +512,13 @@ class Compare(BaseCompare):
                     else:
                         self.compare_result.files_grouped[base_index] = (
                             existing_group_index, diff_score)
+
+        # Validate indices before accessing files_found
+        return_current_results, should_restart = self._validate_checkpoint_data()
+        if should_restart:
+            return self.run_comparison(store_checkpoints=store_checkpoints)
+        if return_current_results:
+            return (self.compare_result.files_grouped, self.compare_result.file_groups)
 
         for file_index in self.compare_result.files_grouped:
             _file = self.compare_data.files_found[file_index]

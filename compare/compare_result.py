@@ -1,6 +1,8 @@
 import os
 import pickle
 
+from utils.utils import Utils
+
 
 def safe_write(textfile, data):
     try:
@@ -129,7 +131,7 @@ class CompareResult:
         save_path = CompareResult.cache_path(self.base_dir)
         with open(save_path, "wb") as f:
             pickle.dump(self, f)
-            print(f"Stored compare result: {save_path}")
+            Utils.log(f"Stored compare result: {save_path}")
 
     def equals_hash(self, files):
         return self._dir_files_hash == CompareResult.hash_dir_files(files)
@@ -144,13 +146,24 @@ class CompareResult:
         for f in files:
             hash_list.append(hash(f))
 
+    def validate_indices(self, files):
+        """
+        Validates that all indices in files_grouped are valid for the given files list.
+        Returns True if all indices are valid, False otherwise.
+        """
+        valid_indices = [idx for idx in self.files_grouped if idx < len(files)]
+        if len(valid_indices) != len(self.files_grouped):
+            Utils.log_red(f"Warning: Checkpoint data contains invalid indices. Discarding checkpoint data.")
+            return False
+        return True
+
     @staticmethod
     def load(base_dir, files, overwrite=False):
         if overwrite:
             return CompareResult(base_dir, files)
         cache_path = CompareResult.cache_path(base_dir)
         if not os.path.exists(cache_path):
-            print(
+            Utils.log(
                 f"No checkpoint found for {base_dir} - creating new compare result cache.")
             return CompareResult(base_dir, files)
         cached = None
@@ -158,9 +171,14 @@ class CompareResult:
             with open(cache_path, "rb") as f:
                 cached = pickle.load(f)
         except Exception:
-            print("Failed to load compare result from base dir " + base_dir)
+            Utils.log_red(f"Failed to load compare result from base dir {base_dir}")
             return CompareResult(base_dir, files)
         if not cached.equals_hash(files):
             raise ValueError(f"{cache_path} does not match {files}")
-        print(f"Loaded compare result: {cache_path}")
+
+        # Validate that all indices in files_grouped are valid
+        if not cached.validate_indices(files):
+            return CompareResult(base_dir, files)
+
+        Utils.log(f"Loaded compare result: {cache_path}")
         return cached

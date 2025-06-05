@@ -9,7 +9,7 @@ class CompareArgs:
                  recursive=True, searching_image=False, search_file_path=None, search_text=None, search_text_negative=None,
                  find_duplicates=False, counter_limit=config.file_counter_limit, compare_threshold=config.embedding_similarity_threshold,
                  compare_faces=False, inclusion_pattern=None, overwrite=False, store_checkpoints=config.store_checkpoints,
-                 use_matrix_comparison=False):
+                 use_matrix_comparison=False, app_actions=None):
         self.base_dir = base_dir
         self.listener = listener
         self.mode = mode
@@ -33,6 +33,7 @@ class CompareArgs:
         self.match_dims = False
         self.verbose = True
         self.use_matrix_comparison = use_matrix_comparison
+        self.app_actions = app_actions
 
     def not_searching(self):
         return (self.search_file_path is None or self.search_file_path.strip() == "") and \

@@ -1206,8 +1206,11 @@ class App():
 
             self.has_added_buttons_for_mode[self.mode] = True
 
-    def display_progress(self, context, percent_complete):
-        self._set_label_state(Utils._wrap_text_to_fit_length(
+    def display_progress(self, context, percent_complete=None):
+        if percent_complete is None:
+            self._set_label_state(Utils._wrap_text_to_fit_length(context, 30))
+        else:
+            self._set_label_state(Utils._wrap_text_to_fit_length(
                 _("{0}: {1}% complete").format(context, int(percent_complete)), 30))
         self.master.update()
 
@@ -1261,6 +1264,7 @@ class App():
         args.include_pdfs = config.enable_pdfs
         args.use_matrix_comparison = False # TODO enable UI option for this
         args.listener = ProgressListener(update_func=self.display_progress)
+        args.app_actions = self.app_actions
         self.compare_wrapper.run(args)
 
     def _set_toggled_view_matches(self):

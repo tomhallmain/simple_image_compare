@@ -285,3 +285,24 @@ class BaseCompare:
 
     def readd_files(self, filepaths=[]):
         pass
+
+    def _validate_checkpoint_data(self):
+        """
+        Validates checkpoint data and handles restart if needed.
+        Returns tuple of (return_current_results, should_restart) where:
+        - return_current_results is True if validation failed and user cancelled
+        - should_restart is True if validation failed and user wants to restart
+        """
+        if not self.compare_result.validate_indices(self.compare_data.files_found):
+            if hasattr(self.args, 'listener') and self.args.listener is not None:
+                self.args.listener.display_progress(_("Invalid Checkpoint Data - Confirm Restart"))
+            if hasattr(self.args, 'app_actions') and self.args.app_actions is not None:
+                if not self.args.app_actions.alert(_("Invalid Checkpoint Data"), 
+                    _("Checkpoint data contains invalid indices. Would you like to restart the comparison?"), 
+                    kind="askokcancel"):
+                    return (True, False)
+            self.args.overwrite = True # Ensure the next run will overwrite the checkpoint
+            if hasattr(self.args, 'listener') and self.args.listener is not None:
+                self.args.listener.display_progress(_("Restarting Comparison"))
+            return (False, True)
+        return (False, False)

@@ -84,6 +84,7 @@ If a search image is set simultaneously with search text, its embedding will be 
 
 <details>
 <summary>Expand Details</summary>
+
 `locale` supports any of the following locales:
 - en (English)
 - de (Deutsh)
@@ -147,7 +148,7 @@ This window helps with efficient filing of file marks.
 <br>
 <p>Simply typing letters while the mark window is open will filter the list of mark target directories, even if the GUI is not present. The backspace key will delete letters from the filter. You can scroll through the list of saved target directories using arrow keys.</p>
 <p>To bypass the move marks window, use the Ctrl+R or Ctrl+E shortcuts to immediately run the previous and penultimate actions respectively on the current selection. You can also use number keys or Ctrl+T as hotkeys for persistent marks actions. To see the full list of file action hotkeys and their current settings open the hotkey actions window by pressing Ctrl+H on the marks window.</p>
-<p>Ctrl+Z will undo the previous file marks move or copy action. If an earlier action needs to be reversed or modified, open the marks history window to verify the action in the history list and reverse it via the UI.</p>
+<p>Ctrl+Z will undo the previous file marks move or copy action. If an earlier action needs to be reversed or modified, open the file actions window to verify the action in the history list and reverse it via the UI.</p>
 </details>
 
 ### File Actions Window

@@ -188,6 +188,13 @@ class BaseCompareEmbedding(BaseCompare):
         if self.compare_result.is_complete:
             return (self.compare_result.files_grouped, self.compare_result.file_groups)
 
+        # Ensure we have correct counts of data compared to files found
+        if len(self.compare_data.files_found) != len(self._file_embeddings):
+            Utils.log_red(f"Warning: Mismatch between files_found ({len(self.compare_data.files_found)}) and file_embeddings ({len(self._file_embeddings)})")
+
+        if self.compare_faces and len(self.compare_data.files_found) != len(self._file_faces):
+            Utils.log_red(f"Warning: Mismatch between files_found ({len(self.compare_data.files_found)}) and file_faces ({len(self._file_faces)})")
+
         if self.verbose:
             print("Identifying groups of similar image files...")
         else:
@@ -210,8 +217,8 @@ class BaseCompareEmbedding(BaseCompare):
                 self._handle_progress(self.compare_result.i, n_files_found_even, gathering_data=False)
 
             if self.compare_data.n_files_found > 5000:
-                print("\nWARNING: Large image file set found, comparison between all"
-                      + " images may take a while.\n")
+                Utils.log_yellow("\nWARNING: Large image file set found, comparison between all"
+                                 + " images may take a while.\n")
 
             for i in range(self.compare_data.n_files_found):
                 if i == 0:  # At this roll index the data would compare to itself
@@ -229,6 +236,13 @@ class BaseCompareEmbedding(BaseCompare):
                     diff_index = ((base_index - i) % self.compare_data.n_files_found)
                     diff_score = diff_scores[base_index]
                     self._process_similarity_results(base_index, diff_index, diff_score)
+
+        # Validate indices before accessing files_found
+        return_current_results, should_restart = self._validate_checkpoint_data()
+        if should_restart:
+            return self.run_comparison(store_checkpoints=store_checkpoints)
+        if return_current_results:
+            return (self.compare_result.files_grouped, self.compare_result.file_groups)
 
         for file_index in self.compare_result.files_grouped:
             _file = self.compare_data.files_found[file_index]
