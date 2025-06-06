@@ -11,6 +11,8 @@ from compare.compare_embeddings_clip import CompareEmbeddingClip
 from files.file_actions_window import Action, FileActionsWindow
 from files.file_browser import FileBrowser
 from files.hotkey_actions_window import HotkeyActionsWindow
+from files.pdf_creator import PDFCreator
+from files.pdf_options_window import PDFOptionsWindow
 from image.image_data_extractor import image_data_extractor
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
@@ -225,6 +227,8 @@ class MarkedFiles():
             self.add_btn("set_target_dirs_from_dir_btn", add_dirs_text, self.set_target_dirs_from_dir, column=4)
             self.clear_target_dirs_btn = None
             self.add_btn("clear_target_dirs_btn", _("Clear targets"), self.clear_target_dirs, column=5)
+            self.create_pdf_btn = None
+            self.add_btn("create_pdf_btn", _("Create PDF"), self.create_pdf_from_marks, column=6)
             self.frame.after(1, lambda: self.frame.focus_force())
         else:
             self.master.after(1, lambda: self.master.focus_force())
@@ -877,3 +881,13 @@ class MarkedFiles():
                 app_actions.toast(_("Marks cleared."))
             elif removed_count > 0:
                 app_actions.toast(_("Removed {0} marks").format(removed_count))
+
+    def create_pdf_from_marks(self, event=None, output_path=None):
+        """
+        Create a PDF from marked files using the PDFCreator class.
+        Opens options window first to let user choose quality settings.
+        """
+        def pdf_callback(options):
+            PDFCreator.create_pdf_from_files(MarkedFiles.file_marks, self.app_actions, output_path, options)
+            
+        PDFOptionsWindow.show(self.master, self.app_actions, pdf_callback)
