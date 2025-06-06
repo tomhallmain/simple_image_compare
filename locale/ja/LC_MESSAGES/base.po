@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-05-24 15:44-0400\n"
-"PO-Revision-Date: 2025-05-24 15:44-0400\n"
+"POT-Creation-Date: 2025-06-06 18:02-0400\n"
+"PO-Revision-Date: 2025-06-06 18:02-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:92 app.py:833 app.py:1862
+#: app.py:92 app.py:833 app.py:1866
 msgid " Simple Image Compare "
 msgstr " シンプルな画像比較 "
 
@@ -124,7 +124,7 @@ msgstr "応募をお願いしたいですか?"
 msgid "Ended slideshows"
 msgstr "終了したスライドショー"
 
-#: app.py:649 app.py:1654 app.py:1713
+#: app.py:649 app.py:1658 app.py:1717
 msgid "Warning"
 msgstr "警告"
 
@@ -201,108 +201,108 @@ msgstr "どういうわけか、検索ファイルが無効です"
 msgid "Failed to get active image filepath"
 msgstr "アクティブなイメージファイルパスを取得する失敗"
 
-#: app.py:1211
+#: app.py:1214
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% 完了"
 
-#: app.py:1217
+#: app.py:1220
 msgid "Confirm comparison"
 msgstr "比較確認"
 
-#: app.py:1218
+#: app.py:1221
 msgid "No base directory has been set, will use current base directory of "
 msgstr "ベースディレクトリが設定されていないので、現在のベースディレクトリを使用する： "
 
-#: app.py:1219
+#: app.py:1222
 msgid "Are you sure you want to proceed?"
 msgstr "続行したいですか?"
 
-#: app.py:1239
+#: app.py:1242
 msgid "Error running compare"
 msgstr "エラー実行比較"
 
-#: app.py:1271
+#: app.py:1275
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションでマークが付かない"
 
-#: app.py:1282
+#: app.py:1286
 msgid "Mark removed. Remaining: {0}"
 msgstr "マーク削除 残っている {0}"
 
-#: app.py:1286
+#: app.py:1290
 msgid "Mark added. Total set: {0}"
 msgstr "マークが付け加えた。合計セット： {0}"
 
-#: app.py:1303
+#: app.py:1307
 msgid "Marks added. Total set: {0}"
 msgstr "マークが追加された。合計セット： {0}"
 
-#: app.py:1312
+#: app.py:1316
 msgid "First sorted mark"
 msgstr "ファーストソートマーク"
 
-#: app.py:1319
+#: app.py:1323
 msgid "Only one marked file set."
 msgstr "1つのマーク付きファイルセットのみ。"
 
-#: app.py:1330
+#: app.py:1334
 msgid "Including marks: {0}"
 msgstr "マークを含む：{0}"
 
-#: app.py:1338
+#: app.py:1342
 msgid "Move {0} Marked File(s)"
 msgstr "{0} つのマークされたファイルを移動しますか？"
 
-#: app.py:1373
+#: app.py:1377
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0}マークが設定された（>={1}の予定）。\n"
 "マークを設定するには Shift+M を使用します。"
 
-#: app.py:1406
+#: app.py:1410
 msgid "Prevalidations now running"
 msgstr "今すぐ実行する準備"
 
-#: app.py:1406
+#: app.py:1410
 msgid "Prevalidations turned off"
 msgstr "無効化がオフ"
 
-#: app.py:1431
+#: app.py:1435
 msgid "File not found"
 msgstr "ファイルが見つかりません"
 
-#: app.py:1431
+#: app.py:1435
 msgid "No file was found for the search text: \"{0}\""
 msgstr "検索テキストに該当するファイルが見つかりませんでした： \"{0}\""
 
-#: app.py:1445
+#: app.py:1449
 msgid "No image selected"
 msgstr "選択した画像なし"
 
-#: app.py:1445
+#: app.py:1449
 msgid "No image was selected for comparison"
 msgstr "比較のために画像が選択されていない"
 
-#: app.py:1458
+#: app.py:1462
 msgid "No Text Search Presets Found"
 msgstr "テキスト検索プリセットが見つかりません"
 
-#: app.py:1459
+#: app.py:1463
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "テキスト埋め込み検索プリセットが見つかりません。config.jsonファイルに設定してください。"
 
-#: app.py:1558
+#: app.py:1562
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの場所を開くことができません。"
 
-#: app.py:1569
+#: app.py:1573
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "GIMPで現在のファイルを開くのに失敗しました。"
 
-#: app.py:1585
+#: app.py:1589
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -310,82 +310,83 @@ msgstr ""
 "現在の画像を隠す。\n"
 "非表示を解除するには、Shift+Bキーを押します。"
 
-#: app.py:1590
+#: app.py:1594
 msgid "Cleared all hidden images."
 msgstr "すべての隠し画像を消去。"
 
-#: app.py:1597
+#: app.py:1601
 msgid "DELETE_LOCK"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションが削除を阻止"
 
-#: app.py:1615
+#: app.py:1619
 msgid "Invalid action, no files found to delete"
 msgstr "無効なアクションです。"
 
-#: app.py:1618
+#: app.py:1622
 msgid "Invalid action, search image not found"
 msgstr "無効なアクションです。"
 
-#: app.py:1633
+#: app.py:1637
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの削除に失敗しました。"
 
-#: app.py:1638
+#: app.py:1642
 msgid "Removing file: {0}"
 msgstr "ファイルを削除しています： {0}"
 
-#: app.py:1655
+#: app.py:1659
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "ゴミ箱へのファイル送信に失敗しました。pipでsend2trashをインストールするか、config.jsonでゴミ箱フォルダを指定してください。"
 
-#: app.py:1672
+#: app.py:1676
 msgid "Invalid target filepath for replacement: "
 msgstr "置換対象のファイルパスが無効です： "
 
-#: app.py:1676
+#: app.py:1680
 msgid "Moved search image to "
 msgstr "検索画像を： "
 
-#: app.py:1711
+#: app.py:1715
 msgid "Running image gen: "
 msgstr "イメージ・ジェネレーションの実行： "
 
-#: app.py:1713
+#: app.py:1717
 msgid "Error running image generation:"
 msgstr "画像生成の実行エラー："
 
-#: app.py:1718
+#: app.py:1722
 msgid "Running refacdir"
 msgstr "ランニング refacdir"
 
-#: app.py:1723
+#: app.py:1727 files/pdf_creator.py:123 files/pdf_creator.py:127
+#: files/pdf_creator.py:130
 msgid "Error"
 msgstr "エラー"
 
-#: app.py:1803
+#: app.py:1807
 msgid "GROUP_DETAILS"
 msgstr ""
 "グループ{0}/{1}\n"
 "サイズ：{2}"
 
-#: app.py:1807
+#: app.py:1811
 msgid "No image files found"
 msgstr "画像ファイルが見つかりません"
 
-#: app.py:1809
+#: app.py:1813
 msgid "1 image file found"
 msgstr "1 見つかった画像ファイル"
 
-#: app.py:1810
+#: app.py:1814
 msgid "{0} image files found"
 msgstr "{0} イメージファイルが見つかりました"
 
-#: app.py:1812
+#: app.py:1816
 msgid "(filtered)"
 msgstr "(フィルタリング)"
 
@@ -667,11 +668,11 @@ msgstr "明確な歴史"
 msgid " ({0} files)"
 msgstr " ({0} ファイル)"
 
-#: files/file_actions_window.py:258 files/marked_file_mover.py:264
+#: files/file_actions_window.py:258 files/marked_file_mover.py:268
 msgid "Move"
 msgstr "交通アクセス"
 
-#: files/file_actions_window.py:258 files/marked_file_mover.py:271
+#: files/file_actions_window.py:258 files/marked_file_mover.py:275
 msgid "Copy"
 msgstr "コピー"
 
@@ -735,195 +736,195 @@ msgstr "対象ディレクトリ"
 msgid "(unset)"
 msgstr "(未設定)"
 
-#: files/marked_file_mover.py:88 files/marked_file_mover.py:877
+#: files/marked_file_mover.py:90 files/marked_file_mover.py:881
 msgid "Marks cleared."
 msgstr "マークはクリア。"
 
-#: files/marked_file_mover.py:95
+#: files/marked_file_mover.py:97
 msgid "Set current marks from previous."
 msgstr "前のマークから現在のマークを設定する。"
 
-#: files/marked_file_mover.py:95
+#: files/marked_file_mover.py:97
 msgid "Total set: {0}"
 msgstr "合計セット {0}"
 
-#: files/marked_file_mover.py:122
+#: files/marked_file_mover.py:124
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "永久マークターゲットセットなし!\n"
 "MarksウィンドウのCtrl+Tで設定します。"
 
-#: files/marked_file_mover.py:134
+#: files/marked_file_mover.py:136
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "{0}にホットキーアクションが設定されていません。\n"
 "マークスウィンドウの {1} で設定します。"
 
-#: files/marked_file_mover.py:214 files/recent_directory_window.py:153
+#: files/marked_file_mover.py:216 files/recent_directory_window.py:153
 msgid "Set a new target directory"
 msgstr "新しいターゲットディレクトリを設定する"
 
-#: files/marked_file_mover.py:216
+#: files/marked_file_mover.py:218
 msgid "MOVE"
 msgstr "ムーヴ"
 
-#: files/marked_file_mover.py:220
+#: files/marked_file_mover.py:222
 msgid "COPY"
 msgstr "コピー"
 
-#: files/marked_file_mover.py:222
+#: files/marked_file_mover.py:224
 msgid "DELETE"
 msgstr "削除"
 
-#: files/marked_file_mover.py:224 files/recent_directory_window.py:157
+#: files/marked_file_mover.py:226 files/recent_directory_window.py:157
 msgid "Add directories from parent"
 msgstr "親からディレクトリを追加する"
 
-#: files/marked_file_mover.py:227 files/recent_directory_window.py:159
+#: files/marked_file_mover.py:229 files/recent_directory_window.py:159
 msgid "Clear targets"
 msgstr "明確な目標"
 
-#: files/marked_file_mover.py:291 files/marked_file_mover.py:297
+#: files/marked_file_mover.py:295 files/marked_file_mover.py:301
 msgid "Recording next mark target and action."
 msgstr "记录下一个标记目标和行动。"
 
-#: files/marked_file_mover.py:310 files/recent_directory_window.py:203
+#: files/marked_file_mover.py:314 files/recent_directory_window.py:203
 msgid "Invalid directory: %s"
 msgstr "無効なディレクトリです： {0}"
 
-#: files/marked_file_mover.py:312
+#: files/marked_file_mover.py:316
 msgid "Select target directory for marked files"
 msgstr "マークされたファイルのターゲットディレクトリを選択"
 
-#: files/marked_file_mover.py:367
+#: files/marked_file_mover.py:371
 msgid "Moving"
 msgstr "アクセス"
 
-#: files/marked_file_mover.py:367
+#: files/marked_file_mover.py:371
 msgid "Copying"
 msgstr "コピー"
 
-#: files/marked_file_mover.py:368
+#: files/marked_file_mover.py:372
 msgid "Moved"
 msgstr "移動する"
 
-#: files/marked_file_mover.py:368
+#: files/marked_file_mover.py:372
 msgid "Copied"
 msgstr "コピッド"
 
-#: files/marked_file_mover.py:406
+#: files/marked_file_mover.py:410
 msgid "Moved {0} files to {1}"
 msgstr ""
 "{0}ファイルを\n"
 "{1}に移動"
 
-#: files/marked_file_mover.py:408
+#: files/marked_file_mover.py:412
 msgid "Copied {0} files to {1}"
 msgstr ""
 "{0}つのファイルを\n"
 "{1}にコピー"
 
-#: files/marked_file_mover.py:435
+#: files/marked_file_mover.py:439
 msgid "Existing filenames match!"
 msgstr "既存のファイル名が一致する！"
 
-#: files/marked_file_mover.py:437
+#: files/marked_file_mover.py:441
 msgid "WARNING: Exact file match."
 msgstr "警告：ファイルの完全一致。"
 
-#: files/marked_file_mover.py:439 files/marked_file_mover.py:790
+#: files/marked_file_mover.py:443 files/marked_file_mover.py:794
 msgid "WARNING: Short filenames."
 msgstr "警告:短いファイル名。"
 
-#: files/marked_file_mover.py:463
+#: files/marked_file_mover.py:467
 msgid "Moving back"
 msgstr "移動バック"
 
-#: files/marked_file_mover.py:463
+#: files/marked_file_mover.py:467
 msgid "Removing"
 msgstr "リムーブ"
 
-#: files/marked_file_mover.py:464
+#: files/marked_file_mover.py:468
 msgid "Moved back"
 msgstr "戻る"
 
-#: files/marked_file_mover.py:464
+#: files/marked_file_mover.py:468
 msgid "Removed"
 msgstr "削除"
 
-#: files/marked_file_mover.py:470
+#: files/marked_file_mover.py:474
 msgid "Where should the marked files have gone?"
 msgstr "マークされたファイルはどこに行くべきだったのか？"
 
-#: files/marked_file_mover.py:495
+#: files/marked_file_mover.py:499
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "{1}\n"
 "から{0}ファイル戻し"
 
-#: files/marked_file_mover.py:497
+#: files/marked_file_mover.py:501
 msgid "Removed {0} files from {1}"
 msgstr ""
 "{1}\n"
 "から{0}つのファイルを削除"
 
-#: files/marked_file_mover.py:514
+#: files/marked_file_mover.py:518
 msgid "Select parent directory for target directories"
 msgstr "対象ディレクトリの親ディレクトリを選択"
 
-#: files/marked_file_mover.py:674
+#: files/marked_file_mover.py:678
 msgid "Sorted directories by embedding comparison."
 msgstr "比較を埋め込むことでソートされたディレクトリ。"
 
-#: files/marked_file_mover.py:694
+#: files/marked_file_mover.py:698
 msgid "Confirm Delete"
 msgstr "削除を確認する"
 
-#: files/marked_file_mover.py:695
+#: files/marked_file_mover.py:699
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr "{0}マークされたファイルを削除する - 続行したいですか?"
 
-#: files/marked_file_mover.py:715
+#: files/marked_file_mover.py:719
 msgid "Delete Failed"
 msgstr "失敗した削除"
 
-#: files/marked_file_mover.py:716
+#: files/marked_file_mover.py:720
 msgid "Failed to delete %s files - check log for details."
 msgstr "{0}ファイルを削除する失敗 - 詳細はログを確認してください。"
 
-#: files/marked_file_mover.py:719
+#: files/marked_file_mover.py:723
 msgid "Deleted %s marked files."
 msgstr "削除された {0} マークされたファイル。"
 
-#: files/marked_file_mover.py:784
+#: files/marked_file_mover.py:788
 msgid "Existing filenames found!"
 msgstr "既存のファイル名が見つかります!"
 
-#: files/marked_file_mover.py:786
+#: files/marked_file_mover.py:790
 msgid "WARNING: All file hashes match."
 msgstr "警告:すべてのファイルハッシュマッチ。"
 
-#: files/marked_file_mover.py:788
+#: files/marked_file_mover.py:792
 msgid "WARNING: %s of %s file hashes match."
 msgstr "警告: {1} ファイルのハッシュマッチの {0}。"
 
-#: files/marked_file_mover.py:794
+#: files/marked_file_mover.py:798
 msgid "No existing filenames found."
 msgstr "既存のファイル名が見つかりません。"
 
-#: files/marked_file_mover.py:822
+#: files/marked_file_mover.py:826
 msgid "Found %s downstream related images"
 msgstr "{0}下流関連画像が見つかりました"
 
-#: files/marked_file_mover.py:824
+#: files/marked_file_mover.py:828
 msgid "No downstream related images found"
 msgstr "下流関連画像が見つかりません"
 
-#: files/marked_file_mover.py:835
+#: files/marked_file_mover.py:839
 msgid "Cleared marked file"
 msgstr "マークされたファイルをクリア"
 
-#: files/marked_file_mover.py:879
+#: files/marked_file_mover.py:883
 msgid "Removed {0} marks"
 msgstr "{0}マークを削除"
 
@@ -935,6 +936,42 @@ msgstr "ディレクトリの追加"
 msgid "Set image comparison directory"
 msgstr "画像比較ディレクトリの設定"
 
+#: files/type_configuration_window.py:26
+msgid "Basic image files (PNG, JPG, etc.)"
+msgstr "基本的な画像ファイル (PNG、JPGなど)"
+
+#: files/type_configuration_window.py:27
+msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
+msgstr "動画ファイル (MP4、AVIなど) - 1番目のフレームが抽出されます。"
+
+#: files/type_configuration_window.py:28
+msgid "Animated GIF files - First frame will be extracted"
+msgstr "アニメーションGIFファイル - 最初のフレームが抽出されます"
+
+#: files/type_configuration_window.py:29
+msgid "PDF documents - First page will be extracted"
+msgstr "PDF ドキュメント - 最初のページが抽出されます"
+
+#: files/type_configuration_window.py:30
+msgid "Vector graphics - Will be converted to raster image"
+msgstr "ベクトルグラフィックス - ラスターイメージに変換されます。"
+
+#: files/type_configuration_window.py:31
+msgid "HTML files - Will be rendered and converted to image"
+msgstr "HTMLファイル - レンダリングされ、画像に変換されます"
+
+#: files/type_configuration_window.py:39
+msgid "PDF support requires pypdfium2 package"
+msgstr "PDFサポートはpypdfium2パッケージを必要とします"
+
+#: files/type_configuration_window.py:44
+msgid "SVG support requires cairosvg package"
+msgstr "SVG サポートは cairosvg パッケージを要求します"
+
+#: files/type_configuration_window.py:49
+msgid "HTML support requires pyppeteer package"
+msgstr "HTMLサポートは、pyppeteerパッケージが必要です"
+
 #: files/type_configuration_window.py:96
 msgid "Media Type Configuration"
 msgstr "媒体のタイプ構成"
@@ -942,6 +979,18 @@ msgstr "媒体のタイプ構成"
 #: files/type_configuration_window.py:113
 msgid "Configure Media Types"
 msgstr "メディアタイプの設定"
+
+#: files/type_configuration_window.py:118
+msgid ""
+"Select which types of media files you want to compare. Changes will require "
+"a refresh of open comparisons but files in browsing mode should update "
+"automatically."
+msgstr ""
+"どの種類のメディアファイルを比較したいですか？変更は、オープンな比較をリフレッシュする必要がありますが、ブラウジングモードにあるファイルは自動的に更新されるはずです。"
+
+#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "キャンセル"
 
 #: files/type_configuration_window.py:184
 msgid "Apply Changes"
@@ -1279,6 +1328,10 @@ msgstr "サイトマップ"
 msgid "SVG"
 msgstr "SVGの特長"
 
+#: utils/constants.py:212
+msgid "HTML"
+msgstr "HTML"
+
 #: utils/constants.py:232
 msgid "Moved files"
 msgstr "ファイルの移動"
@@ -1569,54 +1622,76 @@ msgstr "画像タグの有効化"
 msgid "Escape Backslash Filepaths"
 msgstr "エスケープバックスラッシュファイルパス"
 
-#: files/type_configuration_window.py:26
-msgid "Basic image files (PNG, JPG, etc.)"
-msgstr "基本的な画像ファイル (PNG、JPGなど)"
+#: compare/base_compare.py:298
+msgid "Invalid Checkpoint Data - Confirm Restart"
+msgstr "無効なチェックポイントデータ - 再起動を確認"
 
-#: files/type_configuration_window.py:27
-msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
-msgstr "動画ファイル (MP4、AVIなど) - 1番目のフレームが抽出されます。"
+#: compare/base_compare.py:300
+msgid "Invalid Checkpoint Data"
+msgstr "無効なチェックポイントデータ"
 
-#: files/type_configuration_window.py:28
-msgid "Animated GIF files - First frame will be extracted"
-msgstr "アニメーションGIFファイル - 最初のフレームが抽出されます"
-
-#: files/type_configuration_window.py:29
-msgid "PDF documents - First page will be extracted"
-msgstr "PDF ドキュメント - 最初のページが抽出されます"
-
-#: files/type_configuration_window.py:30
-msgid "Vector graphics - Will be converted to raster image"
-msgstr "ベクトルグラフィックス - ラスターイメージに変換されます。"
-
-#: files/type_configuration_window.py:31
-msgid "HTML files - Will be rendered and converted to image"
-msgstr "HTMLファイル - レンダリングされ、画像に変換されます"
-
-#: files/type_configuration_window.py:39
-msgid "PDF support requires pypdfium2 package"
-msgstr "PDFサポートはpypdfium2パッケージを必要とします"
-
-#: files/type_configuration_window.py:44
-msgid "SVG support requires cairosvg package"
-msgstr "SVG サポートは cairosvg パッケージを要求します"
-
-#: files/type_configuration_window.py:49
-msgid "HTML support requires pyppeteer package"
-msgstr "HTMLサポートは、pyppeteerパッケージが必要です"
-
-#: files/type_configuration_window.py:118
+#: compare/base_compare.py:301
 msgid ""
-"Select which types of media files you want to compare. Changes will require "
-"a refresh of open comparisons but files in browsing mode should update "
-"automatically."
+"Checkpoint data contains invalid indices. Would you like to restart the "
+"comparison?"
+msgstr "チェックポイント・データに無効なインデックスが含まれています。比較を再開しますか？"
+
+#: compare/base_compare.py:306
+msgid "Restarting Comparison"
+msgstr "再開比較"
+
+#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
+msgid "Create PDF"
+msgstr "PDFを作成する"
+
+#: files/pdf_creator.py:39
+msgid "No files to create PDF"
+msgstr "PDFを作成するファイルはありません"
+
+#: files/pdf_creator.py:47 files/pdf_options_window.py:53
+msgid "combined_images"
+msgstr "合成画像"
+
+#: files/pdf_creator.py:55
+msgid "Save PDF as"
+msgstr "PDF形式で保存"
+
+#: files/pdf_creator.py:119
+msgid "compressed"
+msgstr "圧縮"
+
+#: files/pdf_creator.py:119
+msgid "high quality"
+msgstr "高品質"
+
+#: files/pdf_creator.py:120
+msgid "Created {0} PDF with {1} pages"
+msgstr "{1}ページの{0}PDFを作成"
+
+#: files/pdf_creator.py:123
+msgid "No pages could be added to the PDF"
+msgstr "PDFにページが追加できなかった"
+
+#: files/pdf_creator.py:127
+msgid "PDF creation requires pypdfium2 package"
+msgstr "PDF作成にはpypdfium2パッケージが必要です"
+
+#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
+msgid "PDF Creation Options"
+msgstr "PDF作成オプション"
+
+#: files/pdf_options_window.py:49
+msgid "PDF Filename:"
+msgstr "PDFファイル名："
+
+#: files/pdf_options_window.py:61
+msgid "Preserve original image quality and format"
+msgstr "オリジナルの画質とフォーマットを保持"
+
+#: files/pdf_options_window.py:68
+msgid ""
+"If enabled, images will maintain their original quality and format.\n"
+"If disabled, images will be compressed to reduce PDF size."
 msgstr ""
-"どの種類のメディアファイルを比較したいですか？変更は、オープンな比較をリフレッシュする必要がありますが、ブラウジングモードにあるファイルは自動的に更新されるはずです。"
-
-#: files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "キャンセル"
-
-#: utils/constants.py:212
-msgid "HTML"
-msgstr "HTML"
+"有効にする と 、 画像は元の品質 と 形式を保ち ます。\n"
+"無効にす る と 、 画像は圧縮 さ れて PDF サ イ ズ を縮小 し ます。"

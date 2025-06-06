@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: APPLICATION 1.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translator@example.com>\n"
-"POT-Creation-Date: 2025-05-24 15:36-0400\n"
-"PO-Revision-Date: 2025-05-24 15:36-0400\n"
+"POT-Creation-Date: 2025-06-06 17:42-0400\n"
+"PO-Revision-Date: 2025-06-06 17:42-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:92 app.py:833 app.py:1862
+#: app.py:92 app.py:833 app.py:1866
 msgid " Simple Image Compare "
 msgstr ""
 
@@ -128,7 +128,7 @@ msgstr ""
 msgid "Ended slideshows"
 msgstr ""
 
-#: app.py:649 app.py:1654 app.py:1713
+#: app.py:649 app.py:1658 app.py:1717
 msgid "Warning"
 msgstr ""
 
@@ -204,179 +204,179 @@ msgstr ""
 msgid "Failed to get active image filepath"
 msgstr ""
 
-#: app.py:1211
+#: app.py:1214
 msgid "{0}: {1}% complete"
 msgstr ""
 
-#: app.py:1217
+#: app.py:1220
 msgid "Confirm comparison"
 msgstr ""
 
-#: app.py:1218
+#: app.py:1221
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 
-#: app.py:1219
+#: app.py:1222
 msgid "Are you sure you want to proceed?"
 msgstr ""
 
-#: app.py:1239
+#: app.py:1242
 msgid "Error running compare"
 msgstr ""
 
-#: app.py:1271
+#: app.py:1275
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 
-#: app.py:1282
+#: app.py:1286
 msgid "Mark removed. Remaining: {0}"
 msgstr ""
 
-#: app.py:1286
+#: app.py:1290
 msgid "Mark added. Total set: {0}"
 msgstr ""
 
-#: app.py:1303
+#: app.py:1307
 msgid "Marks added. Total set: {0}"
 msgstr ""
 
-#: app.py:1312
+#: app.py:1316
 msgid "First sorted mark"
 msgstr ""
 
-#: app.py:1319
+#: app.py:1323
 msgid "Only one marked file set."
 msgstr ""
 
-#: app.py:1330
+#: app.py:1334
 msgid "Including marks: {0}"
 msgstr ""
 
-#: app.py:1338
+#: app.py:1342
 msgid "Move {0} Marked File(s)"
 msgstr ""
 
-#: app.py:1373
+#: app.py:1377
 msgid "NO_MARKS_SET"
 msgstr ""
 
-#: app.py:1406
+#: app.py:1410
 msgid "Prevalidations now running"
 msgstr ""
 
-#: app.py:1406
+#: app.py:1410
 msgid "Prevalidations turned off"
 msgstr ""
 
-#: app.py:1431
+#: app.py:1435
 msgid "File not found"
 msgstr ""
 
-#: app.py:1431
+#: app.py:1435
 msgid "No file was found for the search text: \"{0}\""
 msgstr ""
 
-#: app.py:1445
+#: app.py:1449
 msgid "No image selected"
 msgstr ""
 
-#: app.py:1445
+#: app.py:1449
 msgid "No image was selected for comparison"
 msgstr ""
 
-#: app.py:1458
+#: app.py:1462
 msgid "No Text Search Presets Found"
 msgstr ""
 
-#: app.py:1459
+#: app.py:1463
 msgid "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 
-#: app.py:1558
+#: app.py:1562
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr ""
 
-#: app.py:1569
+#: app.py:1573
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 
-#: app.py:1585
+#: app.py:1589
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
 msgstr ""
 
-#: app.py:1590
+#: app.py:1594
 msgid "Cleared all hidden images."
 msgstr ""
 
-#: app.py:1597
+#: app.py:1601
 msgid "DELETE_LOCK"
 msgstr ""
 
-#: app.py:1615
+#: app.py:1619
 msgid "Invalid action, no files found to delete"
 msgstr ""
 
-#: app.py:1618
+#: app.py:1622
 msgid "Invalid action, search image not found"
 msgstr ""
 
-#: app.py:1633
+#: app.py:1637
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 
-#: app.py:1638
+#: app.py:1642
 msgid "Removing file: {0}"
 msgstr ""
 
-#: app.py:1655
+#: app.py:1659
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder"
 " in config.json."
 msgstr ""
 
-#: app.py:1672
+#: app.py:1676
 msgid "Invalid target filepath for replacement: "
 msgstr ""
 
-#: app.py:1676
+#: app.py:1680
 msgid "Moved search image to "
 msgstr ""
 
-#: app.py:1711
+#: app.py:1715
 msgid "Running image gen: "
 msgstr ""
 
-#: app.py:1713
+#: app.py:1717
 msgid "Error running image generation:"
 msgstr ""
 
-#: app.py:1718
+#: app.py:1722
 msgid "Running refacdir"
 msgstr ""
 
-#: app.py:1723
+#: app.py:1727 files/pdf_creator.py:123 files/pdf_creator.py:127 files/pdf_creator.py:130
 msgid "Error"
 msgstr ""
 
-#: app.py:1803
+#: app.py:1807
 msgid "GROUP_DETAILS"
 msgstr ""
 
-#: app.py:1807
+#: app.py:1811
 msgid "No image files found"
 msgstr ""
 
-#: app.py:1809
+#: app.py:1813
 msgid "1 image file found"
 msgstr ""
 
-#: app.py:1810
+#: app.py:1814
 msgid "{0} image files found"
 msgstr ""
 
-#: app.py:1812
+#: app.py:1816
 msgid "(filtered)"
 msgstr ""
 
@@ -386,6 +386,22 @@ msgstr ""
 
 #: compare/base_compare.py:227
 msgid "Image comparison"
+msgstr ""
+
+#: compare/base_compare.py:298
+msgid "Invalid Checkpoint Data - Confirm Restart"
+msgstr ""
+
+#: compare/base_compare.py:300
+msgid "Invalid Checkpoint Data"
+msgstr ""
+
+#: compare/base_compare.py:301
+msgid "Checkpoint data contains invalid indices. Would you like to restart the comparison?"
+msgstr ""
+
+#: compare/base_compare.py:306
+msgid "Restarting Comparison"
 msgstr ""
 
 #: compare/compare_wrapper.py:67 compare/compare_wrapper.py:70
@@ -650,11 +666,11 @@ msgstr ""
 msgid " ({0} files)"
 msgstr ""
 
-#: files/file_actions_window.py:258 files/marked_file_mover.py:264
+#: files/file_actions_window.py:258 files/marked_file_mover.py:268
 msgid "Move"
 msgstr ""
 
-#: files/file_actions_window.py:258 files/marked_file_mover.py:271
+#: files/file_actions_window.py:258 files/marked_file_mover.py:275
 msgid "Copy"
 msgstr ""
 
@@ -718,184 +734,242 @@ msgstr ""
 msgid "(unset)"
 msgstr ""
 
-#: files/marked_file_mover.py:88 files/marked_file_mover.py:877
+#: files/marked_file_mover.py:90 files/marked_file_mover.py:881
 msgid "Marks cleared."
 msgstr ""
 
-#: files/marked_file_mover.py:95
+#: files/marked_file_mover.py:97
 msgid "Set current marks from previous."
 msgstr ""
 
-#: files/marked_file_mover.py:95
+#: files/marked_file_mover.py:97
 msgid "Total set: {0}"
 msgstr ""
 
-#: files/marked_file_mover.py:122
+#: files/marked_file_mover.py:124
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 
-#: files/marked_file_mover.py:134
+#: files/marked_file_mover.py:136
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 
-#: files/marked_file_mover.py:214 files/recent_directory_window.py:153
+#: files/marked_file_mover.py:216 files/recent_directory_window.py:153
 msgid "Set a new target directory"
 msgstr ""
 
-#: files/marked_file_mover.py:216
+#: files/marked_file_mover.py:218
 msgid "MOVE"
 msgstr ""
 
-#: files/marked_file_mover.py:220
+#: files/marked_file_mover.py:222
 msgid "COPY"
 msgstr ""
 
-#: files/marked_file_mover.py:222
+#: files/marked_file_mover.py:224
 msgid "DELETE"
 msgstr ""
 
-#: files/marked_file_mover.py:224 files/recent_directory_window.py:157
+#: files/marked_file_mover.py:226 files/recent_directory_window.py:157
 msgid "Add directories from parent"
 msgstr ""
 
-#: files/marked_file_mover.py:227 files/recent_directory_window.py:159
+#: files/marked_file_mover.py:229 files/recent_directory_window.py:159
 msgid "Clear targets"
 msgstr ""
 
-#: files/marked_file_mover.py:291 files/marked_file_mover.py:297
+#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
+msgid "Create PDF"
+msgstr ""
+
+#: files/marked_file_mover.py:295 files/marked_file_mover.py:301
 msgid "Recording next mark target and action."
 msgstr ""
 
-#: files/marked_file_mover.py:310 files/recent_directory_window.py:203
+#: files/marked_file_mover.py:314 files/recent_directory_window.py:203
 msgid "Invalid directory: %s"
 msgstr ""
 
-#: files/marked_file_mover.py:312
+#: files/marked_file_mover.py:316
 msgid "Select target directory for marked files"
 msgstr ""
 
-#: files/marked_file_mover.py:367
+#: files/marked_file_mover.py:371
 msgid "Moving"
 msgstr ""
 
-#: files/marked_file_mover.py:367
+#: files/marked_file_mover.py:371
 msgid "Copying"
 msgstr ""
 
-#: files/marked_file_mover.py:368
+#: files/marked_file_mover.py:372
 msgid "Moved"
 msgstr ""
 
-#: files/marked_file_mover.py:368
+#: files/marked_file_mover.py:372
 msgid "Copied"
 msgstr ""
 
-#: files/marked_file_mover.py:406
+#: files/marked_file_mover.py:410
 msgid "Moved {0} files to {1}"
 msgstr ""
 
-#: files/marked_file_mover.py:408
+#: files/marked_file_mover.py:412
 msgid "Copied {0} files to {1}"
 msgstr ""
 
-#: files/marked_file_mover.py:435
+#: files/marked_file_mover.py:439
 msgid "Existing filenames match!"
 msgstr ""
 
-#: files/marked_file_mover.py:437
+#: files/marked_file_mover.py:441
 msgid "WARNING: Exact file match."
 msgstr ""
 
-#: files/marked_file_mover.py:439 files/marked_file_mover.py:790
+#: files/marked_file_mover.py:443 files/marked_file_mover.py:794
 msgid "WARNING: Short filenames."
 msgstr ""
 
-#: files/marked_file_mover.py:463
+#: files/marked_file_mover.py:467
 msgid "Moving back"
 msgstr ""
 
-#: files/marked_file_mover.py:463
+#: files/marked_file_mover.py:467
 msgid "Removing"
 msgstr ""
 
-#: files/marked_file_mover.py:464
+#: files/marked_file_mover.py:468
 msgid "Moved back"
 msgstr ""
 
-#: files/marked_file_mover.py:464
+#: files/marked_file_mover.py:468
 msgid "Removed"
 msgstr ""
 
-#: files/marked_file_mover.py:470
+#: files/marked_file_mover.py:474
 msgid "Where should the marked files have gone?"
 msgstr ""
 
-#: files/marked_file_mover.py:495
+#: files/marked_file_mover.py:499
 msgid "Moved back {0} files from {1}"
 msgstr ""
 
-#: files/marked_file_mover.py:497
+#: files/marked_file_mover.py:501
 msgid "Removed {0} files from {1}"
 msgstr ""
 
-#: files/marked_file_mover.py:514
+#: files/marked_file_mover.py:518
 msgid "Select parent directory for target directories"
 msgstr ""
 
-#: files/marked_file_mover.py:674
+#: files/marked_file_mover.py:678
 msgid "Sorted directories by embedding comparison."
 msgstr ""
 
-#: files/marked_file_mover.py:694
+#: files/marked_file_mover.py:698
 msgid "Confirm Delete"
 msgstr ""
 
-#: files/marked_file_mover.py:695
+#: files/marked_file_mover.py:699
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr ""
 
-#: files/marked_file_mover.py:715
+#: files/marked_file_mover.py:719
 msgid "Delete Failed"
 msgstr ""
 
-#: files/marked_file_mover.py:716
+#: files/marked_file_mover.py:720
 msgid "Failed to delete %s files - check log for details."
 msgstr ""
 
-#: files/marked_file_mover.py:719
+#: files/marked_file_mover.py:723
 msgid "Deleted %s marked files."
 msgstr ""
 
-#: files/marked_file_mover.py:784
+#: files/marked_file_mover.py:788
 msgid "Existing filenames found!"
 msgstr ""
 
-#: files/marked_file_mover.py:786
+#: files/marked_file_mover.py:790
 msgid "WARNING: All file hashes match."
 msgstr ""
 
-#: files/marked_file_mover.py:788
+#: files/marked_file_mover.py:792
 msgid "WARNING: %s of %s file hashes match."
 msgstr ""
 
-#: files/marked_file_mover.py:794
+#: files/marked_file_mover.py:798
 msgid "No existing filenames found."
 msgstr ""
 
-#: files/marked_file_mover.py:822
+#: files/marked_file_mover.py:826
 msgid "Found %s downstream related images"
 msgstr ""
 
-#: files/marked_file_mover.py:824
+#: files/marked_file_mover.py:828
 msgid "No downstream related images found"
 msgstr ""
 
-#: files/marked_file_mover.py:835
+#: files/marked_file_mover.py:839
 msgid "Cleared marked file"
 msgstr ""
 
-#: files/marked_file_mover.py:879
+#: files/marked_file_mover.py:883
 msgid "Removed {0} marks"
+msgstr ""
+
+#: files/pdf_creator.py:39
+msgid "No files to create PDF"
+msgstr ""
+
+#: files/pdf_creator.py:47 files/pdf_options_window.py:53
+msgid "combined_images"
+msgstr ""
+
+#: files/pdf_creator.py:55
+msgid "Save PDF as"
+msgstr ""
+
+#: files/pdf_creator.py:119
+msgid "compressed"
+msgstr ""
+
+#: files/pdf_creator.py:119
+msgid "high quality"
+msgstr ""
+
+#: files/pdf_creator.py:120
+msgid "Created {0} PDF with {1} pages"
+msgstr ""
+
+#: files/pdf_creator.py:123
+msgid "No pages could be added to the PDF"
+msgstr ""
+
+#: files/pdf_creator.py:127
+msgid "PDF creation requires pypdfium2 package"
+msgstr ""
+
+#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
+msgid "PDF Creation Options"
+msgstr ""
+
+#: files/pdf_options_window.py:49
+msgid "PDF Filename:"
+msgstr ""
+
+#: files/pdf_options_window.py:61
+msgid "Preserve original image quality and format"
+msgstr ""
+
+#: files/pdf_options_window.py:68
+msgid ""
+"If enabled, images will maintain their original quality and format.\n"
+"If disabled, images will be compressed to reduce PDF size."
+msgstr ""
+
+#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+msgid "Cancel"
 msgstr ""
 
 #: files/recent_directory_window.py:155
@@ -954,10 +1028,6 @@ msgstr ""
 msgid ""
 "Select which types of media files you want to compare. Changes will require a refresh of open comparisons but files "
 "in browsing mode should update automatically."
-msgstr ""
-
-#: files/type_configuration_window.py:179
-msgid "Cancel"
 msgstr ""
 
 #: files/type_configuration_window.py:184

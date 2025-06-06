@@ -29,7 +29,7 @@ class PDFOptionsWindow:
             
         cls.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
         cls.top_level.title(_("PDF Creation Options"))
-        cls.top_level.geometry("400x250")
+        cls.top_level.geometry("500x250")
         cls.top_level.protocol("WM_DELETE_WINDOW", cls.on_closing)
         cls.top_level.bind("<Escape>", cls.on_closing)
         

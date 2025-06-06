@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-05-24 15:44-0400\n"
-"PO-Revision-Date: 2025-05-24 15:44-0400\n"
+"POT-Creation-Date: 2025-06-06 18:02-0400\n"
+"PO-Revision-Date: 2025-06-06 18:02-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:92 app.py:833 app.py:1862
+#: app.py:92 app.py:833 app.py:1866
 msgid " Simple Image Compare "
 msgstr " 简单图像比较 "
 
@@ -124,7 +124,7 @@ msgstr "您想要退出申请吗 ?"
 msgid "Ended slideshows"
 msgstr "结束幻灯片放映"
 
-#: app.py:649 app.py:1654 app.py:1713
+#: app.py:649 app.py:1658 app.py:1717
 msgid "Warning"
 msgstr "警告"
 
@@ -201,108 +201,108 @@ msgstr "不知何故, 搜索文件无效"
 msgid "Failed to get active image filepath"
 msgstr "获取活动图像文件路径失败"
 
-#: app.py:1211
+#: app.py:1214
 msgid "{0}: {1}% complete"
 msgstr "{0} : {1} 完成"
 
-#: app.py:1217
+#: app.py:1220
 msgid "Confirm comparison"
 msgstr "确认比较"
 
-#: app.py:1218
+#: app.py:1221
 msgid "No base directory has been set, will use current base directory of "
 msgstr "未设置基本目录，将使用当前基本目录： "
 
-#: app.py:1219
+#: app.py:1222
 msgid "Are you sure you want to proceed?"
 msgstr "你确定要继续吗?"
 
-#: app.py:1239
+#: app.py:1242
 msgid "Error running compare"
 msgstr "运行比较出错"
 
-#: app.py:1271
+#: app.py:1275
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡时无法添加标记"
 
-#: app.py:1282
+#: app.py:1286
 msgid "Mark removed. Remaining: {0}"
 msgstr "标记已去除。剩余 {0}"
 
-#: app.py:1286
+#: app.py:1290
 msgid "Mark added. Total set: {0}"
 msgstr "马克补充道。全套 {0}"
 
-#: app.py:1303
+#: app.py:1307
 msgid "Marks added. Total set: {0}"
 msgstr "标记已添加。总分 {0}"
 
-#: app.py:1312
+#: app.py:1316
 msgid "First sorted mark"
 msgstr "第一个排序标记"
 
-#: app.py:1319
+#: app.py:1323
 msgid "Only one marked file set."
 msgstr "只有一个标记的文件集 。"
 
-#: app.py:1330
+#: app.py:1334
 msgid "Including marks: {0}"
 msgstr "包括标记：{0}"
 
-#: app.py:1338
+#: app.py:1342
 msgid "Move {0} Marked File(s)"
 msgstr "移动 {0} 个标记文件？"
 
-#: app.py:1373
+#: app.py:1377
 msgid "NO_MARKS_SET"
 msgstr ""
 "已设置 {0} 标记（预计 >={1}）。\n"
 "使用 Shift+M 设置标记。"
 
-#: app.py:1406
+#: app.py:1410
 msgid "Prevalidations now running"
 msgstr "前缀正在运行"
 
-#: app.py:1406
+#: app.py:1410
 msgid "Prevalidations turned off"
 msgstr "关闭前缀"
 
-#: app.py:1431
+#: app.py:1435
 msgid "File not found"
 msgstr "未找到文件"
 
-#: app.py:1431
+#: app.py:1435
 msgid "No file was found for the search text: \"{0}\""
 msgstr "没有找到搜索文本的文件 \"{0}”"
 
-#: app.py:1445
+#: app.py:1449
 msgid "No image selected"
 msgstr "未选择图像"
 
-#: app.py:1445
+#: app.py:1449
 msgid "No image was selected for comparison"
 msgstr "没有选择图像进行比较"
 
-#: app.py:1458
+#: app.py:1462
 msgid "No Text Search Presets Found"
 msgstr "未找到文本搜索预设"
 
-#: app.py:1459
+#: app.py:1463
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "未找到文本嵌入搜索预设。请在 config.json 文件中进行设置。"
 
-#: app.py:1558
+#: app.py:1562
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "打开当前文件位置失败，无法获取有效的文件路径"
 
-#: app.py:1569
+#: app.py:1573
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "在 GIMP 中打开当前文件失败，无法获取有效的文件路径"
 
-#: app.py:1585
+#: app.py:1589
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -310,82 +310,83 @@ msgstr ""
 "隐藏当前图像。\n"
 "要取消隐藏，请按 Shift+B。"
 
-#: app.py:1590
+#: app.py:1594
 msgid "Cleared all hidden images."
 msgstr "清除所有隐藏图像"
 
-#: app.py:1597
+#: app.py:1601
 msgid "DELETE_LOCK"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡阻止删除"
 
-#: app.py:1615
+#: app.py:1619
 msgid "Invalid action, no files found to delete"
 msgstr "无效操作，未找到要删除的文件"
 
-#: app.py:1618
+#: app.py:1622
 msgid "Invalid action, search image not found"
 msgstr "无效操作，未找到搜索图像"
 
-#: app.py:1633
+#: app.py:1637
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "删除当前文件失败，无法获取有效的文件路径"
 
-#: app.py:1638
+#: app.py:1642
 msgid "Removing file: {0}"
 msgstr "删除文件： {0}"
 
-#: app.py:1655
+#: app.py:1659
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "发送文件到垃圾箱失败，因此文件将被删除。要么用 pip 安装 send2trash，要么在 config.json 中设置特定的垃圾文件夹。"
 
-#: app.py:1672
+#: app.py:1676
 msgid "Invalid target filepath for replacement: "
 msgstr "替换的目标文件路径无效： "
 
-#: app.py:1676
+#: app.py:1680
 msgid "Moved search image to "
 msgstr "将搜索图像移至 ： "
 
-#: app.py:1711
+#: app.py:1715
 msgid "Running image gen: "
 msgstr "运行图像基因 ： "
 
-#: app.py:1713
+#: app.py:1717
 msgid "Error running image generation:"
 msgstr "生成图像时出错："
 
-#: app.py:1718
+#: app.py:1722
 msgid "Running refacdir"
 msgstr "正在运行 reacdir"
 
-#: app.py:1723
+#: app.py:1727 files/pdf_creator.py:123 files/pdf_creator.py:127
+#: files/pdf_creator.py:130
 msgid "Error"
 msgstr "错误"
 
-#: app.py:1803
+#: app.py:1807
 msgid "GROUP_DETAILS"
 msgstr ""
 "第 {0} 组 {1}\n"
 "大小： {2}"
 
-#: app.py:1807
+#: app.py:1811
 msgid "No image files found"
 msgstr "未找到图像文件"
 
-#: app.py:1809
+#: app.py:1813
 msgid "1 image file found"
 msgstr "找到一个图像文件"
 
-#: app.py:1810
+#: app.py:1814
 msgid "{0} image files found"
 msgstr "找到 {0} 图像文件"
 
-#: app.py:1812
+#: app.py:1816
 msgid "(filtered)"
 msgstr "(过滤)"
 
@@ -666,11 +667,11 @@ msgstr "清除历史记录"
 msgid " ({0} files)"
 msgstr " ({0} 文件)"
 
-#: files/file_actions_window.py:258 files/marked_file_mover.py:264
+#: files/file_actions_window.py:258 files/marked_file_mover.py:268
 msgid "Move"
 msgstr "移动"
 
-#: files/file_actions_window.py:258 files/marked_file_mover.py:271
+#: files/file_actions_window.py:258 files/marked_file_mover.py:275
 msgid "Copy"
 msgstr "复制"
 
@@ -734,195 +735,195 @@ msgstr "目标目录"
 msgid "(unset)"
 msgstr "(未设定)"
 
-#: files/marked_file_mover.py:88 files/marked_file_mover.py:877
+#: files/marked_file_mover.py:90 files/marked_file_mover.py:881
 msgid "Marks cleared."
 msgstr "标记清除。"
 
-#: files/marked_file_mover.py:95
+#: files/marked_file_mover.py:97
 msgid "Set current marks from previous."
 msgstr "从上一个标记设置当前标记。"
 
-#: files/marked_file_mover.py:95
+#: files/marked_file_mover.py:97
 msgid "Total set: {0}"
 msgstr "全套： {0}"
 
-#: files/marked_file_mover.py:122
+#: files/marked_file_mover.py:124
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "没有设定永久标记目标 !\n"
 "在Marks窗口上设定 Ctrl+T 。"
 
-#: files/marked_file_mover.py:134
+#: files/marked_file_mover.py:136
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "未为 {0} 设置热键操作。\n"
 "在标记窗口中用 {1} 设置。"
 
-#: files/marked_file_mover.py:214 files/recent_directory_window.py:153
+#: files/marked_file_mover.py:216 files/recent_directory_window.py:153
 msgid "Set a new target directory"
 msgstr "设置新的目标目录"
 
-#: files/marked_file_mover.py:216
+#: files/marked_file_mover.py:218
 msgid "MOVE"
 msgstr "移动"
 
-#: files/marked_file_mover.py:220
+#: files/marked_file_mover.py:222
 msgid "COPY"
 msgstr "复制"
 
-#: files/marked_file_mover.py:222
+#: files/marked_file_mover.py:224
 msgid "DELETE"
 msgstr "删除"
 
-#: files/marked_file_mover.py:224 files/recent_directory_window.py:157
+#: files/marked_file_mover.py:226 files/recent_directory_window.py:157
 msgid "Add directories from parent"
 msgstr "从父目录添加目录"
 
-#: files/marked_file_mover.py:227 files/recent_directory_window.py:159
+#: files/marked_file_mover.py:229 files/recent_directory_window.py:159
 msgid "Clear targets"
 msgstr "明确目标"
 
-#: files/marked_file_mover.py:291 files/marked_file_mover.py:297
+#: files/marked_file_mover.py:295 files/marked_file_mover.py:301
 msgid "Recording next mark target and action."
 msgstr "记录下一个标记目标和行动。"
 
-#: files/marked_file_mover.py:310 files/recent_directory_window.py:203
+#: files/marked_file_mover.py:314 files/recent_directory_window.py:203
 msgid "Invalid directory: %s"
 msgstr "无效目录： {0}"
 
-#: files/marked_file_mover.py:312
+#: files/marked_file_mover.py:316
 msgid "Select target directory for marked files"
 msgstr "为标记文件选择目标目录"
 
-#: files/marked_file_mover.py:367
+#: files/marked_file_mover.py:371
 msgid "Moving"
 msgstr "移动"
 
-#: files/marked_file_mover.py:367
+#: files/marked_file_mover.py:371
 msgid "Copying"
 msgstr "复制"
 
-#: files/marked_file_mover.py:368
+#: files/marked_file_mover.py:372
 msgid "Moved"
 msgstr "移动"
 
-#: files/marked_file_mover.py:368
+#: files/marked_file_mover.py:372
 msgid "Copied"
 msgstr "复制"
 
-#: files/marked_file_mover.py:406
+#: files/marked_file_mover.py:410
 msgid "Moved {0} files to {1}"
 msgstr ""
 "将 {0} 文件移至\n"
 "{1}"
 
-#: files/marked_file_mover.py:408
+#: files/marked_file_mover.py:412
 msgid "Copied {0} files to {1}"
 msgstr ""
 "将 {0} 个文件复制到\n"
 "{1}"
 
-#: files/marked_file_mover.py:435
+#: files/marked_file_mover.py:439
 msgid "Existing filenames match!"
 msgstr "现有文件名匹配！"
 
-#: files/marked_file_mover.py:437
+#: files/marked_file_mover.py:441
 msgid "WARNING: Exact file match."
 msgstr "警告：文件完全匹配。"
 
-#: files/marked_file_mover.py:439 files/marked_file_mover.py:790
+#: files/marked_file_mover.py:443 files/marked_file_mover.py:794
 msgid "WARNING: Short filenames."
 msgstr "警告:文件短。"
 
-#: files/marked_file_mover.py:463
+#: files/marked_file_mover.py:467
 msgid "Moving back"
 msgstr "向后移动"
 
-#: files/marked_file_mover.py:463
+#: files/marked_file_mover.py:467
 msgid "Removing"
 msgstr "删除"
 
-#: files/marked_file_mover.py:464
+#: files/marked_file_mover.py:468
 msgid "Moved back"
 msgstr "向后移动"
 
-#: files/marked_file_mover.py:464
+#: files/marked_file_mover.py:468
 msgid "Removed"
 msgstr "已删除"
 
-#: files/marked_file_mover.py:470
+#: files/marked_file_mover.py:474
 msgid "Where should the marked files have gone?"
 msgstr "做了标记的文件应该放在哪里？"
 
-#: files/marked_file_mover.py:495
+#: files/marked_file_mover.py:499
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "从 {1}\n"
 "移回 {0} 个文件"
 
-#: files/marked_file_mover.py:497
+#: files/marked_file_mover.py:501
 msgid "Removed {0} files from {1}"
 msgstr ""
 "从 {1}\n"
 "移除 {0} 个文件"
 
-#: files/marked_file_mover.py:514
+#: files/marked_file_mover.py:518
 msgid "Select parent directory for target directories"
 msgstr "选择目标目录的父目录"
 
-#: files/marked_file_mover.py:674
+#: files/marked_file_mover.py:678
 msgid "Sorted directories by embedding comparison."
 msgstr "通过嵌入比较排序目录 。"
 
-#: files/marked_file_mover.py:694
+#: files/marked_file_mover.py:698
 msgid "Confirm Delete"
 msgstr "确认删除"
 
-#: files/marked_file_mover.py:695
+#: files/marked_file_mover.py:699
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr "删除{0} 标记的文件 - 您确定要继续吗 ?"
 
-#: files/marked_file_mover.py:715
+#: files/marked_file_mover.py:719
 msgid "Delete Failed"
 msgstr "删除失败"
 
-#: files/marked_file_mover.py:716
+#: files/marked_file_mover.py:720
 msgid "Failed to delete %s files - check log for details."
 msgstr "删除 {0} 文件 - 检查日志以获取细节失败 。"
 
-#: files/marked_file_mover.py:719
+#: files/marked_file_mover.py:723
 msgid "Deleted %s marked files."
 msgstr "删除{0} 标记的文件 。"
 
-#: files/marked_file_mover.py:784
+#: files/marked_file_mover.py:788
 msgid "Existing filenames found!"
 msgstr "找到已有文件名 !"
 
-#: files/marked_file_mover.py:786
+#: files/marked_file_mover.py:790
 msgid "WARNING: All file hashes match."
 msgstr "所有档案都匹配"
 
-#: files/marked_file_mover.py:788
+#: files/marked_file_mover.py:792
 msgid "WARNING: %s of %s file hashes match."
 msgstr "警告 : {0} {1} 文件散列匹配 。"
 
-#: files/marked_file_mover.py:794
+#: files/marked_file_mover.py:798
 msgid "No existing filenames found."
 msgstr "未找到现有文件名 。"
 
-#: files/marked_file_mover.py:822
+#: files/marked_file_mover.py:826
 msgid "Found %s downstream related images"
 msgstr "找到 {0} 下游相关图像"
 
-#: files/marked_file_mover.py:824
+#: files/marked_file_mover.py:828
 msgid "No downstream related images found"
 msgstr "未找到下游相关图像"
 
-#: files/marked_file_mover.py:835
+#: files/marked_file_mover.py:839
 msgid "Cleared marked file"
 msgstr "清除已标记的文件"
 
-#: files/marked_file_mover.py:879
+#: files/marked_file_mover.py:883
 msgid "Removed {0} marks"
 msgstr "删除{0}标记"
 
@@ -934,6 +935,42 @@ msgstr "添加目录"
 msgid "Set image comparison directory"
 msgstr "设定图像比较目录"
 
+#: files/type_configuration_window.py:26
+msgid "Basic image files (PNG, JPG, etc.)"
+msgstr "基本图片文件（PNG、JPG 等）"
+
+#: files/type_configuration_window.py:27
+msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
+msgstr "视频文件( MP4, AVI等) - 将提取第一帧"
+
+#: files/type_configuration_window.py:28
+msgid "Animated GIF files - First frame will be extracted"
+msgstr "GIF 动画文件 - 第一个框架将被提取"
+
+#: files/type_configuration_window.py:29
+msgid "PDF documents - First page will be extracted"
+msgstr "PDF 文档 - 将提取第一页"
+
+#: files/type_configuration_window.py:30
+msgid "Vector graphics - Will be converted to raster image"
+msgstr "矢量图形 - 将转换为光栅图像"
+
+#: files/type_configuration_window.py:31
+msgid "HTML files - Will be rendered and converted to image"
+msgstr "HTML 文件 - 将渲染并转换成图像"
+
+#: files/type_configuration_window.py:39
+msgid "PDF support requires pypdfium2 package"
+msgstr "PDF 支持需要 pypdfium2 软件包"
+
+#: files/type_configuration_window.py:44
+msgid "SVG support requires cairosvg package"
+msgstr "SVG 支持需要 cairosvg 软件包"
+
+#: files/type_configuration_window.py:49
+msgid "HTML support requires pyppeteer package"
+msgstr "HTML 支持需要 pyppeter 软件包"
+
 #: files/type_configuration_window.py:96
 msgid "Media Type Configuration"
 msgstr "媒体类型配置"
@@ -941,6 +978,17 @@ msgstr "媒体类型配置"
 #: files/type_configuration_window.py:113
 msgid "Configure Media Types"
 msgstr "配置媒体类型"
+
+#: files/type_configuration_window.py:118
+msgid ""
+"Select which types of media files you want to compare. Changes will require "
+"a refresh of open comparisons but files in browsing mode should update "
+"automatically."
+msgstr "选择要比较的媒体文件类型。更改将需要刷新打开的比较，但浏览模式下的文件应会自动更新。"
+
+#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "取消"
 
 #: files/type_configuration_window.py:184
 msgid "Apply Changes"
@@ -1278,6 +1326,10 @@ msgstr "专题报告"
 msgid "SVG"
 msgstr "特别志愿人员小组"
 
+#: utils/constants.py:212
+msgid "HTML"
+msgstr "HTML"
+
 #: utils/constants.py:232
 msgid "Moved files"
 msgstr "已移动文件"
@@ -1568,53 +1620,76 @@ msgstr "图像标签已启用"
 msgid "Escape Backslash Filepaths"
 msgstr "逃逸反斜文件路径"
 
-#: files/type_configuration_window.py:26
-msgid "Basic image files (PNG, JPG, etc.)"
-msgstr "基本图片文件（PNG、JPG 等）"
+#: compare/base_compare.py:298
+msgid "Invalid Checkpoint Data - Confirm Restart"
+msgstr "检查点数据无效 - 确认重启"
 
-#: files/type_configuration_window.py:27
-msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
-msgstr "视频文件( MP4, AVI等) - 将提取第一帧"
+#: compare/base_compare.py:300
+msgid "Invalid Checkpoint Data"
+msgstr "检查点数据无效"
 
-#: files/type_configuration_window.py:28
-msgid "Animated GIF files - First frame will be extracted"
-msgstr "GIF 动画文件 - 第一个框架将被提取"
-
-#: files/type_configuration_window.py:29
-msgid "PDF documents - First page will be extracted"
-msgstr "PDF 文档 - 将提取第一页"
-
-#: files/type_configuration_window.py:30
-msgid "Vector graphics - Will be converted to raster image"
-msgstr "矢量图形 - 将转换为光栅图像"
-
-#: files/type_configuration_window.py:31
-msgid "HTML files - Will be rendered and converted to image"
-msgstr "HTML 文件 - 将渲染并转换成图像"
-
-#: files/type_configuration_window.py:39
-msgid "PDF support requires pypdfium2 package"
-msgstr "PDF 支持需要 pypdfium2 软件包"
-
-#: files/type_configuration_window.py:44
-msgid "SVG support requires cairosvg package"
-msgstr "SVG 支持需要 cairosvg 软件包"
-
-#: files/type_configuration_window.py:49
-msgid "HTML support requires pyppeteer package"
-msgstr "HTML 支持需要 pyppeter 软件包"
-
-#: files/type_configuration_window.py:118
+#: compare/base_compare.py:301
 msgid ""
-"Select which types of media files you want to compare. Changes will require "
-"a refresh of open comparisons but files in browsing mode should update "
-"automatically."
-msgstr "选择要比较的媒体文件类型。更改将需要刷新打开的比较，但浏览模式下的文件应会自动更新。"
+"Checkpoint data contains invalid indices. Would you like to restart the "
+"comparison?"
+msgstr "检查点数据包含无效索引。您想重新开始比较吗？"
 
-#: files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "取消"
+#: compare/base_compare.py:306
+msgid "Restarting Comparison"
+msgstr "重新启动比较"
 
-#: utils/constants.py:212
-msgid "HTML"
-msgstr "HTML"
+#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
+msgid "Create PDF"
+msgstr "创建 PDF"
+
+#: files/pdf_creator.py:39
+msgid "No files to create PDF"
+msgstr "没有文件可以创建 PDF"
+
+#: files/pdf_creator.py:47 files/pdf_options_window.py:53
+msgid "combined_images"
+msgstr "合并图片"
+
+#: files/pdf_creator.py:55
+msgid "Save PDF as"
+msgstr "将 PDF 保存为"
+
+#: files/pdf_creator.py:119
+msgid "compressed"
+msgstr "压缩"
+
+#: files/pdf_creator.py:119
+msgid "high quality"
+msgstr "高品质"
+
+#: files/pdf_creator.py:120
+msgid "Created {0} PDF with {1} pages"
+msgstr "创建了 {0} 个 PDF 文件，包含 {1} 个页面"
+
+#: files/pdf_creator.py:123
+msgid "No pages could be added to the PDF"
+msgstr "PDF 无法添加任何页面"
+
+#: files/pdf_creator.py:127
+msgid "PDF creation requires pypdfium2 package"
+msgstr "创建 PDF 需要 pypdfium2 软件包"
+
+#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
+msgid "PDF Creation Options"
+msgstr "PDF 创建选项"
+
+#: files/pdf_options_window.py:49
+msgid "PDF Filename:"
+msgstr "PDF 文件名："
+
+#: files/pdf_options_window.py:61
+msgid "Preserve original image quality and format"
+msgstr "保留原始图像质量和格式"
+
+#: files/pdf_options_window.py:68
+msgid ""
+"If enabled, images will maintain their original quality and format.\n"
+"If disabled, images will be compressed to reduce PDF size."
+msgstr ""
+"如果启用，图像将保持原始质量和格式。\n"
+"如果禁用，图像将被压缩，以减小 PDF 的大小。"

@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-05-24 15:44-0400\n"
-"PO-Revision-Date: 2025-05-24 15:44-0400\n"
+"POT-Creation-Date: 2025-06-06 18:02-0400\n"
+"PO-Revision-Date: 2025-06-06 18:02-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
 "Language: ko\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:92 app.py:833 app.py:1862
+#: app.py:92 app.py:833 app.py:1866
 msgid " Simple Image Compare "
 msgstr " 간단한 이미지 비교 "
 
@@ -124,7 +124,7 @@ msgstr "응용 프로그램을 종료하시겠습니까?"
 msgid "Ended slideshows"
 msgstr "슬라이드 쇼 종료"
 
-#: app.py:649 app.py:1654 app.py:1713
+#: app.py:649 app.py:1658 app.py:1717
 msgid "Warning"
 msgstr "경고"
 
@@ -201,108 +201,108 @@ msgstr "Somehow, 검색 파일이 잘못되었습니다."
 msgid "Failed to get active image filepath"
 msgstr "Active image filepath를 얻는 실패"
 
-#: app.py:1211
+#: app.py:1214
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% 완료"
 
-#: app.py:1217
+#: app.py:1220
 msgid "Confirm comparison"
 msgstr "자주 묻는 질문"
 
-#: app.py:1218
+#: app.py:1221
 msgid "No base directory has been set, will use current base directory of "
 msgstr "기본 디렉터리가 설정되지 않은 경우 현재 기본 디렉터리를 사용합니다: "
 
-#: app.py:1219
+#: app.py:1222
 msgid "Are you sure you want to proceed?"
 msgstr "진행하시겠습니까?"
 
-#: app.py:1239
+#: app.py:1242
 msgid "Error running compare"
 msgstr "오류 실행 비교"
 
-#: app.py:1271
+#: app.py:1275
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "슬라이드쇼 후 잠금 삭제\n"
 "전환으로 마크 추가 방지"
 
-#: app.py:1282
+#: app.py:1286
 msgid "Mark removed. Remaining: {0}"
 msgstr "마크가 제거되었습니다. 남아있음: {0}"
 
-#: app.py:1286
+#: app.py:1290
 msgid "Mark added. Total set: {0}"
 msgstr "마크가 추가되었습니다. 총 집합입니다: {0}"
 
-#: app.py:1303
+#: app.py:1307
 msgid "Marks added. Total set: {0}"
 msgstr "마크가 추가되었습니다. 총 집합입니다: {0}"
 
-#: app.py:1312
+#: app.py:1316
 msgid "First sorted mark"
 msgstr "첫 번째 정렬 마크"
 
-#: app.py:1319
+#: app.py:1323
 msgid "Only one marked file set."
 msgstr "1개의 표시된 파일 세트만."
 
-#: app.py:1330
+#: app.py:1334
 msgid "Including marks: {0}"
 msgstr "마크 포함: {0}"
 
-#: app.py:1338
+#: app.py:1342
 msgid "Move {0} Marked File(s)"
 msgstr "{0} 개의 표시된 파일을 이동하시겠습니까?"
 
-#: app.py:1373
+#: app.py:1377
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0} 마크가 설정되었습니다(>={1} 예상).\n"
 "Shift+M을 사용하여 마크를 설정합니다."
 
-#: app.py:1406
+#: app.py:1410
 msgid "Prevalidations now running"
 msgstr "지금 실행"
 
-#: app.py:1406
+#: app.py:1410
 msgid "Prevalidations turned off"
 msgstr "사전 검증"
 
-#: app.py:1431
+#: app.py:1435
 msgid "File not found"
 msgstr "찾을 수 없음"
 
-#: app.py:1431
+#: app.py:1435
 msgid "No file was found for the search text: \"{0}\""
 msgstr "검색 텍스트에 대한 파일을 찾을 수 없습니다: \"{0}”"
 
-#: app.py:1445
+#: app.py:1449
 msgid "No image selected"
 msgstr "선택 없음"
 
-#: app.py:1445
+#: app.py:1449
 msgid "No image was selected for comparison"
 msgstr "이미지는 비교를 위해 선정되었습니다"
 
-#: app.py:1458
+#: app.py:1462
 msgid "No Text Search Presets Found"
 msgstr "텍스트 검색 사전 설정을 찾을 수 없음"
 
-#: app.py:1459
+#: app.py:1463
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "텍스트 임베딩 검색 사전 설정을 찾을 수 없습니다. config.json 파일에서 설정하세요."
 
-#: app.py:1558
+#: app.py:1562
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "현재 파일의 위치를 열지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:1569
+#: app.py:1573
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "김프에서 현재 파일을 열지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:1585
+#: app.py:1589
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -310,33 +310,33 @@ msgstr ""
 "현재 이미지를 숨겼습니다.\n"
 "숨기기를 해제하려면 Shift+B를 누릅니다."
 
-#: app.py:1590
+#: app.py:1594
 msgid "Cleared all hidden images."
 msgstr "숨겨진 이미지를 모두 지웠습니다."
 
-#: app.py:1597
+#: app.py:1601
 msgid "DELETE_LOCK"
 msgstr ""
 "슬라이드쇼 후 잠금 삭제\n"
 "전환 후 삭제 방지"
 
-#: app.py:1615
+#: app.py:1619
 msgid "Invalid action, no files found to delete"
 msgstr "잘못된 작업, 삭제할 파일을 찾을 수 없음"
 
-#: app.py:1618
+#: app.py:1622
 msgid "Invalid action, search image not found"
 msgstr "잘못된 작업, 검색 이미지를 찾을 수 없음"
 
-#: app.py:1633
+#: app.py:1637
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "현재 파일을 삭제하지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:1638
+#: app.py:1642
 msgid "Removing file: {0}"
 msgstr "파일을 제거 중입니다: {0}"
 
-#: app.py:1655
+#: app.py:1659
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -344,49 +344,50 @@ msgstr ""
 "파일을 휴지통으로 보내지 못했으므로 삭제됩니다. pip에서 send2trash를 설치하거나 config.json에서 특정 휴지통 폴더를 "
 "설정하세요."
 
-#: app.py:1672
+#: app.py:1676
 msgid "Invalid target filepath for replacement: "
 msgstr "교체할 대상 파일 경로가 잘못되었습니다: "
 
-#: app.py:1676
+#: app.py:1680
 msgid "Moved search image to "
 msgstr "로 검색 이미지를 이동했습니다: "
 
-#: app.py:1711
+#: app.py:1715
 msgid "Running image gen: "
 msgstr "이미지 생성 실행 : "
 
-#: app.py:1713
+#: app.py:1717
 msgid "Error running image generation:"
 msgstr "이미지 생성 실행 중 오류 발생:"
 
-#: app.py:1718
+#: app.py:1722
 msgid "Running refacdir"
 msgstr "refacdir 실행"
 
-#: app.py:1723
+#: app.py:1727 files/pdf_creator.py:123 files/pdf_creator.py:127
+#: files/pdf_creator.py:130
 msgid "Error"
 msgstr "계정 정보"
 
-#: app.py:1803
+#: app.py:1807
 msgid "GROUP_DETAILS"
 msgstr ""
 "그룹 {0} 중 {1}\n"
 "크기: {2}"
 
-#: app.py:1807
+#: app.py:1811
 msgid "No image files found"
 msgstr "이미지 파일 없음"
 
-#: app.py:1809
+#: app.py:1813
 msgid "1 image file found"
 msgstr "1 이미지 파일"
 
-#: app.py:1810
+#: app.py:1814
 msgid "{0} image files found"
 msgstr "{0} 이미지 파일 찾았습니다"
 
-#: app.py:1812
+#: app.py:1816
 msgid "(filtered)"
 msgstr "(필터)"
 
@@ -669,11 +670,11 @@ msgstr "기록 지우기"
 msgid " ({0} files)"
 msgstr " ({0} 파일)"
 
-#: files/file_actions_window.py:258 files/marked_file_mover.py:264
+#: files/file_actions_window.py:258 files/marked_file_mover.py:268
 msgid "Move"
 msgstr "이동"
 
-#: files/file_actions_window.py:258 files/marked_file_mover.py:271
+#: files/file_actions_window.py:258 files/marked_file_mover.py:275
 msgid "Copy"
 msgstr "복사"
 
@@ -737,195 +738,195 @@ msgstr "대상 디렉터리"
 msgid "(unset)"
 msgstr "(미설정)"
 
-#: files/marked_file_mover.py:88 files/marked_file_mover.py:877
+#: files/marked_file_mover.py:90 files/marked_file_mover.py:881
 msgid "Marks cleared."
 msgstr "표시가 지워졌습니다."
 
-#: files/marked_file_mover.py:95
+#: files/marked_file_mover.py:97
 msgid "Set current marks from previous."
 msgstr "이전 마크에서 현재 마크를 설정합니다."
 
-#: files/marked_file_mover.py:95
+#: files/marked_file_mover.py:97
 msgid "Total set: {0}"
 msgstr "총 집합입니다: {0}"
 
-#: files/marked_file_mover.py:122
+#: files/marked_file_mover.py:124
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "영구 마크 대상이 없습니다!\n"
 "Marks 창에서 Ctrl+T로 설정하십시오."
 
-#: files/marked_file_mover.py:134
+#: files/marked_file_mover.py:136
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "{0}에 대해 설정된 단축키 동작이 없습니다.\n"
 "마크 창에서 {1}로 설정합니다."
 
-#: files/marked_file_mover.py:214 files/recent_directory_window.py:153
+#: files/marked_file_mover.py:216 files/recent_directory_window.py:153
 msgid "Set a new target directory"
 msgstr "새 대상 디렉터리 설정"
 
-#: files/marked_file_mover.py:216
+#: files/marked_file_mover.py:218
 msgid "MOVE"
 msgstr "이동"
 
-#: files/marked_file_mover.py:220
+#: files/marked_file_mover.py:222
 msgid "COPY"
 msgstr "복사"
 
-#: files/marked_file_mover.py:222
+#: files/marked_file_mover.py:224
 msgid "DELETE"
 msgstr "삭제"
 
-#: files/marked_file_mover.py:224 files/recent_directory_window.py:157
+#: files/marked_file_mover.py:226 files/recent_directory_window.py:157
 msgid "Add directories from parent"
 msgstr "상위 디렉터리에서 디렉터리 추가"
 
-#: files/marked_file_mover.py:227 files/recent_directory_window.py:159
+#: files/marked_file_mover.py:229 files/recent_directory_window.py:159
 msgid "Clear targets"
 msgstr "목표 지우기"
 
-#: files/marked_file_mover.py:291 files/marked_file_mover.py:297
+#: files/marked_file_mover.py:295 files/marked_file_mover.py:301
 msgid "Recording next mark target and action."
 msgstr "다음 마크 대상 및 작업을 기록합니다."
 
-#: files/marked_file_mover.py:310 files/recent_directory_window.py:203
+#: files/marked_file_mover.py:314 files/recent_directory_window.py:203
 msgid "Invalid directory: %s"
 msgstr "잘못된 디렉터리입니다: {0}"
 
-#: files/marked_file_mover.py:312
+#: files/marked_file_mover.py:316
 msgid "Select target directory for marked files"
 msgstr "표시된 파일의 대상 디렉터리 선택"
 
-#: files/marked_file_mover.py:367
+#: files/marked_file_mover.py:371
 msgid "Moving"
 msgstr "기타"
 
-#: files/marked_file_mover.py:367
+#: files/marked_file_mover.py:371
 msgid "Copying"
 msgstr "관련 기사"
 
-#: files/marked_file_mover.py:368
+#: files/marked_file_mover.py:372
 msgid "Moved"
 msgstr "지원하다"
 
-#: files/marked_file_mover.py:368
+#: files/marked_file_mover.py:372
 msgid "Copied"
 msgstr "뚱 베어"
 
-#: files/marked_file_mover.py:406
+#: files/marked_file_mover.py:410
 msgid "Moved {0} files to {1}"
 msgstr ""
 "파일 {0}개를\n"
 "{1}로 옮겼습니다."
 
-#: files/marked_file_mover.py:408
+#: files/marked_file_mover.py:412
 msgid "Copied {0} files to {1}"
 msgstr ""
 "{1}\n"
 "에 파일 {0}개를 복사했습니다."
 
-#: files/marked_file_mover.py:435
+#: files/marked_file_mover.py:439
 msgid "Existing filenames match!"
 msgstr "기존 파일 이름이 일치합니다!"
 
-#: files/marked_file_mover.py:437
+#: files/marked_file_mover.py:441
 msgid "WARNING: Exact file match."
 msgstr "경고: 정확한 파일 일치."
 
-#: files/marked_file_mover.py:439 files/marked_file_mover.py:790
+#: files/marked_file_mover.py:443 files/marked_file_mover.py:794
 msgid "WARNING: Short filenames."
 msgstr "경고: 짧은 파일명."
 
-#: files/marked_file_mover.py:463
+#: files/marked_file_mover.py:467
 msgid "Moving back"
 msgstr "뒤로 이동"
 
-#: files/marked_file_mover.py:463
+#: files/marked_file_mover.py:467
 msgid "Removing"
 msgstr "뚱 베어"
 
-#: files/marked_file_mover.py:464
+#: files/marked_file_mover.py:468
 msgid "Moved back"
 msgstr "뒤로 이동"
 
-#: files/marked_file_mover.py:464
+#: files/marked_file_mover.py:468
 msgid "Removed"
 msgstr "기타 제품"
 
-#: files/marked_file_mover.py:470
+#: files/marked_file_mover.py:474
 msgid "Where should the marked files have gone?"
 msgstr "표시된 파일은 어디로 갔을까요?"
 
-#: files/marked_file_mover.py:495
+#: files/marked_file_mover.py:499
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "{1}\n"
 "에서 파일 {0}개 다시 옮기기"
 
-#: files/marked_file_mover.py:497
+#: files/marked_file_mover.py:501
 msgid "Removed {0} files from {1}"
 msgstr ""
 "{1}\n"
 "에서 파일 {0}개 제거"
 
-#: files/marked_file_mover.py:514
+#: files/marked_file_mover.py:518
 msgid "Select parent directory for target directories"
 msgstr "대상 디렉토리 선택"
 
-#: files/marked_file_mover.py:674
+#: files/marked_file_mover.py:678
 msgid "Sorted directories by embedding comparison."
 msgstr "분류 된 감독 by embedding 비교."
 
-#: files/marked_file_mover.py:694
+#: files/marked_file_mover.py:698
 msgid "Confirm Delete"
 msgstr "자주 묻는 질문"
 
-#: files/marked_file_mover.py:695
+#: files/marked_file_mover.py:699
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr "삭제 {0} 표시된 파일 - 진행하시겠습니까?"
 
-#: files/marked_file_mover.py:715
+#: files/marked_file_mover.py:719
 msgid "Delete Failed"
 msgstr "실패 삭제"
 
-#: files/marked_file_mover.py:716
+#: files/marked_file_mover.py:720
 msgid "Failed to delete %s files - check log for details."
 msgstr "{0} 파일을 삭제 취소 - 세부 사항에 대한 로그 확인."
 
-#: files/marked_file_mover.py:719
+#: files/marked_file_mover.py:723
 msgid "Deleted %s marked files."
 msgstr "Deleted {0} 파일 표시."
 
-#: files/marked_file_mover.py:784
+#: files/marked_file_mover.py:788
 msgid "Existing filenames found!"
 msgstr "발견 된 파일 이름!"
 
-#: files/marked_file_mover.py:786
+#: files/marked_file_mover.py:790
 msgid "WARNING: All file hashes match."
 msgstr "경고: 모든 파일 hashes 일치."
 
-#: files/marked_file_mover.py:788
+#: files/marked_file_mover.py:792
 msgid "WARNING: %s of %s file hashes match."
 msgstr "경고: {0} 의 {1} 파일 hashes 일치."
 
-#: files/marked_file_mover.py:794
+#: files/marked_file_mover.py:798
 msgid "No existing filenames found."
 msgstr "찾을 수 없음."
 
-#: files/marked_file_mover.py:822
+#: files/marked_file_mover.py:826
 msgid "Found %s downstream related images"
 msgstr "Found {0} downstream 관련 이미지"
 
-#: files/marked_file_mover.py:824
+#: files/marked_file_mover.py:828
 msgid "No downstream related images found"
 msgstr "찾을 수 없음 downstream 관련 이미지"
 
-#: files/marked_file_mover.py:835
+#: files/marked_file_mover.py:839
 msgid "Cleared marked file"
 msgstr "표시된 파일"
 
-#: files/marked_file_mover.py:879
+#: files/marked_file_mover.py:883
 msgid "Removed {0} marks"
 msgstr "제거 {0} 표"
 
@@ -937,6 +938,42 @@ msgstr "디렉토리"
 msgid "Set image comparison directory"
 msgstr "설정 이미지 비교 디렉토리"
 
+#: files/type_configuration_window.py:26
+msgid "Basic image files (PNG, JPG, etc.)"
+msgstr "기본 이미지 파일 (PNG, JPG 등)"
+
+#: files/type_configuration_window.py:27
+msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
+msgstr "비디오 파일 (MP4, AVI 등) - 첫 번째 프레임은 추출 될 것이다"
+
+#: files/type_configuration_window.py:28
+msgid "Animated GIF files - First frame will be extracted"
+msgstr "애니메이션 GIF 파일 - 첫 번째 프레임은 추출 될 것이다"
+
+#: files/type_configuration_window.py:29
+msgid "PDF documents - First page will be extracted"
+msgstr "PDF 문서 - 첫 페이지는 추출됩니다"
+
+#: files/type_configuration_window.py:30
+msgid "Vector graphics - Will be converted to raster image"
+msgstr "벡터 그래픽 - 래스터 이미지로 변환 될 것입니다"
+
+#: files/type_configuration_window.py:31
+msgid "HTML files - Will be rendered and converted to image"
+msgstr "HTML 파일 - 렌더링되고 이미지로 변환됩니다"
+
+#: files/type_configuration_window.py:39
+msgid "PDF support requires pypdfium2 package"
+msgstr "PDF 지원은 pypdfium2 포장을 요구합니다"
+
+#: files/type_configuration_window.py:44
+msgid "SVG support requires cairosvg package"
+msgstr "SVG 지원은 cairosvg 포장을 요구합니다"
+
+#: files/type_configuration_window.py:49
+msgid "HTML support requires pyppeteer package"
+msgstr "HTML 지원은 pyppeteer 패키지를 요구합니다"
+
 #: files/type_configuration_window.py:96
 msgid "Media Type Configuration"
 msgstr "Media Type 구성"
@@ -944,6 +981,18 @@ msgstr "Media Type 구성"
 #: files/type_configuration_window.py:113
 msgid "Configure Media Types"
 msgstr "미디어 유형 구성"
+
+#: files/type_configuration_window.py:118
+msgid ""
+"Select which types of media files you want to compare. Changes will require "
+"a refresh of open comparisons but files in browsing mode should update "
+"automatically."
+msgstr ""
+"어떤 유형의 미디어 파일을 선택하여 비교합니다. 변경은 오픈 비교의 새로이 필요하지만 검색 모드에서 파일이 자동으로 업데이트되어야합니다."
+
+#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "취소"
 
 #: files/type_configuration_window.py:184
 msgid "Apply Changes"
@@ -1281,6 +1330,10 @@ msgstr "PDF 파일"
 msgid "SVG"
 msgstr "사이트맵"
 
+#: utils/constants.py:212
+msgid "HTML"
+msgstr "HTML"
+
 #: utils/constants.py:232
 msgid "Moved files"
 msgstr "파일 이동"
@@ -1571,54 +1624,76 @@ msgstr "이미지 태그 Enabled"
 msgid "Escape Backslash Filepaths"
 msgstr "Backslash 파일 경로 탈출"
 
-#: files/type_configuration_window.py:26
-msgid "Basic image files (PNG, JPG, etc.)"
-msgstr "기본 이미지 파일 (PNG, JPG 등)"
+#: compare/base_compare.py:298
+msgid "Invalid Checkpoint Data - Confirm Restart"
+msgstr "잘못된 체크포인트 데이터 - 재시작 확인"
 
-#: files/type_configuration_window.py:27
-msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
-msgstr "비디오 파일 (MP4, AVI 등) - 첫 번째 프레임은 추출 될 것이다"
+#: compare/base_compare.py:300
+msgid "Invalid Checkpoint Data"
+msgstr "잘못된 체크포인트 데이터"
 
-#: files/type_configuration_window.py:28
-msgid "Animated GIF files - First frame will be extracted"
-msgstr "애니메이션 GIF 파일 - 첫 번째 프레임은 추출 될 것이다"
-
-#: files/type_configuration_window.py:29
-msgid "PDF documents - First page will be extracted"
-msgstr "PDF 문서 - 첫 페이지는 추출됩니다"
-
-#: files/type_configuration_window.py:30
-msgid "Vector graphics - Will be converted to raster image"
-msgstr "벡터 그래픽 - 래스터 이미지로 변환 될 것입니다"
-
-#: files/type_configuration_window.py:31
-msgid "HTML files - Will be rendered and converted to image"
-msgstr "HTML 파일 - 렌더링되고 이미지로 변환됩니다"
-
-#: files/type_configuration_window.py:39
-msgid "PDF support requires pypdfium2 package"
-msgstr "PDF 지원은 pypdfium2 포장을 요구합니다"
-
-#: files/type_configuration_window.py:44
-msgid "SVG support requires cairosvg package"
-msgstr "SVG 지원은 cairosvg 포장을 요구합니다"
-
-#: files/type_configuration_window.py:49
-msgid "HTML support requires pyppeteer package"
-msgstr "HTML 지원은 pyppeteer 패키지를 요구합니다"
-
-#: files/type_configuration_window.py:118
+#: compare/base_compare.py:301
 msgid ""
-"Select which types of media files you want to compare. Changes will require "
-"a refresh of open comparisons but files in browsing mode should update "
-"automatically."
+"Checkpoint data contains invalid indices. Would you like to restart the "
+"comparison?"
+msgstr "체크포인트 데이터에 잘못된 인덱스가 포함되어 있습니다. 비교를 다시 시작하시겠습니까?"
+
+#: compare/base_compare.py:306
+msgid "Restarting Comparison"
+msgstr "재개 대비"
+
+#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
+msgid "Create PDF"
+msgstr "PDF 만들기"
+
+#: files/pdf_creator.py:39
+msgid "No files to create PDF"
+msgstr "PDF 만들 파일 없음"
+
+#: files/pdf_creator.py:47 files/pdf_options_window.py:53
+msgid "combined_images"
+msgstr "결합_이미지"
+
+#: files/pdf_creator.py:55
+msgid "Save PDF as"
+msgstr "PDF를 다른 이름으로 저장"
+
+#: files/pdf_creator.py:119
+msgid "compressed"
+msgstr "압축"
+
+#: files/pdf_creator.py:119
+msgid "high quality"
+msgstr "고품질"
+
+#: files/pdf_creator.py:120
+msgid "Created {0} PDF with {1} pages"
+msgstr "{1} 페이지로 {0} PDF를 만들었습니다."
+
+#: files/pdf_creator.py:123
+msgid "No pages could be added to the PDF"
+msgstr "PDF에 페이지를 추가할 수 없습니다"
+
+#: files/pdf_creator.py:127
+msgid "PDF creation requires pypdfium2 package"
+msgstr "PDF 생성에는 pypdfium2 패키지가 필요합니다"
+
+#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
+msgid "PDF Creation Options"
+msgstr "PDF 생성 옵션"
+
+#: files/pdf_options_window.py:49
+msgid "PDF Filename:"
+msgstr "PDF 파일 이름:"
+
+#: files/pdf_options_window.py:61
+msgid "Preserve original image quality and format"
+msgstr "원본 이미지 품질 및 형식 유지"
+
+#: files/pdf_options_window.py:68
+msgid ""
+"If enabled, images will maintain their original quality and format.\n"
+"If disabled, images will be compressed to reduce PDF size."
 msgstr ""
-"어떤 유형의 미디어 파일을 선택하여 비교합니다. 변경은 오픈 비교의 새로이 필요하지만 검색 모드에서 파일이 자동으로 업데이트되어야합니다."
-
-#: files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "취소"
-
-#: utils/constants.py:212
-msgid "HTML"
-msgstr "HTML"
+"활성화하면 이미지가 원래 품질과 형식을 유지합니다.\n"
+"비활성화하면 이미지가 압축되어 PDF 크기가 줄어듭니다."
