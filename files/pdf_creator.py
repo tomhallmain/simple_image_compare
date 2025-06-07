@@ -87,9 +87,16 @@ class PDFCreator:
                                     img = img.convert('RGB')
                                 # Create a temporary file for the compressed image
                                 temp_path = os.path.join(os.path.dirname(output_path), f"temp_{os.path.basename(image_path)}")
-                                img.save(temp_path, format='JPEG', quality=85)
-                                image_obj.load_jpeg(temp_path, inline=True)
-                                os.remove(temp_path)
+                                try:
+                                    img.save(temp_path, format='JPEG', quality=85)
+                                    image_obj.load_jpeg(temp_path, inline=True)
+                                finally:
+                                    # Ensure temp file is cleaned up even if an error occurs
+                                    if os.path.exists(temp_path):
+                                        try:
+                                            os.remove(temp_path)
+                                        except Exception as e:
+                                            Utils.log_red(f"Error cleaning up temp file {temp_path}: {str(e)}")
                             else:
                                 # Quality preservation mode - use PIL to convert to bitmap
                                 bitmap = pdfium.PdfBitmap.from_pil(img)
