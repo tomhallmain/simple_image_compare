@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-06-06 18:02-0400\n"
-"PO-Revision-Date: 2025-06-06 18:02-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-06-11 16:00-0400\n"
+"PO-Revision-Date: 2025-06-11 16:00-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgstr "検索ファイルを設定する"
 
 #: app.py:261
 msgid "Search text (embedding mode)"
-msgstr "検索テキスト（埋め込みモード）"
+msgstr "検索テキスト (埋め込みモード)"
 
 #: app.py:272
 msgid "Compare mode"
@@ -258,7 +258,7 @@ msgstr "{0} つのマークされたファイルを移動しますか？"
 #: app.py:1377
 msgid "NO_MARKS_SET"
 msgstr ""
-"{0}マークが設定された（>={1}の予定）。\n"
+"{0}マークが設定された(>={1}の予定)。\n"
 "マークを設定するには Shift+M を使用します。"
 
 #: app.py:1410
@@ -397,6 +397,24 @@ msgstr "画像データ収集"
 #: compare/base_compare.py:227
 msgid "Image comparison"
 msgstr "画像比較"
+
+#: compare/base_compare.py:298
+msgid "Invalid Checkpoint Data - Confirm Restart"
+msgstr "無効なチェックポイントデータ - 再起動を確認"
+
+#: compare/base_compare.py:300
+msgid "Invalid Checkpoint Data"
+msgstr "無効なチェックポイントデータ"
+
+#: compare/base_compare.py:301
+msgid ""
+"Checkpoint data contains invalid indices. Would you like to restart the "
+"comparison?"
+msgstr "チェックポイント・データに無効なインデックスが含まれています。比較を再開しますか？"
+
+#: compare/base_compare.py:306
+msgid "Restarting Comparison"
+msgstr "再開比較"
 
 #: compare/compare_wrapper.py:67 compare/compare_wrapper.py:70
 msgid "Invalid mode"
@@ -751,7 +769,7 @@ msgstr "合計セット {0}"
 #: files/marked_file_mover.py:124
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
-"永久マークターゲットセットなし!\n"
+"パーマネントマークターゲットが設定されていない！\n"
 "MarksウィンドウのCtrl+Tで設定します。"
 
 #: files/marked_file_mover.py:136
@@ -783,6 +801,10 @@ msgstr "親からディレクトリを追加する"
 #: files/marked_file_mover.py:229 files/recent_directory_window.py:159
 msgid "Clear targets"
 msgstr "明確な目標"
+
+#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
+msgid "Create PDF"
+msgstr "PDFを作成する"
 
 #: files/marked_file_mover.py:295 files/marked_file_mover.py:301
 msgid "Recording next mark target and action."
@@ -928,6 +950,62 @@ msgstr "マークされたファイルをクリア"
 msgid "Removed {0} marks"
 msgstr "{0}マークを削除"
 
+#: files/pdf_creator.py:39
+msgid "No files to create PDF"
+msgstr "PDFを作成するファイルはありません"
+
+#: files/pdf_creator.py:47 files/pdf_options_window.py:53
+msgid "combined_images"
+msgstr "合成画像"
+
+#: files/pdf_creator.py:55
+msgid "Save PDF as"
+msgstr "PDF形式で保存"
+
+#: files/pdf_creator.py:119
+msgid "compressed"
+msgstr "圧縮"
+
+#: files/pdf_creator.py:119
+msgid "high quality"
+msgstr "高品質"
+
+#: files/pdf_creator.py:120
+msgid "Created {0} PDF with {1} pages"
+msgstr "{1}ページの{0}PDFを作成"
+
+#: files/pdf_creator.py:123
+msgid "No pages could be added to the PDF"
+msgstr "PDFにページが追加できなかった"
+
+#: files/pdf_creator.py:127
+msgid "PDF creation requires pypdfium2 package"
+msgstr "PDF作成にはpypdfium2パッケージが必要です"
+
+#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
+msgid "PDF Creation Options"
+msgstr "PDF作成オプション"
+
+#: files/pdf_options_window.py:49
+msgid "PDF Filename:"
+msgstr "PDFファイル名："
+
+#: files/pdf_options_window.py:61
+msgid "Preserve original image quality and format"
+msgstr "オリジナルの画質とフォーマットを保持"
+
+#: files/pdf_options_window.py:68
+msgid ""
+"If enabled, images will maintain their original quality and format.\n"
+"If disabled, images will be compressed to reduce PDF size."
+msgstr ""
+"有効にする と 、 画像は元の品質 と 形式を保ち ます。\n"
+"無効にす る と 、 画像は圧縮 さ れて PDF サ イ ズ を縮小 し ます。"
+
+#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "キャンセル"
+
 #: files/recent_directory_window.py:155
 msgid "Add directory"
 msgstr "ディレクトリの追加"
@@ -988,10 +1066,6 @@ msgid ""
 msgstr ""
 "どの種類のメディアファイルを比較したいですか？変更は、オープンな比較をリフレッシュする必要がありますが、ブラウジングモードにあるファイルは自動的に更新されるはずです。"
 
-#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "キャンセル"
-
 #: files/type_configuration_window.py:184
 msgid "Apply Changes"
 msgstr "変更を加える"
@@ -1050,7 +1124,7 @@ msgstr "モデル"
 
 #: image/image_details.py:133
 msgid "LoRAs"
-msgstr "ロラ"
+msgstr "LoRA"
 
 #: image/image_details.py:138
 msgid "Copy Prompt"
@@ -1326,7 +1400,7 @@ msgstr "サイトマップ"
 
 #: utils/constants.py:210
 msgid "SVG"
-msgstr "SVGの特長"
+msgstr "SVG"
 
 #: utils/constants.py:212
 msgid "HTML"
@@ -1588,7 +1662,7 @@ msgstr "スライドショーインターバル(秒)"
 
 #: utils/help_and_config.py:140
 msgid "File Check Interval (sec)"
-msgstr "ファイルチェックインターバル (秒)"
+msgstr "ファイル更新間隔 (秒)"
 
 #: utils/help_and_config.py:142
 msgid "Max Search Results"
@@ -1616,82 +1690,8 @@ msgstr "ゴミ箱フォルダ"
 
 #: utils/help_and_config.py:154
 msgid "Image Tagging Enabled"
-msgstr "画像タグの有効化"
+msgstr "画像タグ有効"
 
 #: utils/help_and_config.py:156
 msgid "Escape Backslash Filepaths"
-msgstr "エスケープバックスラッシュファイルパス"
-
-#: compare/base_compare.py:298
-msgid "Invalid Checkpoint Data - Confirm Restart"
-msgstr "無効なチェックポイントデータ - 再起動を確認"
-
-#: compare/base_compare.py:300
-msgid "Invalid Checkpoint Data"
-msgstr "無効なチェックポイントデータ"
-
-#: compare/base_compare.py:301
-msgid ""
-"Checkpoint data contains invalid indices. Would you like to restart the "
-"comparison?"
-msgstr "チェックポイント・データに無効なインデックスが含まれています。比較を再開しますか？"
-
-#: compare/base_compare.py:306
-msgid "Restarting Comparison"
-msgstr "再開比較"
-
-#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
-msgid "Create PDF"
-msgstr "PDFを作成する"
-
-#: files/pdf_creator.py:39
-msgid "No files to create PDF"
-msgstr "PDFを作成するファイルはありません"
-
-#: files/pdf_creator.py:47 files/pdf_options_window.py:53
-msgid "combined_images"
-msgstr "合成画像"
-
-#: files/pdf_creator.py:55
-msgid "Save PDF as"
-msgstr "PDF形式で保存"
-
-#: files/pdf_creator.py:119
-msgid "compressed"
-msgstr "圧縮"
-
-#: files/pdf_creator.py:119
-msgid "high quality"
-msgstr "高品質"
-
-#: files/pdf_creator.py:120
-msgid "Created {0} PDF with {1} pages"
-msgstr "{1}ページの{0}PDFを作成"
-
-#: files/pdf_creator.py:123
-msgid "No pages could be added to the PDF"
-msgstr "PDFにページが追加できなかった"
-
-#: files/pdf_creator.py:127
-msgid "PDF creation requires pypdfium2 package"
-msgstr "PDF作成にはpypdfium2パッケージが必要です"
-
-#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
-msgid "PDF Creation Options"
-msgstr "PDF作成オプション"
-
-#: files/pdf_options_window.py:49
-msgid "PDF Filename:"
-msgstr "PDFファイル名："
-
-#: files/pdf_options_window.py:61
-msgid "Preserve original image quality and format"
-msgstr "オリジナルの画質とフォーマットを保持"
-
-#: files/pdf_options_window.py:68
-msgid ""
-"If enabled, images will maintain their original quality and format.\n"
-"If disabled, images will be compressed to reduce PDF size."
-msgstr ""
-"有効にする と 、 画像は元の品質 と 形式を保ち ます。\n"
-"無効にす る と 、 画像は圧縮 さ れて PDF サ イ ズ を縮小 し ます。"
+msgstr "ファイルパスのバックスラッシュをエスケープする"

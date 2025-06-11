@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-06-06 18:02-0400\n"
-"PO-Revision-Date: 2025-06-06 18:02-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-06-11 16:00-0400\n"
+"PO-Revision-Date: 2025-06-11 16:00-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: es Team <<EMAIL>>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -231,8 +231,8 @@ msgstr "Error al ejecutar la comparación"
 #: app.py:1275
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
-"Borrar bloqueo después de diapositivas\n"
-"transición impidió a00f1adir marca"
+"Eliminar el bloqueo después de la transición de\n"
+"diapositivas impedido añadir marca"
 
 #: app.py:1286
 msgid "Mark removed. Remaining: {0}"
@@ -413,6 +413,26 @@ msgstr "Recopilación de datos de imágenes"
 #: compare/base_compare.py:227
 msgid "Image comparison"
 msgstr "Comparación de imágenes"
+
+#: compare/base_compare.py:298
+msgid "Invalid Checkpoint Data - Confirm Restart"
+msgstr "Datos del punto de control inválido - Confirme el reinicio"
+
+#: compare/base_compare.py:300
+msgid "Invalid Checkpoint Data"
+msgstr "Datos del punto de control inválido"
+
+#: compare/base_compare.py:301
+msgid ""
+"Checkpoint data contains invalid indices. Would you like to restart the "
+"comparison?"
+msgstr ""
+"Los datos del punto de comprobación contienen índices no válidos. ¿Desea "
+"reiniciar la comparación?"
+
+#: compare/base_compare.py:306
+msgid "Restarting Comparison"
+msgstr "Reestrellante Comparación"
 
 #: compare/compare_wrapper.py:67 compare/compare_wrapper.py:70
 msgid "Invalid mode"
@@ -821,6 +841,10 @@ msgstr "A00f1adir directorios desde el padre"
 msgid "Clear targets"
 msgstr "Objetivos claros"
 
+#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
+msgid "Create PDF"
+msgstr "Crear PDF"
+
 #: files/marked_file_mover.py:295 files/marked_file_mover.py:301
 msgid "Recording next mark target and action."
 msgstr "Grabación de la siguiente marca objetivo y acción."
@@ -968,6 +992,62 @@ msgstr "Archivo marcado borrado"
 msgid "Removed {0} marks"
 msgstr "Eliminadas {0} marcas"
 
+#: files/pdf_creator.py:39
+msgid "No files to create PDF"
+msgstr "No hay archivos para crear PDF"
+
+#: files/pdf_creator.py:47 files/pdf_options_window.py:53
+msgid "combined_images"
+msgstr "imágenes_combinadas"
+
+#: files/pdf_creator.py:55
+msgid "Save PDF as"
+msgstr "Guardar PDF como"
+
+#: files/pdf_creator.py:119
+msgid "compressed"
+msgstr "comprimido"
+
+#: files/pdf_creator.py:119
+msgid "high quality"
+msgstr "alta calidad"
+
+#: files/pdf_creator.py:120
+msgid "Created {0} PDF with {1} pages"
+msgstr "Creado PDF {0} con {1} páginas"
+
+#: files/pdf_creator.py:123
+msgid "No pages could be added to the PDF"
+msgstr "No se pueden añadir páginas al PDF"
+
+#: files/pdf_creator.py:127
+msgid "PDF creation requires pypdfium2 package"
+msgstr "Creación de PDF requiere paquete de pypdfium2"
+
+#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
+msgid "PDF Creation Options"
+msgstr "Opciones de creación de PDF"
+
+#: files/pdf_options_window.py:49
+msgid "PDF Filename:"
+msgstr "PDF Nombre de archivo:"
+
+#: files/pdf_options_window.py:61
+msgid "Preserve original image quality and format"
+msgstr "Preserve calidad de imagen original y formato"
+
+#: files/pdf_options_window.py:68
+msgid ""
+"If enabled, images will maintain their original quality and format.\n"
+"If disabled, images will be compressed to reduce PDF size."
+msgstr ""
+"Si se activa, las imágenes mantendrán su calidad y formato originales.\n"
+"Si se desactiva, las imágenes se comprimirán para reducir el tamaño del PDF."
+
+#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "Cancelar"
+
 #: files/recent_directory_window.py:155
 msgid "Add directory"
 msgstr "A00f1adir directorio"
@@ -1029,10 +1109,6 @@ msgstr ""
 "Seleccione qué tipos de archivos multimedia desea comparar. Los cambios "
 "requerirán una actualización de las comparaciones abiertas, pero los "
 "archivos en modo de navegación deben actualizarse automáticamente."
-
-#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "Cancelar"
 
 #: files/type_configuration_window.py:184
 msgid "Apply Changes"
@@ -1470,7 +1546,7 @@ msgstr "Abrir la ventana de filtros de contenido"
 
 #: utils/help_and_config.py:44
 msgid "Open marks window (no GUI)"
-msgstr "Abrir ventana de marcas (sin GUI)"
+msgstr "Abrir ventana de marcas (sin interfaz gráfica)"
 
 #: utils/help_and_config.py:45
 msgid "Open marks window"
@@ -1613,7 +1689,7 @@ msgstr "Ver imagen relacionada (controlnet, etc.)"
 
 #: utils/help_and_config.py:79
 msgid "Toggle slideshow"
-msgstr "Alternar presentación de diapositivas"
+msgstr "Alternar la presentación de diapositivas"
 
 #: utils/help_and_config.py:80
 msgid "Find related images in open window"
@@ -1645,7 +1721,7 @@ msgstr "Intervalo de diapositivas (seg)"
 
 #: utils/help_and_config.py:140
 msgid "File Check Interval (sec)"
-msgstr "Intervalo de comprobación de archivos (seg)"
+msgstr "Intervalo de actualización de archivos (seg)"
 
 #: utils/help_and_config.py:142
 msgid "Max Search Results"
@@ -1677,80 +1753,4 @@ msgstr "Etiquetado de imágenes activado"
 
 #: utils/help_and_config.py:156
 msgid "Escape Backslash Filepaths"
-msgstr "Escape de la barra invertida Filepaths"
-
-#: compare/base_compare.py:298
-msgid "Invalid Checkpoint Data - Confirm Restart"
-msgstr "Datos del punto de control inválido - Confirme el reinicio"
-
-#: compare/base_compare.py:300
-msgid "Invalid Checkpoint Data"
-msgstr "Datos del punto de control inválido"
-
-#: compare/base_compare.py:301
-msgid ""
-"Checkpoint data contains invalid indices. Would you like to restart the "
-"comparison?"
-msgstr ""
-"Los datos del punto de comprobación contienen índices no válidos. ¿Desea "
-"reiniciar la comparación?"
-
-#: compare/base_compare.py:306
-msgid "Restarting Comparison"
-msgstr "Reestrellante Comparación"
-
-#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
-msgid "Create PDF"
-msgstr "Crear PDF"
-
-#: files/pdf_creator.py:39
-msgid "No files to create PDF"
-msgstr "No hay archivos para crear PDF"
-
-#: files/pdf_creator.py:47 files/pdf_options_window.py:53
-msgid "combined_images"
-msgstr "imágenes_combinadas"
-
-#: files/pdf_creator.py:55
-msgid "Save PDF as"
-msgstr "Guardar PDF como"
-
-#: files/pdf_creator.py:119
-msgid "compressed"
-msgstr "comprimido"
-
-#: files/pdf_creator.py:119
-msgid "high quality"
-msgstr "alta calidad"
-
-#: files/pdf_creator.py:120
-msgid "Created {0} PDF with {1} pages"
-msgstr "Creado PDF {0} con {1} páginas"
-
-#: files/pdf_creator.py:123
-msgid "No pages could be added to the PDF"
-msgstr "No se pueden añadir páginas al PDF"
-
-#: files/pdf_creator.py:127
-msgid "PDF creation requires pypdfium2 package"
-msgstr "Creación de PDF requiere paquete de pypdfium2"
-
-#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
-msgid "PDF Creation Options"
-msgstr "Opciones de creación de PDF"
-
-#: files/pdf_options_window.py:49
-msgid "PDF Filename:"
-msgstr "PDF Nombre de archivo:"
-
-#: files/pdf_options_window.py:61
-msgid "Preserve original image quality and format"
-msgstr "Preserve calidad de imagen original y formato"
-
-#: files/pdf_options_window.py:68
-msgid ""
-"If enabled, images will maintain their original quality and format.\n"
-"If disabled, images will be compressed to reduce PDF size."
-msgstr ""
-"Si se activa, las imágenes mantendrán su calidad y formato originales.\n"
-"Si se desactiva, las imágenes se comprimirán para reducir el tamaño del PDF."
+msgstr "Escape de barras invertidas en rutas de archivos"

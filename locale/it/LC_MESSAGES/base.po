@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-06-06 18:02-0400\n"
-"PO-Revision-Date: 2025-06-06 18:02-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-06-11 16:00-0400\n"
+"PO-Revision-Date: 2025-06-11 16:00-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: it Team <<EMAIL>>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -414,6 +414,26 @@ msgstr "Raccolta dati immagine"
 msgid "Image comparison"
 msgstr "Confronto di immagini"
 
+#: compare/base_compare.py:298
+msgid "Invalid Checkpoint Data - Confirm Restart"
+msgstr "Dati del punto di controllo non validi - Confermare il riavvio"
+
+#: compare/base_compare.py:300
+msgid "Invalid Checkpoint Data"
+msgstr "Dati del punto di controllo non validi"
+
+#: compare/base_compare.py:301
+msgid ""
+"Checkpoint data contains invalid indices. Would you like to restart the "
+"comparison?"
+msgstr ""
+"I dati del checkpoint contengono indici non validi. Si desidera riavviare il"
+" confronto?"
+
+#: compare/base_compare.py:306
+msgid "Restarting Comparison"
+msgstr "Riavviare il confronto"
+
 #: compare/compare_wrapper.py:67 compare/compare_wrapper.py:70
 msgid "Invalid mode"
 msgstr "Modalità non valida"
@@ -818,6 +838,10 @@ msgstr "Aggiungere cartella dal genitore"
 msgid "Clear targets"
 msgstr "Obiettivi chiari"
 
+#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
+msgid "Create PDF"
+msgstr "Creare PDF"
+
 #: files/marked_file_mover.py:295 files/marked_file_mover.py:301
 msgid "Recording next mark target and action."
 msgstr "Registrazione del prossimo obiettivo di marcatura e dell'azione."
@@ -964,6 +988,62 @@ msgstr "Cancellazione del file contrassegnato"
 msgid "Removed {0} marks"
 msgstr "Rimossi {0} marchi"
 
+#: files/pdf_creator.py:39
+msgid "No files to create PDF"
+msgstr "Nessun file per creare PDF"
+
+#: files/pdf_creator.py:47 files/pdf_options_window.py:53
+msgid "combined_images"
+msgstr "immagini_combinate"
+
+#: files/pdf_creator.py:55
+msgid "Save PDF as"
+msgstr "Salva il PDF come"
+
+#: files/pdf_creator.py:119
+msgid "compressed"
+msgstr "compresso"
+
+#: files/pdf_creator.py:119
+msgid "high quality"
+msgstr "alta qualità"
+
+#: files/pdf_creator.py:120
+msgid "Created {0} PDF with {1} pages"
+msgstr "Creato PDF {0} con {1} pagine"
+
+#: files/pdf_creator.py:123
+msgid "No pages could be added to the PDF"
+msgstr "Non è stato possibile aggiungere pagine al PDF"
+
+#: files/pdf_creator.py:127
+msgid "PDF creation requires pypdfium2 package"
+msgstr "La creazione di PDF richiede il pacchetto pypdfium2"
+
+#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
+msgid "PDF Creation Options"
+msgstr "Opzioni di creazione PDF"
+
+#: files/pdf_options_window.py:49
+msgid "PDF Filename:"
+msgstr "PDF Nome del file:"
+
+#: files/pdf_options_window.py:61
+msgid "Preserve original image quality and format"
+msgstr "Conservare la qualità e il formato dell'immagine originali"
+
+#: files/pdf_options_window.py:68
+msgid ""
+"If enabled, images will maintain their original quality and format.\n"
+"If disabled, images will be compressed to reduce PDF size."
+msgstr ""
+"Se abilitato, le immagini manterranno la qualità e il formato originali.\n"
+"Se è disattivata, le immagini verranno compresse per ridurre le dimensioni del PDF."
+
+#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "Annulla"
+
 #: files/recent_directory_window.py:155
 msgid "Add directory"
 msgstr "Aggiungi cartella"
@@ -1025,10 +1105,6 @@ msgstr ""
 "Selezionare quali tipi di file multimediali si desidera confrontare. Le "
 "modifiche richiedono un aggiornamento di confronti aperti, ma i file in "
 "modalità di navigazione dovrebbero aggiornarsi automaticamente."
-
-#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "Annulla"
 
 #: files/type_configuration_window.py:184
 msgid "Apply Changes"
@@ -1609,7 +1685,7 @@ msgstr "Visualizza l'immagine correlata (controlnet, ecc.)"
 
 #: utils/help_and_config.py:79
 msgid "Toggle slideshow"
-msgstr "Alterna lo slideshow"
+msgstr "Alterna la presentazione"
 
 #: utils/help_and_config.py:80
 msgid "Find related images in open window"
@@ -1641,7 +1717,7 @@ msgstr "Intervallo di presentazione (sec)"
 
 #: utils/help_and_config.py:140
 msgid "File Check Interval (sec)"
-msgstr "Intervallo di controllo dei file (sec)"
+msgstr "Intervallo di aggiornamento dei file (sec)"
 
 #: utils/help_and_config.py:142
 msgid "Max Search Results"
@@ -1673,80 +1749,4 @@ msgstr "Tagging delle immagini abilitato"
 
 #: utils/help_and_config.py:156
 msgid "Escape Backslash Filepaths"
-msgstr "Fuga dei percorsi dei file con backslash"
-
-#: compare/base_compare.py:298
-msgid "Invalid Checkpoint Data - Confirm Restart"
-msgstr "Dati del punto di controllo non validi - Confermare il riavvio"
-
-#: compare/base_compare.py:300
-msgid "Invalid Checkpoint Data"
-msgstr "Dati del punto di controllo non validi"
-
-#: compare/base_compare.py:301
-msgid ""
-"Checkpoint data contains invalid indices. Would you like to restart the "
-"comparison?"
-msgstr ""
-"I dati del checkpoint contengono indici non validi. Si desidera riavviare il"
-" confronto?"
-
-#: compare/base_compare.py:306
-msgid "Restarting Comparison"
-msgstr "Riavviare il confronto"
-
-#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
-msgid "Create PDF"
-msgstr "Creare PDF"
-
-#: files/pdf_creator.py:39
-msgid "No files to create PDF"
-msgstr "Nessun file per creare PDF"
-
-#: files/pdf_creator.py:47 files/pdf_options_window.py:53
-msgid "combined_images"
-msgstr "immagini_combinate"
-
-#: files/pdf_creator.py:55
-msgid "Save PDF as"
-msgstr "Salva il PDF come"
-
-#: files/pdf_creator.py:119
-msgid "compressed"
-msgstr "compresso"
-
-#: files/pdf_creator.py:119
-msgid "high quality"
-msgstr "alta qualità"
-
-#: files/pdf_creator.py:120
-msgid "Created {0} PDF with {1} pages"
-msgstr "Creato PDF {0} con {1} pagine"
-
-#: files/pdf_creator.py:123
-msgid "No pages could be added to the PDF"
-msgstr "Non è stato possibile aggiungere pagine al PDF"
-
-#: files/pdf_creator.py:127
-msgid "PDF creation requires pypdfium2 package"
-msgstr "La creazione di PDF richiede il pacchetto pypdfium2"
-
-#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
-msgid "PDF Creation Options"
-msgstr "Opzioni di creazione PDF"
-
-#: files/pdf_options_window.py:49
-msgid "PDF Filename:"
-msgstr "PDF Nome del file:"
-
-#: files/pdf_options_window.py:61
-msgid "Preserve original image quality and format"
-msgstr "Conservare la qualità e il formato dell'immagine originali"
-
-#: files/pdf_options_window.py:68
-msgid ""
-"If enabled, images will maintain their original quality and format.\n"
-"If disabled, images will be compressed to reduce PDF size."
-msgstr ""
-"Se abilitato, le immagini manterranno la qualità e il formato originali.\n"
-"Se è disattivata, le immagini verranno compresse per ridurre le dimensioni del PDF."
+msgstr "Sfuggire ai backslash nei percorsi dei file"

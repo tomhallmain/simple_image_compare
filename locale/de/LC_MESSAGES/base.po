@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-06-06 18:02-0400\n"
-"PO-Revision-Date: 2025-06-06 18:02-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-06-11 16:00-0400\n"
+"PO-Revision-Date: 2025-06-11 16:00-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: de Team <<EMAIL>>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -164,7 +164,7 @@ msgstr "Keine stromabwärts gerichtete(n) Bilder im {0} gefunden"
 
 #: app.py:804
 msgid "{0} file marks set"
-msgstr "{0} Feilenmarkensätze"
+msgstr "{0} Dateimarken sind gesetzt"
 
 #: app.py:810
 msgid "Help and Config"
@@ -413,6 +413,26 @@ msgstr "Sammlung von Bilddaten"
 #: compare/base_compare.py:227
 msgid "Image comparison"
 msgstr "Vergleich der Bilder"
+
+#: compare/base_compare.py:298
+msgid "Invalid Checkpoint Data - Confirm Restart"
+msgstr "Ungültige Prüfpunktdaten - Bestätigen Sie den Neustart"
+
+#: compare/base_compare.py:300
+msgid "Invalid Checkpoint Data"
+msgstr "Ungültige Prüfpunktdaten"
+
+#: compare/base_compare.py:301
+msgid ""
+"Checkpoint data contains invalid indices. Would you like to restart the "
+"comparison?"
+msgstr ""
+"Die Prüfpunktdaten enthalten ungültige Indizes. Möchten Sie den Vergleich "
+"erneut starten?"
+
+#: compare/base_compare.py:306
+msgid "Restarting Comparison"
+msgstr "Neustart-Vergleich"
 
 #: compare/compare_wrapper.py:67 compare/compare_wrapper.py:70
 msgid "Invalid mode"
@@ -758,7 +778,7 @@ msgstr "Ungültiger Suchbegriff, bitte geben Sie einen Text ein."
 
 #: files/hotkey_actions_window.py:25
 msgid "Hotkey Actions"
-msgstr "Hotkey-Aktionen"
+msgstr "Tastenkombinationen"
 
 #: files/hotkey_actions_window.py:49
 msgid "Key name"
@@ -793,7 +813,7 @@ msgstr ""
 #: files/marked_file_mover.py:136
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
-"Keine Hotkey-Aktion gesetzt für {0}!\n"
+"Keine Tastenkombination gesetzt für {0}!\n"
 "Mit {1} im Fenster Markierungen einstellen."
 
 #: files/marked_file_mover.py:216 files/recent_directory_window.py:153
@@ -819,6 +839,10 @@ msgstr "Verzeichnisse aus übergeordneten Verzeichnissen hinzufügen"
 #: files/marked_file_mover.py:229 files/recent_directory_window.py:159
 msgid "Clear targets"
 msgstr "Klare Ziele"
+
+#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
+msgid "Create PDF"
+msgstr "PDF erstellen"
 
 #: files/marked_file_mover.py:295 files/marked_file_mover.py:301
 msgid "Recording next mark target and action."
@@ -968,6 +992,62 @@ msgstr "Gelöschte markierte Datei"
 msgid "Removed {0} marks"
 msgstr "Entfernt {0} Markierungen"
 
+#: files/pdf_creator.py:39
+msgid "No files to create PDF"
+msgstr "Keine Dateien zum Erstellen von PDF"
+
+#: files/pdf_creator.py:47 files/pdf_options_window.py:53
+msgid "combined_images"
+msgstr "kombinierte_Bilder"
+
+#: files/pdf_creator.py:55
+msgid "Save PDF as"
+msgstr "PDF speichern als"
+
+#: files/pdf_creator.py:119
+msgid "compressed"
+msgstr "komprimiert"
+
+#: files/pdf_creator.py:119
+msgid "high quality"
+msgstr "hohe Qualität"
+
+#: files/pdf_creator.py:120
+msgid "Created {0} PDF with {1} pages"
+msgstr "Erstellte {0} PDF mit {1} Seiten"
+
+#: files/pdf_creator.py:123
+msgid "No pages could be added to the PDF"
+msgstr "Der PDF-Datei konnten keine Seiten hinzugefügt werden"
+
+#: files/pdf_creator.py:127
+msgid "PDF creation requires pypdfium2 package"
+msgstr "PDF-Erstellung erfordert das Paket pypdfium2"
+
+#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
+msgid "PDF Creation Options"
+msgstr "PDF-Erstellungsoptionen"
+
+#: files/pdf_options_window.py:49
+msgid "PDF Filename:"
+msgstr "PDF Dateiname:"
+
+#: files/pdf_options_window.py:61
+msgid "Preserve original image quality and format"
+msgstr "Originalbildqualität und Format bewahren"
+
+#: files/pdf_options_window.py:68
+msgid ""
+"If enabled, images will maintain their original quality and format.\n"
+"If disabled, images will be compressed to reduce PDF size."
+msgstr ""
+"Wenn aktiviert, behalten die Bilder ihre ursprüngliche Qualität und ihr ursprüngliches Format.\n"
+"Wenn deaktiviert, werden die Bilder komprimiert, um die PDF-Größe zu verringern."
+
+#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "Abbrechen"
+
 #: files/recent_directory_window.py:155
 msgid "Add directory"
 msgstr "Verzeichnis hinzufügen"
@@ -1029,10 +1109,6 @@ msgstr ""
 "Wählen Sie die Medientypen aus, mit denen Sie vergleichen möchten. "
 "Änderungen erfordern ein Neuladen der offenen Vergleiche, aber Dateien im "
 "Navigationsmodus werden automatisch aktualisiert."
-
-#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "Abbrechen"
 
 #: files/type_configuration_window.py:184
 msgid "Apply Changes"
@@ -1672,79 +1748,3 @@ msgstr "Bild-Tagging aktiviert"
 #: utils/help_and_config.py:156
 msgid "Escape Backslash Filepaths"
 msgstr "Escape Backslash-Dateipfade"
-
-#: compare/base_compare.py:298
-msgid "Invalid Checkpoint Data - Confirm Restart"
-msgstr "Ungültige Prüfpunktdaten - Bestätigen Sie den Neustart"
-
-#: compare/base_compare.py:300
-msgid "Invalid Checkpoint Data"
-msgstr "Ungültige Prüfpunktdaten"
-
-#: compare/base_compare.py:301
-msgid ""
-"Checkpoint data contains invalid indices. Would you like to restart the "
-"comparison?"
-msgstr ""
-"Die Prüfpunktdaten enthalten ungültige Indizes. Möchten Sie den Vergleich "
-"erneut starten?"
-
-#: compare/base_compare.py:306
-msgid "Restarting Comparison"
-msgstr "Neustart-Vergleich"
-
-#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
-msgid "Create PDF"
-msgstr "PDF erstellen"
-
-#: files/pdf_creator.py:39
-msgid "No files to create PDF"
-msgstr "Keine Dateien zum Erstellen von PDF"
-
-#: files/pdf_creator.py:47 files/pdf_options_window.py:53
-msgid "combined_images"
-msgstr "kombinierte_Bilder"
-
-#: files/pdf_creator.py:55
-msgid "Save PDF as"
-msgstr "PDF speichern als"
-
-#: files/pdf_creator.py:119
-msgid "compressed"
-msgstr "komprimiert"
-
-#: files/pdf_creator.py:119
-msgid "high quality"
-msgstr "hohe Qualität"
-
-#: files/pdf_creator.py:120
-msgid "Created {0} PDF with {1} pages"
-msgstr "Erstellte {0} PDF mit {1} Seiten"
-
-#: files/pdf_creator.py:123
-msgid "No pages could be added to the PDF"
-msgstr "Der PDF-Datei konnten keine Seiten hinzugefügt werden"
-
-#: files/pdf_creator.py:127
-msgid "PDF creation requires pypdfium2 package"
-msgstr "PDF-Erstellung erfordert das Paket pypdfium2"
-
-#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
-msgid "PDF Creation Options"
-msgstr "PDF-Erstellungsoptionen"
-
-#: files/pdf_options_window.py:49
-msgid "PDF Filename:"
-msgstr "PDF Dateiname:"
-
-#: files/pdf_options_window.py:61
-msgid "Preserve original image quality and format"
-msgstr "Originalbildqualität und Format bewahren"
-
-#: files/pdf_options_window.py:68
-msgid ""
-"If enabled, images will maintain their original quality and format.\n"
-"If disabled, images will be compressed to reduce PDF size."
-msgstr ""
-"Wenn aktiviert, behalten die Bilder ihre ursprüngliche Qualität und ihr ursprüngliches Format.\n"
-"Wenn deaktiviert, werden die Bilder komprimiert, um die PDF-Größe zu verringern."

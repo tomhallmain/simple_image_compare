@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-06-06 18:02-0400\n"
-"PO-Revision-Date: 2025-06-06 18:02-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-06-11 16:00-0400\n"
+"PO-Revision-Date: 2025-06-11 16:00-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgstr "设定搜索文件"
 
 #: app.py:261
 msgid "Search text (embedding mode)"
-msgstr "搜索文本（嵌入模式）"
+msgstr "搜索文本 (嵌入模式)"
 
 #: app.py:272
 msgid "Compare mode"
@@ -258,7 +258,7 @@ msgstr "移动 {0} 个标记文件？"
 #: app.py:1377
 msgid "NO_MARKS_SET"
 msgstr ""
-"已设置 {0} 标记（预计 >={1}）。\n"
+"已设置 {0} 标记(预计 >={1})。\n"
 "使用 Shift+M 设置标记。"
 
 #: app.py:1410
@@ -397,6 +397,24 @@ msgstr "图像数据收集"
 #: compare/base_compare.py:227
 msgid "Image comparison"
 msgstr "图片对比"
+
+#: compare/base_compare.py:298
+msgid "Invalid Checkpoint Data - Confirm Restart"
+msgstr "检查点数据无效 - 确认重启"
+
+#: compare/base_compare.py:300
+msgid "Invalid Checkpoint Data"
+msgstr "检查点数据无效"
+
+#: compare/base_compare.py:301
+msgid ""
+"Checkpoint data contains invalid indices. Would you like to restart the "
+"comparison?"
+msgstr "检查点数据包含无效索引。您想重新开始比较吗？"
+
+#: compare/base_compare.py:306
+msgid "Restarting Comparison"
+msgstr "重新启动比较"
 
 #: compare/compare_wrapper.py:67 compare/compare_wrapper.py:70
 msgid "Invalid mode"
@@ -750,8 +768,8 @@ msgstr "全套： {0}"
 #: files/marked_file_mover.py:124
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
-"没有设定永久标记目标 !\n"
-"在Marks窗口上设定 Ctrl+T 。"
+"未设置永久标记目标！\n"
+"使用 “标记 ”窗口中的 Ctrl+T 进行设置。"
 
 #: files/marked_file_mover.py:136
 msgid "NO_HOTKEY_ACTION_SET"
@@ -782,6 +800,10 @@ msgstr "从父目录添加目录"
 #: files/marked_file_mover.py:229 files/recent_directory_window.py:159
 msgid "Clear targets"
 msgstr "明确目标"
+
+#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
+msgid "Create PDF"
+msgstr "创建 PDF"
 
 #: files/marked_file_mover.py:295 files/marked_file_mover.py:301
 msgid "Recording next mark target and action."
@@ -927,6 +949,62 @@ msgstr "清除已标记的文件"
 msgid "Removed {0} marks"
 msgstr "删除{0}标记"
 
+#: files/pdf_creator.py:39
+msgid "No files to create PDF"
+msgstr "没有文件可以创建 PDF"
+
+#: files/pdf_creator.py:47 files/pdf_options_window.py:53
+msgid "combined_images"
+msgstr "合并图片"
+
+#: files/pdf_creator.py:55
+msgid "Save PDF as"
+msgstr "将 PDF 保存为"
+
+#: files/pdf_creator.py:119
+msgid "compressed"
+msgstr "压缩"
+
+#: files/pdf_creator.py:119
+msgid "high quality"
+msgstr "高品质"
+
+#: files/pdf_creator.py:120
+msgid "Created {0} PDF with {1} pages"
+msgstr "创建了 {0} 个 PDF 文件，包含 {1} 个页面"
+
+#: files/pdf_creator.py:123
+msgid "No pages could be added to the PDF"
+msgstr "PDF 无法添加任何页面"
+
+#: files/pdf_creator.py:127
+msgid "PDF creation requires pypdfium2 package"
+msgstr "创建 PDF 需要 pypdfium2 软件包"
+
+#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
+msgid "PDF Creation Options"
+msgstr "PDF 创建选项"
+
+#: files/pdf_options_window.py:49
+msgid "PDF Filename:"
+msgstr "PDF 文件名："
+
+#: files/pdf_options_window.py:61
+msgid "Preserve original image quality and format"
+msgstr "保留原始图像质量和格式"
+
+#: files/pdf_options_window.py:68
+msgid ""
+"If enabled, images will maintain their original quality and format.\n"
+"If disabled, images will be compressed to reduce PDF size."
+msgstr ""
+"如果启用，图像将保持原始质量和格式。\n"
+"如果禁用，图像将被压缩，以减小 PDF 的大小。"
+
+#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "取消"
+
 #: files/recent_directory_window.py:155
 msgid "Add directory"
 msgstr "添加目录"
@@ -937,7 +1015,7 @@ msgstr "设定图像比较目录"
 
 #: files/type_configuration_window.py:26
 msgid "Basic image files (PNG, JPG, etc.)"
-msgstr "基本图片文件（PNG、JPG 等）"
+msgstr "基本图片文件(PNG、JPG 等)"
 
 #: files/type_configuration_window.py:27
 msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
@@ -985,10 +1063,6 @@ msgid ""
 "a refresh of open comparisons but files in browsing mode should update "
 "automatically."
 msgstr "选择要比较的媒体文件类型。更改将需要刷新打开的比较，但浏览模式下的文件应会自动更新。"
-
-#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "取消"
 
 #: files/type_configuration_window.py:184
 msgid "Apply Changes"
@@ -1048,7 +1122,7 @@ msgstr "模型"
 
 #: image/image_details.py:133
 msgid "LoRAs"
-msgstr "乐团"
+msgstr "LoRA"
 
 #: image/image_details.py:138
 msgid "Copy Prompt"
@@ -1324,7 +1398,7 @@ msgstr "专题报告"
 
 #: utils/constants.py:210
 msgid "SVG"
-msgstr "特别志愿人员小组"
+msgstr "SVG"
 
 #: utils/constants.py:212
 msgid "HTML"
@@ -1586,7 +1660,7 @@ msgstr "幻灯片放映间隔( 秒)"
 
 #: utils/help_and_config.py:140
 msgid "File Check Interval (sec)"
-msgstr "文件检查间隔( 秒)"
+msgstr "文件刷新间隔 (秒)"
 
 #: utils/help_and_config.py:142
 msgid "Max Search Results"
@@ -1614,82 +1688,8 @@ msgstr "回收文件夹"
 
 #: utils/help_and_config.py:154
 msgid "Image Tagging Enabled"
-msgstr "图像标签已启用"
+msgstr "启用图像标记"
 
 #: utils/help_and_config.py:156
 msgid "Escape Backslash Filepaths"
-msgstr "逃逸反斜文件路径"
-
-#: compare/base_compare.py:298
-msgid "Invalid Checkpoint Data - Confirm Restart"
-msgstr "检查点数据无效 - 确认重启"
-
-#: compare/base_compare.py:300
-msgid "Invalid Checkpoint Data"
-msgstr "检查点数据无效"
-
-#: compare/base_compare.py:301
-msgid ""
-"Checkpoint data contains invalid indices. Would you like to restart the "
-"comparison?"
-msgstr "检查点数据包含无效索引。您想重新开始比较吗？"
-
-#: compare/base_compare.py:306
-msgid "Restarting Comparison"
-msgstr "重新启动比较"
-
-#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
-msgid "Create PDF"
-msgstr "创建 PDF"
-
-#: files/pdf_creator.py:39
-msgid "No files to create PDF"
-msgstr "没有文件可以创建 PDF"
-
-#: files/pdf_creator.py:47 files/pdf_options_window.py:53
-msgid "combined_images"
-msgstr "合并图片"
-
-#: files/pdf_creator.py:55
-msgid "Save PDF as"
-msgstr "将 PDF 保存为"
-
-#: files/pdf_creator.py:119
-msgid "compressed"
-msgstr "压缩"
-
-#: files/pdf_creator.py:119
-msgid "high quality"
-msgstr "高品质"
-
-#: files/pdf_creator.py:120
-msgid "Created {0} PDF with {1} pages"
-msgstr "创建了 {0} 个 PDF 文件，包含 {1} 个页面"
-
-#: files/pdf_creator.py:123
-msgid "No pages could be added to the PDF"
-msgstr "PDF 无法添加任何页面"
-
-#: files/pdf_creator.py:127
-msgid "PDF creation requires pypdfium2 package"
-msgstr "创建 PDF 需要 pypdfium2 软件包"
-
-#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
-msgid "PDF Creation Options"
-msgstr "PDF 创建选项"
-
-#: files/pdf_options_window.py:49
-msgid "PDF Filename:"
-msgstr "PDF 文件名："
-
-#: files/pdf_options_window.py:61
-msgid "Preserve original image quality and format"
-msgstr "保留原始图像质量和格式"
-
-#: files/pdf_options_window.py:68
-msgid ""
-"If enabled, images will maintain their original quality and format.\n"
-"If disabled, images will be compressed to reduce PDF size."
-msgstr ""
-"如果启用，图像将保持原始质量和格式。\n"
-"如果禁用，图像将被压缩，以减小 PDF 的大小。"
+msgstr "逃离文件路径中的反斜线"
