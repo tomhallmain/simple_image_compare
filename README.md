@@ -35,7 +35,8 @@ The UI can be used as a media file browser. The following features are available
     <li>Find related images and prompts from embedded Stable Diffusion workflows</li>
     <li>Sort files by related images and prompts</li>
     <li>View raw image metadata</li>
-    <li>Content filtering of images and videos based on their text CLIP similarity (automatically hide, move to dir, delete etc)</li>
+    <li>Content filtering of images and videos based on their text encoding similarity (automatically hide, move to dir, delete etc)</li>
+    <li>Create PDFs from marked files with customizable quality and compression options</li>
 </ul>
 </details>
 
@@ -59,7 +60,7 @@ Prevalidation rules can be configured with:
 - Directory-specific rules
 - H5 model-based classification rules
 
-This feature is particularly useful for maintaining clean media collections and automating content filtering. You can find an example H5 classifier that is known to work [here](https://github.com/FurkanGozukara/nsfw_model).
+This feature is particularly useful for maintaining clean media collections and automating content filtering, but it can be disabled any time if desired. You can find an example H5 classifier that is known to work [here](https://github.com/FurkanGozukara/nsfw_model).
 
 ## Usage
 
@@ -95,7 +96,7 @@ If a search image is set simultaneously with search text, its embedding will be 
 - ko (한국어)
 - zh (中文)
 
-`clip_model` defines the CLIP model to use for generating embeddings.
+`clip_model` defines the CLIP model to use for generating CLIP embeddings.
 
 `image_types` defines the allowed file extensions for gathering image files, while `video_types` defines the allowed file extensions for gathering video files - there are only valid if the `enable_videos` setting is enabled.
 

@@ -456,6 +456,14 @@ class PrevalidationsWindow():
         self.clear_recent_prevalidations_btn = None
         self.add_btn("clear_recent_prevalidations_btn", _("Clear prevalidations"), self.clear_recent_prevalidations, column=2)
 
+        # Add enable prevalidations checkbox
+        self.label_enable_prevalidations = Label(self.frame)
+        self.enable_prevalidations = BooleanVar(value=config.enable_prevalidations)
+        self.checkbox_enable_prevalidations = Checkbutton(self.frame, variable=self.enable_prevalidations, 
+                                                        command=self.toggle_prevalidations)
+        self.add_label(self.label_enable_prevalidations, _("Enable Prevalidations"), row=1, wraplength=PrevalidationsWindow.COL_0_WIDTH)
+        self.checkbox_enable_prevalidations.grid(row=1, column=1, sticky=W)
+
         self.add_prevalidation_widgets()
 
         # self.master.bind("<Key>", self.filter_prevalidations)
@@ -622,6 +630,9 @@ class PrevalidationsWindow():
             else:
                 prevalidation = PrevalidationsWindow.last_set_prevalidation
             self.set_prevalidation(prevalidation=prevalidation)
+
+    def toggle_prevalidations(self):
+        config.enable_prevalidations = self.enable_prevalidations.get()
 
     def clear_recent_prevalidations(self, event=None):
         self.clear_widget_lists()

@@ -103,7 +103,7 @@ class CompareWrapper:
         self._app_actions._set_toggled_view_matches()
         prev_image = self._get_prev_image()
         start_image = prev_image
-        while prev_image in self.hidden_images and prev_image != start_image:
+        while self.skip_image(prev_image) and prev_image != start_image:
             prev_image = self._get_prev_image()
         self._master.update()
         self._app_actions.create_image(prev_image)
@@ -120,7 +120,7 @@ class CompareWrapper:
         self._app_actions._set_toggled_view_matches()
         next_image = self._get_next_image()
         start_image = next_image
-        while next_image in self.hidden_images and next_image != start_image:
+        while self.skip_image(next_image) and next_image != start_image:
             next_image = self._get_next_image()
         self._master.update()
         self._app_actions.create_image(next_image)
