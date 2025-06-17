@@ -3,8 +3,11 @@ import os
 
 from image.image_edit_configuration import ImageEditConfiguration
 from utils.constants import CompareMode, SortBy
+from utils.logging_setup import get_logger
 from utils.running_tasks_registry import running_tasks_registry
 from utils.utils import Utils
+
+logger = get_logger("config")
 
 
 class Config:
@@ -96,8 +99,8 @@ class Config:
             self.dict = json.load(open(self.config_path, "r"))
             dict_set = True
         except Exception as e:
-            print(e)
-            print("Unable to load config. Ensure config.json file is located in the configs directory of simple-image-comare.")
+            logger.error(e)
+            logger.error("Unable to load config. Ensure config.json file is located in the configs directory of simple-image-comare.")
 
         # Handle old version config keys
         if "file_types" in self.dict:
@@ -184,7 +187,7 @@ class Config:
             try:
                 self.sd_prompt_reader_loc = self.validate_and_set_directory(key="sd_prompt_reader_loc")
             except Exception as e:
-                print(e)
+                logger.error(e)
 
             try:
                 self.compare_mode = CompareMode[self.dict["compare_mode"]]
@@ -205,7 +208,7 @@ class Config:
             self.print_config_settings()
 
         if self.locale is None or self.locale == "":
-            print(f"No locale set for config file.")
+            logger.info(f"No locale set for config file.")
             self.locale = Utils.get_default_user_language()
         os.environ["LANG"] = self.locale
 
@@ -219,7 +222,7 @@ class Config:
                 except Exception as e:
                     pass
                 if try_dir is None:
-                    print(f"Invalid directory to search for related images: {_dir}")
+                    logger.info(f"Invalid directory to search for related images: {_dir}")
                     self.directories_to_search_for_related_images.remove(_dir)
                 else:
                     self.directories_to_search_for_related_images[
@@ -228,7 +231,7 @@ class Config:
 
     def check_image_edit_configuration(self):
         if not "image_edit_configuration" in self.dict or not type(self.dict["image_edit_configuration"] == dict):
-            print("Image edit configuration not found or invalid, using default values.")
+            logger.info("Image edit configuration not found or invalid, using default values.")
         else:   
             self.image_edit_configuration.set_from_dict(self.dict["image_edit_configuration"])
 
@@ -256,14 +259,14 @@ class Config:
                     if self.dict[name] is not None:
                         setattr(self, name, type(self.dict[name]))
                 except Exception as e:
-                    print(e)
-                    print(f"Failed to set {name} from config.json file. Ensure the value is set and of the correct type.")
+                    logger.error(e)
+                    logger.warning(f"Failed to set {name} from config.json file. Ensure the value is set and of the correct type.")
             else:
                 try:
                     setattr(self, name, self.dict[name])
                 except Exception as e:
-                    print(e)
-                    print(f"Failed to set {name} from config.json file. Ensure the key is set.")
+                    logger.error(e)
+                    logger.warning(f"Failed to set {name} from config.json file. Ensure the key is set.")
 
     def next_text_embedding_search_preset(self):
         self.text_embedding_search_preset_index += 1
@@ -276,24 +279,24 @@ class Config:
 
 
     def print_config_settings(self):
-        print("Settings active:")
+        logger.info("Settings active:")
         extra_text = ": False - NO toasts will be shown!" if not self.show_toasts else ""
-        print(f" - Show toasts{extra_text}")
+        logger.info(f" - Show toasts{extra_text}")
         if self.delete_instantly:
-            print(f" - Files will be deleted instantly, not sent to trash")
+            logger.info(f" - Files will be deleted instantly, not sent to trash")
         if self.trash_folder:
-            print(f" - Trash folder: {self.trash_folder}")
+            logger.info(f" - Trash folder: {self.trash_folder}")
         if self.escape_backslash_filepaths:
-            print(f" - Escape backslashes in filepaths when copying")
+            logger.info(f" - Escape backslashes in filepaths when copying")
         if self.fill_canvas:
-            print(f" - Expand images to fill canvas")
+            logger.info(f" - Expand images to fill canvas")
         if self.image_browse_recursive:
-            print(f" - Recursive file browsing")
+            logger.info(f" - Recursive file browsing")
         if self.sd_prompt_reader_loc is not None:
-            print(f" - Using stable diffusion prompt reader path at {self.sd_prompt_reader_loc}")
+            logger.info(f" - Using stable diffusion prompt reader path at {self.sd_prompt_reader_loc}")
         else:
-            print(f" - Stable diffusion prompt reader location is not set or invalid.")
-        print(f" - Max files per compare: {self.file_counter_limit}")
+            logger.info(f" - Stable diffusion prompt reader location is not set or invalid.")
+        logger.info(f" - Max files per compare: {self.file_counter_limit}")
 
     def toggle_video_mode(self):
         self.enable_videos = not self.enable_videos

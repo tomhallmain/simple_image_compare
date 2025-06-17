@@ -7,6 +7,9 @@ from PIL import Image
 import pprint
 
 from utils.config import config
+from utils.logging_setup import get_logger
+
+logger = get_logger("image_data_extractor")
 
 has_imported_sd_prompt_reader = False
 try:
@@ -15,8 +18,8 @@ try:
         from sd_prompt_reader.image_data_reader import ImageDataReader
         has_imported_sd_prompt_reader = True
 except Exception as e:
-    print(e)
-    print("Failed to import SD Prompt Reader!")
+    logger.error(e)
+    logger.error("Failed to import SD Prompt Reader!")
 
 
 class ImageDataExtractor:
@@ -88,11 +91,11 @@ class ImageDataExtractor:
             elif ImageDataExtractor.A1111_PARAMS_KEY in info:
                 return self._build_a1111_prompt_info_object(info[ImageDataExtractor.A1111_PARAMS_KEY])
             else:
-                # print(info.keys())
-                # print("Unhandled exif data: " + image_path)
+                # logger.debug(info.keys())
+                # logger.debug("Unhandled exif data: " + image_path)
                 pass
         else:
-            print("Exif data not found: " + image_path)
+            logger.warning("Exif data not found: " + image_path)
         return None
 
     def get_input_by_node_id(self, image_path, node_id, input_name):
@@ -117,11 +120,11 @@ class ImageDataExtractor:
                 tags = json.loads(info[ImageDataExtractor.TAGS_KEY])
                 return tags
             else:
-#                print(info)
+#                logger.debug(info)
                 # TODO IPTC Info handling maybe.
                 pass
         else:
-            print("Exif data not found: " + image_path)
+            logger.warning("Exif data not found: " + image_path)
         return None
 
     ## TODO TODO
@@ -145,7 +148,7 @@ class ImageDataExtractor:
         if prompt is not None:
             for k, v in prompt.items():
                 if ImageDataExtractor.CLASS_TYPE in v and ImageDataExtractor.INPUTS in v:
-                    # print(v[ImageDataExtractor.CLASS_TYPE])
+                    # logger.debug(v[ImageDataExtractor.CLASS_TYPE])
                     if v[ImageDataExtractor.CLASS_TYPE] == "CLIPTextEncode":
                         prompt_dicts[k] = v[ImageDataExtractor.INPUTS]["text"]
                     elif v[ImageDataExtractor.CLASS_TYPE] == "ImpactWildcardProcessor":
@@ -157,8 +160,8 @@ class ImageDataExtractor:
             if positive == "":
                 positive = prompt_dicts.get(node_inputs[ImageDataExtractor.POSITIVE], "")
             negative = prompt_dicts.get(node_inputs[ImageDataExtractor.NEGATIVE], "")
-            # print(f"Positive: \"{positive}\"")
-            # print(f"Negative: \"{negative}\"")
+            # logger.debug(f"Positive: \"{positive}\"")
+            # logger.debug(f"Negative: \"{negative}\"")
 
         return (positive, negative)
 
@@ -171,7 +174,7 @@ class ImageDataExtractor:
             # ComfyUI
             for k, v in prompt.items():
                 if ImageDataExtractor.CLASS_TYPE in v and ImageDataExtractor.INPUTS in v:
-                    # print(v[ImageDataExtractor.CLASS_TYPE])
+                    # logger.debug(v[ImageDataExtractor.CLASS_TYPE])
                     if "Checkpoint" in v[ImageDataExtractor.CLASS_TYPE] and "ckpt_name" in v[ImageDataExtractor.INPUTS]:
                         ckpt_name = v[ImageDataExtractor.INPUTS]["ckpt_name"]
                         if "." in ckpt_name:
@@ -210,7 +213,7 @@ class ImageDataExtractor:
                         loaded_image = v[ImageDataExtractor.INPUTS]["image"]
                         for control_net_image_path in control_net_image_paths:
                             if loaded_image == control_net_image_path:
-                                print(f"Found control net image - Image ({image_path}) Control Net ({control_net_image_path})")
+                                logger.info(f"Found control net image - Image ({image_path}) Control Net ({control_net_image_path})")
                                 return control_net_image_path
         return None
 
@@ -219,7 +222,7 @@ class ImageDataExtractor:
 
         # strip exif
         new_image_path = self.new_image_with_info(image, image_path=image_path, image_copy_path=image_copy_path, target_dir=target_dir)
-        print("Copied image without exif data to: " + new_image_path)
+        logger.info("Copied image without exif data to: " + new_image_path)
 
     def new_image_with_info(self, image, info=None, image_path=None, image_copy_path=None, target_dir=None, append="_"):
         data = list(image.getdata())
@@ -247,12 +250,12 @@ class ImageDataExtractor:
 
     def print_imageinfo(self, image_path):
         info = Image.open(image_path).info
-        print("Image info for image: " + image_path)
+        logger.info("Image info for image: " + image_path)
         pprint.pprint(info)
 
     def print_prompt(self, image_path):
         prompt = self.extract_prompt(image_path)
-        print("Prompt for image: " + image_path)
+        logger.info("Prompt for image: " + image_path)
         pprint.pprint(prompt)
 
     def dump_prompt(self, image_path):
@@ -287,7 +290,7 @@ class ImageDataExtractor:
                         if not positive or positive.strip() == "":
                             positive = "(No prompt found for this file.)"
             except Exception as e:
-#                print(e)
+#                logger.warning(e)
                 pass
 
         models = []
@@ -347,10 +350,10 @@ class ImageDataExtractor:
                     if value.startswith("\"") and value.endswith("\""):
                         value = value[1:-1]
                 prompt_info[key.strip().replace(":", "")] = value
-                # print("____")
-                # print(key)
-                # print(value)
-                # print(prompt_text)
+                # logger.debug("____")
+                # logger.debug(key)
+                # logger.debug(value)
+                # logger.debug(prompt_text)
                 if next_key is not None:
                     prompt_text = prompt_text[prompt_text.rfind(next_key):]
         prompt_info["Positive prompt"], prompt_info["Loras"] = self._extract_loras_from_a1111_prompt(prompt_info["Positive prompt"])

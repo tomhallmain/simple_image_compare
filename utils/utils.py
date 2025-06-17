@@ -1,5 +1,4 @@
 from enum import Enum
-import logging
 import re
 import os
 import psutil
@@ -8,31 +7,17 @@ import subprocess
 import sys
 
 from utils.running_tasks_registry import start_thread
-from utils.logging_setup import logger, log_file
+from utils.logging_setup import get_logger
 
 class Utils:
-    @staticmethod
-    def log(message, level=logging.INFO):
-        logger.log(level, message)
+    _logger = get_logger("utils")
     
-    @staticmethod
-    def log_debug(message):
-        Utils.log(message, logging.DEBUG)
-
-    @staticmethod
-    def log_red(message):
-        Utils.log(message, logging.ERROR)
-    
-    @staticmethod
-    def log_yellow(message):
-        Utils.log(message, logging.WARNING)
-
     @staticmethod
     def safe_write(textfile, data):
         try:
             textfile.write(data)
         except UnicodeEncodeError as e:
-            Utils.log_red(e)
+            Utils._logger.error(e)
 
     @staticmethod
     def trace(frame, event, arg):
@@ -341,10 +326,6 @@ class Utils:
         if len(parts) == 0 and len(string) != 0:
             parts.append(string)
         return parts
-
-    @staticmethod
-    def open_log_file():
-        Utils.open_file(log_file)
 
 
 class ModifierKey(Enum):

@@ -5,24 +5,26 @@ from transformers import AutoModel, AutoProcessor, FlavaProcessor, FlavaModel, A
 
 from image.frame_cache import FrameCache
 from utils.config import config
-from utils.utils import Utils
+from utils.logging_setup import get_logger
+
+logger = get_logger("model")
 
 # XVLM may not be loaded if the config.json file is not updated
 # or if the model files are not downloaded
 xvlm_loaded = False
 
 if config.xvlm_loc is not None:
-    Utils.log(f"Loading XVLM modules from {config.xvlm_loc}")
+    logger.info(f"Loading XVLM modules from {config.xvlm_loc}")
     try:
         import sys
         from transformers import BertTokenizer, BertModel
         from torchvision import transforms
         sys.path.insert(0, config.xvlm_loc)
         from models.xvlm import XVLMBase
-        Utils.log("XVLM modules loaded")
+        logger.info("XVLM modules loaded")
         xvlm_loaded = True
     except Exception as e:
-        Utils.log(f"Error loading XVLM modules: {e}")
+        logger.error(f"Error loading XVLM modules: {e}")
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -163,8 +165,8 @@ def embedding_similarity(embedding0, embedding1):
     # since this might be less efficient then a simple list
     t0 = torch.Tensor([list(embedding0)])
     t1 = torch.Tensor([list(embedding1)])
-    # print(f"[SigLIP] Embedding 1 norm: {embedding0.norm().item():.4f}")
-    # print(f"[SigLIP] Embedding 2 norm: {embedding1.norm().item():.4f}")
+    # logger.debug(f"[SigLIP] Embedding 1 norm: {embedding0.norm().item():.4f}")
+    # logger.debug(f"[SigLIP] Embedding 2 norm: {embedding1.norm().item():.4f}")
     return torch.nn.functional.cosine_similarity(t0, t1)
 
 

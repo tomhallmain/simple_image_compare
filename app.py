@@ -30,6 +30,7 @@ from utils.app_style import AppStyle
 from utils.config import config, FileCheckConfig, SlideshowConfig
 from utils.constants import Mode, CompareMode, Direction, ActionType
 from utils.help_and_config import HelpAndConfig
+from utils.logging_setup import get_logger
 from utils.notification_manager import notification_manager
 from utils.running_tasks_registry import periodic, start_thread
 from utils.translations import I18N
@@ -38,11 +39,12 @@ from utils.utils import Utils, ModifierKey
 from image.image_details import ImageDetails
 
 _ = I18N._
+logger = get_logger("app")
 
 try:
     from send2trash import send2trash
 except Exception:
-    Utils.log_red("Could not import trashing utility - all deleted images will be deleted instantly")
+    logger.error("Could not import trashing utility - all deleted images will be deleted instantly")
 
 
 
@@ -75,7 +77,7 @@ class App():
                 if window.base_dir == base_dir:
                     if image_path is not None and image_path != "":
                         if do_search:
-                            # print("Doing search: " + str(image_path))
+                            # logger.debug("Doing search: " + str(image_path))
                             window.search_img_path_box.delete(0, "end")
                             window.search_img_path_box.insert(0, image_path)
                             window.set_search()
@@ -83,7 +85,7 @@ class App():
                             window.go_to_file(search_text=image_path)
                     window.media_canvas.focus()
                     return
-                # print(f"app base dir \"{_app.base_dir}\" was not base dir: {base_dir}")
+                # logger.warning(f"app base dir \"{_app.base_dir}\" was not base dir: {base_dir}")
         if master is None:
             # Usually want to do this because if a secondary window is the source of another secondary window and that initial secondary window
             # is closed, the second secondary window will also be closed because its master has been destroyed.
@@ -420,7 +422,6 @@ class App():
         self.master.bind("<Control-s>", self.next_text_embedding_preset)
         self.master.bind("<Control-b>", self.return_to_browsing_mode)
         self.master.bind("<Control-v>", self.open_type_configuration_window)
-        self.master.bind("<Control-L>", lambda event: Utils.open_log_file())
         self.master.bind("<Home>", self.home)
         self.master.bind("<End>", lambda event: self.home(last_file=True))
         self.master.bind("<Prior>", self.page_up)
@@ -449,7 +450,7 @@ class App():
         App.open_windows.append(self)
 
         if base_dir is not None and base_dir != "" and base_dir != "." and os.path.isdir(base_dir):
-            # print(f"Setting base dir to {base_dir} on window ID {self.window_id} before self.set_base_dir")
+            # logger.debug(f"Setting base dir to {base_dir} on window ID {self.window_id} before self.set_base_dir")
             self.set_base_dir_box.insert(0, base_dir)
             self.set_base_dir(base_dir_from_dir_window=base_dir)
 
@@ -497,7 +498,7 @@ class App():
     def quit(self, event=None):
         res = self.alert(_("Confirm Quit"), _("Would you like to quit the application?"), kind="askokcancel")
         if res == messagebox.OK or res == True:
-            Utils.log_yellow("Exiting application")
+            logger.warning("Exiting application")
             for window in App.open_windows:
                 if window.window_id == 0:
                     window.on_closing()
@@ -511,11 +512,11 @@ class App():
             PrevalidationsWindow.set_prevalidations()
             return app_info_cache.get_meta("base_dir")
         except Exception as e:
-            Utils.log_red(e)
+            logger.error(e)
 
     def store_info_cache(self, store_window_state=False):
         base_dir = self.get_base_dir()
-        Utils.log(f"Storing app info cache")
+        logger.info(f"Storing app info cache")
         if base_dir and base_dir != "":
             if not self.is_secondary():
                 app_info_cache.set_meta("base_dir", base_dir)
@@ -575,7 +576,7 @@ class App():
         try:
             mode = CompareMode.get(self.compare_mode_var.get())
         except Exception as e:
-            Utils.log_red(f"Compare mode not set: {e}")
+            logger.error(f"Compare mode not set: {e}")
             return
         self.compare_wrapper.compare_mode = mode
         self.label_compare_threshold["text"] = self.compare_wrapper.compare_mode.threshold_str()
@@ -613,14 +614,14 @@ class App():
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
         self.media_canvas.focus(refresh_image=shift_key_pressed)
         if config.debug:
-            Utils.log_debug("Refocused main window")
+            logger.debug("Refocused main window")
 
     def refresh(self, show_new_images=False, refresh_cursor=False, file_check=True, removed_files=[]):
         active_media_filepath_in_removed_files = self.get_active_media_filepath() in removed_files
-        # print(f"File cursor before: {self.file_browser.get_cursor()}")
+        # logger.debug(f"File cursor before: {self.file_browser.get_cursor()}")
         self.file_browser.refresh(
             refresh_cursor=refresh_cursor, file_check=file_check, removed_files=removed_files, direction=self.direction)
-        # print(f"File cursor after: {self.file_browser.get_cursor()}")
+        # logger.debug(f"File cursor after: {self.file_browser.get_cursor()}")
         if len(removed_files) > 0:
             if self.mode == Mode.BROWSE:
                 self._set_label_state()
@@ -648,7 +649,7 @@ class App():
             self._set_label_state()
             self.alert(_("Warning"), _("No files found in directory after refresh."), kind="warning")
         if config.debug:
-            Utils.log_debug("Refreshed files")
+            logger.debug("Refreshed files")
 
     @periodic(registry_attr_name="file_check_config")
     async def check_files(self, **kwargs):
@@ -661,7 +662,7 @@ class App():
     async def do_slideshow(self, **kwargs):
         if self.slideshow_config.slideshow_running:
             if config.debug:
-                Utils.log_debug("Slideshow next image")
+                logger.debug("Slideshow next image")
             base_dir = self.set_base_dir_box.get()
             if base_dir and base_dir != "":
                 self.show_next_media()
@@ -839,7 +840,7 @@ class App():
         '''
         self.store_info_cache()
         base_dir = self.set_base_dir_box.get()
-#        print(f"Got base dir: {base_dir}")
+#        logger.debug(f"Got base dir: {base_dir}")
         if base_dir_from_dir_window is not None:
             self.base_dir = base_dir_from_dir_window  # assume this directory is valid
         elif (base_dir == "" or base_dir == "Add dirpath..." or self.base_dir == base_dir) and len(RecentDirectories.directories) == 0:
@@ -856,7 +857,7 @@ class App():
             self.compare_wrapper._compare = None
             self._set_label_state(group_number=None, size=0)
             self._remove_all_mode_buttons()
-#        print(f"Setting base dir to {self.base_dir} on window ID {self.window_id} in self.set_base_dir")
+#        logger.debug(f"Setting base dir to {self.base_dir} on window ID {self.window_id} in self.set_base_dir")
         self.set_base_dir_box.delete(0, "end")
         self.set_base_dir_box.insert(0, self.base_dir)
         self.file_browser.set_directory(self.base_dir)
@@ -872,13 +873,13 @@ class App():
                 self.compare_wrapper.compare_mode = CompareMode.get(compare_mode)
                 self.compare_mode_var.set(compare_mode)
         except Exception as e:
-            Utils.log_red(f"Error setting stored compare mode: {e}")
+            logger.error(f"Error setting stored compare mode: {e}")
         try:
             if sort_by != self.sort_by.get():
                 self.sort_by.set(sort_by)
                 self.file_browser.set_sort_by(SortBy.get(sort_by))
         except Exception as e:
-            Utils.log_red(f"Error setting stored sort by: {e}")
+            logger.error(f"Error setting stored sort by: {e}")
         if not self.compare_wrapper.has_compare():
             self.set_mode(Mode.BROWSE)
             previous_file = app_info_cache.get(self.base_dir, "image_cursor")
@@ -1011,12 +1012,12 @@ class App():
 
     def show_searched_image(self) -> None:
         if config.debug:
-            Utils.log_debug(f"Search image full path: {self.compare_wrapper.search_image_full_path}")
+            logger.debug(f"Search image full path: {self.compare_wrapper.search_image_full_path}")
         if self.compare_wrapper.search_image_full_path is not None and self.compare_wrapper.search_image_full_path.strip() != "":
             if os.path.isfile(self.compare_wrapper.search_image_full_path):
                 self.create_image(self.compare_wrapper.search_image_full_path, extra_text="(search image)")
             else:
-                Utils.log_yellow(self.compare_wrapper.search_image_full_path)
+                logger.warning(self.compare_wrapper.search_image_full_path)
                 self.handle_error(_("Somehow, the search file is invalid"))
 
     def show_prev_media(self, event=None, show_alert=True) -> bool:
@@ -1331,7 +1332,7 @@ class App():
     def open_move_marks_window(self, event=None, open_gui=True, override_marks=[]):
         self._check_marks(min_mark_size=0)
         if len(override_marks) > 0:
-            Utils.log(_("Including marks: {0}").format(override_marks))
+            logger.debug(_("Including marks: {0}").format(override_marks))
             MarkedFiles.file_marks.extend(override_marks)
         current_image = self.get_active_media_filepath()
         single_image = False
@@ -1403,7 +1404,7 @@ class App():
             try:
                 prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self.get_base_dir, self.hide_current_media, self.toast)
             except Exception as e:
-                print(e)
+                logger.error(e)
 
     def toggle_prevalidations(self, event=None):
         config.enable_prevalidations = not config.enable_prevalidations
@@ -1641,7 +1642,7 @@ class App():
         if toast and manual_delete:
             self.title_notify(_("Removing file: {0}").format(filepath), action_type=ActionType.REMOVE_FILE)
         else:
-            Utils.log("Removing file: " + filepath)
+            logger.info("Removing file: " + filepath)
         if config.delete_instantly:
             os.remove(filepath)
         elif config.trash_folder is not None:
@@ -1654,7 +1655,7 @@ class App():
             try:
                 send2trash(os.path.normpath(filepath))
             except Exception as e:
-                Utils.log_red(e)
+                logger.error(e)
                 self.alert(_("Warning"),
                            _("Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."))
                 os.remove(filepath)
@@ -1731,7 +1732,7 @@ class App():
         if kind not in ("error", "warning", "info", "askokcancel"):
             raise ValueError("Unsupported alert kind.")
 
-        Utils.log_yellow(f"Alert - Title: \"{title}\" Message: {message}")
+        logger.warning(f"Alert - Title: \"{title}\" Message: {message}")
         if kind == "askokcancel":
             alert_method = getattr(messagebox, kind)
         else:
@@ -1739,7 +1740,7 @@ class App():
         return alert_method(title, message)
 
     def toast(self, message, time_in_seconds=config.toasts_persist_seconds):
-        Utils.log("Toast message: " + message.replace("\n", " "))
+        logger.info("Toast message: " + message.replace("\n", " "))
         if not config.show_toasts:
             return
 
@@ -1784,7 +1785,7 @@ class App():
         Temporarily modifies the window title to show a notification message.
         The original title is restored after the specified time.
         """
-        # Utils.log("Title notification: " + message.replace("\n", " "))
+        # logger.info("Title notification: " + message.replace("\n", " "))
         if not config.show_toasts:
             return
 
@@ -1875,7 +1876,7 @@ if __name__ == "__main__":
 
     # Graceful shutdown handler
     def graceful_shutdown(signum, frame):
-        Utils.log("Caught signal, shutting down gracefully...")
+        logger.info("Caught signal, shutting down gracefully...")
         app.on_closing()
         exit(0)
 

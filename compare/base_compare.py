@@ -12,10 +12,13 @@ from compare.compare_result import CompareResult
 from image.frame_cache import FrameCache
 from utils.config import config
 from utils.constants import CompareMode
+from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils
 
 _ = I18N._
+
+logger = get_logger("base_compare")
 
 
 def gather_files(base_dir=".", exts=config.image_types, recursive=True, include_videos=False, include_gifs=False, include_pdfs=False):
@@ -218,7 +221,7 @@ class BaseCompare:
         if percent_complete % 10 == 0 or counter % 500 == 0:
             if self.verbose:
                 desc1 = "data gathered" if gathering_data else "compared"
-                print(str(int(percent_complete)) + "% " + desc1)
+                logger.info(str(int(percent_complete)) + "% " + desc1)
             else:
                 print(".", end="", flush=True)
             if self.progress_listener and sys.platform != "darwin":
@@ -242,9 +245,9 @@ class BaseCompare:
             if os.path.exists(cascPath):
                 break
         if not os.path.exists(cascPath):
-            print("WARNING: Face cascade model not found (cv2 package,"
+            logger.warning("WARNING: Face cascade model not found (cv2 package,"
                   + " Python version 3.6 or greater expected)")
-            print("Run with flag --faces=False to avoid this warning.")
+            logger.warning("Run with flag --faces=False to avoid this warning.")
             self.compare_faces = False
         else:
             self._faceCascade = cv2.CascadeClassifier(cascPath)
@@ -265,7 +268,7 @@ class BaseCompare:
             n_faces = len(faces)
         except Exception as e:
             if self.verbose:
-                print(e)
+                logger.error(e)
         return n_faces
 
     def run(self):

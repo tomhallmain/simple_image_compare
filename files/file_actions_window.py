@@ -1,4 +1,3 @@
-from enum import Enum
 import os
 
 from tkinter import Toplevel, Label, LEFT, W
@@ -8,10 +7,13 @@ from utils.config import config
 from lib.tk_scroll_demo import ScrollFrame
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
+from utils.logging_setup import get_logger
 from utils.utils import Utils, ModifierKey
 from utils.translations import I18N
 
 _ = I18N._
+
+logger = get_logger("file_actions_window")
 
 
 class Action():
@@ -44,7 +46,7 @@ class Action():
             try:
                 os.remove(f)
             except Exception as e:
-                print(e)
+                logger.error(e)
 
     def get_action(self, do_flip=False):
         action = self.action
@@ -158,7 +160,7 @@ class FileActionsWindow:
             if not is_returnable_action or action in seen_actions:
                 start_index += 1
             seen_actions.append(action)
-#            print(f"i={i}, start_index={start_index}, action={action}")
+#            logger.debug(f"i={i}, start_index={start_index}, action={action}")
             if i < start_index:
                 continue
             if is_returnable_action:
@@ -192,7 +194,7 @@ class FileActionsWindow:
     @staticmethod
     def add_file_action(action, source, target, auto=True):
         new_filepath = str(action(source, target))
-        print("Moved file to " + new_filepath)
+        logger.info("Moved file to " + new_filepath)
         new_action = Action(action, target, [source], [new_filepath], auto)
         FileActionsWindow.update_history(new_action)
 
@@ -412,7 +414,7 @@ class FileActionsWindow:
             return
         if self.filter_text.strip() == "":
             if config.debug:
-                Utils.log_debug("Filter unset")
+                logger.info("Filter unset")
             # Restore the list of target directories to the full list
             self.filtered_action_history.clear()
             self.filtered_action_history = FileActionsWindow.action_history[:]

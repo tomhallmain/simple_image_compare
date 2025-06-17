@@ -1,7 +1,9 @@
 
 from image.image_classifier import ImageClassifierWrapper
 from utils.config import config
-from utils.utils import Utils
+from utils.logging_setup import get_logger
+
+logger = get_logger("image_classifier_manager")
 
 
 class ImageClassifierManager:
@@ -30,9 +32,9 @@ class ImageClassifierManager:
             raise Exception(f"Invalid image classifier argument: {image_classifier}")
         if image_classifier.can_run:
             self.classifiers[image_classifier.model_name] = image_classifier
-            print(f"Added image classifier: {image_classifier}")
+            logger.info(f"Added image classifier: {image_classifier}")
         else:
-            Utils.log_yellow(f"Image classifier not runnable: {image_classifier}")
+            logger.warning(f"Image classifier not runnable: {image_classifier}")
 
     def get_classifier(self, model_name):
         if model_name is None or model_name.strip() == "":

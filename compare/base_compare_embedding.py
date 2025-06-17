@@ -9,7 +9,10 @@ from compare.compare_args import CompareArgs
 from compare.compare_result import CompareResult
 from compare.model import embedding_similarity
 from utils.config import config
+from utils.logging_setup import get_logger
 from utils.utils import Utils
+
+logger = get_logger("base_compare_embedding")
 
 
 class BaseCompareEmbedding(BaseCompare):
@@ -35,23 +38,23 @@ class BaseCompareEmbedding(BaseCompare):
         self.embedding_similarity_threshold = threshold
 
     def print_settings(self):
-        print("\n\n|--------------------------------------------------------------------|")
-        print(" CONFIGURATION SETTINGS:")
-        print(f" run search: {self.is_run_search}")
+        logger.info("\n\n|--------------------------------------------------------------------|")
+        logger.info(" CONFIGURATION SETTINGS:")
+        logger.info(f" run search: {self.is_run_search}")
         if self.is_run_search:
-            print(f" search_file_path: {self.search_file_path}")
-        print(f" comparison files base directory: {self.base_dir}")
-        print(f" compare faces: {self.compare_faces}")
-        print(f" embedding similarity threshold: {self.embedding_similarity_threshold}")
-        print(f" max file process limit: {self.args.counter_limit}")
-        print(f" max files processable for base dir: {self.max_files_processed}")
-        print(f" recursive: {self.args.recursive}")
-        print(f" file glob pattern: {self.args.inclusion_pattern}")
-        print(f" include videos: {self.args.include_videos}")
-        print(f" file embeddings filepath: {self.compare_data._file_data_filepath}")
-        print(f" overwrite image data: {self.args.overwrite}")
-        print(f" compare mode: {self.COMPARE_MODE}")
-        print("|--------------------------------------------------------------------|\n\n")
+            logger.info(f" search_file_path: {self.search_file_path}")
+        logger.info(f" comparison files base directory: {self.base_dir}")
+        logger.info(f" compare faces: {self.compare_faces}")
+        logger.info(f" embedding similarity threshold: {self.embedding_similarity_threshold}")
+        logger.info(f" max file process limit: {self.args.counter_limit}")
+        logger.info(f" max files processable for base dir: {self.max_files_processed}")
+        logger.info(f" recursive: {self.args.recursive}")
+        logger.info(f" file glob pattern: {self.args.inclusion_pattern}")
+        logger.info(f" include videos: {self.args.include_videos}")
+        logger.info(f" file embeddings filepath: {self.compare_data._file_data_filepath}")
+        logger.info(f" overwrite image data: {self.args.overwrite}")
+        logger.info(f" compare mode: {self.COMPARE_MODE}")
+        logger.info("|--------------------------------------------------------------------|\n\n")
 
     def get_data(self):
         '''
@@ -64,7 +67,7 @@ class BaseCompareEmbedding(BaseCompare):
         # Gather image file data from directory
 
         if self.verbose:
-            print("Gathering image data...")
+            logger.info("Gathering image data...")
         else:
             print("Gathering image data", end="", flush=True)
 
@@ -91,13 +94,13 @@ class BaseCompareEmbedding(BaseCompare):
                 try:
                     embedding = self.image_embeddings_func(image_file_path)
                 except OSError as e:
-                    print(f"{f} - {e}")
+                    logger.error(f"{f} - {e}")
                     continue
                 except ValueError:
                     continue
                 except SyntaxError as e:
                     if self.verbose:
-                        print(f"{f} - {e}")
+                        logger.error(f"{f} - {e}")
                     # i.e. broken PNG file (bad header checksum in b'tEXt')
                     continue
                 self.compare_data.file_data_dict[f] = embedding
@@ -183,20 +186,20 @@ class BaseCompareEmbedding(BaseCompare):
         file_groups - Keys are the group indexes, values are dicts with keys as the file in the group, values the diff score
         '''
         overwrite = self.args.overwrite or not store_checkpoints
-        print(f"Store checkpoints: {store_checkpoints}")
+        logger.debug(f"Store checkpoints: {store_checkpoints}")
         self.compare_result = CompareResult.load(self.base_dir, self.compare_data.files_found, overwrite=overwrite)
         if self.compare_result.is_complete:
             return (self.compare_result.files_grouped, self.compare_result.file_groups)
 
         # Ensure we have correct counts of data compared to files found
         if len(self.compare_data.files_found) != len(self._file_embeddings):
-            Utils.log_red(f"Warning: Mismatch between files_found ({len(self.compare_data.files_found)}) and file_embeddings ({len(self._file_embeddings)})")
+            logger.error(f"Warning: Mismatch between files_found ({len(self.compare_data.files_found)}) and file_embeddings ({len(self._file_embeddings)})")
 
         if self.compare_faces and len(self.compare_data.files_found) != len(self._file_faces):
-            Utils.log_red(f"Warning: Mismatch between files_found ({len(self.compare_data.files_found)}) and file_faces ({len(self._file_faces)})")
+            logger.error(f"Warning: Mismatch between files_found ({len(self.compare_data.files_found)}) and file_faces ({len(self._file_faces)})")
 
         if self.verbose:
-            print("Identifying groups of similar image files...")
+            logger.info("Identifying groups of similar image files...")
         else:
             print("Identifying groups of similar image files", end="", flush=True)
 
@@ -217,7 +220,7 @@ class BaseCompareEmbedding(BaseCompare):
                 self._handle_progress(self.compare_result.i, n_files_found_even, gathering_data=False)
 
             if self.compare_data.n_files_found > 5000:
-                Utils.log_yellow("\nWARNING: Large image file set found, comparison between all"
+                logger.warning("\nWARNING: Large image file set found, comparison between all"
                                  + " images may take a while.\n")
 
             for i in range(self.compare_data.n_files_found):
@@ -332,7 +335,7 @@ class BaseCompareEmbedding(BaseCompare):
         _files_found = list(self.compare_data.files_found)
 
         if self.verbose:
-            print("Identifying similar image files...")
+            logger.info("Identifying similar image files...")
         _files_found.pop(search_file_index)
         search_file_embedding = self._file_embeddings[search_file_index]
         file_embeddings = np.delete(self._file_embeddings, search_file_index, 0)
@@ -386,20 +389,20 @@ class BaseCompareEmbedding(BaseCompare):
                     break
                 search_file_path = Utils.get_valid_file(self.base_dir, search_file_path)
                 if search_file_path is None:
-                    print("Invalid filepath provided.")
+                    logger.error("Invalid filepath provided.")
                 else:
-                    print("")
+                    logger.info("")
 
         # Gather new image data if it was not in the initial list
 
         if search_file_path not in self.compare_data.files_found:
             if self.verbose:
-                print("Filepath not found in initial list - gathering new file data")
+                logger.info("Filepath not found in initial list - gathering new file data")
             try:
                 embedding = self.image_embeddings_func(search_file_path)
             except OSError as e:
                 if self.verbose:
-                    print(f"{search_file_path} - {e}")
+                    logger.error(f"{search_file_path} - {e}")
                 raise AssertionError(
                     "Encountered an error accessing the provided file path in the file system.")
 
@@ -459,8 +462,8 @@ class BaseCompareEmbedding(BaseCompare):
         if combined_similars is None or len(combined_similars) == 0:
             raise Exception('No results found.')
 
-        Utils.log(f"len files_found: {len(self.compare_data.files_found)}")
-        Utils.log(f"len combined_similars: {len(combined_similars)}")
+        logger.info(f"len files_found: {len(self.compare_data.files_found)}")
+        logger.info(f"len combined_similars: {len(combined_similars)}")
 
         files_grouped = {}
         temp = {}
@@ -485,7 +488,7 @@ class BaseCompareEmbedding(BaseCompare):
         characteristics to the provided images and texts.
         '''
         if self.verbose:
-            print("Identifying similar image files...")
+            logger.info("Identifying similar image files...")
 
         if self.args.search_file_path is None and self.args.negative_search_file_path is None:
             # NOTE It is much less likely for text to match exactly
@@ -528,7 +531,7 @@ class BaseCompareEmbedding(BaseCompare):
                 self._tokenize_text(text.strip(), negative_embeddings, "negative search text")
 
         if len(positive_embeddings) == 0 and len(negative_embeddings) == 0:
-            print(f"Failed to generate embeddings.\n"
+            logger.error(f"Failed to generate embeddings.\n"
                   f"search image = {self.args.search_file_path}\n"
                   f"negative search image = {self.args.negative_search_file_path}\n"
                   f"search text = {self.args.search_text}\n"
@@ -588,26 +591,26 @@ class BaseCompareEmbedding(BaseCompare):
                 embeddings.append(self.text_embedding_cache[text])
                 return
         if self.verbose:
-            print(f"Tokenizing {descriptor}: \"{text}\"")
+            logger.info(f"Tokenizing {descriptor}: \"{text}\"")
         try:
             text_embedding = self.text_embeddings_func(text)
             embeddings.append(text_embedding)
             self.text_embedding_cache[text] = text_embedding
         except OSError as e:
             if self.verbose:
-                print(f"{text} - {e}")
+                logger.error(f"{text} - {e}")
             raise AssertionError(
                 f"Encountered an error generating token embedding for {descriptor}")
 
     def _tokenize_image(self, image_path, embeddings=[], descriptor="search image"):
         if self.verbose:
-            print(f"Tokenizing {descriptor}: \"{image_path}\"")
+            logger.info(f"Tokenizing {descriptor}: \"{image_path}\"")
         try:
             embedding = self.image_embeddings_func(image_path)
             embeddings.append(embedding)
         except OSError as e:
             if self.verbose:
-                print(f"{image_path} - {e}")
+                logger.error(f"{image_path} - {e}")
             raise AssertionError(
                 "Encountered an error accessing the provided file path in the file system.")
 
@@ -641,7 +644,7 @@ class BaseCompareEmbedding(BaseCompare):
                 try:
                     embedding = self.image_embeddings_func(f)
                 except OSError as e:
-                    print(f"Error generating embedding from file {f}: {e}")
+                    logger.error(f"Error generating embedding from file {f}: {e}")
                     continue
                 self.file_embeddings_dict[f] = embedding
                 self._file_embeddings = np.vstack((self._file_embeddings, [embedding]))
@@ -650,7 +653,7 @@ class BaseCompareEmbedding(BaseCompare):
                     self.compare_data.file_faces_dict = n_faces
                     self._file_faces = np.vstack((self._file_faces, [n_faces]))
                 if self.verbose:
-                    print(f"Readded file to compare: {f}")
+                    logger.info(f"Readded file to compare: {f}")
 
 
     @staticmethod
@@ -662,18 +665,18 @@ class BaseCompareEmbedding(BaseCompare):
                 text_embedding = text_embeddings_func(text)
                 text_cache[text] = text_embedding
             except OSError as e:
-                print(f"{text} - {e}")
+                logger.error(f"{text} - {e}")
                 raise AssertionError("Encountered an error generating text embedding.")
         return text_embedding
 
     @staticmethod
     def single_text_compare(image_path, texts_dict, image_embeddings_func, text_cache, text_embeddings_func):
-        print(f"Running text comparison for \"{image_path}\" - text = {texts_dict}")
+        logger.info(f"Running text comparison for \"{image_path}\" - text = {texts_dict}")
         similarities = {}
         try:
             image_embedding = image_embeddings_func(image_path)
         except OSError as e:
-            print(f"{image_path} - {e}")
+            logger.error(f"{image_path} - {e}")
             raise AssertionError(
                 f"Encountered an error accessing the provided file path {image_path} in the file system.")
         for key, text in texts_dict.items():
@@ -690,7 +693,7 @@ class BaseCompareEmbedding(BaseCompare):
         try:
             image_embedding = image_embeddings_func(image_path)
         except OSError as e:
-            print(f"{image_path} - {e}")
+            logger.error(f"{image_path} - {e}")
             raise AssertionError(
                 f"Encountered an error accessing the provided file path {image_path} in the file system.")
 
@@ -718,7 +721,7 @@ class BaseCompareEmbedding(BaseCompare):
             emb1 = image_embeddings_func(image1)
             emb2 = image_embeddings_func(image2)
         except OSError as e:
-            print(f"{image1} - {e}")
+            logger.error(f"{image1} - {e}")
             raise AssertionError(
                 "Encountered an error accessing the provided file paths in the file system.")
         similarity = embedding_similarity(emb1, emb2)[0]

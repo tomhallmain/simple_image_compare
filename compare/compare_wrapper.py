@@ -1,9 +1,8 @@
 from copy import deepcopy
 import os
+import pprint
 
 from tkinter import messagebox
-
-import pprint
 
 from compare.compare_args import CompareArgs
 from compare.compare_colors import CompareColors
@@ -16,10 +15,12 @@ from compare.prevalidations_window import PrevalidationAction, PrevalidationsWin
 from image.frame_cache import FrameCache
 from utils.config import config
 from utils.constants import Mode, CompareMode, Direction
+from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils
 
 _ = I18N._
+logger = get_logger("compare_wrapper")
 
 
 class CompareWrapper:
@@ -378,7 +379,7 @@ class CompareWrapper:
                 self._app_actions.alert(_("No Duplicates Found"), _("None of the files appear to be duplicates based on the current settings."))
                 return
             self._app_actions.set_mode(Mode.DUPLICATES, do_update=True)
-            Utils.log("Probable duplicates:")
+            logger.info("Probable duplicates:")
             pprint.pprint(duplicates, width=160)
             duplicate_group_count = 0
             for file1, file2 in duplicates:
@@ -427,13 +428,13 @@ class CompareWrapper:
         NOTE: This would be more complex if there was not a guarantee groups are disjoint.
         '''
         if config.debug:
-            Utils.log_debug(f"Updating groups for removed file {match_index} in group {group_index}")
+            logger.debug(f"Updating groups for removed file {match_index} in group {group_index}")
         actual_index = self.group_indexes[group_index]
         if set_group or group_index == self.current_group_index:
             files_matched = self.files_matched
             set_group = True
             if config.debug and app_mode != Mode.SEARCH:
-                Utils.log_debug("setting group")
+                logger.debug("setting group")
         else:
             files_matched = []
             group = self.file_groups[actual_index]
@@ -473,7 +474,7 @@ class CompareWrapper:
                 self.set_current_group()
         else:
             filepath = files_matched[match_index]
-            # print(f"Filepath from update_groups: {filepath}")
+            # logger.debug(f"Filepath from update_groups: {filepath}")
             if app_mode != Mode.SEARCH:
                 self.files_grouped = {
                     k: v for k, v in self.files_grouped.items() if v[0] != actual_index}

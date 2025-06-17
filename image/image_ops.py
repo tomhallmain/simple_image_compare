@@ -9,6 +9,9 @@ from PIL import ImageDraw, ImageEnhance
 import PIL.Image
 
 from utils.config import config
+from utils.logging_setup import get_logger
+
+logger = get_logger("image_ops")
 
 
 class ImageOps:
@@ -42,7 +45,7 @@ class ImageOps:
             new_filepath = ImageOps.new_filepath(image_path, "", "_rot")
             cv2.imwrite(new_filepath, rotated)
         except Exception as e:
-            print(f'Error in rotate image: {e}')
+            logger.error(f'Error in rotate image: {e}')
 
     @staticmethod
     def rotate_image_partial(image_path, angle=90, center=None, scale=1.0):
@@ -156,7 +159,7 @@ class ImageOps:
         change from https://stackoverflow.com/a/51109152
         https://gist.github.com/hsuRush/b2def27c98ce7ba3eb84a42e6d01328c
         """
-        #print(im.shape)
+        #logger.debug(im.shape)
         height, width = im.shape[:2] # image shape has 3 dimensions
         image_center = (width/2, height/2) # getRotationMatrix2D needs coordinates in reverse order (width, height) compared to shape
 
@@ -183,7 +186,7 @@ class ImageOps:
                             borderMode=cv2.BORDER_CONSTANT, borderValue=ImageOps.get_random_color())
         im = cv2.resize(im, (width, height))
 
-        #print(rotated_im.shape)
+        #logger.debug(rotated_im.shape)
         return im
 
     @staticmethod
@@ -243,7 +246,7 @@ class ImageOps:
                 has_modified_image = True
         im_final = im
         if not has_modified_image:
-            print("No modifications made to image!")
+            logger.warning("No modifications made to image!")
         new_filepath = ImageOps.new_filepath(image_path, "", "_edit")
         im_final.save(new_filepath)
         im.close()

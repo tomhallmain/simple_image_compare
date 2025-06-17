@@ -3,7 +3,10 @@ import os
 import numpy as np
 from PIL import Image
 
-from utils.utils import Utils
+from utils.logging_setup import get_logger
+
+logger = get_logger("image_classifier")
+
 
 class H5ImageClassifier:
     def __init__(self, model_path, custom_objects=None):
@@ -35,7 +38,7 @@ class H5ImageClassifier:
                 self.is_loaded = True
                 return model
 
-        Utils.log_red(f"Failed to load model at {model_path}")
+        logger.error(f"Failed to load model at {model_path}")
         return None
 
     def _register_common_layers(self, custom_objects):
@@ -52,20 +55,20 @@ class H5ImageClassifier:
             from tensorflow.keras.models import load_model as tf_load_model
             from tensorflow.keras.utils import custom_object_scope
             with custom_object_scope(custom_objects):
-                print("Attempting TensorFlow Keras load...")
+                logger.info("Attempting TensorFlow Keras load...")
                 return tf_load_model(model_path)
         except Exception as e:
-            print(f"TensorFlow Keras load failed: {str(e)[:200]}")
+            logger.error(f"TensorFlow Keras load failed: {str(e)[:200]}")
             return None
 
     def _load_model_tf_keras(self, model_path, custom_objects):
         """Fallback to tf_keras package"""
         try:
             from tf_keras.models import load_model
-            print("Attempting tf_keras load...")
+            logger.info("Attempting tf_keras load...")
             return load_model(model_path, custom_objects=custom_objects)
         except Exception as e:
-            print(f"tf_keras load failed: {str(e)[:200]}")
+            logger.error(f"tf_keras load failed: {str(e)[:200]}")
             return None
 
     def _load_model_keras(self, model_path, custom_objects):
@@ -74,10 +77,10 @@ class H5ImageClassifier:
             from keras.models import load_model as keras_load_model
             from keras.utils.custom_object_scope import custom_object_scope
             with custom_object_scope(custom_objects):
-                print("Attempting standalone Keras load...")
+                logger.info("Attempting standalone Keras load...")
                 return keras_load_model(model_path)
         except Exception as e:
-            print(f"Standalone Keras load failed: {str(e)[:200]}")
+            logger.error(f"Standalone Keras load failed: {str(e)[:200]}")
             return None
 
     def _get_input_shape(self):
@@ -149,8 +152,8 @@ class ImageClassifierWrapper:
                     raise Exception(f"Invalid use hub keras layers flag, must be boolean:  {self.use_hub_keras_layers}")
             except Exception as e:
                 self.can_run = False
-                Utils.log_red(e)
-                Utils.log_yellow("Failed to set model details for image classifier: " + str(self.__dict__))
+                logger.error(e)
+                logger.warning("Failed to set model details for image classifier: " + str(self.__dict__))
             if self.can_run:
                 self.load_classifier()
 
@@ -162,7 +165,7 @@ class ImageClassifierWrapper:
                 import tensorflow_hub as hub
                 custom_objects['KerasLayer'] = hub.KerasLayer
             except ImportError:
-                Utils.log_red("Failed to import tensorflow hub to support h5 model, please install it using pip")
+                logger.error("Failed to import tensorflow hub to support h5 model, please install it using pip")
                 self.can_run = False
         if self.can_run:
             try:
@@ -173,8 +176,8 @@ class ImageClassifierWrapper:
                 self.can_run = bool(self.h5_classifier.is_loaded)
             except Exception as e:
                 self.can_run = False
-                Utils.log_red(e)
-                Utils.log_yellow("Failed to initialize model for image classifier: " + self.model_name)
+                logger.error(e)
+                logger.warning("Failed to initialize model for image classifier: " + self.model_name)
 
     def predict_image(self, image_path):
         if image_path in self.predictions_cache:
@@ -189,7 +192,7 @@ class ImageClassifierWrapper:
         for i in range(len(self.model_categories)):
             classed_predictions[self.model_categories[i]] = float(predictions[0][i])
         self.predictions_cache[image_path] = dict(classed_predictions)
-        # print(classed_predictions)
+        # logger.debug(classed_predictions)
         return classed_predictions
 
     def classify_image(self, image_path):

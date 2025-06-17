@@ -1,7 +1,9 @@
 from multiprocessing.connection import Client
 
 from utils.config import config
-from utils.utils import Utils
+from utils.logging_setup import get_logger
+
+logger = get_logger("refacdir_client")
 
 class RefacDirClient:
     COMMAND_CLOSE_SERVER = 'close server'
@@ -16,14 +18,14 @@ class RefacDirClient:
     def start(self):
         try:
             self._conn = Client((self._host, self._port), authkey=str.encode(config.refacdir_client_password))
-            Utils.log("Started RefacDir Client")
+            logger.info("Started RefacDir Client")
         except Exception as e:
-            Utils.log_red(f"Failed to connect to RefacDir: {e}")
+            logger.error(f"Failed to connect to RefacDir: {e}")
             raise e
 
     def send(self, msg):
         if config.debug:
-            Utils.log_debug(f"Sending {msg} to RefacDir")
+            logger.debug(f"Sending {msg} to RefacDir")
         self._conn.send(msg)
         return self._conn.recv()
 
@@ -32,9 +34,9 @@ class RefacDirClient:
             self._conn.send(RefacDirClient.COMMAND_CLOSE_CONNECTION)
             self._conn.close()
             self._conn = None
-            Utils.log("Closed RefacDir Client")
+            logger.info("Closed RefacDir Client")
         except Exception as e:
-            Utils.log_red(f"Failed to close RefacDir Client: {e}")
+            logger.error(f"Failed to close RefacDir Client: {e}")
             raise e
 
     def validate_connection(self):
@@ -54,7 +56,7 @@ class RefacDirClient:
             resp = self.send(command)
             if "error" in resp:
                 raise Exception(f'RefacDir failed to start run\n{resp["error"]}: {resp["data"]}')
-            Utils.log(f"RefacDir started run")
+            logger.info(f"RefacDir started run")
             self.close()
             return resp['data'] if "data" in resp else None
         except Exception as e:

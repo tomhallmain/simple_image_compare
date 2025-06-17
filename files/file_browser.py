@@ -10,11 +10,12 @@ from typing import List
 from files.sortable_file import SortableFile
 from utils.config import config
 from utils.constants import Sort, SortBy, Direction
+from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils
 
 _ = I18N._
-
+logger = get_logger("file_browser")
 
 
 class FileBrowser:
@@ -57,12 +58,12 @@ class FileBrowser:
 
     def set_filter(self, filter):
         if config.debug:
-            Utils.log_debug(f"File browser set filter: {filter}")
+            logger.debug(f"File browser set filter: {filter}")
         self.filter = filter
 
     def set_recursive(self, recursive):
         if config.debug:
-            Utils.log_debug(f"File browser set recursive: {recursive}")
+            logger.debug(f"File browser set recursive: {recursive}")
         self.recursive = recursive
         self.refresh()
 
@@ -111,7 +112,7 @@ class FileBrowser:
         self.directory = directory
         self.checking_files = True
         self._files_cache = {}
-        Utils.log(f"Setting base directory: {directory}")
+        logger.info(f"Setting base directory: {directory}")
         return self.refresh()
 
     def get_sort_by(self):
@@ -176,7 +177,7 @@ class FileBrowser:
         return files[self.file_cursor]
 
     def load_file_paths_json(self):
-        Utils.log("Loading external file paths from JSON: " + config.file_paths_json_path)
+        logger.info(f"Loading external file paths from JSON: {config.file_paths_json_path}")
         with open(config.file_paths_json_path, "r") as f:
             return json.load(f)
 
@@ -190,7 +191,7 @@ class FileBrowser:
 
         with open(config.file_paths_json_path,"w") as f:
             json.dump(files, f, indent=4)
-            Utils.log("JSON file updated: " + config.file_paths_json_path)
+            logger.info(f"JSON file updated: {config.file_paths_json_path}")
 
     def get_index_details(self):
         files = self.get_files()
@@ -227,13 +228,13 @@ class FileBrowser:
         if search_text in files:
             self.file_cursor = files.index(search_text)
             if config.debug:
-                Utils.log_debug(f"Index of {search_text}: {self.file_cursor}")
+                logger.debug(f"Index of {search_text}: {self.file_cursor}")
             return search_text
         filenames = [os.path.basename(f) for f in files]
         if search_text in filenames:
             self.file_cursor = filenames.index(search_text)
             if config.debug:
-                Utils.log_debug(f"Index of {search_text}: {self.file_cursor}")
+                logger.debug(f"Index of {search_text}: {self.file_cursor}")
             return files[self.file_cursor]
         if exact_match:
             return None
@@ -243,7 +244,7 @@ class FileBrowser:
             filename = filenames[i]
             if filename.lower().startswith(search_text):
                 if config.debug:
-                    Utils.log_debug(f"Index of {filename}: {i}")
+                    logger.debug(f"Index of {filename}: {i}")
                 self.file_cursor = i
                 return files[self.file_cursor]
         # Finally try to match string anywhere within file name
@@ -251,7 +252,7 @@ class FileBrowser:
             filename = files[i]
             if search_text in filename:
                 if config.debug:
-                    Utils.log_debug(f"Index of {filename}: {i}")
+                    logger.debug(f"Index of {filename}: {i}")
                 self.file_cursor = i
                 return files[self.file_cursor]
         return None
@@ -309,7 +310,7 @@ class FileBrowser:
         if len(files) == 0 and retry_with_delay > 0:
             if retry_with_delay > 3:
                 return files
-            Utils.log_yellow(f"No files found, sleeping for {retry_with_delay} seconds and trying again...")
+            logger.warning(f"No files found, sleeping for {retry_with_delay} seconds and trying again...")
             sleep(retry_with_delay)
             return self.get_files_with_retry(retry_with_delay=retry_with_delay+1)
         return files

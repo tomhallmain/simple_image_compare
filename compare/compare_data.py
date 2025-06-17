@@ -2,6 +2,9 @@ import os
 import pickle
 
 from utils.constants import CompareMode
+from utils.logging_setup import get_logger
+
+logger = get_logger("compare_data")
 
 
 class CompareData:
@@ -53,10 +56,10 @@ class CompareData:
     def load_data(self, overwrite=False, compare_faces=False):
         if overwrite or not os.path.exists(self._file_data_filepath):
             if not os.path.exists(self._file_data_filepath):
-                print("Image data not found so creating new cache"
+                logger.info("Image data not found so creating new cache"
                       + " - this may take a while.")
             elif overwrite:
-                print("Overwriting image data caches - this may take a while.")
+                logger.info("Overwriting image data caches - this may take a while.")
             self.file_data_dict = {}
             self.file_faces_dict = {}
         else:
@@ -79,12 +82,12 @@ class CompareData:
             self.file_faces_dict = None
             if verbose:
                 if overwrite:
-                    print("Overwrote any pre-existing image data at:")
+                    logger.info("Overwrote any pre-existing image data at:")
                 else:
-                    print("Updated image data saved to: ")
-                print(self._file_data_filepath)
+                    logger.info("Updated image data saved to: ")
+                logger.info(self._file_data_filepath)
                 if compare_faces:
-                    print(self._file_faces_filepath)
+                    logger.info(self._file_faces_filepath)
 
         self.n_files_found = len(self.files_found)
 
@@ -93,5 +96,5 @@ class CompareData:
                                  + " current params - checked"
                                  + " in base dir = \"" + self.base_dir + "\"")
         elif verbose:
-            print("Data from " + str(self.n_files_found)
+            logger.info("Data from " + str(self.n_files_found)
                   + " files compiled for comparison.")

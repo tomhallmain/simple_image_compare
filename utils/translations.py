@@ -1,7 +1,11 @@
 import gettext
 import os
 
+from utils.logging_setup import get_logger
 from utils.utils import Utils
+
+logger = get_logger("translations")
+
 
 _locale = os.environ['LANG'] if "LANG" in os.environ else None
 if not _locale or _locale == '':
@@ -20,7 +24,7 @@ class I18N:
         I18N.translate = gettext.translation('base', I18N.localedir, languages=[locale], fallback=True)
         I18N.translate.install()
         if verbose:
-            print("Switched locale to: " + locale)
+            logger.info("Switched locale to: " + locale)
 
     @staticmethod
     def _(s):

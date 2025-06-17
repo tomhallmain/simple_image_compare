@@ -6,12 +6,16 @@ from tkinter import TclError
 
 from utils.config import config
 from utils.constants import ActionType
-from utils.utils import Utils
+from utils.logging_setup import get_logger
+
+logger = get_logger("notification_manager")
+
 
 def debug_log(msg: str):
     """Debug logging function"""
     if config.debug:
-        print(f"[NotificationManager] {msg}")
+        logger.debug(f"[NotificationManager] {msg}")
+
 
 class Notification:
     def __init__(self, message: str, base_message: Optional[str] = None, duration: float = 5.0,
@@ -69,7 +73,7 @@ class NotificationManager:
 
     def cleanup_threads(self):
         """Clean up all threads."""
-        Utils.log("Cleaning up all threads")
+        logger.info("Cleaning up all threads")
         if self._timer:
             self._timer.cancel()
         self._timer = None
@@ -166,7 +170,7 @@ class NotificationManager:
                             self._app_actions.pop(window_id, None)
                             self._current_titles.pop(window_id, None)
                         else:
-                            Utils.log_red(f"Failed to update title for window {window_id}: {e}")
+                            logger.error(f"Failed to update title for window {window_id}: {e}")
         
         # Schedule next update outside the lock if needed
         if needs_update:

@@ -27,9 +27,10 @@ except ImportError:
     pass
 
 from utils.config import config
-from utils.utils import Utils
+from utils.logging_setup import get_logger
 from utils.constants import CompareMediaType
 
+logger = get_logger("frame_cache")
 
 class FrameCache:
     """
@@ -128,7 +129,7 @@ class FrameCache:
             else:
                 cls._extract_video_frame(media_path)
         except Exception as e:
-            Utils.log(f"Error extracting frame from {media_path}: {str(e)}")
+            logger.error(f"Error extracting frame from {media_path}: {str(e)}")
             # Fallback to original path if extraction fails
             cls.cache[media_path] = media_path
 
@@ -141,7 +142,7 @@ class FrameCache:
             pdf_path: Path to the PDF file
         """
         try:
-            Utils.log(f"Extracting first page from PDF: {pdf_path}")
+            logger.info(f"Extracting first page from PDF: {pdf_path}")
             pdf = pdfium.PdfDocument(pdf_path)
             if len(pdf) > 0:
                 page = pdf[0]
@@ -156,7 +157,7 @@ class FrameCache:
             else:
                 raise ValueError("PDF has no pages")
         except Exception as e:
-            Utils.log(f"Error processing PDF {pdf_path}: {str(e)}")
+            logger.error(f"Error processing PDF {pdf_path}: {str(e)}")
             raise
 
     @classmethod
@@ -168,7 +169,7 @@ class FrameCache:
             svg_path: Path to the SVG file
         """
         try:
-            Utils.log(f"Converting SVG to PNG: {svg_path}")
+            logger.info(f"Converting SVG to PNG: {svg_path}")
             basename = os.path.splitext(os.path.basename(svg_path))[0] + ".png"
             frame_path = os.path.join(cls.temporary_directory.name, basename)
             
@@ -176,7 +177,7 @@ class FrameCache:
             cairosvg.svg2png(url=svg_path, write_to=frame_path)
             cls.cache[svg_path] = frame_path
         except Exception as e:
-            Utils.log(f"Error processing SVG {svg_path}: {str(e)}")
+            logger.error(f"Error processing SVG {svg_path}: {str(e)}")
             raise
 
     @classmethod
@@ -188,7 +189,7 @@ class FrameCache:
             html_path: Path to the HTML file
         """
         try:
-            Utils.log(f"Converting HTML to image: {html_path}")
+            logger.info(f"Converting HTML to image: {html_path}")
             # First convert HTML to PDF
             pdf_path = os.path.join(cls.temporary_directory.name, 
                                   os.path.splitext(os.path.basename(html_path))[0] + ".pdf")
@@ -231,7 +232,7 @@ class FrameCache:
             del cls.cache[pdf_path]
             
         except Exception as e:
-            Utils.log(f"Error processing HTML {html_path}: {str(e)}")
+            logger.error(f"Error processing HTML {html_path}: {str(e)}")
             raise
 
     @classmethod
@@ -242,7 +243,7 @@ class FrameCache:
         Args:
             video_path: Path to the video/GIF file
         """
-        Utils.log(f"Extracting first frame from video: {video_path}")
+        logger.info(f"Extracting first frame from video: {video_path}")
         cap = cv2.VideoCapture(video_path)
         try:
             ret, frame = cap.read()

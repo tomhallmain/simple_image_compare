@@ -9,10 +9,13 @@ from compare.model import text_embeddings_siglip
 from image.image_data_extractor import ImageDataExtractor
 from utils.config import config
 from utils.constants import CompareMode
+from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils
 
 _ = I18N._
+
+logger = get_logger("compare_prompts")
 
 
 # TODO enable comparisons between images on the basis of positive and negative prompts, to allow for searching prompts by text
@@ -93,20 +96,20 @@ class ComparePrompts(BaseCompareEmbedding):
             self.print_settings()
 
     def print_settings(self):
-        print("\n\n|--------------------------------------------------------------------|")
-        print(" CONFIGURATION SETTINGS:")
-        print(f" run search: {self.is_run_search}")
+        logger.info("\n\n|--------------------------------------------------------------------|")
+        logger.info(" CONFIGURATION SETTINGS:")
+        logger.info(f" run search: {self.is_run_search}")
         if self.is_run_search:
-            print(f" search_file_path: {self.search_file_path}")
-        print(f" comparison files base directory: {self.base_dir}")
-        print(f" max file process limit: {self.args.counter_limit}")
-        print(f" max files processable for base dir: {self.max_files_processed}")
-        print(f" recursive: {self.args.recursive}")
-        print(f" file glob pattern: {self.args.inclusion_pattern}")
-        print(f" include gifs: {self.args.include_gifs}")
-        print(f" file colors filepath: {self._file_colors_filepath}")
-        print(f" overwrite image data: {self.args.overwrite}")
-        print("|--------------------------------------------------------------------|\n\n")
+            logger.info(f" search_file_path: {self.search_file_path}")
+        logger.info(f" comparison files base directory: {self.base_dir}")
+        logger.info(f" max file process limit: {self.args.counter_limit}")
+        logger.info(f" max files processable for base dir: {self.max_files_processed}")
+        logger.info(f" recursive: {self.args.recursive}")
+        logger.info(f" file glob pattern: {self.args.inclusion_pattern}")
+        logger.info(f" include gifs: {self.args.include_gifs}")
+        logger.info(f" file colors filepath: {self._file_colors_filepath}")
+        logger.info(f" overwrite image data: {self.args.overwrite}")
+        logger.info("|--------------------------------------------------------------------|\n\n")
 
     def _extract_prompt_from_image(self, image_path):
         """
@@ -120,7 +123,7 @@ class ComparePrompts(BaseCompareEmbedding):
             return None, None
         except Exception as e:
             if self.verbose:
-                print(f"Error extracting prompt from {image_path}: {e}")
+                logger.error(f"Error extracting prompt from {image_path}: {e}")
             return None, None
 
     def get_data(self):
@@ -131,7 +134,7 @@ class ComparePrompts(BaseCompareEmbedding):
         self.compare_data.load_data(overwrite=self.args.overwrite)
 
         if self.verbose:
-            print("Gathering prompt data...")
+            logger.info("Gathering prompt data...")
         else:
             print("Gathering prompt data", end="", flush=True)
 
@@ -169,7 +172,7 @@ class ComparePrompts(BaseCompareEmbedding):
                 self._handle_progress(counter, self.max_files_processed_even)
             except Exception as e:
                 if self.verbose:
-                    print(f"Error generating embedding for prompt in {f}: {e}")
+                    logger.error(f"Error generating embedding for prompt in {f}: {e}")
                 continue
 
         # Save prompt data
@@ -192,7 +195,7 @@ class ComparePrompts(BaseCompareEmbedding):
         _files_found = list(self.compare_data.files_found)
 
         if self.verbose:
-            print("Identifying similar prompt files...")
+            logger.info("Identifying similar prompt files...")
         _files_found.pop(search_file_index)
         search_file_embedding = self._file_embeddings[search_file_index]
         file_embeddings = np.delete(self._file_embeddings, search_file_index, 0)
@@ -238,20 +241,20 @@ class ComparePrompts(BaseCompareEmbedding):
                     break
                 search_file_path = Utils.get_valid_file(self.base_dir, search_file_path)
                 if search_file_path is None:
-                    print("Invalid filepath provided.")
+                    logger.error("Invalid filepath provided.")
                 else:
-                    print("")
+                    logger.info("")
 
         # Gather new image data if it was not in the initial list
 
         if search_file_path not in self._files_found:
             if self.verbose:
-                print("Filepath not found in initial list - gathering new file data")
+                logger.info("Filepath not found in initial list - gathering new file data")
             try:
                 image = Utils.get_image_array(search_file_path)
             except OSError as e:
                 if self.verbose:
-                    print(f"{search_file_path} - {e}")
+                    logger.error(f"{search_file_path} - {e}")
                 raise AssertionError(
                     "Encountered an error accessing the provided file path in the file system.")
 
@@ -259,7 +262,7 @@ class ComparePrompts(BaseCompareEmbedding):
                 colors = self.color_getter(image, self.modifier)
             except ValueError as e:
                 if self.verbose:
-                    print(e)
+                    logger.error(e)
                 raise AssertionError(
                     "Encountered an error gathering colors from the file provided.")
             self._file_colors = np.insert(self._file_colors, 0, [colors], 0)
@@ -288,10 +291,10 @@ class ComparePrompts(BaseCompareEmbedding):
             self._handle_progress(self.compare_result.i, n_files_found_even, gathering_data=False)
 
         if self.compare_data.n_files_found > 5000:
-            print("\nWARNING: Large image file set found, comparison between all"
+            logger.warning("\nWARNING: Large image file set found, comparison between all"
                   + " images may take a while.\n")
         if self.verbose:
-            print("Identifying groups of similar prompt files...")
+            logger.info("Identifying groups of similar prompt files...")
         else:
             print("Identifying groups of similar prompt files", end="", flush=True)
 

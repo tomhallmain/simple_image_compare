@@ -6,10 +6,12 @@ from PIL import Image
 import pypdfium2 as pdfium
 
 from image.frame_cache import FrameCache
+from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils
 
 _ = I18N._
+logger = get_logger("pdf_creator")
 
 class PDFCreator:
     """
@@ -96,7 +98,7 @@ class PDFCreator:
                                         try:
                                             os.remove(temp_path)
                                         except Exception as e:
-                                            Utils.log_red(f"Error cleaning up temp file {temp_path}: {str(e)}")
+                                            logger.error(f"Error cleaning up temp file {temp_path}: {str(e)}")
                             else:
                                 # Quality preservation mode - use PIL to convert to bitmap
                                 bitmap = pdfium.PdfBitmap.from_pil(img)
@@ -116,7 +118,7 @@ class PDFCreator:
                     successful_pages += 1
                         
                 except Exception as e:
-                    Utils.log_red(f"Error processing {file_path}: {str(e)}")
+                    logger.error(f"Error processing {file_path}: {str(e)}")
                     continue
 
             if successful_pages > 0:

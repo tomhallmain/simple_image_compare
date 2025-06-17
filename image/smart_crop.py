@@ -10,7 +10,10 @@ from PIL.Image import Image as PilImage
 
 from image.image_ops import ImageOps
 from utils.config import config
-from utils.utils import Utils
+from utils.logging_setup import get_logger
+
+logger = get_logger("smart_crop")
+
 
 def detect_edges_sobel(im: PilImage) -> PilImage:
     """
@@ -117,7 +120,7 @@ class Cropper:
     def smart_crop_simple(image_path: str, new_filename: str) -> None:
         new_filepath = ImageOps.new_filepath(image_path, new_filename, None)
         if os.path.exists(new_filepath):
-            print("Skipping crop already run: " + new_filepath)
+            logger.info("Skipping crop already run: " + new_filepath)
             return
         im = Image.open(image_path)
         cropped_image, is_cropped = Cropper.remove_borders(im)
@@ -125,9 +128,9 @@ class Cropper:
         if is_cropped:
             cropped_image.save(new_filepath)
             cropped_image.close()
-            print("Cropped image: " + new_filepath)
+            logger.info("Cropped image: " + new_filepath)
         else:
-            print("No cropping")
+            logger.info("No cropping")
 
     @staticmethod
     def smart_crop_multi_detect(image_path: str, new_filename: str) -> list[str]:
@@ -140,7 +143,7 @@ class Cropper:
         saved_files = []
         new_filepath = ImageOps.new_filepath(image_path, new_filename, None)
         if os.path.exists(new_filepath):
-            print("Skipping crop already run: " + new_filepath)
+            logger.info("Skipping crop already run: " + new_filepath)
             return saved_files
         im = Image.open(image_path)
         cropped_images, is_cropped = Cropper.remove_borders_by_division_detection(im)
@@ -153,9 +156,9 @@ class Cropper:
                     new_filepath = ImageOps.new_filepath(image_path, new_filename, "_" + str(i))
                 cropped_image.save(new_filepath)
                 cropped_image.close()
-            print("Cropped image: " + new_filepath)
+            logger.info("Cropped image: " + new_filepath)
         else:
-            print("No cropping")
+            logger.info("No cropping")
         return saved_files
 
     @staticmethod
@@ -185,30 +188,30 @@ class Cropper:
 
         while left < right and Cropper.is_column_color(im, left, top_left_color):
             if config.debug:
-                print(f"LEFT: {left} RIGHT: {right}")
+                logger.debug(f"LEFT: {left} RIGHT: {right}")
             left += 1
         while right > left and Cropper.is_column_color(im, right, top_left_color):
             if config.debug:
-                print(f"RIGHT: {right} LEFT: {left}")
+                logger.debug(f"RIGHT: {right} LEFT: {left}")
             right -= 1
         while top < bottom and Cropper.is_line_color(im, top, top_left_color):
             if config.debug:
-                print(f"TOP: {top} BOTTOM: {bottom}")
+                logger.debug(f"TOP: {top} BOTTOM: {bottom}")
             top += 1
         while bottom > top and Cropper.is_line_color(im, bottom, top_left_color):
             if config.debug:
-                print(f"BOTTOM: {bottom} TOP: {top}")
+                logger.debug(f"BOTTOM: {bottom} TOP: {top}")
             bottom -= 1
 
         if top == 0 and left == 0 and right == width - 1 and bottom == height - 1:
-            print('no borders detected')
+            logger.info('no borders detected')
             return im, False
 
         # Crop based on found borders
         bbox = (left, top, right, bottom)
         if config.debug:
-            print(f"ORIGINAL IMAGE BOX: 0, 0, {width}, {height}")
-            print(f"CROPPED IMAGE BOX: {left}, {top}, {right}, {bottom}")
+            logger.debug(f"ORIGINAL IMAGE BOX: 0, 0, {width}, {height}")
+            logger.debug(f"CROPPED IMAGE BOX: {left}, {top}, {right}, {bottom}")
         return im.crop(bbox), True
 
     @staticmethod
@@ -229,20 +232,20 @@ class Cropper:
         width, height = im.size
         midpoint_x, midpoint_y = int(width / 2), int(height / 2)
         
-        Utils.log("Starting multi-strategy division detection...")
-        Utils.log(f"Image dimensions: {width}x{height}")
+        logger.info("Starting multi-strategy division detection...")
+        logger.info(f"Image dimensions: {width}x{height}")
 
         # Get edge detection results
-        Utils.log("Running Sobel edge detection...")
+        logger.info("Running Sobel edge detection...")
         edge_image = detect_edges_sobel(im)
         edge_array = np.array(edge_image)
         
         # Get contrast analysis
-        Utils.log("Analyzing contrast regions...")
+        logger.info("Analyzing contrast regions...")
         contrast_map = detect_contrast_regions(im)
         
         # Get color clustering results
-        Utils.log("Performing color clustering analysis...")
+        logger.info("Performing color clustering analysis...")
         color_clusters = analyze_color_clusters(im)
         
         # Initialize division dictionaries
@@ -250,21 +253,21 @@ class Cropper:
         vertical_diffs = {}
         
         # Process edge detection results for horizontal divisions
-        Utils.log("Processing horizontal edge detection results...")
+        logger.info("Processing horizontal edge detection results...")
         for y in range(1, height):
             edge_strength = np.mean(edge_array[y, :])
             if edge_strength > tolerance:
                 horizontal_diffs[y] = edge_strength
                 
         # Process edge detection results for vertical divisions
-        Utils.log("Processing vertical edge detection results...")
+        logger.info("Processing vertical edge detection results...")
         for x in range(1, width):
             edge_strength = np.mean(edge_array[:, x])
             if edge_strength > tolerance:
                 vertical_diffs[x] = edge_strength
         
         # Process contrast map for additional divisions
-        Utils.log("Processing contrast map for additional divisions...")
+        logger.info("Processing contrast map for additional divisions...")
         for (x, y), contrast in contrast_map.items():
             if contrast > tolerance:
                 if x % 10 == 0:  # Vertical division
@@ -273,7 +276,7 @@ class Cropper:
                     horizontal_diffs[y] = max(horizontal_diffs.get(y, 0), contrast)
         
         # Process color clusters for additional divisions
-        Utils.log("Processing color cluster boundaries...")
+        logger.info("Processing color cluster boundaries...")
         cluster_changes_x = np.diff(color_clusters, axis=1)
         cluster_changes_y = np.diff(color_clusters, axis=0)
         
@@ -285,52 +288,52 @@ class Cropper:
             if np.any(cluster_changes_y[y, :] != 0):
                 horizontal_diffs[y] = max(horizontal_diffs.get(y, 0), tolerance)
 
-        Utils.log(f"Initial detection found {len(horizontal_diffs)} horizontal and {len(vertical_diffs)} vertical potential divisions")
+        logger.info(f"Initial detection found {len(horizontal_diffs)} horizontal and {len(vertical_diffs)} vertical potential divisions")
 
         # Smart consolidation of all detected divisions
-        Utils.log("Consolidating close divisions...")
+        logger.info("Consolidating close divisions...")
         horizontal_diffs = smart_consolidate_diffs(horizontal_diffs, height)
         vertical_diffs = smart_consolidate_diffs(vertical_diffs, width)
         
-        Utils.log(f"After consolidation: {len(horizontal_diffs)} horizontal and {len(vertical_diffs)} vertical divisions")
+        logger.info(f"After consolidation: {len(horizontal_diffs)} horizontal and {len(vertical_diffs)} vertical divisions")
         
         # Validate divisions
-        Utils.log("Validating detected divisions...")
+        logger.info("Validating detected divisions...")
         validated_horizontal = {pos: strength for pos, strength in horizontal_diffs.items() 
                               if validate_division(im, pos, True)}
         validated_vertical = {pos: strength for pos, strength in vertical_diffs.items() 
                             if validate_division(im, pos, False)}
 
-        Utils.log(f"After validation: {len(validated_horizontal)} horizontal and {len(validated_vertical)} vertical valid divisions")
+        logger.info(f"After validation: {len(validated_horizontal)} horizontal and {len(validated_vertical)} vertical valid divisions")
 
         if len(validated_horizontal) == 0 and len(validated_vertical) == 0:
-            Utils.log('No borders or subimages detected')
+            logger.info('No borders or subimages detected')
             return [im], False
 
         if config.debug:
-            Utils.log(f'Found horizontal diffs: {validated_horizontal}')
-            Utils.log(f'Found vertical diffs: {validated_vertical}')
+            logger.info(f'Found horizontal diffs: {validated_horizontal}')
+            logger.info(f'Found vertical diffs: {validated_vertical}')
 
         # If the image is divided down the middle, test both the left and right images for entropy.
-        Utils.log("Checking for middle divisions...")
+        logger.info("Checking for middle divisions...")
         if len(validated_horizontal) == 1 and \
                 abs(max(validated_horizontal.keys()) - midpoint_y) < int(height/10):
-            Utils.log("Detected middle horizontal division")
+            logger.info("Detected middle horizontal division")
             validated_horizontal[0] = 0
             validated_horizontal[height] = height
         elif len(validated_vertical) == 1 and \
                 abs(max(validated_vertical.keys()) - midpoint_x) < int(width/10):
-            Utils.log("Detected middle vertical division")
+            logger.info("Detected middle vertical division")
             validated_vertical[0] = 0
             validated_vertical[width] = width
 
         if len(validated_horizontal) > 2 or len(validated_vertical) > 2:
-            Utils.log('Multiple subimages detected!')
-            Utils.log(f"Horizontal diffs: {validated_horizontal}")
-            Utils.log(f"Vertical diffs: {validated_vertical}")
+            logger.info('Multiple subimages detected!')
+            logger.info(f"Horizontal diffs: {validated_horizontal}")
+            logger.info(f"Vertical diffs: {validated_vertical}")
             return Cropper.split_image(im, validated_horizontal, validated_vertical), True
         else:
-            Utils.log("Processing single division case...")
+            logger.info("Processing single division case...")
             if len(validated_vertical) == 0 or (len(validated_vertical) == 1 and min(validated_vertical.keys()) > midpoint_x):
                 left = 0
             else:
@@ -349,8 +352,8 @@ class Cropper:
                 bottom = max(validated_horizontal.keys())
             bbox = (left, top, right, bottom)
             if config.debug:
-                Utils.log(f"Original image box: 0, 0, {width}, {height}")
-                Utils.log(f"Cropped image box: {left}, {top}, {right}, {bottom}")
+                logger.info(f"Original image box: 0, 0, {width}, {height}")
+                logger.info(f"Cropped image box: {left}, {top}, {right}, {bottom}")
             return [im.crop(bbox)], True
 
     @staticmethod
@@ -359,7 +362,7 @@ class Cropper:
         Splits the image into a list of images based on known horizontal and vertical divisions.
         '''
         width, height = im.size
-        print(f"{width}x{height}")
+        logger.debug(f"{width}x{height}")
         subimages = []
         xs = list(vertical_diffs.keys())
         ys = list(horizontal_diffs.keys())
@@ -376,8 +379,8 @@ class Cropper:
         if height not in ys:
             ys.append(height)
         if config.debug:
-            print(f"SUBIMAGE CROP Xs: {xs}")
-            print(f"SUBIMAGE CROP Ys: {ys}")
+            logger.debug(f"SUBIMAGE CROP Xs: {xs}")
+            logger.debug(f"SUBIMAGE CROP Ys: {ys}")
         for x in range(len(xs) - 1):
             for y in range(len(ys) - 1):
                 subimages.append(im.crop((xs[x], ys[y], xs[x + 1], ys[y + 1])))
@@ -386,10 +389,10 @@ class Cropper:
         while i < len(subimages):
             subimage = subimages[i]
             if Cropper.is_small(subimage):
-                print(f"Subimage {subimage_count} is invalid due to being too small.")
+                logger.info(f"Subimage {subimage_count} is invalid due to being too small.")
                 del subimages[i]
             elif Cropper.is_low_entropy(subimage):
-                print(f"Subimage {subimage_count} is invalid due to low entropy.")
+                logger.info(f"Subimage {subimage_count} is invalid due to low entropy.")
                 del subimages[i]
             else:
                 i += 1
@@ -403,7 +406,7 @@ class Cropper:
         '''
         entropy = im.entropy()
         if config.debug:
-            print(f"Entropy of {im} is {entropy}.")
+            logger.debug(f"Entropy of {im} is {entropy}.")
         return entropy < 5
 
     @staticmethod
@@ -416,15 +419,15 @@ class Cropper:
         width, _ = im.size
         print_counts = 0
         if config.debug:
-            print("Comparison for line: " + str(y))
+            logger.debug("Comparison for line: " + str(y))
         for x in range(0, width - 1):
             px = im.getpixel((x,y))
             if not Cropper.is_close_color(px, color):
                 if config.debug:
-                    print(f"{px} <> {color} (unmatched on x {x})")
+                    logger.debug(f"{px} <> {color} (unmatched on x {x})")
                 return False
             if config.debug and print_counts < 10:
-                print(f"{px} <> {color}")
+                logger.debug(f"{px} <> {color}")
                 print_counts += 1
         return True
 
@@ -433,15 +436,15 @@ class Cropper:
         _, height = im.size
         print_counts = 0
         if config.debug:
-            print("Comparison for column: " + str(x))
+            logger.debug("Comparison for column: " + str(x))
         for y in range(0, height-1):
             px = im.getpixel((x,y))
             if not Cropper.is_close_color(px, color):
                 if config.debug:
-                    print(f"{px} <> {color} (unmatched on y {y})")
+                    logger.debug(f"{px} <> {color} (unmatched on y {y})")
                 return False
             if config.debug and print_counts < 10:
-                print(f"{px} <> {color}")
+                logger.debug(f"{px} <> {color}")
                 print_counts += 1
         return True
 
@@ -560,12 +563,12 @@ class Cropper:
         diffs_copy = {k:v for k, v in diffs.items()}
         for x, avg_diff in sorted(diffs.items(), key=lambda x:x[1], reverse=True):
             if config.debug and avg_diff > int(tolerance / 2):
-                print(f"x = {x}, avg diff = {avg_diff}, tolerance = {tolerance}")
+                logger.debug(f"x = {x}, avg diff = {avg_diff}, tolerance = {tolerance}")
             if avg_diff < tolerance:
                 del diffs[x]
         Cropper.consolidate_close_diffs(width, diffs, tolerance=max(10, int(width/10)))
         for x, avg_diff in diffs.items():
-            print(f"FINAL x = {x}, avg diff = {avg_diff}")
+            logger.debug(f"FINAL x = {x}, avg diff = {avg_diff}")
         return diffs, diffs_copy
 
     @staticmethod
@@ -598,12 +601,12 @@ class Cropper:
         diffs_copy = {k:v for k, v in diffs.items()}
         for y, avg_diff in sorted(diffs.items(), key=lambda y:y[1], reverse=True):
             if avg_diff > int(tolerance / 2):
-                print(f"y = {y}, avg diff = {avg_diff}")
+                logger.debug(f"y = {y}, avg diff = {avg_diff}")
             if avg_diff < tolerance:
                 del diffs[y]
         Cropper.consolidate_close_diffs(height, diffs, tolerance=max(10, int(height/10)))
         for y, avg_diff in diffs.items():
-            print(f"FINAL y = {y}, avg diff = {avg_diff}")
+            logger.debug(f"FINAL y = {y}, avg diff = {avg_diff}")
         return diffs, diffs_copy
 
     @staticmethod
@@ -623,7 +626,7 @@ class Cropper:
         matches = {}
         def is_close_to_existing_match(key):
             if config.debug:
-                print(f"key = {key}, match values = {matches}")
+                logger.debug(f"key = {key}, match values = {matches}")
             for match_id, match_values in matches.items():
                 for match_value in match_values:
                     if key == match_value:
@@ -660,7 +663,7 @@ class Cropper:
             for val in match_values:
                 if val != winning_value:
                     if config.debug:
-                        print(f'Consolidated value = {val} Winning value = {winning_value} Max = {_max}')
+                        logger.debug(f'Consolidated value = {val} Winning value = {winning_value} Max = {_max}')
                     del diffs[val]
         return diffs
 
@@ -675,7 +678,7 @@ if __name__ == '__main__':
     extensions = [".jpg", ".jpeg", ".png", ".webp", ".tiff"]
     directory_to_process = sys.argv[1]
     if not os.path.isdir(directory_to_process):
-        print('not a directory: "' + directory_to_process + '"')
+        logger.error('not a directory: "' + directory_to_process + '"')
         exit()
     files_to_crop = []
     for f in os.listdir(directory_to_process):
@@ -687,6 +690,6 @@ if __name__ == '__main__':
         try:
             Cropper.smart_crop_multi_detect(f, "")
         except Exception as e:
-            print("Error processing file " + f)
-            print(e)
+            logger.error("Error processing file " + f)
+            logger.error(e)
 

@@ -1,10 +1,12 @@
 import os
 import pickle
 
+from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils
 
 _ = I18N._
+logger = get_logger("compare_result")
 
 
 class CompareResult:
@@ -71,11 +73,9 @@ class CompareResult:
                         if verbose:
                             print(line)
             if verbose:
-                Utils.log("\nThis output data saved to file at "
-                          + self.search_output_path)
+                logger.info(f"This output data saved to file at {self.search_output_path}")
         elif verbose:
-            Utils.log_yellow("No similar images to \"" + search_path
-                             + "\" identified with current params.")
+            logger.warning(f"No similar images to \"{search_path}\" identified with current params.")
 
     def finalize_group_result(self, verbose=False, store_checkpoints=False):
         if not verbose:
@@ -108,16 +108,13 @@ class CompareResult:
                         if group_counter <= group_print_cutoff:
                             print(f)
 
-            Utils.log("\nFound " + str(group_counter)
-                      + " image groups with current parameters.")
-            Utils.log("\nPrinted up to first " + str(group_print_cutoff)
-                  + " groups identified. All group data saved to file at "
-                  + self.groups_output_path)
+            logger.info(f"Found {group_counter} image groups with current parameters.")
+            logger.info(f"Printed up to first {group_print_cutoff} groups identified. All group data saved to file at {self.groups_output_path}")
             if store_checkpoints:
                 self.is_complete = True
                 self.store()
         else:
-            Utils.log_yellow("No similar images identified with current params.")
+            logger.warning("No similar images identified with current params.")
 
     def sort_groups(self, file_groups):
         return sorted(file_groups,
@@ -127,7 +124,7 @@ class CompareResult:
         save_path = CompareResult.cache_path(self.base_dir)
         with open(save_path, "wb") as f:
             pickle.dump(self, f)
-            Utils.log(f"Stored compare result: {save_path}")
+            logger.info(f"Stored compare result: {save_path}")
 
     def equals_hash(self, files):
         return self._dir_files_hash == CompareResult.hash_dir_files(files)
@@ -149,7 +146,7 @@ class CompareResult:
         """
         valid_indices = [idx for idx in self.files_grouped if idx < len(files)]
         if len(valid_indices) != len(self.files_grouped):
-            Utils.log_red(f"Warning: Checkpoint data contains invalid indices. Discarding checkpoint data.")
+            logger.error("Warning: Checkpoint data contains invalid indices. Discarding checkpoint data.")
             return False
         return True
 
@@ -159,15 +156,14 @@ class CompareResult:
             return CompareResult(base_dir, files)
         cache_path = CompareResult.cache_path(base_dir)
         if not os.path.exists(cache_path):
-            Utils.log(
-                f"No checkpoint found for {base_dir} - creating new compare result cache.")
+            logger.info(f"No checkpoint found for {base_dir} - creating new compare result cache.")
             return CompareResult(base_dir, files)
         cached = None
         try:
             with open(cache_path, "rb") as f:
                 cached = pickle.load(f)
         except Exception:
-            Utils.log_red(f"Failed to load compare result from base dir {base_dir}")
+            logger.error(f"Failed to load compare result from base dir {base_dir}")
             return CompareResult(base_dir, files)
         if not cached.equals_hash(files):
             raise ValueError(f"{cache_path} does not match {files}")
@@ -176,5 +172,5 @@ class CompareResult:
         if not cached.validate_indices(files):
             return CompareResult(base_dir, files)
 
-        Utils.log(f"Loaded compare result: {cache_path}")
+        logger.info(f"Loaded compare result: {cache_path}")
         return cached

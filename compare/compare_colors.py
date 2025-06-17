@@ -17,10 +17,13 @@ from compare.compare_result import CompareResult
 from image.frame_cache import FrameCache
 from utils.config import config
 from utils.constants import CompareMode
+from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils
 
 _ = I18N._
+
+logger = get_logger("compare_colors")
 
 
 def usage():
@@ -186,30 +189,30 @@ class CompareColors(BaseCompare):
         self._probable_duplicates = []
 
     def print_settings(self):
-        print("\n\n|--------------------------------------------------------------------|")
-        print(" CONFIGURATION SETTINGS:")
-        print(f" run search: {self.is_run_search}")
+        logger.info("\n\n|--------------------------------------------------------------------|")
+        logger.info(" CONFIGURATION SETTINGS:")
+        logger.info(f" run search: {self.is_run_search}")
         if self.is_run_search:
-            print(f" search_file_path: {self.search_file_path}")
-        print(f" comparison files base directory: {self.base_dir}")
-        print(f" compare faces: {self.compare_faces}")
-        print(f" use thumb: {self.use_thumb}")
-        print(f" max file process limit: {self.args.counter_limit}")
-        print(
+            logger.info(f" search_file_path: {self.search_file_path}")
+        logger.info(f" comparison files base directory: {self.base_dir}")
+        logger.info(f" compare faces: {self.compare_faces}")
+        logger.info(f" use thumb: {self.use_thumb}")
+        logger.info(f" max file process limit: {self.args.counter_limit}")
+        logger.info(
             f" max files processable for base dir: {self.max_files_processed}")
-        print(f" recursive: {self.args.recursive}")
-        print(f" file glob pattern: {self.args.inclusion_pattern}")
-        print(f" include gifs: {self.args.include_videos}")
-        print(f" n colors: {self.n_colors}")
-        print(f" colors below threshold: {self.colors_below_threshold}")
-        print(f" color diff threshold: {self.color_diff_threshold}")
-        print(
+        logger.info(f" recursive: {self.args.recursive}")
+        logger.info(f" file glob pattern: {self.args.inclusion_pattern}")
+        logger.info(f" include gifs: {self.args.include_videos}")
+        logger.info(f" n colors: {self.n_colors}")
+        logger.info(f" colors below threshold: {self.colors_below_threshold}")
+        logger.info(f" color diff threshold: {self.color_diff_threshold}")
+        logger.info(
             f" file colors filepath: {self.compare_data._file_data_filepath}")
-        print(f" modifier: {self.modifier}")
-        print(f" color getter: {self.color_getter}")
-        print(f" color diff alg: {self.color_diff_alg}")
-        print(f" overwrite image data: {self.args.overwrite}")
-        print("|--------------------------------------------------------------------|\n\n")
+        logger.info(f" modifier: {self.modifier}")
+        logger.info(f" color getter: {self.color_getter}")
+        logger.info(f" color diff alg: {self.color_diff_alg}")
+        logger.info(f" overwrite image data: {self.args.overwrite}")
+        logger.info("|--------------------------------------------------------------------|\n\n")
 
     def get_similarity_threshold(self):
         return self.color_diff_threshold
@@ -228,7 +231,7 @@ class CompareColors(BaseCompare):
         # Gather image file data from directory
 
         if self.verbose:
-            print("Gathering image data...")
+            logger.info("Gathering image data...")
         else:
             print("Gathering image data", end="", flush=True)
 
@@ -250,13 +253,13 @@ class CompareColors(BaseCompare):
                 try:
                     image_array = get_image_array(image_file_path)
                 except OSError as e:
-                    print(f"{f} - {e}")
+                    logger.error(f"{f} - {e}")
                     continue
                 except ValueError:
                     continue
                 except SyntaxError as e:
                     if self.verbose:
-                        print(f"{f} - {e}")
+                        logger.error(f"{f} - {e}")
                     # i.e. broken PNG file (bad header checksum in b'tEXt')
                     continue
 
@@ -264,8 +267,8 @@ class CompareColors(BaseCompare):
                     colors = self.color_getter(image_array, self.modifier)
                 except ValueError as e:
                     if self.verbose:
-                        print(e)
-                        print(f)
+                        logger.error(e)
+                        logger.error(f)
                     continue
 
                 self.compare_data.file_data_dict[f] = colors
@@ -313,7 +316,7 @@ class CompareColors(BaseCompare):
         _files_found = list(self.compare_data.files_found)
 
         if self.verbose:
-            print("Identifying similar image files...")
+            logger.info("Identifying similar image files...")
         _files_found.pop(search_file_index)
         search_file_colors = self._file_colors[search_file_index]
         file_colors = np.delete(self._file_colors, search_file_index, 0)
@@ -367,20 +370,20 @@ class CompareColors(BaseCompare):
                 search_file_path = Utils.get_valid_file(
                     self.base_dir, search_file_path)
                 if search_file_path is None:
-                    print("Invalid filepath provided.")
+                    logger.error("Invalid filepath provided.")
                 else:
-                    print("")
+                    logger.info("")
 
         # Gather new image data if it was not in the initial list
 
         if search_file_path not in self.compare_data.files_found:
             if self.verbose:
-                print("Filepath not found in initial list - gathering new file data")
+                logger.info("Filepath not found in initial list - gathering new file data")
             try:
                 image = get_image_array(search_file_path)
             except OSError as e:
                 if self.verbose:
-                    print(f"{search_file_path} - {e}")
+                    logger.error(f"{search_file_path} - {e}")
                 raise AssertionError(
                     "Encountered an error accessing the provided file path in the file system.")
 
@@ -388,7 +391,7 @@ class CompareColors(BaseCompare):
                 colors = self.color_getter(image, self.modifier)
             except ValueError as e:
                 if self.verbose:
-                    print(e)
+                    logger.error(e)
                 raise AssertionError(
                     "Encountered an error gathering colors from the file provided.")
             n_faces = self._get_faces_count(search_file_path)
@@ -428,19 +431,19 @@ class CompareColors(BaseCompare):
             self._handle_progress(self.compare_result.i, n_files_found_even, gathering_data=False)
 
         if self.compare_data.n_files_found > 5000:
-            print("\nWARNING: Large image file set found, comparison between all"
+            logger.warning("\nWARNING: Large image file set found, comparison between all"
                   + " images may take a while.\n")
         if self.verbose:
-            print("Identifying groups of similar image files...")
+            logger.info("Identifying groups of similar image files...")
         else:
             print("Identifying groups of similar image files", end="", flush=True)
 
         # Ensure we have correct counts of data compared to files found
         if len(self.compare_data.files_found) != len(self._file_colors):
-            Utils.log_red(f"Warning: Mismatch between files_found ({len(self.compare_data.files_found)}) and file_colors ({len(self._file_colors)})")
+            logger.error(f"Warning: Mismatch between files_found ({len(self.compare_data.files_found)}) and file_colors ({len(self._file_colors)})")
 
         if self.compare_faces and len(self.compare_data.files_found) != len(self._file_faces):
-            Utils.log_red(f"Warning: Mismatch between files_found ({len(self.compare_data.files_found)}) and file_faces ({len(self._file_faces)})")
+            logger.error(f"Warning: Mismatch between files_found ({len(self.compare_data.files_found)}) and file_faces ({len(self._file_faces)})")
 
         for i in range(self.compare_data.n_files_found):
             if i == 0:  # At this roll index the data would compare to itself
@@ -490,7 +493,7 @@ class CompareColors(BaseCompare):
                     existing_group_index, previous_diff_score = self.compare_result.files_grouped[
                         base_index]
                     if previous_diff_score - CompareColors.THRESHHOLD_GROUP_CUTOFF > diff_score:
-                        # print(f"Previous: {previous_diff_score} , New: {diff_score}")
+                        # logger.debug(f"Previous: {previous_diff_score} , New: {diff_score}")
                         self.compare_result.files_grouped[base_index] = (
                             self.compare_result.group_index, diff_score)
                         self.compare_result.files_grouped[diff_index] = (
@@ -503,7 +506,7 @@ class CompareColors(BaseCompare):
                     existing_group_index, previous_diff_score = self.compare_result.files_grouped[
                         diff_index]
                     if previous_diff_score - CompareColors.THRESHHOLD_GROUP_CUTOFF > diff_score:
-                        # print(f"Previous: {previous_diff_score} , New: {diff_score}")
+                        # logger.debug(f"Previous: {previous_diff_score} , New: {diff_score}")
                         self.compare_result.files_grouped[base_index] = (
                             self.compare_result.group_index, diff_score)
                         self.compare_result.files_grouped[diff_index] = (

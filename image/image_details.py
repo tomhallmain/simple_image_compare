@@ -16,13 +16,16 @@ from image.metadata_viewer_window import MetadataViewerWindow
 from image.smart_crop import Cropper
 from image.temp_image_canvas import TempImageCanvas
 from utils.app_info_cache import app_info_cache
+from utils.app_style import AppStyle
 from utils.config import config
 from utils.constants import ImageGenerationType
-from utils.app_style import AppStyle
+from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils, ModifierKey
 
 _ = I18N._
+
+logger = get_logger("image_details")
 
 # TODO: fix image generation mode selection widget
 # TODO: rename file
@@ -375,14 +378,14 @@ class ImageDetails():
             node_id = ImageDetails.related_image_saved_node_id
         related_image_path = image_data_extractor.get_related_image_path(image_path, node_id)
         if related_image_path is None or related_image_path == "":
-            # print(f"{image_path} - No related image found for node id {node_id}")
+            # logger.info(f"{image_path} - No related image found for node id {node_id}")
             return None, False
         elif check_extra_directories is None:
             return related_image_path, False
         elif not os.path.isfile(related_image_path):
             if not check_extra_directories:
                 return related_image_path, False
-            print(f"{image_path} - Related image {related_image_path} not found")
+            logger.info(f"{image_path} - Related image {related_image_path} not found")
             if len(config.directories_to_search_for_related_images) > 0:
                 basename = os.path.basename(related_image_path)
                 related_image_path_found = False
@@ -401,7 +404,7 @@ class ImageDetails():
                         break
             if not related_image_path_found or not os.path.isfile(related_image_path):
                 return related_image_path, False
-            print(f"{image_path} - Possibly related image {related_image_path} found")
+            logger.info(f"{image_path} - Possibly related image {related_image_path} found")
         return related_image_path, True
 
     @staticmethod
@@ -428,7 +431,7 @@ class ImageDetails():
             ImageDetails.set_related_image_canvas(master, image_path, app_actions)
         try:
             ImageDetails.related_image_canvas.create_image(image_path)
-            print(f"Related image: {image_path}")
+            logger.info(f"Related image: {image_path}")
         except Exception as e:
             if "invalid command name" in str(e):
                 ImageDetails.set_related_image_canvas(master, image_path, app_actions)
@@ -531,7 +534,7 @@ class ImageDetails():
         return ImageGenerationType.CONTROL_NET
 
     def update_tags(self):
-        print(f"Updating tags for {self.image_path}")
+        logger.info(f"Updating tags for {self.image_path}")
         tags_str = self.tags_str.get()
         if tags_str == "":
             self.tags = []
@@ -540,7 +543,7 @@ class ImageDetails():
             for i in range(len(self.tags)):
                 self.tags[i] = self.tags[i].strip()
         image_data_extractor.set_tags(self.image_path, self.tags)
-        print("Updated tags for " + self.image_path)
+        logger.info("Updated tags for " + self.image_path)
         self.app_actions.toast(_("Updated tags for %s").format(self.image_path))
 
     def close_windows(self, event=None):

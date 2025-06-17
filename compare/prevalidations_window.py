@@ -14,10 +14,12 @@ from utils.app_style import AppStyle
 from utils.app_info_cache import app_info_cache
 from utils.config import config
 from utils.constants import ActionType
+from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils
 
 _ = I18N._
+logger = get_logger("prevalidations_window")
 
 
 class Prevalidation:
@@ -97,7 +99,7 @@ class Prevalidation:
                             image_path, self.action_modifier
                         )
                     except Exception as e:
-                        print(e)
+                        logger.error(e)
             else:
                 raise Exception("Target directory not defined on prevalidation "  + self.name)
         elif self.action == PrevalidationAction.DELETE:
@@ -105,9 +107,9 @@ class Prevalidation:
                             action_type=ActionType.REMOVE_FILE, is_manual=False)
             try:    
                 os.remove(image_path)
-                Utils.log("Deleted file at " + image_path)
+                logger.info("Deleted file at " + image_path)
             except Exception as e:
-                Utils.log_red("Error deleting file at " + image_path + ": " + str(e))
+                logger.error("Error deleting file at " + image_path + ": " + str(e))
         return self.action
 
     def get_negatives_str(self):
@@ -142,9 +144,9 @@ class Prevalidation:
         if self.run_on_folder and self.run_on_folder != "" and not os.path.isdir(self.run_on_folder):
             errors.append(_("Run on folder is not a valid directory: ") + self.run_on_folder)
         if len(errors) > 0:
-            Utils.log_red(_("Invalid prevalidation {0}, may cause errors or be unable to run!").format(self.name))
+            logger.error(_("Invalid prevalidation {0}, may cause errors or be unable to run!").format(self.name))
             for error in errors:
-                Utils.log_yellow(error)
+                logger.warning(error)
 
     def is_move_action(self):
         return self.action == PrevalidationAction.MOVE or self.action == PrevalidationAction.COPY
@@ -490,7 +492,7 @@ class PrevalidationsWindow():
             is_active_var = BooleanVar(value=prevalidation.is_active)
             def set_is_active_handler(prevalidation=prevalidation, var=is_active_var):
                 prevalidation.is_active = var.get()
-                print(f"Set {prevalidation} to active: {prevalidation.is_active}")
+                logger.info(f"Set {prevalidation} to active: {prevalidation.is_active}")
             is_active_box = Checkbutton(self.frame, variable=is_active_var, font=fnt.Font(size=config.font_size), command=set_is_active_handler)
             is_active_box.grid(row=row, column=base_col + 2, sticky=(W))
             self.is_active_list.append(is_active_box)
@@ -503,7 +505,7 @@ class PrevalidationsWindow():
             set_prevalidation_btn.grid(row=row, column=base_col+3)
             def set_prevalidation_handler(event, prevalidation=prevalidation, var=activate_prevalidation_var):
                 prevalidation.is_active = var.get()
-                print(f"Set {prevalidation} to active: {prevalidation.is_active}")
+                logger.info(f"Set {prevalidation} to active: {prevalidation.is_active}")
             set_prevalidation_btn.bind("<Button-1>", set_prevalidation_handler)
 
             modify_prevalidation_btn = Button(self.frame, text=_("Modify"))
@@ -584,7 +586,7 @@ class PrevalidationsWindow():
         else:
             return
         if self.filter_text.strip() == "":
-            print("Filter unset")
+            logger.info("Filter unset")
             # Restore the list of target directories to the full list
             self.filtered_prevalidations.clear()
             self.filtered_prevalidations = PrevalidationsWindow.prevalidations[:]
