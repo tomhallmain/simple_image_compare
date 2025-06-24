@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-06-11 16:00-0400\n"
-"PO-Revision-Date: 2025-06-11 16:00-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-06-24 17:21-0400\n"
+"PO-Revision-Date: 2025-06-24 17:21-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ru Team <<EMAIL>>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -12,307 +12,307 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:92 app.py:833 app.py:1866
+#: app.py:94 app.py:834 app.py:1873
 msgid " Simple Image Compare "
 msgstr " Простое сравнение изображений "
 
-#: app.py:151
+#: app.py:153
 msgid "Theme switched to {0}."
 msgstr "Тема переключается на {0}."
 
-#: app.py:241 compare/compare_wrapper.py:466
+#: app.py:243 compare/compare_wrapper.py:467
 msgid "Set a directory to run comparison."
 msgstr "Задайте каталог для запуска сравнения."
 
-#: app.py:248
+#: app.py:250
 msgid "Toggle theme"
 msgstr "Тема переключения"
 
-#: app.py:249
+#: app.py:251
 msgid "Set directory"
 msgstr "Установите каталог"
 
-#: app.py:250
+#: app.py:252
 msgid "Add dirpath..."
 msgstr "Добавьте путь к каталогу..."
 
-#: app.py:253
+#: app.py:255
 msgid "Set search file"
 msgstr "Настройка файла поиска"
 
-#: app.py:261
+#: app.py:263
 msgid "Search text (embedding mode)"
 msgstr "Search text (режим встраивания)"
 
-#: app.py:272
+#: app.py:274
 msgid "Compare mode"
 msgstr "Сравнить режим"
 
-#: app.py:290
+#: app.py:292
 msgid "Compare faces"
 msgstr "Сравнить лица"
 
-#: app.py:294
+#: app.py:296
 msgid "Overwrite cache"
 msgstr "Перезаписывать кэш"
 
-#: app.py:298
+#: app.py:300
 msgid "Store checkpoints"
 msgstr "Контрольные точки магазина"
 
-#: app.py:302
+#: app.py:304
 msgid "Max files to compare"
 msgstr "Файлы Max для сравнения"
 
-#: app.py:308
+#: app.py:310
 msgid "Filter files by glob pattern"
 msgstr "Фильтр файлов по шаблону glob"
 
-#: app.py:315
+#: app.py:317
 msgid "Browsing mode - Sort by"
 msgstr "Режим просмотра - Сортировать по"
 
-#: app.py:322
+#: app.py:324
 msgid "Recurse subdirectories"
 msgstr "Повторяющиеся подкаталоги"
 
-#: app.py:327
+#: app.py:329
 msgid "Image resize to full window"
 msgstr "Размер изображения до полного окна"
 
-#: app.py:331
+#: app.py:333
 msgid "Search only return closest"
 msgstr "Поиск возвращается ближе всего"
 
-#: app.py:338
+#: app.py:340
 msgid "Run image compare"
 msgstr "Сравнение изображений"
 
-#: app.py:340
+#: app.py:342
 msgid "Find duplicates"
 msgstr "Найти дубликаты"
 
-#: app.py:342 image/image_details.py:62
+#: app.py:344 image/image_details.py:65
 msgid "Image details"
 msgstr "Фотографии"
 
-#: app.py:353
+#: app.py:355
 msgid "Search current image"
 msgstr "Поиск текущее изображение"
 
-#: app.py:354 utils/help_and_config.py:75
+#: app.py:356 utils/help_and_config.py:75
 msgid "Open image location"
 msgstr "Открытое изображение"
 
-#: app.py:355
+#: app.py:357
 msgid "Copy image path"
 msgstr "Путь копирования изображений"
 
-#: app.py:356
+#: app.py:358
 msgid "---- DELETE ----"
 msgstr "---- УДАЛИТЬ ----"
 
-#: app.py:498
+#: app.py:499
 msgid "Confirm Quit"
 msgstr "Подтвердите выход"
 
-#: app.py:498
+#: app.py:499
 msgid "Would you like to quit the application?"
 msgstr "Вы хотите выйти из приложения?"
 
-#: app.py:596
+#: app.py:597
 msgid "Ended slideshows"
 msgstr "Конец слайдшоу"
 
-#: app.py:649 app.py:1658 app.py:1717
+#: app.py:650 app.py:1665 app.py:1724
 msgid "Warning"
 msgstr "Предупреждение"
 
-#: app.py:649
+#: app.py:650
 msgid "No files found in directory after refresh."
 msgstr "После обновления в каталоге не найдено ни одного файла."
 
-#: app.py:672
+#: app.py:673
 msgid "Slideshow for new images started"
 msgstr "Началось слайдшоу для новых изображений"
 
-#: app.py:674
+#: app.py:675
 msgid "Slideshow started"
 msgstr "Слайдшоу началось"
 
-#: app.py:677
+#: app.py:678
 msgid "Slideshows ended"
 msgstr "Слайдшоу закончились"
 
-#: app.py:690
+#: app.py:691
 msgid "Browsing mode set."
 msgstr "Установлен режим просмотра."
 
-#: app.py:724
+#: app.py:725
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr ""
 "(Откройте это изображение как часть каталога, чтобы увидеть детали индекса)."
 
-#: app.py:757
+#: app.py:758 app.py:1403
 msgid "Many Files"
 msgstr "Много файлов"
 
-#: app.py:783
+#: app.py:784
 msgid "No downstream related image(s) found in {0}"
 msgstr "Не найдено ни одного изображения, связанного с течением, в {0}"
 
-#: app.py:804
+#: app.py:805
 msgid "{0} file marks set"
 msgstr "{0} файловые метки"
 
-#: app.py:810
+#: app.py:811
 msgid "Help and Config"
 msgstr "Помощь и конфигурация"
 
-#: app.py:896
+#: app.py:897
 msgid "Set Image Comparison Directory"
 msgstr "Установите каталог сравнения изображений"
 
-#: app.py:934
+#: app.py:935
 msgid "Counter limit must be an integer value."
 msgstr "Контрлимит должен быть целочисленным значением."
 
-#: app.py:934 app.py:949
+#: app.py:935 app.py:950
 msgid "Invalid Setting"
 msgstr "Недействительная настройка"
 
-#: app.py:949
+#: app.py:950
 msgid "No image selected."
 msgstr "Изображение не выбрано."
 
-#: app.py:987
+#: app.py:988
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr ""
 "Режим сравнения должен быть настроен на режим встраивания для встраивания "
 "текста поиска"
 
-#: app.py:991
+#: app.py:992
 msgid "Select image file"
 msgstr "Выберите файл изображения"
 
-#: app.py:1020
+#: app.py:1021
 msgid "Somehow, the search file is invalid"
 msgstr "Каким-то образом файл поиска недействителен."
 
-#: app.py:1105 app.py:1129
+#: app.py:1106 app.py:1130
 msgid "Failed to get active image filepath"
 msgstr "Не удалось получить активный файлообмен"
 
-#: app.py:1214
+#: app.py:1215
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% полный"
 
-#: app.py:1220
+#: app.py:1221
 msgid "Confirm comparison"
 msgstr "Подтверждает сравнение"
 
-#: app.py:1221
+#: app.py:1222
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 "Базовый каталог не был задан, будет использоваться текущий базовый каталог "
 
-#: app.py:1222
+#: app.py:1223
 msgid "Are you sure you want to proceed?"
 msgstr "Вы уверены, что хотите продолжить?"
 
-#: app.py:1242
+#: app.py:1243
 msgid "Error running compare"
 msgstr "Сравнение ошибок"
 
-#: app.py:1275
+#: app.py:1276
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "Удаление блокировки после перехода слайд-шоу\n"
 "предотвратило добавление метки"
 
-#: app.py:1286
+#: app.py:1287
 msgid "Mark removed. Remaining: {0}"
 msgstr "Отметка удалена. Осталось: {0}"
 
-#: app.py:1290
+#: app.py:1291
 msgid "Mark added. Total set: {0}"
 msgstr "Марк добавил. Полный набор: {0}"
 
-#: app.py:1307
+#: app.py:1308
 msgid "Marks added. Total set: {0}"
 msgstr "Маркс добавил. Полный набор: {0}"
 
-#: app.py:1316
+#: app.py:1317
 msgid "First sorted mark"
 msgstr "Первый сортированный знак"
 
-#: app.py:1323
+#: app.py:1324
 msgid "Only one marked file set."
 msgstr "Только один отмеченный файл."
 
-#: app.py:1334
+#: app.py:1335
 msgid "Including marks: {0}"
 msgstr "Включая отметки: {0}"
 
-#: app.py:1342
+#: app.py:1343
 msgid "Move {0} Marked File(s)"
 msgstr "Переместить {0} отмеченный файл(ы)"
 
-#: app.py:1377
+#: app.py:1378
 msgid "NO_MARKS_SET"
 msgstr ""
 "Установлено {0} отметок (ожидалось >={1}).\n"
 "Для установки метки используйте Shift+M."
 
-#: app.py:1410
+#: app.py:1417
 msgid "Prevalidations now running"
 msgstr "В настоящее время проводятся проверки"
 
-#: app.py:1410
+#: app.py:1417
 msgid "Prevalidations turned off"
 msgstr "Протесты отключились"
 
-#: app.py:1435
+#: app.py:1442
 msgid "File not found"
 msgstr "Файл не найден"
 
-#: app.py:1435
+#: app.py:1442
 msgid "No file was found for the search text: \"{0}\""
 msgstr "Файл для поискового текста не найден: \"{0}\""
 
-#: app.py:1449
+#: app.py:1456
 msgid "No image selected"
 msgstr "Изображение не выбрано"
 
-#: app.py:1449
+#: app.py:1456
 msgid "No image was selected for comparison"
 msgstr "Изображение не было выбрано для сравнения"
 
-#: app.py:1462
+#: app.py:1469
 msgid "No Text Search Presets Found"
 msgstr "Предустановки текстового поиска не найдены"
 
-#: app.py:1463
+#: app.py:1470
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 "Не найдено текстового встраивания предустановок поиска. Установите их в "
 "файле config.json."
 
-#: app.py:1562
+#: app.py:1569
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr ""
 "Не удалось открыть местоположение текущего файла, не смог получить "
 "действительный путь файла"
 
-#: app.py:1573
+#: app.py:1580
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 "Не удалось открыть текущий файл в GIMP, не смог получить действительный "
 "файлообменник"
 
-#: app.py:1589
+#: app.py:1596
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -320,34 +320,34 @@ msgstr ""
 "Скрыть текущее изображение.\n"
 "Чтобы скрыться, нажмите Shift + B."
 
-#: app.py:1594
+#: app.py:1601
 msgid "Cleared all hidden images."
 msgstr "Очистили все скрытые изображения."
 
-#: app.py:1601
+#: app.py:1608
 msgid "DELETE_LOCK"
 msgstr ""
 "Удалить замок после слайд-шоу\n"
 "Переход предотвратил удаление"
 
-#: app.py:1619
+#: app.py:1626
 msgid "Invalid action, no files found to delete"
 msgstr "Недействительные действия, файлы не найдены для удаления"
 
-#: app.py:1622
+#: app.py:1629
 msgid "Invalid action, search image not found"
 msgstr "Недействительное действие, поиск изображения не найден"
 
-#: app.py:1637
+#: app.py:1644
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 "Не удалось удалить текущий файл, не смог получить действительный путь файла"
 
-#: app.py:1642
+#: app.py:1649
 msgid "Removing file: {0}"
 msgstr "Удаление файла: {0}"
 
-#: app.py:1659
+#: app.py:1666
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -356,70 +356,70 @@ msgstr ""
 "установите pip send2trash, либо задайте конкретную папку для корзины в "
 "config.json."
 
-#: app.py:1676
+#: app.py:1683
 msgid "Invalid target filepath for replacement: "
 msgstr "Недействительный целевой файловый путь для замены: "
 
-#: app.py:1680
+#: app.py:1687
 msgid "Moved search image to "
 msgstr "Перемещенное поисковое изображение на "
 
-#: app.py:1715
+#: app.py:1722
 msgid "Running image gen: "
 msgstr "Запуск Image Gen: "
 
-#: app.py:1717
+#: app.py:1724
 msgid "Error running image generation:"
 msgstr "Ошибка генерации изображений:"
 
-#: app.py:1722
+#: app.py:1729
 msgid "Running refacdir"
 msgstr "Запуск факультатива"
 
-#: app.py:1727 files/pdf_creator.py:123 files/pdf_creator.py:127
-#: files/pdf_creator.py:130
+#: app.py:1734 files/pdf_creator.py:132 files/pdf_creator.py:136
+#: files/pdf_creator.py:139
 msgid "Error"
 msgstr "ошибка"
 
-#: app.py:1807
+#: app.py:1814
 msgid "GROUP_DETAILS"
 msgstr ""
 "Группа {0} {1}\n"
 "Размер: {2}"
 
-#: app.py:1811
+#: app.py:1818
 msgid "No image files found"
 msgstr "Файлы изображений не найдены"
 
-#: app.py:1813
+#: app.py:1820
 msgid "1 image file found"
 msgstr "Найден 1 файл изображения"
 
-#: app.py:1814
+#: app.py:1821
 msgid "{0} image files found"
 msgstr "Найдено {0} файлов изображений"
 
-#: app.py:1816
+#: app.py:1823
 msgid "(filtered)"
 msgstr "(фильтровано)"
 
-#: compare/base_compare.py:226
+#: compare/base_compare.py:229
 msgid "Image data collection"
 msgstr "Сбор данных изображений"
 
-#: compare/base_compare.py:227
+#: compare/base_compare.py:230
 msgid "Image comparison"
 msgstr "Сравнение изображений"
 
-#: compare/base_compare.py:298
+#: compare/base_compare.py:301
 msgid "Invalid Checkpoint Data - Confirm Restart"
 msgstr "Недействительные данные контрольной точки - Подтверждаем перезапуск"
 
-#: compare/base_compare.py:300
+#: compare/base_compare.py:303
 msgid "Invalid Checkpoint Data"
 msgstr "Недействительные данные контрольной точки"
 
-#: compare/base_compare.py:301
+#: compare/base_compare.py:304
 msgid ""
 "Checkpoint data contains invalid indices. Would you like to restart the "
 "comparison?"
@@ -427,41 +427,41 @@ msgstr ""
 "Данные контрольной точки содержат недопустимые индексы. Вы хотите "
 "перезапустить сравнение?"
 
-#: compare/base_compare.py:306
+#: compare/base_compare.py:309
 msgid "Restarting Comparison"
 msgstr "Восстановление сравнения"
 
-#: compare/compare_wrapper.py:67 compare/compare_wrapper.py:70
+#: compare/compare_wrapper.py:68 compare/compare_wrapper.py:71
 msgid "Invalid mode"
 msgstr "Недействительный режим"
 
-#: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
+#: compare/compare_wrapper.py:101 compare/compare_wrapper.py:118
 msgid "Search required"
 msgstr "Поиск требуется"
 
-#: compare/compare_wrapper.py:100 compare/compare_wrapper.py:117
+#: compare/compare_wrapper.py:101 compare/compare_wrapper.py:118
 msgid "No matches found. Search again to find potential matches."
 msgstr ""
 "Не найдено ни одного совпадения. Повторите поиск, чтобы найти потенциальные "
 "совпадения."
 
-#: compare/compare_wrapper.py:158
+#: compare/compare_wrapper.py:159
 msgid "Skipped %s images."
 msgstr "Пропущено {0} изображений."
 
-#: compare/compare_wrapper.py:164
+#: compare/compare_wrapper.py:165
 msgid "No Unrelated Images"
 msgstr "Нет несвязанных изображений"
 
-#: compare/compare_wrapper.py:164
+#: compare/compare_wrapper.py:165
 msgid "No unrelated images found."
 msgstr "Несвязанных изображений не найдено."
 
-#: compare/compare_wrapper.py:201 compare/compare_wrapper.py:363
+#: compare/compare_wrapper.py:202 compare/compare_wrapper.py:364
 msgid "No Groups Found"
 msgstr "Группы не найдены"
 
-#: compare/compare_wrapper.py:271
+#: compare/compare_wrapper.py:272
 msgid ""
 "Gathering image data... setup may take a while depending on number of files "
 "involved."
@@ -469,11 +469,11 @@ msgstr ""
 "Сбор данных изображения ... настройка может занять некоторое время в "
 "зависимости от количества файлов."
 
-#: compare/compare_wrapper.py:293
+#: compare/compare_wrapper.py:294
 msgid "Confirm group run"
 msgstr "Подтвердить групповой забег"
 
-#: compare/compare_wrapper.py:294
+#: compare/compare_wrapper.py:295
 msgid ""
 "Search mode detected, please confirm switch to group mode before run. Group "
 "mode will take longer as all images in the base directory are compared."
@@ -482,67 +482,67 @@ msgstr ""
 "режим перед запуском. Групповой режим займет больше времени, так как "
 "сравниваются все изображения в базовом каталоге."
 
-#: compare/compare_wrapper.py:301
+#: compare/compare_wrapper.py:302
 msgid "Gathering image data for comparison"
 msgstr "Сбор данных изображений для сравнения"
 
-#: compare/compare_wrapper.py:329
+#: compare/compare_wrapper.py:330
 msgid "Searching images..."
 msgstr "Поиск изображений..."
 
-#: compare/compare_wrapper.py:335
+#: compare/compare_wrapper.py:336
 msgid "Set a directory and search file or search text."
 msgstr "Установите каталог и файл поиска или текст поиска."
 
-#: compare/compare_wrapper.py:336
+#: compare/compare_wrapper.py:337
 msgid "No Match Found"
 msgstr "Матч не найден"
 
-#: compare/compare_wrapper.py:336
+#: compare/compare_wrapper.py:337
 msgid "None of the files match the search filters with current settings."
 msgstr ""
 "Ни один из файлов не соответствует фильтрам поиска с текущими настройками."
 
-#: compare/compare_wrapper.py:349
+#: compare/compare_wrapper.py:350
 msgid "%s possibly related images found."
 msgstr "{0} возможно найденные изображения."
 
-#: compare/compare_wrapper.py:357
+#: compare/compare_wrapper.py:358
 msgid "Running image comparisons..."
 msgstr "Сравнение изображений..."
 
-#: compare/compare_wrapper.py:362 compare/compare_wrapper.py:377
+#: compare/compare_wrapper.py:363 compare/compare_wrapper.py:378
 msgid "Set a directory and search file."
 msgstr "Установите каталог и файл поиска."
 
-#: compare/compare_wrapper.py:363
+#: compare/compare_wrapper.py:364
 msgid "None of the files can be grouped with current settings."
 msgstr "Ни один из файлов не может быть сгруппирован с текущими настройками."
 
-#: compare/compare_wrapper.py:378
+#: compare/compare_wrapper.py:379
 msgid "No Duplicates Found"
 msgstr "Дубликаты не найдены"
 
-#: compare/compare_wrapper.py:378
+#: compare/compare_wrapper.py:379
 msgid ""
 "None of the files appear to be duplicates based on the current settings."
 msgstr "Ни один из файлов не является дубликатом на основе текущих настроек."
 
-#: compare/compare_wrapper.py:402
+#: compare/compare_wrapper.py:403
 msgid "Stranded Group Members Found"
 msgstr "Найдены члены группы, попавшей в беду"
 
-#: compare/compare_wrapper.py:402
+#: compare/compare_wrapper.py:403
 msgid "Some group members were left stranded by the grouping process."
 msgstr ""
 "Некоторые члены группы оказались в затруднительном положении из-за процесса "
 "группирования."
 
-#: compare/compare_wrapper.py:457
+#: compare/compare_wrapper.py:458
 msgid "No More Groups"
 msgstr "Больше никаких групп"
 
-#: compare/compare_wrapper.py:458
+#: compare/compare_wrapper.py:459
 msgid ""
 "There are no more image groups remaining for this directory and current "
 "filter settings."
@@ -550,212 +550,212 @@ msgstr ""
 "Для этого каталога и текущих настроек фильтра больше не осталось групп "
 "изображений."
 
-#: compare/prevalidations_window.py:24
+#: compare/prevalidations_window.py:26
 msgid "(no positives set)"
 msgstr "(нет положительного набора)"
 
-#: compare/prevalidations_window.py:25
+#: compare/prevalidations_window.py:27
 msgid "(no negatives set)"
 msgstr "(без отрицательного набора)"
 
-#: compare/prevalidations_window.py:27 compare/prevalidations_window.py:214
+#: compare/prevalidations_window.py:29 compare/prevalidations_window.py:216
 msgid "New Prevalidation"
 msgstr "Новая превалация"
 
-#: compare/prevalidations_window.py:77
+#: compare/prevalidations_window.py:79
 msgid " detected"
 msgstr " обнаруженный"
 
-#: compare/prevalidations_window.py:79
+#: compare/prevalidations_window.py:81
 msgid " - skipped"
 msgstr " - пропущен"
 
-#: compare/prevalidations_window.py:82
+#: compare/prevalidations_window.py:84
 msgid " - hidden"
 msgstr " - скрытый"
 
-#: compare/prevalidations_window.py:91
+#: compare/prevalidations_window.py:93
 msgid "Moving file: "
 msgstr "Перемещение файла: "
 
-#: compare/prevalidations_window.py:104
+#: compare/prevalidations_window.py:106
 msgid "Deleting file: "
 msgstr "Удаление файла: "
 
-#: compare/prevalidations_window.py:141
+#: compare/prevalidations_window.py:143
 msgid "Action modifier is not a valid directory: "
 msgstr "Модификатор действий не является действительным каталогом: "
 
-#: compare/prevalidations_window.py:143
+#: compare/prevalidations_window.py:145
 msgid "Run on folder is not a valid directory: "
 msgstr "Папка Run on не является действительным каталогом: "
 
-#: compare/prevalidations_window.py:145
+#: compare/prevalidations_window.py:147
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr ""
 "Неверная проверка {0}, может привести к ошибкам или невозможности "
 "выполнения!"
 
-#: compare/prevalidations_window.py:189
+#: compare/prevalidations_window.py:191
 msgid " testing classifier {0} for {1}"
 msgstr " Классификатор испытаний {0} для {1}"
 
-#: compare/prevalidations_window.py:191
+#: compare/prevalidations_window.py:193
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} положительные, {1} отрицательные)"
 
-#: compare/prevalidations_window.py:204
+#: compare/prevalidations_window.py:206
 msgid "Modify Prevalidation"
 msgstr "Изменить превалирование"
 
-#: compare/prevalidations_window.py:213
+#: compare/prevalidations_window.py:215
 msgid "Prevalidation Name"
 msgstr "Превалирующее название"
 
-#: compare/prevalidations_window.py:220
+#: compare/prevalidations_window.py:222
 msgid "Positives"
 msgstr "Положительные"
 
-#: compare/prevalidations_window.py:227
+#: compare/prevalidations_window.py:229
 msgid "Negatives"
 msgstr "Отрицательные"
 
-#: compare/prevalidations_window.py:234
+#: compare/prevalidations_window.py:236
 msgid "Threshold"
 msgstr "порог"
 
-#: compare/prevalidations_window.py:241
+#: compare/prevalidations_window.py:243
 msgid "Action"
 msgstr "Меры"
 
-#: compare/prevalidations_window.py:251
+#: compare/prevalidations_window.py:253
 msgid "Action Modifier"
 msgstr "Модификатор действий"
 
-#: compare/prevalidations_window.py:258
+#: compare/prevalidations_window.py:260
 msgid "Run on Directory"
 msgstr "Беги по каталогу"
 
-#: compare/prevalidations_window.py:265
+#: compare/prevalidations_window.py:267
 msgid "Image Classifier Name"
 msgstr "Название Классификатора изображений"
 
-#: compare/prevalidations_window.py:276
+#: compare/prevalidations_window.py:278
 msgid "Image Classifier Selected Category"
 msgstr "Классификатор изображений выбранная категория"
 
-#: compare/prevalidations_window.py:280
+#: compare/prevalidations_window.py:282
 msgid "Select Categories..."
 msgstr "Выберите категории..."
 
-#: compare/prevalidations_window.py:286
+#: compare/prevalidations_window.py:288
 msgid "Done"
 msgstr "Сделано"
 
-#: compare/prevalidations_window.py:419
+#: compare/prevalidations_window.py:421
 msgid ""
 "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 msgstr ""
 "Не найдена превалидация с именем: {0}. Установите его в окне превалидаций."
 
-#: compare/prevalidations_window.py:430
+#: compare/prevalidations_window.py:432
 msgid "Prevalidations"
 msgstr "Превалирование"
 
-#: compare/prevalidations_window.py:453
+#: compare/prevalidations_window.py:455
 msgid "Set Prevalidations"
 msgstr "Установить превалирование"
 
-#: compare/prevalidations_window.py:455
+#: compare/prevalidations_window.py:457
 msgid "Add prevalidation"
 msgstr "Добавить превалирование"
 
-#: compare/prevalidations_window.py:457
+#: compare/prevalidations_window.py:459
 msgid "Clear prevalidations"
 msgstr "Ясные доказательства"
 
-#: compare/prevalidations_window.py:493 files/hotkey_actions_window.py:95
+#: compare/prevalidations_window.py:503 files/hotkey_actions_window.py:95
 msgid "Set"
 msgstr "Настройка"
 
-#: compare/prevalidations_window.py:501 files/file_actions_window.py:269
-#: files/file_actions_window.py:312
+#: compare/prevalidations_window.py:511 files/file_actions_window.py:271
+#: files/file_actions_window.py:314
 msgid "Modify"
 msgstr "изменять"
 
-#: compare/prevalidations_window.py:508
+#: compare/prevalidations_window.py:518
 msgid "Delete"
 msgstr "Исключить"
 
-#: compare/prevalidations_window.py:515
+#: compare/prevalidations_window.py:525
 msgid "Move down"
 msgstr "Спуститься"
 
-#: extensions/sd_runner_client.py:59
+#: extensions/sd_runner_client.py:60
 msgid "Image does not contain a prompt to redo!"
 msgstr "Изображение не содержит подсказки для переделки!"
 
-#: files/file_actions_window.py:201
+#: files/file_actions_window.py:203
 msgid "File Actions"
 msgstr "Файловые действия"
 
-#: files/file_actions_window.py:223
+#: files/file_actions_window.py:225
 msgid "File Action History"
 msgstr "История действий с файлами"
 
-#: files/file_actions_window.py:225
+#: files/file_actions_window.py:227
 msgid "Search Image"
 msgstr "Поисковое изображение"
 
-#: files/file_actions_window.py:227
+#: files/file_actions_window.py:229
 msgid "Clear History"
 msgstr "Ясная история"
 
-#: files/file_actions_window.py:253
+#: files/file_actions_window.py:255
 msgid " ({0} files)"
 msgstr " ({0} файлы)"
 
-#: files/file_actions_window.py:258 files/marked_file_mover.py:268
+#: files/file_actions_window.py:260 files/marked_file_mover.py:270
 msgid "Move"
 msgstr "Двигаться"
 
-#: files/file_actions_window.py:258 files/marked_file_mover.py:275
+#: files/file_actions_window.py:260 files/marked_file_mover.py:277
 msgid "Copy"
 msgstr "Копия"
 
-#: files/file_actions_window.py:261 files/file_actions_window.py:304
+#: files/file_actions_window.py:263 files/file_actions_window.py:306
 msgid "Undo"
 msgstr "Снять"
 
-#: files/file_actions_window.py:296
+#: files/file_actions_window.py:298
 msgid "View"
 msgstr "Посмотреть"
 
-#: files/file_actions_window.py:329
+#: files/file_actions_window.py:331
 msgid "Image does not exist: "
 msgstr "Изображение не существует: "
 
-#: files/file_actions_window.py:330 files/file_actions_window.py:341
+#: files/file_actions_window.py:332 files/file_actions_window.py:343
 msgid "File Action Error"
 msgstr "Ошибка файлового действия"
 
-#: files/file_actions_window.py:340
+#: files/file_actions_window.py:342
 msgid "Images not found"
 msgstr "Изображения не найдены"
 
-#: files/file_browser.py:151 files/file_browser.py:163
+#: files/file_browser.py:152 files/file_browser.py:164
 msgid " (try setting recursive to True)"
 msgstr " (попробуйте установить для параметра recursive значение True)"
 
-#: files/file_browser.py:152 files/file_browser.py:164
+#: files/file_browser.py:153 files/file_browser.py:165
 msgid "No files found for current browsing settings."
 msgstr "Не найдено ни одного файла для текущих настроек просмотра."
 
-#: files/file_browser.py:197
+#: files/file_browser.py:198
 msgid "FILE_BROWSER_INDEX_DETAILS"
 msgstr "{0} из {1} файлов в каталоге, упорядоченных по {2} {3}"
 
-#: files/file_browser.py:224
+#: files/file_browser.py:225
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "Текст для поиска, переданный в file_browser.find(), был недопустимым."
 
@@ -783,231 +783,231 @@ msgstr "Каталог целей"
 msgid "(unset)"
 msgstr "(запуск)"
 
-#: files/marked_file_mover.py:90 files/marked_file_mover.py:881
+#: files/marked_file_mover.py:92 files/marked_file_mover.py:883
 msgid "Marks cleared."
 msgstr "Отметины сняты."
 
-#: files/marked_file_mover.py:97
+#: files/marked_file_mover.py:99
 msgid "Set current marks from previous."
 msgstr "Установите текущие отметки от предыдущих."
 
-#: files/marked_file_mover.py:97
+#: files/marked_file_mover.py:99
 msgid "Total set: {0}"
 msgstr "Полный набор: {0}"
 
-#: files/marked_file_mover.py:124
+#: files/marked_file_mover.py:126
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "Не нужно устанавливать постоянную цель метки!\n"
 "Устанавливается с помощью Ctrl+T в окне «Метки»."
 
-#: files/marked_file_mover.py:136
+#: files/marked_file_mover.py:138
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "Для {0} не установлено действие горячей клавиши.\n"
 "Установите {1} в окне метки."
 
-#: files/marked_file_mover.py:216 files/recent_directory_window.py:153
+#: files/marked_file_mover.py:218 files/recent_directory_window.py:153
 msgid "Set a new target directory"
 msgstr "Установите новый целевой каталог"
 
-#: files/marked_file_mover.py:218
+#: files/marked_file_mover.py:220
 msgid "MOVE"
 msgstr "Двигаться"
 
-#: files/marked_file_mover.py:222
+#: files/marked_file_mover.py:224
 msgid "COPY"
 msgstr "копия"
 
-#: files/marked_file_mover.py:224
+#: files/marked_file_mover.py:226
 msgid "DELETE"
 msgstr "Удалить"
 
-#: files/marked_file_mover.py:226 files/recent_directory_window.py:157
+#: files/marked_file_mover.py:228 files/recent_directory_window.py:157
 msgid "Add directories from parent"
 msgstr "Добавить каталоги от родителя"
 
-#: files/marked_file_mover.py:229 files/recent_directory_window.py:159
+#: files/marked_file_mover.py:231 files/recent_directory_window.py:159
 msgid "Clear targets"
 msgstr "Четкие цели"
 
-#: files/marked_file_mover.py:231 files/pdf_options_window.py:81
+#: files/marked_file_mover.py:233 files/pdf_options_window.py:81
 msgid "Create PDF"
 msgstr "Создать PDF"
 
-#: files/marked_file_mover.py:295 files/marked_file_mover.py:301
+#: files/marked_file_mover.py:297 files/marked_file_mover.py:303
 msgid "Recording next mark target and action."
 msgstr "Запись следующей цели и действия."
 
-#: files/marked_file_mover.py:314 files/recent_directory_window.py:203
+#: files/marked_file_mover.py:316 files/recent_directory_window.py:203
 msgid "Invalid directory: %s"
 msgstr "Недопустимый каталог: {0}"
 
-#: files/marked_file_mover.py:316
+#: files/marked_file_mover.py:318
 msgid "Select target directory for marked files"
 msgstr "Выберите целевой каталог для отмеченных файлов"
 
-#: files/marked_file_mover.py:371
+#: files/marked_file_mover.py:373
 msgid "Moving"
 msgstr "двигаться"
 
-#: files/marked_file_mover.py:371
+#: files/marked_file_mover.py:373
 msgid "Copying"
 msgstr "Копирование"
 
-#: files/marked_file_mover.py:372
+#: files/marked_file_mover.py:374
 msgid "Moved"
 msgstr "перемещенный"
 
-#: files/marked_file_mover.py:372
+#: files/marked_file_mover.py:374
 msgid "Copied"
 msgstr "Копирован"
 
-#: files/marked_file_mover.py:410
+#: files/marked_file_mover.py:412
 msgid "Moved {0} files to {1}"
 msgstr ""
 "Переместите {0} файлов на\n"
 "{1}"
 
-#: files/marked_file_mover.py:412
+#: files/marked_file_mover.py:414
 msgid "Copied {0} files to {1}"
 msgstr ""
 "Скопируйте {0} файлов на\n"
 "{1}."
 
-#: files/marked_file_mover.py:439
+#: files/marked_file_mover.py:441
 msgid "Existing filenames match!"
 msgstr "Существующие имена файлов совпадают!"
 
-#: files/marked_file_mover.py:441
+#: files/marked_file_mover.py:443
 msgid "WARNING: Exact file match."
 msgstr "Предупреждение: точное совпадение файлов."
 
-#: files/marked_file_mover.py:443 files/marked_file_mover.py:794
+#: files/marked_file_mover.py:445 files/marked_file_mover.py:796
 msgid "WARNING: Short filenames."
 msgstr "Предупреждение: короткие имена файлов."
 
-#: files/marked_file_mover.py:467
+#: files/marked_file_mover.py:469
 msgid "Moving back"
 msgstr "Вернуться назад"
 
-#: files/marked_file_mover.py:467
+#: files/marked_file_mover.py:469
 msgid "Removing"
 msgstr "удалять"
 
-#: files/marked_file_mover.py:468
+#: files/marked_file_mover.py:470
 msgid "Moved back"
 msgstr "Вернуться назад"
 
-#: files/marked_file_mover.py:468
+#: files/marked_file_mover.py:470
 msgid "Removed"
 msgstr "Удаленный"
 
-#: files/marked_file_mover.py:474
+#: files/marked_file_mover.py:476
 msgid "Where should the marked files have gone?"
 msgstr "Куда должны были пойти отмеченные файлы?"
 
-#: files/marked_file_mover.py:499
+#: files/marked_file_mover.py:501
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "Перенесите файлы из {0}\n"
 "{1}"
 
-#: files/marked_file_mover.py:501
+#: files/marked_file_mover.py:503
 msgid "Removed {0} files from {1}"
 msgstr ""
 "Удаленные файлы {0}\n"
 "{1}"
 
-#: files/marked_file_mover.py:518
+#: files/marked_file_mover.py:520
 msgid "Select parent directory for target directories"
 msgstr "Выберите родительский каталог для целевых каталогов"
 
-#: files/marked_file_mover.py:678
+#: files/marked_file_mover.py:680
 msgid "Sorted directories by embedding comparison."
 msgstr "Сортированные каталоги путем встраивания сравнения."
 
-#: files/marked_file_mover.py:698
+#: files/marked_file_mover.py:700
 msgid "Confirm Delete"
 msgstr "Подтвердить удаление"
 
-#: files/marked_file_mover.py:699
+#: files/marked_file_mover.py:701
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr "Удаление {0} отмеченных файлов - Вы уверены, что хотите продолжить?"
 
-#: files/marked_file_mover.py:719
+#: files/marked_file_mover.py:721
 msgid "Delete Failed"
 msgstr "Удалить не удалось"
 
-#: files/marked_file_mover.py:720
+#: files/marked_file_mover.py:722
 msgid "Failed to delete %s files - check log for details."
 msgstr "Не удалось удалить {0} файлы - проверьте журнал для деталей."
 
-#: files/marked_file_mover.py:723
+#: files/marked_file_mover.py:725
 msgid "Deleted %s marked files."
 msgstr "Удаленные {0} отмеченные файлы."
 
-#: files/marked_file_mover.py:788
+#: files/marked_file_mover.py:790
 msgid "Existing filenames found!"
 msgstr "Существующие имена файлов найдены!"
 
-#: files/marked_file_mover.py:790
+#: files/marked_file_mover.py:792
 msgid "WARNING: All file hashes match."
 msgstr "ПРЕДУПРЕЖДЕНИЕ: Все хэши файлов совпадают."
 
-#: files/marked_file_mover.py:792
+#: files/marked_file_mover.py:794
 msgid "WARNING: %s of %s file hashes match."
 msgstr "ПРЕДУПРЕЖДЕНИЕ: {0} из {1} хэшей файлов совпадают."
 
-#: files/marked_file_mover.py:798
+#: files/marked_file_mover.py:800
 msgid "No existing filenames found."
 msgstr "Существующих имен файлов не найдено."
 
-#: files/marked_file_mover.py:826
+#: files/marked_file_mover.py:828
 msgid "Found %s downstream related images"
 msgstr "Найдено {0} ниже по потоку связанных изображений"
 
-#: files/marked_file_mover.py:828
+#: files/marked_file_mover.py:830
 msgid "No downstream related images found"
 msgstr "Не найдено ни одного нисходящего изображения"
 
-#: files/marked_file_mover.py:839
+#: files/marked_file_mover.py:841
 msgid "Cleared marked file"
 msgstr "Очищенный файл"
 
-#: files/marked_file_mover.py:883
+#: files/marked_file_mover.py:885
 msgid "Removed {0} marks"
 msgstr "Снятые знаки {0}"
 
-#: files/pdf_creator.py:39
+#: files/pdf_creator.py:41
 msgid "No files to create PDF"
 msgstr "Нет файлов для создания PDF"
 
-#: files/pdf_creator.py:47 files/pdf_options_window.py:53
+#: files/pdf_creator.py:49 files/pdf_options_window.py:53
 msgid "combined_images"
 msgstr "объединённые_изображения"
 
-#: files/pdf_creator.py:55
+#: files/pdf_creator.py:57
 msgid "Save PDF as"
 msgstr "Сохранить PDF как"
 
-#: files/pdf_creator.py:119
+#: files/pdf_creator.py:128
 msgid "compressed"
 msgstr "сжатый"
 
-#: files/pdf_creator.py:119
+#: files/pdf_creator.py:128
 msgid "high quality"
 msgstr "высокое качество"
 
-#: files/pdf_creator.py:120
+#: files/pdf_creator.py:129
 msgid "Created {0} PDF with {1} pages"
 msgstr "Создан {0} PDF с {1} страницами"
 
-#: files/pdf_creator.py:123
+#: files/pdf_creator.py:132
 msgid "No pages could be added to the PDF"
 msgstr "Страницы не могут быть добавлены в PDF"
 
-#: files/pdf_creator.py:127
+#: files/pdf_creator.py:136
 msgid "PDF creation requires pypdfium2 package"
 msgstr "Создание PDF требует пакета pypdfium2"
 
@@ -1115,187 +1115,187 @@ msgstr ""
 msgid "Media type configuration updated"
 msgstr "Обновлена конфигурация типа медиа"
 
-#: image/image_details.py:115
+#: image/image_details.py:118
 msgid "Image Path"
 msgstr "Путь изображения"
 
-#: image/image_details.py:117
+#: image/image_details.py:120
 msgid "File Index"
 msgstr "Файловый индекс"
 
-#: image/image_details.py:119
+#: image/image_details.py:122
 msgid "Color Mode"
 msgstr "Цветовой режим"
 
-#: image/image_details.py:121
+#: image/image_details.py:124
 msgid "Dimensions"
 msgstr "Размеры"
 
-#: image/image_details.py:123 utils/constants.py:96 utils/constants.py:116
+#: image/image_details.py:126 utils/constants.py:96 utils/constants.py:116
 msgid "Size"
 msgstr "Размер"
 
-#: image/image_details.py:125
+#: image/image_details.py:128
 msgid "Modification Time"
 msgstr "Время модификации"
 
-#: image/image_details.py:127
+#: image/image_details.py:130
 msgid "Positive"
 msgstr "Положительный"
 
-#: image/image_details.py:129
+#: image/image_details.py:132
 msgid "Negative"
 msgstr "отрицательный"
 
-#: image/image_details.py:130
+#: image/image_details.py:133
 msgid "(negative prompt not shown by config setting)"
 msgstr "(отрицательная подсказка, не показанная конфигурацией)"
 
-#: image/image_details.py:131
+#: image/image_details.py:134
 msgid "Models"
 msgstr "Модели"
 
-#: image/image_details.py:133
+#: image/image_details.py:136
 msgid "LoRAs"
 msgstr "LoRA"
 
-#: image/image_details.py:138
+#: image/image_details.py:141
 msgid "Copy Prompt"
 msgstr "Копировать быстро"
 
-#: image/image_details.py:139
+#: image/image_details.py:142
 msgid "Copy Prompt No BREAK"
 msgstr "Копировать подсказку без «BREAK»"
 
-#: image/image_details.py:143
+#: image/image_details.py:146
 msgid "Rotate Image Left"
 msgstr "Поворот изображения слева"
 
-#: image/image_details.py:144
+#: image/image_details.py:147
 msgid "Rotate Image Right"
 msgstr "Вращайте изображение правильно"
 
-#: image/image_details.py:148
+#: image/image_details.py:151
 msgid "Crop Image (Smart Detect)"
 msgstr "Обрезать изображение (Интеллектуальное обнаружение)"
 
-#: image/image_details.py:149
+#: image/image_details.py:152
 msgid "Enhance Image"
 msgstr "Улучшить изображение"
 
-#: image/image_details.py:153
+#: image/image_details.py:156
 msgid "Random Crop"
 msgstr "Случайный урожай"
 
-#: image/image_details.py:154
+#: image/image_details.py:157
 msgid "Randomly Modify"
 msgstr "случайные изменения"
 
-#: image/image_details.py:158
+#: image/image_details.py:161
 msgid "Flip Image Horizontally"
 msgstr "Флип изображения горизонтально"
 
-#: image/image_details.py:159
+#: image/image_details.py:162
 msgid "Flip Image Vertically"
 msgstr "Перевернуть изображение вертикально"
 
-#: image/image_details.py:162
+#: image/image_details.py:165
 msgid "Show Metadata"
 msgstr "Показать Метаданные"
 
-#: image/image_details.py:166
+#: image/image_details.py:169
 msgid "Open Related Image"
 msgstr "Открытые связанные изображения"
 
-#: image/image_details.py:175
+#: image/image_details.py:178
 msgid "Image Generation"
 msgstr "Поколение изображений"
 
-#: image/image_details.py:183
+#: image/image_details.py:186
 msgid "Run Image Generation"
 msgstr "Поколение изображений"
 
-#: image/image_details.py:185
+#: image/image_details.py:188
 msgid "Press Shift+I on a main app window to run this"
 msgstr "Сдвиг прессы+ Я на главном окне приложения, чтобы запустить это"
 
-#: image/image_details.py:188
+#: image/image_details.py:191
 msgid "Redo Prompt"
 msgstr "Скорая помощь"
 
-#: image/image_details.py:192
+#: image/image_details.py:195
 msgid "Tags"
 msgstr "Тэги"
 
-#: image/image_details.py:202
+#: image/image_details.py:205
 msgid "Update Tags"
 msgstr "Теги обновления"
 
-#: image/image_details.py:265
+#: image/image_details.py:268
 msgid "Copied prompt"
 msgstr "Копированное сообщение"
 
-#: image/image_details.py:274 image/image_details.py:284
+#: image/image_details.py:277 image/image_details.py:287
 msgid "Copied prompt without BREAK"
 msgstr "Копирован без перерыва"
 
-#: image/image_details.py:302
+#: image/image_details.py:305
 msgid "Rotated image right"
 msgstr "Вращенное изображение правильно"
 
-#: image/image_details.py:302
+#: image/image_details.py:305
 msgid "Rotated image left"
 msgstr "Вращенное изображение слева"
 
-#: image/image_details.py:311
+#: image/image_details.py:314
 msgid "Cropped image"
 msgstr "Обрезанное изображение"
 
-#: image/image_details.py:313
+#: image/image_details.py:316
 msgid "No crops found"
 msgstr "Посевы не найдены"
 
-#: image/image_details.py:320
+#: image/image_details.py:323
 msgid "Enhanced image"
 msgstr "Улучшенное изображение"
 
-#: image/image_details.py:325
+#: image/image_details.py:328
 msgid "Randomly cropped image"
 msgstr "Случайно обрезанное изображение"
 
-#: image/image_details.py:334
+#: image/image_details.py:337
 msgid "Randomly modified image"
 msgstr "Случайно измененное изображение"
 
-#: image/image_details.py:339
+#: image/image_details.py:342
 msgid "Flipped image"
 msgstr "Перевернутое изображение"
 
-#: image/image_details.py:344
+#: image/image_details.py:347
 msgid "No metadata found"
 msgstr "Метаданные не найдены"
 
-#: image/image_details.py:358 image/image_details.py:416
+#: image/image_details.py:361 image/image_details.py:419
 msgid " (Exact Match Not Found)"
 msgstr " (точный матч не найден)"
 
-#: image/image_details.py:360 image/image_details.py:413
+#: image/image_details.py:363 image/image_details.py:416
 msgid "(No related image found)"
 msgstr "(Не найдено никаких изображений)"
 
-#: image/image_details.py:475 image/image_details.py:482
+#: image/image_details.py:478 image/image_details.py:485
 msgid "%s downstream image(s) found."
 msgstr "{0} нисходящее изображение(ы) найдено."
 
-#: image/image_details.py:478
+#: image/image_details.py:481
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (кэшированное) изображение (изображения) вниз по течению."
 
-#: image/image_details.py:484
+#: image/image_details.py:487
 msgid "No downstream related images found in"
 msgstr "Не найдено ни одного связанного с нисходящим потоком изображения"
 
-#: image/image_details.py:544
+#: image/image_details.py:547
 msgid "Updated tags for %s"
 msgstr "Обновленные теги для {0}"
 
@@ -1689,46 +1689,58 @@ msgstr "Установите метки на изображениях, отно�
 msgid "Show previous/next group"
 msgstr "Показать предыдущую/следующую группу"
 
-#: utils/help_and_config.py:136
+#: utils/help_and_config.py:139
 msgid "Show Toasts"
 msgstr "Показать тосты"
 
-#: utils/help_and_config.py:138
+#: utils/help_and_config.py:141
 msgid "Slideshow Interval (sec)"
 msgstr "Интервал показа слайдов (сек)"
 
-#: utils/help_and_config.py:140
+#: utils/help_and_config.py:143
 msgid "File Check Interval (sec)"
 msgstr "Интервал обновления файлов (сек)"
 
-#: utils/help_and_config.py:142
+#: utils/help_and_config.py:145
 msgid "Max Search Results"
 msgstr "Максимальные результаты поиска"
 
-#: utils/help_and_config.py:144
+#: utils/help_and_config.py:147
 msgid "Sort By"
 msgstr "Сортировать по"
 
-#: utils/help_and_config.py:146
+#: utils/help_and_config.py:151
 msgid "Toasts Persist (sec)"
 msgstr "Тосты сохраняются (сек)"
 
-#: utils/help_and_config.py:148
+#: utils/help_and_config.py:153
 msgid "Title Notify Persist (sec)"
 msgstr "Название Уведомить о сохранении (сек)"
 
-#: utils/help_and_config.py:150
+#: utils/help_and_config.py:155
 msgid "Delete Instantly"
 msgstr "Удалить мгновенно"
 
-#: utils/help_and_config.py:152
+#: utils/help_and_config.py:157
 msgid "Trash Folder"
 msgstr "Папка для мусора"
 
-#: utils/help_and_config.py:154
+#: utils/help_and_config.py:159
 msgid "Image Tagging Enabled"
 msgstr "Тегирование изображений включено"
 
-#: utils/help_and_config.py:156
+#: utils/help_and_config.py:161
 msgid "Escape Backslash Filepaths"
 msgstr "Исключение обратных косых символов в путях файлов"
+
+#: app.py:1403
+msgid ""
+"Are you sure you want to run all prevalidations on directory {0} ? This may "
+"take a while."
+msgstr ""
+"Вы уверены, что хотите запустить все превалидации в каталоге {0}? Это может "
+"занять некоторое время."
+
+#: compare/prevalidations_window.py:466 utils/help_and_config.py:149
+msgid "Enable Prevalidations"
+msgstr "Обеспечение превалидации"

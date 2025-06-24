@@ -1399,10 +1399,16 @@ class App():
                 self.handle_error(str(e), title="Prevalidations Window Error")
 
     def run_prevalidations_for_base_dir(self, event=None):
+        if self.file_browser.is_slow_total_files(threshold=100):
+            res = self.alert(_("Many Files"), _("Are you sure you want to run all prevalidations on directory {0} ? This may take a while.").format(self.get_base_dir()), kind="askokcancel")
+            if res != messagebox.OK and res != True:
+                logger.info("User canceled prevalidations task")
+                return
+        logger.warning("Running prevalidations for " + self.get_base_dir())
         PrevalidationsWindow.prevalidated_cache.clear()
         for image_path in self.file_browser.get_files():
             try:
-                prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self.get_base_dir, self.hide_current_media, self.toast)
+                prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self.get_base_dir, self.hide_current_media, self.title_notify)
             except Exception as e:
                 logger.error(e)
 
