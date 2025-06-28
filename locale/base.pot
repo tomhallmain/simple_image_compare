@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: APPLICATION 1.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translator@example.com>\n"
-"POT-Creation-Date: 2025-06-24 15:05-0400\n"
-"PO-Revision-Date: 2025-06-24 15:05-0400\n"
+"POT-Creation-Date: 2025-06-28 19:16-0400\n"
+"PO-Revision-Date: 2025-06-28 19:16-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1139,102 +1139,126 @@ msgid "Flip Image Vertically"
 msgstr ""
 
 #: image/image_details.py:165
+msgid "Copy Without EXIF"
+msgstr ""
+
+#: image/image_details.py:167
+msgid "Convert to JPG"
+msgstr ""
+
+#: image/image_details.py:170
 msgid "Show Metadata"
 msgstr ""
 
-#: image/image_details.py:169
+#: image/image_details.py:174
 msgid "Open Related Image"
 msgstr ""
 
-#: image/image_details.py:178
+#: image/image_details.py:183
 msgid "Image Generation"
 msgstr ""
 
-#: image/image_details.py:186
+#: image/image_details.py:191
 msgid "Run Image Generation"
 msgstr ""
 
-#: image/image_details.py:188
+#: image/image_details.py:193
 msgid "Press Shift+I on a main app window to run this"
 msgstr ""
 
-#: image/image_details.py:191
+#: image/image_details.py:196
 msgid "Redo Prompt"
 msgstr ""
 
-#: image/image_details.py:195
+#: image/image_details.py:200
 msgid "Tags"
 msgstr ""
 
-#: image/image_details.py:205
+#: image/image_details.py:210
 msgid "Update Tags"
 msgstr ""
 
-#: image/image_details.py:268
+#: image/image_details.py:273
 msgid "Copied prompt"
 msgstr ""
 
-#: image/image_details.py:277 image/image_details.py:287
+#: image/image_details.py:282 image/image_details.py:292
 msgid "Copied prompt without BREAK"
 msgstr ""
 
-#: image/image_details.py:305
+#: image/image_details.py:310
 msgid "Rotated image right"
 msgstr ""
 
-#: image/image_details.py:305
+#: image/image_details.py:310
 msgid "Rotated image left"
 msgstr ""
 
-#: image/image_details.py:314
+#: image/image_details.py:319
 msgid "Cropped image"
 msgstr ""
 
-#: image/image_details.py:316
+#: image/image_details.py:321
 msgid "No crops found"
 msgstr ""
 
-#: image/image_details.py:323
+#: image/image_details.py:328
 msgid "Enhanced image"
 msgstr ""
 
-#: image/image_details.py:328
+#: image/image_details.py:333
 msgid "Randomly cropped image"
 msgstr ""
 
-#: image/image_details.py:337
+#: image/image_details.py:342
 msgid "Randomly modified image"
 msgstr ""
 
-#: image/image_details.py:342
+#: image/image_details.py:347
 msgid "Flipped image"
 msgstr ""
 
-#: image/image_details.py:347
+#: image/image_details.py:353
+msgid "Copied image without EXIF data"
+msgstr ""
+
+#: image/image_details.py:356
+msgid "Error copying image without EXIF"
+msgstr ""
+
+#: image/image_details.py:362
+msgid "Converted image to JPG"
+msgstr ""
+
+#: image/image_details.py:365
+msgid "Error converting image to JPG"
+msgstr ""
+
+#: image/image_details.py:370
 msgid "No metadata found"
 msgstr ""
 
-#: image/image_details.py:361 image/image_details.py:419
+#: image/image_details.py:384 image/image_details.py:442
 msgid " (Exact Match Not Found)"
 msgstr ""
 
-#: image/image_details.py:363 image/image_details.py:416
+#: image/image_details.py:386 image/image_details.py:439
 msgid "(No related image found)"
 msgstr ""
 
-#: image/image_details.py:478 image/image_details.py:485
+#: image/image_details.py:501 image/image_details.py:508
 msgid "%s downstream image(s) found."
 msgstr ""
 
-#: image/image_details.py:481
+#: image/image_details.py:504
 msgid "%s (cached) downstream image(s) found."
 msgstr ""
 
-#: image/image_details.py:487
+#: image/image_details.py:510
 msgid "No downstream related images found in"
 msgstr ""
 
-#: image/image_details.py:547
+#: image/image_details.py:570
 msgid "Updated tags for %s"
 msgstr ""
 

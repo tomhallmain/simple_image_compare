@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-06-24 17:21-0400\n"
-"PO-Revision-Date: 2025-06-24 17:21-0400\n"
+"POT-Creation-Date: 2025-06-28 19:26-0400\n"
+"PO-Revision-Date: 2025-06-28 19:26-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
 "Language: ko\n"
@@ -260,6 +260,12 @@ msgid "NO_MARKS_SET"
 msgstr ""
 "{0} 마크가 설정되었습니다(>={1} 예상).\n"
 "Shift+M을 사용하여 마크를 설정합니다."
+
+#: app.py:1403
+msgid ""
+"Are you sure you want to run all prevalidations on directory {0} ? This may "
+"take a while."
+msgstr "디렉터리 {0}에서 모든 사전 유효성 검사를 실행하시겠습니까? 시간이 걸릴 수 있습니다."
 
 #: app.py:1417
 msgid "Prevalidations now running"
@@ -646,6 +652,10 @@ msgstr "사전 검증"
 #: compare/prevalidations_window.py:459
 msgid "Clear prevalidations"
 msgstr "취소 정책"
+
+#: compare/prevalidations_window.py:466 utils/help_and_config.py:149
+msgid "Enable Prevalidations"
+msgstr "사전 유효성 검사 사용"
 
 #: compare/prevalidations_window.py:503 files/hotkey_actions_window.py:95
 msgid "Set"
@@ -1168,103 +1178,103 @@ msgstr "플립 이미지 수평으로"
 msgid "Flip Image Vertically"
 msgstr "Flip 이미지 수직으로"
 
-#: image/image_details.py:165
+#: image/image_details.py:170
 msgid "Show Metadata"
 msgstr "Metadata 보기"
 
-#: image/image_details.py:169
+#: image/image_details.py:174
 msgid "Open Related Image"
 msgstr "관련 이미지"
 
-#: image/image_details.py:178
+#: image/image_details.py:183
 msgid "Image Generation"
 msgstr "이미지 생성"
 
-#: image/image_details.py:186
+#: image/image_details.py:191
 msgid "Run Image Generation"
 msgstr "이미지 생성"
 
-#: image/image_details.py:188
+#: image/image_details.py:193
 msgid "Press Shift+I on a main app window to run this"
 msgstr "프레스 Shift+ 나는 메인 앱 창에서 이것을 실행"
 
-#: image/image_details.py:191
+#: image/image_details.py:196
 msgid "Redo Prompt"
 msgstr "레드오 Prompt"
 
-#: image/image_details.py:195
+#: image/image_details.py:200
 msgid "Tags"
 msgstr "이름 *"
 
-#: image/image_details.py:205
+#: image/image_details.py:210
 msgid "Update Tags"
 msgstr "업데이트"
 
-#: image/image_details.py:268
+#: image/image_details.py:273
 msgid "Copied prompt"
 msgstr "비밀번호"
 
-#: image/image_details.py:277 image/image_details.py:287
+#: image/image_details.py:282 image/image_details.py:292
 msgid "Copied prompt without BREAK"
 msgstr "BREAK없이 복사 된 프롬프트"
 
-#: image/image_details.py:305
+#: image/image_details.py:310
 msgid "Rotated image right"
 msgstr "연락처"
 
-#: image/image_details.py:305
+#: image/image_details.py:310
 msgid "Rotated image left"
 msgstr "왼쪽된 이미지"
 
-#: image/image_details.py:314
+#: image/image_details.py:319
 msgid "Cropped image"
 msgstr "Cropped 이미지"
 
-#: image/image_details.py:316
+#: image/image_details.py:321
 msgid "No crops found"
 msgstr "발견되지 않은 작물"
 
-#: image/image_details.py:323
+#: image/image_details.py:328
 msgid "Enhanced image"
 msgstr "향상된 이미지"
 
-#: image/image_details.py:328
+#: image/image_details.py:333
 msgid "Randomly cropped image"
 msgstr "무작위 이미지"
 
-#: image/image_details.py:337
+#: image/image_details.py:342
 msgid "Randomly modified image"
 msgstr "무작위 이미지"
 
-#: image/image_details.py:342
+#: image/image_details.py:347
 msgid "Flipped image"
 msgstr "좋은 이미지"
 
-#: image/image_details.py:347
+#: image/image_details.py:370
 msgid "No metadata found"
 msgstr "메타데이터 없음"
 
-#: image/image_details.py:361 image/image_details.py:419
+#: image/image_details.py:384 image/image_details.py:442
 msgid " (Exact Match Not Found)"
 msgstr " (Exact Match 찾을 수 없음)"
 
-#: image/image_details.py:363 image/image_details.py:416
+#: image/image_details.py:386 image/image_details.py:439
 msgid "(No related image found)"
 msgstr "(찾은 관련 이미지 없음)"
 
-#: image/image_details.py:478 image/image_details.py:485
+#: image/image_details.py:501 image/image_details.py:508
 msgid "%s downstream image(s) found."
 msgstr "{0} 다운스트림 이미지(s)가 있습니다."
 
-#: image/image_details.py:481
+#: image/image_details.py:504
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (예정) 다운스트림 이미지(s) 발견."
 
-#: image/image_details.py:487
+#: image/image_details.py:510
 msgid "No downstream related images found in"
 msgstr "downstream 관련 이미지가 없습니다."
 
-#: image/image_details.py:547
+#: image/image_details.py:570
 msgid "Updated tags for %s"
 msgstr "{0}에 대한 업데이트 된 태그"
 
@@ -1698,12 +1708,26 @@ msgstr "이미지 태그 사용"
 msgid "Escape Backslash Filepaths"
 msgstr "파일 경로의 백슬래시 이스케이프"
 
-#: app.py:1403
-msgid ""
-"Are you sure you want to run all prevalidations on directory {0} ? This may "
-"take a while."
-msgstr "디렉터리 {0}에서 모든 사전 유효성 검사를 실행하시겠습니까? 시간이 걸릴 수 있습니다."
+#: image/image_details.py:165
+msgid "Copy Without EXIF"
+msgstr "EXIF 없이 복사"
 
-#: compare/prevalidations_window.py:466 utils/help_and_config.py:149
-msgid "Enable Prevalidations"
-msgstr "사전 유효성 검사 사용"
+#: image/image_details.py:167
+msgid "Convert to JPG"
+msgstr "JPG로 변환"
+
+#: image/image_details.py:353
+msgid "Copied image without EXIF data"
+msgstr "EXIF 데이터 없이 복사된 이미지"
+
+#: image/image_details.py:356
+msgid "Error copying image without EXIF"
+msgstr "EXIF가 없는 이미지 복사 오류"
+
+#: image/image_details.py:362
+msgid "Converted image to JPG"
+msgstr "이미지를 JPG로 변환"
+
+#: image/image_details.py:365
+msgid "Error converting image to JPG"
+msgstr "이미지를 JPG로 변환하는 중 오류 발생"

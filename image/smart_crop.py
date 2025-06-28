@@ -118,7 +118,7 @@ def validate_division(im: PilImage, division_pos: int, is_horizontal: bool) -> b
 class Cropper:
     @staticmethod
     def smart_crop_simple(image_path: str, new_filename: str) -> None:
-        new_filepath = ImageOps.new_filepath(image_path, new_filename, None)
+        new_filepath = ImageOps.new_filepath(image_path, new_filename)
         if os.path.exists(new_filepath):
             logger.info("Skipping crop already run: " + new_filepath)
             return
@@ -141,7 +141,7 @@ class Cropper:
         we can crop the image and save valid images accordingly.
         '''
         saved_files = []
-        new_filepath = ImageOps.new_filepath(image_path, new_filename, None)
+        new_filepath = ImageOps.new_filepath(image_path, new_filename)
         if os.path.exists(new_filepath):
             logger.info("Skipping crop already run: " + new_filepath)
             return saved_files
@@ -153,7 +153,7 @@ class Cropper:
             for i in range(len(cropped_images)):
                 cropped_image = cropped_images[i]
                 if index_filepaths:
-                    new_filepath = ImageOps.new_filepath(image_path, new_filename, "_" + str(i))
+                    new_filepath = ImageOps.new_filepath(image_path, new_filename, append_part="_" + str(i))
                 cropped_image.save(new_filepath)
                 cropped_image.close()
             logger.info("Cropped image: " + new_filepath)

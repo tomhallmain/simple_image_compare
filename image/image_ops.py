@@ -18,9 +18,9 @@ class ImageOps:
     COLORS = ["red", "green", "blue", "yellow", "purple", "orange", "black", "white", "gray", "pink", "brown"]
 
     @staticmethod
-    def new_filepath(image_path: str, new_filename: str, append_part: str | None) -> str:
+    def new_filepath(image_path: str, new_filename: str = "", append_part: str | None = None) -> str:
         dirname = os.path.dirname(image_path)
-        if new_filename is None or new_filename == "" or append_part is not None:
+        if new_filename == "" or append_part is not None:
             basename = os.path.basename(image_path)
             filename_part, ext = os.path.splitext(basename)
             if append_part is not None:
@@ -42,7 +42,7 @@ class ImageOps:
                 rotated = np.rot90(img, k=1)
 
             current_extension = os.path.splitext(image_path)[-1]
-            new_filepath = ImageOps.new_filepath(image_path, "", "_rot")
+            new_filepath = ImageOps.new_filepath(image_path, append_part="_rot")
             cv2.imwrite(new_filepath, rotated)
         except Exception as e:
             logger.error(f'Error in rotate image: {e}')
@@ -51,7 +51,7 @@ class ImageOps:
     def rotate_image_partial(image_path, angle=90, center=None, scale=1.0):
         image = cv2.imread(image_path)
         rotated = ImageOps._rotate_image_partial(image, angle=angle, center=center, scale=scale)
-        new_filepath = ImageOps.new_filepath(image_path, "", "_rot")
+        new_filepath = ImageOps.new_filepath(image_path, append_part="_rot")
         rotated.imsave(new_filepath)
         image.close()
 
@@ -101,10 +101,52 @@ class ImageOps:
     def flip_image(image_path, top_bottom=False):
         original_img = PIL.Image.open(image_path)
         mod_img, original_img = ImageOps._flip_image(original_img, top_bottom=top_bottom)
-        new_filepath = ImageOps.new_filepath(image_path, "", "_flip")
+        new_filepath = ImageOps.new_filepath(image_path, append_part="_flip")
         mod_img.save(new_filepath)
         original_img.close()
         mod_img.close()
+
+    @staticmethod
+    def convert_to_jpg(image_path, quality=85):
+        """
+        Convert lossless image formats to JPG to reduce file size.
+        Preserves original dimensions and removes EXIF data.
+        
+        Args:
+            image_path: Path to the source image
+            quality: JPG quality (1-100, default 85)
+        """
+        try:
+            # Open the image
+            image = PIL.Image.open(image_path)
+            
+            # Convert to RGB if necessary (JPG doesn't support alpha channel)
+            if image.mode in ('RGBA', 'LA', 'P'):
+                # Create a white background for transparent images
+                background = PIL.Image.new('RGB', image.size, (255, 255, 255))
+                if image.mode == 'P':
+                    image = image.convert('RGBA')
+                background.paste(image, mask=image.split()[-1] if image.mode in ('RGBA', 'LA') else None)
+                image = background
+            elif image.mode != 'RGB':
+                image = image.convert('RGB')
+            
+            # Create new filepath with .jpg extension
+            new_filepath = ImageOps.new_filepath(image_path, append_part="")
+            # Ensure the extension is .jpg
+            base_path = os.path.splitext(new_filepath)[0]
+            new_filepath = base_path + ".jpg"
+            
+            # Save as JPG without EXIF data
+            image.save(new_filepath, 'JPEG', quality=quality, optimize=True)
+            image.close()
+            
+            logger.info(f"Converted {image_path} to JPG: {new_filepath}")
+            return new_filepath
+            
+        except Exception as e:
+            logger.error(f"Error converting image to JPG: {e}")
+            raise
 
     @staticmethod
     def _flip_image(im, top_bottom=False):
@@ -145,7 +187,7 @@ class ImageOps:
         im = PIL.Image.open(image_path)
         cropped = ImageOps._random_crop_and_upscale(im, allowable_proportions, shortest_side)
         im.close()
-        new_filepath = ImageOps.new_filepath(image_path, "", "_crop")
+        new_filepath = ImageOps.new_filepath(image_path, append_part="_crop")
         cropped.save(new_filepath)
 
     @staticmethod
@@ -203,7 +245,7 @@ class ImageOps:
         sr.setModel("edsr", 3)
         # Upscale the image
         result = sr.upsample(image)
-        new_filepath = ImageOps.new_filepath(image_path, "", "_up")
+        new_filepath = ImageOps.new_filepath(image_path, append_part="_up")
         # Save the image
         cv2.imwrite(new_filepath, result)
 
@@ -247,7 +289,7 @@ class ImageOps:
         im_final = im
         if not has_modified_image:
             logger.warning("No modifications made to image!")
-        new_filepath = ImageOps.new_filepath(image_path, "", "_edit")
+        new_filepath = ImageOps.new_filepath(image_path, append_part="_edit")
         im_final.save(new_filepath)
         im.close()
         try:
@@ -259,7 +301,7 @@ class ImageOps:
     def random_draw(image_path):
         image = PIL.Image.open(image_path)
         ImageOps._random_draw(image)
-        new_filepath = ImageOps.new_filepath(image_path, "", "_drawn")
+        new_filepath = ImageOps.new_filepath(image_path, append_part="_drawn")
         image.save(new_filepath)
         image.close()
 

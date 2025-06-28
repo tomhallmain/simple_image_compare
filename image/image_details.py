@@ -161,6 +161,11 @@ class ImageDetails():
         self.add_button("flip_image_btn",  _("Flip Image Horizontally"), lambda: self.flip_image(), column=0)
         self.add_button("flip_vertical_btn", _("Flip Image Vertically"), lambda: self.flip_image(top_bottom=True), column=1)
 
+        self.copy_without_exif_btn = None
+        self.add_button("copy_without_exif_btn", _("Copy Without EXIF"), lambda: self.copy_without_exif(), column=0)
+        self.convert_to_jpg_btn = None
+        self.add_button("convert_to_jpg_btn", _("Convert to JPG"), lambda: self.convert_to_jpg(), column=1)
+
         self.metadata_btn = None
         self.add_button("metadata_btn",  _("Show Metadata"), lambda: self.show_metadata(), column=0)
         self.row_count1 += 1
@@ -340,6 +345,24 @@ class ImageDetails():
         ImageOps.flip_image(self.image_path, top_bottom=top_bottom)
         self.app_actions.refresh()
         self.app_actions.toast(_("Flipped image"))
+
+    def copy_without_exif(self):
+        try:
+            image_data_extractor.copy_without_exif(self.image_path)
+            self.app_actions.refresh()
+            self.app_actions.toast(_("Copied image without EXIF data"))
+        except Exception as e:
+            logger.error(f"Error copying image without EXIF: {e}")
+            self.app_actions.toast(_("Error copying image without EXIF"))
+
+    def convert_to_jpg(self):
+        try:
+            ImageOps.convert_to_jpg(self.image_path)
+            self.app_actions.refresh()
+            self.app_actions.toast(_("Converted image to JPG"))
+        except Exception as e:
+            logger.error(f"Error converting image to JPG: {e}")
+            self.app_actions.toast(_("Error converting image to JPG"))
 
     def show_metadata(self, event=None):
         metadata_text = image_data_extractor.get_raw_metadata_text(self.image_path)

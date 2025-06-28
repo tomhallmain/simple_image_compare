@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-06-24 17:21-0400\n"
-"PO-Revision-Date: 2025-06-24 17:21-0400\n"
+"POT-Creation-Date: 2025-06-28 19:26-0400\n"
+"PO-Revision-Date: 2025-06-28 19:26-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: pt Team <<EMAIL>>\n"
 "Language: pt\n"
@@ -266,6 +266,14 @@ msgid "NO_MARKS_SET"
 msgstr ""
 "{0} marcas foram definidas (>={1} esperado).\n"
 "Utilize Shift+M para definir uma marca."
+
+#: app.py:1403
+msgid ""
+"Are you sure you want to run all prevalidations on directory {0} ? This may "
+"take a while."
+msgstr ""
+"Tem a certeza de que pretende executar todas as prevalidações na diretoria "
+"{0} ? Isto pode demorar algum tempo."
 
 #: app.py:1417
 msgid "Prevalidations now running"
@@ -675,6 +683,10 @@ msgstr "Adicionar prevalidação"
 #: compare/prevalidations_window.py:459
 msgid "Clear prevalidations"
 msgstr "Prevalidações claras"
+
+#: compare/prevalidations_window.py:466 utils/help_and_config.py:149
+msgid "Enable Prevalidations"
+msgstr "Ativar as pré-validações"
 
 #: compare/prevalidations_window.py:503 files/hotkey_actions_window.py:95
 msgid "Set"
@@ -1205,103 +1217,103 @@ msgstr "Inverter a Imagem Horizontalmente"
 msgid "Flip Image Vertically"
 msgstr "Inverter a Imagem Verticalmente"
 
-#: image/image_details.py:165
+#: image/image_details.py:170
 msgid "Show Metadata"
 msgstr "Mostrar metadados"
 
-#: image/image_details.py:169
+#: image/image_details.py:174
 msgid "Open Related Image"
 msgstr "Abrir imagem relacionada"
 
-#: image/image_details.py:178
+#: image/image_details.py:183
 msgid "Image Generation"
 msgstr "Geração de Imagens"
 
-#: image/image_details.py:186
+#: image/image_details.py:191
 msgid "Run Image Generation"
 msgstr "Executar a Geração de Imagens"
 
-#: image/image_details.py:188
+#: image/image_details.py:193
 msgid "Press Shift+I on a main app window to run this"
 msgstr "Pressione Shift+I na janela principal da aplicação para executar isto"
 
-#: image/image_details.py:191
+#: image/image_details.py:196
 msgid "Redo Prompt"
 msgstr "Refazer o Pedido"
 
-#: image/image_details.py:195
+#: image/image_details.py:200
 msgid "Tags"
 msgstr "Etiquetas"
 
-#: image/image_details.py:205
+#: image/image_details.py:210
 msgid "Update Tags"
 msgstr "Actualizar as Marcas"
 
-#: image/image_details.py:268
+#: image/image_details.py:273
 msgid "Copied prompt"
 msgstr "Prompt copiada"
 
-#: image/image_details.py:277 image/image_details.py:287
+#: image/image_details.py:282 image/image_details.py:292
 msgid "Copied prompt without BREAK"
 msgstr "Copiou o prompt sem “BREAK”"
 
-#: image/image_details.py:305
+#: image/image_details.py:310
 msgid "Rotated image right"
 msgstr "Imagem rotacionada à direita"
 
-#: image/image_details.py:305
+#: image/image_details.py:310
 msgid "Rotated image left"
 msgstr "Imagem rotacionada à esquerda"
 
-#: image/image_details.py:314
+#: image/image_details.py:319
 msgid "Cropped image"
 msgstr "Imagem recortada"
 
-#: image/image_details.py:316
+#: image/image_details.py:321
 msgid "No crops found"
 msgstr "Não foram encontradas recortas"
 
-#: image/image_details.py:323
+#: image/image_details.py:328
 msgid "Enhanced image"
 msgstr "Imagem melhorada"
 
-#: image/image_details.py:328
+#: image/image_details.py:333
 msgid "Randomly cropped image"
 msgstr "Imagem recortada aleatoriamente"
 
-#: image/image_details.py:337
+#: image/image_details.py:342
 msgid "Randomly modified image"
 msgstr "Imagem modificada aleatoriamente"
 
-#: image/image_details.py:342
+#: image/image_details.py:347
 msgid "Flipped image"
 msgstr "Imagem virada"
 
-#: image/image_details.py:347
+#: image/image_details.py:370
 msgid "No metadata found"
 msgstr "Não foram encontrados metadados"
 
-#: image/image_details.py:361 image/image_details.py:419
+#: image/image_details.py:384 image/image_details.py:442
 msgid " (Exact Match Not Found)"
 msgstr " (Correspondência exacta não encontrada)"
 
-#: image/image_details.py:363 image/image_details.py:416
+#: image/image_details.py:386 image/image_details.py:439
 msgid "(No related image found)"
 msgstr "(Nenhuma imagem relacionada encontrada)"
 
-#: image/image_details.py:478 image/image_details.py:485
+#: image/image_details.py:501 image/image_details.py:508
 msgid "%s downstream image(s) found."
 msgstr "{0} imagem(ns) a jusante encontrada(s)."
 
-#: image/image_details.py:481
+#: image/image_details.py:504
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (em cache) imagem(ns) a jusante encontrada(s)."
 
-#: image/image_details.py:487
+#: image/image_details.py:510
 msgid "No downstream related images found in"
 msgstr "Não foram encontradas imagens relacionadas com o downstream em"
 
-#: image/image_details.py:547
+#: image/image_details.py:570
 msgid "Updated tags for %s"
 msgstr "Etiquetas actualizadas para {0}"
 
@@ -1741,14 +1753,26 @@ msgstr "Etiquetagem de imagens activada"
 msgid "Escape Backslash Filepaths"
 msgstr "Escape as barras invertidas nos caminhos dos ficheiros"
 
-#: app.py:1403
-msgid ""
-"Are you sure you want to run all prevalidations on directory {0} ? This may "
-"take a while."
-msgstr ""
-"Tem a certeza de que pretende executar todas as prevalidações na diretoria "
-"{0} ? Isto pode demorar algum tempo."
+#: image/image_details.py:165
+msgid "Copy Without EXIF"
+msgstr "Copiar sem EXIF"
 
-#: compare/prevalidations_window.py:466 utils/help_and_config.py:149
-msgid "Enable Prevalidations"
-msgstr "Ativar as pré-validações"
+#: image/image_details.py:167
+msgid "Convert to JPG"
+msgstr "Converter em JPG"
+
+#: image/image_details.py:353
+msgid "Copied image without EXIF data"
+msgstr "Imagem copiada sem dados EXIF"
+
+#: image/image_details.py:356
+msgid "Error copying image without EXIF"
+msgstr "Erro ao copiar imagem sem EXIF"
+
+#: image/image_details.py:362
+msgid "Converted image to JPG"
+msgstr "Imagem convertida em JPG"
+
+#: image/image_details.py:365
+msgid "Error converting image to JPG"
+msgstr "Erro ao converter a imagem em JPG"

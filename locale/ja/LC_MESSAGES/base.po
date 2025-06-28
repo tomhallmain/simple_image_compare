@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-06-24 17:21-0400\n"
-"PO-Revision-Date: 2025-06-24 17:21-0400\n"
+"POT-Creation-Date: 2025-06-28 19:26-0400\n"
+"PO-Revision-Date: 2025-06-28 19:26-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
@@ -260,6 +260,12 @@ msgid "NO_MARKS_SET"
 msgstr ""
 "{0}マークが設定された(>={1}の予定)。\n"
 "マークを設定するには Shift+M を使用します。"
+
+#: app.py:1403
+msgid ""
+"Are you sure you want to run all prevalidations on directory {0} ? This may "
+"take a while."
+msgstr "本当にディレクトリ{0}ですべての事前検証を実行したいのですか？時間がかかるかもしれません。"
 
 #: app.py:1417
 msgid "Prevalidations now running"
@@ -644,6 +650,10 @@ msgstr "優先権を追加"
 #: compare/prevalidations_window.py:459
 msgid "Clear prevalidations"
 msgstr "明確な優先順位"
+
+#: compare/prevalidations_window.py:466 utils/help_and_config.py:149
+msgid "Enable Prevalidations"
+msgstr "プレバリデーションを有効にする"
 
 #: compare/prevalidations_window.py:503 files/hotkey_actions_window.py:95
 msgid "Set"
@@ -1166,103 +1176,103 @@ msgstr "横のフリップ イメージ"
 msgid "Flip Image Vertically"
 msgstr "縦にフリップ イメージ"
 
-#: image/image_details.py:165
+#: image/image_details.py:170
 msgid "Show Metadata"
 msgstr "メタデータを表示する"
 
-#: image/image_details.py:169
+#: image/image_details.py:174
 msgid "Open Related Image"
 msgstr "関連する画像を開く"
 
-#: image/image_details.py:178
+#: image/image_details.py:183
 msgid "Image Generation"
 msgstr "画像生成"
 
-#: image/image_details.py:186
+#: image/image_details.py:191
 msgid "Run Image Generation"
 msgstr "映像生成の実行"
 
-#: image/image_details.py:188
+#: image/image_details.py:193
 msgid "Press Shift+I on a main app window to run this"
 msgstr "プレスシフト+ 私はメインアプリウィンドウでこれを実行します"
 
-#: image/image_details.py:191
+#: image/image_details.py:196
 msgid "Redo Prompt"
 msgstr "Redoのプロンプト"
 
-#: image/image_details.py:195
+#: image/image_details.py:200
 msgid "Tags"
 msgstr "ニュース"
 
-#: image/image_details.py:205
+#: image/image_details.py:210
 msgid "Update Tags"
 msgstr "更新タグ"
 
-#: image/image_details.py:268
+#: image/image_details.py:273
 msgid "Copied prompt"
 msgstr "Copiedのプロンプト"
 
-#: image/image_details.py:277 image/image_details.py:287
+#: image/image_details.py:282 image/image_details.py:292
 msgid "Copied prompt without BREAK"
 msgstr "BREAKなしでコピーされたプロンプト"
 
-#: image/image_details.py:305
+#: image/image_details.py:310
 msgid "Rotated image right"
 msgstr "右に回転した画像"
 
-#: image/image_details.py:305
+#: image/image_details.py:310
 msgid "Rotated image left"
 msgstr "左に回転した画像"
 
-#: image/image_details.py:314
+#: image/image_details.py:319
 msgid "Cropped image"
 msgstr "Croppedイメージ"
 
-#: image/image_details.py:316
+#: image/image_details.py:321
 msgid "No crops found"
 msgstr "作物が見つかりません"
 
-#: image/image_details.py:323
+#: image/image_details.py:328
 msgid "Enhanced image"
 msgstr "高められたイメージ"
 
-#: image/image_details.py:328
+#: image/image_details.py:333
 msgid "Randomly cropped image"
 msgstr "ランダムにクロップされた画像"
 
-#: image/image_details.py:337
+#: image/image_details.py:342
 msgid "Randomly modified image"
 msgstr "ランダムに修正された画像"
 
-#: image/image_details.py:342
+#: image/image_details.py:347
 msgid "Flipped image"
 msgstr "フリップイメージ"
 
-#: image/image_details.py:347
+#: image/image_details.py:370
 msgid "No metadata found"
 msgstr "メタデータが見つかりません"
 
-#: image/image_details.py:361 image/image_details.py:419
+#: image/image_details.py:384 image/image_details.py:442
 msgid " (Exact Match Not Found)"
 msgstr " (正確なマッチが見つかりません)"
 
-#: image/image_details.py:363 image/image_details.py:416
+#: image/image_details.py:386 image/image_details.py:439
 msgid "(No related image found)"
 msgstr "(関連画像が見つかりません)"
 
-#: image/image_details.py:478 image/image_details.py:485
+#: image/image_details.py:501 image/image_details.py:508
 msgid "%s downstream image(s) found."
 msgstr "{0} 下流画像(s)が見つかります。"
 
-#: image/image_details.py:481
+#: image/image_details.py:504
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (キャッシュ済み) ダウンストリーム画像が見つかりました。"
 
-#: image/image_details.py:487
+#: image/image_details.py:510
 msgid "No downstream related images found in"
 msgstr "下流関連の画像が見つかりません"
 
-#: image/image_details.py:547
+#: image/image_details.py:570
 msgid "Updated tags for %s"
 msgstr "{0} のタグを更新"
 
@@ -1696,12 +1706,26 @@ msgstr "画像タグ有効"
 msgid "Escape Backslash Filepaths"
 msgstr "ファイルパスのバックスラッシュをエスケープする"
 
-#: app.py:1403
-msgid ""
-"Are you sure you want to run all prevalidations on directory {0} ? This may "
-"take a while."
-msgstr "本当にディレクトリ{0}ですべての事前検証を実行したいのですか？時間がかかるかもしれません。"
+#: image/image_details.py:165
+msgid "Copy Without EXIF"
+msgstr "EXIFなしコピー"
 
-#: compare/prevalidations_window.py:466 utils/help_and_config.py:149
-msgid "Enable Prevalidations"
-msgstr "プレバリデーションを有効にする"
+#: image/image_details.py:167
+msgid "Convert to JPG"
+msgstr "JPGに変換"
+
+#: image/image_details.py:353
+msgid "Copied image without EXIF data"
+msgstr "EXIFデータのないコピー画像"
+
+#: image/image_details.py:356
+msgid "Error copying image without EXIF"
+msgstr "EXIFのない画像のコピーエラー"
+
+#: image/image_details.py:362
+msgid "Converted image to JPG"
+msgstr "画像をJPGに変換"
+
+#: image/image_details.py:365
+msgid "Error converting image to JPG"
+msgstr "画像をJPGに変換する際のエラー"

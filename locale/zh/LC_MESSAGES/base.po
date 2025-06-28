@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-06-24 17:21-0400\n"
-"PO-Revision-Date: 2025-06-24 17:21-0400\n"
+"POT-Creation-Date: 2025-06-28 19:26-0400\n"
+"PO-Revision-Date: 2025-06-28 19:26-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
@@ -260,6 +260,12 @@ msgid "NO_MARKS_SET"
 msgstr ""
 "已设置 {0} 标记(预计 >={1})。\n"
 "使用 Shift+M 设置标记。"
+
+#: app.py:1403
+msgid ""
+"Are you sure you want to run all prevalidations on directory {0} ? This may "
+"take a while."
+msgstr "您确定要在目录{0}上运行所有预验证吗？这可能需要一些时间。"
 
 #: app.py:1417
 msgid "Prevalidations now running"
@@ -643,6 +649,10 @@ msgstr "添加预验证"
 #: compare/prevalidations_window.py:459
 msgid "Clear prevalidations"
 msgstr "清除预先验证"
+
+#: compare/prevalidations_window.py:466 utils/help_and_config.py:149
+msgid "Enable Prevalidations"
+msgstr "启用预先批准"
 
 #: compare/prevalidations_window.py:503 files/hotkey_actions_window.py:95
 msgid "Set"
@@ -1164,103 +1174,103 @@ msgstr "水平翻转图像"
 msgid "Flip Image Vertically"
 msgstr "垂直翻转图像"
 
-#: image/image_details.py:165
+#: image/image_details.py:170
 msgid "Show Metadata"
 msgstr "显示元数据"
 
-#: image/image_details.py:169
+#: image/image_details.py:174
 msgid "Open Related Image"
 msgstr "打开相关图像"
 
-#: image/image_details.py:178
+#: image/image_details.py:183
 msgid "Image Generation"
 msgstr "图像生成"
 
-#: image/image_details.py:186
+#: image/image_details.py:191
 msgid "Run Image Generation"
 msgstr "运行图像生成"
 
-#: image/image_details.py:188
+#: image/image_details.py:193
 msgid "Press Shift+I on a main app window to run this"
 msgstr "按Shift+键 我在主应用窗口运行这个"
 
-#: image/image_details.py:191
+#: image/image_details.py:196
 msgid "Redo Prompt"
 msgstr "重做提示"
 
-#: image/image_details.py:195
+#: image/image_details.py:200
 msgid "Tags"
 msgstr "标记"
 
-#: image/image_details.py:205
+#: image/image_details.py:210
 msgid "Update Tags"
 msgstr "更新标记"
 
-#: image/image_details.py:268
+#: image/image_details.py:273
 msgid "Copied prompt"
 msgstr "复制提示"
 
-#: image/image_details.py:277 image/image_details.py:287
+#: image/image_details.py:282 image/image_details.py:292
 msgid "Copied prompt without BREAK"
 msgstr "复制的快速无阻"
 
-#: image/image_details.py:305
+#: image/image_details.py:310
 msgid "Rotated image right"
 msgstr "向右旋转图像"
 
-#: image/image_details.py:305
+#: image/image_details.py:310
 msgid "Rotated image left"
 msgstr "左旋图像"
 
-#: image/image_details.py:314
+#: image/image_details.py:319
 msgid "Cropped image"
 msgstr "剪切图像"
 
-#: image/image_details.py:316
+#: image/image_details.py:321
 msgid "No crops found"
 msgstr "没有找到作物"
 
-#: image/image_details.py:323
+#: image/image_details.py:328
 msgid "Enhanced image"
 msgstr "增强图像"
 
-#: image/image_details.py:328
+#: image/image_details.py:333
 msgid "Randomly cropped image"
 msgstr "随机裁剪的图像"
 
-#: image/image_details.py:337
+#: image/image_details.py:342
 msgid "Randomly modified image"
 msgstr "随机修改的图像"
 
-#: image/image_details.py:342
+#: image/image_details.py:347
 msgid "Flipped image"
 msgstr "翻转图像"
 
-#: image/image_details.py:347
+#: image/image_details.py:370
 msgid "No metadata found"
 msgstr "未找到元数据"
 
-#: image/image_details.py:361 image/image_details.py:419
+#: image/image_details.py:384 image/image_details.py:442
 msgid " (Exact Match Not Found)"
 msgstr " (没有找到精确匹配)"
 
-#: image/image_details.py:363 image/image_details.py:416
+#: image/image_details.py:386 image/image_details.py:439
 msgid "(No related image found)"
 msgstr "(没有找到相关的图像)"
 
-#: image/image_details.py:478 image/image_details.py:485
+#: image/image_details.py:501 image/image_details.py:508
 msgid "%s downstream image(s) found."
 msgstr "{0} 找到下游图像 。"
 
-#: image/image_details.py:481
+#: image/image_details.py:504
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (cached) 下游图像找到 。"
 
-#: image/image_details.py:487
+#: image/image_details.py:510
 msgid "No downstream related images found in"
 msgstr "找不到下游相关图像"
 
-#: image/image_details.py:547
+#: image/image_details.py:570
 msgid "Updated tags for %s"
 msgstr "{0} 的更新标签"
 
@@ -1694,12 +1704,26 @@ msgstr "启用图像标记"
 msgid "Escape Backslash Filepaths"
 msgstr "逃离文件路径中的反斜线"
 
-#: app.py:1403
-msgid ""
-"Are you sure you want to run all prevalidations on directory {0} ? This may "
-"take a while."
-msgstr "您确定要在目录{0}上运行所有预验证吗？这可能需要一些时间。"
+#: image/image_details.py:165
+msgid "Copy Without EXIF"
+msgstr "无 EXIF 复制"
 
-#: compare/prevalidations_window.py:466 utils/help_and_config.py:149
-msgid "Enable Prevalidations"
-msgstr "启用预先批准"
+#: image/image_details.py:167
+msgid "Convert to JPG"
+msgstr "转换为 JPG"
+
+#: image/image_details.py:353
+msgid "Copied image without EXIF data"
+msgstr "复制的图像没有 EXIF 数据"
+
+#: image/image_details.py:356
+msgid "Error copying image without EXIF"
+msgstr "复制无 EXIF 的图像时出错"
+
+#: image/image_details.py:362
+msgid "Converted image to JPG"
+msgstr "将图像转换为 JPG"
+
+#: image/image_details.py:365
+msgid "Error converting image to JPG"
+msgstr "将图像转换为 JPG 时出错"

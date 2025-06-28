@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-06-24 17:21-0400\n"
-"PO-Revision-Date: 2025-06-24 17:21-0400\n"
+"POT-Creation-Date: 2025-06-28 19:26-0400\n"
+"PO-Revision-Date: 2025-06-28 19:26-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ru Team <<EMAIL>>\n"
 "Language: ru\n"
@@ -264,6 +264,14 @@ msgid "NO_MARKS_SET"
 msgstr ""
 "Установлено {0} отметок (ожидалось >={1}).\n"
 "Для установки метки используйте Shift+M."
+
+#: app.py:1403
+msgid ""
+"Are you sure you want to run all prevalidations on directory {0} ? This may "
+"take a while."
+msgstr ""
+"Вы уверены, что хотите запустить все превалидации в каталоге {0}? Это может "
+"занять некоторое время."
 
 #: app.py:1417
 msgid "Prevalidations now running"
@@ -673,6 +681,10 @@ msgstr "Добавить превалирование"
 #: compare/prevalidations_window.py:459
 msgid "Clear prevalidations"
 msgstr "Ясные доказательства"
+
+#: compare/prevalidations_window.py:466 utils/help_and_config.py:149
+msgid "Enable Prevalidations"
+msgstr "Обеспечение превалидации"
 
 #: compare/prevalidations_window.py:503 files/hotkey_actions_window.py:95
 msgid "Set"
@@ -1199,103 +1211,103 @@ msgstr "Флип изображения горизонтально"
 msgid "Flip Image Vertically"
 msgstr "Перевернуть изображение вертикально"
 
-#: image/image_details.py:165
+#: image/image_details.py:170
 msgid "Show Metadata"
 msgstr "Показать Метаданные"
 
-#: image/image_details.py:169
+#: image/image_details.py:174
 msgid "Open Related Image"
 msgstr "Открытые связанные изображения"
 
-#: image/image_details.py:178
+#: image/image_details.py:183
 msgid "Image Generation"
 msgstr "Поколение изображений"
 
-#: image/image_details.py:186
+#: image/image_details.py:191
 msgid "Run Image Generation"
 msgstr "Поколение изображений"
 
-#: image/image_details.py:188
+#: image/image_details.py:193
 msgid "Press Shift+I on a main app window to run this"
 msgstr "Сдвиг прессы+ Я на главном окне приложения, чтобы запустить это"
 
-#: image/image_details.py:191
+#: image/image_details.py:196
 msgid "Redo Prompt"
 msgstr "Скорая помощь"
 
-#: image/image_details.py:195
+#: image/image_details.py:200
 msgid "Tags"
 msgstr "Тэги"
 
-#: image/image_details.py:205
+#: image/image_details.py:210
 msgid "Update Tags"
 msgstr "Теги обновления"
 
-#: image/image_details.py:268
+#: image/image_details.py:273
 msgid "Copied prompt"
 msgstr "Копированное сообщение"
 
-#: image/image_details.py:277 image/image_details.py:287
+#: image/image_details.py:282 image/image_details.py:292
 msgid "Copied prompt without BREAK"
 msgstr "Копирован без перерыва"
 
-#: image/image_details.py:305
+#: image/image_details.py:310
 msgid "Rotated image right"
 msgstr "Вращенное изображение правильно"
 
-#: image/image_details.py:305
+#: image/image_details.py:310
 msgid "Rotated image left"
 msgstr "Вращенное изображение слева"
 
-#: image/image_details.py:314
+#: image/image_details.py:319
 msgid "Cropped image"
 msgstr "Обрезанное изображение"
 
-#: image/image_details.py:316
+#: image/image_details.py:321
 msgid "No crops found"
 msgstr "Посевы не найдены"
 
-#: image/image_details.py:323
+#: image/image_details.py:328
 msgid "Enhanced image"
 msgstr "Улучшенное изображение"
 
-#: image/image_details.py:328
+#: image/image_details.py:333
 msgid "Randomly cropped image"
 msgstr "Случайно обрезанное изображение"
 
-#: image/image_details.py:337
+#: image/image_details.py:342
 msgid "Randomly modified image"
 msgstr "Случайно измененное изображение"
 
-#: image/image_details.py:342
+#: image/image_details.py:347
 msgid "Flipped image"
 msgstr "Перевернутое изображение"
 
-#: image/image_details.py:347
+#: image/image_details.py:370
 msgid "No metadata found"
 msgstr "Метаданные не найдены"
 
-#: image/image_details.py:361 image/image_details.py:419
+#: image/image_details.py:384 image/image_details.py:442
 msgid " (Exact Match Not Found)"
 msgstr " (точный матч не найден)"
 
-#: image/image_details.py:363 image/image_details.py:416
+#: image/image_details.py:386 image/image_details.py:439
 msgid "(No related image found)"
 msgstr "(Не найдено никаких изображений)"
 
-#: image/image_details.py:478 image/image_details.py:485
+#: image/image_details.py:501 image/image_details.py:508
 msgid "%s downstream image(s) found."
 msgstr "{0} нисходящее изображение(ы) найдено."
 
-#: image/image_details.py:481
+#: image/image_details.py:504
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (кэшированное) изображение (изображения) вниз по течению."
 
-#: image/image_details.py:487
+#: image/image_details.py:510
 msgid "No downstream related images found in"
 msgstr "Не найдено ни одного связанного с нисходящим потоком изображения"
 
-#: image/image_details.py:547
+#: image/image_details.py:570
 msgid "Updated tags for %s"
 msgstr "Обновленные теги для {0}"
 
@@ -1733,14 +1745,26 @@ msgstr "Тегирование изображений включено"
 msgid "Escape Backslash Filepaths"
 msgstr "Исключение обратных косых символов в путях файлов"
 
-#: app.py:1403
-msgid ""
-"Are you sure you want to run all prevalidations on directory {0} ? This may "
-"take a while."
-msgstr ""
-"Вы уверены, что хотите запустить все превалидации в каталоге {0}? Это может "
-"занять некоторое время."
+#: image/image_details.py:165
+msgid "Copy Without EXIF"
+msgstr "Копирование без EXIF"
 
-#: compare/prevalidations_window.py:466 utils/help_and_config.py:149
-msgid "Enable Prevalidations"
-msgstr "Обеспечение превалидации"
+#: image/image_details.py:167
+msgid "Convert to JPG"
+msgstr "Преобразование в JPG"
+
+#: image/image_details.py:353
+msgid "Copied image without EXIF data"
+msgstr "Скопированное изображение без данных EXIF"
+
+#: image/image_details.py:356
+msgid "Error copying image without EXIF"
+msgstr "Ошибка при копировании изображения без EXIF"
+
+#: image/image_details.py:362
+msgid "Converted image to JPG"
+msgstr "Преобразование изображения в JPG"
+
+#: image/image_details.py:365
+msgid "Error converting image to JPG"
+msgstr "Ошибка при преобразовании изображения в JPG"
