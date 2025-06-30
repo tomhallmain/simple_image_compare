@@ -81,18 +81,17 @@ class ImageDataExtractor:
             return None
         return pprint.pformat(info)
 
-    def extract_prompt(self, image_path, comfyui=True):
+    def extract_prompt(self, image_path, comfyui=None):
         info = Image.open(image_path).info
         if isinstance(info, dict):
-            if comfyui:
-                if ImageDataExtractor.COMFYUI_PROMPT_KEY in info:
-                    prompt = json.loads(info[ImageDataExtractor.COMFYUI_PROMPT_KEY])
-                    return prompt
+            if (comfyui or comfyui is None) and ImageDataExtractor.COMFYUI_PROMPT_KEY in info:
+                prompt = json.loads(info[ImageDataExtractor.COMFYUI_PROMPT_KEY])
+                return prompt
             elif ImageDataExtractor.A1111_PARAMS_KEY in info:
                 return self._build_a1111_prompt_info_object(info[ImageDataExtractor.A1111_PARAMS_KEY])
             else:
-                # logger.debug(info.keys())
-                # logger.debug("Unhandled exif data: " + image_path)
+                logger.debug(info.keys())
+                logger.debug("Unhandled exif data: " + image_path)
                 pass
         else:
             logger.warning("Exif data not found: " + image_path)
