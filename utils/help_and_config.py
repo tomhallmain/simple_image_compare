@@ -45,6 +45,7 @@ class HelpAndConfig():
             "Ctrl+M": _("Open marks window"),
             "Ctrl+N": _("Open marks action history window"),
             "Ctrl+Q": _("Quit"),
+            "Ctrl+P": _("Open security configuration window"),
             "Ctrl+R": _("Run previous marks action"),
             "Ctrl+Return": _("Continue image generation"),
             "Ctrl+Shift+Return": _("Cancel image generation"),
