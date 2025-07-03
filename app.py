@@ -11,6 +11,8 @@ import tkinter.font as fnt
 from tkinter.ttk import Button, Entry, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
 
+from auth.password_admin_window import PasswordAdminWindow
+from auth.password_utils import require_password
 from compare.compare_args import CompareArgs
 from compare.compare_wrapper import CompareWrapper
 from compare.prevalidations_window import PrevalidationsWindow
@@ -28,7 +30,7 @@ from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config, FileCheckConfig, SlideshowConfig
-from utils.constants import Mode, CompareMode, Direction, ActionType
+from utils.constants import Mode, CompareMode, Direction, ActionType, ProtectedActions
 from utils.help_and_config import HelpAndConfig
 from utils.logging_setup import get_logger
 from utils.notification_manager import notification_manager
@@ -178,12 +180,7 @@ class App():
         self.prev_img_path = None
         self.is_toggled_view_matches = True
         self.direction = Direction.FORWARD
-        self.has_added_buttons_for_mode = {
-            Mode.BROWSE: False,
-            Mode.GROUP: False,
-            Mode.SEARCH: False,
-            Mode.DUPLICATES: False
-        }
+        self.has_added_buttons_for_mode = {Mode.BROWSE: False, Mode.GROUP: False, Mode.SEARCH: False, Mode.DUPLICATES: False}
 
         Style().configure(".", font=('Helvetica', config.font_size))
 
@@ -404,6 +401,7 @@ class App():
         self.master.bind("<Control-Tab>", self.cycle_windows)
         self.master.bind("<Shift-Escape>", lambda event: self.on_closing() if self.is_secondary() else None)
         self.master.bind("<Control-q>", self.quit)
+        self.master.bind("<Control-p>", self.open_password_admin_window)
         self.master.bind("<Control-w>", self.open_secondary_compare_window)
         self.master.bind("<Control-a>", lambda event: self.open_secondary_compare_window(run_compare_image=self.img_path))
         self.master.bind("<Control-g>", self.open_go_to_file_window)
@@ -714,6 +712,7 @@ class App():
             return window, other_dirs
         return None, other_dirs
 
+    @require_password(ProtectedActions.VIEW_MEDIA_DETAILS)
     def get_media_details(self, event=None, media_path=None, manually_keyed=True):
         preset_image_path = True
         if media_path is None:
@@ -750,6 +749,7 @@ class App():
             except Exception as e:
                 self.handle_error(str(e), title="Image Details Error")
 
+    @require_password(ProtectedActions.VIEW_MEDIA_DETAILS)
     def show_related_image(self, event=None):
         ImageDetails.show_related_image(master=self.master, image_path=self.img_path, app_actions=self.app_actions)
 
@@ -763,6 +763,7 @@ class App():
             window.file_browser.set_dir_confirmed()
         return False
 
+    @require_password(ProtectedActions.VIEW_MEDIA_DETAILS)
     def find_related_images_in_open_window(self, event=None, base_dir=None):
         if base_dir is None:
             window, dirs = self.get_other_window_or_self_dir()
@@ -783,6 +784,7 @@ class App():
         else:
             self.toast(_("No downstream related image(s) found in {0}").format(base_dir))
 
+    @require_password(ProtectedActions.VIEW_MEDIA_DETAILS)
     def set_marks_from_downstream_related_images(self, event=None, base_dir=None, image_to_use=None):
         # TODO some way to tell if the current mark is invalid based on whether the window has been switched, and if so clear it and use the current image instead
         if base_dir is None:
@@ -943,6 +945,7 @@ class App():
         inclusion_pattern = self.inclusion_pattern.get().strip()
         return None if inclusion_pattern.strip() == "" else inclusion_pattern
 
+    @require_password(ProtectedActions.RUN_SEARCH)
     def set_search_for_image(self, event=None) -> None:
         image_path = self.get_search_file_path()
         if image_path is None or image_path == "":
@@ -952,6 +955,7 @@ class App():
             self.search_img_path_box.insert(0, str(self.img_path))
         self.set_search()
 
+    @require_password(ProtectedActions.RUN_SEARCH)
     def set_search_for_text(self, event=None):
         search_text = self.search_text.get()
         search_text_negative = self.search_text_negative.get()
@@ -1076,6 +1080,7 @@ class App():
         else:
             raise Exception(f"Direction was improperly set. Direction was {self.direction}")
 
+    @require_password(ProtectedActions.RUN_SEARCH)
     def set_current_image_run_search(self, event=None, base_dir=None) -> None:
         '''
         Execute a new image search from the provided search image.
@@ -1112,6 +1117,7 @@ class App():
         self.search_image.set(filepath)
         self.set_search()
 
+    @require_password(ProtectedActions.RUN_SEARCH)
     def add_current_image_to_negative_search(self, event=None, base_dir=None):
         filepath = self.get_active_media_filepath()
         if filepath:
@@ -1225,6 +1231,7 @@ class App():
             return res == messagebox.OK or res == True
         return True
 
+    @require_password(ProtectedActions.RUN_COMPARES)
     def run_compare(self, compare_args=CompareArgs(), find_duplicates=False) -> None:
         if not self._validate_run():
             return
@@ -1329,6 +1336,7 @@ class App():
         self.master.clipboard_clear()
         self.master.clipboard_append(MarkedFiles.file_marks)
 
+    @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def open_move_marks_window(self, event=None, open_gui=True, override_marks=[]):
         self._check_marks(min_mark_size=0)
         if len(override_marks) > 0:
@@ -1350,21 +1358,25 @@ class App():
         except Exception as e:
             self.handle_error(str(e), title="Marked Files Window Error")
 
+    @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def run_previous_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
         MarkedFiles.run_previous_action(self.app_actions, self.get_active_media_filepath())
 
+    @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def run_penultimate_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
         MarkedFiles.run_penultimate_action(self.app_actions, self.get_active_media_filepath())
 
+    @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def run_permanent_marks_action(self, event=None):
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image(show_toast=False)
         MarkedFiles.run_permanent_action(self.app_actions, self.get_active_media_filepath())
 
+    @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def run_hotkey_marks_action(self, event=None):
         assert event is not None
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
@@ -1379,10 +1391,12 @@ class App():
             self.toast(exception_text)
             raise Exception(exception_text)
 
+    @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def revert_last_marks_change(self, event=None):
         if not config.use_file_paths_json:
             MarkedFiles.undo_move_marks(self.get_base_dir(), self.app_actions)
 
+    @require_password(ProtectedActions.VIEW_FILE_ACTIONS)
     def open_file_actions_window(self, event=None):
         try:
             file_actions_window = FileActionsWindow(self.master, self.app_actions,
@@ -1391,6 +1405,14 @@ class App():
         except Exception as e:
             self.handle_error(str(e), title="File Actions Window Error")
 
+    @require_password(ProtectedActions.ACCESS_ADMIN)
+    def open_password_admin_window(self, event=None):
+        try:
+            password_admin_window = PasswordAdminWindow(self.master, self.app_actions)
+        except Exception as e:
+            self.handle_error(str(e), title="Password Admin Window Error")
+
+    @require_password(ProtectedActions.EDIT_PREVALIDATIONS)
     def open_prevalidations_window(self, event=None):
         if config.enable_prevalidations:
             try:
@@ -1398,6 +1420,7 @@ class App():
             except Exception as e:
                 self.handle_error(str(e), title="Prevalidations Window Error")
 
+    @require_password(ProtectedActions.RUN_PREVALIDATIONS)
     def run_prevalidations_for_base_dir(self, event=None):
         if self.file_browser.is_slow_total_files(threshold=100):
             res = self.alert(_("Many Files"), _("Are you sure you want to run all prevalidations on directory {0} ? This may take a while.").format(self.get_base_dir()), kind="askokcancel")
@@ -1412,10 +1435,12 @@ class App():
             except Exception as e:
                 logger.error(e)
 
+    @require_password(ProtectedActions.RUN_PREVALIDATIONS)
     def toggle_prevalidations(self, event=None):
         config.enable_prevalidations = not config.enable_prevalidations
         self.toast(_("Prevalidations now running") if config.enable_prevalidations else _("Prevalidations turned off"))
 
+    @require_password(ProtectedActions.CONFIGURE_MEDIA_TYPES)
     def open_type_configuration_window(self, event=None):
         TypeConfigurationWindow.show(master=self.master, app_actions=self.app_actions)
 
@@ -1458,6 +1483,7 @@ class App():
             # TODO enable this function to target already open windows with existing compares if available
             self.open_recent_directory_window(run_compare_image=self.img_path)
 
+    @require_password(ProtectedActions.RUN_SEARCH_PRESET)
     def next_text_embedding_preset(self, event=None):
         # TODO enable this function to also accept a directory, and if this is
         # the case find the next file in the directory and search that against
@@ -1600,6 +1626,7 @@ class App():
         self.compare_wrapper.hidden_images.clear()
         self.toast(_("Cleared all hidden images."))
 
+    @require_password(ProtectedActions.DELETE_MEDIA)
     def delete_image(self, event=None):
         '''
         Delete the currently displayed image from the filesystem.
@@ -1708,6 +1735,7 @@ class App():
         shift_key_pressed = event and Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
         ImageDetails.run_image_generation_static(self.app_actions, modify_call=bool(shift_key_pressed))
 
+    @require_password(ProtectedActions.RUN_IMAGE_GENERATION)
     def run_image_generation(self, event=None, _type=None, image_path=None, modify_call=False):
         self.sd_runner_client.start()
         if image_path is None:
@@ -1723,6 +1751,7 @@ class App():
         except Exception as e:
             self.handle_error(_("Error running image generation:") + "\n" + str(e), title=_("Warning"))
 
+    @require_password(ProtectedActions.RUN_REFACDIR)
     def run_refacdir(self, event=None):
         self.refacdir_client.start()
         self.refacdir_client.run(self.img_path)

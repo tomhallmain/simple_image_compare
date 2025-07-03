@@ -4,6 +4,11 @@ from utils.translations import I18N
 _ = I18N._
 
 
+class AppInfo:
+    SERVICE_NAME = "MyPersonalApplicationsService"
+    APP_IDENTIFIER = "simple_image_compare"
+
+
 class Mode(Enum):
     BROWSE = _("Browsing Mode")
     SEARCH = _("Searching Mode")
@@ -250,3 +255,50 @@ class ActionType(Enum):
             return _("System")
         raise Exception("Unhandled action type translation: " + str(self))
 
+
+class ProtectedActions(Enum):
+    """Enumeration of actions that can be password protected."""
+    RUN_COMPARES = "run_compares"
+    RUN_SEARCH = "run_search"
+    RUN_SEARCH_PRESET = "run_search_preset"
+    VIEW_MEDIA_DETAILS = "view_media_details"
+    VIEW_RECENT_DIRECTORIES = "view_recent_directories"
+    VIEW_FILE_ACTIONS = "view_file_actions"
+    RUN_FILE_ACTIONS = "run_file_actions"
+    EDIT_PREVALIDATIONS = "edit_prevalidations"
+    RUN_PREVALIDATIONS = "run_prevalidations"
+    RUN_IMAGE_GENERATION = "run_image_generation"
+    RUN_REFACDIR = "run_refacdir"
+    DELETE_MEDIA = "delete_media"
+    CONFIGURE_MEDIA_TYPES = "configure_media_types"
+    START_APPLICATION = "start_application"
+    ACCESS_ADMIN = "access_admin"
+    
+    @staticmethod
+    def get_action(action_name: str):
+        """Get the ProtectedActions enum value for a given action name."""
+        try:
+            return ProtectedActions(action_name.lower().replace(" ", "_"))
+        except ValueError:
+            return None
+
+    def get_description(self):
+        """Get the user-friendly description for this action."""
+        descriptions = {
+            ProtectedActions.RUN_COMPARES: _("Run Compares"),
+            ProtectedActions.RUN_SEARCH: _("Run Search"),
+            ProtectedActions.RUN_SEARCH_PRESET: _("Run Search Preset"),
+            ProtectedActions.VIEW_MEDIA_DETAILS: _("View Media Details"),
+            ProtectedActions.VIEW_RECENT_DIRECTORIES: _("View Recent Directories"),
+            ProtectedActions.VIEW_FILE_ACTIONS: _("View File Actions"),
+            ProtectedActions.RUN_FILE_ACTIONS: _("Run File Actions"),
+            ProtectedActions.EDIT_PREVALIDATIONS: _("Edit Prevalidations"),
+            ProtectedActions.RUN_PREVALIDATIONS: _("Run Prevalidations"),
+            ProtectedActions.RUN_IMAGE_GENERATION: _("Run Image Generation"),
+            ProtectedActions.RUN_REFACDIR: _("Run RefacDir"),
+            ProtectedActions.DELETE_MEDIA: _("Delete Media"),
+            ProtectedActions.CONFIGURE_MEDIA_TYPES: _("Configure Media Types"),
+            ProtectedActions.START_APPLICATION: _("Start Application"),
+            ProtectedActions.ACCESS_ADMIN: _("Access Password Administration")
+        }
+        return descriptions.get(self, self.value)
