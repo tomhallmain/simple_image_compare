@@ -3,6 +3,7 @@ import os
 import shutil
 import sys
 
+from utils.constants import AppInfo
 from utils.encryptor import encrypt_data_to_file, decrypt_data_from_file
 from utils.logging_setup import get_logger
 
@@ -10,7 +11,7 @@ logger = get_logger(__name__)
 
 
 class AppInfoCache:
-    CACHE_LOC = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), "app_info_cache.enc")
+    CACHE_LOC = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app_info_cache.enc")
     META_INFO_KEY = "info"
     DIRECTORIES_KEY = "directories"
 
@@ -22,27 +23,47 @@ class AppInfoCache:
     def store(self):
         try:
             cache_data = json.dumps(self._cache).encode('utf-8')
-            encrypt_data_to_file(cache_data, "simple_image_compare", "app_info_cache", AppInfoCache.CACHE_LOC)
+            encrypt_data_to_file(
+                cache_data,
+                AppInfo.SERVICE_NAME,
+                AppInfo.APP_IDENTIFIER,
+                AppInfoCache.CACHE_LOC
+            )
         except Exception as e:
             logger.error(f"Error storing cache: {e}")
             raise e
 
     def load(self):
         try:
-            shutil.copy2(AppInfoCache.CACHE_LOC, AppInfoCache.CACHE_LOC + ".bak") # overwrite backup
             old_json_loc = AppInfoCache.CACHE_LOC.replace(".enc", ".json")
             if os.path.exists(old_json_loc):
                 logger.info(f"Removing old cache file: {old_json_loc}")
                 # Get the old data first
-                with open(old_json_loc, "r") as f:
+                with open(old_json_loc, "r", encoding="utf-8") as f:
                     self._cache = json.load(f)
-                self.store()
+                self.store() # store encrypted cache
                 os.remove(old_json_loc)
-            else:
-                encrypted_data = decrypt_data_from_file(AppInfoCache.CACHE_LOC, "simple_image_compare", "app_info_cache")
+            elif os.path.exists(AppInfoCache.CACHE_LOC):
+                encrypted_data = decrypt_data_from_file(
+                    AppInfoCache.CACHE_LOC,
+                    AppInfo.SERVICE_NAME,
+                    AppInfo.APP_IDENTIFIER
+                )
                 self._cache = json.loads(encrypted_data.decode('utf-8'))
-        except FileNotFoundError:
-            pass
+                # The encrypted file did not fail to decrypt, so preserve a backup                
+                backup_loc = AppInfoCache.CACHE_LOC + ".bak"
+                backup_loc2 = AppInfoCache.CACHE_LOC + ".bak2"
+                text = f"Loaded cache from {AppInfoCache.CACHE_LOC}, shifted backups to {backup_loc}"
+                if os.path.exists(backup_loc):
+                    shutil.copy2(backup_loc, backup_loc2)
+                    text += f" and {backup_loc2}"
+                shutil.copy2(AppInfoCache.CACHE_LOC, backup_loc)
+                print(text)
+            else:
+                print(f"No cache file found at {AppInfoCache.CACHE_LOC}, creating new cache")
+        except Exception as e:
+            logger.error(f"Error loading cache: {e}")
+            raise e
 
     def validate(self):
         directory_info = self._get_directory_info()

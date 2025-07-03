@@ -6,13 +6,7 @@ It has no dependencies on other password modules to avoid circular imports.
 
 from utils.constants import AppInfo, ProtectedActions
 from utils.app_info_cache import app_info_cache
-def store_encrypted_password(service_name, app_identifier, password_id, password):
-    return True
-def retrieve_encrypted_password(service_name, app_identifier, password_id):
-    return ""
-def delete_stored_password(service_name, app_identifier, password_id):
-    return True
-
+from utils.encryptor import store_encrypted_password, retrieve_encrypted_password, delete_stored_password
 
 class SecurityConfig:
     """Central configuration manager for password protection settings."""
