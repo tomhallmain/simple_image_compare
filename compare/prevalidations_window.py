@@ -1,5 +1,6 @@
 from enum import Enum
 import os
+from typing import Optional
 
 from tkinter import Toplevel, Frame, Label, Scale, Checkbutton, BooleanVar, StringVar, LEFT, W, HORIZONTAL
 import tkinter.font as fnt
@@ -41,7 +42,6 @@ class Prevalidation:
         self.image_classifier = None
         self.image_classifier_categories = []
         self.image_classifier_selected_categories = image_classifier_selected_categories
-        self.set_image_classifier(image_classifier_name)
 
     def set_positives(self, text):
         self.positives = [x.strip() for x in Utils.split(text, ",") if len(x) > 0]
@@ -65,10 +65,19 @@ class Prevalidation:
         if self.image_classifier is not None:
             self.image_classifier_categories.extend(list(self.image_classifier.model_categories))
 
+    def _ensure_image_classifier_loaded(self):
+        """Lazy load the image classifier if it hasn't been loaded yet."""
+        if self.image_classifier is None and self.image_classifier_name:
+            self.set_image_classifier(self.image_classifier_name)
+
     def is_selected_category_unset(self):
+        # TODO - this may be incorrect, would make more sense to be the opposite logic, need to check
         return len(self.image_classifier_selected_categories) > 0
 
     def run_on_image_path(self, image_path, hide_callback, notify_callback):
+        # Lazy load the image classifier if needed
+        self._ensure_image_classifier_loaded()
+        
         if self.image_classifier is not None:
             is_above_threshold = self.image_classifier.test_image_for_categories(image_path, self.image_classifier_selected_categories)
         else:
@@ -131,7 +140,7 @@ class Prevalidation:
         if self.image_classifier is not None and any([category not in self.image_classifier_categories for category in self.image_classifier_selected_categories]):
             raise Exception(f"One or more selected categories {self.image_classifier_selected_categories} were not found in the image classifier's category options")
         if self.image_classifier_name is not None and self.image_classifier_name.strip() != "" and self.image_classifier is None:
-            raise Exception(f"The image classifier \"{self.image_classifier}\" was not found in the available image classifiers")
+            raise Exception(f"The image classifier \"{self.image_classifier_name}\" was not found in the available image classifiers")
         if self.is_move_action() and not os.path.isdir(self.action_modifier):
             raise Exception('Action modifier must be a valid directory')
         if self.run_on_folder is not None and not os.path.isdir(self.run_on_folder):
@@ -187,7 +196,7 @@ class Prevalidation:
         return Prevalidation(**d)
 
     def __str__(self) -> str:
-        if self.image_classifier is not None:
+        if self.image_classifier_name and self.image_classifier_name.strip():
             return self.name + _(" testing classifier {0} for {1}").format(self.image_classifier_name, ", ".join(self.image_classifier_selected_categories))
         else:
             return self.name + _(" ({0} positives, {1} negatives)").format(len(self.positives), len(self.negatives))
@@ -204,6 +213,9 @@ class PrevalidationModifyWindow():
         self.refresh_callback = refresh_callback
         self.prevalidation = prevalidation if prevalidation is not None else Prevalidation()
         PrevalidationModifyWindow.top_level.title(_("Modify Prevalidation") + f": {self.prevalidation.name}")
+
+        # Ensure image classifier is loaded for UI display
+        self.prevalidation._ensure_image_classifier_loaded()
 
         self.frame = Frame(self.master)
         self.frame.grid(column=0, row=0)
@@ -362,11 +374,11 @@ class PrevalidationModifyWindow():
 
 
 class PrevalidationsWindow():
-    prevalidated_cache = {}
-    directories_to_exclude = []
+    prevalidated_cache: dict[str, PrevalidationAction] = {}
+    directories_to_exclude: list[str] = []
     top_level = None
     prevalidation_modify_window = None
-    prevalidations = []
+    prevalidations: list[Prevalidation] = []
 
     MAX_PRESETS = 50
 
@@ -375,7 +387,7 @@ class PrevalidationsWindow():
     COL_0_WIDTH = 600
 
     @staticmethod
-    def prevalidate(image_path, get_base_dir_func, hide_callback, notify_callback):
+    def prevalidate(image_path, get_base_dir_func, hide_callback, notify_callback) -> Optional[PrevalidationAction]:
         base_dir = get_base_dir_func()
         if len(PrevalidationsWindow.directories_to_exclude) > 0:
             if base_dir in PrevalidationsWindow.directories_to_exclude:
@@ -400,7 +412,7 @@ class PrevalidationsWindow():
     @staticmethod
     def set_prevalidations():
         for prevalidation_dict in list(app_info_cache.get_meta("recent_prevalidations", default_val=[])):
-            prevalidation = Prevalidation.from_dict(prevalidation_dict)
+            prevalidation: Prevalidation = Prevalidation.from_dict(prevalidation_dict)
             prevalidation.validate_dirs()
             PrevalidationsWindow.prevalidations.append(prevalidation)
             if prevalidation.is_move_action():

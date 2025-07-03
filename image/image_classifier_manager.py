@@ -1,3 +1,4 @@
+from typing import Dict, Any, Optional, List
 
 from image.image_classifier import ImageClassifierWrapper
 from utils.config import config
@@ -7,28 +8,32 @@ logger = get_logger("image_classifier_manager")
 
 
 class ImageClassifierManager:
-    def __init__(self):
-        self.classifiers = {}
-        if type(config.image_classifier_h5_models) == list:
-            for model_details in config.image_classifier_h5_models:
-                classifier = ImageClassifierWrapper(**model_details)
-                self.add_classifier(classifier)
+    classifier_metadata: Dict[str, Dict[str, Any]]
+    classifiers: Dict[str, ImageClassifierWrapper]
 
-    def can_classify(self):
+    def __init__(self) -> None:
+        self.classifier_metadata = {}
+        self.classifiers = {}
+        if isinstance(config.image_classifier_h5_models, list):
+            for model_details in config.image_classifier_h5_models:
+                model_name = model_details['model_name']
+                self.classifier_metadata[model_name] = model_details
+
+    def can_classify(self) -> bool:
         return len(self.get_model_names()) > 0
 
-    def classify_image(self, model_name, image_path):
+    def classify_image(self, model_name: str, image_path: str) -> Any:
         try:
-            return self.classifiers[model_name].classify_image(image_path)
+            return self.get_classifier(model_name).classify_image(image_path)
         except KeyError as e:
-            if not model_name in self.classifiers:
-                classifier_model_names = list(self.classifiers.keys())
+            if model_name not in self.classifier_metadata:
+                classifier_model_names = list(self.classifier_metadata.keys())
                 raise Exception(f"Image classifier model name not found: {model_name}\n"
                                 f"Valid classifier model names: {classifier_model_names}")
             raise e
 
-    def add_classifier(self, image_classifier):
-        if type(image_classifier) != ImageClassifierWrapper:
+    def add_classifier(self, image_classifier: ImageClassifierWrapper) -> None:
+        if not isinstance(image_classifier, ImageClassifierWrapper):
             raise Exception(f"Invalid image classifier argument: {image_classifier}")
         if image_classifier.can_run:
             self.classifiers[image_classifier.model_name] = image_classifier
@@ -36,16 +41,19 @@ class ImageClassifierManager:
         else:
             logger.warning(f"Image classifier not runnable: {image_classifier}")
 
-    def get_classifier(self, model_name):
+    def get_classifier(self, model_name: Optional[str]) -> Optional[ImageClassifierWrapper]:
         if model_name is None or model_name.strip() == "":
             return None
-        try:
+        if model_name in self.classifiers:
             return self.classifiers[model_name]
-        except Exception as e:
+        if model_name not in self.classifier_metadata:
             raise Exception(f"Failed to find image classifier with model name: \"{model_name}\"")
+        classifier = ImageClassifierWrapper(**self.classifier_metadata[model_name])
+        self.classifiers[model_name] = classifier
+        return classifier
 
-    def get_model_names(self) -> list[str]:
-        return [c.model_name for c in self.classifiers.values() if c.can_run]
+    def get_model_names(self) -> List[str]:
+        return list(self.classifier_metadata.keys())
 
 
 image_classifier_manager = ImageClassifierManager()
