@@ -317,6 +317,7 @@ class PrevalidationModifyWindow():
         self.frame.grid(column=0, row=0)
         self.frame.columnconfigure(0, weight=9)
         self.frame.columnconfigure(1, weight=1)
+        self.frame.config(bg=AppStyle.BG_COLOR)
 
         row = 0
         self._label_info = Label(self.frame)
@@ -346,19 +347,22 @@ class PrevalidationModifyWindow():
         
         self.use_embedding_var = BooleanVar(value=self.prevalidation.use_embedding)
         self.use_embedding_checkbox = Checkbutton(self.frame, text=_("Use Embedding"), variable=self.use_embedding_var, 
-                                                command=self.update_ui_for_validation_types)
+                                                command=self.update_ui_for_validation_types,
+                                                bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
         self.use_embedding_checkbox.grid(row=row, column=1, sticky=W)
         
         row += 1
         self.use_image_classifier_var = BooleanVar(value=self.prevalidation.use_image_classifier)
         self.use_image_classifier_checkbox = Checkbutton(self.frame, text=_("Use Image Classifier"), variable=self.use_image_classifier_var,
-                                                        command=self.update_ui_for_validation_types)
+                                                        command=self.update_ui_for_validation_types,
+                                                        bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
         self.use_image_classifier_checkbox.grid(row=row, column=1, sticky=W)
         
         row += 1
         self.use_prompts_var = BooleanVar(value=self.prevalidation.use_prompts)
         self.use_prompts_checkbox = Checkbutton(self.frame, text=_("Use Prompts"), variable=self.use_prompts_var,
-                                               command=self.update_ui_for_validation_types)
+                                               command=self.update_ui_for_validation_types,
+                                               bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
         self.use_prompts_checkbox.grid(row=row, column=1, sticky=W)
 
         row += 1
@@ -377,6 +381,8 @@ class PrevalidationModifyWindow():
         self.action_choice.current(action_options.index(self.prevalidation.action.name))
         self.action_choice.bind("<<ComboboxSelected>>", self.set_action)
         self.action_choice.grid(row=row, column=1, sticky=W)
+        # Style the combobox
+        self.action_choice.config(background=AppStyle.BG_COLOR, foreground=AppStyle.FG_COLOR)
 
         row += 1
         self.label_action_modifier = Label(self.frame)
@@ -402,6 +408,7 @@ class PrevalidationModifyWindow():
         self.image_classifier_name_choice.current(name_options.index(self.prevalidation.image_classifier_name))
         self.image_classifier_name_choice.bind("<<ComboboxSelected>>", self.set_image_classifier)
         self.image_classifier_name_choice.grid(row=row, column=1, sticky=W)
+        self.image_classifier_name_choice.config(background=AppStyle.BG_COLOR, foreground=AppStyle.FG_COLOR)
 
         row += 1
         self.label_selected_category = Label(self.frame)
