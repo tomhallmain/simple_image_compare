@@ -1,5 +1,5 @@
 """
-Core password functionality for the SD Runner application.
+Core password functionality for the Simple Image Compare application.
 This module contains the foundational password management and configuration classes.
 It has no dependencies on other password modules to avoid circular imports.
 """

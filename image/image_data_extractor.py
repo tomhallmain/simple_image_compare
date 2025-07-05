@@ -138,8 +138,8 @@ class ImageDataExtractor:
             json.dump(prompt, store, indent=2)
 
     def extract(self, image_path):
-        positive = ""
-        negative = ""
+        positive = None
+        negative = None
         prompt_dicts = {}
         node_inputs = {}
         prompt = self.extract_prompt(image_path)
@@ -156,13 +156,35 @@ class ImageDataExtractor:
                         node_inputs[ImageDataExtractor.POSITIVE] = v[ImageDataExtractor.INPUTS][ImageDataExtractor.POSITIVE][0]
                         node_inputs[ImageDataExtractor.NEGATIVE] = v[ImageDataExtractor.INPUTS][ImageDataExtractor.NEGATIVE][0]
 
-            if positive == "":
+            if positive is None or positive.strip() == "":
                 positive = prompt_dicts.get(node_inputs[ImageDataExtractor.POSITIVE], "")
             negative = prompt_dicts.get(node_inputs[ImageDataExtractor.NEGATIVE], "")
             # logger.debug(f"Positive: \"{positive}\"")
             # logger.debug(f"Negative: \"{negative}\"")
 
         return (positive, negative)
+
+    def extract_with_sd_prompt_reader(self, image_path):
+        positive = None
+        negative = None
+        try:
+            image_data = self.get_image_data_reader(image_path)
+            if image_data.tool:
+                if image_data.is_sdxl:
+                    positive = image_data.positive_sdxl
+                    negative = image_data.negative_sdxl
+                else:
+                    positive = image_data.positive
+                    negative = image_data.negative
+                if not positive or positive.strip() == "":
+                    try:
+                        positive, negative = self.extract(image_path)
+                    except Exception as e:
+                        pass
+        except Exception as e:
+            # logger.warning(e)
+            pass
+        return positive, negative
 
     def get_models(self, image_path):
         models = []
@@ -268,29 +290,14 @@ class ImageDataExtractor:
         return ImageDataReader(image_path)
 
     def get_image_prompts_and_models(self, image_path):
-        positive = "(Unable to parse image prompt information for this file.)"
-        negative = ""
-
         if has_imported_sd_prompt_reader:
-            try:
-                image_data = self.get_image_data_reader(image_path)
-                if image_data.tool:
-                    if image_data.is_sdxl:
-                        positive = image_data.positive_sdxl
-                        negative = image_data.negative_sdxl
-                    else:
-                        positive = image_data.positive
-                        negative = image_data.negative
-                    if not positive or positive.strip() == "":
-                        try:
-                            positive, negative = self.extract(image_path)
-                        except Exception as e:
-                           pass
-                        if not positive or positive.strip() == "":
-                            positive = "(No prompt found for this file.)"
-            except Exception as e:
-#                logger.warning(e)
-                pass
+            positive, negative = self.extract_with_sd_prompt_reader(image_path)
+        else:
+            positive, negative = self.extract(image_path)
+        if positive is None or positive.strip() == "":
+            positive = "(Unable to parse image prompt information for this file.)"
+        if negative is None or negative.strip() == "":
+            negative = ""
 
         models = []
         loras = []

@@ -9,6 +9,7 @@ from tkinter.ttk import Entry, Button, Combobox
 from compare.compare_embeddings_clip import CompareEmbeddingClip
 from files.file_actions_window import FileActionsWindow
 from image.image_classifier_manager import image_classifier_manager
+from image.image_data_extractor import image_data_extractor
 from image.prevalidation_action import PrevalidationAction
 from lib.multiselect_dropdown import MultiSelectDropdown
 from utils.app_style import AppStyle
@@ -29,7 +30,8 @@ class Prevalidation:
 
     def __init__(self, name=_("New Prevalidation"), positives=[], negatives=[], threshold=0.23,
                  action=PrevalidationAction.NOTIFY, action_modifier="", run_on_folder=None, is_active=True,
-                 image_classifier_name="", image_classifier_selected_categories=[]):
+                 image_classifier_name="", image_classifier_selected_categories=[], 
+                 use_embedding=True, use_image_classifier=False, use_prompts=False, use_blacklist=False):
         self.name = name
         self.positives = positives
         self.negatives = negatives
@@ -42,6 +44,10 @@ class Prevalidation:
         self.image_classifier = None
         self.image_classifier_categories = []
         self.image_classifier_selected_categories = image_classifier_selected_categories
+        self.use_embedding = use_embedding
+        self.use_image_classifier = use_image_classifier
+        self.use_prompts = use_prompts
+        self.use_blacklist = use_blacklist
 
     def set_positives(self, text):
         self.positives = [x.strip() for x in Utils.split(text, ",") if len(x) > 0]
@@ -74,15 +80,53 @@ class Prevalidation:
         # TODO - this may be incorrect, would make more sense to be the opposite logic, need to check
         return len(self.image_classifier_selected_categories) > 0
 
+    def _check_prompt_validation(self, image_path):
+        """Check if image prompts match the positive and negative criteria."""
+        try:
+            positive_prompt, negative_prompt = image_data_extractor.extract_with_sd_prompt_reader(image_path)
+
+            # Skip if no prompts found
+            if positive_prompt is None or positive_prompt.strip() == "":
+                return False
+            
+            # Check positive prompts
+            positive_match = True
+            if self.positives:
+                positive_match = any(pos.lower() in positive_prompt.lower() for pos in self.positives)
+            
+            # Check negative prompts
+            negative_match = True
+            if self.negatives:
+                negative_match = any(neg.lower() in negative_prompt.lower() for neg in self.negatives)
+            
+            return positive_match and negative_match
+            
+        except Exception as e:
+            logger.error(f"Error checking prompt validation for {image_path}: {e}")
+            return False
+
     def run_on_image_path(self, image_path, hide_callback, notify_callback):
         # Lazy load the image classifier if needed
         self._ensure_image_classifier_loaded()
         
-        if self.image_classifier is not None:
-            is_above_threshold = self.image_classifier.test_image_for_categories(image_path, self.image_classifier_selected_categories)
-        else:
-            is_above_threshold = CompareEmbeddingClip.multi_text_compare(image_path, self.positives, self.negatives, self.threshold)
-        return self.run_action(image_path, hide_callback, notify_callback) if is_above_threshold else None
+        # Check each enabled validation type with short-circuit OR logic
+        if self.use_embedding:
+            if CompareEmbeddingClip.multi_text_compare(image_path, self.positives, self.negatives, self.threshold):
+                return self.run_action(image_path, hide_callback, notify_callback)
+        
+        if self.use_image_classifier:
+            if self.image_classifier is not None:
+                if self.image_classifier.test_image_for_categories(image_path, self.image_classifier_selected_categories):
+                    return self.run_action(image_path, hide_callback, notify_callback)
+            else:
+                logger.error(f"Image classifier {self.image_classifier_name} not found for prevalidation {self.name}")
+        
+        if self.use_prompts:
+            if self._check_prompt_validation(image_path):
+                return self.run_action(image_path, hide_callback, notify_callback)
+        
+        # No validation type passed
+        return None
 
     def run_action(self, image_path, hide_callback, notify_callback):
         base_message = self.name + _(" detected")
@@ -133,14 +177,23 @@ class Prevalidation:
     def validate(self):
         if self.name is None or len(self.name) == 0:
             raise Exception('Prevalidation name is None or empty')
-        if self.image_classifier is None:
-            if (self.positives is None or len(self.positives) == 0) and \
-                    (self.negatives is None and len(self.negatives) == 0):
-                raise Exception("At least one of positive or negative texts must be set.")
-        if self.image_classifier is not None and any([category not in self.image_classifier_categories for category in self.image_classifier_selected_categories]):
-            raise Exception(f"One or more selected categories {self.image_classifier_selected_categories} were not found in the image classifier's category options")
-        if self.image_classifier_name is not None and self.image_classifier_name.strip() != "" and self.image_classifier is None:
-            raise Exception(f"The image classifier \"{self.image_classifier_name}\" was not found in the available image classifiers")
+        
+        # Check if at least one validation type is enabled
+        if not (self.use_embedding or self.use_image_classifier or self.use_prompts or self.use_blacklist):
+            raise Exception("At least one validation type (embedding, image classifier, prompts, or prompts blacklist) must be enabled.")
+        
+        # Check if positives/negatives are set when needed
+        if (self.use_embedding or self.use_prompts) and (self.positives is None or len(self.positives) == 0) and \
+                (self.negatives is None or len(self.negatives) == 0):
+            raise Exception("At least one of positive or negative texts must be set when using embedding or prompt validation.")
+        
+        # Validate image classifier settings if enabled
+        if self.use_image_classifier:
+            if self.image_classifier is not None and any([category not in self.image_classifier_categories for category in self.image_classifier_selected_categories]):
+                raise Exception(f"One or more selected categories {self.image_classifier_selected_categories} were not found in the image classifier's category options")
+            if self.image_classifier_name is not None and self.image_classifier_name.strip() != "" and self.image_classifier is None:
+                raise Exception(f"The image classifier \"{self.image_classifier_name}\" was not found in the available image classifiers")
+        
         if self.is_move_action() and not os.path.isdir(self.action_modifier):
             raise Exception('Action modifier must be a valid directory')
         if self.run_on_folder is not None and not os.path.isdir(self.run_on_folder):
@@ -189,15 +242,58 @@ class Prevalidation:
             "is_active": self.is_active,
             "image_classifier_name": self.image_classifier_name,
             "image_classifier_selected_categories": self.image_classifier_selected_categories,
+            "use_embedding": self.use_embedding,
+            "use_image_classifier": self.use_image_classifier,
+            "use_prompts": self.use_prompts,
+            "use_blacklist": self.use_blacklist,
             }
 
     @staticmethod
     def from_dict(d):
+        # Handle backward compatibility - detect original type based on data presence
+        if 'use_embedding' not in d:
+            # If image_classifier_name is set, it was an image classifier prevalidation
+            if 'image_classifier_name' in d and d['image_classifier_name'] and d['image_classifier_name'].strip():
+                d['use_embedding'] = False
+                d['use_image_classifier'] = True
+            else:
+                # Otherwise it was an embedding prevalidation
+                d['use_embedding'] = True
+                d['use_image_classifier'] = False
+        if 'use_image_classifier' not in d:
+            d['use_image_classifier'] = False
+        if 'use_prompts' not in d:
+            d['use_prompts'] = False
+        if 'use_blacklist' not in d:
+            d['use_blacklist'] = False
         return Prevalidation(**d)
 
     def __str__(self) -> str:
-        if self.image_classifier_name and self.image_classifier_name.strip():
-            return self.name + _(" testing classifier {0} for {1}").format(self.image_classifier_name, ", ".join(self.image_classifier_selected_categories))
+        validation_types = []
+        if self.use_embedding:
+            validation_types.append(_("embedding"))
+        if self.use_image_classifier and self.image_classifier_name and self.image_classifier_name.strip():
+            validation_types.append(_("classifier {0}").format(self.image_classifier_name))
+        if self.use_prompts:
+            validation_types.append(_("prompts"))
+        
+        if validation_types:
+            # Build the description parts
+            description_parts = []
+            
+            # Add categories if image classifier is enabled and has categories
+            if self.use_image_classifier and self.image_classifier_selected_categories:
+                description_parts.append(_("categories: {0}").format(", ".join(self.image_classifier_selected_categories)))
+            
+            # Add positives/negatives if any are set
+            if self.positives or self.negatives:
+                description_parts.append(_("{0} positives, {1} negatives").format(len(self.positives), len(self.negatives)))
+            
+            # Combine all parts
+            if description_parts:
+                return self.name + _(" using {0} ({1})").format(", ".join(validation_types), "; ".join(description_parts))
+            else:
+                return self.name + _(" using {0}").format(", ".join(validation_types))
         else:
             return self.name + _(" ({0} positives, {1} negatives)").format(len(self.positives), len(self.negatives))
 
@@ -242,6 +338,28 @@ class PrevalidationModifyWindow():
         self.negatives_var = StringVar(self.master, value=self.prevalidation.get_negatives_str())
         self.negatives_entry = Entry(self.frame, textvariable=self.negatives_var, width=50, font=fnt.Font(size=config.font_size))
         self.negatives_entry.grid(row=row, column=1, sticky=W)
+
+        row += 1
+        # Validation type checkboxes
+        self.label_validation_types = Label(self.frame)
+        self.add_label(self.label_validation_types, _("Validation Types"), row=row, wraplength=PrevalidationModifyWindow.COL_0_WIDTH)
+        
+        self.use_embedding_var = BooleanVar(value=self.prevalidation.use_embedding)
+        self.use_embedding_checkbox = Checkbutton(self.frame, text=_("Use Embedding"), variable=self.use_embedding_var, 
+                                                command=self.update_ui_for_validation_types)
+        self.use_embedding_checkbox.grid(row=row, column=1, sticky=W)
+        
+        row += 1
+        self.use_image_classifier_var = BooleanVar(value=self.prevalidation.use_image_classifier)
+        self.use_image_classifier_checkbox = Checkbutton(self.frame, text=_("Use Image Classifier"), variable=self.use_image_classifier_var,
+                                                        command=self.update_ui_for_validation_types)
+        self.use_image_classifier_checkbox.grid(row=row, column=1, sticky=W)
+        
+        row += 1
+        self.use_prompts_var = BooleanVar(value=self.prevalidation.use_prompts)
+        self.use_prompts_checkbox = Checkbutton(self.frame, text=_("Use Prompts"), variable=self.use_prompts_var,
+                                               command=self.update_ui_for_validation_types)
+        self.use_prompts_checkbox.grid(row=row, column=1, sticky=W)
 
         row += 1
         self.label_threshold = Label(self.frame)
@@ -299,6 +417,9 @@ class PrevalidationModifyWindow():
         self.add_prevalidation_btn = None
         self.add_btn("add_prevalidation_btn", _("Done"), self.finalize_prevalidation, row=row, column=0)
 
+        # Initialize UI based on current validation types
+        self.update_ui_for_validation_types()
+
         self.master.update()
 
     def set_name(self):
@@ -317,6 +438,41 @@ class PrevalidationModifyWindow():
 
     def set_threshold(self, event=None):
         self.prevalidation.threshold = float(self.threshold_slider.get()) / 100
+
+    def set_validation_types(self):
+        self.prevalidation.use_embedding = self.use_embedding_var.get()
+        self.prevalidation.use_image_classifier = self.use_image_classifier_var.get()
+        self.prevalidation.use_prompts = self.use_prompts_var.get()
+
+    def update_ui_for_validation_types(self):
+        """Update UI elements based on the selected validation types."""
+        use_embedding = self.use_embedding_var.get()
+        use_image_classifier = self.use_image_classifier_var.get()
+        use_prompts = self.use_prompts_var.get()
+        
+        # Show/hide image classifier fields
+        if use_image_classifier:
+            self.image_classifier_name_choice.grid()
+            self.label_image_classifier_name.grid()
+            self.image_classifier_selected_categories.button.grid()
+            self.label_selected_category.grid()
+        else:
+            self.image_classifier_name_choice.grid_remove()
+            self.label_image_classifier_name.grid_remove()
+            self.image_classifier_selected_categories.button.grid_remove()
+            self.label_selected_category.grid_remove()
+        
+        # Show/hide positive/negative fields based on type
+        if use_embedding or use_prompts:
+            self.positives_entry.grid()
+            self.label_positives.grid()
+            self.negatives_entry.grid()
+            self.label_negatives.grid()
+        else:
+            self.positives_entry.grid_remove()
+            self.label_positives.grid_remove()
+            self.negatives_entry.grid_remove()
+            self.label_negatives.grid_remove()
 
     def set_action(self, event=None):
         self.prevalidation.action = PrevalidationAction[self.action_var.get()]
@@ -347,6 +503,7 @@ class PrevalidationModifyWindow():
         self.set_positives()
         self.set_negatives()
         self.set_threshold()
+        self.set_validation_types()
         self.set_action()
         self.set_action_modifier()
         self.set_run_on_folder()
@@ -434,8 +591,8 @@ class PrevalidationsWindow():
 
     @staticmethod
     def get_geometry(is_gui=True):
-        width = 700
-        height = 400
+        width = 1200
+        height = 600
         return f"{width}x{height}"
 
     def __init__(self, master, app_actions):

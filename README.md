@@ -47,16 +47,17 @@ Note that depending on your configuration videos, GIFs, PDFs, SVGs and HTMLs may
 
 ## Prevalidation Rules
 
-The tool includes a prevalidation system that can automatically process media before they're shown to the user. This is useful for:
+The tool includes a flexible prevalidation system that can automatically process media before they're shown to the user. This is useful for:
 
 - Automatically skipping, hiding, or deleting unwanted media
 - Moving or copying media to specific directories based on content
-- Filtering media using either CLIP embeddings or H5 image classifiers
+- Filtering media using CLIP embeddings, H5 image classifiers, prompt string detection
 - Setting up rules that apply to specific directories
 
 Prevalidation rules can be configured with:
-- Positive and negative text prompts for embedding-based rules
-- Custom thresholds for matching
+- Multiple validation types enabled simultaneously (OR logic - any type can trigger the action)
+- Positive and negative text prompts shared across embedding and prompt validation
+- Custom thresholds for embedding-based matching
 - Different actions (skip, hide, notify, move, copy, delete)
 - Directory-specific rules
 - H5 model-based classification rules

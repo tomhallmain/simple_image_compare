@@ -117,8 +117,8 @@ class ComparePrompts(BaseCompareEmbedding):
         Returns tuple of (positive_prompt, negative_prompt) or (None, None) if no prompts found.
         """
         try:
-            positive, negative, _, _ = self.image_data_extractor.get_image_prompts_and_models(image_path)
-            if positive != "(Unable to parse image prompt information for this file.)" and positive != "(No prompt found for this file.)":
+            positive, negative = self.image_data_extractor.extract_with_sd_prompt_reader(image_path)
+            if positive is not None:
                 return positive, negative
             return None, None
         except Exception as e:
