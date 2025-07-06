@@ -55,7 +55,7 @@ class PasswordAdminWindow():
     @staticmethod
     def get_geometry(is_gui=True):
         width = 900
-        height = 850
+        height = 700
         return f"{width}x{height}"
 
     def setup_ui(self):

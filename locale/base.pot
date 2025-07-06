@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: APPLICATION 1.0\n"
 "Report-Msgid-Bugs-To: Thomas Hall <tomhall.main@gmail.com>\n"
-"POT-Creation-Date: 2025-07-03 19:21-0400\n"
-"PO-Revision-Date: 2025-07-03 19:21-0400\n"
+"POT-Creation-Date: 2025-07-06 11:23-0400\n"
+"PO-Revision-Date: 2025-07-06 11:23-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -736,143 +736,183 @@ msgstr ""
 msgid "There are no more image groups remaining for this directory and current filter settings."
 msgstr ""
 
-#: compare/prevalidations_window.py:27
+#: compare/prevalidations_window.py:28
 msgid "(no positives set)"
 msgstr ""
 
-#: compare/prevalidations_window.py:28
+#: compare/prevalidations_window.py:29
 msgid "(no negatives set)"
 msgstr ""
 
-#: compare/prevalidations_window.py:30 compare/prevalidations_window.py:228
+#: compare/prevalidations_window.py:31 compare/prevalidations_window.py:325
 msgid "New Prevalidation"
 msgstr ""
 
-#: compare/prevalidations_window.py:88
+#: compare/prevalidations_window.py:132
 msgid " detected"
 msgstr ""
 
-#: compare/prevalidations_window.py:90
+#: compare/prevalidations_window.py:134
 msgid " - skipped"
 msgstr ""
 
-#: compare/prevalidations_window.py:93
+#: compare/prevalidations_window.py:137
 msgid " - hidden"
 msgstr ""
 
-#: compare/prevalidations_window.py:102
+#: compare/prevalidations_window.py:146
 msgid "Moving file: "
 msgstr ""
 
-#: compare/prevalidations_window.py:115
+#: compare/prevalidations_window.py:159
 msgid "Deleting file: "
 msgstr ""
 
-#: compare/prevalidations_window.py:152
+#: compare/prevalidations_window.py:205
 msgid "Action modifier is not a valid directory: "
 msgstr ""
 
-#: compare/prevalidations_window.py:154
+#: compare/prevalidations_window.py:207
 msgid "Run on folder is not a valid directory: "
 msgstr ""
 
-#: compare/prevalidations_window.py:156
+#: compare/prevalidations_window.py:209
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr ""
 
-#: compare/prevalidations_window.py:200
-msgid " testing classifier {0} for {1}"
+#: compare/prevalidations_window.py:274
+msgid "embedding"
 msgstr ""
 
-#: compare/prevalidations_window.py:202
-msgid " ({0} positives, {1} negatives)"
+#: compare/prevalidations_window.py:276
+msgid "classifier {0}"
 msgstr ""
 
-#: compare/prevalidations_window.py:215
-msgid "Modify Prevalidation"
+#: compare/prevalidations_window.py:278
+msgid "prompts"
 msgstr ""
 
-#: compare/prevalidations_window.py:227
-msgid "Prevalidation Name"
-msgstr ""
-
-#: compare/prevalidations_window.py:234
-msgid "Positives"
-msgstr ""
-
-#: compare/prevalidations_window.py:241
-msgid "Negatives"
-msgstr ""
-
-#: compare/prevalidations_window.py:248
-msgid "Threshold"
-msgstr ""
-
-#: compare/prevalidations_window.py:255
-msgid "Action"
-msgstr ""
-
-#: compare/prevalidations_window.py:265
-msgid "Action Modifier"
-msgstr ""
-
-#: compare/prevalidations_window.py:272
-msgid "Run on Directory"
-msgstr ""
-
-#: compare/prevalidations_window.py:279
-msgid "Image Classifier Name"
+#: compare/prevalidations_window.py:286
+msgid "categories: {0}"
 msgstr ""
 
 #: compare/prevalidations_window.py:290
-msgid "Image Classifier Selected Category"
+msgid "{0} positives, {1} negatives"
 msgstr ""
 
 #: compare/prevalidations_window.py:294
+msgid " using {0} ({1})"
+msgstr ""
+
+#: compare/prevalidations_window.py:296
+msgid " using {0}"
+msgstr ""
+
+#: compare/prevalidations_window.py:298
+msgid " ({0} positives, {1} negatives)"
+msgstr ""
+
+#: compare/prevalidations_window.py:311
+msgid "Modify Prevalidation"
+msgstr ""
+
+#: compare/prevalidations_window.py:324
+msgid "Prevalidation Name"
+msgstr ""
+
+#: compare/prevalidations_window.py:331
+msgid "Positives"
+msgstr ""
+
+#: compare/prevalidations_window.py:338
+msgid "Negatives"
+msgstr ""
+
+#: compare/prevalidations_window.py:346
+msgid "Validation Types"
+msgstr ""
+
+#: compare/prevalidations_window.py:349
+msgid "Use Embedding"
+msgstr ""
+
+#: compare/prevalidations_window.py:356
+msgid "Use Image Classifier"
+msgstr ""
+
+#: compare/prevalidations_window.py:363
+msgid "Use Prompts"
+msgstr ""
+
+#: compare/prevalidations_window.py:370
+msgid "Threshold"
+msgstr ""
+
+#: compare/prevalidations_window.py:377
+msgid "Action"
+msgstr ""
+
+#: compare/prevalidations_window.py:389
+msgid "Action Modifier"
+msgstr ""
+
+#: compare/prevalidations_window.py:396
+msgid "Run on Directory"
+msgstr ""
+
+#: compare/prevalidations_window.py:403
+msgid "Image Classifier Name"
+msgstr ""
+
+#: compare/prevalidations_window.py:415
+msgid "Image Classifier Selected Category"
+msgstr ""
+
+#: compare/prevalidations_window.py:419
 msgid "Select Categories..."
 msgstr ""
 
-#: compare/prevalidations_window.py:300
+#: compare/prevalidations_window.py:425
 msgid "Done"
 msgstr ""
 
-#: compare/prevalidations_window.py:433
+#: compare/prevalidations_window.py:597
 msgid "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 msgstr ""
 
-#: compare/prevalidations_window.py:444
+#: compare/prevalidations_window.py:608
 msgid "Prevalidations"
 msgstr ""
 
-#: compare/prevalidations_window.py:467
+#: compare/prevalidations_window.py:631
 msgid "Set Prevalidations"
 msgstr ""
 
-#: compare/prevalidations_window.py:469
+#: compare/prevalidations_window.py:633
 msgid "Add prevalidation"
 msgstr ""
 
-#: compare/prevalidations_window.py:471
+#: compare/prevalidations_window.py:635
 msgid "Clear prevalidations"
 msgstr ""
 
-#: compare/prevalidations_window.py:478 utils/help_and_config.py:150
+#: compare/prevalidations_window.py:642 utils/help_and_config.py:150
 msgid "Enable Prevalidations"
 msgstr ""
 
-#: compare/prevalidations_window.py:515 files/hotkey_actions_window.py:95
+#: compare/prevalidations_window.py:679 files/hotkey_actions_window.py:95
 msgid "Set"
 msgstr ""
 
-#: compare/prevalidations_window.py:523 files/file_actions_window.py:271 files/file_actions_window.py:314
+#: compare/prevalidations_window.py:687 files/file_actions_window.py:271 files/file_actions_window.py:314
 msgid "Modify"
 msgstr ""
 
-#: compare/prevalidations_window.py:530
+#: compare/prevalidations_window.py:694
 msgid "Delete"
 msgstr ""
 
-#: compare/prevalidations_window.py:537
+#: compare/prevalidations_window.py:701
 msgid "Move down"
 msgstr ""
 
