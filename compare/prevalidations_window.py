@@ -71,10 +71,14 @@ class Prevalidation:
         if self.image_classifier is not None:
             self.image_classifier_categories.extend(list(self.image_classifier.model_categories))
 
-    def _ensure_image_classifier_loaded(self):
+    def _ensure_image_classifier_loaded(self, notify_callback):
         """Lazy load the image classifier if it hasn't been loaded yet."""
         if self.image_classifier is None and self.image_classifier_name:
-            self.set_image_classifier(self.image_classifier_name)
+            try:
+                notify_callback(_("Loading image classifier <{0}> ...").format(self.image_classifier_name))
+                self.set_image_classifier(self.image_classifier_name)
+            except Exception as e:
+                logger.error(f"Error loading image classifier <{self.image_classifier_name}>!")
 
     def is_selected_category_unset(self):
         # TODO - this may be incorrect, would make more sense to be the opposite logic, need to check
@@ -107,7 +111,7 @@ class Prevalidation:
 
     def run_on_image_path(self, image_path, hide_callback, notify_callback):
         # Lazy load the image classifier if needed
-        self._ensure_image_classifier_loaded()
+        self._ensure_image_classifier_loaded(notify_callback)
         
         # Check each enabled validation type with short-circuit OR logic
         if self.use_embedding:
