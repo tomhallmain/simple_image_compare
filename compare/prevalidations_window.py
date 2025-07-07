@@ -85,12 +85,12 @@ class Prevalidation:
         return len(self.image_classifier_selected_categories) > 0
 
     def _check_prompt_validation(self, image_path):
-        """Check if image prompts match the positive and negative criteria."""
+        """Check if image prompts match the positive or negative criteria."""
         try:
             positive_prompt, negative_prompt = image_data_extractor.extract_with_sd_prompt_reader(image_path)
 
-            # Skip if no prompts found
-            if positive_prompt is None or positive_prompt.strip() == "":
+            # Skip if no prompts found (None indicates failure to extract prompts)
+            if positive_prompt is None:
                 return False
             
             # Check positive prompts
@@ -103,7 +103,7 @@ class Prevalidation:
             if self.negatives:
                 negative_match = any(neg.lower() in negative_prompt.lower() for neg in self.negatives)
             
-            return positive_match and negative_match
+            return positive_match or negative_match
             
         except Exception as e:
             logger.error(f"Error checking prompt validation for {image_path}: {e}")
