@@ -408,12 +408,13 @@ class MarkedFiles():
         if len(exceptions) < len(files_to_move):
             FileActionsWindow.update_history(action)
             action_type = ActionType.MOVE_FILE if is_moving else ActionType.COPY_FILE
+            target_dir_name = Utils.get_relative_dirpath(target_dir, levels=2)
             if is_moving:
-                message = _("Moved {0} files to {1}").format(len(files_to_move) - len(exceptions), target_dir)
+                message = _("Moved {0} files to {1}").format(len(files_to_move) - len(exceptions), target_dir_name)
             else:
-                message = _("Copied {0} files to {1}").format(len(files_to_move) - len(exceptions), target_dir)
+                message = _("Copied {0} files to {1}").format(len(files_to_move) - len(exceptions), target_dir_name)
             logger.warning(message.replace("\n", " "))
-            app_actions.title_notify(message, action_type=action_type)
+            app_actions.title_notify(message, base_message=target_dir_name, action_type=action_type)
             MarkedFiles.delete_lock = False
         MarkedFiles.file_marks.clear()
         exceptions_present = len(exceptions) > 0

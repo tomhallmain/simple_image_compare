@@ -1673,7 +1673,7 @@ class App():
     def _handle_delete(self, filepath, toast=True, manual_delete=True):
         MarkedFiles.set_delete_lock()  # Undo deleting action is not supported
         if toast and manual_delete:
-            self.title_notify(_("Removing file: {0}").format(filepath), action_type=ActionType.REMOVE_FILE)
+            self.title_notify(_("Removing file: {0}").format(os.path.basename(filepath)), action_type=ActionType.REMOVE_FILE)
         else:
             logger.info("Removing file: " + filepath)
         if config.delete_instantly:
@@ -1737,19 +1737,23 @@ class App():
 
     @require_password(ProtectedActions.RUN_IMAGE_GENERATION)
     def run_image_generation(self, event=None, _type=None, image_path=None, modify_call=False):
-        self.sd_runner_client.start()
+        _type = ImageDetails.get_image_specific_generation_mode() if _type is None else _type
         if image_path is None:
             if self.delete_lock:
                 image_path = self.prev_img_path
             else:
                 image_path = self.get_active_media_filepath()
-        _type = ImageDetails.get_image_specific_generation_mode() if _type is None else _type
-        try:
-            self.sd_runner_client.run(_type, image_path, append=modify_call)
-            ImageDetails.previous_image_generation_image = image_path
-            self.toast(_("Running image gen: ") + str(_type))
-        except Exception as e:
-            self.handle_error(_("Error running image generation:") + "\n" + str(e), title=_("Warning"))
+
+        def do_run_image_generation(self, _type, image_path, modify_call):
+            self.sd_runner_client.start()
+            try:
+                self.sd_runner_client.run(_type, image_path, append=modify_call)
+                ImageDetails.previous_image_generation_image = image_path
+                self.toast(_("Running image gen: ") + str(_type))
+            except Exception as e:
+                self.handle_error(_("Error running image generation:") + "\n" + str(e), title=_("Warning"))
+
+        start_thread(do_run_image_generation, use_asyncio=False, args=[self, _type, image_path, modify_call])
 
     @require_password(ProtectedActions.RUN_REFACDIR)
     def run_refacdir(self, event=None):

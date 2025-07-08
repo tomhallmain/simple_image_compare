@@ -146,8 +146,9 @@ class Prevalidation:
                 if not os.path.exists(self.action_modifier):
                     raise Exception("Invalid move target directory for prevalidation " + self.name + ": " + self.action_modifier)
                 if os.path.normpath(os.path.dirname(image_path)) != os.path.normpath(self.action_modifier):
+                    action_modifier_name = Utils.get_relative_dirpath(self.action_modifier, levels=2)
                     action_type = ActionType.MOVE_FILE if self.action == PrevalidationAction.MOVE else ActionType.COPY_FILE
-                    specific_message = _("Moving file: ") + image_path
+                    specific_message = _("Moving file: ") + os.path.basename(image_path) + " -> " + action_modifier_name
                     notify_callback("\n" + specific_message, base_message=base_message,
                                     action_type=action_type, is_manual=False)
                     try:
@@ -160,7 +161,7 @@ class Prevalidation:
             else:
                 raise Exception("Target directory not defined on prevalidation "  + self.name)
         elif self.action == PrevalidationAction.DELETE:
-            notify_callback("\n" + _("Deleting file: ") + image_path, base_message=base_message,
+            notify_callback("\n" + _("Deleting file: ") + os.path.basename(image_path), base_message=base_message,
                             action_type=ActionType.REMOVE_FILE, is_manual=False)
             try:    
                 os.remove(image_path)

@@ -261,12 +261,14 @@ class NotificationManager:
 
         # Filter out expired notifications
         current_time = time.time()
-        debug_log(f"Current time in get_display_title: {current_time}")
-        debug_log(f"Number of notifications before filtering: {len(window_notifications)}")
-        
-        # Log each notification's expiration time
-        for n in window_notifications:
-            debug_log(f"Notification expires at: {n.expires_at} (in {n.expires_at - current_time:.2f} seconds)")
+
+        if config.debug:
+            debug_log(f"Current time in get_display_title: {current_time}")
+            debug_log(f"Number of notifications before filtering: {len(window_notifications)}")
+            
+            # Log each notification's expiration time
+            for n in window_notifications:
+                debug_log(f"Notification expires at: {n.expires_at} (in {n.expires_at - current_time:.2f} seconds)")
         
         window_notifications = [n for n in window_notifications if n.expires_at > current_time]
         debug_log(f"Number of notifications after filtering: {len(window_notifications)}")
