@@ -388,8 +388,9 @@ class MarkedFiles():
                 MarkedFiles.last_moved_image = new_filename
                 set_last_moved_file = True
             try:
-                if is_moving and current_image == marked_file:
-                    app_actions.release_media_canvas()
+                if is_moving:
+                    if current_image == marked_file:
+                        app_actions.release_media_canvas()
                 move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
                 action.add_file(new_filename)
                 logger.info(f"{action_part2} file to {new_filename}")
@@ -424,15 +425,29 @@ class MarkedFiles():
             names_are_short = False
             matching_files = False
             for marked_file, exc_tuple in exceptions.items():
-                logger.error(exc_tuple[0])
+                error_msg = exc_tuple[0]
+                target_filepath = exc_tuple[1]
+                logger.error(error_msg)
                 if marked_file not in invalid_files:
                     if not config.clear_marks_with_errors_after_move and not single_image:
                         # Just in case some of them failed to move for whatever reason.
                         MarkedFiles.file_marks.append(marked_file)
-                    if exc_tuple[0].startswith("File already exists"):
-                        if _calculate_hash(marked_file) == _calculate_hash(exc_tuple[1]):
+                    if error_msg.startswith("File already exists"):
+                        if _calculate_hash(marked_file) == _calculate_hash(target_filepath):
                             matching_files = True
                             logger.info(f"File hashes match: {marked_file} <> {exc_tuple[1]}")
+                            if is_moving:
+                                # The other effect of this operation would have been to remove the
+                                # file from source, so try to do that
+                                try:
+                                    app_actions.delete(marked_file)
+                                    if marked_file in MarkedFiles.file_marks:
+                                        MarkedFiles.file_marks.remove(marked_file)
+                                    app_actions.toast(f"Removed marked file from source: {marked_file}")
+                                except Exception as e:
+                                    error_text = f"Failed to remove marked file from source: {marked_file} - {e}"
+                                    logger.warning(error_text)
+                                    app_actions.title_notify(error_text)
                         elif len(os.path.basename(marked_file)) < 13 and not names_are_short:
                             names_are_short = True
                         some_files_already_present = True
