@@ -1431,7 +1431,7 @@ class App():
         PrevalidationsWindow.prevalidated_cache.clear()
         for image_path in self.file_browser.get_files():
             try:
-                prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self.get_base_dir, self.hide_current_media, self.title_notify)
+                prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self.get_base_dir, self.hide_current_media, self.title_notify, MarkedFiles.add_mark_if_not_present)
             except Exception as e:
                 logger.error(e)
 

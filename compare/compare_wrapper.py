@@ -12,6 +12,7 @@ from compare.compare_embeddings_flava import CompareEmbeddingFlava
 from compare.compare_embeddings_siglip import CompareEmbeddingSiglip
 from compare.compare_embeddings_xvlm import CompareEmbeddingXVLM
 from compare.prevalidations_window import PrevalidationAction, PrevalidationsWindow
+from files.marked_file_mover import MarkedFiles
 from image.frame_cache import FrameCache
 from utils.config import config
 from utils.constants import Mode, CompareMode, Direction
@@ -132,13 +133,25 @@ class CompareWrapper:
             return True
         if config.enable_prevalidations:
             try:
-                prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_media, self._app_actions.title_notify)
+                prevalidation_action = PrevalidationsWindow.prevalidate(
+                    image_path,
+                    self._app_actions.get_base_dir,
+                    self._app_actions.hide_current_media,
+                    self._app_actions.title_notify,
+                    MarkedFiles.add_mark_if_not_present
+                )
             except Exception as e:
                 # If the initial prevalidation fails, try with the extracted frame
                 actual_image_path = FrameCache.get_image_path(image_path)
                 if actual_image_path == image_path:
                     raise e
-                prevalidation_action = PrevalidationsWindow.prevalidate(actual_image_path, self._app_actions.get_base_dir, self._app_actions.hide_current_media, self._app_actions.title_notify)
+                prevalidation_action = PrevalidationsWindow.prevalidate(
+                    actual_image_path,
+                    self._app_actions.get_base_dir,
+                    self._app_actions.hide_current_media,
+                    self._app_actions.title_notify,
+                    MarkedFiles.add_mark_if_not_present
+                )
             if prevalidation_action is not None:
                 return prevalidation_action != PrevalidationAction.NOTIFY
         return False
@@ -153,7 +166,7 @@ class CompareWrapper:
         while not found_unrelated_image:
             next_image = file_browser.next_file() if forward else file_browser.previous_file()
             if (self.compare_mode == CompareMode.COLOR_MATCHING and not CompareColors.is_related(previous_image, next_image)) or \
-                    (self.compare_mode == CompareMode.CLIP_EMBEDDING and not CompareEmbeddingClip.is_related(previous_image, next_image)):
+                    (self.compare_mode != CompareMode.COLOR_MATCHING and not CompareEmbeddingClip.is_related(previous_image, next_image)):
                 found_unrelated_image = True
                 self._app_actions.create_image(next_image)
                 self._app_actions.toast(_("Skipped %s images.").format(skip_count))

@@ -83,6 +83,17 @@ class MarkedFiles():
         app_info_cache.set_meta("marked_file_target_dirs", MarkedFiles.mark_target_dirs)
 
     @staticmethod
+    def add_mark_if_not_present(filepath):
+        """
+        Add a file to the marks list if it's not already present.
+        Returns True if the file was added, False if it was already present.
+        """
+        if filepath not in MarkedFiles.file_marks:
+            MarkedFiles.file_marks.append(filepath)
+            return True
+        return False
+
+    @staticmethod
     def set_delete_lock(delete_lock=True):
         MarkedFiles.delete_lock = delete_lock
 

@@ -75,7 +75,8 @@ class Prevalidation:
         """Lazy load the image classifier if it hasn't been loaded yet."""
         if self.image_classifier is None and self.image_classifier_name:
             try:
-                notify_callback(_("Loading image classifier <{0}> ...").format(self.image_classifier_name))
+                if notify_callback is not None:
+                    notify_callback(_("Loading image classifier <{0}> ...").format(self.image_classifier_name))
                 self.set_image_classifier(self.image_classifier_name)
             except Exception as e:
                 logger.error(f"Error loading image classifier <{self.image_classifier_name}>!")
@@ -109,30 +110,30 @@ class Prevalidation:
             logger.error(f"Error checking prompt validation for {image_path}: {e}")
             return False
 
-    def run_on_image_path(self, image_path, hide_callback, notify_callback):
+    def run_on_image_path(self, image_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[PrevalidationAction]:
         # Lazy load the image classifier if needed
         self._ensure_image_classifier_loaded(notify_callback)
         
         # Check each enabled validation type with short-circuit OR logic
         if self.use_embedding:
             if CompareEmbeddingClip.multi_text_compare(image_path, self.positives, self.negatives, self.threshold):
-                return self.run_action(image_path, hide_callback, notify_callback)
+                return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
         
         if self.use_image_classifier:
             if self.image_classifier is not None:
                 if self.image_classifier.test_image_for_categories(image_path, self.image_classifier_selected_categories):
-                    return self.run_action(image_path, hide_callback, notify_callback)
+                    return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
             else:
                 logger.error(f"Image classifier {self.image_classifier_name} not found for prevalidation {self.name}")
         
         if self.use_prompts:
             if self._check_prompt_validation(image_path):
-                return self.run_action(image_path, hide_callback, notify_callback)
+                return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
         
         # No validation type passed
         return None
 
-    def run_action(self, image_path, hide_callback, notify_callback):
+    def run_action(self, image_path, hide_callback, notify_callback, add_mark_callback=None):
         base_message = self.name + _(" detected")
         if self.action == PrevalidationAction.SKIP:
             notify_callback(_(" - skipped"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
@@ -141,6 +142,9 @@ class Prevalidation:
             notify_callback(_(" - hidden"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
         elif self.action == PrevalidationAction.NOTIFY:
             notify_callback(base_message, base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
+        elif self.action == PrevalidationAction.ADD_MARK:
+            add_mark_callback(image_path)
+            notify_callback(_(" - marked"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
         elif self.action == PrevalidationAction.MOVE or self.action == PrevalidationAction.COPY:
             if self.action_modifier is not None and len(self.action_modifier) > 0:
                 if not os.path.exists(self.action_modifier):
@@ -316,7 +320,7 @@ class PrevalidationModifyWindow():
         PrevalidationModifyWindow.top_level.title(_("Modify Prevalidation") + f": {self.prevalidation.name}")
 
         # Ensure image classifier is loaded for UI display
-        self.prevalidation._ensure_image_classifier_loaded()
+        self.prevalidation._ensure_image_classifier_loaded(app_actions.title_notify if app_actions is not None else None)
 
         self.frame = Frame(self.master)
         self.frame.grid(column=0, row=0)
@@ -556,7 +560,7 @@ class PrevalidationsWindow():
     COL_0_WIDTH = 600
 
     @staticmethod
-    def prevalidate(image_path, get_base_dir_func, hide_callback, notify_callback) -> Optional[PrevalidationAction]:
+    def prevalidate(image_path, get_base_dir_func, hide_callback, notify_callback, add_mark_callback) -> Optional[PrevalidationAction]:
         base_dir = get_base_dir_func()
         if len(PrevalidationsWindow.directories_to_exclude) > 0:
             if base_dir in PrevalidationsWindow.directories_to_exclude:
@@ -569,7 +573,7 @@ class PrevalidationsWindow():
                         continue
                     if prevalidation.run_on_folder is not None and base_dir != prevalidation.run_on_folder:
                         continue
-                    prevalidation_action = prevalidation.run_on_image_path(image_path, hide_callback, notify_callback)
+                    prevalidation_action = prevalidation.run_on_image_path(image_path, hide_callback, notify_callback, add_mark_callback)
                     if prevalidation_action is not None:
                         break
             if prevalidation_action is None or prevalidation_action.is_cache_type():
