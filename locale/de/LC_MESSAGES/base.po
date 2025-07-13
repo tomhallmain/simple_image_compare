@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-06 15:18-0400\n"
-"PO-Revision-Date: 2025-07-06 15:18-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-07-13 11:09-0400\n"
+"PO-Revision-Date: 2025-07-13 11:09-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: de Team <<EMAIL>>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:96 app.py:836 app.py:1902
+#: app.py:96 app.py:836 app.py:1906
 msgid " Simple Image Compare "
 msgstr " Einfacher Bildvergleich "
 
@@ -20,7 +20,7 @@ msgstr " Einfacher Bildvergleich "
 msgid "Theme switched to {0}."
 msgstr "Thema auf {0} umgestellt."
 
-#: app.py:240 compare/compare_wrapper.py:467
+#: app.py:240 compare/compare_wrapper.py:480
 msgid "Set a directory to run comparison."
 msgstr "Legen Sie ein Verzeichnis für den Vergleich fest."
 
@@ -124,7 +124,7 @@ msgstr "Möchten Sie die Anwendung beenden?"
 msgid "Ended slideshows"
 msgstr "Beendete Diashows"
 
-#: app.py:648 app.py:1692 app.py:1752
+#: app.py:648 app.py:1692 app.py:1754
 msgid "Warning"
 msgstr "Warnung"
 
@@ -375,42 +375,42 @@ msgstr "Ungültiger Zieldateipfad für Ersetzung: "
 msgid "Moved search image to "
 msgstr "Suchbild verschoben nach "
 
-#: app.py:1750
+#: app.py:1752
 msgid "Running image gen: "
 msgstr "Laufende Bilderzeugung: "
 
-#: app.py:1752
+#: app.py:1754
 msgid "Error running image generation:"
 msgstr "Fehler bei der Bilderzeugung:"
 
-#: app.py:1758
+#: app.py:1762
 msgid "Running refacdir"
 msgstr "Ausführen der refacdir-App"
 
-#: app.py:1763 auth/password_dialog.py:169 files/pdf_creator.py:132
+#: app.py:1767 auth/password_dialog.py:231 files/pdf_creator.py:132
 #: files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "Fehler"
 
-#: app.py:1843
+#: app.py:1847
 msgid "GROUP_DETAILS"
 msgstr ""
 "Gruppe {0} von {1}\n"
 "Größe: {2}"
 
-#: app.py:1847
+#: app.py:1851
 msgid "No image files found"
 msgstr "Keine Bilddateien gefunden"
 
-#: app.py:1849
+#: app.py:1853
 msgid "1 image file found"
 msgstr "1 Bilddatei gefunden"
 
-#: app.py:1850
+#: app.py:1854
 msgid "{0} image files found"
 msgstr "{0} Bilddateien gefunden"
 
-#: app.py:1852
+#: app.py:1856
 msgid "(filtered)"
 msgstr "(gefiltert)"
 
@@ -418,93 +418,93 @@ msgstr "(gefiltert)"
 msgid "Password Administration"
 msgstr "Passwort-Verwaltung"
 
-#: auth/password_admin_window.py:64
+#: auth/password_admin_window.py:72
 msgid "Password Protection Settings"
 msgstr "Passwortschutz-Einstellungen"
 
-#: auth/password_admin_window.py:76
+#: auth/password_admin_window.py:84
 msgid "Protected Actions"
 msgstr "Geschützte Handlungen"
 
-#: auth/password_admin_window.py:82
+#: auth/password_admin_window.py:90
 msgid "Select which actions require password authentication:"
 msgstr ""
 "Wählen Sie aus, welche Aktionen eine Kennwortauthentifizierung erfordern:"
 
-#: auth/password_admin_window.py:98
+#: auth/password_admin_window.py:106
 msgid "(Always protected if a password is set)"
 msgstr "(Immer geschützt, wenn ein Passwort festgelegt ist)"
 
-#: auth/password_admin_window.py:117
+#: auth/password_admin_window.py:125
 msgid "Session Timeout Settings"
 msgstr "Einstellungen für die Sitzungsdauer"
 
-#: auth/password_admin_window.py:123
+#: auth/password_admin_window.py:131
 msgid "Enable session timeout (remember password for a period)"
 msgstr "Sitzungsdauer aktivieren (Passwort eine Zeit lang speichern)"
 
-#: auth/password_admin_window.py:135
+#: auth/password_admin_window.py:143
 msgid "Session timeout duration (minutes):"
 msgstr "Dauer der Sitzungsunterbrechung (Minuten):"
 
-#: auth/password_admin_window.py:144
+#: auth/password_admin_window.py:152
 msgid "Password Setup"
 msgstr "Kennwort einrichten"
 
-#: auth/password_admin_window.py:154
+#: auth/password_admin_window.py:162
 msgid "Password is configured"
 msgstr "Kennwort ist konfiguriert"
 
-#: auth/password_admin_window.py:160 auth/password_admin_window.py:328
-#: auth/password_admin_window.py:344 auth/password_admin_window.py:403
+#: auth/password_admin_window.py:168 auth/password_admin_window.py:336
+#: auth/password_admin_window.py:352 auth/password_admin_window.py:411
 msgid "Change Password"
 msgstr "Kennwort ändern"
 
-#: auth/password_admin_window.py:165 auth/password_admin_window.py:416
+#: auth/password_admin_window.py:173 auth/password_admin_window.py:424
 msgid "Remove Password"
 msgstr "Kennwort entfernen"
 
-#: auth/password_admin_window.py:170
+#: auth/password_admin_window.py:178
 msgid "Set up a password to enable protection:"
 msgstr "Richten Sie ein Passwort ein, um den Schutz zu aktivieren:"
 
-#: auth/password_admin_window.py:180 auth/password_admin_window.py:360
+#: auth/password_admin_window.py:188 auth/password_admin_window.py:368
 msgid "New Password:"
 msgstr "Neues Kennwort:"
 
-#: auth/password_admin_window.py:193
+#: auth/password_admin_window.py:201
 msgid "Confirm Password:"
 msgstr "Bestätigen Sie das Kennwort:"
 
-#: auth/password_admin_window.py:202
+#: auth/password_admin_window.py:210
 msgid "Set Password"
 msgstr "Kennwort festlegen"
 
-#: auth/password_admin_window.py:212 auth/password_admin_window.py:258
+#: auth/password_admin_window.py:220 auth/password_admin_window.py:266
 msgid "Reset to Defaults"
 msgstr "Auf Standardwerte zurücksetzen"
 
-#: auth/password_admin_window.py:216 auth/password_admin_window.py:278
+#: auth/password_admin_window.py:224 auth/password_admin_window.py:286
 msgid "Set to Current"
 msgstr "Auf Strom einstellen"
 
-#: auth/password_admin_window.py:220
+#: auth/password_admin_window.py:228
 msgid "Export Cache as JSON"
 msgstr "Cache als JSON exportieren"
 
-#: auth/password_admin_window.py:224
+#: auth/password_admin_window.py:232
 msgid "Save Settings"
 msgstr "Einstellungen speichern"
 
-#: auth/password_admin_window.py:228
+#: auth/password_admin_window.py:236
 msgid "Close"
 msgstr "Schließen"
 
-#: auth/password_admin_window.py:252
+#: auth/password_admin_window.py:260
 msgid "Password protection settings saved."
 msgstr "Kennwortschutz-Einstellungen gespeichert."
 
-#: auth/password_admin_window.py:259
+#: auth/password_admin_window.py:267
 msgid ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
@@ -512,11 +512,11 @@ msgstr ""
 "Sind Sie sicher, dass Sie alle Kennwortschutzeinstellungen auf die "
 "Standardwerte zurücksetzen wollen?"
 
-#: auth/password_admin_window.py:273
+#: auth/password_admin_window.py:281
 msgid "Settings reset to defaults."
 msgstr "Die Einstellungen werden auf die Standardwerte zurückgesetzt."
 
-#: auth/password_admin_window.py:279
+#: auth/password_admin_window.py:287
 msgid ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
@@ -525,62 +525,62 @@ msgstr ""
 "zurücksetzen wollen? Dadurch werden alle nicht gespeicherten Änderungen "
 "verworfen."
 
-#: auth/password_admin_window.py:294
+#: auth/password_admin_window.py:302
 msgid "Settings restored to current saved state."
 msgstr ""
 "Die Einstellungen werden auf den aktuell gespeicherten Stand zurückgesetzt."
 
-#: auth/password_admin_window.py:303
+#: auth/password_admin_window.py:311
 msgid "Please enter a password."
 msgstr "Bitte geben Sie ein Passwort ein."
 
-#: auth/password_admin_window.py:307
+#: auth/password_admin_window.py:315
 msgid "Passwords do not match."
 msgstr "Die Kennwörter stimmen nicht überein."
 
-#: auth/password_admin_window.py:311 auth/password_admin_window.py:394
+#: auth/password_admin_window.py:319 auth/password_admin_window.py:402
 msgid "Password must be at least 6 characters long."
 msgstr "Das Kennwort muss mindestens 6 Zeichen lang sein."
 
-#: auth/password_admin_window.py:315
+#: auth/password_admin_window.py:323
 msgid "Password set successfully."
 msgstr "Kennwort erfolgreich gesetzt."
 
-#: auth/password_admin_window.py:322
+#: auth/password_admin_window.py:330
 msgid "Failed to set password."
 msgstr "Das Kennwort konnte nicht gesetzt werden."
 
-#: auth/password_admin_window.py:351
+#: auth/password_admin_window.py:359
 msgid "Current Password:"
 msgstr "Aktuelles Kennwort:"
 
-#: auth/password_admin_window.py:369
+#: auth/password_admin_window.py:377
 msgid "Confirm New Password:"
 msgstr "Neues Kennwort bestätigen:"
 
-#: auth/password_admin_window.py:386
+#: auth/password_admin_window.py:394
 msgid "Current password is incorrect."
 msgstr "Das aktuelle Kennwort ist nicht korrekt."
 
-#: auth/password_admin_window.py:390
+#: auth/password_admin_window.py:398
 msgid "New passwords do not match."
 msgstr "Die neuen Kennwörter stimmen nicht überein."
 
-#: auth/password_admin_window.py:398
+#: auth/password_admin_window.py:406
 msgid "Password changed successfully."
 msgstr "Kennwort erfolgreich geändert."
 
-#: auth/password_admin_window.py:401
+#: auth/password_admin_window.py:409
 msgid "Failed to change password."
 msgstr "Kennwort kann nicht geändert werden."
 
-#: auth/password_admin_window.py:406 auth/password_dialog.py:104
-#: auth/password_dialog.py:155 files/pdf_options_window.py:78
-#: files/type_configuration_window.py:179
+#: auth/password_admin_window.py:414 auth/password_dialog.py:139
+#: auth/password_dialog.py:200 auth/password_dialog.py:217
+#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: auth/password_admin_window.py:417
+#: auth/password_admin_window.py:425
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
@@ -588,71 +588,71 @@ msgstr ""
 "Sind Sie sicher, dass Sie den Kennwortschutz aufheben wollen? Dadurch werden"
 " alle Kennwortanforderungen deaktiviert."
 
-#: auth/password_admin_window.py:422
+#: auth/password_admin_window.py:430
 msgid "Password removed successfully."
 msgstr "Kennwort erfolgreich entfernt."
 
-#: auth/password_admin_window.py:426
+#: auth/password_admin_window.py:434
 msgid "Failed to remove password."
 msgstr "Das Kennwort konnte nicht entfernt werden."
 
-#: auth/password_admin_window.py:461
+#: auth/password_admin_window.py:469
 msgid "Cache exported as JSON to:"
 msgstr "Cache als JSON exportiert nach:"
 
-#: auth/password_admin_window.py:463
+#: auth/password_admin_window.py:471
 msgid "Failed to export cache as JSON:"
 msgstr "Der Cache konnte nicht als JSON exportiert werden:"
 
-#: auth/password_dialog.py:28 auth/password_dialog.py:72
+#: auth/password_dialog.py:38 auth/password_dialog.py:93
 msgid "Password Required"
 msgstr "Kennwort erforderlich"
 
-#: auth/password_dialog.py:28
+#: auth/password_dialog.py:38
 msgid "Password Protection"
 msgstr "Kennwortschutz"
 
-#: auth/password_dialog.py:79
+#: auth/password_dialog.py:100
 msgid "Password required for: {0}"
 msgstr "Kennwort erforderlich für: {0}"
 
-#: auth/password_dialog.py:88
+#: auth/password_dialog.py:123
 msgid "Password:"
 msgstr "Kennwort:"
 
-#: auth/password_dialog.py:101
+#: auth/password_dialog.py:136
 msgid "OK"
 msgstr "GUT"
 
-#: auth/password_dialog.py:110
+#: auth/password_dialog.py:145
 msgid "Password Protection Available"
 msgstr "Kennwortschutz verfügbar"
 
-#: auth/password_dialog.py:117
+#: auth/password_dialog.py:152
 msgid "This action requires password protection: {0}"
 msgstr "Diese Aktion erfordert einen Kennwortschutz: {0}"
 
-#: auth/password_dialog.py:123
+#: auth/password_dialog.py:168
 msgid "Password protection is not currently configured. You can:"
 msgstr "Der Kennwortschutz ist derzeit nicht konfiguriert. Sie können:"
 
-#: auth/password_dialog.py:133
+#: auth/password_dialog.py:178
 msgid "• Configure password protection for sensitive actions"
 msgstr "• Konfigurieren Sie den Kennwortschutz für sensible Aktionen"
 
-#: auth/password_dialog.py:138
+#: auth/password_dialog.py:183
 msgid "• Continue without password protection (less secure)"
 msgstr "• Weiter ohne Kennwortschutz (weniger sicher)"
 
-#: auth/password_dialog.py:147
+#: auth/password_dialog.py:192 auth/password_dialog.py:213
 msgid "Configure Protection"
 msgstr "Schutz konfigurieren"
 
-#: auth/password_dialog.py:151
+#: auth/password_dialog.py:196
 msgid "Continue Without Protection"
 msgstr "Weiter ohne Schutz"
 
-#: auth/password_dialog.py:169
+#: auth/password_dialog.py:231
 msgid "Incorrect password"
 msgstr "Falsches Kennwort"
 
@@ -684,37 +684,37 @@ msgstr ""
 msgid "Restarting Comparison"
 msgstr "Neustart-Vergleich"
 
-#: compare/compare_wrapper.py:68 compare/compare_wrapper.py:71
+#: compare/compare_wrapper.py:69 compare/compare_wrapper.py:72
 msgid "Invalid mode"
 msgstr "Ungültiger Modus"
 
-#: compare/compare_wrapper.py:101 compare/compare_wrapper.py:118
+#: compare/compare_wrapper.py:102 compare/compare_wrapper.py:119
 msgid "Search required"
 msgstr "Suche erforderlich"
 
-#: compare/compare_wrapper.py:101 compare/compare_wrapper.py:118
+#: compare/compare_wrapper.py:102 compare/compare_wrapper.py:119
 msgid "No matches found. Search again to find potential matches."
 msgstr ""
 "Keine Übereinstimmungen gefunden. Suchen Sie erneut, um mögliche "
 "Übereinstimmungen zu finden."
 
-#: compare/compare_wrapper.py:159
+#: compare/compare_wrapper.py:172
 msgid "Skipped %s images."
 msgstr "{0} Bilder wurden übersprungen."
 
-#: compare/compare_wrapper.py:165
+#: compare/compare_wrapper.py:178
 msgid "No Unrelated Images"
 msgstr "Keine unzusammenhängenden Bilder"
 
-#: compare/compare_wrapper.py:165
+#: compare/compare_wrapper.py:178
 msgid "No unrelated images found."
 msgstr "Keine unverbundenen Bilder gefunden."
 
-#: compare/compare_wrapper.py:202 compare/compare_wrapper.py:364
+#: compare/compare_wrapper.py:215 compare/compare_wrapper.py:377
 msgid "No Groups Found"
 msgstr "Keine Gruppen gefunden"
 
-#: compare/compare_wrapper.py:272
+#: compare/compare_wrapper.py:285
 msgid ""
 "Gathering image data... setup may take a while depending on number of files "
 "involved."
@@ -722,11 +722,11 @@ msgstr ""
 "Sammeln von Bilddaten... Die Einrichtung kann je nach Anzahl der Dateien "
 "eine Weile dauern."
 
-#: compare/compare_wrapper.py:294
+#: compare/compare_wrapper.py:307
 msgid "Confirm group run"
 msgstr "Gruppenlauf bestätigen"
 
-#: compare/compare_wrapper.py:295
+#: compare/compare_wrapper.py:308
 msgid ""
 "Search mode detected, please confirm switch to group mode before run. Group "
 "mode will take longer as all images in the base directory are compared."
@@ -735,71 +735,71 @@ msgstr ""
 "der Ausführung. Der Gruppenmodus dauert länger, da alle Bilder im "
 "Basisverzeichnis verglichen werd."
 
-#: compare/compare_wrapper.py:302
+#: compare/compare_wrapper.py:315
 msgid "Gathering image data for comparison"
 msgstr "Sammeln von Bilddaten für den Vergleich"
 
-#: compare/compare_wrapper.py:330
+#: compare/compare_wrapper.py:343
 msgid "Searching images..."
 msgstr "Suche nach Bildern..."
 
-#: compare/compare_wrapper.py:336
+#: compare/compare_wrapper.py:349
 msgid "Set a directory and search file or search text."
 msgstr ""
 "Legen Sie ein Verzeichnis und eine Suchdatei oder einen Suchtext fest."
 
-#: compare/compare_wrapper.py:337
+#: compare/compare_wrapper.py:350
 msgid "No Match Found"
 msgstr "Keine Übereinstimmung gefunden"
 
-#: compare/compare_wrapper.py:337
+#: compare/compare_wrapper.py:350
 msgid "None of the files match the search filters with current settings."
 msgstr ""
 "Keine der Dateien entspricht den Suchfiltern mit den aktuellen "
 "Einstellungen."
 
-#: compare/compare_wrapper.py:350
+#: compare/compare_wrapper.py:363
 msgid "%s possibly related images found."
 msgstr "{0} möglicherweise zugehörige Bilder gefunden."
 
-#: compare/compare_wrapper.py:358
+#: compare/compare_wrapper.py:371
 msgid "Running image comparisons..."
 msgstr "Bildvergleiche durchführen..."
 
-#: compare/compare_wrapper.py:363 compare/compare_wrapper.py:378
+#: compare/compare_wrapper.py:376 compare/compare_wrapper.py:391
 msgid "Set a directory and search file."
 msgstr "Legen Sie ein Verzeichnis und eine Suchdatei fest."
 
-#: compare/compare_wrapper.py:364
+#: compare/compare_wrapper.py:377
 msgid "None of the files can be grouped with current settings."
 msgstr ""
 "Keine der Dateien kann mit den aktuellen Einstellungen gruppiert werden."
 
-#: compare/compare_wrapper.py:379
+#: compare/compare_wrapper.py:392
 msgid "No Duplicates Found"
 msgstr "Keine Duplikate gefunden"
 
-#: compare/compare_wrapper.py:379
+#: compare/compare_wrapper.py:392
 msgid ""
 "None of the files appear to be duplicates based on the current settings."
 msgstr ""
 "Bei den aktuellen Einstellungen scheint keine der Dateien doppelt vorhanden "
 "zu sein."
 
-#: compare/compare_wrapper.py:403
+#: compare/compare_wrapper.py:416
 msgid "Stranded Group Members Found"
 msgstr "Gestrandete Gruppenmitglieder gefunden"
 
-#: compare/compare_wrapper.py:403
+#: compare/compare_wrapper.py:416
 msgid "Some group members were left stranded by the grouping process."
 msgstr ""
 "Einige Gruppenmitglieder wurden von der Gruppenbildung ausgeschlossen."
 
-#: compare/compare_wrapper.py:458
+#: compare/compare_wrapper.py:471
 msgid "No More Groups"
 msgstr "Keine Gruppen mehr"
 
-#: compare/compare_wrapper.py:459
+#: compare/compare_wrapper.py:472
 msgid ""
 "There are no more image groups remaining for this directory and current "
 "filter settings."
@@ -815,181 +815,181 @@ msgstr "(es werden keine Positiven gesetzt)"
 msgid "(no negatives set)"
 msgstr "(es werden keine Negative gesetzt)"
 
-#: compare/prevalidations_window.py:31 compare/prevalidations_window.py:325
+#: compare/prevalidations_window.py:31 compare/prevalidations_window.py:334
 msgid "New Prevalidation"
 msgstr "Neue Prävalidierung"
 
-#: compare/prevalidations_window.py:132
+#: compare/prevalidations_window.py:137
 msgid " detected"
 msgstr " entdeckt"
 
-#: compare/prevalidations_window.py:134
+#: compare/prevalidations_window.py:139
 msgid " - skipped"
 msgstr " - übersprungen"
 
-#: compare/prevalidations_window.py:137
+#: compare/prevalidations_window.py:142
 msgid " - hidden"
 msgstr " - versteckt"
 
-#: compare/prevalidations_window.py:146
+#: compare/prevalidations_window.py:155
 msgid "Moving file: "
 msgstr "Bewegliche Datei: "
 
-#: compare/prevalidations_window.py:159
+#: compare/prevalidations_window.py:168
 msgid "Deleting file: "
 msgstr "Löschung der Datei: "
 
-#: compare/prevalidations_window.py:205
+#: compare/prevalidations_window.py:214
 msgid "Action modifier is not a valid directory: "
 msgstr "Aktionsmodifikator ist kein gültiges Verzeichnis: "
 
-#: compare/prevalidations_window.py:207
+#: compare/prevalidations_window.py:216
 msgid "Run on folder is not a valid directory: "
 msgstr "Auf Ordner laufen ist kein gültiges Verzeichnis: "
 
-#: compare/prevalidations_window.py:209
+#: compare/prevalidations_window.py:218
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr ""
 "Invalide Vorvalidierung {0}, kann Fehler verursachen oder nicht laufen "
 "können!"
 
-#: compare/prevalidations_window.py:274
+#: compare/prevalidations_window.py:283
 msgid "embedding"
 msgstr "Einbettung"
 
-#: compare/prevalidations_window.py:276
+#: compare/prevalidations_window.py:285
 msgid "classifier {0}"
 msgstr "Klassifikator {0}"
 
-#: compare/prevalidations_window.py:278
+#: compare/prevalidations_window.py:287
 msgid "prompts"
 msgstr "Eingabeaufforderungen"
 
-#: compare/prevalidations_window.py:286
+#: compare/prevalidations_window.py:295
 msgid "categories: {0}"
 msgstr "Kategorien: {0}"
 
-#: compare/prevalidations_window.py:290
+#: compare/prevalidations_window.py:299
 msgid "{0} positives, {1} negatives"
 msgstr "{0} Positiv, {1} Negativ"
 
-#: compare/prevalidations_window.py:294
+#: compare/prevalidations_window.py:303
 msgid " using {0} ({1})"
 msgstr " mit {0} ({1})"
 
-#: compare/prevalidations_window.py:296
+#: compare/prevalidations_window.py:305
 msgid " using {0}"
 msgstr " mit {0}"
 
-#: compare/prevalidations_window.py:298
+#: compare/prevalidations_window.py:307
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} Positiv, {1} Negativ)"
 
-#: compare/prevalidations_window.py:311
+#: compare/prevalidations_window.py:320
 msgid "Modify Prevalidation"
 msgstr "Ändern der Prävalidierung"
 
-#: compare/prevalidations_window.py:324
+#: compare/prevalidations_window.py:333
 msgid "Prevalidation Name"
 msgstr "Prävalidierung Name"
 
-#: compare/prevalidations_window.py:331
+#: compare/prevalidations_window.py:340
 msgid "Positives"
 msgstr "Positiv"
 
-#: compare/prevalidations_window.py:338
+#: compare/prevalidations_window.py:347
 msgid "Negatives"
 msgstr "Negativ"
 
-#: compare/prevalidations_window.py:346
+#: compare/prevalidations_window.py:355
 msgid "Validation Types"
 msgstr "Validierungstypen"
 
-#: compare/prevalidations_window.py:349
+#: compare/prevalidations_window.py:358
 msgid "Use Embedding"
 msgstr "Einbettung verwenden"
 
-#: compare/prevalidations_window.py:356
+#: compare/prevalidations_window.py:365
 msgid "Use Image Classifier"
 msgstr "Bildklassifikator verwenden"
 
-#: compare/prevalidations_window.py:363
+#: compare/prevalidations_window.py:372
 msgid "Use Prompts"
 msgstr "Eingabeaufforderungen verwenden"
 
-#: compare/prevalidations_window.py:370
+#: compare/prevalidations_window.py:379
 msgid "Threshold"
 msgstr "Schwellenwert"
 
-#: compare/prevalidations_window.py:377
+#: compare/prevalidations_window.py:386
 msgid "Action"
 msgstr "Aktion"
 
-#: compare/prevalidations_window.py:389
+#: compare/prevalidations_window.py:398
 msgid "Action Modifier"
 msgstr "Aktionsmodifikator"
 
-#: compare/prevalidations_window.py:396
+#: compare/prevalidations_window.py:405
 msgid "Run on Directory"
 msgstr "Im Verzeichnis ausführen"
 
-#: compare/prevalidations_window.py:403
+#: compare/prevalidations_window.py:412
 msgid "Image Classifier Name"
 msgstr "Bildklassifikator Name"
 
-#: compare/prevalidations_window.py:415
+#: compare/prevalidations_window.py:424
 msgid "Image Classifier Selected Category"
 msgstr "Bildklassifikator Ausgewählte Kategorie"
 
-#: compare/prevalidations_window.py:419
+#: compare/prevalidations_window.py:428
 msgid "Select Categories..."
 msgstr "Kategorien auswählen..."
 
-#: compare/prevalidations_window.py:425
+#: compare/prevalidations_window.py:434
 msgid "Done"
 msgstr "Fertig"
 
-#: compare/prevalidations_window.py:597
+#: compare/prevalidations_window.py:606
 msgid ""
 "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 msgstr ""
 "Es wurde keine Vorabgenehmigung mit dem Namen {0} gefunden. Legen Sie sie im"
 " Fenster Prävalidierungen fest."
 
-#: compare/prevalidations_window.py:608
+#: compare/prevalidations_window.py:617
 msgid "Prevalidations"
 msgstr "Prävalidierungen"
 
-#: compare/prevalidations_window.py:631
+#: compare/prevalidations_window.py:640
 msgid "Set Prevalidations"
 msgstr "Prävalidierungen einstellen"
 
-#: compare/prevalidations_window.py:633
+#: compare/prevalidations_window.py:642
 msgid "Add prevalidation"
 msgstr "Prävalidierung hinzufügen"
 
-#: compare/prevalidations_window.py:635
+#: compare/prevalidations_window.py:644
 msgid "Clear prevalidations"
 msgstr "Klare Prävalidierungen"
 
-#: compare/prevalidations_window.py:642 utils/help_and_config.py:150
+#: compare/prevalidations_window.py:651 utils/help_and_config.py:150
 msgid "Enable Prevalidations"
 msgstr "Freigabe von Prävalidierungen"
 
-#: compare/prevalidations_window.py:679 files/hotkey_actions_window.py:95
+#: compare/prevalidations_window.py:688 files/hotkey_actions_window.py:95
 msgid "Set"
 msgstr "Einstellen"
 
-#: compare/prevalidations_window.py:687 files/file_actions_window.py:271
+#: compare/prevalidations_window.py:696 files/file_actions_window.py:271
 #: files/file_actions_window.py:314
 msgid "Modify"
 msgstr "Ändern"
 
-#: compare/prevalidations_window.py:694
+#: compare/prevalidations_window.py:703
 msgid "Delete"
 msgstr "Löschen"
 
-#: compare/prevalidations_window.py:701
+#: compare/prevalidations_window.py:710
 msgid "Move down"
 msgstr "Nach unten gehen"
 
@@ -1017,11 +1017,11 @@ msgstr "Geschichte löschen"
 msgid " ({0} files)"
 msgstr " ({0} Dateien)"
 
-#: files/file_actions_window.py:260 files/marked_file_mover.py:270
+#: files/file_actions_window.py:260 files/marked_file_mover.py:281
 msgid "Move"
 msgstr "Bewegen"
 
-#: files/file_actions_window.py:260 files/marked_file_mover.py:277
+#: files/file_actions_window.py:260 files/marked_file_mover.py:288
 msgid "Copy"
 msgstr "Kopie"
 
@@ -1086,203 +1086,203 @@ msgstr "Zielverzeichnis"
 msgid "(unset)"
 msgstr "(unbestimmt)"
 
-#: files/marked_file_mover.py:92 files/marked_file_mover.py:883
+#: files/marked_file_mover.py:103 files/marked_file_mover.py:910
 msgid "Marks cleared."
 msgstr "Markierungen gelöscht."
 
-#: files/marked_file_mover.py:99
+#: files/marked_file_mover.py:110
 msgid "Set current marks from previous."
 msgstr "Setzen Sie die aktuelle Markierung von der vorherigen ab."
 
-#: files/marked_file_mover.py:99
+#: files/marked_file_mover.py:110
 msgid "Total set: {0}"
 msgstr "Gesamtmenge: {0}"
 
-#: files/marked_file_mover.py:126
+#: files/marked_file_mover.py:137
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "Kein dauerhaftes Markierungsziel gesetzt!\n"
 "Mit Strg+T im Fenster Markierungen setzen."
 
-#: files/marked_file_mover.py:138
+#: files/marked_file_mover.py:149
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "Keine Tastenkombination gesetzt für {0}!\n"
 "Mit {1} im Fenster Markierungen einstellen."
 
-#: files/marked_file_mover.py:218 files/recent_directory_window.py:153
+#: files/marked_file_mover.py:229 files/recent_directory_window.py:153
 msgid "Set a new target directory"
 msgstr "Ein neues Zielverzeichnis festlegen"
 
-#: files/marked_file_mover.py:220
+#: files/marked_file_mover.py:231
 msgid "MOVE"
 msgstr "BEWEGEN"
 
-#: files/marked_file_mover.py:224
+#: files/marked_file_mover.py:235
 msgid "COPY"
 msgstr "KOPIE"
 
-#: files/marked_file_mover.py:226
+#: files/marked_file_mover.py:237
 msgid "DELETE"
 msgstr "LÖSCHEN"
 
-#: files/marked_file_mover.py:228 files/recent_directory_window.py:157
+#: files/marked_file_mover.py:239 files/recent_directory_window.py:157
 msgid "Add directories from parent"
 msgstr "Verzeichnisse aus übergeordneten Verzeichnissen hinzufügen"
 
-#: files/marked_file_mover.py:231 files/recent_directory_window.py:159
+#: files/marked_file_mover.py:242 files/recent_directory_window.py:159
 msgid "Clear targets"
 msgstr "Klare Ziele"
 
-#: files/marked_file_mover.py:233 files/pdf_options_window.py:81
+#: files/marked_file_mover.py:244 files/pdf_options_window.py:81
 msgid "Create PDF"
 msgstr "PDF erstellen"
 
-#: files/marked_file_mover.py:297 files/marked_file_mover.py:303
+#: files/marked_file_mover.py:308 files/marked_file_mover.py:314
 msgid "Recording next mark target and action."
 msgstr "Aufzeichnung des nächsten Markierungsziels und der nächsten Aktion."
 
-#: files/marked_file_mover.py:316 files/recent_directory_window.py:203
+#: files/marked_file_mover.py:327 files/recent_directory_window.py:203
 msgid "Invalid directory: %s"
 msgstr "Ungültiges Verzeichnis: {0}"
 
-#: files/marked_file_mover.py:318
+#: files/marked_file_mover.py:329
 msgid "Select target directory for marked files"
 msgstr "Zielverzeichnis für markierte Dateien auswählen"
 
-#: files/marked_file_mover.py:373
+#: files/marked_file_mover.py:384
 msgid "Moving"
 msgstr "Verschiebe"
 
-#: files/marked_file_mover.py:373
+#: files/marked_file_mover.py:384
 msgid "Copying"
 msgstr "Kopieren"
 
-#: files/marked_file_mover.py:374
+#: files/marked_file_mover.py:385
 msgid "Moved"
 msgstr "Verschiebt"
 
-#: files/marked_file_mover.py:374
+#: files/marked_file_mover.py:385
 msgid "Copied"
 msgstr "Kopiert"
 
-#: files/marked_file_mover.py:412
+#: files/marked_file_mover.py:425
 msgid "Moved {0} files to {1}"
 msgstr ""
 "{0} Dateien nach\n"
 "{1} verschoben"
 
-#: files/marked_file_mover.py:414
+#: files/marked_file_mover.py:427
 msgid "Copied {0} files to {1}"
 msgstr ""
 "{0} Dateien nach\n"
 "{1} kopiert"
 
-#: files/marked_file_mover.py:441
+#: files/marked_file_mover.py:468
 msgid "Existing filenames match!"
 msgstr "Bestehende Dateinamen stimmen überein!"
 
-#: files/marked_file_mover.py:443
+#: files/marked_file_mover.py:470
 msgid "WARNING: Exact file match."
 msgstr "WARNUNG: Genaue Übereinstimmung mit der Datei."
 
-#: files/marked_file_mover.py:445 files/marked_file_mover.py:796
+#: files/marked_file_mover.py:472 files/marked_file_mover.py:823
 msgid "WARNING: Short filenames."
 msgstr "WARNUNG: Kurze Dateinamen."
 
-#: files/marked_file_mover.py:469
+#: files/marked_file_mover.py:496
 msgid "Moving back"
 msgstr "Zurückgehen"
 
-#: files/marked_file_mover.py:469
+#: files/marked_file_mover.py:496
 msgid "Removing"
 msgstr "Entfernen von"
 
-#: files/marked_file_mover.py:470
+#: files/marked_file_mover.py:497
 msgid "Moved back"
 msgstr "Zurückgezogen"
 
-#: files/marked_file_mover.py:470
+#: files/marked_file_mover.py:497
 msgid "Removed"
 msgstr "Entfernt"
 
-#: files/marked_file_mover.py:476
+#: files/marked_file_mover.py:503
 msgid "Where should the marked files have gone?"
 msgstr "Wo sollen die markierten Dateien hin?"
 
-#: files/marked_file_mover.py:501
+#: files/marked_file_mover.py:528
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "{0} Dateien von\n"
 "{1} zurückgeschoben"
 
-#: files/marked_file_mover.py:503
+#: files/marked_file_mover.py:530
 msgid "Removed {0} files from {1}"
 msgstr ""
 "{0} Dateien aus\n"
 "{1} entfernt"
 
-#: files/marked_file_mover.py:520
+#: files/marked_file_mover.py:547
 msgid "Select parent directory for target directories"
 msgstr "Übergeordnetes Verzeichnis für Zielverzeichnisse auswählen"
 
-#: files/marked_file_mover.py:680
+#: files/marked_file_mover.py:707
 msgid "Sorted directories by embedding comparison."
 msgstr "Sortierte Verzeichnisse durch Einbettungsvergleich."
 
-#: files/marked_file_mover.py:700
+#: files/marked_file_mover.py:727
 msgid "Confirm Delete"
 msgstr "Bestätigen Löschen"
 
-#: files/marked_file_mover.py:701
+#: files/marked_file_mover.py:728
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr ""
 "Löschen von {0} markierten Dateien - Sind Sie sicher, dass Sie fortfahren "
 "möchten?"
 
-#: files/marked_file_mover.py:721
+#: files/marked_file_mover.py:748
 msgid "Delete Failed"
 msgstr "Löschen fehlgeschlagen"
 
-#: files/marked_file_mover.py:722
+#: files/marked_file_mover.py:749
 msgid "Failed to delete %s files - check log for details."
 msgstr ""
 "Das Löschen von {0}-Dateien ist fehlgeschlagen - prüfen Sie das Protokoll "
 "für Details."
 
-#: files/marked_file_mover.py:725
+#: files/marked_file_mover.py:752
 msgid "Deleted %s marked files."
 msgstr "Gelöschte {0} markierte Dateien."
 
-#: files/marked_file_mover.py:790
+#: files/marked_file_mover.py:817
 msgid "Existing filenames found!"
 msgstr "Bestehende Dateinamen gefunden!"
 
-#: files/marked_file_mover.py:792
+#: files/marked_file_mover.py:819
 msgid "WARNING: All file hashes match."
 msgstr "WARNUNG: Alle Datei-Hashes stimmen überein."
 
-#: files/marked_file_mover.py:794
+#: files/marked_file_mover.py:821
 msgid "WARNING: %s of %s file hashes match."
 msgstr "WARNUNG: {0} von {1} Datei-Hashes stimmen überein."
 
-#: files/marked_file_mover.py:800
+#: files/marked_file_mover.py:827
 msgid "No existing filenames found."
 msgstr "Keine vorhandenen Dateinamen gefunden."
 
-#: files/marked_file_mover.py:828
+#: files/marked_file_mover.py:855
 msgid "Found %s downstream related images"
 msgstr "{0} stromabwärts gerichtete Bilder gefunden"
 
-#: files/marked_file_mover.py:830
+#: files/marked_file_mover.py:857
 msgid "No downstream related images found"
 msgstr "Keine stromabwärts gerichteten Bilder gefunden"
 
-#: files/marked_file_mover.py:841
+#: files/marked_file_mover.py:868
 msgid "Cleared marked file"
 msgstr "Gelöschte markierte Datei"
 
-#: files/marked_file_mover.py:885
+#: files/marked_file_mover.py:912
 msgid "Removed {0} marks"
 msgstr "Entfernt {0} Markierungen"
 
@@ -2118,3 +2118,19 @@ msgstr "Bild-Tagging aktiviert"
 #: utils/help_and_config.py:162
 msgid "Escape Backslash Filepaths"
 msgstr "Escape Backslash-Dateipfade"
+
+#: auth/password_dialog.py:204
+msgid ""
+"Password protection is required for this action but is not currently "
+"configured."
+msgstr ""
+"Für diese Aktion ist ein Kennwortschutz erforderlich, der jedoch derzeit "
+"nicht konfiguriert ist."
+
+#: compare/prevalidations_window.py:79
+msgid "Loading image classifier <{0}> ..."
+msgstr "Laden des Bildklassifizierers <{0}> ..."
+
+#: compare/prevalidations_window.py:147
+msgid " - marked"
+msgstr " - markiert"

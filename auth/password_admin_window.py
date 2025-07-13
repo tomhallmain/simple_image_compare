@@ -29,8 +29,16 @@ class PasswordAdminWindow():
         
         # Create variables for checkboxes
         self.action_vars = {}
+        # Initialize with existing config values
         for action in self.config.protected_actions.keys():
             self.action_vars[action] = BooleanVar(value=self.config.protected_actions[action])
+        
+        # Add any new protected actions that aren't in config yet
+        for action_enum in ProtectedActions:
+            action = action_enum.value
+            if action not in self.action_vars:
+                # Default to True for new actions (protected by default)
+                self.action_vars[action] = BooleanVar(value=True)
         
         # Create variables for session timeout settings
         self.session_timeout_enabled_var = BooleanVar(value=self.config.session_timeout_enabled)
@@ -155,7 +163,7 @@ class PasswordAdminWindow():
                                fg="green")
             status_label.grid(column=0, row=4, pady=5, sticky="w")
             status_label.config(bg=AppStyle.BG_COLOR)
-            
+
             # Change password button
             change_btn = Button(right_frame, text=_("Change Password"), 
                                command=self.show_change_password_dialog)
@@ -197,7 +205,7 @@ class PasswordAdminWindow():
             confirm_pwd_entry = Entry(confirm_pwd_frame, textvariable=self.confirm_password_var, 
                                      show="*", width=20)
             confirm_pwd_entry.grid(column=1, row=0, padx=5, sticky="w")
-            
+
             # Set password button
             set_pwd_btn = Button(right_frame, text=_("Set Password"), 
                                 command=self.set_password)

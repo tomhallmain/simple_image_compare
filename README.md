@@ -62,7 +62,7 @@ Prevalidation rules can be configured with:
 - Directory-specific rules
 - H5 model-based classification rules
 
-This feature is particularly useful for maintaining clean media collections and automating content filtering, but it can be disabled at any time if desired. You can find an example H5 classifier that is known to work [here](https://github.com/FurkanGozukara/nsfw_model).
+This feature is particularly useful for maintaining clean media collections and automating local content filtering, but it can be disabled at any time if desired. You can find an example H5 classifier that is known to work [here](https://github.com/FurkanGozukara/nsfw_model).
 
 ## Usage
 
