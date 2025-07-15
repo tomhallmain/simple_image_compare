@@ -447,7 +447,7 @@ class MarkedFiles():
                         if _calculate_hash(marked_file) == _calculate_hash(target_filepath):
                             matching_files = True
                             logger.info(f"File hashes match: {marked_file} <> {exc_tuple[1]}")
-                            if is_moving:
+                            if is_moving and marked_file != target_filepath:
                                 # The other effect of this operation would have been to remove the
                                 # file from source, so try to do that
                                 try:
