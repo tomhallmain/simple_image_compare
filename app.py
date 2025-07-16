@@ -1901,29 +1901,54 @@ class App():
 
 
 if __name__ == "__main__":
-    I18N.install_locale(config.locale, verbose=config.print_settings)
-    root = ThemedTk(theme="black", themebg="black")
-    root.title(_(" Simple Image Compare "))
-    assets = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets")
-    icon = PhotoImage(file=os.path.join(assets, "icon.png"))
-    root.iconphoto(False, icon)
-    root.geometry(config.default_main_window_size)
-    # root.attributes('-fullscreen', True)
-    app = App(root)
-
-    # sys.settrace(Utils.trace)
-
-    # Graceful shutdown handler
-    def graceful_shutdown(signum, frame):
-        logger.info("Caught signal, shutting down gracefully...")
-        app.on_closing()
-        exit(0)
-
-    # Register the signal handlers for graceful shutdown
-    signal.signal(signal.SIGINT, graceful_shutdown)
-    signal.signal(signal.SIGTERM, graceful_shutdown)
-
     try:
-        root.mainloop()
+        I18N.install_locale(config.locale, verbose=config.print_settings)
+
+        def create_root():
+            root = ThemedTk(theme="black", themebg="black")
+            root.title(_(" Simple Image Compare "))
+            assets = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets")
+            icon = PhotoImage(file=os.path.join(assets, "icon.png"))
+            root.iconphoto(False, icon)
+            root.geometry(config.default_main_window_size)
+            # root.attributes('-fullscreen', True)
+            return root
+
+        app = None
+
+        # sys.settrace(Utils.trace)
+
+        # Graceful shutdown handler
+        def graceful_shutdown(signum, frame):
+            logger.info("Caught signal, shutting down gracefully...")
+            if app is not None:
+                app.on_closing()
+            exit(0)
+
+        # Register the signal handlers for graceful shutdown
+        signal.signal(signal.SIGINT, graceful_shutdown)
+        signal.signal(signal.SIGTERM, graceful_shutdown)
+
+        def startup_callback(result):
+            if result:
+                # Password verified or not required, create the application
+                global app
+                root = create_root()
+                app = App(root)
+                try:
+                    root.mainloop()
+                except KeyboardInterrupt:
+                    pass
+                except Exception:
+                    traceback.print_exc()
+            else:
+                # User cancelled the password dialog, exit
+                exit(0)
+        
+        # Check if startup password is required
+        # This will either call the callback immediately (if no password required)
+        # or show a password dialog and call the callback when done
+        from auth.app_startup_auth import check_startup_password_required
+        check_startup_password_required(startup_callback)
     except KeyboardInterrupt:
         pass

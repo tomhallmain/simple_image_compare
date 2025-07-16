@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-13 11:09-0400\n"
-"PO-Revision-Date: 2025-07-13 11:09-0400\n"
+"POT-Creation-Date: 2025-07-16 01:24-0400\n"
+"PO-Revision-Date: 2025-07-16 01:24-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
 "Language: ko\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:96 app.py:836 app.py:1906
+#: app.py:96 app.py:836 app.py:1909
 msgid " Simple Image Compare "
 msgstr " 간단한 이미지 비교 "
 
@@ -370,8 +370,8 @@ msgstr "이미지 생성 실행 중 오류 발생:"
 msgid "Running refacdir"
 msgstr "refacdir 실행"
 
-#: app.py:1767 auth/password_dialog.py:231 files/pdf_creator.py:132
-#: files/pdf_creator.py:136 files/pdf_creator.py:139
+#: app.py:1767 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "계정 정보"
 
@@ -401,180 +401,181 @@ msgstr "(필터)"
 msgid "Password Administration"
 msgstr "비밀번호 관리"
 
-#: auth/password_admin_window.py:72
+#: auth/password_admin_window.py:67
 msgid "Password Protection Settings"
 msgstr "비밀번호 보호 설정"
 
-#: auth/password_admin_window.py:84
+#: auth/password_admin_window.py:79
 msgid "Protected Actions"
 msgstr "보호되는 작업"
 
-#: auth/password_admin_window.py:90
+#: auth/password_admin_window.py:85
 msgid "Select which actions require password authentication:"
 msgstr "비밀번호 인증이 필요한 작업을 선택합니다:"
 
-#: auth/password_admin_window.py:106
+#: auth/password_admin_window.py:101
 msgid "(Always protected if a password is set)"
 msgstr "(비밀번호가 설정된 경우 항상 보호됨)"
 
-#: auth/password_admin_window.py:125
+#: auth/password_admin_window.py:120
 msgid "Session Timeout Settings"
 msgstr "세션 시간 초과 설정"
 
-#: auth/password_admin_window.py:131
+#: auth/password_admin_window.py:126
 msgid "Enable session timeout (remember password for a period)"
 msgstr "세션 시간 초과 사용(일정 기간 동안 비밀번호 기억)"
 
-#: auth/password_admin_window.py:143
+#: auth/password_admin_window.py:138
 msgid "Session timeout duration (minutes):"
 msgstr "세션 시간 초과 기간(분):"
 
-#: auth/password_admin_window.py:152
+#: auth/password_admin_window.py:147
 msgid "Password Setup"
 msgstr "비밀번호 설정"
 
-#: auth/password_admin_window.py:162
+#: auth/password_admin_window.py:157
 msgid "Password is configured"
 msgstr "비밀번호가 구성되었습니다."
 
-#: auth/password_admin_window.py:168 auth/password_admin_window.py:336
-#: auth/password_admin_window.py:352 auth/password_admin_window.py:411
+#: auth/password_admin_window.py:163 auth/password_admin_window.py:331
+#: auth/password_admin_window.py:347 auth/password_admin_window.py:406
 msgid "Change Password"
 msgstr "비밀번호 변경"
 
-#: auth/password_admin_window.py:173 auth/password_admin_window.py:424
+#: auth/password_admin_window.py:168 auth/password_admin_window.py:419
 msgid "Remove Password"
 msgstr "비밀번호 제거"
 
-#: auth/password_admin_window.py:178
+#: auth/password_admin_window.py:173
 msgid "Set up a password to enable protection:"
 msgstr "보호 기능을 사용하려면 비밀번호를 설정하세요:"
 
-#: auth/password_admin_window.py:188 auth/password_admin_window.py:368
+#: auth/password_admin_window.py:183 auth/password_admin_window.py:363
 msgid "New Password:"
 msgstr "새 비밀번호:"
 
-#: auth/password_admin_window.py:201
+#: auth/password_admin_window.py:196
 msgid "Confirm Password:"
 msgstr "비밀번호를 확인합니다:"
 
-#: auth/password_admin_window.py:210
+#: auth/password_admin_window.py:205
 msgid "Set Password"
 msgstr "비밀번호 설정"
 
-#: auth/password_admin_window.py:220 auth/password_admin_window.py:266
+#: auth/password_admin_window.py:215 auth/password_admin_window.py:261
 msgid "Reset to Defaults"
 msgstr "기본값으로 재설정"
 
-#: auth/password_admin_window.py:224 auth/password_admin_window.py:286
+#: auth/password_admin_window.py:219 auth/password_admin_window.py:281
 msgid "Set to Current"
 msgstr "현재로 설정"
 
-#: auth/password_admin_window.py:228
+#: auth/password_admin_window.py:223
 msgid "Export Cache as JSON"
 msgstr "캐시를 JSON으로 내보내기"
 
-#: auth/password_admin_window.py:232
+#: auth/password_admin_window.py:227
 msgid "Save Settings"
 msgstr "설정 저장"
 
-#: auth/password_admin_window.py:236
+#: auth/password_admin_window.py:231
 msgid "Close"
 msgstr "닫기"
 
-#: auth/password_admin_window.py:260
+#: auth/password_admin_window.py:255
 msgid "Password protection settings saved."
 msgstr "비밀번호 보호 설정이 저장되었습니다."
 
-#: auth/password_admin_window.py:267
+#: auth/password_admin_window.py:262
 msgid ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
 msgstr "모든 비밀번호 보호 설정을 기본값으로 초기화하시겠습니까?"
 
-#: auth/password_admin_window.py:281
+#: auth/password_admin_window.py:276
 msgid "Settings reset to defaults."
 msgstr "설정이 기본값으로 초기화됩니다."
 
-#: auth/password_admin_window.py:287
+#: auth/password_admin_window.py:282
 msgid ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
 msgstr "모든 설정을 현재 저장된 상태로 복원하시겠습니까? 이렇게 하면 저장되지 않은 변경 사항이 모두 삭제됩니다."
 
-#: auth/password_admin_window.py:302
+#: auth/password_admin_window.py:297
 msgid "Settings restored to current saved state."
 msgstr "설정이 현재 저장된 상태로 복원되었습니다."
 
-#: auth/password_admin_window.py:311
+#: auth/password_admin_window.py:306
 msgid "Please enter a password."
 msgstr "비밀번호를 입력하세요."
 
-#: auth/password_admin_window.py:315
+#: auth/password_admin_window.py:310
 msgid "Passwords do not match."
 msgstr "비밀번호가 일치하지 않습니다."
 
-#: auth/password_admin_window.py:319 auth/password_admin_window.py:402
+#: auth/password_admin_window.py:314 auth/password_admin_window.py:397
 msgid "Password must be at least 6 characters long."
 msgstr "비밀번호는 6자 이상이어야 합니다."
 
-#: auth/password_admin_window.py:323
+#: auth/password_admin_window.py:318
 msgid "Password set successfully."
 msgstr "비밀번호가 성공적으로 설정되었습니다."
 
-#: auth/password_admin_window.py:330
+#: auth/password_admin_window.py:325
 msgid "Failed to set password."
 msgstr "비밀번호를 설정하지 못했습니다."
 
-#: auth/password_admin_window.py:359
+#: auth/password_admin_window.py:354
 msgid "Current Password:"
 msgstr "현재 비밀번호:"
 
-#: auth/password_admin_window.py:377
+#: auth/password_admin_window.py:372
 msgid "Confirm New Password:"
 msgstr "새 비밀번호를 확인합니다:"
 
-#: auth/password_admin_window.py:394
+#: auth/password_admin_window.py:389
 msgid "Current password is incorrect."
 msgstr "현재 비밀번호가 올바르지 않습니다."
 
-#: auth/password_admin_window.py:398
+#: auth/password_admin_window.py:393
 msgid "New passwords do not match."
 msgstr "새 비밀번호가 일치하지 않습니다."
 
-#: auth/password_admin_window.py:406
+#: auth/password_admin_window.py:401
 msgid "Password changed successfully."
 msgstr "비밀번호가 성공적으로 변경되었습니다."
 
-#: auth/password_admin_window.py:409
+#: auth/password_admin_window.py:404
 msgid "Failed to change password."
 msgstr "비밀번호를 변경하지 못했습니다."
 
-#: auth/password_admin_window.py:414 auth/password_dialog.py:139
-#: auth/password_dialog.py:200 auth/password_dialog.py:217
-#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
+#: auth/password_dialog.py:139 auth/password_dialog.py:200
+#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: files/type_configuration_window.py:179
 msgid "Cancel"
 msgstr "취소"
 
-#: auth/password_admin_window.py:425
+#: auth/password_admin_window.py:420
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
 msgstr "비밀번호 보호를 제거하시겠습니까? 그러면 모든 비밀번호 요구 사항이 비활성화됩니다."
 
-#: auth/password_admin_window.py:430
+#: auth/password_admin_window.py:425
 msgid "Password removed successfully."
 msgstr "비밀번호가 성공적으로 제거되었습니다."
 
-#: auth/password_admin_window.py:434
+#: auth/password_admin_window.py:429
 msgid "Failed to remove password."
 msgstr "비밀번호를 제거하지 못했습니다."
 
-#: auth/password_admin_window.py:469
+#: auth/password_admin_window.py:464
 msgid "Cache exported as JSON to:"
 msgstr "캐시를 JSON으로 내보냅니다:"
 
-#: auth/password_admin_window.py:471
+#: auth/password_admin_window.py:466
 msgid "Failed to export cache as JSON:"
 msgstr "캐시를 JSON으로 내보내지 못했습니다:"
 
@@ -590,11 +591,11 @@ msgstr "비밀번호 보호"
 msgid "Password required for: {0}"
 msgstr "암호가 필요합니다: {0}"
 
-#: auth/password_dialog.py:123
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
 msgid "Password:"
 msgstr "비밀번호:"
 
-#: auth/password_dialog.py:136
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
 msgid "OK"
 msgstr "확인"
 
@@ -626,7 +627,13 @@ msgstr "보호 구성"
 msgid "Continue Without Protection"
 msgstr "보호 없이 계속 진행"
 
-#: auth/password_dialog.py:231
+#: auth/password_dialog.py:204
+msgid ""
+"Password protection is required for this action but is not currently "
+"configured."
+msgstr "이 작업에는 비밀번호 보호가 필요하지만 현재 구성되어 있지 않습니다."
+
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
 msgid "Incorrect password"
 msgstr "잘못된 비밀번호"
 
@@ -777,6 +784,10 @@ msgstr "(네거티브 설정 없음)"
 msgid "New Prevalidation"
 msgstr "새로운 유효성"
 
+#: compare/prevalidations_window.py:79
+msgid "Loading image classifier <{0}> ..."
+msgstr "이미지 분류기 <{0}> 로드 중 ..."
+
 #: compare/prevalidations_window.py:137
 msgid " detected"
 msgstr " 관련 기사"
@@ -788,6 +799,10 @@ msgstr " - 건너뛰기"
 #: compare/prevalidations_window.py:142
 msgid " - hidden"
 msgstr " - 숨겨진"
+
+#: compare/prevalidations_window.py:147
+msgid " - marked"
+msgstr " - 표시"
 
 #: compare/prevalidations_window.py:155
 msgid "Moving file: "
@@ -1335,7 +1350,7 @@ msgstr "HTML 지원은 pyppeteer 패키지를 요구합니다"
 msgid "Media Type Configuration"
 msgstr "Media Type 구성"
 
-#: files/type_configuration_window.py:113 utils/constants.py:300
+#: files/type_configuration_window.py:113 utils/constants.py:301
 msgid "Configure Media Types"
 msgstr "미디어 유형 구성"
 
@@ -1467,7 +1482,7 @@ msgstr "관련 이미지"
 msgid "Image Generation"
 msgstr "이미지 생성"
 
-#: image/image_details.py:191 utils/constants.py:297
+#: image/image_details.py:191 utils/constants.py:298
 msgid "Run Image Generation"
 msgstr "이미지 생성"
 
@@ -1751,51 +1766,51 @@ msgstr "관련 링크"
 msgid "System"
 msgstr "시스템"
 
-#: utils/constants.py:288
+#: utils/constants.py:289
 msgid "Run Compares"
 msgstr "비교 실행"
 
-#: utils/constants.py:289
+#: utils/constants.py:290
 msgid "Run Search"
 msgstr "검색 실행"
 
-#: utils/constants.py:290
+#: utils/constants.py:291
 msgid "Run Search Preset"
 msgstr "검색 사전 설정 실행"
 
-#: utils/constants.py:291
+#: utils/constants.py:292
 msgid "View Media Details"
 msgstr "미디어 세부 정보 보기"
 
-#: utils/constants.py:292
+#: utils/constants.py:293
 msgid "View Recent Directories"
 msgstr "최근 디렉터리 보기"
 
-#: utils/constants.py:293
+#: utils/constants.py:294
 msgid "View File Actions"
 msgstr "파일 작업 보기"
 
-#: utils/constants.py:294
+#: utils/constants.py:295
 msgid "Run File Actions"
 msgstr "파일 작업 실행"
 
-#: utils/constants.py:295
+#: utils/constants.py:296
 msgid "Edit Prevalidations"
 msgstr "유효성 검사 편집"
 
-#: utils/constants.py:296
+#: utils/constants.py:297
 msgid "Run Prevalidations"
 msgstr "사전 유효성 검사 실행"
 
-#: utils/constants.py:298
+#: utils/constants.py:299
 msgid "Run RefacDir"
 msgstr "RefacDir 실행"
 
-#: utils/constants.py:299
+#: utils/constants.py:300
 msgid "Delete Media"
 msgstr "미디어 삭제"
 
-#: utils/constants.py:301
+#: utils/constants.py:288
 msgid "Start Application"
 msgstr "소프트웨어 시작"
 
@@ -2057,16 +2072,10 @@ msgstr "이미지 태그 사용"
 msgid "Escape Backslash Filepaths"
 msgstr "파일 경로의 백슬래시 이스케이프"
 
-#: auth/password_dialog.py:204
-msgid ""
-"Password protection is required for this action but is not currently "
-"configured."
-msgstr "이 작업에는 비밀번호 보호가 필요하지만 현재 구성되어 있지 않습니다."
+#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
+msgid "Application Password Required"
+msgstr "소프트웨어 애플리케이션 암호 필요"
 
-#: compare/prevalidations_window.py:79
-msgid "Loading image classifier <{0}> ..."
-msgstr "이미지 분류기 <{0}> 로드 중 ..."
-
-#: compare/prevalidations_window.py:147
-msgid " - marked"
-msgstr " - 표시"
+#: auth/app_startup_auth.py:69
+msgid "A password is required to open this application."
+msgstr "이 소프트웨어 애플리케이션을 열려면 비밀번호가 필요합니다."

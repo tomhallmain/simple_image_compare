@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-13 11:09-0400\n"
-"PO-Revision-Date: 2025-07-13 11:09-0400\n"
+"POT-Creation-Date: 2025-07-16 01:24-0400\n"
+"PO-Revision-Date: 2025-07-16 01:24-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:96 app.py:836 app.py:1906
+#: app.py:96 app.py:836 app.py:1909
 msgid " Simple Image Compare "
 msgstr " 简单图像比较 "
 
@@ -369,8 +369,8 @@ msgstr "生成图像时出错："
 msgid "Running refacdir"
 msgstr "正在运行 reacdir"
 
-#: app.py:1767 auth/password_dialog.py:231 files/pdf_creator.py:132
-#: files/pdf_creator.py:136 files/pdf_creator.py:139
+#: app.py:1767 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "错误"
 
@@ -400,180 +400,181 @@ msgstr "(过滤)"
 msgid "Password Administration"
 msgstr "密码管理"
 
-#: auth/password_admin_window.py:72
+#: auth/password_admin_window.py:67
 msgid "Password Protection Settings"
 msgstr "密码保护设置"
 
-#: auth/password_admin_window.py:84
+#: auth/password_admin_window.py:79
 msgid "Protected Actions"
 msgstr "受保护的行动"
 
-#: auth/password_admin_window.py:90
+#: auth/password_admin_window.py:85
 msgid "Select which actions require password authentication:"
 msgstr "选择哪些操作需要密码验证："
 
-#: auth/password_admin_window.py:106
+#: auth/password_admin_window.py:101
 msgid "(Always protected if a password is set)"
 msgstr "(如果设置了密码，则始终受保护）"
 
-#: auth/password_admin_window.py:125
+#: auth/password_admin_window.py:120
 msgid "Session Timeout Settings"
 msgstr "会话超时设置"
 
-#: auth/password_admin_window.py:131
+#: auth/password_admin_window.py:126
 msgid "Enable session timeout (remember password for a period)"
 msgstr "启用会话超时（在一段时间内记住密码）"
 
-#: auth/password_admin_window.py:143
+#: auth/password_admin_window.py:138
 msgid "Session timeout duration (minutes):"
 msgstr "会话超时时间（分钟）："
 
-#: auth/password_admin_window.py:152
+#: auth/password_admin_window.py:147
 msgid "Password Setup"
 msgstr "密码设置"
 
-#: auth/password_admin_window.py:162
+#: auth/password_admin_window.py:157
 msgid "Password is configured"
 msgstr "密码已配置"
 
-#: auth/password_admin_window.py:168 auth/password_admin_window.py:336
-#: auth/password_admin_window.py:352 auth/password_admin_window.py:411
+#: auth/password_admin_window.py:163 auth/password_admin_window.py:331
+#: auth/password_admin_window.py:347 auth/password_admin_window.py:406
 msgid "Change Password"
 msgstr "更改密码"
 
-#: auth/password_admin_window.py:173 auth/password_admin_window.py:424
+#: auth/password_admin_window.py:168 auth/password_admin_window.py:419
 msgid "Remove Password"
 msgstr "删除密码"
 
-#: auth/password_admin_window.py:178
+#: auth/password_admin_window.py:173
 msgid "Set up a password to enable protection:"
 msgstr "设置密码以启用保护："
 
-#: auth/password_admin_window.py:188 auth/password_admin_window.py:368
+#: auth/password_admin_window.py:183 auth/password_admin_window.py:363
 msgid "New Password:"
 msgstr "新密码："
 
-#: auth/password_admin_window.py:201
+#: auth/password_admin_window.py:196
 msgid "Confirm Password:"
 msgstr "确认密码："
 
-#: auth/password_admin_window.py:210
+#: auth/password_admin_window.py:205
 msgid "Set Password"
 msgstr "设置密码"
 
-#: auth/password_admin_window.py:220 auth/password_admin_window.py:266
+#: auth/password_admin_window.py:215 auth/password_admin_window.py:261
 msgid "Reset to Defaults"
 msgstr "重置为默认值"
 
-#: auth/password_admin_window.py:224 auth/password_admin_window.py:286
+#: auth/password_admin_window.py:219 auth/password_admin_window.py:281
 msgid "Set to Current"
 msgstr "设置为当前"
 
-#: auth/password_admin_window.py:228
+#: auth/password_admin_window.py:223
 msgid "Export Cache as JSON"
 msgstr "以 JSON 格式导出缓存"
 
-#: auth/password_admin_window.py:232
+#: auth/password_admin_window.py:227
 msgid "Save Settings"
 msgstr "保存设置"
 
-#: auth/password_admin_window.py:236
+#: auth/password_admin_window.py:231
 msgid "Close"
 msgstr "关闭"
 
-#: auth/password_admin_window.py:260
+#: auth/password_admin_window.py:255
 msgid "Password protection settings saved."
 msgstr "保存密码保护设置。"
 
-#: auth/password_admin_window.py:267
+#: auth/password_admin_window.py:262
 msgid ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
 msgstr "您确定要将所有密码保护设置重置为默认值吗？"
 
-#: auth/password_admin_window.py:281
+#: auth/password_admin_window.py:276
 msgid "Settings reset to defaults."
 msgstr "设置重置为默认值。"
 
-#: auth/password_admin_window.py:287
+#: auth/password_admin_window.py:282
 msgid ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
 msgstr "您确定要将所有设置恢复到当前保存的状态吗？这将放弃任何未保存的更改。"
 
-#: auth/password_admin_window.py:302
+#: auth/password_admin_window.py:297
 msgid "Settings restored to current saved state."
 msgstr "设置恢复到当前保存状态。"
 
-#: auth/password_admin_window.py:311
+#: auth/password_admin_window.py:306
 msgid "Please enter a password."
 msgstr "请输入密码。"
 
-#: auth/password_admin_window.py:315
+#: auth/password_admin_window.py:310
 msgid "Passwords do not match."
 msgstr "密码不匹配。"
 
-#: auth/password_admin_window.py:319 auth/password_admin_window.py:402
+#: auth/password_admin_window.py:314 auth/password_admin_window.py:397
 msgid "Password must be at least 6 characters long."
 msgstr "密码长度至少为 6 个字符。"
 
-#: auth/password_admin_window.py:323
+#: auth/password_admin_window.py:318
 msgid "Password set successfully."
 msgstr "密码设置成功。"
 
-#: auth/password_admin_window.py:330
+#: auth/password_admin_window.py:325
 msgid "Failed to set password."
 msgstr "密码设置失败。"
 
-#: auth/password_admin_window.py:359
+#: auth/password_admin_window.py:354
 msgid "Current Password:"
 msgstr "当前密码:"
 
-#: auth/password_admin_window.py:377
+#: auth/password_admin_window.py:372
 msgid "Confirm New Password:"
 msgstr "确认新密码："
 
-#: auth/password_admin_window.py:394
+#: auth/password_admin_window.py:389
 msgid "Current password is incorrect."
 msgstr "当前密码不正确。"
 
-#: auth/password_admin_window.py:398
+#: auth/password_admin_window.py:393
 msgid "New passwords do not match."
 msgstr "新密码不匹配。"
 
-#: auth/password_admin_window.py:406
+#: auth/password_admin_window.py:401
 msgid "Password changed successfully."
 msgstr "密码更改成功。"
 
-#: auth/password_admin_window.py:409
+#: auth/password_admin_window.py:404
 msgid "Failed to change password."
 msgstr "更改密码失败。"
 
-#: auth/password_admin_window.py:414 auth/password_dialog.py:139
-#: auth/password_dialog.py:200 auth/password_dialog.py:217
-#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
+#: auth/password_dialog.py:139 auth/password_dialog.py:200
+#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: files/type_configuration_window.py:179
 msgid "Cancel"
 msgstr "取消"
 
-#: auth/password_admin_window.py:425
+#: auth/password_admin_window.py:420
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
 msgstr "您确定要取消密码保护吗？这将禁用所有密码要求。"
 
-#: auth/password_admin_window.py:430
+#: auth/password_admin_window.py:425
 msgid "Password removed successfully."
 msgstr "密码已成功删除。"
 
-#: auth/password_admin_window.py:434
+#: auth/password_admin_window.py:429
 msgid "Failed to remove password."
 msgstr "删除密码失败。"
 
-#: auth/password_admin_window.py:469
+#: auth/password_admin_window.py:464
 msgid "Cache exported as JSON to:"
 msgstr "缓存以 JSON 格式导出到:"
 
-#: auth/password_admin_window.py:471
+#: auth/password_admin_window.py:466
 msgid "Failed to export cache as JSON:"
 msgstr "以 JSON 格式导出缓存失败："
 
@@ -589,11 +590,11 @@ msgstr "密码保护"
 msgid "Password required for: {0}"
 msgstr "需要密码： {0}"
 
-#: auth/password_dialog.py:123
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
 msgid "Password:"
 msgstr "密码:"
 
-#: auth/password_dialog.py:136
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
 msgid "OK"
 msgstr "好的"
 
@@ -625,7 +626,13 @@ msgstr "配置保护"
 msgid "Continue Without Protection"
 msgstr "在没有保护的情况下继续"
 
-#: auth/password_dialog.py:231
+#: auth/password_dialog.py:204
+msgid ""
+"Password protection is required for this action but is not currently "
+"configured."
+msgstr "此操作需要密码保护，但目前尚未配置。"
+
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
 msgid "Incorrect password"
 msgstr "密码错误"
 
@@ -774,6 +781,10 @@ msgstr "(没有底片）"
 msgid "New Prevalidation"
 msgstr "新建前缀"
 
+#: compare/prevalidations_window.py:79
+msgid "Loading image classifier <{0}> ..."
+msgstr "加载图像分类器 <{0}> ..."
+
 #: compare/prevalidations_window.py:137
 msgid " detected"
 msgstr " 检测"
@@ -785,6 +796,10 @@ msgstr " - 跳过"
 #: compare/prevalidations_window.py:142
 msgid " - hidden"
 msgstr " - 隐藏"
+
+#: compare/prevalidations_window.py:147
+msgid " - marked"
+msgstr " - 显著的"
 
 #: compare/prevalidations_window.py:155
 msgid "Moving file: "
@@ -1332,7 +1347,7 @@ msgstr "HTML 支持需要 pyppeter 软件包"
 msgid "Media Type Configuration"
 msgstr "媒体类型配置"
 
-#: files/type_configuration_window.py:113 utils/constants.py:300
+#: files/type_configuration_window.py:113 utils/constants.py:301
 msgid "Configure Media Types"
 msgstr "配置媒体类型"
 
@@ -1463,7 +1478,7 @@ msgstr "打开相关图像"
 msgid "Image Generation"
 msgstr "图像生成"
 
-#: image/image_details.py:191 utils/constants.py:297
+#: image/image_details.py:191 utils/constants.py:298
 msgid "Run Image Generation"
 msgstr "运行图像生成"
 
@@ -1747,51 +1762,51 @@ msgstr "更改目录"
 msgid "System"
 msgstr "系统"
 
-#: utils/constants.py:288
+#: utils/constants.py:289
 msgid "Run Compares"
 msgstr "运行比较"
 
-#: utils/constants.py:289
+#: utils/constants.py:290
 msgid "Run Search"
 msgstr "运行搜索"
 
-#: utils/constants.py:290
+#: utils/constants.py:291
 msgid "Run Search Preset"
 msgstr "运行搜索预置"
 
-#: utils/constants.py:291
+#: utils/constants.py:292
 msgid "View Media Details"
 msgstr "查看媒体详情"
 
-#: utils/constants.py:292
+#: utils/constants.py:293
 msgid "View Recent Directories"
 msgstr "查看最新目录"
 
-#: utils/constants.py:293
+#: utils/constants.py:294
 msgid "View File Actions"
 msgstr "查看文件操作"
 
-#: utils/constants.py:294
+#: utils/constants.py:295
 msgid "Run File Actions"
 msgstr "运行文件操作"
 
-#: utils/constants.py:295
+#: utils/constants.py:296
 msgid "Edit Prevalidations"
 msgstr "编辑批准书"
 
-#: utils/constants.py:296
+#: utils/constants.py:297
 msgid "Run Prevalidations"
 msgstr "运行审批"
 
-#: utils/constants.py:298
+#: utils/constants.py:299
 msgid "Run RefacDir"
 msgstr "运行 RefacDir"
 
-#: utils/constants.py:299
+#: utils/constants.py:300
 msgid "Delete Media"
 msgstr "删除媒体"
 
-#: utils/constants.py:301
+#: utils/constants.py:288
 msgid "Start Application"
 msgstr "启动软件应用程序"
 
@@ -2053,16 +2068,10 @@ msgstr "启用图像标记"
 msgid "Escape Backslash Filepaths"
 msgstr "逃离文件路径中的反斜线"
 
-#: auth/password_dialog.py:204
-msgid ""
-"Password protection is required for this action but is not currently "
-"configured."
-msgstr "此操作需要密码保护，但目前尚未配置。"
+#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
+msgid "Application Password Required"
+msgstr "需要软件应用密码"
 
-#: compare/prevalidations_window.py:79
-msgid "Loading image classifier <{0}> ..."
-msgstr "加载图像分类器 <{0}> ..."
-
-#: compare/prevalidations_window.py:147
-msgid " - marked"
-msgstr " - 显著的"
+#: auth/app_startup_auth.py:69
+msgid "A password is required to open this application."
+msgstr "打开此软件应用程序需要密码。"

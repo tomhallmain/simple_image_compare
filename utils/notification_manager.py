@@ -7,6 +7,9 @@ from tkinter import TclError
 from utils.config import config
 from utils.constants import ActionType
 from utils.logging_setup import get_logger
+from utils.translations import I18N
+
+_ = I18N._
 
 logger = get_logger("notification_manager")
 
@@ -18,6 +21,10 @@ def debug_log(msg: str):
 
 
 class Notification:
+    """A notification to be displayed in the title of a window."""
+
+    ETC_MESSAGE = _(" etc.")
+
     def __init__(self, message: str, base_message: Optional[str] = None, duration: float = 5.0,
                  action_type: ActionType = ActionType.SYSTEM, is_manual: bool = True, window_id: int = 0):
         self.message = message.replace("\n", " ") # TODO remove this when all translations have newline removed
@@ -304,7 +311,7 @@ class NotificationManager:
         # If we couldn't show all notifications, add "etc."
         if len(sorted_notifications) > len(notification_parts):
             if remaining_length >= 5:  # If we have space for " etc."
-                combined += " etc."
+                combined += Notification.ETC_MESSAGE
         
         debug_log(f"Returning combined title with {len(notification_parts)} notifications")
         return f"{title} - {combined}"

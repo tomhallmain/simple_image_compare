@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-13 11:09-0400\n"
-"PO-Revision-Date: 2025-07-13 11:09-0400\n"
+"POT-Creation-Date: 2025-07-16 01:24-0400\n"
+"PO-Revision-Date: 2025-07-16 01:24-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:96 app.py:836 app.py:1906
+#: app.py:96 app.py:836 app.py:1909
 msgid " Simple Image Compare "
 msgstr " シンプルな画像比較 "
 
@@ -369,8 +369,8 @@ msgstr "画像生成の実行エラー："
 msgid "Running refacdir"
 msgstr "ランニング refacdir"
 
-#: app.py:1767 auth/password_dialog.py:231 files/pdf_creator.py:132
-#: files/pdf_creator.py:136 files/pdf_creator.py:139
+#: app.py:1767 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "エラー"
 
@@ -400,180 +400,181 @@ msgstr "(フィルタリング)"
 msgid "Password Administration"
 msgstr "パスワード管理"
 
-#: auth/password_admin_window.py:72
+#: auth/password_admin_window.py:67
 msgid "Password Protection Settings"
 msgstr "パスワード保護設定"
 
-#: auth/password_admin_window.py:84
+#: auth/password_admin_window.py:79
 msgid "Protected Actions"
 msgstr "保護された行為"
 
-#: auth/password_admin_window.py:90
+#: auth/password_admin_window.py:85
 msgid "Select which actions require password authentication:"
 msgstr "パスワード認証が必要なアクションを選択します："
 
-#: auth/password_admin_window.py:106
+#: auth/password_admin_window.py:101
 msgid "(Always protected if a password is set)"
 msgstr "(パスワードが設定されている場合は常に保護されます）"
 
-#: auth/password_admin_window.py:125
+#: auth/password_admin_window.py:120
 msgid "Session Timeout Settings"
 msgstr "セッションタイムアウトの設定"
 
-#: auth/password_admin_window.py:131
+#: auth/password_admin_window.py:126
 msgid "Enable session timeout (remember password for a period)"
 msgstr "セッションタイムアウトを有効にする（一定期間パスワードを記憶する）"
 
-#: auth/password_admin_window.py:143
+#: auth/password_admin_window.py:138
 msgid "Session timeout duration (minutes):"
 msgstr "セッションのタイムアウト時間（分）："
 
-#: auth/password_admin_window.py:152
+#: auth/password_admin_window.py:147
 msgid "Password Setup"
 msgstr "パスワード設定"
 
-#: auth/password_admin_window.py:162
+#: auth/password_admin_window.py:157
 msgid "Password is configured"
 msgstr "パスワードが設定されている"
 
-#: auth/password_admin_window.py:168 auth/password_admin_window.py:336
-#: auth/password_admin_window.py:352 auth/password_admin_window.py:411
+#: auth/password_admin_window.py:163 auth/password_admin_window.py:331
+#: auth/password_admin_window.py:347 auth/password_admin_window.py:406
 msgid "Change Password"
 msgstr "パスワードの変更"
 
-#: auth/password_admin_window.py:173 auth/password_admin_window.py:424
+#: auth/password_admin_window.py:168 auth/password_admin_window.py:419
 msgid "Remove Password"
 msgstr "パスワードの削除"
 
-#: auth/password_admin_window.py:178
+#: auth/password_admin_window.py:173
 msgid "Set up a password to enable protection:"
 msgstr "パスワードを設定して保護を有効にする："
 
-#: auth/password_admin_window.py:188 auth/password_admin_window.py:368
+#: auth/password_admin_window.py:183 auth/password_admin_window.py:363
 msgid "New Password:"
 msgstr "新しいパスワード"
 
-#: auth/password_admin_window.py:201
+#: auth/password_admin_window.py:196
 msgid "Confirm Password:"
 msgstr "パスワードの確認:"
 
-#: auth/password_admin_window.py:210
+#: auth/password_admin_window.py:205
 msgid "Set Password"
 msgstr "パスワードの設定"
 
-#: auth/password_admin_window.py:220 auth/password_admin_window.py:266
+#: auth/password_admin_window.py:215 auth/password_admin_window.py:261
 msgid "Reset to Defaults"
 msgstr "デフォルトにリセット"
 
-#: auth/password_admin_window.py:224 auth/password_admin_window.py:286
+#: auth/password_admin_window.py:219 auth/password_admin_window.py:281
 msgid "Set to Current"
 msgstr "カレントに設定"
 
-#: auth/password_admin_window.py:228
+#: auth/password_admin_window.py:223
 msgid "Export Cache as JSON"
 msgstr "キャッシュをJSONとしてエクスポートする"
 
-#: auth/password_admin_window.py:232
+#: auth/password_admin_window.py:227
 msgid "Save Settings"
 msgstr "設定を保存する"
 
-#: auth/password_admin_window.py:236
+#: auth/password_admin_window.py:231
 msgid "Close"
 msgstr "閉じる"
 
-#: auth/password_admin_window.py:260
+#: auth/password_admin_window.py:255
 msgid "Password protection settings saved."
 msgstr "パスワード保護設定を保存。"
 
-#: auth/password_admin_window.py:267
+#: auth/password_admin_window.py:262
 msgid ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
 msgstr "すべてのパスワード保護設定をデフォルト値にリセットしてもよろしいですか？"
 
-#: auth/password_admin_window.py:281
+#: auth/password_admin_window.py:276
 msgid "Settings reset to defaults."
 msgstr "設定がデフォルトにリセットされる。"
 
-#: auth/password_admin_window.py:287
+#: auth/password_admin_window.py:282
 msgid ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
 msgstr "すべての設定を現在の保存状態に戻してもよろしいですか？これで保存されていない変更は破棄されます。"
 
-#: auth/password_admin_window.py:302
+#: auth/password_admin_window.py:297
 msgid "Settings restored to current saved state."
 msgstr "設定を現在の保存状態に戻す。"
 
-#: auth/password_admin_window.py:311
+#: auth/password_admin_window.py:306
 msgid "Please enter a password."
 msgstr "パスワードを入力してください。"
 
-#: auth/password_admin_window.py:315
+#: auth/password_admin_window.py:310
 msgid "Passwords do not match."
 msgstr "パスワードが一致しない。"
 
-#: auth/password_admin_window.py:319 auth/password_admin_window.py:402
+#: auth/password_admin_window.py:314 auth/password_admin_window.py:397
 msgid "Password must be at least 6 characters long."
 msgstr "パスワードは6文字以上でなければなりません。"
 
-#: auth/password_admin_window.py:323
+#: auth/password_admin_window.py:318
 msgid "Password set successfully."
 msgstr "パスワードの設定に成功しました。"
 
-#: auth/password_admin_window.py:330
+#: auth/password_admin_window.py:325
 msgid "Failed to set password."
 msgstr "パスワードの設定に失敗しました。"
 
-#: auth/password_admin_window.py:359
+#: auth/password_admin_window.py:354
 msgid "Current Password:"
 msgstr "現在のパスワード："
 
-#: auth/password_admin_window.py:377
+#: auth/password_admin_window.py:372
 msgid "Confirm New Password:"
 msgstr "新しいパスワードを確認する："
 
-#: auth/password_admin_window.py:394
+#: auth/password_admin_window.py:389
 msgid "Current password is incorrect."
 msgstr "現在のパスワードが間違っています。"
 
-#: auth/password_admin_window.py:398
+#: auth/password_admin_window.py:393
 msgid "New passwords do not match."
 msgstr "新しいパスワードが一致しない。"
 
-#: auth/password_admin_window.py:406
+#: auth/password_admin_window.py:401
 msgid "Password changed successfully."
 msgstr "パスワードの変更に成功しました。"
 
-#: auth/password_admin_window.py:409
+#: auth/password_admin_window.py:404
 msgid "Failed to change password."
 msgstr "パスワードの変更に失敗しました。"
 
-#: auth/password_admin_window.py:414 auth/password_dialog.py:139
-#: auth/password_dialog.py:200 auth/password_dialog.py:217
-#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
+#: auth/password_dialog.py:139 auth/password_dialog.py:200
+#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: files/type_configuration_window.py:179
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: auth/password_admin_window.py:425
+#: auth/password_admin_window.py:420
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
 msgstr "本当にパスワード保護を解除しますか？これにより、すべてのパスワード要件が無効になります。"
 
-#: auth/password_admin_window.py:430
+#: auth/password_admin_window.py:425
 msgid "Password removed successfully."
 msgstr "パスワードは正常に削除されました。"
 
-#: auth/password_admin_window.py:434
+#: auth/password_admin_window.py:429
 msgid "Failed to remove password."
 msgstr "パスワードの削除に失敗しました。"
 
-#: auth/password_admin_window.py:469
+#: auth/password_admin_window.py:464
 msgid "Cache exported as JSON to:"
 msgstr "キャッシュはJSONとしてエクスポートされる："
 
-#: auth/password_admin_window.py:471
+#: auth/password_admin_window.py:466
 msgid "Failed to export cache as JSON:"
 msgstr "キャッシュを JSON としてエクスポートできませんでした："
 
@@ -589,11 +590,11 @@ msgstr "パスワード保護"
 msgid "Password required for: {0}"
 msgstr "パスワードが必要です： {0}"
 
-#: auth/password_dialog.py:123
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
 msgid "Password:"
 msgstr "パスワード :"
 
-#: auth/password_dialog.py:136
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
 msgid "OK"
 msgstr "オーケー"
 
@@ -625,7 +626,13 @@ msgstr "プロテクションの設定"
 msgid "Continue Without Protection"
 msgstr "保護なしで続ける"
 
-#: auth/password_dialog.py:231
+#: auth/password_dialog.py:204
+msgid ""
+"Password protection is required for this action but is not currently "
+"configured."
+msgstr "このアクションにはパスワード保護が必要だが、現在は設定されていない。"
+
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
 msgid "Incorrect password"
 msgstr "パスワードの誤り"
 
@@ -775,6 +782,10 @@ msgstr "(ネガなし）"
 msgid "New Prevalidation"
 msgstr "新規登録"
 
+#: compare/prevalidations_window.py:79
+msgid "Loading image classifier <{0}> ..."
+msgstr "画像分類器<{0}>をロード中 ..."
+
 #: compare/prevalidations_window.py:137
 msgid " detected"
 msgstr " 検出する"
@@ -786,6 +797,10 @@ msgstr " - スキップ"
 #: compare/prevalidations_window.py:142
 msgid " - hidden"
 msgstr " - 隠し"
+
+#: compare/prevalidations_window.py:147
+msgid " - marked"
+msgstr " - マーク"
 
 #: compare/prevalidations_window.py:155
 msgid "Moving file: "
@@ -1333,7 +1348,7 @@ msgstr "HTMLサポートは、pyppeteerパッケージが必要です"
 msgid "Media Type Configuration"
 msgstr "媒体のタイプ構成"
 
-#: files/type_configuration_window.py:113 utils/constants.py:300
+#: files/type_configuration_window.py:113 utils/constants.py:301
 msgid "Configure Media Types"
 msgstr "メディアタイプの設定"
 
@@ -1465,7 +1480,7 @@ msgstr "関連する画像を開く"
 msgid "Image Generation"
 msgstr "画像生成"
 
-#: image/image_details.py:191 utils/constants.py:297
+#: image/image_details.py:191 utils/constants.py:298
 msgid "Run Image Generation"
 msgstr "映像生成の実行"
 
@@ -1749,51 +1764,51 @@ msgstr "変更ディレクトリ"
 msgid "System"
 msgstr "システム"
 
-#: utils/constants.py:288
+#: utils/constants.py:289
 msgid "Run Compares"
 msgstr "比較実行"
 
-#: utils/constants.py:289
+#: utils/constants.py:290
 msgid "Run Search"
 msgstr "検索を実行する"
 
-#: utils/constants.py:290
+#: utils/constants.py:291
 msgid "Run Search Preset"
 msgstr "検索プリセットの実行"
 
-#: utils/constants.py:291
+#: utils/constants.py:292
 msgid "View Media Details"
 msgstr "メディア詳細を見る"
 
-#: utils/constants.py:292
+#: utils/constants.py:293
 msgid "View Recent Directories"
 msgstr "最近のディレクトリを見る"
 
-#: utils/constants.py:293
+#: utils/constants.py:294
 msgid "View File Actions"
 msgstr "ファイルアクションを見る"
 
-#: utils/constants.py:294
+#: utils/constants.py:295
 msgid "Run File Actions"
 msgstr "ファイルアクションの実行"
 
-#: utils/constants.py:295
+#: utils/constants.py:296
 msgid "Edit Prevalidations"
 msgstr "プリヴァリッドを編集する"
 
-#: utils/constants.py:296
+#: utils/constants.py:297
 msgid "Run Prevalidations"
 msgstr "ラン・プレバリデーション"
 
-#: utils/constants.py:298
+#: utils/constants.py:299
 msgid "Run RefacDir"
 msgstr "RefacDirの実行"
 
-#: utils/constants.py:299
+#: utils/constants.py:300
 msgid "Delete Media"
 msgstr "メディア削除"
 
-#: utils/constants.py:301
+#: utils/constants.py:288
 msgid "Start Application"
 msgstr "スタート・ソフトウェア"
 
@@ -2055,16 +2070,10 @@ msgstr "画像タグ有効"
 msgid "Escape Backslash Filepaths"
 msgstr "ファイルパスのバックスラッシュをエスケープする"
 
-#: auth/password_dialog.py:204
-msgid ""
-"Password protection is required for this action but is not currently "
-"configured."
-msgstr "このアクションにはパスワード保護が必要だが、現在は設定されていない。"
+#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
+msgid "Application Password Required"
+msgstr "ソフトウェア・アプリケーションのパスワードが必要"
 
-#: compare/prevalidations_window.py:79
-msgid "Loading image classifier <{0}> ..."
-msgstr "画像分類器<{0}>をロード中 ..."
-
-#: compare/prevalidations_window.py:147
-msgid " - marked"
-msgstr " - マーク"
+#: auth/app_startup_auth.py:69
+msgid "A password is required to open this application."
+msgstr "このアプリケーションを開くにはパスワードが必要です。"

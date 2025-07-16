@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-13 11:09-0400\n"
-"PO-Revision-Date: 2025-07-13 11:09-0400\n"
+"POT-Creation-Date: 2025-07-16 01:24-0400\n"
+"PO-Revision-Date: 2025-07-16 01:24-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: es Team <<EMAIL>>\n"
 "Language: es\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:96 app.py:836 app.py:1906
+#: app.py:96 app.py:836 app.py:1909
 msgid " Simple Image Compare "
 msgstr " Comparación sencilla de imágenes "
 
@@ -387,8 +387,8 @@ msgstr "Error al generar la imagen:"
 msgid "Running refacdir"
 msgstr "Ejecución de la aplicación refacdir"
 
-#: app.py:1767 auth/password_dialog.py:231 files/pdf_creator.py:132
-#: files/pdf_creator.py:136 files/pdf_creator.py:139
+#: app.py:1767 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "Error"
 
@@ -418,94 +418,94 @@ msgstr "(filtrado)"
 msgid "Password Administration"
 msgstr "Administración de contraseñas"
 
-#: auth/password_admin_window.py:72
+#: auth/password_admin_window.py:67
 msgid "Password Protection Settings"
 msgstr "Configuración de la protección por contraseña"
 
-#: auth/password_admin_window.py:84
+#: auth/password_admin_window.py:79
 msgid "Protected Actions"
 msgstr "Acciones protegidas"
 
-#: auth/password_admin_window.py:90
+#: auth/password_admin_window.py:85
 msgid "Select which actions require password authentication:"
 msgstr "Seleccione qué acciones requieren autenticación de contraseña:"
 
-#: auth/password_admin_window.py:106
+#: auth/password_admin_window.py:101
 msgid "(Always protected if a password is set)"
 msgstr "(Siempre protegido si se establece una contraseña)"
 
-#: auth/password_admin_window.py:125
+#: auth/password_admin_window.py:120
 msgid "Session Timeout Settings"
 msgstr "Configuración del tiempo de espera de la sesión"
 
-#: auth/password_admin_window.py:131
+#: auth/password_admin_window.py:126
 msgid "Enable session timeout (remember password for a period)"
 msgstr ""
 "Activar el tiempo de espera de la sesión (recordar la contraseña durante un "
 "tiempo)"
 
-#: auth/password_admin_window.py:143
+#: auth/password_admin_window.py:138
 msgid "Session timeout duration (minutes):"
 msgstr "Duración del tiempo de espera de la sesión (minutos):"
 
-#: auth/password_admin_window.py:152
+#: auth/password_admin_window.py:147
 msgid "Password Setup"
 msgstr "Configuración de contraseña"
 
-#: auth/password_admin_window.py:162
+#: auth/password_admin_window.py:157
 msgid "Password is configured"
 msgstr "La contraseña está configurada"
 
-#: auth/password_admin_window.py:168 auth/password_admin_window.py:336
-#: auth/password_admin_window.py:352 auth/password_admin_window.py:411
+#: auth/password_admin_window.py:163 auth/password_admin_window.py:331
+#: auth/password_admin_window.py:347 auth/password_admin_window.py:406
 msgid "Change Password"
 msgstr "Cambiar contraseña"
 
-#: auth/password_admin_window.py:173 auth/password_admin_window.py:424
+#: auth/password_admin_window.py:168 auth/password_admin_window.py:419
 msgid "Remove Password"
 msgstr "Eliminar contraseña"
 
-#: auth/password_admin_window.py:178
+#: auth/password_admin_window.py:173
 msgid "Set up a password to enable protection:"
 msgstr "Establezca una contraseña para activar la protección:"
 
-#: auth/password_admin_window.py:188 auth/password_admin_window.py:368
+#: auth/password_admin_window.py:183 auth/password_admin_window.py:363
 msgid "New Password:"
 msgstr "Nueva contraseña:"
 
-#: auth/password_admin_window.py:201
+#: auth/password_admin_window.py:196
 msgid "Confirm Password:"
 msgstr "Confirmar contraseña:"
 
-#: auth/password_admin_window.py:210
+#: auth/password_admin_window.py:205
 msgid "Set Password"
 msgstr "Establecer contraseña"
 
-#: auth/password_admin_window.py:220 auth/password_admin_window.py:266
+#: auth/password_admin_window.py:215 auth/password_admin_window.py:261
 msgid "Reset to Defaults"
 msgstr "Restablecer valores por defecto"
 
-#: auth/password_admin_window.py:224 auth/password_admin_window.py:286
+#: auth/password_admin_window.py:219 auth/password_admin_window.py:281
 msgid "Set to Current"
 msgstr "Ajustar a actual"
 
-#: auth/password_admin_window.py:228
+#: auth/password_admin_window.py:223
 msgid "Export Cache as JSON"
 msgstr "Exportar caché como JSON"
 
-#: auth/password_admin_window.py:232
+#: auth/password_admin_window.py:227
 msgid "Save Settings"
 msgstr "Guardar ajustes"
 
-#: auth/password_admin_window.py:236
+#: auth/password_admin_window.py:231
 msgid "Close"
 msgstr "Cerca"
 
-#: auth/password_admin_window.py:260
+#: auth/password_admin_window.py:255
 msgid "Password protection settings saved."
 msgstr "Ajustes de protección por contraseña guardados."
 
-#: auth/password_admin_window.py:267
+#: auth/password_admin_window.py:262
 msgid ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
@@ -513,11 +513,11 @@ msgstr ""
 "¿Estás seguro de que quieres restablecer todos los ajustes de protección de "
 "contraseña a sus valores por defecto?"
 
-#: auth/password_admin_window.py:281
+#: auth/password_admin_window.py:276
 msgid "Settings reset to defaults."
 msgstr "Restablece los ajustes predeterminados."
 
-#: auth/password_admin_window.py:287
+#: auth/password_admin_window.py:282
 msgid ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
@@ -525,61 +525,62 @@ msgstr ""
 "¿Estás seguro de que quieres restaurar todos los ajustes a su estado actual?"
 " Esto descartará cualquier cambio no guardado."
 
-#: auth/password_admin_window.py:302
+#: auth/password_admin_window.py:297
 msgid "Settings restored to current saved state."
 msgstr "Configuración restaurada al estado actual guardado."
 
-#: auth/password_admin_window.py:311
+#: auth/password_admin_window.py:306
 msgid "Please enter a password."
 msgstr "Por favor, introduzca una contraseña."
 
-#: auth/password_admin_window.py:315
+#: auth/password_admin_window.py:310
 msgid "Passwords do not match."
 msgstr "Las contraseñas no coinciden."
 
-#: auth/password_admin_window.py:319 auth/password_admin_window.py:402
+#: auth/password_admin_window.py:314 auth/password_admin_window.py:397
 msgid "Password must be at least 6 characters long."
 msgstr "La contraseña debe tener al menos 6 caracteres."
 
-#: auth/password_admin_window.py:323
+#: auth/password_admin_window.py:318
 msgid "Password set successfully."
 msgstr "Contraseña establecida correctamente."
 
-#: auth/password_admin_window.py:330
+#: auth/password_admin_window.py:325
 msgid "Failed to set password."
 msgstr "Fallo al establecer la contraseña."
 
-#: auth/password_admin_window.py:359
+#: auth/password_admin_window.py:354
 msgid "Current Password:"
 msgstr "Contraseña actual:"
 
-#: auth/password_admin_window.py:377
+#: auth/password_admin_window.py:372
 msgid "Confirm New Password:"
 msgstr "Confirme la nueva contraseña:"
 
-#: auth/password_admin_window.py:394
+#: auth/password_admin_window.py:389
 msgid "Current password is incorrect."
 msgstr "La contraseña actual es incorrecta."
 
-#: auth/password_admin_window.py:398
+#: auth/password_admin_window.py:393
 msgid "New passwords do not match."
 msgstr "Las nuevas contraseñas no coinciden."
 
-#: auth/password_admin_window.py:406
+#: auth/password_admin_window.py:401
 msgid "Password changed successfully."
 msgstr "Contraseña cambiada con éxito."
 
-#: auth/password_admin_window.py:409
+#: auth/password_admin_window.py:404
 msgid "Failed to change password."
 msgstr "Error al cambiar la contraseña."
 
-#: auth/password_admin_window.py:414 auth/password_dialog.py:139
-#: auth/password_dialog.py:200 auth/password_dialog.py:217
-#: files/pdf_options_window.py:78 files/type_configuration_window.py:179
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
+#: auth/password_dialog.py:139 auth/password_dialog.py:200
+#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: files/type_configuration_window.py:179
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: auth/password_admin_window.py:425
+#: auth/password_admin_window.py:420
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
@@ -587,19 +588,19 @@ msgstr ""
 "¿Está seguro de que desea eliminar la protección por contraseña? Esto "
 "desactivará todos los requisitos de contraseña."
 
-#: auth/password_admin_window.py:430
+#: auth/password_admin_window.py:425
 msgid "Password removed successfully."
 msgstr "Contraseña eliminada correctamente."
 
-#: auth/password_admin_window.py:434
+#: auth/password_admin_window.py:429
 msgid "Failed to remove password."
 msgstr "No se ha podido eliminar la contraseña."
 
-#: auth/password_admin_window.py:469
+#: auth/password_admin_window.py:464
 msgid "Cache exported as JSON to:"
 msgstr "Caché exportado como JSON a:"
 
-#: auth/password_admin_window.py:471
+#: auth/password_admin_window.py:466
 msgid "Failed to export cache as JSON:"
 msgstr "Error al exportar la caché como JSON:"
 
@@ -615,11 +616,11 @@ msgstr "Protección por contraseña"
 msgid "Password required for: {0}"
 msgstr "Contraseña requerida para: {0}"
 
-#: auth/password_dialog.py:123
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
 msgid "Password:"
 msgstr "Contraseña:"
 
-#: auth/password_dialog.py:136
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
 msgid "OK"
 msgstr "VALE"
 
@@ -652,7 +653,15 @@ msgstr "Configurar la protección"
 msgid "Continue Without Protection"
 msgstr "Continuar sin protección"
 
-#: auth/password_dialog.py:231
+#: auth/password_dialog.py:204
+msgid ""
+"Password protection is required for this action but is not currently "
+"configured."
+msgstr ""
+"La protección por contraseña es necesaria para esta acción, pero actualmente"
+" no está configurada."
+
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
 msgid "Incorrect password"
 msgstr "Contraseña incorrecta"
 
@@ -820,6 +829,10 @@ msgstr "(ningún negativo fijado)"
 msgid "New Prevalidation"
 msgstr "Nueva Prevalidacións"
 
+#: compare/prevalidations_window.py:79
+msgid "Loading image classifier <{0}> ..."
+msgstr "Cargando clasificador de imágenes <{0}> ..."
+
 #: compare/prevalidations_window.py:137
 msgid " detected"
 msgstr " detectado"
@@ -831,6 +844,10 @@ msgstr " - omitido"
 #: compare/prevalidations_window.py:142
 msgid " - hidden"
 msgstr " - oculto"
+
+#: compare/prevalidations_window.py:147
+msgid " - marked"
+msgstr " - marcado"
 
 #: compare/prevalidations_window.py:155
 msgid "Moving file: "
@@ -1386,7 +1403,7 @@ msgstr "Soporte HTML requiere paquete de pyppeteer"
 msgid "Media Type Configuration"
 msgstr "Configuración del tipo de medio"
 
-#: files/type_configuration_window.py:113 utils/constants.py:300
+#: files/type_configuration_window.py:113 utils/constants.py:301
 msgid "Configure Media Types"
 msgstr "Configurar Tipos de Medios"
 
@@ -1522,7 +1539,7 @@ msgstr "Abrir Imagen relacionada"
 msgid "Image Generation"
 msgstr "Generación de imágenes"
 
-#: image/image_details.py:191 utils/constants.py:297
+#: image/image_details.py:191 utils/constants.py:298
 msgid "Run Image Generation"
 msgstr "Ejecutar la generación de imágenes"
 
@@ -1812,51 +1829,51 @@ msgstr "Cambiado de directorio"
 msgid "System"
 msgstr "Sistema"
 
-#: utils/constants.py:288
+#: utils/constants.py:289
 msgid "Run Compares"
 msgstr "Ejecutar comparaciones"
 
-#: utils/constants.py:289
+#: utils/constants.py:290
 msgid "Run Search"
 msgstr "Ejecutar búsqueda"
 
-#: utils/constants.py:290
+#: utils/constants.py:291
 msgid "Run Search Preset"
 msgstr "Ejecutar búsqueda preestablecida"
 
-#: utils/constants.py:291
+#: utils/constants.py:292
 msgid "View Media Details"
 msgstr "Ver detalles de los medios"
 
-#: utils/constants.py:292
+#: utils/constants.py:293
 msgid "View Recent Directories"
 msgstr "Ver directorios recientes"
 
-#: utils/constants.py:293
+#: utils/constants.py:294
 msgid "View File Actions"
 msgstr "Ver acciones de archivo"
 
-#: utils/constants.py:294
+#: utils/constants.py:295
 msgid "Run File Actions"
 msgstr "Ejecutar acciones de archivo"
 
-#: utils/constants.py:295
+#: utils/constants.py:296
 msgid "Edit Prevalidations"
 msgstr "Editar Prevalidaciones"
 
-#: utils/constants.py:296
+#: utils/constants.py:297
 msgid "Run Prevalidations"
 msgstr "Prevalidaciones de carrera"
 
-#: utils/constants.py:298
+#: utils/constants.py:299
 msgid "Run RefacDir"
 msgstr "Ejecutar RefacDir"
 
-#: utils/constants.py:299
+#: utils/constants.py:300
 msgid "Delete Media"
 msgstr "Borrar medios"
 
-#: utils/constants.py:301
+#: utils/constants.py:288
 msgid "Start Application"
 msgstr "Iniciar aplicación"
 
@@ -2125,18 +2142,10 @@ msgstr "Etiquetado de imágenes activado"
 msgid "Escape Backslash Filepaths"
 msgstr "Escape de barras invertidas en rutas de archivos"
 
-#: auth/password_dialog.py:204
-msgid ""
-"Password protection is required for this action but is not currently "
-"configured."
-msgstr ""
-"La protección por contraseña es necesaria para esta acción, pero actualmente"
-" no está configurada."
+#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
+msgid "Application Password Required"
+msgstr "Contraseña de aplicación necesaria"
 
-#: compare/prevalidations_window.py:79
-msgid "Loading image classifier <{0}> ..."
-msgstr "Cargando clasificador de imágenes <{0}> ..."
-
-#: compare/prevalidations_window.py:147
-msgid " - marked"
-msgstr " - marcado"
+#: auth/app_startup_auth.py:69
+msgid "A password is required to open this application."
+msgstr "Se necesita una contraseña para abrir esta aplicación."

@@ -258,6 +258,7 @@ class ActionType(Enum):
 
 class ProtectedActions(Enum):
     """Enumeration of actions that can be password protected."""
+    OPEN_APPLICATION = "start_application"
     RUN_COMPARES = "run_compares"
     RUN_SEARCH = "run_search"
     RUN_SEARCH_PRESET = "run_search_preset"
@@ -271,7 +272,6 @@ class ProtectedActions(Enum):
     RUN_REFACDIR = "run_refacdir"
     DELETE_MEDIA = "delete_media"
     CONFIGURE_MEDIA_TYPES = "configure_media_types"
-    START_APPLICATION = "start_application"
     ACCESS_ADMIN = "access_admin"
     
     @staticmethod
@@ -285,6 +285,7 @@ class ProtectedActions(Enum):
     def get_description(self):
         """Get the user-friendly description for this action."""
         descriptions = {
+            ProtectedActions.OPEN_APPLICATION: _("Start Application"),
             ProtectedActions.RUN_COMPARES: _("Run Compares"),
             ProtectedActions.RUN_SEARCH: _("Run Search"),
             ProtectedActions.RUN_SEARCH_PRESET: _("Run Search Preset"),
@@ -298,7 +299,6 @@ class ProtectedActions(Enum):
             ProtectedActions.RUN_REFACDIR: _("Run RefacDir"),
             ProtectedActions.DELETE_MEDIA: _("Delete Media"),
             ProtectedActions.CONFIGURE_MEDIA_TYPES: _("Configure Media Types"),
-            ProtectedActions.START_APPLICATION: _("Start Application"),
             ProtectedActions.ACCESS_ADMIN: _("Access Password Administration")
         }
         return descriptions.get(self, self.value)

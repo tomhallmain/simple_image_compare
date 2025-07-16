@@ -17,6 +17,7 @@ class SecurityConfig:
     
     # Default password-protected actions
     DEFAULT_PROTECTED_ACTIONS = {
+        ProtectedActions.OPEN_APPLICATION.value: False,
         ProtectedActions.RUN_COMPARES.value: False,
         ProtectedActions.RUN_SEARCH.value: False,
         ProtectedActions.RUN_SEARCH_PRESET.value: False,
@@ -30,7 +31,6 @@ class SecurityConfig:
         ProtectedActions.RUN_REFACDIR.value: False,
         ProtectedActions.DELETE_MEDIA.value: False,
         ProtectedActions.CONFIGURE_MEDIA_TYPES.value: False,
-        ProtectedActions.START_APPLICATION.value: False,
         ProtectedActions.ACCESS_ADMIN.value: True  # Always protected
     }
     
@@ -51,8 +51,8 @@ class SecurityConfig:
         for action_enum in ProtectedActions:
             action = action_enum.value
             if action not in self.protected_actions:
-                # Default to True for new actions (protected by default)
-                self.protected_actions[action] = True
+                # Use the default value from DEFAULT_PROTECTED_ACTIONS, or True if not specified
+                self.protected_actions[action] = self.DEFAULT_PROTECTED_ACTIONS.get(action, True)
         
         # Ensure ACCESS_ADMIN always remains protected
         self.protected_actions[ProtectedActions.ACCESS_ADMIN.value] = True
