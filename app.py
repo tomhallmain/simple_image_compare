@@ -5,7 +5,7 @@ import sys
 import time
 import traceback
 
-from tkinter import Frame, Toplevel, PhotoImage, Label, Checkbutton, BooleanVar, StringVar, filedialog, messagebox
+from tkinter import Frame, Toplevel, Menu, PhotoImage, Label, Checkbutton, BooleanVar, StringVar, filedialog, font, messagebox
 from tkinter import BOTH, END, N, NW, YES, HORIZONTAL, W
 import tkinter.font as fnt
 from tkinter.ttk import Button, Entry, OptionMenu, Progressbar, Style
@@ -18,6 +18,7 @@ from compare.compare_wrapper import CompareWrapper
 from compare.prevalidations_window import PrevalidationsWindow
 from extensions.refacdir_client import RefacDirClient
 from extensions.sd_runner_client import SDRunnerClient
+from files.favorites_window import FavoritesWindow
 from files.file_actions_window import FileActionsWindow
 from files.file_browser import FileBrowser, SortBy
 from files.go_to_file import GoToFile
@@ -101,6 +102,10 @@ class App():
             do_search = False
         window = App(top_level, base_dir=base_dir, image_path=image_path,
                    grid_sidebar=False, do_search=do_search, window_id=window_id)
+
+    @staticmethod
+    def get_open_windows():
+        return App.open_windows[:]
 
     @staticmethod
     def get_window(window_id=None, base_dir=None, img_path=None, refocus=False):
@@ -188,6 +193,7 @@ class App():
             "title": self.master.title,
             "new_window": App.add_secondary_window,
             "get_window": App.get_window,
+            "get_open_windows": App.get_open_windows,
             "refresh_all_compares": App.refresh_all_compares,
             "find_window_with_compare": App.find_window_with_compare,
             "toast": self.toast,
@@ -384,7 +390,7 @@ class App():
         self.master.bind("<Shift-S>", lambda e: self.check_focus(e, self.toggle_slideshow))
         self.master.bind("<MouseWheel>", lambda event: None if (event.state & 0x1) != 0 else (self.show_next_media() if event.delta > 0 else self.show_prev_media()))
         self.master.bind("<Button-2>", self.delete_image)
-        self.master.bind("<Button-3>", self.trigger_image_generation)
+        self.master.bind("<Button-3>", self.show_context_menu)
         self.master.bind("<Shift-M>", lambda e: self.check_focus(e, self.add_or_remove_mark_for_current_image))
         self.master.bind("<Shift-N>", lambda e: self.check_focus(e, self._add_all_marks_from_last_or_current_group))
         self.master.bind("<Shift-G>", lambda e: self.check_focus(e, self.go_to_mark))
@@ -407,6 +413,7 @@ class App():
         self.master.bind("<Control-g>", self.open_go_to_file_window)
         self.master.bind("<Control-h>", self.toggle_sidebar)
         self.master.bind("<Control-C>", self.copy_marks_list)
+        self.master.bind("<Control-f>", self.open_favorites_window)
         self.master.bind("<Control-n>", self.open_file_actions_window)
         self.master.bind("<Control-m>", self.open_move_marks_window)
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
@@ -508,6 +515,7 @@ class App():
             FileActionsWindow.load_action_history()
             ImageDetails.load_image_generation_mode()
             PrevalidationsWindow.set_prevalidations()
+            FavoritesWindow.load_favorites()
             return app_info_cache.get_meta("base_dir")
         except Exception as e:
             logger.error(e)
@@ -534,6 +542,7 @@ class App():
         FileActionsWindow.store_action_history()
         ImageDetails.store_image_generation_mode()
         PrevalidationsWindow.store_prevalidations()
+        FavoritesWindow.store_favorites()
         app_info_cache.store()
 
     def toggle_fullscreen(self, event=None):
@@ -711,6 +720,42 @@ class App():
         if len(other_dirs) == 1:
             return window, other_dirs
         return None, other_dirs
+
+    def show_context_menu(self, event):
+        # Only show menu if an image is loaded
+        image_path = self.get_active_media_filepath()
+        if not image_path:
+            return
+        menu = Menu(self.master, tearoff=0)
+
+        menu.add_command(label=os.path.basename(image_path), state="disabled")
+        try:
+            italic_font = font.Font(menu, menu.cget("font"))
+            italic_font.configure(slant="italic")
+            menu.entryconfig(0, font=italic_font)
+        except Exception:
+            pass
+        menu.add_separator()
+        current_media_in_marked_files = image_path in MarkedFiles.file_marks
+        current_media_in_favorites = image_path in FavoritesWindow.get_favorites(self.get_base_dir())
+        favorite_command = FavoritesWindow.add_favorite if not current_media_in_favorites else FavoritesWindow.remove_favorite
+        menu.add_command(label=_("View Media Details"), command=lambda: self.get_media_details(event))
+        menu.add_command(label=_("Hide Media"), command=lambda: self.hide_current_media(event))
+        menu.add_command(label=_("Remove from Marks") if current_media_in_marked_files else _("Add to Marks"),
+                         command=lambda: self.add_or_remove_mark_for_current_image(event))
+        menu.add_command(label=_("Remove from Favorites") if current_media_in_favorites else _("Add to Favorites"),
+                         command=lambda: favorite_command(self.get_base_dir(), image_path, self.toast))
+        menu.add_separator()
+        menu.add_command(label=_("Open in GIMP"), command=lambda: self.open_image_in_gimp(event))
+        menu.add_command(label=_("Run Image Generation"), command=lambda: self.trigger_image_generation(event))
+        menu.add_command(label=_("Show Source Image"), command=lambda: self.show_related_image(event))
+        menu.add_command(label=_("Find Related Images"), command=lambda: self.find_related_images_in_open_window(event))
+        menu.add_command(label=_("Set Marks from Downstream Related Images"), command=lambda: self.set_marks_from_downstream_related_images(event))
+        menu.add_separator()
+        menu.add_command(label=_("Set Current Image as Search Image"), command=lambda: self.set_current_image_run_search(event))
+        menu.add_command(label=_("Add Current Image to Negative Search"), command=lambda: self.add_current_image_to_negative_search(event))
+        menu.add_command(label=_("Run Refacdir"), command=lambda: self.run_refacdir(event))
+        menu.tk_popup(event.x_root, event.y_root)
 
     @require_password(ProtectedActions.VIEW_MEDIA_DETAILS)
     def get_media_details(self, event=None, media_path=None, manually_keyed=True):
@@ -1443,6 +1488,12 @@ class App():
     @require_password(ProtectedActions.CONFIGURE_MEDIA_TYPES)
     def open_type_configuration_window(self, event=None):
         TypeConfigurationWindow.show(master=self.master, app_actions=self.app_actions)
+
+    def open_favorites_window(self, event=None):
+        try:
+            FavoritesWindow(self.master, self.app_actions)
+        except Exception as e:
+            self.handle_error(str(e), title="Favorites Window Error")
 
     def open_go_to_file_window(self, event=None):
         try:

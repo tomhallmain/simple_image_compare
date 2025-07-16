@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-16 01:31-0400\n"
-"PO-Revision-Date: 2025-07-16 01:31-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-07-16 11:54-0400\n"
+"PO-Revision-Date: 2025-07-16 11:54-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: de Team <<EMAIL>>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -12,262 +12,262 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:96 app.py:836 app.py:1909
+#: app.py:97 app.py:881 app.py:1960
 msgid " Simple Image Compare "
 msgstr " Einfacher Bildvergleich "
 
-#: app.py:155
+#: app.py:160
 msgid "Theme switched to {0}."
 msgstr "Thema auf {0} umgestellt."
 
-#: app.py:240 compare/compare_wrapper.py:480
+#: app.py:246 compare/compare_wrapper.py:480
 msgid "Set a directory to run comparison."
 msgstr "Legen Sie ein Verzeichnis für den Vergleich fest."
 
-#: app.py:247
+#: app.py:253
 msgid "Toggle theme"
 msgstr "Thema umschalten"
 
-#: app.py:248
+#: app.py:254
 msgid "Set directory"
 msgstr "Verzeichnis einstellen"
 
-#: app.py:249
+#: app.py:255
 msgid "Add dirpath..."
 msgstr "Dirpfad hinzufügen..."
 
-#: app.py:252
+#: app.py:258
 msgid "Set search file"
 msgstr "Suchdatei einstellen"
 
-#: app.py:260
+#: app.py:266
 msgid "Search text (embedding mode)"
 msgstr "Suchtext (Einbettungsmodus)"
 
-#: app.py:271
+#: app.py:277
 msgid "Compare mode"
 msgstr "Modus vergleichen"
 
-#: app.py:289
+#: app.py:295
 msgid "Compare faces"
 msgstr "Gesichter vergleichen"
 
-#: app.py:293
+#: app.py:299
 msgid "Overwrite cache"
 msgstr "Cache überschreiben"
 
-#: app.py:297
+#: app.py:303
 msgid "Store checkpoints"
 msgstr "Kontrollpunkte speichern"
 
-#: app.py:301
+#: app.py:307
 msgid "Max files to compare"
 msgstr "Maximal zu vergleichende Dateien"
 
-#: app.py:307
+#: app.py:313
 msgid "Filter files by glob pattern"
 msgstr "Dateien nach glob-Muster filtern"
 
-#: app.py:314
+#: app.py:320
 msgid "Browsing mode - Sort by"
 msgstr "Browsing-Modus - Sortieren"
 
-#: app.py:321
+#: app.py:327
 msgid "Recurse subdirectories"
 msgstr "Unterverzeichnisse rekursieren"
 
-#: app.py:326
+#: app.py:332
 msgid "Image resize to full window"
 msgstr "Bildgröße auf ganzes Fenster ändern"
 
-#: app.py:330
+#: app.py:336
 msgid "Search only return closest"
 msgstr "Suche liefert nur die nächstgelegenen"
 
-#: app.py:337
+#: app.py:343
 msgid "Run image compare"
 msgstr "Bildvergleich durchführen"
 
-#: app.py:339
+#: app.py:345
 msgid "Find duplicates"
 msgstr "Duplikate finden"
 
-#: app.py:341 image/image_details.py:65
+#: app.py:347 image/image_details.py:65
 msgid "Image details"
 msgstr "Bild-Details"
 
-#: app.py:352
+#: app.py:358
 msgid "Search current image"
 msgstr "Aktuelles Bild suchen"
 
-#: app.py:353 utils/help_and_config.py:76
+#: app.py:359 utils/help_and_config.py:76
 msgid "Open image location"
 msgstr "Bildstandort öffnen"
 
-#: app.py:354
+#: app.py:360
 msgid "Copy image path"
 msgstr "Bildpfad kopieren"
 
-#: app.py:355
+#: app.py:361
 msgid "---- DELETE ----"
 msgstr "---- LÖSCHEN ----"
 
-#: app.py:497
+#: app.py:504
 msgid "Confirm Quit"
 msgstr "Beenden bestätigen"
 
-#: app.py:497
+#: app.py:504
 msgid "Would you like to quit the application?"
 msgstr "Möchten Sie die Anwendung beenden?"
 
-#: app.py:595
+#: app.py:604
 msgid "Ended slideshows"
 msgstr "Beendete Diashows"
 
-#: app.py:648 app.py:1692 app.py:1754
+#: app.py:657 app.py:1743 app.py:1805
 msgid "Warning"
 msgstr "Warnung"
 
-#: app.py:648
+#: app.py:657
 msgid "No files found in directory after refresh."
 msgstr "Keine Dateien im Verzeichnis nach Aktualisierung gefunden."
 
-#: app.py:671
+#: app.py:680
 msgid "Slideshow for new images started"
 msgstr "Diashow für neue Bilder gestartet"
 
-#: app.py:673
+#: app.py:682
 msgid "Slideshow started"
 msgstr "Diashow gestartet"
 
-#: app.py:676
+#: app.py:685
 msgid "Slideshows ended"
 msgstr "Diashows beendet"
 
-#: app.py:689
+#: app.py:698
 msgid "Browsing mode set."
 msgstr "Browsing-Modus eingestellt."
 
-#: app.py:724
+#: app.py:769
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr ""
 "(Öffnen Sie dieses Bild als Teil eines Verzeichnisses, um Indexdetails zu "
 "sehen)."
 
-#: app.py:758 app.py:1426
+#: app.py:803 app.py:1471
 msgid "Many Files"
 msgstr "Viele Dateien"
 
-#: app.py:785
+#: app.py:830
 msgid "No downstream related image(s) found in {0}"
 msgstr "Keine stromabwärts gerichtete(n) Bilder im {0} gefunden"
 
-#: app.py:807
+#: app.py:852
 msgid "{0} file marks set"
 msgstr "{0} Dateimarken sind gesetzt"
 
-#: app.py:813
+#: app.py:858
 msgid "Help and Config"
 msgstr "Hilfe und Konfig"
 
-#: app.py:899
+#: app.py:944
 msgid "Set Image Comparison Directory"
 msgstr "Bildvergleichsverzeichnis festlegen"
 
-#: app.py:937
+#: app.py:982
 msgid "Counter limit must be an integer value."
 msgstr "Die Zählergrenze muss ein ganzzahliger Wert sein."
 
-#: app.py:937 app.py:953
+#: app.py:982 app.py:998
 msgid "Invalid Setting"
 msgstr "Ungültige Einstellung"
 
-#: app.py:953
+#: app.py:998
 msgid "No image selected."
 msgstr "Kein Bild ausgewählt."
 
-#: app.py:992
+#: app.py:1037
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr ""
 "Der Vergleichsmodus muss auf einen Einbettungsmodus gesetzt werden, um "
 "Texteinbettung zu suchen"
 
-#: app.py:996
+#: app.py:1041
 msgid "Select image file"
 msgstr "Bilddatei auswählen"
 
-#: app.py:1025
+#: app.py:1070
 msgid "Somehow, the search file is invalid"
 msgstr "Irgendwie ist die Suchdatei ungültig"
 
-#: app.py:1111 app.py:1136
+#: app.py:1156 app.py:1181
 msgid "Failed to get active image filepath"
 msgstr "Dateipfad des aktiven Bildes konnte nicht ermittelt werden"
 
-#: app.py:1221
+#: app.py:1266
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1} % abgeschlossen"
 
-#: app.py:1227
+#: app.py:1272
 msgid "Confirm comparison"
 msgstr "Vergleich bestätigen"
 
-#: app.py:1228
+#: app.py:1273
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 "Es wurde kein Basisverzeichnis festgelegt, es wird das aktuelle "
 "Basisverzeichnis von "
 
-#: app.py:1229
+#: app.py:1274
 msgid "Are you sure you want to proceed?"
 msgstr "Sind Sie sicher, dass Sie fortfahren wollen?"
 
-#: app.py:1250
+#: app.py:1295
 msgid "Error running compare"
 msgstr "Fehler beim Ausführen des Vergleichs"
 
-#: app.py:1283
+#: app.py:1328
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "Sperre nach Diashow-Übergang löschen\n"
 "verhinderte das Hinzufügen einer Markierung"
 
-#: app.py:1294
+#: app.py:1339
 msgid "Mark removed. Remaining: {0}"
 msgstr "Markierung entfernt. Verbleibend: {0}"
 
-#: app.py:1298
+#: app.py:1343
 msgid "Mark added. Total set: {0}"
 msgstr "Mark hinzugefügt. Gesamtmenge: {0}"
 
-#: app.py:1315
+#: app.py:1360
 msgid "Marks added. Total set: {0}"
 msgstr "Markierungen hinzugefügt. Gesamtmenge: {0}"
 
-#: app.py:1324
+#: app.py:1369
 msgid "First sorted mark"
 msgstr "Erste sortierte Marke"
 
-#: app.py:1331
+#: app.py:1376
 msgid "Only one marked file set."
 msgstr "Es wird nur eine markierte Datei gesetzt"
 
-#: app.py:1343
+#: app.py:1388
 msgid "Including marks: {0}"
 msgstr "Einschließlich Markierungen: {0}"
 
-#: app.py:1351
+#: app.py:1396
 msgid "Move {0} Marked File(s)"
 msgstr "{0} Markierte Datei(en) verschieben"
 
-#: app.py:1390
+#: app.py:1435
 msgid "NO_MARKS_SET"
 msgstr ""
 "Es wurden {0} Markierungen gesetzt (>={1} erwartet).\n"
 "Verwenden Sie Shift+M, um eine Markierung zu setzen."
 
-#: app.py:1426
+#: app.py:1471
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
@@ -275,54 +275,54 @@ msgstr ""
 "Sind Sie sicher, dass Sie alle Prävalidierungen im Verzeichnis {0} "
 "durchführen wollen? Das kann eine Weile dauern."
 
-#: app.py:1441
+#: app.py:1486
 msgid "Prevalidations now running"
 msgstr "Prävalidierungen laufen jetzt"
 
-#: app.py:1441
+#: app.py:1486
 msgid "Prevalidations turned off"
 msgstr "Prävalidierungen ausgeschaltet"
 
-#: app.py:1467
+#: app.py:1518
 msgid "File not found"
 msgstr "Datei nicht gefunden"
 
-#: app.py:1467
+#: app.py:1518
 msgid "No file was found for the search text: \"{0}\""
 msgstr "Es wurde keine Datei für den Suchtext gefunden: \"{0}\""
 
-#: app.py:1481
+#: app.py:1532
 msgid "No image selected"
 msgstr "Kein Bild ausgewählt"
 
-#: app.py:1481
+#: app.py:1532
 msgid "No image was selected for comparison"
 msgstr "Es wurde kein Bild zum Vergleich ausgewählt"
 
-#: app.py:1495
+#: app.py:1546
 msgid "No Text Search Presets Found"
 msgstr "Keine Textsuchvoreinstellungen gefunden"
 
-#: app.py:1496
+#: app.py:1547
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 "Keine Suchvorgaben für die Texteinbettung gefunden. Legen Sie sie in der "
 "Datei config.json fest."
 
-#: app.py:1595
+#: app.py:1646
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr ""
 "Der Speicherort der aktuellen Datei konnte nicht geöffnet werden, da kein "
 "gültiger Dateipfad ermittelt werden konnte"
 
-#: app.py:1606
+#: app.py:1657
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 "Die aktuelle Datei konnte in GIMP nicht geöffnet werden, da kein gültiger "
 "Dateipfad ermittelt werden konnte"
 
-#: app.py:1622
+#: app.py:1673
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -330,35 +330,35 @@ msgstr ""
 "Aktuelles Bild ausblenden.\n"
 "Um die Ausblendung aufzuheben, drücken Sie Shift+B."
 
-#: app.py:1627
+#: app.py:1678
 msgid "Cleared all hidden images."
 msgstr "Alle versteckten Bilder wurden gelöscht."
 
-#: app.py:1635
+#: app.py:1686
 msgid "DELETE_LOCK"
 msgstr ""
 "Löschsperre nach Diashow-Übergang\n"
 "verhinderte Löschung"
 
-#: app.py:1653
+#: app.py:1704
 msgid "Invalid action, no files found to delete"
 msgstr "Ungültige Aktion, keine Dateien zum Löschen gefunden"
 
-#: app.py:1656
+#: app.py:1707
 msgid "Invalid action, search image not found"
 msgstr "Ungültige Aktion, Suchbild nicht gefunden"
 
-#: app.py:1671
+#: app.py:1722
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 "Aktuelle Datei konnte nicht gelöscht werden, da kein gültiger Dateipfad "
 "ermittelt werden konnte"
 
-#: app.py:1676
+#: app.py:1727
 msgid "Removing file: {0}"
 msgstr "Die Datei wird entfernt: {0}"
 
-#: app.py:1693
+#: app.py:1744
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -367,50 +367,50 @@ msgstr ""
 "gelöscht. Entweder pip installiert send2trash oder setzt einen bestimmten "
 "Papierkorbordner in config.json."
 
-#: app.py:1710
+#: app.py:1761
 msgid "Invalid target filepath for replacement: "
 msgstr "Ungültiger Zieldateipfad für Ersetzung: "
 
-#: app.py:1714
+#: app.py:1765
 msgid "Moved search image to "
 msgstr "Suchbild verschoben nach "
 
-#: app.py:1752
+#: app.py:1803
 msgid "Running image gen: "
 msgstr "Laufende Bilderzeugung: "
 
-#: app.py:1754
+#: app.py:1805
 msgid "Error running image generation:"
 msgstr "Fehler bei der Bilderzeugung:"
 
-#: app.py:1762
+#: app.py:1813
 msgid "Running refacdir"
 msgstr "Ausführen der refacdir-App"
 
-#: app.py:1767 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: app.py:1818 auth/app_startup_auth.py:108 auth/password_dialog.py:231
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "Fehler"
 
-#: app.py:1847
+#: app.py:1898
 msgid "GROUP_DETAILS"
 msgstr ""
 "Gruppe {0} von {1}\n"
 "Größe: {2}"
 
-#: app.py:1851
+#: app.py:1902
 msgid "No image files found"
 msgstr "Keine Bilddateien gefunden"
 
-#: app.py:1853
+#: app.py:1904
 msgid "1 image file found"
 msgstr "1 Bilddatei gefunden"
 
-#: app.py:1854
+#: app.py:1905
 msgid "{0} image files found"
 msgstr "{0} Bilddateien gefunden"
 
-#: app.py:1856
+#: app.py:1907
 msgid "(filtered)"
 msgstr "(gefiltert)"
 
@@ -1549,7 +1549,7 @@ msgstr "Verwandtes Bild öffnen"
 msgid "Image Generation"
 msgstr "Bilderzeugung"
 
-#: image/image_details.py:191 utils/constants.py:298
+#: app.py:750 image/image_details.py:191 utils/constants.py:298
 msgid "Run Image Generation"
 msgstr "Bilderzeugung ausführen"
 
@@ -1850,7 +1850,7 @@ msgstr "Suche ausführen"
 msgid "Run Search Preset"
 msgstr "Suchvoreinstellung ausführen"
 
-#: utils/constants.py:292
+#: app.py:742 utils/constants.py:292
 msgid "View Media Details"
 msgstr "Mediendetails anzeigen"
 
@@ -2147,3 +2147,89 @@ msgstr "Escape Backslash-Dateipfade"
 #: utils/notification_manager.py:26
 msgid " etc."
 msgstr " usw."
+
+#: app.py:743
+msgid "Hide Media"
+msgstr "Medien ausblenden"
+
+#: app.py:744
+msgid "Remove from Marks"
+msgstr "Aus den Markierungen entfernen"
+
+#: app.py:744
+msgid "Add to Marks"
+msgstr "Zu den Markierungen hinzufügen"
+
+#: app.py:746
+msgid "Remove from Favorites"
+msgstr "Aus Favoriten entfernen"
+
+#: app.py:746
+msgid "Add to Favorites"
+msgstr "Zu Favoriten hinzufügen"
+
+#: app.py:749
+msgid "Open in GIMP"
+msgstr "In GIMP öffnen"
+
+#: app.py:751
+msgid "Show Source Image"
+msgstr "Quellbild anzeigen"
+
+#: app.py:752
+msgid "Find Related Images"
+msgstr "Ähnliche Bilder finden"
+
+#: app.py:753
+msgid "Set Marks from Downstream Related Images"
+msgstr "Markierungen aus nachgelagerten verwandten Bildern setzen"
+
+#: app.py:755
+msgid "Set Current Image as Search Image"
+msgstr "Aktuelles Bild als Suchbild festlegen"
+
+#: app.py:756
+msgid "Add Current Image to Negative Search"
+msgstr "Aktuelles Bild zur Negativsuche hinzufügen"
+
+#: app.py:757
+msgid "Run Refacdir"
+msgstr "RefacDir ausführen"
+
+#: files/favorites_window.py:50
+msgid "Added favorite: "
+msgstr "Favorit hinzugefügt: "
+
+#: files/favorites_window.py:56
+msgid "Favorites"
+msgstr "Favoriten"
+
+#: files/favorites_window.py:112
+msgid ""
+"No favorites set.\n"
+"\n"
+"To add a favorite, right-click an image and select 'Add to Favorites'."
+msgstr ""
+"Es sind keine Favoriten festgelegt.\n"
+"\n"
+"Um einen Favoriten hinzuzufügen, klicken Sie mit der rechten Maustaste auf ein Bild und wählen Sie „Zu Favoriten hinzufügen”."
+
+#: files/favorites_window.py:129
+msgid "Open"
+msgstr "Offene Medien"
+
+#: files/favorites_window.py:135
+msgid "Remove Favorite"
+msgstr "Entfernen Favoriten"
+
+#: files/favorites_window.py:161
+msgid "Opened favorite: "
+msgstr "Öffnen Favorit: "
+
+#: files/favorites_window.py:166
+msgid "Opened favorite in new window: "
+msgstr "Favorit in neuem Fenster geöffnet: "
+
+#: files/favorites_window.py:174
+msgid "Removed favorite: "
+msgstr "Favorit entfernt: "

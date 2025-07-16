@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-16 01:31-0400\n"
-"PO-Revision-Date: 2025-07-16 01:31-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-07-16 11:54-0400\n"
+"PO-Revision-Date: 2025-07-16 11:54-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -12,303 +12,303 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:96 app.py:836 app.py:1909
+#: app.py:97 app.py:881 app.py:1960
 msgid " Simple Image Compare "
 msgstr " シンプルな画像比較 "
 
-#: app.py:155
+#: app.py:160
 msgid "Theme switched to {0}."
 msgstr "テーマを{0}に切り替えます。"
 
-#: app.py:240 compare/compare_wrapper.py:480
+#: app.py:246 compare/compare_wrapper.py:480
 msgid "Set a directory to run comparison."
 msgstr "比較を実行するディレクトリを設定します。"
 
-#: app.py:247
+#: app.py:253
 msgid "Toggle theme"
 msgstr "トグルテーマ"
 
-#: app.py:248
+#: app.py:254
 msgid "Set directory"
 msgstr "ディレクトリを設定する"
 
-#: app.py:249
+#: app.py:255
 msgid "Add dirpath..."
 msgstr "ディレクトリパスの追加..."
 
-#: app.py:252
+#: app.py:258
 msgid "Set search file"
 msgstr "検索ファイルを設定する"
 
-#: app.py:260
+#: app.py:266
 msgid "Search text (embedding mode)"
 msgstr "検索テキスト (埋め込みモード)"
 
-#: app.py:271
+#: app.py:277
 msgid "Compare mode"
 msgstr "比較モード"
 
-#: app.py:289
+#: app.py:295
 msgid "Compare faces"
 msgstr "顔の比較"
 
-#: app.py:293
+#: app.py:299
 msgid "Overwrite cache"
 msgstr "キャッシュを上書き"
 
-#: app.py:297
+#: app.py:303
 msgid "Store checkpoints"
 msgstr "ストアチェックポイント"
 
-#: app.py:301
+#: app.py:307
 msgid "Max files to compare"
 msgstr "比較する最大ファイル"
 
-#: app.py:307
+#: app.py:313
 msgid "Filter files by glob pattern"
 msgstr "グロブパターンによるファイルのフィルタリング"
 
-#: app.py:314
+#: app.py:320
 msgid "Browsing mode - Sort by"
 msgstr "閲覧モード - 並べ替え"
 
-#: app.py:321
+#: app.py:327
 msgid "Recurse subdirectories"
 msgstr "サブディレクトリを再帰する"
 
-#: app.py:326
+#: app.py:332
 msgid "Image resize to full window"
 msgstr "フルウィンドウに画像のサイズを変更"
 
-#: app.py:330
+#: app.py:336
 msgid "Search only return closest"
 msgstr "一番近い順に検索"
 
-#: app.py:337
+#: app.py:343
 msgid "Run image compare"
 msgstr "画像比較の実行"
 
-#: app.py:339
+#: app.py:345
 msgid "Find duplicates"
 msgstr "重複を見つける"
 
-#: app.py:341 image/image_details.py:65
+#: app.py:347 image/image_details.py:65
 msgid "Image details"
 msgstr "画像詳細"
 
-#: app.py:352
+#: app.py:358
 msgid "Search current image"
 msgstr "現在の画像を検索"
 
-#: app.py:353 utils/help_and_config.py:76
+#: app.py:359 utils/help_and_config.py:76
 msgid "Open image location"
 msgstr "画像の場所を開く"
 
-#: app.py:354
+#: app.py:360
 msgid "Copy image path"
 msgstr "コピーイメージパス"
 
-#: app.py:355
+#: app.py:361
 msgid "---- DELETE ----"
 msgstr "---- 染料 ----"
 
-#: app.py:497
+#: app.py:504
 msgid "Confirm Quit"
 msgstr "終了を確認する"
 
-#: app.py:497
+#: app.py:504
 msgid "Would you like to quit the application?"
 msgstr "応募をお願いしたいですか?"
 
-#: app.py:595
+#: app.py:604
 msgid "Ended slideshows"
 msgstr "終了したスライドショー"
 
-#: app.py:648 app.py:1692 app.py:1754
+#: app.py:657 app.py:1743 app.py:1805
 msgid "Warning"
 msgstr "警告"
 
-#: app.py:648
+#: app.py:657
 msgid "No files found in directory after refresh."
 msgstr "更新後、ディレクトリにファイルが見つかりません。"
 
-#: app.py:671
+#: app.py:680
 msgid "Slideshow for new images started"
 msgstr "新しい画像のスライドショー開始"
 
-#: app.py:673
+#: app.py:682
 msgid "Slideshow started"
 msgstr "スライドショー開始"
 
-#: app.py:676
+#: app.py:685
 msgid "Slideshows ended"
 msgstr "スライドショー終了"
 
-#: app.py:689
+#: app.py:698
 msgid "Browsing mode set."
 msgstr "ブラウジングモードセット。"
 
-#: app.py:724
+#: app.py:769
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(インデックスの詳細を見るには、この画像をディレクトリの一部として開いてください）。"
 
-#: app.py:758 app.py:1426
+#: app.py:803 app.py:1471
 msgid "Many Files"
 msgstr "多くのファイル"
 
-#: app.py:785
+#: app.py:830
 msgid "No downstream related image(s) found in {0}"
 msgstr "{0} に下流関連の画像は見つかりませんでした。"
 
-#: app.py:807
+#: app.py:852
 msgid "{0} file marks set"
 msgstr "{0} ファイル マーク セット"
 
-#: app.py:813
+#: app.py:858
 msgid "Help and Config"
 msgstr "ヘルプと設定"
 
-#: app.py:899
+#: app.py:944
 msgid "Set Image Comparison Directory"
 msgstr "画像比較ディレクトリの設定"
 
-#: app.py:937
+#: app.py:982
 msgid "Counter limit must be an integer value."
 msgstr "カウンターの上限は整数値でなければならない。"
 
-#: app.py:937 app.py:953
+#: app.py:982 app.py:998
 msgid "Invalid Setting"
 msgstr "無効な設定"
 
-#: app.py:953
+#: app.py:998
 msgid "No image selected."
 msgstr "選択した画像はありません。"
 
-#: app.py:992
+#: app.py:1037
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "テキスト埋め込みを検索するには、比較モードを埋め込みモードに設定する必要があります。"
 
-#: app.py:996
+#: app.py:1041
 msgid "Select image file"
 msgstr "画像ファイルの選択"
 
-#: app.py:1025
+#: app.py:1070
 msgid "Somehow, the search file is invalid"
 msgstr "どういうわけか、検索ファイルが無効です"
 
-#: app.py:1111 app.py:1136
+#: app.py:1156 app.py:1181
 msgid "Failed to get active image filepath"
 msgstr "アクティブなイメージファイルパスを取得する失敗"
 
-#: app.py:1221
+#: app.py:1266
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% 完了"
 
-#: app.py:1227
+#: app.py:1272
 msgid "Confirm comparison"
 msgstr "比較確認"
 
-#: app.py:1228
+#: app.py:1273
 msgid "No base directory has been set, will use current base directory of "
 msgstr "ベースディレクトリが設定されていないので、現在のベースディレクトリを使用する： "
 
-#: app.py:1229
+#: app.py:1274
 msgid "Are you sure you want to proceed?"
 msgstr "続行したいですか?"
 
-#: app.py:1250
+#: app.py:1295
 msgid "Error running compare"
 msgstr "エラー実行比較"
 
-#: app.py:1283
+#: app.py:1328
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションでマークが付かない"
 
-#: app.py:1294
+#: app.py:1339
 msgid "Mark removed. Remaining: {0}"
 msgstr "マーク削除 残っている {0}"
 
-#: app.py:1298
+#: app.py:1343
 msgid "Mark added. Total set: {0}"
 msgstr "マークが付け加えた。合計セット： {0}"
 
-#: app.py:1315
+#: app.py:1360
 msgid "Marks added. Total set: {0}"
 msgstr "マークが追加された。合計セット： {0}"
 
-#: app.py:1324
+#: app.py:1369
 msgid "First sorted mark"
 msgstr "ファーストソートマーク"
 
-#: app.py:1331
+#: app.py:1376
 msgid "Only one marked file set."
 msgstr "1つのマーク付きファイルセットのみ。"
 
-#: app.py:1343
+#: app.py:1388
 msgid "Including marks: {0}"
 msgstr "マークを含む：{0}"
 
-#: app.py:1351
+#: app.py:1396
 msgid "Move {0} Marked File(s)"
 msgstr "{0} つのマークされたファイルを移動しますか？"
 
-#: app.py:1390
+#: app.py:1435
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0}マークが設定された(>={1}の予定)。\n"
 "マークを設定するには Shift+M を使用します。"
 
-#: app.py:1426
+#: app.py:1471
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "本当にディレクトリ{0}ですべての事前検証を実行したいのですか？時間がかかるかもしれません。"
 
-#: app.py:1441
+#: app.py:1486
 msgid "Prevalidations now running"
 msgstr "今すぐ実行する準備"
 
-#: app.py:1441
+#: app.py:1486
 msgid "Prevalidations turned off"
 msgstr "無効化がオフ"
 
-#: app.py:1467
+#: app.py:1518
 msgid "File not found"
 msgstr "ファイルが見つかりません"
 
-#: app.py:1467
+#: app.py:1518
 msgid "No file was found for the search text: \"{0}\""
 msgstr "検索テキストに該当するファイルが見つかりませんでした： \"{0}\""
 
-#: app.py:1481
+#: app.py:1532
 msgid "No image selected"
 msgstr "選択した画像なし"
 
-#: app.py:1481
+#: app.py:1532
 msgid "No image was selected for comparison"
 msgstr "比較のために画像が選択されていない"
 
-#: app.py:1495
+#: app.py:1546
 msgid "No Text Search Presets Found"
 msgstr "テキスト検索プリセットが見つかりません"
 
-#: app.py:1496
+#: app.py:1547
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "テキスト埋め込み検索プリセットが見つかりません。config.jsonファイルに設定してください。"
 
-#: app.py:1595
+#: app.py:1646
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの場所を開くことができません。"
 
-#: app.py:1606
+#: app.py:1657
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "GIMPで現在のファイルを開くのに失敗しました。"
 
-#: app.py:1622
+#: app.py:1673
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -316,83 +316,83 @@ msgstr ""
 "現在の画像を隠す。\n"
 "非表示を解除するには、Shift+Bキーを押します。"
 
-#: app.py:1627
+#: app.py:1678
 msgid "Cleared all hidden images."
 msgstr "すべての隠し画像を消去。"
 
-#: app.py:1635
+#: app.py:1686
 msgid "DELETE_LOCK"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションが削除を阻止"
 
-#: app.py:1653
+#: app.py:1704
 msgid "Invalid action, no files found to delete"
 msgstr "無効なアクションです。"
 
-#: app.py:1656
+#: app.py:1707
 msgid "Invalid action, search image not found"
 msgstr "無効なアクションです。"
 
-#: app.py:1671
+#: app.py:1722
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの削除に失敗しました。"
 
-#: app.py:1676
+#: app.py:1727
 msgid "Removing file: {0}"
 msgstr "ファイルを削除しています： {0}"
 
-#: app.py:1693
+#: app.py:1744
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "ゴミ箱へのファイル送信に失敗しました。pipでsend2trashをインストールするか、config.jsonでゴミ箱フォルダを指定してください。"
 
-#: app.py:1710
+#: app.py:1761
 msgid "Invalid target filepath for replacement: "
 msgstr "置換対象のファイルパスが無効です： "
 
-#: app.py:1714
+#: app.py:1765
 msgid "Moved search image to "
 msgstr "検索画像を： "
 
-#: app.py:1752
+#: app.py:1803
 msgid "Running image gen: "
 msgstr "イメージ・ジェネレーションの実行： "
 
-#: app.py:1754
+#: app.py:1805
 msgid "Error running image generation:"
 msgstr "画像生成の実行エラー："
 
-#: app.py:1762
+#: app.py:1813
 msgid "Running refacdir"
 msgstr "ランニング refacdir"
 
-#: app.py:1767 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: app.py:1818 auth/app_startup_auth.py:108 auth/password_dialog.py:231
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "エラー"
 
-#: app.py:1847
+#: app.py:1898
 msgid "GROUP_DETAILS"
 msgstr ""
 "グループ{0}/{1}\n"
 "サイズ：{2}"
 
-#: app.py:1851
+#: app.py:1902
 msgid "No image files found"
 msgstr "画像ファイルが見つかりません"
 
-#: app.py:1853
+#: app.py:1904
 msgid "1 image file found"
 msgstr "1 見つかった画像ファイル"
 
-#: app.py:1854
+#: app.py:1905
 msgid "{0} image files found"
 msgstr "{0} イメージファイルが見つかりました"
 
-#: app.py:1856
+#: app.py:1907
 msgid "(filtered)"
 msgstr "(フィルタリング)"
 
@@ -1488,7 +1488,7 @@ msgstr "関連する画像を開く"
 msgid "Image Generation"
 msgstr "画像生成"
 
-#: image/image_details.py:191 utils/constants.py:298
+#: app.py:750 image/image_details.py:191 utils/constants.py:298
 msgid "Run Image Generation"
 msgstr "映像生成の実行"
 
@@ -1788,7 +1788,7 @@ msgstr "検索を実行する"
 msgid "Run Search Preset"
 msgstr "検索プリセットの実行"
 
-#: utils/constants.py:292
+#: app.py:742 utils/constants.py:292
 msgid "View Media Details"
 msgstr "メディア詳細を見る"
 
@@ -2081,3 +2081,89 @@ msgstr "ファイルパスのバックスラッシュをエスケープする"
 #: utils/notification_manager.py:26
 msgid " etc."
 msgstr " その他"
+
+#: app.py:743
+msgid "Hide Media"
+msgstr "メディアを非表示にする"
+
+#: app.py:744
+msgid "Remove from Marks"
+msgstr "マークから削除する"
+
+#: app.py:744
+msgid "Add to Marks"
+msgstr "マークに追加"
+
+#: app.py:746
+msgid "Remove from Favorites"
+msgstr "お気に入りから削除する"
+
+#: app.py:746
+msgid "Add to Favorites"
+msgstr "お気に入りに追加"
+
+#: app.py:749
+msgid "Open in GIMP"
+msgstr "GIMPで開く"
+
+#: app.py:751
+msgid "Show Source Image"
+msgstr "ソース画像を表示"
+
+#: app.py:752
+msgid "Find Related Images"
+msgstr "関連する画像を探す"
+
+#: app.py:753
+msgid "Set Marks from Downstream Related Images"
+msgstr "下流に関連する画像からマークを設定する"
+
+#: app.py:755
+msgid "Set Current Image as Search Image"
+msgstr "現在の画像を検索結果の画像として設定する"
+
+#: app.py:756
+msgid "Add Current Image to Negative Search"
+msgstr "現在の画像をネガティブ検索に追加する"
+
+#: app.py:757
+msgid "Run Refacdir"
+msgstr "RefacDirを実行してください。"
+
+#: files/favorites_window.py:50
+msgid "Added favorite: "
+msgstr "お気に入りに追加しました: "
+
+#: files/favorites_window.py:56
+msgid "Favorites"
+msgstr "お気に入り"
+
+#: files/favorites_window.py:112
+msgid ""
+"No favorites set.\n"
+"\n"
+"To add a favorite, right-click an image and select 'Add to Favorites'."
+msgstr ""
+"お気に入りが設定されていません。\n"
+"\n"
+"お気に入りに追加するには、画像の上で右クリックし、『お気に入りに追加』を選択してください。"
+
+#: files/favorites_window.py:129
+msgid "Open"
+msgstr "オープンメディア"
+
+#: files/favorites_window.py:135
+msgid "Remove Favorite"
+msgstr "お気に入りを削除する"
+
+#: files/favorites_window.py:161
+msgid "Opened favorite: "
+msgstr "お気に入りとして開いた: "
+
+#: files/favorites_window.py:166
+msgid "Opened favorite in new window: "
+msgstr "お気に入りを新しいウィンドウで開く: "
+
+#: files/favorites_window.py:174
+msgid "Removed favorite: "
+msgstr "お気に入りを削除しました: "
