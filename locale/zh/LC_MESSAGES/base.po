@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-16 01:24-0400\n"
-"PO-Revision-Date: 2025-07-16 01:24-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-07-16 01:31-0400\n"
+"PO-Revision-Date: 2025-07-16 01:31-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
 "MIME-Version: 1.0\n"
@@ -396,6 +396,33 @@ msgstr "找到 {0} 图像文件"
 msgid "(filtered)"
 msgstr "(过滤)"
 
+#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
+msgid "Application Password Required"
+msgstr "需要软件应用密码"
+
+#: auth/app_startup_auth.py:69
+msgid "A password is required to open this application."
+msgstr "打开此软件应用程序需要密码。"
+
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
+msgid "Password:"
+msgstr "密码:"
+
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
+msgid "OK"
+msgstr "好的"
+
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
+#: auth/password_dialog.py:139 auth/password_dialog.py:200
+#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "取消"
+
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
+msgid "Incorrect password"
+msgstr "密码错误"
+
 #: auth/password_admin_window.py:21
 msgid "Password Administration"
 msgstr "密码管理"
@@ -549,13 +576,6 @@ msgstr "密码更改成功。"
 msgid "Failed to change password."
 msgstr "更改密码失败。"
 
-#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
-#: auth/password_dialog.py:139 auth/password_dialog.py:200
-#: auth/password_dialog.py:217 files/pdf_options_window.py:78
-#: files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "取消"
-
 #: auth/password_admin_window.py:420
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
@@ -590,14 +610,6 @@ msgstr "密码保护"
 msgid "Password required for: {0}"
 msgstr "需要密码： {0}"
 
-#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
-msgid "Password:"
-msgstr "密码:"
-
-#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
-msgid "OK"
-msgstr "好的"
-
 #: auth/password_dialog.py:145
 msgid "Password Protection Available"
 msgstr "提供密码保护"
@@ -631,10 +643,6 @@ msgid ""
 "Password protection is required for this action but is not currently "
 "configured."
 msgstr "此操作需要密码保护，但目前尚未配置。"
-
-#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
-msgid "Incorrect password"
-msgstr "密码错误"
 
 #: compare/base_compare.py:229
 msgid "Image data collection"
@@ -1762,6 +1770,10 @@ msgstr "更改目录"
 msgid "System"
 msgstr "系统"
 
+#: utils/constants.py:288
+msgid "Start Application"
+msgstr "启动软件应用程序"
+
 #: utils/constants.py:289
 msgid "Run Compares"
 msgstr "运行比较"
@@ -1805,10 +1817,6 @@ msgstr "运行 RefacDir"
 #: utils/constants.py:300
 msgid "Delete Media"
 msgstr "删除媒体"
-
-#: utils/constants.py:288
-msgid "Start Application"
-msgstr "启动软件应用程序"
 
 #: utils/constants.py:302
 msgid "Access Password Administration"
@@ -2068,10 +2076,6 @@ msgstr "启用图像标记"
 msgid "Escape Backslash Filepaths"
 msgstr "逃离文件路径中的反斜线"
 
-#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
-msgid "Application Password Required"
-msgstr "需要软件应用密码"
-
-#: auth/app_startup_auth.py:69
-msgid "A password is required to open this application."
-msgstr "打开此软件应用程序需要密码。"
+#: utils/notification_manager.py:26
+msgid " etc."
+msgstr " 等等"

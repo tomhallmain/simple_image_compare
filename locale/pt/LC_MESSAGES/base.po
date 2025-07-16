@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-16 01:24-0400\n"
-"PO-Revision-Date: 2025-07-16 01:24-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-07-16 01:31-0400\n"
+"PO-Revision-Date: 2025-07-16 01:31-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: pt Team <<EMAIL>>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -412,6 +412,33 @@ msgstr "{0} ficheiros de imagem encontrados"
 msgid "(filtered)"
 msgstr "(filtrado)"
 
+#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
+msgid "Application Password Required"
+msgstr "Palavra-passe de aplicação necessária"
+
+#: auth/app_startup_auth.py:69
+msgid "A password is required to open this application."
+msgstr "É necessária uma palavra-passe para abrir esta aplicação de software."
+
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
+msgid "Password:"
+msgstr "Palavra-passe:"
+
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
+msgid "OK"
+msgstr "CERTO"
+
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
+#: auth/password_dialog.py:139 auth/password_dialog.py:200
+#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
+msgid "Incorrect password"
+msgstr "Palavra-passe incorrecta"
+
 #: auth/password_admin_window.py:21
 msgid "Password Administration"
 msgstr "Administração da palavra-passe"
@@ -571,13 +598,6 @@ msgstr "Palavra-passe alterada com sucesso."
 msgid "Failed to change password."
 msgstr "Falha ao alterar a palavra-passe."
 
-#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
-#: auth/password_dialog.py:139 auth/password_dialog.py:200
-#: auth/password_dialog.py:217 files/pdf_options_window.py:78
-#: files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "Cancelar"
-
 #: auth/password_admin_window.py:420
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
@@ -613,14 +633,6 @@ msgstr "Proteção por palavra-passe"
 #: auth/password_dialog.py:100
 msgid "Password required for: {0}"
 msgstr "Palavra-passe necessária para: {0}"
-
-#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
-msgid "Password:"
-msgstr "Palavra-passe:"
-
-#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
-msgid "OK"
-msgstr "CERTO"
 
 #: auth/password_dialog.py:145
 msgid "Password Protection Available"
@@ -658,10 +670,6 @@ msgid ""
 msgstr ""
 "A proteção por palavra-passe é necessária para esta ação, mas não está "
 "atualmente configurada."
-
-#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
-msgid "Incorrect password"
-msgstr "Palavra-passe incorrecta"
 
 #: compare/base_compare.py:229
 msgid "Image data collection"
@@ -1816,6 +1824,10 @@ msgstr "Pasta alterada"
 msgid "System"
 msgstr "Sistema"
 
+#: utils/constants.py:288
+msgid "Start Application"
+msgstr "Iniciar a aplicação"
+
 #: utils/constants.py:289
 msgid "Run Compares"
 msgstr "Executar comparações"
@@ -1859,10 +1871,6 @@ msgstr "Executar RefacDir"
 #: utils/constants.py:300
 msgid "Delete Media"
 msgstr "Eliminar meios"
-
-#: utils/constants.py:288
-msgid "Start Application"
-msgstr "Iniciar a aplicação"
 
 #: utils/constants.py:302
 msgid "Access Password Administration"
@@ -2128,10 +2136,6 @@ msgstr "Etiquetagem de imagens activada"
 msgid "Escape Backslash Filepaths"
 msgstr "Escape as barras invertidas nos caminhos dos ficheiros"
 
-#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
-msgid "Application Password Required"
-msgstr "Palavra-passe de aplicação necessária"
-
-#: auth/app_startup_auth.py:69
-msgid "A password is required to open this application."
-msgstr "É necessária uma palavra-passe para abrir esta aplicação de software."
+#: utils/notification_manager.py:26
+msgid " etc."
+msgstr " etc."

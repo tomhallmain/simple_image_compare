@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-16 01:24-0400\n"
-"PO-Revision-Date: 2025-07-16 01:24-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-07-16 01:31-0400\n"
+"PO-Revision-Date: 2025-07-16 01:31-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -396,6 +396,33 @@ msgstr "{0} イメージファイルが見つかりました"
 msgid "(filtered)"
 msgstr "(フィルタリング)"
 
+#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
+msgid "Application Password Required"
+msgstr "ソフトウェア・アプリケーションのパスワードが必要"
+
+#: auth/app_startup_auth.py:69
+msgid "A password is required to open this application."
+msgstr "このアプリケーションを開くにはパスワードが必要です。"
+
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
+msgid "Password:"
+msgstr "パスワード :"
+
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
+msgid "OK"
+msgstr "オーケー"
+
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
+#: auth/password_dialog.py:139 auth/password_dialog.py:200
+#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
+msgid "Incorrect password"
+msgstr "パスワードの誤り"
+
 #: auth/password_admin_window.py:21
 msgid "Password Administration"
 msgstr "パスワード管理"
@@ -549,13 +576,6 @@ msgstr "パスワードの変更に成功しました。"
 msgid "Failed to change password."
 msgstr "パスワードの変更に失敗しました。"
 
-#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
-#: auth/password_dialog.py:139 auth/password_dialog.py:200
-#: auth/password_dialog.py:217 files/pdf_options_window.py:78
-#: files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "キャンセル"
-
 #: auth/password_admin_window.py:420
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
@@ -590,14 +610,6 @@ msgstr "パスワード保護"
 msgid "Password required for: {0}"
 msgstr "パスワードが必要です： {0}"
 
-#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
-msgid "Password:"
-msgstr "パスワード :"
-
-#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
-msgid "OK"
-msgstr "オーケー"
-
 #: auth/password_dialog.py:145
 msgid "Password Protection Available"
 msgstr "パスワード保護あり"
@@ -631,10 +643,6 @@ msgid ""
 "Password protection is required for this action but is not currently "
 "configured."
 msgstr "このアクションにはパスワード保護が必要だが、現在は設定されていない。"
-
-#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
-msgid "Incorrect password"
-msgstr "パスワードの誤り"
 
 #: compare/base_compare.py:229
 msgid "Image data collection"
@@ -1764,6 +1772,10 @@ msgstr "変更ディレクトリ"
 msgid "System"
 msgstr "システム"
 
+#: utils/constants.py:288
+msgid "Start Application"
+msgstr "スタート・ソフトウェア"
+
 #: utils/constants.py:289
 msgid "Run Compares"
 msgstr "比較実行"
@@ -1807,10 +1819,6 @@ msgstr "RefacDirの実行"
 #: utils/constants.py:300
 msgid "Delete Media"
 msgstr "メディア削除"
-
-#: utils/constants.py:288
-msgid "Start Application"
-msgstr "スタート・ソフトウェア"
 
 #: utils/constants.py:302
 msgid "Access Password Administration"
@@ -2070,10 +2078,6 @@ msgstr "画像タグ有効"
 msgid "Escape Backslash Filepaths"
 msgstr "ファイルパスのバックスラッシュをエスケープする"
 
-#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
-msgid "Application Password Required"
-msgstr "ソフトウェア・アプリケーションのパスワードが必要"
-
-#: auth/app_startup_auth.py:69
-msgid "A password is required to open this application."
-msgstr "このアプリケーションを開くにはパスワードが必要です。"
+#: utils/notification_manager.py:26
+msgid " etc."
+msgstr " その他"

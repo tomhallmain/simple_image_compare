@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-16 01:24-0400\n"
-"PO-Revision-Date: 2025-07-16 01:24-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-07-16 01:31-0400\n"
+"PO-Revision-Date: 2025-07-16 01:31-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: it Team <<EMAIL>>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -414,6 +414,33 @@ msgstr "{0} file immagine trovati"
 msgid "(filtered)"
 msgstr "(filtrato)"
 
+#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
+msgid "Application Password Required"
+msgstr "È richiesta la password per l'applicazione"
+
+#: auth/app_startup_auth.py:69
+msgid "A password is required to open this application."
+msgstr "Per aprire questa applicazione è necessaria una password."
+
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
+msgid "Password:"
+msgstr "Password:"
+
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
+msgid "OK"
+msgstr "OK"
+
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
+#: auth/password_dialog.py:139 auth/password_dialog.py:200
+#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "Annulla"
+
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
+msgid "Incorrect password"
+msgstr "Password errata"
+
 #: auth/password_admin_window.py:21
 msgid "Password Administration"
 msgstr "Amministrazione della password"
@@ -575,13 +602,6 @@ msgstr "La password è stata modificata con successo."
 msgid "Failed to change password."
 msgstr "Impossibile modificare la password."
 
-#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
-#: auth/password_dialog.py:139 auth/password_dialog.py:200
-#: auth/password_dialog.py:217 files/pdf_options_window.py:78
-#: files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "Annulla"
-
 #: auth/password_admin_window.py:420
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
@@ -617,14 +637,6 @@ msgstr "Protezione con password"
 #: auth/password_dialog.py:100
 msgid "Password required for: {0}"
 msgstr "Password richiesta per: {0}"
-
-#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
-msgid "Password:"
-msgstr "Password:"
-
-#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
-msgid "OK"
-msgstr "OK"
 
 #: auth/password_dialog.py:145
 msgid "Password Protection Available"
@@ -662,10 +674,6 @@ msgid ""
 msgstr ""
 "La protezione con password è necessaria per questa azione, ma al momento non"
 " è configurata."
-
-#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
-msgid "Incorrect password"
-msgstr "Password errata"
 
 #: compare/base_compare.py:229
 msgid "Image data collection"
@@ -1826,6 +1834,10 @@ msgstr "directory modificata"
 msgid "System"
 msgstr "Sistema"
 
+#: utils/constants.py:288
+msgid "Start Application"
+msgstr "Avvio dell'applicazione"
+
 #: utils/constants.py:289
 msgid "Run Compares"
 msgstr "Esegui confronti"
@@ -1869,10 +1881,6 @@ msgstr "Eseguire RefacDir"
 #: utils/constants.py:300
 msgid "Delete Media"
 msgstr "Eliminare i media"
-
-#: utils/constants.py:288
-msgid "Start Application"
-msgstr "Avvio dell'applicazione"
 
 #: utils/constants.py:302
 msgid "Access Password Administration"
@@ -2140,10 +2148,6 @@ msgstr "Tagging delle immagini abilitato"
 msgid "Escape Backslash Filepaths"
 msgstr "Sfuggire ai backslash nei percorsi dei file"
 
-#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
-msgid "Application Password Required"
-msgstr "È richiesta la password per l'applicazione"
-
-#: auth/app_startup_auth.py:69
-msgid "A password is required to open this application."
-msgstr "Per aprire questa applicazione è necessaria una password."
+#: utils/notification_manager.py:26
+msgid " etc."
+msgstr " ecc."

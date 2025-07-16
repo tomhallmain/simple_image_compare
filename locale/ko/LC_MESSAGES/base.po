@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-16 01:24-0400\n"
-"PO-Revision-Date: 2025-07-16 01:24-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-07-16 01:31-0400\n"
+"PO-Revision-Date: 2025-07-16 01:31-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -397,6 +397,33 @@ msgstr "{0} 이미지 파일 찾았습니다"
 msgid "(filtered)"
 msgstr "(필터)"
 
+#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
+msgid "Application Password Required"
+msgstr "소프트웨어 애플리케이션 암호 필요"
+
+#: auth/app_startup_auth.py:69
+msgid "A password is required to open this application."
+msgstr "이 소프트웨어 애플리케이션을 열려면 비밀번호가 필요합니다."
+
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
+msgid "Password:"
+msgstr "비밀번호:"
+
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
+msgid "OK"
+msgstr "확인"
+
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
+#: auth/password_dialog.py:139 auth/password_dialog.py:200
+#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: files/type_configuration_window.py:179
+msgid "Cancel"
+msgstr "취소"
+
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
+msgid "Incorrect password"
+msgstr "잘못된 비밀번호"
+
 #: auth/password_admin_window.py:21
 msgid "Password Administration"
 msgstr "비밀번호 관리"
@@ -550,13 +577,6 @@ msgstr "비밀번호가 성공적으로 변경되었습니다."
 msgid "Failed to change password."
 msgstr "비밀번호를 변경하지 못했습니다."
 
-#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
-#: auth/password_dialog.py:139 auth/password_dialog.py:200
-#: auth/password_dialog.py:217 files/pdf_options_window.py:78
-#: files/type_configuration_window.py:179
-msgid "Cancel"
-msgstr "취소"
-
 #: auth/password_admin_window.py:420
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
@@ -591,14 +611,6 @@ msgstr "비밀번호 보호"
 msgid "Password required for: {0}"
 msgstr "암호가 필요합니다: {0}"
 
-#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
-msgid "Password:"
-msgstr "비밀번호:"
-
-#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
-msgid "OK"
-msgstr "확인"
-
 #: auth/password_dialog.py:145
 msgid "Password Protection Available"
 msgstr "비밀번호 보호 사용 가능"
@@ -632,10 +644,6 @@ msgid ""
 "Password protection is required for this action but is not currently "
 "configured."
 msgstr "이 작업에는 비밀번호 보호가 필요하지만 현재 구성되어 있지 않습니다."
-
-#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
-msgid "Incorrect password"
-msgstr "잘못된 비밀번호"
 
 #: compare/base_compare.py:229
 msgid "Image data collection"
@@ -1766,6 +1774,10 @@ msgstr "관련 링크"
 msgid "System"
 msgstr "시스템"
 
+#: utils/constants.py:288
+msgid "Start Application"
+msgstr "소프트웨어 시작"
+
 #: utils/constants.py:289
 msgid "Run Compares"
 msgstr "비교 실행"
@@ -1809,10 +1821,6 @@ msgstr "RefacDir 실행"
 #: utils/constants.py:300
 msgid "Delete Media"
 msgstr "미디어 삭제"
-
-#: utils/constants.py:288
-msgid "Start Application"
-msgstr "소프트웨어 시작"
 
 #: utils/constants.py:302
 msgid "Access Password Administration"
@@ -2072,10 +2080,6 @@ msgstr "이미지 태그 사용"
 msgid "Escape Backslash Filepaths"
 msgstr "파일 경로의 백슬래시 이스케이프"
 
-#: auth/app_startup_auth.py:31 auth/app_startup_auth.py:62
-msgid "Application Password Required"
-msgstr "소프트웨어 애플리케이션 암호 필요"
-
-#: auth/app_startup_auth.py:69
-msgid "A password is required to open this application."
-msgstr "이 소프트웨어 애플리케이션을 열려면 비밀번호가 필요합니다."
+#: utils/notification_manager.py:26
+msgid " etc."
+msgstr " 등"
