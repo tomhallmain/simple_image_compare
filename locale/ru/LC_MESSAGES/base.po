@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-16 11:54-0400\n"
-"PO-Revision-Date: 2025-07-16 11:54-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-07-20 16:57-0400\n"
+"PO-Revision-Date: 2025-07-20 16:57-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ru Team <<EMAIL>>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -100,7 +100,7 @@ msgstr "Фотографии"
 msgid "Search current image"
 msgstr "Поиск текущее изображение"
 
-#: app.py:359 utils/help_and_config.py:76
+#: app.py:359 utils/help_and_config.py:78
 msgid "Open image location"
 msgstr "Открытое изображение"
 
@@ -147,6 +147,62 @@ msgstr "Слайдшоу закончились"
 #: app.py:698
 msgid "Browsing mode set."
 msgstr "Установлен режим просмотра."
+
+#: app.py:742 utils/constants.py:292
+msgid "View Media Details"
+msgstr "Посмотреть детали СМИ"
+
+#: app.py:743
+msgid "Hide Media"
+msgstr "Скрыть медиа"
+
+#: app.py:744
+msgid "Remove from Marks"
+msgstr "Удалить из отметок"
+
+#: app.py:744
+msgid "Add to Marks"
+msgstr "Добавить к отметкам"
+
+#: app.py:746
+msgid "Remove from Favorites"
+msgstr "Удалить из избранного"
+
+#: app.py:746
+msgid "Add to Favorites"
+msgstr "Добавить в избранное"
+
+#: app.py:749
+msgid "Open in GIMP"
+msgstr "Открыть в GIMP"
+
+#: app.py:750 image/image_details.py:191 utils/constants.py:298
+msgid "Run Image Generation"
+msgstr "Поколение изображений"
+
+#: app.py:751
+msgid "Show Source Image"
+msgstr "Показать исходное изображение"
+
+#: app.py:752
+msgid "Find Related Images"
+msgstr "Найти похожие изображения"
+
+#: app.py:753
+msgid "Set Marks from Downstream Related Images"
+msgstr "Установить метки из нижестоящих связанных изображений"
+
+#: app.py:755
+msgid "Set Current Image as Search Image"
+msgstr "Установить текущее изображение в качестве изображения для поиска"
+
+#: app.py:756
+msgid "Add Current Image to Negative Search"
+msgstr "Добавить текущее изображение к отрицательному поиску"
+
+#: app.py:757
+msgid "Run Refacdir"
+msgstr "Запустить RefacDir"
 
 #: app.py:769
 msgid "(Open this image as part of a directory to see index details.)"
@@ -986,7 +1042,7 @@ msgstr "Добавить превалирование"
 msgid "Clear prevalidations"
 msgstr "Ясные доказательства"
 
-#: compare/prevalidations_window.py:651 utils/help_and_config.py:150
+#: compare/prevalidations_window.py:651 utils/help_and_config.py:152
 msgid "Enable Prevalidations"
 msgstr "Обеспечение превалидации"
 
@@ -1010,6 +1066,44 @@ msgstr "Спуститься"
 #: extensions/sd_runner_client.py:60
 msgid "Image does not contain a prompt to redo!"
 msgstr "Изображение не содержит подсказки для переделки!"
+
+#: files/favorites_window.py:50
+msgid "Added favorite: "
+msgstr "Добавлено в избранное: "
+
+#: files/favorites_window.py:56
+msgid "Favorites"
+msgstr "Любимые"
+
+#: files/favorites_window.py:112
+msgid ""
+"No favorites set.\n"
+"\n"
+"To add a favorite, right-click an image and select 'Add to Favorites'."
+msgstr ""
+"Избранное не установлено.\n"
+"\n"
+"Чтобы добавить в избранное, щелкните правой кнопкой мыши по изображению и выберите «Добавить в избранное»."
+
+#: files/favorites_window.py:129
+msgid "Open"
+msgstr "Открытые медиа"
+
+#: files/favorites_window.py:135
+msgid "Remove Favorite"
+msgstr "Удалить из избранного"
+
+#: files/favorites_window.py:161
+msgid "Opened favorite: "
+msgstr "Открытый фаворит: "
+
+#: files/favorites_window.py:166
+msgid "Opened favorite in new window: "
+msgstr "Открыть избранное в новом окне: "
+
+#: files/favorites_window.py:174
+msgid "Removed favorite: "
+msgstr "Удален из избранного: "
 
 #: files/file_actions_window.py:203
 msgid "File Actions"
@@ -1531,10 +1625,6 @@ msgstr "Открытые связанные изображения"
 msgid "Image Generation"
 msgstr "Поколение изображений"
 
-#: app.py:750 image/image_details.py:191 utils/constants.py:298
-msgid "Run Image Generation"
-msgstr "Поколение изображений"
-
 #: image/image_details.py:193
 msgid "Press Shift+I on a main app window to run this"
 msgstr "Сдвиг прессы+ Я на главном окне приложения, чтобы запустить это"
@@ -1831,10 +1921,6 @@ msgstr "Выполнить поиск"
 msgid "Run Search Preset"
 msgstr "Выполнить предварительную настройку поиска"
 
-#: app.py:742 utils/constants.py:292
-msgid "View Media Details"
-msgstr "Посмотреть детали СМИ"
-
 #: utils/constants.py:293
 msgid "View Recent Directories"
 msgstr "Просмотр последних каталогов"
@@ -1895,149 +1981,149 @@ msgstr "Установите текущие отметки из предыдущ
 msgid "Run penultimate marks action"
 msgstr "Запуск предпоследних знаков действия"
 
-#: utils/help_and_config.py:40
+#: utils/help_and_config.py:41
 msgid "Open Go to file window"
 msgstr "Откройте окно Перейти к файлу"
 
-#: utils/help_and_config.py:41
+#: utils/help_and_config.py:42
 msgid "Hide/show sidebar"
 msgstr "Скрыть/показать боковую панель"
 
-#: utils/help_and_config.py:42
+#: utils/help_and_config.py:43
 msgid "Open hotkeys window (*when marks window open)"
 msgstr "Открытое окно горячих ключей (*, когда окно открывается)"
 
-#: utils/help_and_config.py:43
+#: utils/help_and_config.py:44
 msgid "Open content filters window"
 msgstr "Открытое окно фильтров контента"
 
-#: utils/help_and_config.py:44
+#: utils/help_and_config.py:45
 msgid "Open marks window (no GUI)"
 msgstr "Окно открытых меток (без GUI)"
 
-#: utils/help_and_config.py:45
+#: utils/help_and_config.py:46
 msgid "Open marks window"
 msgstr "Окно открытых дверей"
 
-#: utils/help_and_config.py:46
+#: utils/help_and_config.py:47
 msgid "Open marks action history window"
 msgstr "Открытое окно истории событий"
 
-#: utils/help_and_config.py:47
+#: utils/help_and_config.py:48
 msgid "Quit"
 msgstr "Бросить"
 
-#: utils/help_and_config.py:48
+#: utils/help_and_config.py:49
 msgid "Open security configuration window"
 msgstr "Откройте окно конфигурации безопасности"
 
-#: utils/help_and_config.py:49
+#: utils/help_and_config.py:50
 msgid "Run previous marks action"
 msgstr "Запуск предыдущих знаков"
 
-#: utils/help_and_config.py:50
+#: utils/help_and_config.py:51
 msgid "Continue image generation"
 msgstr "Продолжить генерацию изображений"
 
-#: utils/help_and_config.py:51
+#: utils/help_and_config.py:52
 msgid "Cancel image generation"
 msgstr "Отменить генерацию изображений"
 
-#: utils/help_and_config.py:52
+#: utils/help_and_config.py:53
 msgid "Run next text embedding search preset"
 msgstr "Запустите следующую предустановку поиска встраивания текста"
 
-#: utils/help_and_config.py:53
+#: utils/help_and_config.py:54
 msgid "Run permanent marks action"
 msgstr "Запуск постоянного знака"
 
-#: utils/help_and_config.py:54
+#: utils/help_and_config.py:55
 msgid "Open type configuration window"
 msgstr "Открытое окно конфигурации типа"
 
-#: utils/help_and_config.py:55
+#: utils/help_and_config.py:56
 msgid "Open new compare window"
 msgstr "Открыть новое окно сравнения"
 
-#: utils/help_and_config.py:56
+#: utils/help_and_config.py:57
 msgid "Move previous marks to a different directory"
 msgstr "Переместить предыдущие отметки в другой каталог"
 
-#: utils/help_and_config.py:57 utils/help_and_config.py:85
+#: utils/help_and_config.py:58 utils/help_and_config.py:87
 msgid "Undo previous marks changes"
 msgstr "Отменить предыдущие изменения меток"
 
-#: utils/help_and_config.py:58
+#: utils/help_and_config.py:59
 msgid "Toggle fullscreen"
 msgstr "Переключить полноэкранный режим"
 
-#: utils/help_and_config.py:59
+#: utils/help_and_config.py:60
 msgid "Go to first sorted image"
 msgstr "Перейти к первому отсортированному изображению"
 
-#: utils/help_and_config.py:60
+#: utils/help_and_config.py:61
 msgid "Go to last sorted image"
 msgstr "Перейти к последнему сортированному изображению"
 
-#: utils/help_and_config.py:61
+#: utils/help_and_config.py:62
 msgid "Show previous/next image"
 msgstr "Показать предыдущее / следующее изображение"
 
-#: utils/help_and_config.py:62
+#: utils/help_and_config.py:63
 msgid "Page through images"
 msgstr "Страница через изображения"
 
-#: utils/help_and_config.py:63
+#: utils/help_and_config.py:64
 msgid "Search current image in current window"
 msgstr "Поиск текущего изображения в текущем окне"
 
-#: utils/help_and_config.py:64
+#: utils/help_and_config.py:65
 msgid "Clear all hidden images"
 msgstr "Все скрытые изображения"
 
-#: utils/help_and_config.py:65
+#: utils/help_and_config.py:66
 msgid "Clear marks list"
 msgstr "Четкий список"
 
-#: utils/help_and_config.py:66
+#: utils/help_and_config.py:67
 msgid "Show image details"
 msgstr "Показать изображения детали"
 
-#: utils/help_and_config.py:67
+#: utils/help_and_config.py:68
 msgid "Delete image (or marked file group if marks window selected)"
 msgstr ""
 "Удалить изображение (или помеченную группу файлов, если выбрано окно "
 "отметок)"
 
-#: utils/help_and_config.py:68
+#: utils/help_and_config.py:69
 msgid "Go to next mark"
 msgstr "Перейти к следующей марке"
 
-#: utils/help_and_config.py:69
+#: utils/help_and_config.py:70
 msgid "Show help window"
 msgstr "Показать окно помощи"
 
-#: utils/help_and_config.py:70
+#: utils/help_and_config.py:71
 msgid "Run image generation"
 msgstr "Запуск генерации изображений"
 
-#: utils/help_and_config.py:71
+#: utils/help_and_config.py:73
 msgid "Run content filters for all files in the current directory"
 msgstr "Запуск фильтров содержимого для всех файлов в текущем каталоге"
 
-#: utils/help_and_config.py:72
+#: utils/help_and_config.py:74
 msgid "View last moved image mark"
 msgstr "Просмотр последней перемещенной метки изображения"
 
-#: utils/help_and_config.py:73
+#: utils/help_and_config.py:75
 msgid "Toggle content filters"
 msgstr "Переключение фильтров содержимого"
 
-#: utils/help_and_config.py:74
+#: utils/help_and_config.py:76
 msgid "Add or remove a mark for current image"
 msgstr "Добавить или удалить метку для текущего изображения"
 
-#: utils/help_and_config.py:75
+#: utils/help_and_config.py:77
 msgid ""
 "Add all marks between most recently set and current selected inclusive, or "
 "all marks in current group"
@@ -2045,83 +2131,83 @@ msgstr ""
 "Добавить все отметки между последней установленной и текущей выбранной "
 "включительно, или все отметки в текущей группе"
 
-#: utils/help_and_config.py:77
+#: utils/help_and_config.py:79
 msgid "Open image in GIMP"
 msgstr "Открытое изображение в GIMP"
 
-#: utils/help_and_config.py:78
+#: utils/help_and_config.py:80
 msgid "Randomly modify image"
 msgstr "Случайное изменение изображения"
 
-#: utils/help_and_config.py:79
+#: utils/help_and_config.py:81
 msgid "View related image (controlnet, etc.)"
 msgstr "Смотреть связанные изображения (controlnet и т.д.)"
 
-#: utils/help_and_config.py:80
+#: utils/help_and_config.py:82
 msgid "Toggle slideshow"
 msgstr "Переключить слайдшоу"
 
-#: utils/help_and_config.py:81
+#: utils/help_and_config.py:83
 msgid "Find related images in open window"
 msgstr "Найти соответствующие изображения в открытом окне"
 
-#: utils/help_and_config.py:82
+#: utils/help_and_config.py:84
 msgid "Run refacdir"
 msgstr "Скрыть текущее изображение"
 
-#: utils/help_and_config.py:83
+#: utils/help_and_config.py:85
 msgid "Hide current image"
 msgstr "Скрыть текущее изображение"
 
-#: utils/help_and_config.py:84
+#: utils/help_and_config.py:86
 msgid "Set marks from downstream related images"
 msgstr "Установите метки на изображениях, относящихся к нижнему течению"
 
-#: utils/help_and_config.py:86
+#: utils/help_and_config.py:88
 msgid "Show previous/next group"
 msgstr "Показать предыдущую/следующую группу"
 
-#: utils/help_and_config.py:140
+#: utils/help_and_config.py:142
 msgid "Show Toasts"
 msgstr "Показать тосты"
 
-#: utils/help_and_config.py:142
+#: utils/help_and_config.py:144
 msgid "Slideshow Interval (sec)"
 msgstr "Интервал показа слайдов (сек)"
 
-#: utils/help_and_config.py:144
+#: utils/help_and_config.py:146
 msgid "File Check Interval (sec)"
 msgstr "Интервал обновления файлов (сек)"
 
-#: utils/help_and_config.py:146
+#: utils/help_and_config.py:148
 msgid "Max Search Results"
 msgstr "Максимальные результаты поиска"
 
-#: utils/help_and_config.py:148
+#: utils/help_and_config.py:150
 msgid "Sort By"
 msgstr "Сортировать по"
 
-#: utils/help_and_config.py:152
+#: utils/help_and_config.py:154
 msgid "Toasts Persist (sec)"
 msgstr "Тосты сохраняются (сек)"
 
-#: utils/help_and_config.py:154
+#: utils/help_and_config.py:156
 msgid "Title Notify Persist (sec)"
 msgstr "Название Уведомить о сохранении (сек)"
 
-#: utils/help_and_config.py:156
+#: utils/help_and_config.py:158
 msgid "Delete Instantly"
 msgstr "Удалить мгновенно"
 
-#: utils/help_and_config.py:158
+#: utils/help_and_config.py:160
 msgid "Trash Folder"
 msgstr "Папка для мусора"
 
-#: utils/help_and_config.py:160
+#: utils/help_and_config.py:162
 msgid "Image Tagging Enabled"
 msgstr "Тегирование изображений включено"
 
-#: utils/help_and_config.py:162
+#: utils/help_and_config.py:164
 msgid "Escape Backslash Filepaths"
 msgstr "Исключение обратных косых символов в путях файлов"
 
@@ -2129,88 +2215,10 @@ msgstr "Исключение обратных косых символов в п�
 msgid " etc."
 msgstr " и т.д."
 
-#: app.py:743
-msgid "Hide Media"
-msgstr "Скрыть медиа"
+#: utils/help_and_config.py:40
+msgid "Open Favorites window"
+msgstr "Откройте окно Избранное"
 
-#: app.py:744
-msgid "Remove from Marks"
-msgstr "Удалить из отметок"
-
-#: app.py:744
-msgid "Add to Marks"
-msgstr "Добавить к отметкам"
-
-#: app.py:746
-msgid "Remove from Favorites"
-msgstr "Удалить из избранного"
-
-#: app.py:746
-msgid "Add to Favorites"
-msgstr "Добавить в избранное"
-
-#: app.py:749
-msgid "Open in GIMP"
-msgstr "Открыть в GIMP"
-
-#: app.py:751
-msgid "Show Source Image"
-msgstr "Показать исходное изображение"
-
-#: app.py:752
-msgid "Find Related Images"
-msgstr "Найти похожие изображения"
-
-#: app.py:753
-msgid "Set Marks from Downstream Related Images"
-msgstr "Установить метки из нижестоящих связанных изображений"
-
-#: app.py:755
-msgid "Set Current Image as Search Image"
-msgstr "Установить текущее изображение в качестве изображения для поиска"
-
-#: app.py:756
-msgid "Add Current Image to Negative Search"
-msgstr "Добавить текущее изображение к отрицательному поиску"
-
-#: app.py:757
-msgid "Run Refacdir"
-msgstr "Запустить RefacDir"
-
-#: files/favorites_window.py:50
-msgid "Added favorite: "
-msgstr "Добавлено в избранное: "
-
-#: files/favorites_window.py:56
-msgid "Favorites"
-msgstr "Любимые"
-
-#: files/favorites_window.py:112
-msgid ""
-"No favorites set.\n"
-"\n"
-"To add a favorite, right-click an image and select 'Add to Favorites'."
-msgstr ""
-"Избранное не установлено.\n"
-"\n"
-"Чтобы добавить в избранное, щелкните правой кнопкой мыши по изображению и выберите «Добавить в избранное»."
-
-#: files/favorites_window.py:129
-msgid "Open"
-msgstr "Открытые медиа"
-
-#: files/favorites_window.py:135
-msgid "Remove Favorite"
-msgstr "Удалить из избранного"
-
-#: files/favorites_window.py:161
-msgid "Opened favorite: "
-msgstr "Открытый фаворит: "
-
-#: files/favorites_window.py:166
-msgid "Opened favorite in new window: "
-msgstr "Открыть избранное в новом окне: "
-
-#: files/favorites_window.py:174
-msgid "Removed favorite: "
-msgstr "Удален из избранного: "
+#: utils/help_and_config.py:72
+msgid "Open context menu"
+msgstr "Открыть контекстное меню"

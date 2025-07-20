@@ -25,6 +25,7 @@ The UI can be used as a media file browser. The following features are available
     <li>Faster load times when switching between sort types</li>
     <li>Go to file by string search</li>
     <li>Mark groups of files to enable quick transitions and comparisons</li>
+    <li>Mark favorite media and access them quickly via the Favorites window</li>
     <li>Move, copy, and delete marked file groups without overwriting system clipboard</li>
     <li>Revert and modify historical file action changes</li>
     <li>Quickly find directories via recent directory picker window</li>
@@ -44,6 +45,10 @@ The UI can be used as a media file browser. The following features are available
 For image files, zoom and drag functionality is available in both browsing mode as well as when viewing grouped media after a comparison has been run.
 
 Note that depending on your configuration videos, GIFs, PDFs, SVGs and HTMLs may not be included, you may need to open the filetype configuration window with Ctrl+J and turn them on.
+
+### Favorites Window
+
+You can mark any media file (image, video, etc.) as a favorite and access all favorites quickly using the Favorites window (Ctrl+F). This is especially useful when working with directories containing many files, as it allows you to keep persistent preferred items easily accessible for future searches and actions.
 
 ## Prevalidation Rules
 
