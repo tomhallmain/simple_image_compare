@@ -2,7 +2,8 @@ import hashlib
 import os
 import re
 import sys
-from typing import Tuple
+import threading
+from typing import Tuple, Optional, Callable
 
 from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
@@ -29,6 +30,7 @@ logger = get_logger("marked_file_mover")
 # TODO preserve dictionary of all moved / copied files in a session along with their target directories.
 # TODO enable the main app to access this dictionary as groups and remove files if needed
 # TODO give statistics on how many files were moved / copied.
+
 
 def _calculate_hash(filepath):
     with open(filepath, 'rb') as f:
@@ -373,6 +375,37 @@ class MarkedFiles():
         self.close_windows()
 
     @staticmethod
+    def _process_single_file_operation(marked_file: str, target_dir: str, move_func: Callable, 
+                                      new_filename: str, current_image: Optional[str] = None, 
+                                      app_actions=None) -> Tuple[bool, str]:
+        """
+        Process a single file operation using a thread-safe lock.
+        
+        Returns:
+            Tuple[bool, str]: (success, new_filename)
+        """
+        new_filename = os.path.join(target_dir, os.path.basename(marked_file))
+        is_moving = move_func == Utils.move_file
+        
+        try:
+            # Use lock to ensure thread-safe file operations
+            with Utils.file_operation_lock:
+                # Handle media canvas release for moving operations
+                if is_moving and current_image == marked_file:
+                    if app_actions:
+                        app_actions.release_media_canvas()
+                
+                # Perform the actual file operation
+                move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
+            
+            action_part2 = _("Moved") if is_moving else _("Copied")
+            logger.info(f"{action_part2} file to {new_filename}")
+            return True, new_filename
+                
+        except Exception as e:
+            return False, str(e)
+
+    @staticmethod
     def move_marks_to_dir_static(app_actions, target_dir=None, move_func=Utils.move_file, files=None,
                                  single_image=False, current_image=None) -> Tuple[bool, bool]:
         """
@@ -382,7 +415,6 @@ class MarkedFiles():
         some_files_already_present = False
         is_moving = move_func == Utils.move_file
         action_part1 = _("Moving") if is_moving else _("Copying")
-        action_part2 = _("Moved") if is_moving else _("Copied")
         MarkedFiles.previous_marks.clear()
         files_to_move = MarkedFiles.file_marks if files is None else files
         action = Action(move_func, target_dir, MarkedFiles.file_marks)
@@ -398,16 +430,15 @@ class MarkedFiles():
             if not set_last_moved_file:
                 MarkedFiles.last_moved_image = new_filename
                 set_last_moved_file = True
-            try:
-                if is_moving:
-                    if current_image == marked_file:
-                        app_actions.release_media_canvas()
-                move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
+            success, result = MarkedFiles._process_single_file_operation(
+                marked_file, target_dir, move_func, new_filename, current_image, app_actions
+            )
+            
+            if success:
                 action.add_file(new_filename)
-                logger.info(f"{action_part2} file to {new_filename}")
                 MarkedFiles.previous_marks.append(marked_file)
-            except Exception as e:
-                exceptions[marked_file] = (str(e), new_filename)
+            else:
+                exceptions[marked_file] = (result, new_filename)  # result is error message
                 if not os.path.exists(marked_file):
                     invalid_files.append(marked_file)
         if MarkedFiles.is_cancelled_action:
@@ -920,3 +951,11 @@ class MarkedFiles():
             PDFCreator.create_pdf_from_files(MarkedFiles.file_marks, self.app_actions, output_path, options)
             
         PDFOptionsWindow.show(self.master, self.app_actions, pdf_callback)
+
+    @staticmethod
+    def get_queue_status():
+        """Get the current status of the file operation system."""
+        return {
+            'lock_held': Utils.file_operation_lock.locked(),
+            'thread_safe': True
+        }

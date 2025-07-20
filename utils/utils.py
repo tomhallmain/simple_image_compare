@@ -5,12 +5,16 @@ import psutil
 import shutil
 import subprocess
 import sys
+import threading
 
 from utils.running_tasks_registry import start_thread
 from utils.logging_setup import get_logger
 
 class Utils:
     _logger = get_logger("utils")
+    
+    # Global lock for thread-safe file operations
+    file_operation_lock = threading.Lock()
     
     @staticmethod
     def safe_write(textfile, data):
