@@ -1727,22 +1727,24 @@ class App():
             self.title_notify(_("Removing file: {0}").format(os.path.basename(filepath)), action_type=ActionType.REMOVE_FILE)
         else:
             logger.info("Removing file: " + filepath)
-        if config.delete_instantly:
-            os.remove(filepath)
-        elif config.trash_folder is not None:
-            filepath = os.path.normpath(filepath)
-            sep = "\\" if "\\" in filepath else "/"
-            new_filepath = filepath[filepath.rfind(sep)+1:len(filepath)]
-            new_filepath = os.path.normpath(os.path.join(config.trash_folder, new_filepath))
-            os.rename(filepath, new_filepath)
-        else:
-            try:
-                send2trash(os.path.normpath(filepath))
-            except Exception as e:
-                logger.error(e)
-                self.alert(_("Warning"),
-                           _("Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."))
+        
+        with Utils.file_operation_lock:
+            if config.delete_instantly:
                 os.remove(filepath)
+            elif config.trash_folder is not None:
+                filepath = os.path.normpath(filepath)
+                sep = "\\" if "\\" in filepath else "/"
+                new_filepath = filepath[filepath.rfind(sep)+1:len(filepath)]
+                new_filepath = os.path.normpath(os.path.join(config.trash_folder, new_filepath))
+                os.rename(filepath, new_filepath)
+            else:
+                try:
+                    send2trash(os.path.normpath(filepath))
+                except Exception as e:
+                    logger.error(e)
+                    self.alert(_("Warning"),
+                               _("Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."))
+                    os.remove(filepath)
 
     def replace_current_image_with_search_image(self):
         '''
