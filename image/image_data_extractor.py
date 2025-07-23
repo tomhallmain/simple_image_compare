@@ -1,3 +1,4 @@
+from enum import Enum
 import json
 import os
 import re
@@ -20,6 +21,11 @@ try:
 except Exception as e:
     logger.error(e)
     logger.error("Failed to import SD Prompt Reader!")
+
+
+class SoftwareType(Enum):
+    COMFYUI = "comfyui"
+    A1111 = "a1111"
 
 
 class ImageDataExtractor:
@@ -81,31 +87,31 @@ class ImageDataExtractor:
             return None
         return pprint.pformat(info)
 
-    def extract_prompt(self, image_path, comfyui=None):
+    def extract_prompt(self, image_path):
         info = Image.open(image_path).info
         if isinstance(info, dict):
-            if (comfyui or comfyui is None) and ImageDataExtractor.COMFYUI_PROMPT_KEY in info:
+            if ImageDataExtractor.A1111_PARAMS_KEY in info:
+                return self._build_a1111_prompt_info_object(info[ImageDataExtractor.A1111_PARAMS_KEY]), SoftwareType.A1111
+            if ImageDataExtractor.COMFYUI_PROMPT_KEY in info:
                 prompt = json.loads(info[ImageDataExtractor.COMFYUI_PROMPT_KEY])
-                return prompt
-            elif ImageDataExtractor.A1111_PARAMS_KEY in info:
-                return self._build_a1111_prompt_info_object(info[ImageDataExtractor.A1111_PARAMS_KEY])
+                return prompt, SoftwareType.COMFYUI
             else:
                 logger.debug(info.keys())
                 logger.debug("Unhandled exif data: " + image_path)
                 pass
         else:
             logger.warning("Exif data not found: " + image_path)
-        return None
+        return None, None
 
     def get_input_by_node_id(self, image_path, node_id, input_name):
-        prompt = self.extract_prompt(image_path)
-        if not prompt or node_id not in prompt:
+        prompt, software_type = self.extract_prompt(image_path)
+        if not prompt or software_type != SoftwareType.COMFYUI or node_id not in prompt:
             return None
         return prompt[node_id]["inputs"][input_name]
 
     def get_input_by_class_type(self, image_path, class_type, input_name):
-        prompt = self.extract_prompt(image_path)
-        if not prompt:
+        prompt, software_type = self.extract_prompt(image_path)
+        if not prompt or software_type != SoftwareType.COMFYUI:
             return None
         for node_id, node in prompt.items():
             if "class_type" in node and class_type == node["class_type"]:
@@ -133,7 +139,7 @@ class ImageDataExtractor:
         new_image_path = self.new_image_with_info(image, new_info, image_path=image_path, image_copy_path=None, target_dir=None)
 
     def copy_prompt_to_file(self, image_path, prompt_file_path):
-        prompt = self.extract_prompt(image_path)
+        prompt, _ = self.extract_prompt(image_path)
         with open(prompt_file_path, "w") as store:
             json.dump(prompt, store, indent=2)
 
@@ -142,9 +148,9 @@ class ImageDataExtractor:
         negative = None
         prompt_dicts = {}
         node_inputs = {}
-        prompt = self.extract_prompt(image_path)
+        prompt, software_type = self.extract_prompt(image_path)
 
-        if prompt is not None:
+        if software_type == SoftwareType.COMFYUI:
             for k, v in prompt.items():
                 if ImageDataExtractor.CLASS_TYPE in v and ImageDataExtractor.INPUTS in v:
                     # logger.debug(v[ImageDataExtractor.CLASS_TYPE])
@@ -189,10 +195,11 @@ class ImageDataExtractor:
     def get_models(self, image_path):
         models = []
         loras = []
-        prompt = self.extract_prompt(image_path)
+        prompt, software_type = self.extract_prompt(image_path)
+        if prompt is None or software_type is None:
+            return models, loras
 
-        if prompt is not None:
-            # ComfyUI
+        if software_type == SoftwareType.COMFYUI:
             for k, v in prompt.items():
                 if ImageDataExtractor.CLASS_TYPE in v and ImageDataExtractor.INPUTS in v:
                     # logger.debug(v[ImageDataExtractor.CLASS_TYPE])
@@ -214,10 +221,10 @@ class ImageDataExtractor:
                         if  "." in lora_name:
                             lora_name = lora_name[:lora_name.rfind(".")]
                         loras.append(lora_name)
+        elif software_type == SoftwareType.A1111:
+            models, loras = [prompt["Model"]], prompt["Loras"]
         else:
-            prompt = self.extract_prompt(image_path, comfyui=False)
-            if prompt is not None:
-                models, loras = [prompt["Model"]], prompt["Loras"]
+            raise Exception("Unhandled software type: " + software_type)
 
         return (models, loras)
 
@@ -225,9 +232,9 @@ class ImageDataExtractor:
     def uses_load_images(self, image_path, control_net_image_paths=[]):
         if not control_net_image_paths or len(control_net_image_paths) == 0:
             raise Exception("Control net image not provided.")
-        prompt = self.extract_prompt(image_path)
+        prompt, software_type = self.extract_prompt(image_path)
 
-        if prompt is not None:
+        if software_type == SoftwareType.COMFYUI:
             for v in prompt.values():
                 if ImageDataExtractor.CLASS_TYPE in v:
                     if v[ImageDataExtractor.CLASS_TYPE] == "LoadImage" and ImageDataExtractor.INPUTS in v:
@@ -275,12 +282,12 @@ class ImageDataExtractor:
         pprint.pprint(info)
 
     def print_prompt(self, image_path):
-        prompt = self.extract_prompt(image_path)
-        logger.info("Prompt for image: " + image_path)
+        prompt, software_type = self.extract_prompt(image_path)
+        logger.info("Prompt for image: " + image_path + " (" + str(software_type) + ")")
         pprint.pprint(prompt)
 
     def dump_prompt(self, image_path):
-        prompt = self.extract_prompt(image_path)
+        prompt, _ = self.extract_prompt(image_path)
         with open("extracted_prompt.json", "w") as store:
             json.dump(prompt, store, indent=2)
 
@@ -356,10 +363,10 @@ class ImageDataExtractor:
                     if value.startswith("\"") and value.endswith("\""):
                         value = value[1:-1]
                 prompt_info[key.strip().replace(":", "")] = value
-                # logger.debug("____")
-                # logger.debug(key)
-                # logger.debug(value)
-                # logger.debug(prompt_text)
+                # print("____")
+                # print(key)
+                # print(value)
+                # print(prompt_text)
                 if next_key is not None:
                     prompt_text = prompt_text[prompt_text.rfind(next_key):]
         prompt_info["Positive prompt"], prompt_info["Loras"] = self._extract_loras_from_a1111_prompt(prompt_info["Positive prompt"])
@@ -374,7 +381,9 @@ class ImageDataExtractor:
             actual_prompt = prompt_text[:first_lora_tag_match.start()].strip()
             for match in re.finditer(lora_tag_pattern, prompt_text):
                 lora_tag = match.group(0)[6:-1]
-                loras.append(lora_tag[:lora_tag.index(":")])
+                lora_name = lora_tag[:lora_tag.index(":")]
+                # print(lora_name)
+                loras.append(lora_name)
         return actual_prompt, loras
 
 image_data_extractor = ImageDataExtractor()

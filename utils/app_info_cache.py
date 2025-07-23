@@ -71,13 +71,11 @@ class AppInfoCache:
                         self._cache = self._try_load_cache_from_file(path)
                         # Only shift backups if we loaded from the main file
                         if path == AppInfoCache.CACHE_LOC:
-                            backup_loc = AppInfoCache.CACHE_LOC + ".bak"
-                            backup_loc2 = AppInfoCache.CACHE_LOC + ".bak2"
-                            text = f"Loaded cache from {AppInfoCache.CACHE_LOC}, shifted backups to {backup_loc}"
-                            if os.path.exists(backup_loc):
-                                shutil.copy2(backup_loc, backup_loc2)
-                                text += f" and {backup_loc2}"
-                            shutil.copy2(AppInfoCache.CACHE_LOC, backup_loc)
+                            text = f"Loaded cache from {AppInfoCache.CACHE_LOC}, shifted backups to {cache_paths[1]}"
+                            if os.path.exists(cache_paths[1]):
+                                shutil.copy2(cache_paths[1], cache_paths[2])
+                                text += f" and {cache_paths[2]}"
+                            shutil.copy2(AppInfoCache.CACHE_LOC, cache_paths[1])
                             logger.info(text)
                         else:
                             logger.warning(f"Loaded cache from backup: {path}")

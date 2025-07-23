@@ -55,7 +55,8 @@ class SDRunnerClient:
 
     def validate_image_for_type(self, _type, base_image):
         if _type == ImageGenerationType.REDO_PROMPT:
-            if image_data_extractor.extract_prompt(base_image) is None:
+            prompt, software_type = image_data_extractor.extract_prompt(base_image)
+            if prompt is None:
                 self.close()
                 raise Exception(_('Image does not contain a prompt to redo!'))
 
