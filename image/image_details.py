@@ -372,7 +372,7 @@ class ImageDetails():
             self._show_metadata_window(metadata_text)
 
     def _show_metadata_window(self, metadata_text):
-        if ImageDetails.metatdata_viewer_window is None:
+        if ImageDetails.metatdata_viewer_window is None or ImageDetails.metatdata_viewer_window.has_closed:
             ImageDetails.metatdata_viewer_window = MetadataViewerWindow(self.master, self.app_actions, metadata_text, self.image_path)
         else:
             ImageDetails.metatdata_viewer_window.update_metadata(metadata_text, self.image_path)
