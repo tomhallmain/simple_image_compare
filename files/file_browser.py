@@ -390,17 +390,18 @@ class FileBrowser:
                 else:
                     files.extend(glob.glob(os.path.join(self.directory, _ + "*" + ext), recursive=self.recursive))
         else:
-            to_scan = [self.directory]
-            while to_scan:
-                current_dir = to_scan.pop()
-                try:
-                    with os.scandir(current_dir) as it:
-                        for entry in it:
-                            if entry.is_dir(follow_symlinks=False) and self.recursive:
-                                to_scan.append(entry.path)
-                            elif entry.is_file(follow_symlinks=False):
-                                ext = os.path.splitext(entry.name)[1].lower()
-                                if ext in allowed_extensions:
-                                    files.append(entry.path)
-                except PermissionError:
-                    logger.warning(f"Permission denied: {current_dir}")
+            with Utils.file_operation_lock:
+                to_scan = [self.directory]
+                while to_scan:
+                    current_dir = to_scan.pop()
+                    try:
+                        with os.scandir(current_dir) as it:
+                            for entry in it:
+                                if entry.is_dir(follow_symlinks=False) and self.recursive:
+                                    to_scan.append(entry.path)
+                                elif entry.is_file(follow_symlinks=False):
+                                    ext = os.path.splitext(entry.name)[1].lower()
+                                    if ext in allowed_extensions:
+                                        files.append(entry.path)
+                    except PermissionError:
+                        logger.warning(f"Permission denied: {current_dir}")
