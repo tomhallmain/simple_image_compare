@@ -1988,6 +1988,13 @@ if __name__ == "__main__":
                 global app
                 root = create_root()
                 app = App(root)
+                # The below is to make sure the new tkinter instance and main window
+                # specifically is focused and not simply "on top"
+                root.lift()
+                root.focus_force()
+                root.attributes('-topmost', 1)
+                root.attributes('-topmost', 0)
+                root.update()
                 try:
                     root.mainloop()
                 except KeyboardInterrupt:
