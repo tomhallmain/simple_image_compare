@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-20 16:59-0400\n"
-"PO-Revision-Date: 2025-07-20 16:59-0400\n"
+"POT-Creation-Date: 2025-07-23 13:57-0400\n"
+"PO-Revision-Date: 2025-07-23 13:57-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: pt Team <<EMAIL>>\n"
 "Language: pt\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:97 app.py:881 app.py:1960
+#: app.py:97 app.py:881 app.py:1962
 msgid " Simple Image Compare "
 msgstr " Comparação simples de imagens "
 
@@ -124,7 +124,7 @@ msgstr "Gostaria de sair da aplicação?"
 msgid "Ended slideshows"
 msgstr "Apresentações de diapositivos terminadas"
 
-#: app.py:657 app.py:1743 app.py:1805
+#: app.py:657 app.py:1745 app.py:1807
 msgid "Warning"
 msgstr "Atenção"
 
@@ -413,7 +413,7 @@ msgstr ""
 msgid "Removing file: {0}"
 msgstr "Removendo arquivo: {0}"
 
-#: app.py:1744
+#: app.py:1746
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -421,50 +421,50 @@ msgstr ""
 "Falha ao enviar o arquivo para a lixeira, então ele será excluído. Ou o pip "
 "instala o send2trash ou define uma pasta de lixo específica no config.json."
 
-#: app.py:1761
+#: app.py:1763
 msgid "Invalid target filepath for replacement: "
 msgstr "Caminho de ficheiro de destino inválido para substituição: "
 
-#: app.py:1765
+#: app.py:1767
 msgid "Moved search image to "
 msgstr "Mover a imagem de pesquisa para "
 
-#: app.py:1803
+#: app.py:1805
 msgid "Running image gen: "
 msgstr "Geração da imagem em execução: "
 
-#: app.py:1805
+#: app.py:1807
 msgid "Error running image generation:"
 msgstr "Erro ao executar a geração de imagens:"
 
-#: app.py:1813
+#: app.py:1815
 msgid "Running refacdir"
 msgstr "A executar o refacdir"
 
-#: app.py:1818 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: app.py:1820 auth/app_startup_auth.py:108 auth/password_dialog.py:231
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "Erro"
 
-#: app.py:1898
+#: app.py:1900
 msgid "GROUP_DETAILS"
 msgstr ""
 "Grupo {0} de {1}\n"
 "Tamanho: {2}"
 
-#: app.py:1902
+#: app.py:1904
 msgid "No image files found"
 msgstr "Nenhum ficheiro de imagem encontrado"
 
-#: app.py:1904
+#: app.py:1906
 msgid "1 image file found"
 msgstr "1 ficheiro de imagem encontrado"
 
-#: app.py:1905
+#: app.py:1907
 msgid "{0} image files found"
 msgstr "{0} ficheiros de imagem encontrados"
 
-#: app.py:1907
+#: app.py:1909
 msgid "(filtered)"
 msgstr "(filtrado)"
 
@@ -1055,12 +1055,12 @@ msgstr "Ativar as pré-validações"
 msgid "Set"
 msgstr "Definir"
 
-#: compare/prevalidations_window.py:696 files/file_actions_window.py:271
-#: files/file_actions_window.py:314
+#: compare/prevalidations_window.py:696 files/file_actions_window.py:273
+#: files/file_actions_window.py:316
 msgid "Modify"
 msgstr "Modificar"
 
-#: compare/prevalidations_window.py:703
+#: compare/prevalidations_window.py:703 image/prevalidation_action.py:34
 msgid "Delete"
 msgstr "Apagar"
 
@@ -1068,7 +1068,7 @@ msgstr "Apagar"
 msgid "Move down"
 msgstr "Mover para baixo"
 
-#: extensions/sd_runner_client.py:60
+#: extensions/sd_runner_client.py:61
 msgid "Image does not contain a prompt to redo!"
 msgstr "A imagem não contém um prompt para refazer!"
 
@@ -1110,51 +1110,53 @@ msgstr "Abrir favorito numa nova janela: "
 msgid "Removed favorite: "
 msgstr "Favorito removido: "
 
-#: files/file_actions_window.py:203
+#: files/file_actions_window.py:205
 msgid "File Actions"
 msgstr "Acções do Ficheiro"
 
-#: files/file_actions_window.py:225
+#: files/file_actions_window.py:227
 msgid "File Action History"
 msgstr "Histórico de Ação de Arquivo"
 
-#: files/file_actions_window.py:227
+#: files/file_actions_window.py:229
 msgid "Search Image"
 msgstr "Procurar imagem"
 
-#: files/file_actions_window.py:229
+#: files/file_actions_window.py:231
 msgid "Clear History"
 msgstr "Limpar o Histórico"
 
-#: files/file_actions_window.py:255
+#: files/file_actions_window.py:257
 msgid " ({0} files)"
 msgstr " ({0} ficheiros)"
 
-#: files/file_actions_window.py:260 files/marked_file_mover.py:281
+#: files/file_actions_window.py:262 files/marked_file_mover.py:283
+#: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "Mover"
 
-#: files/file_actions_window.py:260 files/marked_file_mover.py:288
+#: files/file_actions_window.py:262 files/marked_file_mover.py:290
+#: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "Copiar"
 
-#: files/file_actions_window.py:263 files/file_actions_window.py:306
+#: files/file_actions_window.py:265 files/file_actions_window.py:308
 msgid "Undo"
 msgstr "Desfazer"
 
-#: files/file_actions_window.py:298
+#: files/file_actions_window.py:300
 msgid "View"
 msgstr "Ver"
 
-#: files/file_actions_window.py:331
+#: files/file_actions_window.py:333
 msgid "Image does not exist: "
 msgstr "A imagem não existe: "
 
-#: files/file_actions_window.py:332 files/file_actions_window.py:343
+#: files/file_actions_window.py:334 files/file_actions_window.py:345
 msgid "File Action Error"
 msgstr "Erro na Acção do Ficheiro"
 
-#: files/file_actions_window.py:342
+#: files/file_actions_window.py:344
 msgid "Images not found"
 msgstr "Imagens não encontradas"
 
@@ -1199,201 +1201,201 @@ msgstr "Pasta de destino"
 msgid "(unset)"
 msgstr "(desactivado)"
 
-#: files/marked_file_mover.py:103 files/marked_file_mover.py:910
+#: files/marked_file_mover.py:105 files/marked_file_mover.py:941
 msgid "Marks cleared."
 msgstr "Marcas limpas."
 
-#: files/marked_file_mover.py:110
+#: files/marked_file_mover.py:112
 msgid "Set current marks from previous."
 msgstr "Define as marcas atuais das anteriores."
 
-#: files/marked_file_mover.py:110
+#: files/marked_file_mover.py:112
 msgid "Total set: {0}"
 msgstr "Total definido: {0}"
 
-#: files/marked_file_mover.py:137
+#: files/marked_file_mover.py:139
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "Não é possível definir um objetivo de marca permanente!\n"
 "Definir com Ctrl+T na janela Marcas."
 
-#: files/marked_file_mover.py:149
+#: files/marked_file_mover.py:151
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "Nenhuma ação de atalho definida para {0}.\n"
 "Definir com {1} na janela Marca."
 
-#: files/marked_file_mover.py:229 files/recent_directory_window.py:153
+#: files/marked_file_mover.py:231 files/recent_directory_window.py:153
 msgid "Set a new target directory"
 msgstr "Definir um novo directório- alvo"
 
-#: files/marked_file_mover.py:231
+#: files/marked_file_mover.py:233
 msgid "MOVE"
 msgstr "MOVER"
 
-#: files/marked_file_mover.py:235
+#: files/marked_file_mover.py:237
 msgid "COPY"
 msgstr "CÓPIA"
 
-#: files/marked_file_mover.py:237
+#: files/marked_file_mover.py:239
 msgid "DELETE"
 msgstr "APAGAR"
 
-#: files/marked_file_mover.py:239 files/recent_directory_window.py:157
+#: files/marked_file_mover.py:241 files/recent_directory_window.py:157
 msgid "Add directories from parent"
 msgstr "Adicionar diretórios a partir do pai"
 
-#: files/marked_file_mover.py:242 files/recent_directory_window.py:159
+#: files/marked_file_mover.py:244 files/recent_directory_window.py:159
 msgid "Clear targets"
 msgstr "Alvos claros"
 
-#: files/marked_file_mover.py:244 files/pdf_options_window.py:81
+#: files/marked_file_mover.py:246 files/pdf_options_window.py:81
 msgid "Create PDF"
 msgstr "Criar PDF"
 
-#: files/marked_file_mover.py:308 files/marked_file_mover.py:314
+#: files/marked_file_mover.py:310 files/marked_file_mover.py:316
 msgid "Recording next mark target and action."
 msgstr "Registar o próximo alvo de marcação e a ação."
 
-#: files/marked_file_mover.py:327 files/recent_directory_window.py:203
+#: files/marked_file_mover.py:329 files/recent_directory_window.py:203
 msgid "Invalid directory: %s"
 msgstr "Pasta inválida: {0}"
 
-#: files/marked_file_mover.py:329
+#: files/marked_file_mover.py:331
 msgid "Select target directory for marked files"
 msgstr "Seleccione o directório de destino dos ficheiros marcados"
 
-#: files/marked_file_mover.py:384
+#: files/marked_file_mover.py:417
 msgid "Moving"
 msgstr "Mover"
 
-#: files/marked_file_mover.py:384
+#: files/marked_file_mover.py:417
 msgid "Copying"
 msgstr "Copiar"
 
-#: files/marked_file_mover.py:385
+#: files/marked_file_mover.py:401
 msgid "Moved"
 msgstr "Movido"
 
-#: files/marked_file_mover.py:385
+#: files/marked_file_mover.py:401
 msgid "Copied"
 msgstr "Copiado"
 
-#: files/marked_file_mover.py:425
+#: files/marked_file_mover.py:456
 msgid "Moved {0} files to {1}"
 msgstr ""
 "Movidos {0} ficheiros para\n"
 "{1}"
 
-#: files/marked_file_mover.py:427
+#: files/marked_file_mover.py:458
 msgid "Copied {0} files to {1}"
 msgstr ""
 "Copiou {0} ficheiros para\n"
 "{1}"
 
-#: files/marked_file_mover.py:468
+#: files/marked_file_mover.py:499
 msgid "Existing filenames match!"
 msgstr "Os nomes de ficheiros existentes correspondem!"
 
-#: files/marked_file_mover.py:470
+#: files/marked_file_mover.py:501
 msgid "WARNING: Exact file match."
 msgstr "AVISO: O arquivo exato corresponde."
 
-#: files/marked_file_mover.py:472 files/marked_file_mover.py:823
+#: files/marked_file_mover.py:503 files/marked_file_mover.py:854
 msgid "WARNING: Short filenames."
 msgstr "AVISO: Nomes de arquivos curtos."
 
-#: files/marked_file_mover.py:496
+#: files/marked_file_mover.py:527
 msgid "Moving back"
 msgstr "Recuar"
 
-#: files/marked_file_mover.py:496
+#: files/marked_file_mover.py:527
 msgid "Removing"
 msgstr "Remoção"
 
-#: files/marked_file_mover.py:497
+#: files/marked_file_mover.py:528
 msgid "Moved back"
 msgstr "Recuado"
 
-#: files/marked_file_mover.py:497
+#: files/marked_file_mover.py:528
 msgid "Removed"
 msgstr "Removido"
 
-#: files/marked_file_mover.py:503
+#: files/marked_file_mover.py:534
 msgid "Where should the marked files have gone?"
 msgstr "Para onde deveriam ter ido os ficheiros marcados?"
 
-#: files/marked_file_mover.py:528
+#: files/marked_file_mover.py:559
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "Regressou {0} ficheiros de \n"
 "{1}"
 
-#: files/marked_file_mover.py:530
+#: files/marked_file_mover.py:561
 msgid "Removed {0} files from {1}"
 msgstr ""
 "Removidos {0} ficheiros de\n"
 "{1}"
 
-#: files/marked_file_mover.py:547
+#: files/marked_file_mover.py:578
 msgid "Select parent directory for target directories"
 msgstr "Selecionar o diretório principal para os diretórios de destino"
 
-#: files/marked_file_mover.py:707
+#: files/marked_file_mover.py:738
 msgid "Sorted directories by embedding comparison."
 msgstr "Diretórios ordenados por comparação de incorporação."
 
-#: files/marked_file_mover.py:727
+#: files/marked_file_mover.py:758
 msgid "Confirm Delete"
 msgstr "Confirmar Apagar"
 
-#: files/marked_file_mover.py:728
+#: files/marked_file_mover.py:759
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr ""
 "Eliminar {0} ficheiros marcados - Tem a certeza de que pretende continuar?"
 
-#: files/marked_file_mover.py:748
+#: files/marked_file_mover.py:779
 msgid "Delete Failed"
 msgstr "Falha na eliminação"
 
-#: files/marked_file_mover.py:749
+#: files/marked_file_mover.py:780
 msgid "Failed to delete %s files - check log for details."
 msgstr ""
 "Falha ao eliminar {0} ficheiros - verifique o registo para obter detalhes."
 
-#: files/marked_file_mover.py:752
+#: files/marked_file_mover.py:783
 msgid "Deleted %s marked files."
 msgstr "Eliminou {0} ficheiros marcados."
 
-#: files/marked_file_mover.py:817
+#: files/marked_file_mover.py:848
 msgid "Existing filenames found!"
 msgstr "Nomes de ficheiros existentes encontrados!"
 
-#: files/marked_file_mover.py:819
+#: files/marked_file_mover.py:850
 msgid "WARNING: All file hashes match."
 msgstr "AVISO: Todos os hashes de ficheiros coincidem."
 
-#: files/marked_file_mover.py:821
+#: files/marked_file_mover.py:852
 msgid "WARNING: %s of %s file hashes match."
 msgstr "AVISO: {0} de {1} hashes de ficheiro coincidem."
 
-#: files/marked_file_mover.py:827
+#: files/marked_file_mover.py:858
 msgid "No existing filenames found."
 msgstr "Não foram encontrados nomes de ficheiros existentes."
 
-#: files/marked_file_mover.py:855
+#: files/marked_file_mover.py:886
 msgid "Found %s downstream related images"
 msgstr "Encontrou {0} imagens relacionadas com a jusante"
 
-#: files/marked_file_mover.py:857
+#: files/marked_file_mover.py:888
 msgid "No downstream related images found"
 msgstr "Não foram encontradas imagens relacionadas com o downstream"
 
-#: files/marked_file_mover.py:868
+#: files/marked_file_mover.py:899
 msgid "Cleared marked file"
 msgstr "Limpar arquivo marcado"
 
-#: files/marked_file_mover.py:912
+#: files/marked_file_mover.py:943
 msgid "Removed {0} marks"
 msgstr "Remoção de {0} marcas"
 
@@ -1990,6 +1992,10 @@ msgstr "Definir marcas actuais a partir da lista de marcas anteriores"
 msgid "Run penultimate marks action"
 msgstr "Executar a penúltima ação em marcas"
 
+#: utils/help_and_config.py:40
+msgid "Open Favorites window"
+msgstr "Abrir a janela dos Favoritos"
+
 #: utils/help_and_config.py:41
 msgid "Open Go to file window"
 msgstr "Abrir a janela Ir para o ficheiro"
@@ -2117,6 +2123,10 @@ msgstr "Mostrar a janela de ajuda"
 msgid "Run image generation"
 msgstr "Executar a geração de imagens"
 
+#: utils/help_and_config.py:72
+msgid "Open context menu"
+msgstr "Abrir o menu de contexto"
+
 #: utils/help_and_config.py:73
 msgid "Run content filters for all files in the current directory"
 msgstr ""
@@ -2226,10 +2236,18 @@ msgstr "Escape as barras invertidas nos caminhos dos ficheiros"
 msgid " etc."
 msgstr " etc."
 
-#: utils/help_and_config.py:40
-msgid "Open Favorites window"
-msgstr "Abrir a janela dos Favoritos"
+#: image/prevalidation_action.py:24
+msgid "Hide"
+msgstr "Ocultar"
 
-#: utils/help_and_config.py:72
-msgid "Open context menu"
-msgstr "Abrir o menu de contexto"
+#: image/prevalidation_action.py:26
+msgid "Notify"
+msgstr "Notificar"
+
+#: image/prevalidation_action.py:28
+msgid "Skip"
+msgstr "Pular"
+
+#: image/prevalidation_action.py:36
+msgid "Add Mark"
+msgstr "Adicionar marca"

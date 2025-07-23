@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-20 16:57-0400\n"
-"PO-Revision-Date: 2025-07-20 16:57-0400\n"
+"POT-Creation-Date: 2025-07-23 13:57-0400\n"
+"PO-Revision-Date: 2025-07-23 13:57-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ru Team <<EMAIL>>\n"
 "Language: ru\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:97 app.py:881 app.py:1960
+#: app.py:97 app.py:881 app.py:1962
 msgid " Simple Image Compare "
 msgstr " Простое сравнение изображений "
 
@@ -124,7 +124,7 @@ msgstr "Вы хотите выйти из приложения?"
 msgid "Ended slideshows"
 msgstr "Конец слайдшоу"
 
-#: app.py:657 app.py:1743 app.py:1805
+#: app.py:657 app.py:1745 app.py:1807
 msgid "Warning"
 msgstr "Предупреждение"
 
@@ -411,7 +411,7 @@ msgstr ""
 msgid "Removing file: {0}"
 msgstr "Удаление файла: {0}"
 
-#: app.py:1744
+#: app.py:1746
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -420,50 +420,50 @@ msgstr ""
 "установите pip send2trash, либо задайте конкретную папку для корзины в "
 "config.json."
 
-#: app.py:1761
+#: app.py:1763
 msgid "Invalid target filepath for replacement: "
 msgstr "Недействительный целевой файловый путь для замены: "
 
-#: app.py:1765
+#: app.py:1767
 msgid "Moved search image to "
 msgstr "Перемещенное поисковое изображение на "
 
-#: app.py:1803
+#: app.py:1805
 msgid "Running image gen: "
 msgstr "Запуск Image Gen: "
 
-#: app.py:1805
+#: app.py:1807
 msgid "Error running image generation:"
 msgstr "Ошибка генерации изображений:"
 
-#: app.py:1813
+#: app.py:1815
 msgid "Running refacdir"
 msgstr "Запуск факультатива"
 
-#: app.py:1818 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: app.py:1820 auth/app_startup_auth.py:108 auth/password_dialog.py:231
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "ошибка"
 
-#: app.py:1898
+#: app.py:1900
 msgid "GROUP_DETAILS"
 msgstr ""
 "Группа {0} {1}\n"
 "Размер: {2}"
 
-#: app.py:1902
+#: app.py:1904
 msgid "No image files found"
 msgstr "Файлы изображений не найдены"
 
-#: app.py:1904
+#: app.py:1906
 msgid "1 image file found"
 msgstr "Найден 1 файл изображения"
 
-#: app.py:1905
+#: app.py:1907
 msgid "{0} image files found"
 msgstr "Найдено {0} файлов изображений"
 
-#: app.py:1907
+#: app.py:1909
 msgid "(filtered)"
 msgstr "(фильтровано)"
 
@@ -1050,12 +1050,12 @@ msgstr "Обеспечение превалидации"
 msgid "Set"
 msgstr "Настройка"
 
-#: compare/prevalidations_window.py:696 files/file_actions_window.py:271
-#: files/file_actions_window.py:314
+#: compare/prevalidations_window.py:696 files/file_actions_window.py:273
+#: files/file_actions_window.py:316
 msgid "Modify"
 msgstr "изменять"
 
-#: compare/prevalidations_window.py:703
+#: compare/prevalidations_window.py:703 image/prevalidation_action.py:34
 msgid "Delete"
 msgstr "Исключить"
 
@@ -1063,7 +1063,7 @@ msgstr "Исключить"
 msgid "Move down"
 msgstr "Спуститься"
 
-#: extensions/sd_runner_client.py:60
+#: extensions/sd_runner_client.py:61
 msgid "Image does not contain a prompt to redo!"
 msgstr "Изображение не содержит подсказки для переделки!"
 
@@ -1105,51 +1105,53 @@ msgstr "Открыть избранное в новом окне: "
 msgid "Removed favorite: "
 msgstr "Удален из избранного: "
 
-#: files/file_actions_window.py:203
+#: files/file_actions_window.py:205
 msgid "File Actions"
 msgstr "Файловые действия"
 
-#: files/file_actions_window.py:225
+#: files/file_actions_window.py:227
 msgid "File Action History"
 msgstr "История действий с файлами"
 
-#: files/file_actions_window.py:227
+#: files/file_actions_window.py:229
 msgid "Search Image"
 msgstr "Поисковое изображение"
 
-#: files/file_actions_window.py:229
+#: files/file_actions_window.py:231
 msgid "Clear History"
 msgstr "Ясная история"
 
-#: files/file_actions_window.py:255
+#: files/file_actions_window.py:257
 msgid " ({0} files)"
 msgstr " ({0} файлы)"
 
-#: files/file_actions_window.py:260 files/marked_file_mover.py:281
+#: files/file_actions_window.py:262 files/marked_file_mover.py:283
+#: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "Двигаться"
 
-#: files/file_actions_window.py:260 files/marked_file_mover.py:288
+#: files/file_actions_window.py:262 files/marked_file_mover.py:290
+#: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "Копия"
 
-#: files/file_actions_window.py:263 files/file_actions_window.py:306
+#: files/file_actions_window.py:265 files/file_actions_window.py:308
 msgid "Undo"
 msgstr "Снять"
 
-#: files/file_actions_window.py:298
+#: files/file_actions_window.py:300
 msgid "View"
 msgstr "Посмотреть"
 
-#: files/file_actions_window.py:331
+#: files/file_actions_window.py:333
 msgid "Image does not exist: "
 msgstr "Изображение не существует: "
 
-#: files/file_actions_window.py:332 files/file_actions_window.py:343
+#: files/file_actions_window.py:334 files/file_actions_window.py:345
 msgid "File Action Error"
 msgstr "Ошибка файлового действия"
 
-#: files/file_actions_window.py:342
+#: files/file_actions_window.py:344
 msgid "Images not found"
 msgstr "Изображения не найдены"
 
@@ -1193,199 +1195,199 @@ msgstr "Каталог целей"
 msgid "(unset)"
 msgstr "(запуск)"
 
-#: files/marked_file_mover.py:103 files/marked_file_mover.py:910
+#: files/marked_file_mover.py:105 files/marked_file_mover.py:941
 msgid "Marks cleared."
 msgstr "Отметины сняты."
 
-#: files/marked_file_mover.py:110
+#: files/marked_file_mover.py:112
 msgid "Set current marks from previous."
 msgstr "Установите текущие отметки от предыдущих."
 
-#: files/marked_file_mover.py:110
+#: files/marked_file_mover.py:112
 msgid "Total set: {0}"
 msgstr "Полный набор: {0}"
 
-#: files/marked_file_mover.py:137
+#: files/marked_file_mover.py:139
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "Не нужно устанавливать постоянную цель метки!\n"
 "Устанавливается с помощью Ctrl+T в окне «Метки»."
 
-#: files/marked_file_mover.py:149
+#: files/marked_file_mover.py:151
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "Для {0} не установлено действие горячей клавиши.\n"
 "Установите {1} в окне метки."
 
-#: files/marked_file_mover.py:229 files/recent_directory_window.py:153
+#: files/marked_file_mover.py:231 files/recent_directory_window.py:153
 msgid "Set a new target directory"
 msgstr "Установите новый целевой каталог"
 
-#: files/marked_file_mover.py:231
+#: files/marked_file_mover.py:233
 msgid "MOVE"
 msgstr "Двигаться"
 
-#: files/marked_file_mover.py:235
+#: files/marked_file_mover.py:237
 msgid "COPY"
 msgstr "копия"
 
-#: files/marked_file_mover.py:237
+#: files/marked_file_mover.py:239
 msgid "DELETE"
 msgstr "Удалить"
 
-#: files/marked_file_mover.py:239 files/recent_directory_window.py:157
+#: files/marked_file_mover.py:241 files/recent_directory_window.py:157
 msgid "Add directories from parent"
 msgstr "Добавить каталоги от родителя"
 
-#: files/marked_file_mover.py:242 files/recent_directory_window.py:159
+#: files/marked_file_mover.py:244 files/recent_directory_window.py:159
 msgid "Clear targets"
 msgstr "Четкие цели"
 
-#: files/marked_file_mover.py:244 files/pdf_options_window.py:81
+#: files/marked_file_mover.py:246 files/pdf_options_window.py:81
 msgid "Create PDF"
 msgstr "Создать PDF"
 
-#: files/marked_file_mover.py:308 files/marked_file_mover.py:314
+#: files/marked_file_mover.py:310 files/marked_file_mover.py:316
 msgid "Recording next mark target and action."
 msgstr "Запись следующей цели и действия."
 
-#: files/marked_file_mover.py:327 files/recent_directory_window.py:203
+#: files/marked_file_mover.py:329 files/recent_directory_window.py:203
 msgid "Invalid directory: %s"
 msgstr "Недопустимый каталог: {0}"
 
-#: files/marked_file_mover.py:329
+#: files/marked_file_mover.py:331
 msgid "Select target directory for marked files"
 msgstr "Выберите целевой каталог для отмеченных файлов"
 
-#: files/marked_file_mover.py:384
+#: files/marked_file_mover.py:417
 msgid "Moving"
 msgstr "двигаться"
 
-#: files/marked_file_mover.py:384
+#: files/marked_file_mover.py:417
 msgid "Copying"
 msgstr "Копирование"
 
-#: files/marked_file_mover.py:385
+#: files/marked_file_mover.py:401
 msgid "Moved"
 msgstr "перемещенный"
 
-#: files/marked_file_mover.py:385
+#: files/marked_file_mover.py:401
 msgid "Copied"
 msgstr "Копирован"
 
-#: files/marked_file_mover.py:425
+#: files/marked_file_mover.py:456
 msgid "Moved {0} files to {1}"
 msgstr ""
 "Переместите {0} файлов на\n"
 "{1}"
 
-#: files/marked_file_mover.py:427
+#: files/marked_file_mover.py:458
 msgid "Copied {0} files to {1}"
 msgstr ""
 "Скопируйте {0} файлов на\n"
 "{1}."
 
-#: files/marked_file_mover.py:468
+#: files/marked_file_mover.py:499
 msgid "Existing filenames match!"
 msgstr "Существующие имена файлов совпадают!"
 
-#: files/marked_file_mover.py:470
+#: files/marked_file_mover.py:501
 msgid "WARNING: Exact file match."
 msgstr "Предупреждение: точное совпадение файлов."
 
-#: files/marked_file_mover.py:472 files/marked_file_mover.py:823
+#: files/marked_file_mover.py:503 files/marked_file_mover.py:854
 msgid "WARNING: Short filenames."
 msgstr "Предупреждение: короткие имена файлов."
 
-#: files/marked_file_mover.py:496
+#: files/marked_file_mover.py:527
 msgid "Moving back"
 msgstr "Вернуться назад"
 
-#: files/marked_file_mover.py:496
+#: files/marked_file_mover.py:527
 msgid "Removing"
 msgstr "удалять"
 
-#: files/marked_file_mover.py:497
+#: files/marked_file_mover.py:528
 msgid "Moved back"
 msgstr "Вернуться назад"
 
-#: files/marked_file_mover.py:497
+#: files/marked_file_mover.py:528
 msgid "Removed"
 msgstr "Удаленный"
 
-#: files/marked_file_mover.py:503
+#: files/marked_file_mover.py:534
 msgid "Where should the marked files have gone?"
 msgstr "Куда должны были пойти отмеченные файлы?"
 
-#: files/marked_file_mover.py:528
+#: files/marked_file_mover.py:559
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "Перенесите файлы из {0}\n"
 "{1}"
 
-#: files/marked_file_mover.py:530
+#: files/marked_file_mover.py:561
 msgid "Removed {0} files from {1}"
 msgstr ""
 "Удаленные файлы {0}\n"
 "{1}"
 
-#: files/marked_file_mover.py:547
+#: files/marked_file_mover.py:578
 msgid "Select parent directory for target directories"
 msgstr "Выберите родительский каталог для целевых каталогов"
 
-#: files/marked_file_mover.py:707
+#: files/marked_file_mover.py:738
 msgid "Sorted directories by embedding comparison."
 msgstr "Сортированные каталоги путем встраивания сравнения."
 
-#: files/marked_file_mover.py:727
+#: files/marked_file_mover.py:758
 msgid "Confirm Delete"
 msgstr "Подтвердить удаление"
 
-#: files/marked_file_mover.py:728
+#: files/marked_file_mover.py:759
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr "Удаление {0} отмеченных файлов - Вы уверены, что хотите продолжить?"
 
-#: files/marked_file_mover.py:748
+#: files/marked_file_mover.py:779
 msgid "Delete Failed"
 msgstr "Удалить не удалось"
 
-#: files/marked_file_mover.py:749
+#: files/marked_file_mover.py:780
 msgid "Failed to delete %s files - check log for details."
 msgstr "Не удалось удалить {0} файлы - проверьте журнал для деталей."
 
-#: files/marked_file_mover.py:752
+#: files/marked_file_mover.py:783
 msgid "Deleted %s marked files."
 msgstr "Удаленные {0} отмеченные файлы."
 
-#: files/marked_file_mover.py:817
+#: files/marked_file_mover.py:848
 msgid "Existing filenames found!"
 msgstr "Существующие имена файлов найдены!"
 
-#: files/marked_file_mover.py:819
+#: files/marked_file_mover.py:850
 msgid "WARNING: All file hashes match."
 msgstr "ПРЕДУПРЕЖДЕНИЕ: Все хэши файлов совпадают."
 
-#: files/marked_file_mover.py:821
+#: files/marked_file_mover.py:852
 msgid "WARNING: %s of %s file hashes match."
 msgstr "ПРЕДУПРЕЖДЕНИЕ: {0} из {1} хэшей файлов совпадают."
 
-#: files/marked_file_mover.py:827
+#: files/marked_file_mover.py:858
 msgid "No existing filenames found."
 msgstr "Существующих имен файлов не найдено."
 
-#: files/marked_file_mover.py:855
+#: files/marked_file_mover.py:886
 msgid "Found %s downstream related images"
 msgstr "Найдено {0} ниже по потоку связанных изображений"
 
-#: files/marked_file_mover.py:857
+#: files/marked_file_mover.py:888
 msgid "No downstream related images found"
 msgstr "Не найдено ни одного нисходящего изображения"
 
-#: files/marked_file_mover.py:868
+#: files/marked_file_mover.py:899
 msgid "Cleared marked file"
 msgstr "Очищенный файл"
 
-#: files/marked_file_mover.py:912
+#: files/marked_file_mover.py:943
 msgid "Removed {0} marks"
 msgstr "Снятые знаки {0}"
 
@@ -1981,6 +1983,10 @@ msgstr "Установите текущие отметки из предыдущ
 msgid "Run penultimate marks action"
 msgstr "Запуск предпоследних знаков действия"
 
+#: utils/help_and_config.py:40
+msgid "Open Favorites window"
+msgstr "Откройте окно Избранное"
+
 #: utils/help_and_config.py:41
 msgid "Open Go to file window"
 msgstr "Откройте окно Перейти к файлу"
@@ -2107,6 +2113,10 @@ msgstr "Показать окно помощи"
 msgid "Run image generation"
 msgstr "Запуск генерации изображений"
 
+#: utils/help_and_config.py:72
+msgid "Open context menu"
+msgstr "Открыть контекстное меню"
+
 #: utils/help_and_config.py:73
 msgid "Run content filters for all files in the current directory"
 msgstr "Запуск фильтров содержимого для всех файлов в текущем каталоге"
@@ -2215,10 +2225,18 @@ msgstr "Исключение обратных косых символов в п�
 msgid " etc."
 msgstr " и т.д."
 
-#: utils/help_and_config.py:40
-msgid "Open Favorites window"
-msgstr "Откройте окно Избранное"
+#: image/prevalidation_action.py:24
+msgid "Hide"
+msgstr "Скрыть"
 
-#: utils/help_and_config.py:72
-msgid "Open context menu"
-msgstr "Открыть контекстное меню"
+#: image/prevalidation_action.py:26
+msgid "Notify"
+msgstr "Уведомить"
+
+#: image/prevalidation_action.py:28
+msgid "Skip"
+msgstr "Пропустить"
+
+#: image/prevalidation_action.py:36
+msgid "Add Mark"
+msgstr "Добавить метку"

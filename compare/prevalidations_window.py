@@ -384,10 +384,10 @@ class PrevalidationModifyWindow():
         row += 1
         self.label_action = Label(self.frame)
         self.add_label(self.label_action, _("Action"), row=row, column=0)
-        self.action_var = StringVar(self.master, value=self.prevalidation.action.name)
-        action_options = [str(k) for k in PrevalidationAction.__members__]
+        self.action_var = StringVar(self.master, value=self.prevalidation.action.get_translation())
+        action_options = [k.get_translation() for k in PrevalidationAction]
         self.action_choice = Combobox(self.frame, textvariable=self.action_var, values=action_options)
-        self.action_choice.current(action_options.index(self.prevalidation.action.name))
+        self.action_choice.current(action_options.index(self.prevalidation.action.get_translation()))
         self.action_choice.bind("<<ComboboxSelected>>", self.set_action)
         self.action_choice.grid(row=row, column=1, sticky=W)
         # Style the combobox
@@ -491,7 +491,7 @@ class PrevalidationModifyWindow():
             self.label_negatives.grid_remove()
 
     def set_action(self, event=None):
-        self.prevalidation.action = PrevalidationAction[self.action_var.get()]
+        self.prevalidation.action = PrevalidationAction.get_action(self.action_var.get())
 
     def set_action_modifier(self):
         self.prevalidation.action_modifier = self.action_modifier_var.get()
@@ -672,7 +672,7 @@ class PrevalidationsWindow():
 
             label_action = Label(self.frame)
             self.label_list2.append(label_action)
-            self.add_label(label_action, prevalidation.action.name, row=row, column=base_col + 1)
+            self.add_label(label_action, prevalidation.action.get_translation(), row=row, column=base_col + 1)
 
             is_active_var = BooleanVar(value=prevalidation.is_active)
             def set_is_active_handler(prevalidation=prevalidation, var=is_active_var):
