@@ -34,6 +34,15 @@ class AppInfoCache:
             logger.error(f"Error storing cache: {e}")
             raise e
 
+    def _try_load_cache_from_file(self, path):
+        """Attempt to load and decrypt the cache from the given file path. Raises on failure."""
+        encrypted_data = decrypt_data_from_file(
+            path,
+            AppInfo.SERVICE_NAME,
+            AppInfo.APP_IDENTIFIER
+        )
+        return json.loads(encrypted_data.decode('utf-8'))
+
     def load(self):
         try:
             if os.path.exists(AppInfoCache.JSON_LOC):
@@ -43,24 +52,41 @@ class AppInfoCache:
                     self._cache = json.load(f)
                 self.store() # store encrypted cache
                 os.remove(AppInfoCache.JSON_LOC)
-            elif os.path.exists(AppInfoCache.CACHE_LOC):
-                encrypted_data = decrypt_data_from_file(
-                    AppInfoCache.CACHE_LOC,
-                    AppInfo.SERVICE_NAME,
-                    AppInfo.APP_IDENTIFIER
-                )
-                self._cache = json.loads(encrypted_data.decode('utf-8'))
-                # The encrypted file did not fail to decrypt, so preserve a backup                
-                backup_loc = AppInfoCache.CACHE_LOC + ".bak"
-                backup_loc2 = AppInfoCache.CACHE_LOC + ".bak2"
-                text = f"Loaded cache from {AppInfoCache.CACHE_LOC}, shifted backups to {backup_loc}"
-                if os.path.exists(backup_loc):
-                    shutil.copy2(backup_loc, backup_loc2)
-                    text += f" and {backup_loc2}"
-                shutil.copy2(AppInfoCache.CACHE_LOC, backup_loc)
-                print(text)
-            else:
-                print(f"No cache file found at {AppInfoCache.CACHE_LOC}, creating new cache")
+                return
+
+            # Try encrypted cache and backups in order
+            cache_paths = [
+                AppInfoCache.CACHE_LOC,
+                AppInfoCache.CACHE_LOC + ".bak",
+                AppInfoCache.CACHE_LOC + ".bak2"
+            ]
+            any_exist = any(os.path.exists(path) for path in cache_paths)
+            if not any_exist:
+                logger.info(f"No cache file found at {AppInfoCache.CACHE_LOC}, creating new cache")
+                return
+
+            for path in cache_paths:
+                if os.path.exists(path):
+                    try:
+                        self._cache = self._try_load_cache_from_file(path)
+                        # Only shift backups if we loaded from the main file
+                        if path == AppInfoCache.CACHE_LOC:
+                            backup_loc = AppInfoCache.CACHE_LOC + ".bak"
+                            backup_loc2 = AppInfoCache.CACHE_LOC + ".bak2"
+                            text = f"Loaded cache from {AppInfoCache.CACHE_LOC}, shifted backups to {backup_loc}"
+                            if os.path.exists(backup_loc):
+                                shutil.copy2(backup_loc, backup_loc2)
+                                text += f" and {backup_loc2}"
+                            shutil.copy2(AppInfoCache.CACHE_LOC, backup_loc)
+                            logger.info(text)
+                        else:
+                            logger.warning(f"Loaded cache from backup: {path}")
+                        return
+                    except Exception as e:
+                        logger.error(f"Failed to load cache from {path}: {e}")
+                        continue
+            # If we get here, all attempts failed (but at least one file existed)
+            raise Exception(f"Failed to load cache from all locations: {cache_paths}")
         except Exception as e:
             logger.error(f"Error loading cache: {e}")
             raise e
