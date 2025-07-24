@@ -161,15 +161,31 @@ class Prevalidation:
                             image_path, self.action_modifier
                         )
                     except Exception as e:
-                        logger.error(e)
+                        if (self.action == PrevalidationAction.MOVE and
+                            "File already exists:" in str(e) and
+                            Utils.calculate_hash(image_path) == Utils.calculate_hash(os.path.join(self.action_modifier, os.path.basename(image_path)))):
+                            # The file already exists in target, so we need to remove it from the source
+                            # NOTE: this is a hack to avoid an error that sometimes happens where a file gets stranded
+                            # possibly due to the sd-runner application re-saving it after the move, but it could 
+                            # technically happen for other more valid reasons. Ideally need to identify why this error
+                            # occurs and fix it.
+                            try:
+                                with Utils.file_operation_lock:
+                                    os.remove(image_path)
+                                    logger.info("Removed file from source: " + image_path)
+                            except Exception as e:
+                                logger.error("Error removing file from source: " + image_path + ": " + str(e))
+                        else:
+                            logger.error(e)
             else:
                 raise Exception("Target directory not defined on prevalidation "  + self.name)
         elif self.action == PrevalidationAction.DELETE:
             notify_callback("\n" + _("Deleting file: ") + os.path.basename(image_path), base_message=base_message,
                             action_type=ActionType.REMOVE_FILE, is_manual=False)
-            try:    
-                os.remove(image_path)
-                logger.info("Deleted file at " + image_path)
+            try:
+                with Utils.file_operation_lock:
+                    os.remove(image_path)
+                    logger.info("Deleted file at " + image_path)
             except Exception as e:
                 logger.error("Error deleting file at " + image_path + ": " + str(e))
         return self.action

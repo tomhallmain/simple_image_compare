@@ -1,4 +1,5 @@
 from enum import Enum
+import hashlib
 import re
 import os
 import psutil
@@ -22,6 +23,16 @@ class Utils:
             textfile.write(data)
         except UnicodeEncodeError as e:
             Utils._logger.error(e)
+
+    @staticmethod
+    def calculate_hash(filepath):
+        with open(filepath, 'rb') as f:
+            sha256 = hashlib.sha256()
+            while True:
+                data = f.read(65536)
+                if not data: break
+                sha256.update(f.read())
+        return sha256.hexdigest()
 
     @staticmethod
     def trace(frame, event, arg):

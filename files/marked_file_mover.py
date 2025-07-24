@@ -1,8 +1,6 @@
-import hashlib
 import os
 import re
 import sys
-import threading
 from typing import Tuple, Optional, Callable
 
 from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
@@ -32,14 +30,6 @@ logger = get_logger("marked_file_mover")
 # TODO give statistics on how many files were moved / copied.
 
 
-def _calculate_hash(filepath):
-    with open(filepath, 'rb') as f:
-        sha256 = hashlib.sha256()
-        while True:
-            data = f.read(65536)
-            if not data: break
-            sha256.update(f.read())
-    return sha256.hexdigest()
 
 
 class MarkedFiles():
@@ -475,7 +465,7 @@ class MarkedFiles():
                         # Just in case some of them failed to move for whatever reason.
                         MarkedFiles.file_marks.append(marked_file)
                     if error_msg.startswith("File already exists"):
-                        if _calculate_hash(marked_file) == _calculate_hash(target_filepath):
+                        if Utils.calculate_hash(marked_file) == Utils.calculate_hash(target_filepath):
                             matching_files = True
                             logger.info(f"File hashes match: {marked_file} <> {exc_tuple[1]}")
                             if is_moving and marked_file != target_filepath:
@@ -837,7 +827,7 @@ class MarkedFiles():
         names_are_short = False
         matching_files = 0
         for marked_file, new_filename in found_files:
-            if _calculate_hash(marked_file) == _calculate_hash(new_filename):
+            if Utils.calculate_hash(marked_file) == Utils.calculate_hash(new_filename):
                 matching_files += 1
                 logger.info(f"File hashes match: {marked_file} <> {new_filename}")
             elif len(os.path.basename(marked_file)) < 13 and not names_are_short:
