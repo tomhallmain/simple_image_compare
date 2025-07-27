@@ -435,9 +435,6 @@ class App():
         for i in range(10):
             self.master.bind(str(i), self.run_hotkey_marks_action)
 
-        # Start async threads
-        start_thread(self.check_files)
-
         self.toggle_theme(to_theme=(AppStyle.get_theme_name() if self.is_secondary() else None), do_toast=False)
         self.master.update()
 
@@ -455,9 +452,20 @@ class App():
         App.open_windows.append(self)
 
         if base_dir is not None and base_dir != "" and base_dir != "." and os.path.isdir(base_dir):
-            # logger.debug(f"Setting base dir to {base_dir} on window ID {self.window_id} before self.set_base_dir")
-            self.set_base_dir_box.insert(0, base_dir)
-            self.set_base_dir(base_dir_from_dir_window=base_dir)
+            # Check for large directories before loading files
+            if self.check_large_directory_before_load(base_dir):
+                # User canceled, unset the base directory and continue without loading
+                self.base_dir = None
+                self.set_base_dir_box.delete(0, "end")
+                self.set_base_dir_box.insert(0, "Add dirpath...")
+                self._set_label_state(_("Set a directory to run comparison."), pady=10)
+            else:
+                # logger.debug(f"Setting base dir to {base_dir} on window ID {self.window_id} before self.set_base_dir")
+                self.set_base_dir_box.insert(0, base_dir)
+                self.set_base_dir(base_dir_from_dir_window=base_dir)
+
+        # Start async threads
+        start_thread(self.check_files)
 
         if not self.is_secondary():
             for _dir in app_info_cache.get_meta("secondary_base_dirs", default_val=[]):
@@ -808,6 +816,38 @@ class App():
             window.file_browser.set_dir_confirmed()
         return False
 
+    def check_large_directory_before_load(self, base_dir, threshold=5000):
+        """
+        Check if a directory has many files or is on external storage before loading.
+        Returns True if user cancels, False if user wants to proceed.
+        """
+        # Store the current directory and files to restore later if user cancels
+        logger.debug(f"Checking large directory before load: {base_dir}")
+        original_directory = self.file_browser.directory
+        original_files = self.file_browser._files.copy()
+        
+        try:
+            # Temporarily set the directory to check
+            self.file_browser.directory = base_dir
+            # Check if this directory has already been confirmed
+            if self.file_browser.has_confirmed_dir():
+                return False
+
+            self.file_browser._gather_files()
+            
+            if self.file_browser.is_slow_total_files(threshold=threshold):
+                message = _("A directory with a large number of files or a directory with a fair-sized number of files on external storage was detected, which may result in a slow load time. Please confirm you want to load the full directory.")
+                res = self.alert(_("Large Directory Detected: {0}").format(base_dir), message, kind="askokcancel")
+                if res != messagebox.OK and res != True:
+                    logger.info(f"User canceled loading large directory: {base_dir}")
+                    return True
+                self.file_browser.set_dir_confirmed()
+        finally:
+            # Restore the original state
+            self.file_browser.directory = original_directory
+            self.file_browser._files = original_files
+        return False
+
     @require_password(ProtectedActions.VIEW_MEDIA_DETAILS)
     def find_related_images_in_open_window(self, event=None, base_dir=None):
         if base_dir is None:
@@ -899,6 +939,15 @@ class App():
             RecentDirectories.directories.append(self.base_dir)
         else:
             self.open_recent_directory_window()
+            return
+        
+        # Check for large directories before loading files
+        if self.check_large_directory_before_load(self.base_dir):
+            # User canceled, unset the base directory and return
+            self.base_dir = None
+            self.set_base_dir_box.delete(0, "end")
+            self.set_base_dir_box.insert(0, "Add dirpath...")
+            self._set_label_state(_("Set a directory to run comparison."), pady=10)
             return
         if self.compare_wrapper.has_compare() and self.base_dir != self.compare_wrapper.compare().base_dir:
             self.compare_wrapper._compare = None
@@ -1467,7 +1516,7 @@ class App():
 
     @require_password(ProtectedActions.RUN_PREVALIDATIONS)
     def run_prevalidations_for_base_dir(self, event=None):
-        if self.file_browser.is_slow_total_files(threshold=100):
+        if self.file_browser.is_slow_total_files(threshold=100, use_sortable_files=True):
             res = self.alert(_("Many Files"), _("Are you sure you want to run all prevalidations on directory {0} ? This may take a while.").format(self.get_base_dir()), kind="askokcancel")
             if res != messagebox.OK and res != True:
                 logger.info("User canceled prevalidations task")

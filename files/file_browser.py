@@ -45,9 +45,10 @@ class FileBrowser:
     def count(self):
         return len(self._files)
 
-    def is_slow_total_files(self, threshold=2000):
+    def is_slow_total_files(self, threshold=2000, use_sortable_files=False):
         factor = 5 if Utils.is_external_drive(self.directory) else 1
-        return factor * len(self._files) > threshold
+        file_count = len(self._files) if use_sortable_files else len(self.filepaths)
+        return factor * file_count > threshold
 
     def has_confirmed_dir(self):
         return self.directory in FileBrowser.have_confirmed_directories
