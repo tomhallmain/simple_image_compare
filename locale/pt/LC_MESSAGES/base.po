@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-23 13:57-0400\n"
-"PO-Revision-Date: 2025-07-23 13:57-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-07-27 16:52-0400\n"
+"PO-Revision-Date: 2025-07-27 16:52-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: pt Team <<EMAIL>>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:97 app.py:881 app.py:1962
+#: app.py:97 app.py:930 app.py:2020
 msgid " Simple Image Compare "
 msgstr " Comparação simples de imagens "
 
@@ -20,7 +20,7 @@ msgstr " Comparação simples de imagens "
 msgid "Theme switched to {0}."
 msgstr "O tema mudou para {0}."
 
-#: app.py:246 compare/compare_wrapper.py:480
+#: app.py:246 app.py:461 app.py:959 compare/compare_wrapper.py:480
 msgid "Set a directory to run comparison."
 msgstr "Definir um diretório para executar a comparação."
 
@@ -112,218 +112,218 @@ msgstr "Copiar o caminho da imagem"
 msgid "---- DELETE ----"
 msgstr "---- DELETE ----"
 
-#: app.py:504
+#: app.py:512
 msgid "Confirm Quit"
 msgstr "Confirmar Sair"
 
-#: app.py:504
+#: app.py:512
 msgid "Would you like to quit the application?"
 msgstr "Gostaria de sair da aplicação?"
 
-#: app.py:604
+#: app.py:612
 msgid "Ended slideshows"
 msgstr "Apresentações de diapositivos terminadas"
 
-#: app.py:657 app.py:1745 app.py:1807
+#: app.py:665 app.py:1803 app.py:1865
 msgid "Warning"
 msgstr "Atenção"
 
-#: app.py:657
+#: app.py:665
 msgid "No files found in directory after refresh."
 msgstr "Não foram encontrados ficheiros no diretório após a atualização."
 
-#: app.py:680
+#: app.py:697
 msgid "Slideshow for new images started"
 msgstr "Iniciada a apresentação para novas imagens"
 
-#: app.py:682
+#: app.py:699
 msgid "Slideshow started"
 msgstr "Apresentação iniciada"
 
-#: app.py:685
+#: app.py:702
 msgid "Slideshows ended"
 msgstr "Apresentação terminada"
 
-#: app.py:698
+#: app.py:715
 msgid "Browsing mode set."
 msgstr "Modo de navegação definido."
 
-#: app.py:742 utils/constants.py:292
+#: app.py:759 utils/constants.py:292
 msgid "View Media Details"
 msgstr "Ver detalhes dos meios"
 
-#: app.py:743
+#: app.py:760
 msgid "Hide Media"
 msgstr "Ocultar mídia"
 
-#: app.py:744
+#: app.py:761
 msgid "Remove from Marks"
 msgstr "Remover das marcas"
 
-#: app.py:744
+#: app.py:761
 msgid "Add to Marks"
 msgstr "Adicionar às marcas"
 
-#: app.py:746
+#: app.py:763
 msgid "Remove from Favorites"
 msgstr "Remover dos Favoritos"
 
-#: app.py:746
+#: app.py:763
 msgid "Add to Favorites"
 msgstr "Adicionar aos Favoritos"
 
-#: app.py:749
+#: app.py:766
 msgid "Open in GIMP"
 msgstr "Abrir no GIMP"
 
-#: app.py:750 image/image_details.py:191 utils/constants.py:298
+#: app.py:767 image/image_details.py:191 utils/constants.py:298
 msgid "Run Image Generation"
 msgstr "Executar a Geração de Imagens"
 
-#: app.py:751
+#: app.py:768
 msgid "Show Source Image"
 msgstr "Mostrar imagem original"
 
-#: app.py:752
+#: app.py:769
 msgid "Find Related Images"
 msgstr "Encontrar imagens relacionadas"
 
-#: app.py:753
+#: app.py:770
 msgid "Set Marks from Downstream Related Images"
 msgstr "Definir marcas a partir de imagens relacionadas a jusante"
 
-#: app.py:755
+#: app.py:772
 msgid "Set Current Image as Search Image"
 msgstr "Definir imagem atual como imagem de pesquisa"
 
-#: app.py:756
+#: app.py:773
 msgid "Add Current Image to Negative Search"
 msgstr "Adicionar imagem atual à pesquisa negativa"
 
-#: app.py:757
+#: app.py:774
 msgid "Run Refacdir"
 msgstr "Executar RefacDir"
 
-#: app.py:769
+#: app.py:786
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr ""
 "(Abra esta imagem como parte de um diretório para ver os detalhes do "
 "índice)."
 
-#: app.py:803 app.py:1471
+#: app.py:820 app.py:1529
 msgid "Many Files"
 msgstr "Muitos arquivos"
 
-#: app.py:830
+#: app.py:879
 msgid "No downstream related image(s) found in {0}"
 msgstr "Não foram encontradas imagens relacionadas com downstream em {0}"
 
-#: app.py:852
+#: app.py:901
 msgid "{0} file marks set"
 msgstr "{0} as marcas de ficheiro são definidas"
 
-#: app.py:858
+#: app.py:907
 msgid "Help and Config"
 msgstr "Ajuda e Configuração"
 
-#: app.py:944
+#: app.py:1002
 msgid "Set Image Comparison Directory"
 msgstr "Configurar diretório de comparação de imagens"
 
-#: app.py:982
+#: app.py:1040
 msgid "Counter limit must be an integer value."
 msgstr "O limite do contador deve ser um valor inteiro."
 
-#: app.py:982 app.py:998
+#: app.py:1040 app.py:1056
 msgid "Invalid Setting"
 msgstr "Configuração inválida"
 
-#: app.py:998
+#: app.py:1056
 msgid "No image selected."
 msgstr "Nenhuma imagem selecionada."
 
-#: app.py:1037
+#: app.py:1095
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr ""
 "O modo de comparação deve ser definido para um modo de incorporação para "
 "pesquisar incorporações de texto"
 
-#: app.py:1041
+#: app.py:1099
 msgid "Select image file"
 msgstr "Selecionar arquivo de imagem"
 
-#: app.py:1070
+#: app.py:1128
 msgid "Somehow, the search file is invalid"
 msgstr "De alguma forma, o arquivo de pesquisa é inválido"
 
-#: app.py:1156 app.py:1181
+#: app.py:1214 app.py:1239
 msgid "Failed to get active image filepath"
 msgstr "Falha ao obter o caminho ativo da imagem"
 
-#: app.py:1266
+#: app.py:1324
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% completo"
 
-#: app.py:1272
+#: app.py:1330
 msgid "Confirm comparison"
 msgstr "Confirmar comparação"
 
-#: app.py:1273
+#: app.py:1331
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 "Se não tiver sido definido nenhum diretório de base, será utilizado o "
 "diretório de base atual de "
 
-#: app.py:1274
+#: app.py:1332
 msgid "Are you sure you want to proceed?"
 msgstr "Tens a certeza que queres continuar?"
 
-#: app.py:1295
+#: app.py:1353
 msgid "Error running compare"
 msgstr "Erro ao executar a comparação"
 
-#: app.py:1328
+#: app.py:1386
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "Eliminar o bloqueio após a apresentação \n"
 "transição impediu a adição de marca"
 
-#: app.py:1339
+#: app.py:1397
 msgid "Mark removed. Remaining: {0}"
 msgstr "Marca removida. Restante: {0}"
 
-#: app.py:1343
+#: app.py:1401
 msgid "Mark added. Total set: {0}"
 msgstr "Marca adicionada. Conjunto total: {0}"
 
-#: app.py:1360
+#: app.py:1418
 msgid "Marks added. Total set: {0}"
 msgstr "Marcas adicionadas. Conjunto total: {0}"
 
-#: app.py:1369
+#: app.py:1427
 msgid "First sorted mark"
 msgstr "Primeira marca ordenada"
 
-#: app.py:1376
+#: app.py:1434
 msgid "Only one marked file set."
 msgstr "Apenas um ficheiro marcado."
 
-#: app.py:1388
+#: app.py:1446
 msgid "Including marks: {0}"
 msgstr "Incluindo marcas: {0}"
 
-#: app.py:1396
+#: app.py:1454
 msgid "Move {0} Marked File(s)"
 msgstr "Mover {0} Ficheiro(s) marcado(s)"
 
-#: app.py:1435
+#: app.py:1493
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0} marcas foram definidas (>={1} esperado).\n"
 "Utilize Shift+M para definir uma marca."
 
-#: app.py:1471
+#: app.py:1529
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
@@ -331,54 +331,54 @@ msgstr ""
 "Tem a certeza de que pretende executar todas as prevalidações na diretoria "
 "{0} ? Isto pode demorar algum tempo."
 
-#: app.py:1486
+#: app.py:1544
 msgid "Prevalidations now running"
 msgstr "Prevalidações em execução"
 
-#: app.py:1486
+#: app.py:1544
 msgid "Prevalidations turned off"
 msgstr "Prevalidações desligadas"
 
-#: app.py:1518
+#: app.py:1576
 msgid "File not found"
 msgstr "Ficheiro não encontrado"
 
-#: app.py:1518
+#: app.py:1576
 msgid "No file was found for the search text: \"{0}\""
 msgstr "Não foi encontrado nenhum ficheiro para o texto de pesquisa: “{0}”"
 
-#: app.py:1532
+#: app.py:1590
 msgid "No image selected"
 msgstr "Nenhuma imagem selecionada"
 
-#: app.py:1532
+#: app.py:1590
 msgid "No image was selected for comparison"
 msgstr "Nenhuma imagem foi selecionada para comparação"
 
-#: app.py:1546
+#: app.py:1604
 msgid "No Text Search Presets Found"
 msgstr "Nenhuma Predefinição de Pesquisa de Texto Encontrada"
 
-#: app.py:1547
+#: app.py:1605
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 "Não foram encontradas predefinições de pesquisa de incorporação de texto. "
 "Defina-as no ficheiro config.json."
 
-#: app.py:1646
+#: app.py:1704
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr ""
 "Falha ao abrir a localização do ficheiro atual, não foi possível obter um "
 "caminho de ficheiro válido"
 
-#: app.py:1657
+#: app.py:1715
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 "Falha ao abrir o ficheiro atual no GIMP, não foi possível obter um caminho "
 "de ficheiro válido"
 
-#: app.py:1673
+#: app.py:1731
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -386,34 +386,34 @@ msgstr ""
 "Oculta a imagem atual.\n"
 "Para voltar a ocultar, prima Shift+B."
 
-#: app.py:1678
+#: app.py:1736
 msgid "Cleared all hidden images."
 msgstr "Limpar todas as imagens escondidas."
 
-#: app.py:1686
+#: app.py:1744
 msgid "DELETE_LOCK"
 msgstr ""
 "Eliminar o bloqueio após a apresentação\n"
 "transição impediu a eliminação"
 
-#: app.py:1704
+#: app.py:1762
 msgid "Invalid action, no files found to delete"
 msgstr "Ação inválida, não foram encontrados ficheiros para eliminar"
 
-#: app.py:1707
+#: app.py:1765
 msgid "Invalid action, search image not found"
 msgstr "Acção inválida, a imagem de pesquisa não foi encontrada"
 
-#: app.py:1722
+#: app.py:1780
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 "Falha ao remover o arquivo atual, não foi possível obter o caminho válido"
 
-#: app.py:1727
+#: app.py:1785
 msgid "Removing file: {0}"
 msgstr "Removendo arquivo: {0}"
 
-#: app.py:1746
+#: app.py:1804
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -421,50 +421,50 @@ msgstr ""
 "Falha ao enviar o arquivo para a lixeira, então ele será excluído. Ou o pip "
 "instala o send2trash ou define uma pasta de lixo específica no config.json."
 
-#: app.py:1763
+#: app.py:1821
 msgid "Invalid target filepath for replacement: "
 msgstr "Caminho de ficheiro de destino inválido para substituição: "
 
-#: app.py:1767
+#: app.py:1825
 msgid "Moved search image to "
 msgstr "Mover a imagem de pesquisa para "
 
-#: app.py:1805
+#: app.py:1863
 msgid "Running image gen: "
 msgstr "Geração da imagem em execução: "
 
-#: app.py:1807
+#: app.py:1865
 msgid "Error running image generation:"
 msgstr "Erro ao executar a geração de imagens:"
 
-#: app.py:1815
+#: app.py:1873
 msgid "Running refacdir"
 msgstr "A executar o refacdir"
 
-#: app.py:1820 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: app.py:1878 auth/app_startup_auth.py:108 auth/password_dialog.py:231
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "Erro"
 
-#: app.py:1900
+#: app.py:1958
 msgid "GROUP_DETAILS"
 msgstr ""
 "Grupo {0} de {1}\n"
 "Tamanho: {2}"
 
-#: app.py:1904
+#: app.py:1962
 msgid "No image files found"
 msgstr "Nenhum ficheiro de imagem encontrado"
 
-#: app.py:1906
+#: app.py:1964
 msgid "1 image file found"
 msgstr "1 ficheiro de imagem encontrado"
 
-#: app.py:1907
+#: app.py:1965
 msgid "{0} image files found"
 msgstr "{0} ficheiros de imagem encontrados"
 
-#: app.py:1909
+#: app.py:1967
 msgid "(filtered)"
 msgstr "(filtrado)"
 
@@ -883,7 +883,7 @@ msgstr "(sem conjuntos positivos)"
 msgid "(no negatives set)"
 msgstr "(sem conjuntos negativos)"
 
-#: compare/prevalidations_window.py:31 compare/prevalidations_window.py:334
+#: compare/prevalidations_window.py:31 compare/prevalidations_window.py:350
 msgid "New Prevalidation"
 msgstr "Nova Prevalidação"
 
@@ -911,160 +911,160 @@ msgstr " - assinalado"
 msgid "Moving file: "
 msgstr "Movendo arquivo: "
 
-#: compare/prevalidations_window.py:168
+#: compare/prevalidations_window.py:183
 msgid "Deleting file: "
 msgstr "Excluindo arquivo: "
 
-#: compare/prevalidations_window.py:214
+#: compare/prevalidations_window.py:230
 msgid "Action modifier is not a valid directory: "
 msgstr "O modificador de ação não é uma pasta válida: "
 
-#: compare/prevalidations_window.py:216
+#: compare/prevalidations_window.py:232
 msgid "Run on folder is not a valid directory: "
 msgstr "Executar na pasta não é uma pasta válida: "
 
-#: compare/prevalidations_window.py:218
+#: compare/prevalidations_window.py:234
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr ""
 "Prevalidação inválida {0}, pode causar erros ou ser incapaz de executar!"
 
-#: compare/prevalidations_window.py:283
+#: compare/prevalidations_window.py:299
 msgid "embedding"
 msgstr "incorporação"
 
-#: compare/prevalidations_window.py:285
+#: compare/prevalidations_window.py:301
 msgid "classifier {0}"
 msgstr "classificador {0}"
 
-#: compare/prevalidations_window.py:287
+#: compare/prevalidations_window.py:303
 msgid "prompts"
 msgstr "avisos"
 
-#: compare/prevalidations_window.py:295
+#: compare/prevalidations_window.py:311
 msgid "categories: {0}"
 msgstr "categorias: {0}"
 
-#: compare/prevalidations_window.py:299
+#: compare/prevalidations_window.py:315
 msgid "{0} positives, {1} negatives"
 msgstr "{0} positivos, {1} negativos"
 
-#: compare/prevalidations_window.py:303
+#: compare/prevalidations_window.py:319
 msgid " using {0} ({1})"
 msgstr " usando {0} ({1})"
 
-#: compare/prevalidations_window.py:305
+#: compare/prevalidations_window.py:321
 msgid " using {0}"
 msgstr " usando {0}"
 
-#: compare/prevalidations_window.py:307
+#: compare/prevalidations_window.py:323
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} positivos, {1} negativos)"
 
-#: compare/prevalidations_window.py:320
+#: compare/prevalidations_window.py:336
 msgid "Modify Prevalidation"
 msgstr "Modificar a Prevalidação"
 
-#: compare/prevalidations_window.py:333
+#: compare/prevalidations_window.py:349
 msgid "Prevalidation Name"
 msgstr "Nome da Prevalidação"
 
-#: compare/prevalidations_window.py:340
+#: compare/prevalidations_window.py:356
 msgid "Positives"
 msgstr "Positivos"
 
-#: compare/prevalidations_window.py:347
+#: compare/prevalidations_window.py:363
 msgid "Negatives"
 msgstr "Negativos"
 
-#: compare/prevalidations_window.py:355
+#: compare/prevalidations_window.py:371
 msgid "Validation Types"
 msgstr "Tipos de validação"
 
-#: compare/prevalidations_window.py:358
+#: compare/prevalidations_window.py:374
 msgid "Use Embedding"
 msgstr "Utilizar a incorporação"
 
-#: compare/prevalidations_window.py:365
+#: compare/prevalidations_window.py:381
 msgid "Use Image Classifier"
 msgstr "Utilizar o classificador de imagens"
 
-#: compare/prevalidations_window.py:372
+#: compare/prevalidations_window.py:388
 msgid "Use Prompts"
 msgstr "Utilizar avisos"
 
-#: compare/prevalidations_window.py:379
+#: compare/prevalidations_window.py:395
 msgid "Threshold"
 msgstr "Limiar"
 
-#: compare/prevalidations_window.py:386
+#: compare/prevalidations_window.py:402
 msgid "Action"
 msgstr "Acção"
 
-#: compare/prevalidations_window.py:398
+#: compare/prevalidations_window.py:414
 msgid "Action Modifier"
 msgstr "Modificador de Ação"
 
-#: compare/prevalidations_window.py:405
+#: compare/prevalidations_window.py:421
 msgid "Run on Directory"
 msgstr "Executar na Pasta"
 
-#: compare/prevalidations_window.py:412
+#: compare/prevalidations_window.py:428
 msgid "Image Classifier Name"
 msgstr "Nome do classificador de imagem"
 
-#: compare/prevalidations_window.py:424
+#: compare/prevalidations_window.py:440
 msgid "Image Classifier Selected Category"
 msgstr "Categoria Seleccionada do Classificador de Imagens"
 
-#: compare/prevalidations_window.py:428
+#: compare/prevalidations_window.py:444
 msgid "Select Categories..."
 msgstr "Selecionar categorias..."
 
-#: compare/prevalidations_window.py:434
+#: compare/prevalidations_window.py:450
 msgid "Done"
 msgstr "Feito"
 
-#: compare/prevalidations_window.py:606
+#: compare/prevalidations_window.py:622
 msgid ""
 "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 msgstr ""
 "Não foi encontrada nenhuma validação com o nome: {0}. Defina-a na Janela "
 "Prevalidações."
 
-#: compare/prevalidations_window.py:617
+#: compare/prevalidations_window.py:633
 msgid "Prevalidations"
 msgstr "Prevalidações"
 
-#: compare/prevalidations_window.py:640
+#: compare/prevalidations_window.py:656
 msgid "Set Prevalidations"
 msgstr "Definir Prevalidações"
 
-#: compare/prevalidations_window.py:642
+#: compare/prevalidations_window.py:658
 msgid "Add prevalidation"
 msgstr "Adicionar prevalidação"
 
-#: compare/prevalidations_window.py:644
+#: compare/prevalidations_window.py:660
 msgid "Clear prevalidations"
 msgstr "Prevalidações claras"
 
-#: compare/prevalidations_window.py:651 utils/help_and_config.py:152
+#: compare/prevalidations_window.py:667 utils/help_and_config.py:152
 msgid "Enable Prevalidations"
 msgstr "Ativar as pré-validações"
 
-#: compare/prevalidations_window.py:688 files/hotkey_actions_window.py:95
+#: compare/prevalidations_window.py:704 files/hotkey_actions_window.py:95
 msgid "Set"
 msgstr "Definir"
 
-#: compare/prevalidations_window.py:696 files/file_actions_window.py:273
+#: compare/prevalidations_window.py:712 files/file_actions_window.py:273
 #: files/file_actions_window.py:316
 msgid "Modify"
 msgstr "Modificar"
 
-#: compare/prevalidations_window.py:703 image/prevalidation_action.py:34
+#: compare/prevalidations_window.py:719 image/prevalidation_action.py:34
 msgid "Delete"
 msgstr "Apagar"
 
-#: compare/prevalidations_window.py:710
+#: compare/prevalidations_window.py:726
 msgid "Move down"
 msgstr "Mover para baixo"
 
@@ -1130,12 +1130,12 @@ msgstr "Limpar o Histórico"
 msgid " ({0} files)"
 msgstr " ({0} ficheiros)"
 
-#: files/file_actions_window.py:262 files/marked_file_mover.py:283
+#: files/file_actions_window.py:262 files/marked_file_mover.py:273
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "Mover"
 
-#: files/file_actions_window.py:262 files/marked_file_mover.py:290
+#: files/file_actions_window.py:262 files/marked_file_mover.py:280
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "Copiar"
@@ -1160,20 +1160,20 @@ msgstr "Erro na Acção do Ficheiro"
 msgid "Images not found"
 msgstr "Imagens não encontradas"
 
-#: files/file_browser.py:152 files/file_browser.py:164
+#: files/file_browser.py:153 files/file_browser.py:165
 msgid " (try setting recursive to True)"
 msgstr " (tente definir recursivo como Verdadeiro)"
 
-#: files/file_browser.py:153 files/file_browser.py:165
+#: files/file_browser.py:154 files/file_browser.py:166
 msgid "No files found for current browsing settings."
 msgstr ""
 "Não foram encontrados ficheiros para as definições de navegação actuais."
 
-#: files/file_browser.py:198
+#: files/file_browser.py:199
 msgid "FILE_BROWSER_INDEX_DETAILS"
 msgstr "{0} de {1} ficheiros no diretório, ordenados por {2} {3}"
 
-#: files/file_browser.py:225
+#: files/file_browser.py:226
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "O texto de pesquisa fornecido a file_browser.find() era inválido."
 
@@ -1201,201 +1201,201 @@ msgstr "Pasta de destino"
 msgid "(unset)"
 msgstr "(desactivado)"
 
-#: files/marked_file_mover.py:105 files/marked_file_mover.py:941
+#: files/marked_file_mover.py:95 files/marked_file_mover.py:931
 msgid "Marks cleared."
 msgstr "Marcas limpas."
 
-#: files/marked_file_mover.py:112
+#: files/marked_file_mover.py:102
 msgid "Set current marks from previous."
 msgstr "Define as marcas atuais das anteriores."
 
-#: files/marked_file_mover.py:112
+#: files/marked_file_mover.py:102
 msgid "Total set: {0}"
 msgstr "Total definido: {0}"
 
-#: files/marked_file_mover.py:139
+#: files/marked_file_mover.py:129
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "Não é possível definir um objetivo de marca permanente!\n"
 "Definir com Ctrl+T na janela Marcas."
 
-#: files/marked_file_mover.py:151
+#: files/marked_file_mover.py:141
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "Nenhuma ação de atalho definida para {0}.\n"
 "Definir com {1} na janela Marca."
 
-#: files/marked_file_mover.py:231 files/recent_directory_window.py:153
+#: files/marked_file_mover.py:221 files/recent_directory_window.py:153
 msgid "Set a new target directory"
 msgstr "Definir um novo directório- alvo"
 
-#: files/marked_file_mover.py:233
+#: files/marked_file_mover.py:223
 msgid "MOVE"
 msgstr "MOVER"
 
-#: files/marked_file_mover.py:237
+#: files/marked_file_mover.py:227
 msgid "COPY"
 msgstr "CÓPIA"
 
-#: files/marked_file_mover.py:239
+#: files/marked_file_mover.py:229
 msgid "DELETE"
 msgstr "APAGAR"
 
-#: files/marked_file_mover.py:241 files/recent_directory_window.py:157
+#: files/marked_file_mover.py:231 files/recent_directory_window.py:157
 msgid "Add directories from parent"
 msgstr "Adicionar diretórios a partir do pai"
 
-#: files/marked_file_mover.py:244 files/recent_directory_window.py:159
+#: files/marked_file_mover.py:234 files/recent_directory_window.py:159
 msgid "Clear targets"
 msgstr "Alvos claros"
 
-#: files/marked_file_mover.py:246 files/pdf_options_window.py:81
+#: files/marked_file_mover.py:236 files/pdf_options_window.py:81
 msgid "Create PDF"
 msgstr "Criar PDF"
 
-#: files/marked_file_mover.py:310 files/marked_file_mover.py:316
+#: files/marked_file_mover.py:300 files/marked_file_mover.py:306
 msgid "Recording next mark target and action."
 msgstr "Registar o próximo alvo de marcação e a ação."
 
-#: files/marked_file_mover.py:329 files/recent_directory_window.py:203
+#: files/marked_file_mover.py:319 files/recent_directory_window.py:203
 msgid "Invalid directory: %s"
 msgstr "Pasta inválida: {0}"
 
-#: files/marked_file_mover.py:331
+#: files/marked_file_mover.py:321
 msgid "Select target directory for marked files"
 msgstr "Seleccione o directório de destino dos ficheiros marcados"
 
-#: files/marked_file_mover.py:417
-msgid "Moving"
-msgstr "Mover"
-
-#: files/marked_file_mover.py:417
-msgid "Copying"
-msgstr "Copiar"
-
-#: files/marked_file_mover.py:401
+#: files/marked_file_mover.py:391
 msgid "Moved"
 msgstr "Movido"
 
-#: files/marked_file_mover.py:401
+#: files/marked_file_mover.py:391
 msgid "Copied"
 msgstr "Copiado"
 
-#: files/marked_file_mover.py:456
+#: files/marked_file_mover.py:407
+msgid "Moving"
+msgstr "Mover"
+
+#: files/marked_file_mover.py:407
+msgid "Copying"
+msgstr "Copiar"
+
+#: files/marked_file_mover.py:446
 msgid "Moved {0} files to {1}"
 msgstr ""
 "Movidos {0} ficheiros para\n"
 "{1}"
 
-#: files/marked_file_mover.py:458
+#: files/marked_file_mover.py:448
 msgid "Copied {0} files to {1}"
 msgstr ""
 "Copiou {0} ficheiros para\n"
 "{1}"
 
-#: files/marked_file_mover.py:499
+#: files/marked_file_mover.py:489
 msgid "Existing filenames match!"
 msgstr "Os nomes de ficheiros existentes correspondem!"
 
-#: files/marked_file_mover.py:501
+#: files/marked_file_mover.py:491
 msgid "WARNING: Exact file match."
 msgstr "AVISO: O arquivo exato corresponde."
 
-#: files/marked_file_mover.py:503 files/marked_file_mover.py:854
+#: files/marked_file_mover.py:493 files/marked_file_mover.py:844
 msgid "WARNING: Short filenames."
 msgstr "AVISO: Nomes de arquivos curtos."
 
-#: files/marked_file_mover.py:527
+#: files/marked_file_mover.py:517
 msgid "Moving back"
 msgstr "Recuar"
 
-#: files/marked_file_mover.py:527
+#: files/marked_file_mover.py:517
 msgid "Removing"
 msgstr "Remoção"
 
-#: files/marked_file_mover.py:528
+#: files/marked_file_mover.py:518
 msgid "Moved back"
 msgstr "Recuado"
 
-#: files/marked_file_mover.py:528
+#: files/marked_file_mover.py:518
 msgid "Removed"
 msgstr "Removido"
 
-#: files/marked_file_mover.py:534
+#: files/marked_file_mover.py:524
 msgid "Where should the marked files have gone?"
 msgstr "Para onde deveriam ter ido os ficheiros marcados?"
 
-#: files/marked_file_mover.py:559
+#: files/marked_file_mover.py:549
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "Regressou {0} ficheiros de \n"
 "{1}"
 
-#: files/marked_file_mover.py:561
+#: files/marked_file_mover.py:551
 msgid "Removed {0} files from {1}"
 msgstr ""
 "Removidos {0} ficheiros de\n"
 "{1}"
 
-#: files/marked_file_mover.py:578
+#: files/marked_file_mover.py:568
 msgid "Select parent directory for target directories"
 msgstr "Selecionar o diretório principal para os diretórios de destino"
 
-#: files/marked_file_mover.py:738
+#: files/marked_file_mover.py:728
 msgid "Sorted directories by embedding comparison."
 msgstr "Diretórios ordenados por comparação de incorporação."
 
-#: files/marked_file_mover.py:758
+#: files/marked_file_mover.py:748
 msgid "Confirm Delete"
 msgstr "Confirmar Apagar"
 
-#: files/marked_file_mover.py:759
+#: files/marked_file_mover.py:749
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr ""
 "Eliminar {0} ficheiros marcados - Tem a certeza de que pretende continuar?"
 
-#: files/marked_file_mover.py:779
+#: files/marked_file_mover.py:769
 msgid "Delete Failed"
 msgstr "Falha na eliminação"
 
-#: files/marked_file_mover.py:780
+#: files/marked_file_mover.py:770
 msgid "Failed to delete %s files - check log for details."
 msgstr ""
 "Falha ao eliminar {0} ficheiros - verifique o registo para obter detalhes."
 
-#: files/marked_file_mover.py:783
+#: files/marked_file_mover.py:773
 msgid "Deleted %s marked files."
 msgstr "Eliminou {0} ficheiros marcados."
 
-#: files/marked_file_mover.py:848
+#: files/marked_file_mover.py:838
 msgid "Existing filenames found!"
 msgstr "Nomes de ficheiros existentes encontrados!"
 
-#: files/marked_file_mover.py:850
+#: files/marked_file_mover.py:840
 msgid "WARNING: All file hashes match."
 msgstr "AVISO: Todos os hashes de ficheiros coincidem."
 
-#: files/marked_file_mover.py:852
+#: files/marked_file_mover.py:842
 msgid "WARNING: %s of %s file hashes match."
 msgstr "AVISO: {0} de {1} hashes de ficheiro coincidem."
 
-#: files/marked_file_mover.py:858
+#: files/marked_file_mover.py:848
 msgid "No existing filenames found."
 msgstr "Não foram encontrados nomes de ficheiros existentes."
 
-#: files/marked_file_mover.py:886
+#: files/marked_file_mover.py:876
 msgid "Found %s downstream related images"
 msgstr "Encontrou {0} imagens relacionadas com a jusante"
 
-#: files/marked_file_mover.py:888
+#: files/marked_file_mover.py:878
 msgid "No downstream related images found"
 msgstr "Não foram encontradas imagens relacionadas com o downstream"
 
-#: files/marked_file_mover.py:899
+#: files/marked_file_mover.py:889
 msgid "Cleared marked file"
 msgstr "Limpar arquivo marcado"
 
-#: files/marked_file_mover.py:943
+#: files/marked_file_mover.py:933
 msgid "Removed {0} marks"
 msgstr "Remoção de {0} marcas"
 
@@ -1743,6 +1743,22 @@ msgstr "Metadados brutos da imagem"
 #: image/metadata_viewer_window.py:49
 msgid "Metadata Viewer"
 msgstr "Visualizador de metadados"
+
+#: image/prevalidation_action.py:24
+msgid "Hide"
+msgstr "Ocultar"
+
+#: image/prevalidation_action.py:26
+msgid "Notify"
+msgstr "Notificar"
+
+#: image/prevalidation_action.py:28
+msgid "Skip"
+msgstr "Pular"
+
+#: image/prevalidation_action.py:36
+msgid "Add Mark"
+msgstr "Adicionar marca"
 
 #: image/temp_image_canvas.py:104
 msgid "Open a new related image with Shift+R on main window"
@@ -2236,18 +2252,17 @@ msgstr "Escape as barras invertidas nos caminhos dos ficheiros"
 msgid " etc."
 msgstr " etc."
 
-#: image/prevalidation_action.py:24
-msgid "Hide"
-msgstr "Ocultar"
+#: app.py:848
+msgid ""
+"A directory with a large number of files or a directory with a fair-sized "
+"number of files on external storage was detected, which may result in a slow"
+" load time. Please confirm you want to load the full directory."
+msgstr ""
+"Foi detetado um diretório com um grande número de ficheiros ou um diretório "
+"com um número considerável de ficheiros em armazenamento externo, o que pode"
+" resultar num tempo de carregamento lento. Confirme se deseja carregar o "
+"diretório completo."
 
-#: image/prevalidation_action.py:26
-msgid "Notify"
-msgstr "Notificar"
-
-#: image/prevalidation_action.py:28
-msgid "Skip"
-msgstr "Pular"
-
-#: image/prevalidation_action.py:36
-msgid "Add Mark"
-msgstr "Adicionar marca"
+#: app.py:849
+msgid "Large Directory Detected: {0}"
+msgstr "Grande diretório detetado: {0}"
