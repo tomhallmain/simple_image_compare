@@ -458,7 +458,7 @@ class App():
                 self.base_dir = None
                 self.set_base_dir_box.delete(0, "end")
                 self.set_base_dir_box.insert(0, "Add dirpath...")
-                self._set_label_state(_("Set a directory to run comparison."), pady=10)
+                self._set_label_state(_("Set a directory to run comparison."))
             else:
                 # logger.debug(f"Setting base dir to {base_dir} on window ID {self.window_id} before self.set_base_dir")
                 self.set_base_dir_box.insert(0, base_dir)
@@ -669,9 +669,18 @@ class App():
     @periodic(registry_attr_name="file_check_config")
     async def check_files(self, **kwargs):
         if self.file_browser.checking_files and self.mode == Mode.BROWSE:
+            # Use after_idle to ensure Tkinter calls are made on the main thread
+            self.master.after_idle(self._check_files_main_thread)
+    
+    def _check_files_main_thread(self):
+        """Check files on the main thread to avoid Tkinter threading issues"""
+        try:
             base_dir = self.set_base_dir_box.get()
             if base_dir and base_dir != "":
                 self.refresh(show_new_images=self.slideshow_config.show_new_images)
+        except Exception as e:
+            # Log any errors but don't crash the periodic task
+            logger.debug(f"Error in _check_files_main_thread: {e}")
 
     @periodic(registry_attr_name="slideshow_config")
     async def do_slideshow(self, **kwargs):
@@ -947,7 +956,7 @@ class App():
             self.base_dir = None
             self.set_base_dir_box.delete(0, "end")
             self.set_base_dir_box.insert(0, "Add dirpath...")
-            self._set_label_state(_("Set a directory to run comparison."), pady=10)
+            self._set_label_state(_("Set a directory to run comparison."))
             return
         if self.compare_wrapper.has_compare() and self.base_dir != self.compare_wrapper.compare().base_dir:
             self.compare_wrapper._compare = None
