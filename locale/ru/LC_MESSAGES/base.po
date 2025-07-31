@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-27 16:52-0400\n"
-"PO-Revision-Date: 2025-07-27 16:52-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-07-30 20:14-0400\n"
+"PO-Revision-Date: 2025-07-30 20:14-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ru Team <<EMAIL>>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:97 app.py:930 app.py:2020
+#: app.py:97 app.py:931 app.py:2021
 msgid " Simple Image Compare "
 msgstr " Простое сравнение изображений "
 
@@ -20,308 +20,322 @@ msgstr " Простое сравнение изображений "
 msgid "Theme switched to {0}."
 msgstr "Тема переключается на {0}."
 
-#: app.py:246 app.py:461 app.py:959 compare/compare_wrapper.py:480
+#: app.py:247 app.py:462 app.py:960 compare/compare_wrapper.py:480
 msgid "Set a directory to run comparison."
 msgstr "Задайте каталог для запуска сравнения."
 
-#: app.py:253
+#: app.py:254
 msgid "Toggle theme"
 msgstr "Тема переключения"
 
-#: app.py:254
+#: app.py:255
 msgid "Set directory"
 msgstr "Установите каталог"
 
-#: app.py:255
+#: app.py:256
 msgid "Add dirpath..."
 msgstr "Добавьте путь к каталогу..."
 
-#: app.py:258
+#: app.py:259
 msgid "Set search file"
 msgstr "Настройка файла поиска"
 
-#: app.py:266
+#: app.py:267
 msgid "Search text (embedding mode)"
 msgstr "Search text (режим встраивания)"
 
-#: app.py:277
+#: app.py:278
 msgid "Compare mode"
 msgstr "Сравнить режим"
 
-#: app.py:295
+#: app.py:296
 msgid "Compare faces"
 msgstr "Сравнить лица"
 
-#: app.py:299
+#: app.py:300
 msgid "Overwrite cache"
 msgstr "Перезаписывать кэш"
 
-#: app.py:303
+#: app.py:304
 msgid "Store checkpoints"
 msgstr "Контрольные точки магазина"
 
-#: app.py:307
+#: app.py:308
 msgid "Max files to compare"
 msgstr "Файлы Max для сравнения"
 
-#: app.py:313
+#: app.py:314
 msgid "Filter files by glob pattern"
 msgstr "Фильтр файлов по шаблону glob"
 
-#: app.py:320
+#: app.py:321
 msgid "Browsing mode - Sort by"
 msgstr "Режим просмотра - Сортировать по"
 
-#: app.py:327
+#: app.py:328
 msgid "Recurse subdirectories"
 msgstr "Повторяющиеся подкаталоги"
 
-#: app.py:332
+#: app.py:333
 msgid "Image resize to full window"
 msgstr "Размер изображения до полного окна"
 
-#: app.py:336
+#: app.py:337
 msgid "Search only return closest"
 msgstr "Поиск возвращается ближе всего"
 
-#: app.py:343
+#: app.py:344
 msgid "Run image compare"
 msgstr "Сравнение изображений"
 
-#: app.py:345
+#: app.py:346
 msgid "Find duplicates"
 msgstr "Найти дубликаты"
 
-#: app.py:347 image/image_details.py:65
+#: app.py:348 image/image_details.py:65
 msgid "Image details"
 msgstr "Фотографии"
 
-#: app.py:358
+#: app.py:359
 msgid "Search current image"
 msgstr "Поиск текущее изображение"
 
-#: app.py:359 utils/help_and_config.py:78
+#: app.py:360 utils/help_and_config.py:78
 msgid "Open image location"
 msgstr "Открытое изображение"
 
-#: app.py:360
+#: app.py:361
 msgid "Copy image path"
 msgstr "Путь копирования изображений"
 
-#: app.py:361
+#: app.py:362
 msgid "---- DELETE ----"
 msgstr "---- УДАЛИТЬ ----"
 
-#: app.py:512
+#: app.py:513
 msgid "Confirm Quit"
 msgstr "Подтвердите выход"
 
-#: app.py:512
+#: app.py:513
 msgid "Would you like to quit the application?"
 msgstr "Вы хотите выйти из приложения?"
 
-#: app.py:612
+#: app.py:613
 msgid "Ended slideshows"
 msgstr "Конец слайдшоу"
 
-#: app.py:665 app.py:1803 app.py:1865
+#: app.py:666 app.py:1804 app.py:1866
 msgid "Warning"
 msgstr "Предупреждение"
 
-#: app.py:665
+#: app.py:666
 msgid "No files found in directory after refresh."
 msgstr "После обновления в каталоге не найдено ни одного файла."
 
-#: app.py:697
+#: app.py:698
 msgid "Slideshow for new images started"
 msgstr "Началось слайдшоу для новых изображений"
 
-#: app.py:699
+#: app.py:700
 msgid "Slideshow started"
 msgstr "Слайдшоу началось"
 
-#: app.py:702
+#: app.py:703
 msgid "Slideshows ended"
 msgstr "Слайдшоу закончились"
 
-#: app.py:715
+#: app.py:716
 msgid "Browsing mode set."
 msgstr "Установлен режим просмотра."
 
-#: app.py:759 utils/constants.py:292
+#: app.py:760 utils/constants.py:292
 msgid "View Media Details"
 msgstr "Посмотреть детали СМИ"
 
-#: app.py:760
+#: app.py:761
 msgid "Hide Media"
 msgstr "Скрыть медиа"
 
-#: app.py:761
+#: app.py:762
 msgid "Remove from Marks"
 msgstr "Удалить из отметок"
 
-#: app.py:761
+#: app.py:762
 msgid "Add to Marks"
 msgstr "Добавить к отметкам"
 
-#: app.py:763
+#: app.py:764
 msgid "Remove from Favorites"
 msgstr "Удалить из избранного"
 
-#: app.py:763
+#: app.py:764
 msgid "Add to Favorites"
 msgstr "Добавить в избранное"
 
-#: app.py:766
+#: app.py:767
 msgid "Open in GIMP"
 msgstr "Открыть в GIMP"
 
-#: app.py:767 image/image_details.py:191 utils/constants.py:298
+#: app.py:768 image/image_details.py:191 utils/constants.py:298
 msgid "Run Image Generation"
 msgstr "Поколение изображений"
 
-#: app.py:768
+#: app.py:769
 msgid "Show Source Image"
 msgstr "Показать исходное изображение"
 
-#: app.py:769
+#: app.py:770
 msgid "Find Related Images"
 msgstr "Найти похожие изображения"
 
-#: app.py:770
+#: app.py:771
 msgid "Set Marks from Downstream Related Images"
 msgstr "Установить метки из нижестоящих связанных изображений"
 
-#: app.py:772
+#: app.py:773
 msgid "Set Current Image as Search Image"
 msgstr "Установить текущее изображение в качестве изображения для поиска"
 
-#: app.py:773
+#: app.py:774
 msgid "Add Current Image to Negative Search"
 msgstr "Добавить текущее изображение к отрицательному поиску"
 
-#: app.py:774
+#: app.py:775
 msgid "Run Refacdir"
 msgstr "Запустить RefacDir"
 
-#: app.py:786
+#: app.py:787
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr ""
 "(Откройте это изображение как часть каталога, чтобы увидеть детали индекса)."
 
-#: app.py:820 app.py:1529
+#: app.py:821 app.py:1530
 msgid "Many Files"
 msgstr "Много файлов"
 
-#: app.py:879
+#: app.py:849
+msgid ""
+"A directory with a large number of files or a directory with a fair-sized "
+"number of files on external storage was detected, which may result in a slow"
+" load time. Please confirm you want to load the full directory."
+msgstr ""
+"Обнаружен каталог с большим количеством файлов или каталог с достаточно "
+"большим количеством файлов на внешнем носителе, что может привести к "
+"замедлению загрузки. Подтвердите, что вы хотите загрузить весь каталог."
+
+#: app.py:850
+msgid "Large Directory Detected: {0}"
+msgstr "Обнаружен большой каталог: {0}"
+
+#: app.py:880
 msgid "No downstream related image(s) found in {0}"
 msgstr "Не найдено ни одного изображения, связанного с течением, в {0}"
 
-#: app.py:901
+#: app.py:902
 msgid "{0} file marks set"
 msgstr "{0} файловые метки"
 
-#: app.py:907
+#: app.py:908
 msgid "Help and Config"
 msgstr "Помощь и конфигурация"
 
-#: app.py:1002
+#: app.py:1003
 msgid "Set Image Comparison Directory"
 msgstr "Установите каталог сравнения изображений"
 
-#: app.py:1040
+#: app.py:1041
 msgid "Counter limit must be an integer value."
 msgstr "Контрлимит должен быть целочисленным значением."
 
-#: app.py:1040 app.py:1056
+#: app.py:1041 app.py:1057
 msgid "Invalid Setting"
 msgstr "Недействительная настройка"
 
-#: app.py:1056
+#: app.py:1057
 msgid "No image selected."
 msgstr "Изображение не выбрано."
 
-#: app.py:1095
+#: app.py:1096
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr ""
 "Режим сравнения должен быть настроен на режим встраивания для встраивания "
 "текста поиска"
 
-#: app.py:1099
+#: app.py:1100
 msgid "Select image file"
 msgstr "Выберите файл изображения"
 
-#: app.py:1128
+#: app.py:1129
 msgid "Somehow, the search file is invalid"
 msgstr "Каким-то образом файл поиска недействителен."
 
-#: app.py:1214 app.py:1239
+#: app.py:1215 app.py:1240
 msgid "Failed to get active image filepath"
 msgstr "Не удалось получить активный файлообмен"
 
-#: app.py:1324
+#: app.py:1325
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% полный"
 
-#: app.py:1330
+#: app.py:1331
 msgid "Confirm comparison"
 msgstr "Подтверждает сравнение"
 
-#: app.py:1331
+#: app.py:1332
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 "Базовый каталог не был задан, будет использоваться текущий базовый каталог "
 
-#: app.py:1332
+#: app.py:1333
 msgid "Are you sure you want to proceed?"
 msgstr "Вы уверены, что хотите продолжить?"
 
-#: app.py:1353
+#: app.py:1354
 msgid "Error running compare"
 msgstr "Сравнение ошибок"
 
-#: app.py:1386
+#: app.py:1387
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "Удаление блокировки после перехода слайд-шоу\n"
 "предотвратило добавление метки"
 
-#: app.py:1397
+#: app.py:1398
 msgid "Mark removed. Remaining: {0}"
 msgstr "Отметка удалена. Осталось: {0}"
 
-#: app.py:1401
+#: app.py:1402
 msgid "Mark added. Total set: {0}"
 msgstr "Марк добавил. Полный набор: {0}"
 
-#: app.py:1418
+#: app.py:1419
 msgid "Marks added. Total set: {0}"
 msgstr "Маркс добавил. Полный набор: {0}"
 
-#: app.py:1427
+#: app.py:1428
 msgid "First sorted mark"
 msgstr "Первый сортированный знак"
 
-#: app.py:1434
+#: app.py:1435
 msgid "Only one marked file set."
 msgstr "Только один отмеченный файл."
 
-#: app.py:1446
+#: app.py:1447
 msgid "Including marks: {0}"
 msgstr "Включая отметки: {0}"
 
-#: app.py:1454
+#: app.py:1455
 msgid "Move {0} Marked File(s)"
 msgstr "Переместить {0} отмеченный файл(ы)"
 
-#: app.py:1493
+#: app.py:1494
 msgid "NO_MARKS_SET"
 msgstr ""
 "Установлено {0} отметок (ожидалось >={1}).\n"
 "Для установки метки используйте Shift+M."
 
-#: app.py:1529
+#: app.py:1530
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
@@ -329,54 +343,54 @@ msgstr ""
 "Вы уверены, что хотите запустить все превалидации в каталоге {0}? Это может "
 "занять некоторое время."
 
-#: app.py:1544
+#: app.py:1545
 msgid "Prevalidations now running"
 msgstr "В настоящее время проводятся проверки"
 
-#: app.py:1544
+#: app.py:1545
 msgid "Prevalidations turned off"
 msgstr "Протесты отключились"
 
-#: app.py:1576
+#: app.py:1577
 msgid "File not found"
 msgstr "Файл не найден"
 
-#: app.py:1576
+#: app.py:1577
 msgid "No file was found for the search text: \"{0}\""
 msgstr "Файл для поискового текста не найден: \"{0}\""
 
-#: app.py:1590
+#: app.py:1591
 msgid "No image selected"
 msgstr "Изображение не выбрано"
 
-#: app.py:1590
+#: app.py:1591
 msgid "No image was selected for comparison"
 msgstr "Изображение не было выбрано для сравнения"
 
-#: app.py:1604
+#: app.py:1605
 msgid "No Text Search Presets Found"
 msgstr "Предустановки текстового поиска не найдены"
 
-#: app.py:1605
+#: app.py:1606
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 "Не найдено текстового встраивания предустановок поиска. Установите их в "
 "файле config.json."
 
-#: app.py:1704
+#: app.py:1705
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr ""
 "Не удалось открыть местоположение текущего файла, не смог получить "
 "действительный путь файла"
 
-#: app.py:1715
+#: app.py:1716
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 "Не удалось открыть текущий файл в GIMP, не смог получить действительный "
 "файлообменник"
 
-#: app.py:1731
+#: app.py:1732
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -384,34 +398,34 @@ msgstr ""
 "Скрыть текущее изображение.\n"
 "Чтобы скрыться, нажмите Shift + B."
 
-#: app.py:1736
+#: app.py:1737
 msgid "Cleared all hidden images."
 msgstr "Очистили все скрытые изображения."
 
-#: app.py:1744
+#: app.py:1745
 msgid "DELETE_LOCK"
 msgstr ""
 "Удалить замок после слайд-шоу\n"
 "Переход предотвратил удаление"
 
-#: app.py:1762
+#: app.py:1763
 msgid "Invalid action, no files found to delete"
 msgstr "Недействительные действия, файлы не найдены для удаления"
 
-#: app.py:1765
+#: app.py:1766
 msgid "Invalid action, search image not found"
 msgstr "Недействительное действие, поиск изображения не найден"
 
-#: app.py:1780
+#: app.py:1781
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 "Не удалось удалить текущий файл, не смог получить действительный путь файла"
 
-#: app.py:1785
+#: app.py:1786
 msgid "Removing file: {0}"
 msgstr "Удаление файла: {0}"
 
-#: app.py:1804
+#: app.py:1805
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -420,50 +434,50 @@ msgstr ""
 "установите pip send2trash, либо задайте конкретную папку для корзины в "
 "config.json."
 
-#: app.py:1821
+#: app.py:1822
 msgid "Invalid target filepath for replacement: "
 msgstr "Недействительный целевой файловый путь для замены: "
 
-#: app.py:1825
+#: app.py:1826
 msgid "Moved search image to "
 msgstr "Перемещенное поисковое изображение на "
 
-#: app.py:1863
+#: app.py:1864
 msgid "Running image gen: "
 msgstr "Запуск Image Gen: "
 
-#: app.py:1865
+#: app.py:1866
 msgid "Error running image generation:"
 msgstr "Ошибка генерации изображений:"
 
-#: app.py:1873
+#: app.py:1874
 msgid "Running refacdir"
 msgstr "Запуск факультатива"
 
-#: app.py:1878 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: app.py:1879 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "ошибка"
 
-#: app.py:1958
+#: app.py:1959
 msgid "GROUP_DETAILS"
 msgstr ""
 "Группа {0} {1}\n"
 "Размер: {2}"
 
-#: app.py:1962
+#: app.py:1963
 msgid "No image files found"
 msgstr "Файлы изображений не найдены"
 
-#: app.py:1964
+#: app.py:1965
 msgid "1 image file found"
 msgstr "Найден 1 файл изображения"
 
-#: app.py:1965
+#: app.py:1966
 msgid "{0} image files found"
 msgstr "Найдено {0} файлов изображений"
 
-#: app.py:1967
+#: app.py:1968
 msgid "(filtered)"
 msgstr "(фильтровано)"
 
@@ -475,22 +489,22 @@ msgstr "Требуется пароль к приложению"
 msgid "A password is required to open this application."
 msgstr "Для открытия этого программного приложения требуется пароль."
 
-#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:134
 msgid "Password:"
 msgstr "Пароль:"
 
-#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:147
 msgid "OK"
 msgstr "OK"
 
-#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
-#: auth/password_dialog.py:139 auth/password_dialog.py:200
-#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:448
+#: auth/password_dialog.py:150 auth/password_dialog.py:219
+#: auth/password_dialog.py:236 files/pdf_options_window.py:78
 #: files/type_configuration_window.py:179
 msgid "Cancel"
 msgstr "отменить"
 
-#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:247
 msgid "Incorrect password"
 msgstr "Неверный пароль"
 
@@ -498,92 +512,92 @@ msgstr "Неверный пароль"
 msgid "Password Administration"
 msgstr "Администрирование паролей"
 
-#: auth/password_admin_window.py:67
+#: auth/password_admin_window.py:70
 msgid "Password Protection Settings"
 msgstr "Настройки защиты паролем"
 
-#: auth/password_admin_window.py:79
+#: auth/password_admin_window.py:82
 msgid "Protected Actions"
 msgstr "Защищенные действия"
 
-#: auth/password_admin_window.py:85
+#: auth/password_admin_window.py:88
 msgid "Select which actions require password authentication:"
 msgstr "Выберите, какие действия требуют проверки подлинности пароля:"
 
-#: auth/password_admin_window.py:101
+#: auth/password_admin_window.py:104
 msgid "(Always protected if a password is set)"
 msgstr "(Всегда защищена, если установлен пароль)"
 
-#: auth/password_admin_window.py:120
+#: auth/password_admin_window.py:123
 msgid "Session Timeout Settings"
 msgstr "Настройки таймаута сеанса"
 
-#: auth/password_admin_window.py:126
+#: auth/password_admin_window.py:129
 msgid "Enable session timeout (remember password for a period)"
 msgstr "Включите тайм-аут сессии (запоминание пароля на определенное время)"
 
-#: auth/password_admin_window.py:138
+#: auth/password_admin_window.py:141
 msgid "Session timeout duration (minutes):"
 msgstr "Длительность тайм-аута сеанса (минуты):"
 
-#: auth/password_admin_window.py:147
+#: auth/password_admin_window.py:164
 msgid "Password Setup"
 msgstr "Настройка пароля"
 
-#: auth/password_admin_window.py:157
+#: auth/password_admin_window.py:174
 msgid "Password is configured"
 msgstr "Пароль настроен"
 
-#: auth/password_admin_window.py:163 auth/password_admin_window.py:331
-#: auth/password_admin_window.py:347 auth/password_admin_window.py:406
+#: auth/password_admin_window.py:180 auth/password_admin_window.py:370
+#: auth/password_admin_window.py:386 auth/password_admin_window.py:445
 msgid "Change Password"
 msgstr "Изменить пароль"
 
-#: auth/password_admin_window.py:168 auth/password_admin_window.py:419
+#: auth/password_admin_window.py:185 auth/password_admin_window.py:458
 msgid "Remove Password"
 msgstr "Удалить пароль"
 
-#: auth/password_admin_window.py:173
+#: auth/password_admin_window.py:190
 msgid "Set up a password to enable protection:"
 msgstr "Установите пароль для включения защиты:"
 
-#: auth/password_admin_window.py:183 auth/password_admin_window.py:363
+#: auth/password_admin_window.py:200 auth/password_admin_window.py:402
 msgid "New Password:"
 msgstr "Новый пароль:"
 
-#: auth/password_admin_window.py:196
+#: auth/password_admin_window.py:213
 msgid "Confirm Password:"
 msgstr "Подтвердите пароль:"
 
-#: auth/password_admin_window.py:205
+#: auth/password_admin_window.py:222
 msgid "Set Password"
 msgstr "Установить пароль"
 
-#: auth/password_admin_window.py:215 auth/password_admin_window.py:261
+#: auth/password_admin_window.py:232 auth/password_admin_window.py:291
 msgid "Reset to Defaults"
 msgstr "Сброс настроек по умолчанию"
 
-#: auth/password_admin_window.py:219 auth/password_admin_window.py:281
+#: auth/password_admin_window.py:236 auth/password_admin_window.py:316
 msgid "Set to Current"
 msgstr "Установить на текущий"
 
-#: auth/password_admin_window.py:223
+#: auth/password_admin_window.py:240
 msgid "Export Cache as JSON"
 msgstr "Экспорт кэша в формате JSON"
 
-#: auth/password_admin_window.py:227
+#: auth/password_admin_window.py:244
 msgid "Save Settings"
 msgstr "Сохранить настройки"
 
-#: auth/password_admin_window.py:231
+#: auth/password_admin_window.py:248
 msgid "Close"
 msgstr "Закрыть"
 
-#: auth/password_admin_window.py:255
+#: auth/password_admin_window.py:285
 msgid "Password protection settings saved."
 msgstr "Сохранение настроек защиты паролем."
 
-#: auth/password_admin_window.py:262
+#: auth/password_admin_window.py:292
 msgid ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
@@ -591,11 +605,11 @@ msgstr ""
 "Вы уверены, что хотите сбросить все настройки защиты паролем до значений по "
 "умолчанию?"
 
-#: auth/password_admin_window.py:276
+#: auth/password_admin_window.py:311
 msgid "Settings reset to defaults."
 msgstr "Настройки сбрасываются до значений по умолчанию."
 
-#: auth/password_admin_window.py:282
+#: auth/password_admin_window.py:317
 msgid ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
@@ -603,55 +617,55 @@ msgstr ""
 "Вы уверены, что хотите восстановить все настройки в текущем сохраненном "
 "состоянии? Это приведет к удалению всех несохраненных изменений."
 
-#: auth/password_admin_window.py:297
+#: auth/password_admin_window.py:335
 msgid "Settings restored to current saved state."
 msgstr "Настройки восстанавливаются в текущее сохраненное состояние."
 
-#: auth/password_admin_window.py:306
+#: auth/password_admin_window.py:344
 msgid "Please enter a password."
 msgstr "Пожалуйста, введите пароль."
 
-#: auth/password_admin_window.py:310
+#: auth/password_admin_window.py:348
 msgid "Passwords do not match."
 msgstr "Пароли не совпадают."
 
-#: auth/password_admin_window.py:314 auth/password_admin_window.py:397
+#: auth/password_admin_window.py:352 auth/password_admin_window.py:436
 msgid "Password must be at least 6 characters long."
 msgstr "Пароль должен состоять не менее чем из 6 символов."
 
-#: auth/password_admin_window.py:318
+#: auth/password_admin_window.py:357
 msgid "Password set successfully."
 msgstr "Пароль установлен успешно."
 
-#: auth/password_admin_window.py:325
+#: auth/password_admin_window.py:364
 msgid "Failed to set password."
 msgstr "Не удалось установить пароль."
 
-#: auth/password_admin_window.py:354
+#: auth/password_admin_window.py:393
 msgid "Current Password:"
 msgstr "Текущий пароль:"
 
-#: auth/password_admin_window.py:372
+#: auth/password_admin_window.py:411
 msgid "Confirm New Password:"
 msgstr "Подтвердите новый пароль:"
 
-#: auth/password_admin_window.py:389
+#: auth/password_admin_window.py:428
 msgid "Current password is incorrect."
 msgstr "Текущий пароль неверен."
 
-#: auth/password_admin_window.py:393
+#: auth/password_admin_window.py:432
 msgid "New passwords do not match."
 msgstr "Новые пароли не совпадают."
 
-#: auth/password_admin_window.py:401
+#: auth/password_admin_window.py:440
 msgid "Password changed successfully."
 msgstr "Пароль успешно изменен."
 
-#: auth/password_admin_window.py:404
+#: auth/password_admin_window.py:443
 msgid "Failed to change password."
 msgstr "Не удалось изменить пароль."
 
-#: auth/password_admin_window.py:420
+#: auth/password_admin_window.py:459
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
@@ -659,63 +673,63 @@ msgstr ""
 "Вы уверены, что хотите снять защиту паролем? Это отключит все требования к "
 "паролю."
 
-#: auth/password_admin_window.py:425
+#: auth/password_admin_window.py:465
 msgid "Password removed successfully."
 msgstr "Пароль успешно удален."
 
-#: auth/password_admin_window.py:429
+#: auth/password_admin_window.py:469
 msgid "Failed to remove password."
 msgstr "Не удалось удалить пароль."
 
-#: auth/password_admin_window.py:464
+#: auth/password_admin_window.py:504
 msgid "Cache exported as JSON to:"
 msgstr "Кэш экспортируется в формате JSON в:"
 
-#: auth/password_admin_window.py:466
+#: auth/password_admin_window.py:506
 msgid "Failed to export cache as JSON:"
 msgstr "Не удалось экспортировать кэш в формате JSON:"
 
-#: auth/password_dialog.py:38 auth/password_dialog.py:93
+#: auth/password_dialog.py:40 auth/password_dialog.py:104
 msgid "Password Required"
 msgstr "Требуется пароль"
 
-#: auth/password_dialog.py:38
+#: auth/password_dialog.py:40
 msgid "Password Protection"
 msgstr "Защита паролем"
 
-#: auth/password_dialog.py:100
+#: auth/password_dialog.py:111
 msgid "Password required for: {0}"
 msgstr "Требуется пароль для: {0}"
 
-#: auth/password_dialog.py:145
+#: auth/password_dialog.py:156
 msgid "Password Protection Available"
 msgstr "Доступна защита паролем"
 
-#: auth/password_dialog.py:152
+#: auth/password_dialog.py:163
 msgid "This action requires password protection: {0}"
 msgstr "Это действие требует защиты паролем: {0}"
 
-#: auth/password_dialog.py:168
+#: auth/password_dialog.py:179
 msgid "Password protection is not currently configured. You can:"
 msgstr "В настоящее время защита паролем не настроена. Вы можете:"
 
-#: auth/password_dialog.py:178
+#: auth/password_dialog.py:189
 msgid "• Configure password protection for sensitive actions"
 msgstr "• Настройте защиту паролем для важных действий"
 
-#: auth/password_dialog.py:183
+#: auth/password_dialog.py:194
 msgid "• Continue without password protection (less secure)"
 msgstr "• Продолжить без защиты паролем (менее безопасно)"
 
-#: auth/password_dialog.py:192 auth/password_dialog.py:213
+#: auth/password_dialog.py:211 auth/password_dialog.py:232
 msgid "Configure Protection"
 msgstr "Настройка защиты"
 
-#: auth/password_dialog.py:196
+#: auth/password_dialog.py:215
 msgid "Continue Without Protection"
 msgstr "Продолжайте работать без защиты"
 
-#: auth/password_dialog.py:204
+#: auth/password_dialog.py:223
 msgid ""
 "Password protection is required for this action but is not currently "
 "configured."
@@ -2241,16 +2255,14 @@ msgstr "Исключение обратных косых символов в п�
 msgid " etc."
 msgstr " и т.д."
 
-#: app.py:848
-msgid ""
-"A directory with a large number of files or a directory with a fair-sized "
-"number of files on external storage was detected, which may result in a slow"
-" load time. Please confirm you want to load the full directory."
-msgstr ""
-"Обнаружен каталог с большим количеством файлов или каталог с достаточно "
-"большим количеством файлов на внешнем носителе, что может привести к "
-"замедлению загрузки. Подтвердите, что вы хотите загрузить весь каталог."
+#: auth/password_admin_window.py:150
+msgid "Security Advice Settings"
+msgstr "Настройки рекомендаций по безопасности"
 
-#: app.py:849
-msgid "Large Directory Detected: {0}"
-msgstr "Обнаружен большой каталог: {0}"
+#: auth/password_admin_window.py:156
+msgid "Show security advice when no password is configured"
+msgstr "Показывать советы по безопасности, если пароль не настроен"
+
+#: auth/password_dialog.py:201
+msgid "Don't show this security advice again"
+msgstr "Не показывать больше это предупреждение о безопасности"

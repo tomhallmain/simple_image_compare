@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-27 16:52-0400\n"
-"PO-Revision-Date: 2025-07-27 16:52-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-07-30 20:14-0400\n"
+"PO-Revision-Date: 2025-07-30 20:14-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: en Team <<EMAIL>>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:97 app.py:930 app.py:2020
+#: app.py:97 app.py:931 app.py:2021
 msgid " Simple Image Compare "
 msgstr " Simple Image Compare "
 
@@ -20,305 +20,319 @@ msgstr " Simple Image Compare "
 msgid "Theme switched to {0}."
 msgstr "Theme switched to {0}."
 
-#: app.py:246 app.py:461 app.py:959 compare/compare_wrapper.py:480
+#: app.py:247 app.py:462 app.py:960 compare/compare_wrapper.py:480
 msgid "Set a directory to run comparison."
 msgstr "Set a directory to run comparison."
 
-#: app.py:253
+#: app.py:254
 msgid "Toggle theme"
 msgstr "Toggle theme"
 
-#: app.py:254
+#: app.py:255
 msgid "Set directory"
 msgstr "Set directory"
 
-#: app.py:255
+#: app.py:256
 msgid "Add dirpath..."
 msgstr "Add dirpath..."
 
-#: app.py:258
+#: app.py:259
 msgid "Set search file"
 msgstr "Set search file"
 
-#: app.py:266
+#: app.py:267
 msgid "Search text (embedding mode)"
 msgstr "Search text (embedding mode)"
 
-#: app.py:277
+#: app.py:278
 msgid "Compare mode"
 msgstr "Compare mode"
 
-#: app.py:295
+#: app.py:296
 msgid "Compare faces"
 msgstr "Compare faces"
 
-#: app.py:299
+#: app.py:300
 msgid "Overwrite cache"
 msgstr "Overwrite cache"
 
-#: app.py:303
+#: app.py:304
 msgid "Store checkpoints"
 msgstr "Store checkpoints"
 
-#: app.py:307
+#: app.py:308
 msgid "Max files to compare"
 msgstr "Max files to compare"
 
-#: app.py:313
+#: app.py:314
 msgid "Filter files by glob pattern"
 msgstr "Filter files by glob pattern"
 
-#: app.py:320
+#: app.py:321
 msgid "Browsing mode - Sort by"
 msgstr "Browsing mode - Sort by"
 
-#: app.py:327
+#: app.py:328
 msgid "Recurse subdirectories"
 msgstr "Recurse subdirectories"
 
-#: app.py:332
+#: app.py:333
 msgid "Image resize to full window"
 msgstr "Image resize to full window"
 
-#: app.py:336
+#: app.py:337
 msgid "Search only return closest"
 msgstr "Search only return closest"
 
-#: app.py:343
+#: app.py:344
 msgid "Run image compare"
 msgstr "Run image compare"
 
-#: app.py:345
+#: app.py:346
 msgid "Find duplicates"
 msgstr "Find duplicates"
 
-#: app.py:347 image/image_details.py:65
+#: app.py:348 image/image_details.py:65
 msgid "Image details"
 msgstr "Image details"
 
-#: app.py:358
+#: app.py:359
 msgid "Search current image"
 msgstr "Search current image"
 
-#: app.py:359 utils/help_and_config.py:78
+#: app.py:360 utils/help_and_config.py:78
 msgid "Open image location"
 msgstr "Open image location"
 
-#: app.py:360
+#: app.py:361
 msgid "Copy image path"
 msgstr "Copy image path"
 
-#: app.py:361
+#: app.py:362
 msgid "---- DELETE ----"
 msgstr "---- DELETE ----"
 
-#: app.py:512
+#: app.py:513
 msgid "Confirm Quit"
 msgstr "Confirm Quit"
 
-#: app.py:512
+#: app.py:513
 msgid "Would you like to quit the application?"
 msgstr "Would you like to quit the application?"
 
-#: app.py:612
+#: app.py:613
 msgid "Ended slideshows"
 msgstr "Ended slideshows"
 
-#: app.py:665 app.py:1803 app.py:1865
+#: app.py:666 app.py:1804 app.py:1866
 msgid "Warning"
 msgstr "Warning"
 
-#: app.py:665
+#: app.py:666
 msgid "No files found in directory after refresh."
 msgstr "No files found in directory after refresh."
 
-#: app.py:697
+#: app.py:698
 msgid "Slideshow for new images started"
 msgstr "Slideshow for new images started"
 
-#: app.py:699
+#: app.py:700
 msgid "Slideshow started"
 msgstr "Slideshow started"
 
-#: app.py:702
+#: app.py:703
 msgid "Slideshows ended"
 msgstr "Slideshows ended"
 
-#: app.py:715
+#: app.py:716
 msgid "Browsing mode set."
 msgstr "Browsing mode set."
 
-#: app.py:759 utils/constants.py:292
+#: app.py:760 utils/constants.py:292
 msgid "View Media Details"
 msgstr "View Media Details"
 
-#: app.py:760
+#: app.py:761
 msgid "Hide Media"
 msgstr "Hide Media"
 
-#: app.py:761
+#: app.py:762
 msgid "Remove from Marks"
 msgstr "Remove from Marks"
 
-#: app.py:761
+#: app.py:762
 msgid "Add to Marks"
 msgstr "Add to Marks"
 
-#: app.py:763
+#: app.py:764
 msgid "Remove from Favorites"
 msgstr "Remove from Favorites"
 
-#: app.py:763
+#: app.py:764
 msgid "Add to Favorites"
 msgstr "Add to Favorites"
 
-#: app.py:766
+#: app.py:767
 msgid "Open in GIMP"
 msgstr "Open in GIMP"
 
-#: app.py:767 image/image_details.py:191 utils/constants.py:298
+#: app.py:768 image/image_details.py:191 utils/constants.py:298
 msgid "Run Image Generation"
 msgstr "Run Image Generation"
 
-#: app.py:768
+#: app.py:769
 msgid "Show Source Image"
 msgstr "Show Source Image"
 
-#: app.py:769
+#: app.py:770
 msgid "Find Related Images"
 msgstr "Find Related Images"
 
-#: app.py:770
+#: app.py:771
 msgid "Set Marks from Downstream Related Images"
 msgstr "Set Marks from Downstream Related Images"
 
-#: app.py:772
+#: app.py:773
 msgid "Set Current Image as Search Image"
 msgstr "Set Current Image as Search Image"
 
-#: app.py:773
+#: app.py:774
 msgid "Add Current Image to Negative Search"
 msgstr "Add Current Image to Negative Search"
 
-#: app.py:774
+#: app.py:775
 msgid "Run Refacdir"
 msgstr "Run Refacdir"
 
-#: app.py:786
+#: app.py:787
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(Open this image as part of a directory to see index details.)"
 
-#: app.py:820 app.py:1529
+#: app.py:821 app.py:1530
 msgid "Many Files"
 msgstr "Many Files"
 
-#: app.py:879
+#: app.py:849
+msgid ""
+"A directory with a large number of files or a directory with a fair-sized "
+"number of files on external storage was detected, which may result in a slow"
+" load time. Please confirm you want to load the full directory."
+msgstr ""
+"A directory with a large number of files or a directory with a fair-sized "
+"number of files on external storage was detected, which may result in a slow"
+" load time. Please confirm you want to load the full directory."
+
+#: app.py:850
+msgid "Large Directory Detected: {0}"
+msgstr "Large Directory Detected: {0}"
+
+#: app.py:880
 msgid "No downstream related image(s) found in {0}"
 msgstr "No downstream related image(s) found in {0}"
 
-#: app.py:901
+#: app.py:902
 msgid "{0} file marks set"
 msgstr "{0} file marks set"
 
-#: app.py:907
+#: app.py:908
 msgid "Help and Config"
 msgstr "Help and Config"
 
-#: app.py:1002
+#: app.py:1003
 msgid "Set Image Comparison Directory"
 msgstr "Set Image Comparison Directory"
 
-#: app.py:1040
+#: app.py:1041
 msgid "Counter limit must be an integer value."
 msgstr "Counter limit must be an integer value."
 
-#: app.py:1040 app.py:1056
+#: app.py:1041 app.py:1057
 msgid "Invalid Setting"
 msgstr "Invalid Setting"
 
-#: app.py:1056
+#: app.py:1057
 msgid "No image selected."
 msgstr "No image selected."
 
-#: app.py:1095
+#: app.py:1096
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 
-#: app.py:1099
+#: app.py:1100
 msgid "Select image file"
 msgstr "Select image file"
 
-#: app.py:1128
+#: app.py:1129
 msgid "Somehow, the search file is invalid"
 msgstr "Somehow, the search file is invalid"
 
-#: app.py:1214 app.py:1239
+#: app.py:1215 app.py:1240
 msgid "Failed to get active image filepath"
 msgstr "Failed to get active image filepath"
 
-#: app.py:1324
+#: app.py:1325
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% complete"
 
-#: app.py:1330
+#: app.py:1331
 msgid "Confirm comparison"
 msgstr "Confirm comparison"
 
-#: app.py:1331
+#: app.py:1332
 msgid "No base directory has been set, will use current base directory of "
 msgstr "No base directory has been set, will use current base directory of "
 
-#: app.py:1332
+#: app.py:1333
 msgid "Are you sure you want to proceed?"
 msgstr "Are you sure you want to proceed?"
 
-#: app.py:1353
+#: app.py:1354
 msgid "Error running compare"
 msgstr "Error running compare"
 
-#: app.py:1386
+#: app.py:1387
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "Delete lock after slideshow\n"
 "transition prevented adding mark"
 
-#: app.py:1397
+#: app.py:1398
 msgid "Mark removed. Remaining: {0}"
 msgstr "Mark removed. Remaining: {0}"
 
-#: app.py:1401
+#: app.py:1402
 msgid "Mark added. Total set: {0}"
 msgstr "Mark added. Total set: {0}"
 
-#: app.py:1418
+#: app.py:1419
 msgid "Marks added. Total set: {0}"
 msgstr "Marks added. Total set: {0}"
 
-#: app.py:1427
+#: app.py:1428
 msgid "First sorted mark"
 msgstr "First sorted mark"
 
-#: app.py:1434
+#: app.py:1435
 msgid "Only one marked file set."
 msgstr "Only one marked file set."
 
-#: app.py:1446
+#: app.py:1447
 msgid "Including marks: {0}"
 msgstr "Including marks: {0}"
 
-#: app.py:1454
+#: app.py:1455
 msgid "Move {0} Marked File(s)"
 msgstr "Move {0} Marked File(s)"
 
-#: app.py:1493
+#: app.py:1494
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0} marks have been set (>={1} expected).\n"
 "Use Shift+M to set a mark."
 
-#: app.py:1529
+#: app.py:1530
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
@@ -326,49 +340,49 @@ msgstr ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 
-#: app.py:1544
+#: app.py:1545
 msgid "Prevalidations now running"
 msgstr "Prevalidations now running"
 
-#: app.py:1544
+#: app.py:1545
 msgid "Prevalidations turned off"
 msgstr "Prevalidations turned off"
 
-#: app.py:1576
+#: app.py:1577
 msgid "File not found"
 msgstr "File not found"
 
-#: app.py:1576
+#: app.py:1577
 msgid "No file was found for the search text: \"{0}\""
 msgstr "No file was found for the search text: \"{0}\""
 
-#: app.py:1590
+#: app.py:1591
 msgid "No image selected"
 msgstr "No image selected"
 
-#: app.py:1590
+#: app.py:1591
 msgid "No image was selected for comparison"
 msgstr "No image was selected for comparison"
 
-#: app.py:1604
+#: app.py:1605
 msgid "No Text Search Presets Found"
 msgstr "No Text Search Presets Found"
 
-#: app.py:1605
+#: app.py:1606
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 "No text embedding search presets found. Set them in the config.json file."
 
-#: app.py:1704
+#: app.py:1705
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "Failed to open location of current file, unable to get valid filepath"
 
-#: app.py:1715
+#: app.py:1716
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "Failed to open current file in GIMP, unable to get valid filepath"
 
-#: app.py:1731
+#: app.py:1732
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -376,33 +390,33 @@ msgstr ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
 
-#: app.py:1736
+#: app.py:1737
 msgid "Cleared all hidden images."
 msgstr "Cleared all hidden images."
 
-#: app.py:1744
+#: app.py:1745
 msgid "DELETE_LOCK"
 msgstr ""
 "Delete lock after slideshow\n"
 "transition prevented deletion"
 
-#: app.py:1762
+#: app.py:1763
 msgid "Invalid action, no files found to delete"
 msgstr "Invalid action, no files found to delete"
 
-#: app.py:1765
+#: app.py:1766
 msgid "Invalid action, search image not found"
 msgstr "Invalid action, search image not found"
 
-#: app.py:1780
+#: app.py:1781
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "Failed to delete current file, unable to get valid filepath"
 
-#: app.py:1785
+#: app.py:1786
 msgid "Removing file: {0}"
 msgstr "Removing file: {0}"
 
-#: app.py:1804
+#: app.py:1805
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -410,50 +424,50 @@ msgstr ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 
-#: app.py:1821
+#: app.py:1822
 msgid "Invalid target filepath for replacement: "
 msgstr "Invalid target filepath for replacement: "
 
-#: app.py:1825
+#: app.py:1826
 msgid "Moved search image to "
 msgstr "Moved search image to "
 
-#: app.py:1863
+#: app.py:1864
 msgid "Running image gen: "
 msgstr "Running image gen: "
 
-#: app.py:1865
+#: app.py:1866
 msgid "Error running image generation:"
 msgstr "Error running image generation:"
 
-#: app.py:1873
+#: app.py:1874
 msgid "Running refacdir"
 msgstr "Running refacdir"
 
-#: app.py:1878 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: app.py:1879 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "Error"
 
-#: app.py:1958
+#: app.py:1959
 msgid "GROUP_DETAILS"
 msgstr ""
 "Group {0} of {1}\n"
 "Size: {2}"
 
-#: app.py:1962
+#: app.py:1963
 msgid "No image files found"
 msgstr "No image files found"
 
-#: app.py:1964
+#: app.py:1965
 msgid "1 image file found"
 msgstr "1 image file found"
 
-#: app.py:1965
+#: app.py:1966
 msgid "{0} image files found"
 msgstr "{0} image files found"
 
-#: app.py:1967
+#: app.py:1968
 msgid "(filtered)"
 msgstr "(filtered)"
 
@@ -465,22 +479,22 @@ msgstr "Application Password Required"
 msgid "A password is required to open this application."
 msgstr "A password is required to open this application."
 
-#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:134
 msgid "Password:"
 msgstr "Password:"
 
-#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:147
 msgid "OK"
 msgstr "OK"
 
-#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
-#: auth/password_dialog.py:139 auth/password_dialog.py:200
-#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:448
+#: auth/password_dialog.py:150 auth/password_dialog.py:219
+#: auth/password_dialog.py:236 files/pdf_options_window.py:78
 #: files/type_configuration_window.py:179
 msgid "Cancel"
 msgstr "Cancel"
 
-#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:247
 msgid "Incorrect password"
 msgstr "Incorrect password"
 
@@ -488,92 +502,92 @@ msgstr "Incorrect password"
 msgid "Password Administration"
 msgstr "Password Administration"
 
-#: auth/password_admin_window.py:67
+#: auth/password_admin_window.py:70
 msgid "Password Protection Settings"
 msgstr "Password Protection Settings"
 
-#: auth/password_admin_window.py:79
+#: auth/password_admin_window.py:82
 msgid "Protected Actions"
 msgstr "Protected Actions"
 
-#: auth/password_admin_window.py:85
+#: auth/password_admin_window.py:88
 msgid "Select which actions require password authentication:"
 msgstr "Select which actions require password authentication:"
 
-#: auth/password_admin_window.py:101
+#: auth/password_admin_window.py:104
 msgid "(Always protected if a password is set)"
 msgstr "(Always protected if a password is set)"
 
-#: auth/password_admin_window.py:120
+#: auth/password_admin_window.py:123
 msgid "Session Timeout Settings"
 msgstr "Session Timeout Settings"
 
-#: auth/password_admin_window.py:126
+#: auth/password_admin_window.py:129
 msgid "Enable session timeout (remember password for a period)"
 msgstr "Enable session timeout (remember password for a period)"
 
-#: auth/password_admin_window.py:138
+#: auth/password_admin_window.py:141
 msgid "Session timeout duration (minutes):"
 msgstr "Session timeout duration (minutes):"
 
-#: auth/password_admin_window.py:147
+#: auth/password_admin_window.py:164
 msgid "Password Setup"
 msgstr "Password Setup"
 
-#: auth/password_admin_window.py:157
+#: auth/password_admin_window.py:174
 msgid "Password is configured"
 msgstr "Password is configured"
 
-#: auth/password_admin_window.py:163 auth/password_admin_window.py:331
-#: auth/password_admin_window.py:347 auth/password_admin_window.py:406
+#: auth/password_admin_window.py:180 auth/password_admin_window.py:370
+#: auth/password_admin_window.py:386 auth/password_admin_window.py:445
 msgid "Change Password"
 msgstr "Change Password"
 
-#: auth/password_admin_window.py:168 auth/password_admin_window.py:419
+#: auth/password_admin_window.py:185 auth/password_admin_window.py:458
 msgid "Remove Password"
 msgstr "Remove Password"
 
-#: auth/password_admin_window.py:173
+#: auth/password_admin_window.py:190
 msgid "Set up a password to enable protection:"
 msgstr "Set up a password to enable protection:"
 
-#: auth/password_admin_window.py:183 auth/password_admin_window.py:363
+#: auth/password_admin_window.py:200 auth/password_admin_window.py:402
 msgid "New Password:"
 msgstr "New Password:"
 
-#: auth/password_admin_window.py:196
+#: auth/password_admin_window.py:213
 msgid "Confirm Password:"
 msgstr "Confirm Password:"
 
-#: auth/password_admin_window.py:205
+#: auth/password_admin_window.py:222
 msgid "Set Password"
 msgstr "Set Password"
 
-#: auth/password_admin_window.py:215 auth/password_admin_window.py:261
+#: auth/password_admin_window.py:232 auth/password_admin_window.py:291
 msgid "Reset to Defaults"
 msgstr "Reset to Defaults"
 
-#: auth/password_admin_window.py:219 auth/password_admin_window.py:281
+#: auth/password_admin_window.py:236 auth/password_admin_window.py:316
 msgid "Set to Current"
 msgstr "Set to Current"
 
-#: auth/password_admin_window.py:223
+#: auth/password_admin_window.py:240
 msgid "Export Cache as JSON"
 msgstr "Export Cache as JSON"
 
-#: auth/password_admin_window.py:227
+#: auth/password_admin_window.py:244
 msgid "Save Settings"
 msgstr "Save Settings"
 
-#: auth/password_admin_window.py:231
+#: auth/password_admin_window.py:248
 msgid "Close"
 msgstr "Close"
 
-#: auth/password_admin_window.py:255
+#: auth/password_admin_window.py:285
 msgid "Password protection settings saved."
 msgstr "Password protection settings saved."
 
-#: auth/password_admin_window.py:262
+#: auth/password_admin_window.py:292
 msgid ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
@@ -581,11 +595,11 @@ msgstr ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
 
-#: auth/password_admin_window.py:276
+#: auth/password_admin_window.py:311
 msgid "Settings reset to defaults."
 msgstr "Settings reset to defaults."
 
-#: auth/password_admin_window.py:282
+#: auth/password_admin_window.py:317
 msgid ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
@@ -593,55 +607,55 @@ msgstr ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
 
-#: auth/password_admin_window.py:297
+#: auth/password_admin_window.py:335
 msgid "Settings restored to current saved state."
 msgstr "Settings restored to current saved state."
 
-#: auth/password_admin_window.py:306
+#: auth/password_admin_window.py:344
 msgid "Please enter a password."
 msgstr "Please enter a password."
 
-#: auth/password_admin_window.py:310
+#: auth/password_admin_window.py:348
 msgid "Passwords do not match."
 msgstr "Passwords do not match."
 
-#: auth/password_admin_window.py:314 auth/password_admin_window.py:397
+#: auth/password_admin_window.py:352 auth/password_admin_window.py:436
 msgid "Password must be at least 6 characters long."
 msgstr "Password must be at least 6 characters long."
 
-#: auth/password_admin_window.py:318
+#: auth/password_admin_window.py:357
 msgid "Password set successfully."
 msgstr "Password set successfully."
 
-#: auth/password_admin_window.py:325
+#: auth/password_admin_window.py:364
 msgid "Failed to set password."
 msgstr "Failed to set password."
 
-#: auth/password_admin_window.py:354
+#: auth/password_admin_window.py:393
 msgid "Current Password:"
 msgstr "Current Password:"
 
-#: auth/password_admin_window.py:372
+#: auth/password_admin_window.py:411
 msgid "Confirm New Password:"
 msgstr "Confirm New Password:"
 
-#: auth/password_admin_window.py:389
+#: auth/password_admin_window.py:428
 msgid "Current password is incorrect."
 msgstr "Current password is incorrect."
 
-#: auth/password_admin_window.py:393
+#: auth/password_admin_window.py:432
 msgid "New passwords do not match."
 msgstr "New passwords do not match."
 
-#: auth/password_admin_window.py:401
+#: auth/password_admin_window.py:440
 msgid "Password changed successfully."
 msgstr "Password changed successfully."
 
-#: auth/password_admin_window.py:404
+#: auth/password_admin_window.py:443
 msgid "Failed to change password."
 msgstr "Failed to change password."
 
-#: auth/password_admin_window.py:420
+#: auth/password_admin_window.py:459
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
@@ -649,63 +663,63 @@ msgstr ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
 
-#: auth/password_admin_window.py:425
+#: auth/password_admin_window.py:465
 msgid "Password removed successfully."
 msgstr "Password removed successfully."
 
-#: auth/password_admin_window.py:429
+#: auth/password_admin_window.py:469
 msgid "Failed to remove password."
 msgstr "Failed to remove password."
 
-#: auth/password_admin_window.py:464
+#: auth/password_admin_window.py:504
 msgid "Cache exported as JSON to:"
 msgstr "Cache exported as JSON to:"
 
-#: auth/password_admin_window.py:466
+#: auth/password_admin_window.py:506
 msgid "Failed to export cache as JSON:"
 msgstr "Failed to export cache as JSON:"
 
-#: auth/password_dialog.py:38 auth/password_dialog.py:93
+#: auth/password_dialog.py:40 auth/password_dialog.py:104
 msgid "Password Required"
 msgstr "Password Required"
 
-#: auth/password_dialog.py:38
+#: auth/password_dialog.py:40
 msgid "Password Protection"
 msgstr "Password Protection"
 
-#: auth/password_dialog.py:100
+#: auth/password_dialog.py:111
 msgid "Password required for: {0}"
 msgstr "Password required for: {0}"
 
-#: auth/password_dialog.py:145
+#: auth/password_dialog.py:156
 msgid "Password Protection Available"
 msgstr "Password Protection Available"
 
-#: auth/password_dialog.py:152
+#: auth/password_dialog.py:163
 msgid "This action requires password protection: {0}"
 msgstr "This action requires password protection: {0}"
 
-#: auth/password_dialog.py:168
+#: auth/password_dialog.py:179
 msgid "Password protection is not currently configured. You can:"
 msgstr "Password protection is not currently configured. You can:"
 
-#: auth/password_dialog.py:178
+#: auth/password_dialog.py:189
 msgid "• Configure password protection for sensitive actions"
 msgstr "• Configure password protection for sensitive actions"
 
-#: auth/password_dialog.py:183
+#: auth/password_dialog.py:194
 msgid "• Continue without password protection (less secure)"
 msgstr "• Continue without password protection (less secure)"
 
-#: auth/password_dialog.py:192 auth/password_dialog.py:213
+#: auth/password_dialog.py:211 auth/password_dialog.py:232
 msgid "Configure Protection"
 msgstr "Configure Protection"
 
-#: auth/password_dialog.py:196
+#: auth/password_dialog.py:215
 msgid "Continue Without Protection"
 msgstr "Continue Without Protection"
 
-#: auth/password_dialog.py:204
+#: auth/password_dialog.py:223
 msgid ""
 "Password protection is required for this action but is not currently "
 "configured."
@@ -2220,16 +2234,14 @@ msgstr "Escape Backslash Filepaths"
 msgid " etc."
 msgstr " etc."
 
-#: app.py:848
-msgid ""
-"A directory with a large number of files or a directory with a fair-sized "
-"number of files on external storage was detected, which may result in a slow"
-" load time. Please confirm you want to load the full directory."
-msgstr ""
-"A directory with a large number of files or a directory with a fair-sized "
-"number of files on external storage was detected, which may result in a slow"
-" load time. Please confirm you want to load the full directory."
+#: auth/password_admin_window.py:150
+msgid "Security Advice Settings"
+msgstr "Security Advice Settings"
 
-#: app.py:849
-msgid "Large Directory Detected: {0}"
-msgstr "Large Directory Detected: {0}"
+#: auth/password_admin_window.py:156
+msgid "Show security advice when no password is configured"
+msgstr "Show security advice when no password is configured"
+
+#: auth/password_dialog.py:201
+msgid "Don't show this security advice again"
+msgstr "Don't show this security advice again"

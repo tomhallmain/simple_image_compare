@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-27 16:52-0400\n"
-"PO-Revision-Date: 2025-07-27 16:52-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-07-30 20:14-0400\n"
+"PO-Revision-Date: 2025-07-30 20:14-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:97 app.py:930 app.py:2020
+#: app.py:97 app.py:931 app.py:2021
 msgid " Simple Image Compare "
 msgstr " 간단한 이미지 비교 "
 
@@ -20,351 +20,364 @@ msgstr " 간단한 이미지 비교 "
 msgid "Theme switched to {0}."
 msgstr "테마는 {0}에 전환."
 
-#: app.py:246 app.py:461 app.py:959 compare/compare_wrapper.py:480
+#: app.py:247 app.py:462 app.py:960 compare/compare_wrapper.py:480
 msgid "Set a directory to run comparison."
 msgstr "비교를 실행하려면 디렉토리를 설정합니다."
 
-#: app.py:253
+#: app.py:254
 msgid "Toggle theme"
 msgstr "관련 기사"
 
-#: app.py:254
+#: app.py:255
 msgid "Set directory"
 msgstr "설정 디렉토리"
 
-#: app.py:255
+#: app.py:256
 msgid "Add dirpath..."
 msgstr "디렉토리 경로 추가..."
 
-#: app.py:258
+#: app.py:259
 msgid "Set search file"
 msgstr "연락처"
 
-#: app.py:266
+#: app.py:267
 msgid "Search text (embedding mode)"
 msgstr "텍스트 검색(임베딩 모드)"
 
-#: app.py:277
+#: app.py:278
 msgid "Compare mode"
 msgstr "비교 모드"
 
-#: app.py:295
+#: app.py:296
 msgid "Compare faces"
 msgstr "자주 묻는 질문"
 
-#: app.py:299
+#: app.py:300
 msgid "Overwrite cache"
 msgstr "캐시를 덮어"
 
-#: app.py:303
+#: app.py:304
 msgid "Store checkpoints"
 msgstr "매장 찾기"
 
-#: app.py:307
+#: app.py:308
 msgid "Max files to compare"
 msgstr "최대 파일 비교"
 
-#: app.py:313
+#: app.py:314
 msgid "Filter files by glob pattern"
 msgstr "글로브 패턴으로 파일 필터링"
 
-#: app.py:320
+#: app.py:321
 msgid "Browsing mode - Sort by"
 msgstr "브라우징 모드 - 정렬 기준"
 
-#: app.py:327
+#: app.py:328
 msgid "Recurse subdirectories"
 msgstr "하위 디렉터리 재귀"
 
-#: app.py:332
+#: app.py:333
 msgid "Image resize to full window"
 msgstr "전체 창에 이미지 크기"
 
-#: app.py:336
+#: app.py:337
 msgid "Search only return closest"
 msgstr "자주 묻는 질문"
 
-#: app.py:343
+#: app.py:344
 msgid "Run image compare"
 msgstr "이미지 비교 실행"
 
-#: app.py:345
+#: app.py:346
 msgid "Find duplicates"
 msgstr "중복 찾기"
 
-#: app.py:347 image/image_details.py:65
+#: app.py:348 image/image_details.py:65
 msgid "Image details"
 msgstr "이미지 세부 정보"
 
-#: app.py:358
+#: app.py:359
 msgid "Search current image"
 msgstr "현재 이미지 검색"
 
-#: app.py:359 utils/help_and_config.py:78
+#: app.py:360 utils/help_and_config.py:78
 msgid "Open image location"
 msgstr "본문 바로가기"
 
-#: app.py:360
+#: app.py:361
 msgid "Copy image path"
 msgstr "본문 바로가기"
 
-#: app.py:361
+#: app.py:362
 msgid "---- DELETE ----"
 msgstr "---- 종료 ----"
 
-#: app.py:512
+#: app.py:513
 msgid "Confirm Quit"
 msgstr "자주 묻는 질문"
 
-#: app.py:512
+#: app.py:513
 msgid "Would you like to quit the application?"
 msgstr "응용 프로그램을 종료하시겠습니까?"
 
-#: app.py:612
+#: app.py:613
 msgid "Ended slideshows"
 msgstr "슬라이드 쇼 종료"
 
-#: app.py:665 app.py:1803 app.py:1865
+#: app.py:666 app.py:1804 app.py:1866
 msgid "Warning"
 msgstr "경고"
 
-#: app.py:665
+#: app.py:666
 msgid "No files found in directory after refresh."
 msgstr "새로 고침 후 디렉토리에 파일을 찾을 수 없습니다."
 
-#: app.py:697
+#: app.py:698
 msgid "Slideshow for new images started"
 msgstr "새 이미지 슬라이드쇼 시작"
 
-#: app.py:699
+#: app.py:700
 msgid "Slideshow started"
 msgstr "슬라이드쇼 시작"
 
-#: app.py:702
+#: app.py:703
 msgid "Slideshows ended"
 msgstr "슬라이드 쇼 종료"
 
-#: app.py:715
+#: app.py:716
 msgid "Browsing mode set."
 msgstr "검색 모드 설정."
 
-#: app.py:759 utils/constants.py:292
+#: app.py:760 utils/constants.py:292
 msgid "View Media Details"
 msgstr "미디어 세부 정보 보기"
 
-#: app.py:760
+#: app.py:761
 msgid "Hide Media"
 msgstr "미디어 숨기기"
 
-#: app.py:761
+#: app.py:762
 msgid "Remove from Marks"
 msgstr "마크에서 제거"
 
-#: app.py:761
+#: app.py:762
 msgid "Add to Marks"
 msgstr "마크에 추가하기"
 
-#: app.py:763
+#: app.py:764
 msgid "Remove from Favorites"
 msgstr "즐겨찾기에서 제거"
 
-#: app.py:763
+#: app.py:764
 msgid "Add to Favorites"
 msgstr "즐겨찾기에 추가"
 
-#: app.py:766
+#: app.py:767
 msgid "Open in GIMP"
 msgstr "GIMP에서 열기"
 
-#: app.py:767 image/image_details.py:191 utils/constants.py:298
+#: app.py:768 image/image_details.py:191 utils/constants.py:298
 msgid "Run Image Generation"
 msgstr "이미지 생성"
 
-#: app.py:768
+#: app.py:769
 msgid "Show Source Image"
 msgstr "원본 이미지 표시"
 
-#: app.py:769
+#: app.py:770
 msgid "Find Related Images"
 msgstr "관련 이미지 찾기"
 
-#: app.py:770
+#: app.py:771
 msgid "Set Marks from Downstream Related Images"
 msgstr "하류 관련 이미지에서 표시 설정"
 
-#: app.py:772
+#: app.py:773
 msgid "Set Current Image as Search Image"
 msgstr "현재 이미지를 검색 이미지로 설정"
 
-#: app.py:773
+#: app.py:774
 msgid "Add Current Image to Negative Search"
 msgstr "현재 이미지를 음수 검색에 추가하기"
 
-#: app.py:774
+#: app.py:775
 msgid "Run Refacdir"
 msgstr "RefacDir 실행"
 
-#: app.py:786
+#: app.py:787
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(인덱스 세부 정보를 보려면 이 이미지를 디렉토리의 일부로 엽니다.)"
 
-#: app.py:820 app.py:1529
+#: app.py:821 app.py:1530
 msgid "Many Files"
 msgstr "많은 파일"
 
-#: app.py:879
+#: app.py:849
+msgid ""
+"A directory with a large number of files or a directory with a fair-sized "
+"number of files on external storage was detected, which may result in a slow"
+" load time. Please confirm you want to load the full directory."
+msgstr ""
+"외부 저장 장치에 파일 수가 많은 디렉토리 또는 중간 규모의 파일 수를 가진 디렉토리가 감지되었습니다. 이 경우 로드 시간이 느려질 수 "
+"있습니다. 전체 디렉토리를 로드하시겠습니까?"
+
+#: app.py:850
+msgid "Large Directory Detected: {0}"
+msgstr "대용량 디렉토리 감지: {0}"
+
+#: app.py:880
 msgid "No downstream related image(s) found in {0}"
 msgstr "{0} 에서 다운스트림 관련 이미지를 찾을 수 없습니다."
 
-#: app.py:901
+#: app.py:902
 msgid "{0} file marks set"
 msgstr "{0} 파일 표시 세트"
 
-#: app.py:907
+#: app.py:908
 msgid "Help and Config"
 msgstr "도움말 및 불만"
 
-#: app.py:1002
+#: app.py:1003
 msgid "Set Image Comparison Directory"
 msgstr "이미지 비교 디렉토리 설정"
 
-#: app.py:1040
+#: app.py:1041
 msgid "Counter limit must be an integer value."
 msgstr "카운터 제한은 정수 값이어야 합니다."
 
-#: app.py:1040 app.py:1056
+#: app.py:1041 app.py:1057
 msgid "Invalid Setting"
 msgstr "잘못된 설정"
 
-#: app.py:1056
+#: app.py:1057
 msgid "No image selected."
 msgstr "선택된 이미지 없음."
 
-#: app.py:1095
+#: app.py:1096
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "텍스트 임베딩을 검색하려면 비교 모드를 임베딩 모드로 설정해야 합니다."
 
-#: app.py:1099
+#: app.py:1100
 msgid "Select image file"
 msgstr "이미지 파일 선택"
 
-#: app.py:1128
+#: app.py:1129
 msgid "Somehow, the search file is invalid"
 msgstr "Somehow, 검색 파일이 잘못되었습니다."
 
-#: app.py:1214 app.py:1239
+#: app.py:1215 app.py:1240
 msgid "Failed to get active image filepath"
 msgstr "Active image filepath를 얻는 실패"
 
-#: app.py:1324
+#: app.py:1325
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% 완료"
 
-#: app.py:1330
+#: app.py:1331
 msgid "Confirm comparison"
 msgstr "자주 묻는 질문"
 
-#: app.py:1331
+#: app.py:1332
 msgid "No base directory has been set, will use current base directory of "
 msgstr "기본 디렉터리가 설정되지 않은 경우 현재 기본 디렉터리를 사용합니다: "
 
-#: app.py:1332
+#: app.py:1333
 msgid "Are you sure you want to proceed?"
 msgstr "진행하시겠습니까?"
 
-#: app.py:1353
+#: app.py:1354
 msgid "Error running compare"
 msgstr "오류 실행 비교"
 
-#: app.py:1386
+#: app.py:1387
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "슬라이드쇼 후 잠금 삭제\n"
 "전환으로 마크 추가 방지"
 
-#: app.py:1397
+#: app.py:1398
 msgid "Mark removed. Remaining: {0}"
 msgstr "마크가 제거되었습니다. 남아있음: {0}"
 
-#: app.py:1401
+#: app.py:1402
 msgid "Mark added. Total set: {0}"
 msgstr "마크가 추가되었습니다. 총 집합입니다: {0}"
 
-#: app.py:1418
+#: app.py:1419
 msgid "Marks added. Total set: {0}"
 msgstr "마크가 추가되었습니다. 총 집합입니다: {0}"
 
-#: app.py:1427
+#: app.py:1428
 msgid "First sorted mark"
 msgstr "첫 번째 정렬 마크"
 
-#: app.py:1434
+#: app.py:1435
 msgid "Only one marked file set."
 msgstr "1개의 표시된 파일 세트만."
 
-#: app.py:1446
+#: app.py:1447
 msgid "Including marks: {0}"
 msgstr "마크 포함: {0}"
 
-#: app.py:1454
+#: app.py:1455
 msgid "Move {0} Marked File(s)"
 msgstr "{0} 개의 표시된 파일을 이동하시겠습니까?"
 
-#: app.py:1493
+#: app.py:1494
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0} 마크가 설정되었습니다(>={1} 예상).\n"
 "Shift+M을 사용하여 마크를 설정합니다."
 
-#: app.py:1529
+#: app.py:1530
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "디렉터리 {0}에서 모든 사전 유효성 검사를 실행하시겠습니까? 시간이 걸릴 수 있습니다."
 
-#: app.py:1544
+#: app.py:1545
 msgid "Prevalidations now running"
 msgstr "지금 실행"
 
-#: app.py:1544
+#: app.py:1545
 msgid "Prevalidations turned off"
 msgstr "사전 검증"
 
-#: app.py:1576
+#: app.py:1577
 msgid "File not found"
 msgstr "찾을 수 없음"
 
-#: app.py:1576
+#: app.py:1577
 msgid "No file was found for the search text: \"{0}\""
 msgstr "검색 텍스트에 대한 파일을 찾을 수 없습니다: \"{0}”"
 
-#: app.py:1590
+#: app.py:1591
 msgid "No image selected"
 msgstr "선택 없음"
 
-#: app.py:1590
+#: app.py:1591
 msgid "No image was selected for comparison"
 msgstr "이미지는 비교를 위해 선정되었습니다"
 
-#: app.py:1604
+#: app.py:1605
 msgid "No Text Search Presets Found"
 msgstr "텍스트 검색 사전 설정을 찾을 수 없음"
 
-#: app.py:1605
+#: app.py:1606
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "텍스트 임베딩 검색 사전 설정을 찾을 수 없습니다. config.json 파일에서 설정하세요."
 
-#: app.py:1704
+#: app.py:1705
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "현재 파일의 위치를 열지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:1715
+#: app.py:1716
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "김프에서 현재 파일을 열지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:1731
+#: app.py:1732
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -372,33 +385,33 @@ msgstr ""
 "현재 이미지를 숨겼습니다.\n"
 "숨기기를 해제하려면 Shift+B를 누릅니다."
 
-#: app.py:1736
+#: app.py:1737
 msgid "Cleared all hidden images."
 msgstr "숨겨진 이미지를 모두 지웠습니다."
 
-#: app.py:1744
+#: app.py:1745
 msgid "DELETE_LOCK"
 msgstr ""
 "슬라이드쇼 후 잠금 삭제\n"
 "전환 후 삭제 방지"
 
-#: app.py:1762
+#: app.py:1763
 msgid "Invalid action, no files found to delete"
 msgstr "잘못된 작업, 삭제할 파일을 찾을 수 없음"
 
-#: app.py:1765
+#: app.py:1766
 msgid "Invalid action, search image not found"
 msgstr "잘못된 작업, 검색 이미지를 찾을 수 없음"
 
-#: app.py:1780
+#: app.py:1781
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "현재 파일을 삭제하지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:1785
+#: app.py:1786
 msgid "Removing file: {0}"
 msgstr "파일을 제거 중입니다: {0}"
 
-#: app.py:1804
+#: app.py:1805
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -406,50 +419,50 @@ msgstr ""
 "파일을 휴지통으로 보내지 못했으므로 삭제됩니다. pip에서 send2trash를 설치하거나 config.json에서 특정 휴지통 폴더를 "
 "설정하세요."
 
-#: app.py:1821
+#: app.py:1822
 msgid "Invalid target filepath for replacement: "
 msgstr "교체할 대상 파일 경로가 잘못되었습니다: "
 
-#: app.py:1825
+#: app.py:1826
 msgid "Moved search image to "
 msgstr "로 검색 이미지를 이동했습니다: "
 
-#: app.py:1863
+#: app.py:1864
 msgid "Running image gen: "
 msgstr "이미지 생성 실행 : "
 
-#: app.py:1865
+#: app.py:1866
 msgid "Error running image generation:"
 msgstr "이미지 생성 실행 중 오류 발생:"
 
-#: app.py:1873
+#: app.py:1874
 msgid "Running refacdir"
 msgstr "refacdir 실행"
 
-#: app.py:1878 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: app.py:1879 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "계정 정보"
 
-#: app.py:1958
+#: app.py:1959
 msgid "GROUP_DETAILS"
 msgstr ""
 "그룹 {0} 중 {1}\n"
 "크기: {2}"
 
-#: app.py:1962
+#: app.py:1963
 msgid "No image files found"
 msgstr "이미지 파일 없음"
 
-#: app.py:1964
+#: app.py:1965
 msgid "1 image file found"
 msgstr "1 이미지 파일"
 
-#: app.py:1965
+#: app.py:1966
 msgid "{0} image files found"
 msgstr "{0} 이미지 파일 찾았습니다"
 
-#: app.py:1967
+#: app.py:1968
 msgid "(filtered)"
 msgstr "(필터)"
 
@@ -461,22 +474,22 @@ msgstr "소프트웨어 애플리케이션 암호 필요"
 msgid "A password is required to open this application."
 msgstr "이 소프트웨어 애플리케이션을 열려면 비밀번호가 필요합니다."
 
-#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:134
 msgid "Password:"
 msgstr "비밀번호:"
 
-#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:147
 msgid "OK"
 msgstr "확인"
 
-#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
-#: auth/password_dialog.py:139 auth/password_dialog.py:200
-#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:448
+#: auth/password_dialog.py:150 auth/password_dialog.py:219
+#: auth/password_dialog.py:236 files/pdf_options_window.py:78
 #: files/type_configuration_window.py:179
 msgid "Cancel"
 msgstr "취소"
 
-#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:247
 msgid "Incorrect password"
 msgstr "잘못된 비밀번호"
 
@@ -484,218 +497,218 @@ msgstr "잘못된 비밀번호"
 msgid "Password Administration"
 msgstr "비밀번호 관리"
 
-#: auth/password_admin_window.py:67
+#: auth/password_admin_window.py:70
 msgid "Password Protection Settings"
 msgstr "비밀번호 보호 설정"
 
-#: auth/password_admin_window.py:79
+#: auth/password_admin_window.py:82
 msgid "Protected Actions"
 msgstr "보호되는 작업"
 
-#: auth/password_admin_window.py:85
+#: auth/password_admin_window.py:88
 msgid "Select which actions require password authentication:"
 msgstr "비밀번호 인증이 필요한 작업을 선택합니다:"
 
-#: auth/password_admin_window.py:101
+#: auth/password_admin_window.py:104
 msgid "(Always protected if a password is set)"
 msgstr "(비밀번호가 설정된 경우 항상 보호됨)"
 
-#: auth/password_admin_window.py:120
+#: auth/password_admin_window.py:123
 msgid "Session Timeout Settings"
 msgstr "세션 시간 초과 설정"
 
-#: auth/password_admin_window.py:126
+#: auth/password_admin_window.py:129
 msgid "Enable session timeout (remember password for a period)"
 msgstr "세션 시간 초과 사용(일정 기간 동안 비밀번호 기억)"
 
-#: auth/password_admin_window.py:138
+#: auth/password_admin_window.py:141
 msgid "Session timeout duration (minutes):"
 msgstr "세션 시간 초과 기간(분):"
 
-#: auth/password_admin_window.py:147
+#: auth/password_admin_window.py:164
 msgid "Password Setup"
 msgstr "비밀번호 설정"
 
-#: auth/password_admin_window.py:157
+#: auth/password_admin_window.py:174
 msgid "Password is configured"
 msgstr "비밀번호가 구성되었습니다."
 
-#: auth/password_admin_window.py:163 auth/password_admin_window.py:331
-#: auth/password_admin_window.py:347 auth/password_admin_window.py:406
+#: auth/password_admin_window.py:180 auth/password_admin_window.py:370
+#: auth/password_admin_window.py:386 auth/password_admin_window.py:445
 msgid "Change Password"
 msgstr "비밀번호 변경"
 
-#: auth/password_admin_window.py:168 auth/password_admin_window.py:419
+#: auth/password_admin_window.py:185 auth/password_admin_window.py:458
 msgid "Remove Password"
 msgstr "비밀번호 제거"
 
-#: auth/password_admin_window.py:173
+#: auth/password_admin_window.py:190
 msgid "Set up a password to enable protection:"
 msgstr "보호 기능을 사용하려면 비밀번호를 설정하세요:"
 
-#: auth/password_admin_window.py:183 auth/password_admin_window.py:363
+#: auth/password_admin_window.py:200 auth/password_admin_window.py:402
 msgid "New Password:"
 msgstr "새 비밀번호:"
 
-#: auth/password_admin_window.py:196
+#: auth/password_admin_window.py:213
 msgid "Confirm Password:"
 msgstr "비밀번호를 확인합니다:"
 
-#: auth/password_admin_window.py:205
+#: auth/password_admin_window.py:222
 msgid "Set Password"
 msgstr "비밀번호 설정"
 
-#: auth/password_admin_window.py:215 auth/password_admin_window.py:261
+#: auth/password_admin_window.py:232 auth/password_admin_window.py:291
 msgid "Reset to Defaults"
 msgstr "기본값으로 재설정"
 
-#: auth/password_admin_window.py:219 auth/password_admin_window.py:281
+#: auth/password_admin_window.py:236 auth/password_admin_window.py:316
 msgid "Set to Current"
 msgstr "현재로 설정"
 
-#: auth/password_admin_window.py:223
+#: auth/password_admin_window.py:240
 msgid "Export Cache as JSON"
 msgstr "캐시를 JSON으로 내보내기"
 
-#: auth/password_admin_window.py:227
+#: auth/password_admin_window.py:244
 msgid "Save Settings"
 msgstr "설정 저장"
 
-#: auth/password_admin_window.py:231
+#: auth/password_admin_window.py:248
 msgid "Close"
 msgstr "닫기"
 
-#: auth/password_admin_window.py:255
+#: auth/password_admin_window.py:285
 msgid "Password protection settings saved."
 msgstr "비밀번호 보호 설정이 저장되었습니다."
 
-#: auth/password_admin_window.py:262
+#: auth/password_admin_window.py:292
 msgid ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
 msgstr "모든 비밀번호 보호 설정을 기본값으로 초기화하시겠습니까?"
 
-#: auth/password_admin_window.py:276
+#: auth/password_admin_window.py:311
 msgid "Settings reset to defaults."
 msgstr "설정이 기본값으로 초기화됩니다."
 
-#: auth/password_admin_window.py:282
+#: auth/password_admin_window.py:317
 msgid ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
 msgstr "모든 설정을 현재 저장된 상태로 복원하시겠습니까? 이렇게 하면 저장되지 않은 변경 사항이 모두 삭제됩니다."
 
-#: auth/password_admin_window.py:297
+#: auth/password_admin_window.py:335
 msgid "Settings restored to current saved state."
 msgstr "설정이 현재 저장된 상태로 복원되었습니다."
 
-#: auth/password_admin_window.py:306
+#: auth/password_admin_window.py:344
 msgid "Please enter a password."
 msgstr "비밀번호를 입력하세요."
 
-#: auth/password_admin_window.py:310
+#: auth/password_admin_window.py:348
 msgid "Passwords do not match."
 msgstr "비밀번호가 일치하지 않습니다."
 
-#: auth/password_admin_window.py:314 auth/password_admin_window.py:397
+#: auth/password_admin_window.py:352 auth/password_admin_window.py:436
 msgid "Password must be at least 6 characters long."
 msgstr "비밀번호는 6자 이상이어야 합니다."
 
-#: auth/password_admin_window.py:318
+#: auth/password_admin_window.py:357
 msgid "Password set successfully."
 msgstr "비밀번호가 성공적으로 설정되었습니다."
 
-#: auth/password_admin_window.py:325
+#: auth/password_admin_window.py:364
 msgid "Failed to set password."
 msgstr "비밀번호를 설정하지 못했습니다."
 
-#: auth/password_admin_window.py:354
+#: auth/password_admin_window.py:393
 msgid "Current Password:"
 msgstr "현재 비밀번호:"
 
-#: auth/password_admin_window.py:372
+#: auth/password_admin_window.py:411
 msgid "Confirm New Password:"
 msgstr "새 비밀번호를 확인합니다:"
 
-#: auth/password_admin_window.py:389
+#: auth/password_admin_window.py:428
 msgid "Current password is incorrect."
 msgstr "현재 비밀번호가 올바르지 않습니다."
 
-#: auth/password_admin_window.py:393
+#: auth/password_admin_window.py:432
 msgid "New passwords do not match."
 msgstr "새 비밀번호가 일치하지 않습니다."
 
-#: auth/password_admin_window.py:401
+#: auth/password_admin_window.py:440
 msgid "Password changed successfully."
 msgstr "비밀번호가 성공적으로 변경되었습니다."
 
-#: auth/password_admin_window.py:404
+#: auth/password_admin_window.py:443
 msgid "Failed to change password."
 msgstr "비밀번호를 변경하지 못했습니다."
 
-#: auth/password_admin_window.py:420
+#: auth/password_admin_window.py:459
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
 msgstr "비밀번호 보호를 제거하시겠습니까? 그러면 모든 비밀번호 요구 사항이 비활성화됩니다."
 
-#: auth/password_admin_window.py:425
+#: auth/password_admin_window.py:465
 msgid "Password removed successfully."
 msgstr "비밀번호가 성공적으로 제거되었습니다."
 
-#: auth/password_admin_window.py:429
+#: auth/password_admin_window.py:469
 msgid "Failed to remove password."
 msgstr "비밀번호를 제거하지 못했습니다."
 
-#: auth/password_admin_window.py:464
+#: auth/password_admin_window.py:504
 msgid "Cache exported as JSON to:"
 msgstr "캐시를 JSON으로 내보냅니다:"
 
-#: auth/password_admin_window.py:466
+#: auth/password_admin_window.py:506
 msgid "Failed to export cache as JSON:"
 msgstr "캐시를 JSON으로 내보내지 못했습니다:"
 
-#: auth/password_dialog.py:38 auth/password_dialog.py:93
+#: auth/password_dialog.py:40 auth/password_dialog.py:104
 msgid "Password Required"
 msgstr "비밀번호 필요"
 
-#: auth/password_dialog.py:38
+#: auth/password_dialog.py:40
 msgid "Password Protection"
 msgstr "비밀번호 보호"
 
-#: auth/password_dialog.py:100
+#: auth/password_dialog.py:111
 msgid "Password required for: {0}"
 msgstr "암호가 필요합니다: {0}"
 
-#: auth/password_dialog.py:145
+#: auth/password_dialog.py:156
 msgid "Password Protection Available"
 msgstr "비밀번호 보호 사용 가능"
 
-#: auth/password_dialog.py:152
+#: auth/password_dialog.py:163
 msgid "This action requires password protection: {0}"
 msgstr "이 작업에는 암호 보호가 필요합니다: {0}"
 
-#: auth/password_dialog.py:168
+#: auth/password_dialog.py:179
 msgid "Password protection is not currently configured. You can:"
 msgstr "현재 비밀번호 보호가 구성되어 있지 않습니다. 설정할 수 있습니다:"
 
-#: auth/password_dialog.py:178
+#: auth/password_dialog.py:189
 msgid "• Configure password protection for sensitive actions"
 msgstr "• 민감한 작업에 대한 비밀번호 보호 구성"
 
-#: auth/password_dialog.py:183
+#: auth/password_dialog.py:194
 msgid "• Continue without password protection (less secure)"
 msgstr "• 비밀번호 보호 없이 계속 진행(보안 취약)"
 
-#: auth/password_dialog.py:192 auth/password_dialog.py:213
+#: auth/password_dialog.py:211 auth/password_dialog.py:232
 msgid "Configure Protection"
 msgstr "보호 구성"
 
-#: auth/password_dialog.py:196
+#: auth/password_dialog.py:215
 msgid "Continue Without Protection"
 msgstr "보호 없이 계속 진행"
 
-#: auth/password_dialog.py:204
+#: auth/password_dialog.py:223
 msgid ""
 "Password protection is required for this action but is not currently "
 "configured."
@@ -2196,15 +2209,14 @@ msgstr "파일 경로의 백슬래시 이스케이프"
 msgid " etc."
 msgstr " 등"
 
-#: app.py:848
-msgid ""
-"A directory with a large number of files or a directory with a fair-sized "
-"number of files on external storage was detected, which may result in a slow"
-" load time. Please confirm you want to load the full directory."
-msgstr ""
-"외부 저장 장치에 파일 수가 많은 디렉토리 또는 중간 규모의 파일 수를 가진 디렉토리가 감지되었습니다. 이 경우 로드 시간이 느려질 수 "
-"있습니다. 전체 디렉토리를 로드하시겠습니까?"
+#: auth/password_admin_window.py:150
+msgid "Security Advice Settings"
+msgstr "보안 설정 안내"
 
-#: app.py:849
-msgid "Large Directory Detected: {0}"
-msgstr "대용량 디렉토리 감지: {0}"
+#: auth/password_admin_window.py:156
+msgid "Show security advice when no password is configured"
+msgstr "비밀번호가 설정되지 않았을 때 보안 안내 메시지를 표시합니다."
+
+#: auth/password_dialog.py:201
+msgid "Don't show this security advice again"
+msgstr "이 보안 안내를 다시 표시하지 마세요."

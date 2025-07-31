@@ -38,6 +38,9 @@ class SecurityConfig:
     DEFAULT_SESSION_TIMEOUT_ENABLED = True
     DEFAULT_SESSION_TIMEOUT_MINUTES = 30  # 30 minutes default
     
+    # Default security advertisement settings
+    DEFAULT_SHOW_SECURITY_ADVICE = True  # Show security advice when no password is configured
+    
     def __init__(self):
         self._load_settings()
     
@@ -46,6 +49,7 @@ class SecurityConfig:
         self.session_timeout_enabled = app_info_cache.get_meta("session_timeout_enabled", default_val=self.DEFAULT_SESSION_TIMEOUT_ENABLED)
         self.session_timeout_minutes = app_info_cache.get_meta("session_timeout_minutes", default_val=self.DEFAULT_SESSION_TIMEOUT_MINUTES)
         self.protected_actions = app_info_cache.get_meta("protected_actions", default_val=self.DEFAULT_PROTECTED_ACTIONS.copy())
+        self.show_security_advice = app_info_cache.get_meta("show_security_advice", default_val=self.DEFAULT_SHOW_SECURITY_ADVICE)
         
         # Add any new protected actions that aren't in cache yet
         for action_enum in ProtectedActions:
@@ -62,12 +66,14 @@ class SecurityConfig:
         app_info_cache.set_meta("protected_actions", self.protected_actions)
         app_info_cache.set_meta("session_timeout_enabled", self.session_timeout_enabled)
         app_info_cache.set_meta("session_timeout_minutes", self.session_timeout_minutes)
+        app_info_cache.set_meta("show_security_advice", self.show_security_advice)
     
     def reset_to_defaults(self):
         """Reset all settings to their default values."""
         self.protected_actions = self.DEFAULT_PROTECTED_ACTIONS.copy()
         self.session_timeout_enabled = self.DEFAULT_SESSION_TIMEOUT_ENABLED
         self.session_timeout_minutes = self.DEFAULT_SESSION_TIMEOUT_MINUTES
+        self.show_security_advice = self.DEFAULT_SHOW_SECURITY_ADVICE
         
         # Ensure ACCESS_ADMIN always remains protected
         self.protected_actions[ProtectedActions.ACCESS_ADMIN.value] = True
@@ -101,6 +107,14 @@ class SecurityConfig:
         """Set the session timeout duration in minutes."""
         if minutes > 0:
             self.session_timeout_minutes = minutes
+    
+    def is_security_advice_enabled(self):
+        """Check if security advice should be shown when no password is configured."""
+        return self.show_security_advice
+    
+    def set_security_advice_enabled(self, enabled):
+        """Set whether security advice should be shown when no password is configured."""
+        self.show_security_advice = enabled
 
 
 # Global instance

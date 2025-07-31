@@ -51,6 +51,16 @@ class PasswordSessionManager:
         return (current_time - last_verification_time) < timeout_seconds
     
     @classmethod
+    def clear_all_sessions(cls) -> None:
+        """
+        Clear all session data for all actions.
+        
+        This is useful when security settings are changed to ensure
+        that all changes take effect immediately.
+        """
+        cls._session_data.clear()
+
+    @classmethod
     def clear_session(cls, action: Optional[ProtectedActions] = None) -> None:
         """
         Clear session data for an action or all actions.
@@ -99,4 +109,4 @@ class PasswordSessionManager:
             return False
             
         _, is_authenticated = cls._session_data[action_name]
-        return is_authenticated 
+        return is_authenticated

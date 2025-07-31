@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-27 16:52-0400\n"
-"PO-Revision-Date: 2025-07-27 16:52-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-07-30 20:14-0400\n"
+"PO-Revision-Date: 2025-07-30 20:14-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:97 app.py:930 app.py:2020
+#: app.py:97 app.py:931 app.py:2021
 msgid " Simple Image Compare "
 msgstr " シンプルな画像比較 "
 
@@ -20,351 +20,363 @@ msgstr " シンプルな画像比較 "
 msgid "Theme switched to {0}."
 msgstr "テーマを{0}に切り替えます。"
 
-#: app.py:246 app.py:461 app.py:959 compare/compare_wrapper.py:480
+#: app.py:247 app.py:462 app.py:960 compare/compare_wrapper.py:480
 msgid "Set a directory to run comparison."
 msgstr "比較を実行するディレクトリを設定します。"
 
-#: app.py:253
+#: app.py:254
 msgid "Toggle theme"
 msgstr "トグルテーマ"
 
-#: app.py:254
+#: app.py:255
 msgid "Set directory"
 msgstr "ディレクトリを設定する"
 
-#: app.py:255
+#: app.py:256
 msgid "Add dirpath..."
 msgstr "ディレクトリパスの追加..."
 
-#: app.py:258
+#: app.py:259
 msgid "Set search file"
 msgstr "検索ファイルを設定する"
 
-#: app.py:266
+#: app.py:267
 msgid "Search text (embedding mode)"
 msgstr "検索テキスト (埋め込みモード)"
 
-#: app.py:277
+#: app.py:278
 msgid "Compare mode"
 msgstr "比較モード"
 
-#: app.py:295
+#: app.py:296
 msgid "Compare faces"
 msgstr "顔の比較"
 
-#: app.py:299
+#: app.py:300
 msgid "Overwrite cache"
 msgstr "キャッシュを上書き"
 
-#: app.py:303
+#: app.py:304
 msgid "Store checkpoints"
 msgstr "ストアチェックポイント"
 
-#: app.py:307
+#: app.py:308
 msgid "Max files to compare"
 msgstr "比較する最大ファイル"
 
-#: app.py:313
+#: app.py:314
 msgid "Filter files by glob pattern"
 msgstr "グロブパターンによるファイルのフィルタリング"
 
-#: app.py:320
+#: app.py:321
 msgid "Browsing mode - Sort by"
 msgstr "閲覧モード - 並べ替え"
 
-#: app.py:327
+#: app.py:328
 msgid "Recurse subdirectories"
 msgstr "サブディレクトリを再帰する"
 
-#: app.py:332
+#: app.py:333
 msgid "Image resize to full window"
 msgstr "フルウィンドウに画像のサイズを変更"
 
-#: app.py:336
+#: app.py:337
 msgid "Search only return closest"
 msgstr "一番近い順に検索"
 
-#: app.py:343
+#: app.py:344
 msgid "Run image compare"
 msgstr "画像比較の実行"
 
-#: app.py:345
+#: app.py:346
 msgid "Find duplicates"
 msgstr "重複を見つける"
 
-#: app.py:347 image/image_details.py:65
+#: app.py:348 image/image_details.py:65
 msgid "Image details"
 msgstr "画像詳細"
 
-#: app.py:358
+#: app.py:359
 msgid "Search current image"
 msgstr "現在の画像を検索"
 
-#: app.py:359 utils/help_and_config.py:78
+#: app.py:360 utils/help_and_config.py:78
 msgid "Open image location"
 msgstr "画像の場所を開く"
 
-#: app.py:360
+#: app.py:361
 msgid "Copy image path"
 msgstr "コピーイメージパス"
 
-#: app.py:361
+#: app.py:362
 msgid "---- DELETE ----"
 msgstr "---- 染料 ----"
 
-#: app.py:512
+#: app.py:513
 msgid "Confirm Quit"
 msgstr "終了を確認する"
 
-#: app.py:512
+#: app.py:513
 msgid "Would you like to quit the application?"
 msgstr "応募をお願いしたいですか?"
 
-#: app.py:612
+#: app.py:613
 msgid "Ended slideshows"
 msgstr "終了したスライドショー"
 
-#: app.py:665 app.py:1803 app.py:1865
+#: app.py:666 app.py:1804 app.py:1866
 msgid "Warning"
 msgstr "警告"
 
-#: app.py:665
+#: app.py:666
 msgid "No files found in directory after refresh."
 msgstr "更新後、ディレクトリにファイルが見つかりません。"
 
-#: app.py:697
+#: app.py:698
 msgid "Slideshow for new images started"
 msgstr "新しい画像のスライドショー開始"
 
-#: app.py:699
+#: app.py:700
 msgid "Slideshow started"
 msgstr "スライドショー開始"
 
-#: app.py:702
+#: app.py:703
 msgid "Slideshows ended"
 msgstr "スライドショー終了"
 
-#: app.py:715
+#: app.py:716
 msgid "Browsing mode set."
 msgstr "ブラウジングモードセット。"
 
-#: app.py:759 utils/constants.py:292
+#: app.py:760 utils/constants.py:292
 msgid "View Media Details"
 msgstr "メディア詳細を見る"
 
-#: app.py:760
+#: app.py:761
 msgid "Hide Media"
 msgstr "メディアを非表示にする"
 
-#: app.py:761
+#: app.py:762
 msgid "Remove from Marks"
 msgstr "マークから削除する"
 
-#: app.py:761
+#: app.py:762
 msgid "Add to Marks"
 msgstr "マークに追加"
 
-#: app.py:763
+#: app.py:764
 msgid "Remove from Favorites"
 msgstr "お気に入りから削除する"
 
-#: app.py:763
+#: app.py:764
 msgid "Add to Favorites"
 msgstr "お気に入りに追加"
 
-#: app.py:766
+#: app.py:767
 msgid "Open in GIMP"
 msgstr "GIMPで開く"
 
-#: app.py:767 image/image_details.py:191 utils/constants.py:298
+#: app.py:768 image/image_details.py:191 utils/constants.py:298
 msgid "Run Image Generation"
 msgstr "映像生成の実行"
 
-#: app.py:768
+#: app.py:769
 msgid "Show Source Image"
 msgstr "ソース画像を表示"
 
-#: app.py:769
+#: app.py:770
 msgid "Find Related Images"
 msgstr "関連する画像を探す"
 
-#: app.py:770
+#: app.py:771
 msgid "Set Marks from Downstream Related Images"
 msgstr "下流に関連する画像からマークを設定する"
 
-#: app.py:772
+#: app.py:773
 msgid "Set Current Image as Search Image"
 msgstr "現在の画像を検索結果の画像として設定する"
 
-#: app.py:773
+#: app.py:774
 msgid "Add Current Image to Negative Search"
 msgstr "現在の画像をネガティブ検索に追加する"
 
-#: app.py:774
+#: app.py:775
 msgid "Run Refacdir"
 msgstr "RefacDirを実行してください。"
 
-#: app.py:786
+#: app.py:787
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(インデックスの詳細を見るには、この画像をディレクトリの一部として開いてください）。"
 
-#: app.py:820 app.py:1529
+#: app.py:821 app.py:1530
 msgid "Many Files"
 msgstr "多くのファイル"
 
-#: app.py:879
+#: app.py:849
+msgid ""
+"A directory with a large number of files or a directory with a fair-sized "
+"number of files on external storage was detected, which may result in a slow"
+" load time. Please confirm you want to load the full directory."
+msgstr ""
+"外部ストレージに大量のファイルを含むディレクトリまたは相当数のファイルを含むディレクトリが検出されました。これにより、読み込み時間が遅くなる可能性があります。フルディレクトリを読み込むことを確認してください。"
+
+#: app.py:850
+msgid "Large Directory Detected: {0}"
+msgstr "大規模なディレクトリが検出されました: {0}"
+
+#: app.py:880
 msgid "No downstream related image(s) found in {0}"
 msgstr "{0} に下流関連の画像は見つかりませんでした。"
 
-#: app.py:901
+#: app.py:902
 msgid "{0} file marks set"
 msgstr "{0} ファイル マーク セット"
 
-#: app.py:907
+#: app.py:908
 msgid "Help and Config"
 msgstr "ヘルプと設定"
 
-#: app.py:1002
+#: app.py:1003
 msgid "Set Image Comparison Directory"
 msgstr "画像比較ディレクトリの設定"
 
-#: app.py:1040
+#: app.py:1041
 msgid "Counter limit must be an integer value."
 msgstr "カウンターの上限は整数値でなければならない。"
 
-#: app.py:1040 app.py:1056
+#: app.py:1041 app.py:1057
 msgid "Invalid Setting"
 msgstr "無効な設定"
 
-#: app.py:1056
+#: app.py:1057
 msgid "No image selected."
 msgstr "選択した画像はありません。"
 
-#: app.py:1095
+#: app.py:1096
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "テキスト埋め込みを検索するには、比較モードを埋め込みモードに設定する必要があります。"
 
-#: app.py:1099
+#: app.py:1100
 msgid "Select image file"
 msgstr "画像ファイルの選択"
 
-#: app.py:1128
+#: app.py:1129
 msgid "Somehow, the search file is invalid"
 msgstr "どういうわけか、検索ファイルが無効です"
 
-#: app.py:1214 app.py:1239
+#: app.py:1215 app.py:1240
 msgid "Failed to get active image filepath"
 msgstr "アクティブなイメージファイルパスを取得する失敗"
 
-#: app.py:1324
+#: app.py:1325
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% 完了"
 
-#: app.py:1330
+#: app.py:1331
 msgid "Confirm comparison"
 msgstr "比較確認"
 
-#: app.py:1331
+#: app.py:1332
 msgid "No base directory has been set, will use current base directory of "
 msgstr "ベースディレクトリが設定されていないので、現在のベースディレクトリを使用する： "
 
-#: app.py:1332
+#: app.py:1333
 msgid "Are you sure you want to proceed?"
 msgstr "続行したいですか?"
 
-#: app.py:1353
+#: app.py:1354
 msgid "Error running compare"
 msgstr "エラー実行比較"
 
-#: app.py:1386
+#: app.py:1387
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションでマークが付かない"
 
-#: app.py:1397
+#: app.py:1398
 msgid "Mark removed. Remaining: {0}"
 msgstr "マーク削除 残っている {0}"
 
-#: app.py:1401
+#: app.py:1402
 msgid "Mark added. Total set: {0}"
 msgstr "マークが付け加えた。合計セット： {0}"
 
-#: app.py:1418
+#: app.py:1419
 msgid "Marks added. Total set: {0}"
 msgstr "マークが追加された。合計セット： {0}"
 
-#: app.py:1427
+#: app.py:1428
 msgid "First sorted mark"
 msgstr "ファーストソートマーク"
 
-#: app.py:1434
+#: app.py:1435
 msgid "Only one marked file set."
 msgstr "1つのマーク付きファイルセットのみ。"
 
-#: app.py:1446
+#: app.py:1447
 msgid "Including marks: {0}"
 msgstr "マークを含む：{0}"
 
-#: app.py:1454
+#: app.py:1455
 msgid "Move {0} Marked File(s)"
 msgstr "{0} つのマークされたファイルを移動しますか？"
 
-#: app.py:1493
+#: app.py:1494
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0}マークが設定された(>={1}の予定)。\n"
 "マークを設定するには Shift+M を使用します。"
 
-#: app.py:1529
+#: app.py:1530
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "本当にディレクトリ{0}ですべての事前検証を実行したいのですか？時間がかかるかもしれません。"
 
-#: app.py:1544
+#: app.py:1545
 msgid "Prevalidations now running"
 msgstr "今すぐ実行する準備"
 
-#: app.py:1544
+#: app.py:1545
 msgid "Prevalidations turned off"
 msgstr "無効化がオフ"
 
-#: app.py:1576
+#: app.py:1577
 msgid "File not found"
 msgstr "ファイルが見つかりません"
 
-#: app.py:1576
+#: app.py:1577
 msgid "No file was found for the search text: \"{0}\""
 msgstr "検索テキストに該当するファイルが見つかりませんでした： \"{0}\""
 
-#: app.py:1590
+#: app.py:1591
 msgid "No image selected"
 msgstr "選択した画像なし"
 
-#: app.py:1590
+#: app.py:1591
 msgid "No image was selected for comparison"
 msgstr "比較のために画像が選択されていない"
 
-#: app.py:1604
+#: app.py:1605
 msgid "No Text Search Presets Found"
 msgstr "テキスト検索プリセットが見つかりません"
 
-#: app.py:1605
+#: app.py:1606
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "テキスト埋め込み検索プリセットが見つかりません。config.jsonファイルに設定してください。"
 
-#: app.py:1704
+#: app.py:1705
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの場所を開くことができません。"
 
-#: app.py:1715
+#: app.py:1716
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "GIMPで現在のファイルを開くのに失敗しました。"
 
-#: app.py:1731
+#: app.py:1732
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -372,83 +384,83 @@ msgstr ""
 "現在の画像を隠す。\n"
 "非表示を解除するには、Shift+Bキーを押します。"
 
-#: app.py:1736
+#: app.py:1737
 msgid "Cleared all hidden images."
 msgstr "すべての隠し画像を消去。"
 
-#: app.py:1744
+#: app.py:1745
 msgid "DELETE_LOCK"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションが削除を阻止"
 
-#: app.py:1762
+#: app.py:1763
 msgid "Invalid action, no files found to delete"
 msgstr "無効なアクションです。"
 
-#: app.py:1765
+#: app.py:1766
 msgid "Invalid action, search image not found"
 msgstr "無効なアクションです。"
 
-#: app.py:1780
+#: app.py:1781
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの削除に失敗しました。"
 
-#: app.py:1785
+#: app.py:1786
 msgid "Removing file: {0}"
 msgstr "ファイルを削除しています： {0}"
 
-#: app.py:1804
+#: app.py:1805
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "ゴミ箱へのファイル送信に失敗しました。pipでsend2trashをインストールするか、config.jsonでゴミ箱フォルダを指定してください。"
 
-#: app.py:1821
+#: app.py:1822
 msgid "Invalid target filepath for replacement: "
 msgstr "置換対象のファイルパスが無効です： "
 
-#: app.py:1825
+#: app.py:1826
 msgid "Moved search image to "
 msgstr "検索画像を： "
 
-#: app.py:1863
+#: app.py:1864
 msgid "Running image gen: "
 msgstr "イメージ・ジェネレーションの実行： "
 
-#: app.py:1865
+#: app.py:1866
 msgid "Error running image generation:"
 msgstr "画像生成の実行エラー："
 
-#: app.py:1873
+#: app.py:1874
 msgid "Running refacdir"
 msgstr "ランニング refacdir"
 
-#: app.py:1878 auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: app.py:1879 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "エラー"
 
-#: app.py:1958
+#: app.py:1959
 msgid "GROUP_DETAILS"
 msgstr ""
 "グループ{0}/{1}\n"
 "サイズ：{2}"
 
-#: app.py:1962
+#: app.py:1963
 msgid "No image files found"
 msgstr "画像ファイルが見つかりません"
 
-#: app.py:1964
+#: app.py:1965
 msgid "1 image file found"
 msgstr "1 見つかった画像ファイル"
 
-#: app.py:1965
+#: app.py:1966
 msgid "{0} image files found"
 msgstr "{0} イメージファイルが見つかりました"
 
-#: app.py:1967
+#: app.py:1968
 msgid "(filtered)"
 msgstr "(フィルタリング)"
 
@@ -460,22 +472,22 @@ msgstr "ソフトウェア・アプリケーションのパスワードが必要
 msgid "A password is required to open this application."
 msgstr "このアプリケーションを開くにはパスワードが必要です。"
 
-#: auth/app_startup_auth.py:78 auth/password_dialog.py:123
+#: auth/app_startup_auth.py:78 auth/password_dialog.py:134
 msgid "Password:"
 msgstr "パスワード :"
 
-#: auth/app_startup_auth.py:91 auth/password_dialog.py:136
+#: auth/app_startup_auth.py:91 auth/password_dialog.py:147
 msgid "OK"
 msgstr "オーケー"
 
-#: auth/app_startup_auth.py:94 auth/password_admin_window.py:409
-#: auth/password_dialog.py:139 auth/password_dialog.py:200
-#: auth/password_dialog.py:217 files/pdf_options_window.py:78
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:448
+#: auth/password_dialog.py:150 auth/password_dialog.py:219
+#: auth/password_dialog.py:236 files/pdf_options_window.py:78
 #: files/type_configuration_window.py:179
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: auth/app_startup_auth.py:108 auth/password_dialog.py:231
+#: auth/app_startup_auth.py:108 auth/password_dialog.py:247
 msgid "Incorrect password"
 msgstr "パスワードの誤り"
 
@@ -483,218 +495,218 @@ msgstr "パスワードの誤り"
 msgid "Password Administration"
 msgstr "パスワード管理"
 
-#: auth/password_admin_window.py:67
+#: auth/password_admin_window.py:70
 msgid "Password Protection Settings"
 msgstr "パスワード保護設定"
 
-#: auth/password_admin_window.py:79
+#: auth/password_admin_window.py:82
 msgid "Protected Actions"
 msgstr "保護された行為"
 
-#: auth/password_admin_window.py:85
+#: auth/password_admin_window.py:88
 msgid "Select which actions require password authentication:"
 msgstr "パスワード認証が必要なアクションを選択します："
 
-#: auth/password_admin_window.py:101
+#: auth/password_admin_window.py:104
 msgid "(Always protected if a password is set)"
 msgstr "(パスワードが設定されている場合は常に保護されます）"
 
-#: auth/password_admin_window.py:120
+#: auth/password_admin_window.py:123
 msgid "Session Timeout Settings"
 msgstr "セッションタイムアウトの設定"
 
-#: auth/password_admin_window.py:126
+#: auth/password_admin_window.py:129
 msgid "Enable session timeout (remember password for a period)"
 msgstr "セッションタイムアウトを有効にする（一定期間パスワードを記憶する）"
 
-#: auth/password_admin_window.py:138
+#: auth/password_admin_window.py:141
 msgid "Session timeout duration (minutes):"
 msgstr "セッションのタイムアウト時間（分）："
 
-#: auth/password_admin_window.py:147
+#: auth/password_admin_window.py:164
 msgid "Password Setup"
 msgstr "パスワード設定"
 
-#: auth/password_admin_window.py:157
+#: auth/password_admin_window.py:174
 msgid "Password is configured"
 msgstr "パスワードが設定されている"
 
-#: auth/password_admin_window.py:163 auth/password_admin_window.py:331
-#: auth/password_admin_window.py:347 auth/password_admin_window.py:406
+#: auth/password_admin_window.py:180 auth/password_admin_window.py:370
+#: auth/password_admin_window.py:386 auth/password_admin_window.py:445
 msgid "Change Password"
 msgstr "パスワードの変更"
 
-#: auth/password_admin_window.py:168 auth/password_admin_window.py:419
+#: auth/password_admin_window.py:185 auth/password_admin_window.py:458
 msgid "Remove Password"
 msgstr "パスワードの削除"
 
-#: auth/password_admin_window.py:173
+#: auth/password_admin_window.py:190
 msgid "Set up a password to enable protection:"
 msgstr "パスワードを設定して保護を有効にする："
 
-#: auth/password_admin_window.py:183 auth/password_admin_window.py:363
+#: auth/password_admin_window.py:200 auth/password_admin_window.py:402
 msgid "New Password:"
 msgstr "新しいパスワード"
 
-#: auth/password_admin_window.py:196
+#: auth/password_admin_window.py:213
 msgid "Confirm Password:"
 msgstr "パスワードの確認:"
 
-#: auth/password_admin_window.py:205
+#: auth/password_admin_window.py:222
 msgid "Set Password"
 msgstr "パスワードの設定"
 
-#: auth/password_admin_window.py:215 auth/password_admin_window.py:261
+#: auth/password_admin_window.py:232 auth/password_admin_window.py:291
 msgid "Reset to Defaults"
 msgstr "デフォルトにリセット"
 
-#: auth/password_admin_window.py:219 auth/password_admin_window.py:281
+#: auth/password_admin_window.py:236 auth/password_admin_window.py:316
 msgid "Set to Current"
 msgstr "カレントに設定"
 
-#: auth/password_admin_window.py:223
+#: auth/password_admin_window.py:240
 msgid "Export Cache as JSON"
 msgstr "キャッシュをJSONとしてエクスポートする"
 
-#: auth/password_admin_window.py:227
+#: auth/password_admin_window.py:244
 msgid "Save Settings"
 msgstr "設定を保存する"
 
-#: auth/password_admin_window.py:231
+#: auth/password_admin_window.py:248
 msgid "Close"
 msgstr "閉じる"
 
-#: auth/password_admin_window.py:255
+#: auth/password_admin_window.py:285
 msgid "Password protection settings saved."
 msgstr "パスワード保護設定を保存。"
 
-#: auth/password_admin_window.py:262
+#: auth/password_admin_window.py:292
 msgid ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
 msgstr "すべてのパスワード保護設定をデフォルト値にリセットしてもよろしいですか？"
 
-#: auth/password_admin_window.py:276
+#: auth/password_admin_window.py:311
 msgid "Settings reset to defaults."
 msgstr "設定がデフォルトにリセットされる。"
 
-#: auth/password_admin_window.py:282
+#: auth/password_admin_window.py:317
 msgid ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
 msgstr "すべての設定を現在の保存状態に戻してもよろしいですか？これで保存されていない変更は破棄されます。"
 
-#: auth/password_admin_window.py:297
+#: auth/password_admin_window.py:335
 msgid "Settings restored to current saved state."
 msgstr "設定を現在の保存状態に戻す。"
 
-#: auth/password_admin_window.py:306
+#: auth/password_admin_window.py:344
 msgid "Please enter a password."
 msgstr "パスワードを入力してください。"
 
-#: auth/password_admin_window.py:310
+#: auth/password_admin_window.py:348
 msgid "Passwords do not match."
 msgstr "パスワードが一致しない。"
 
-#: auth/password_admin_window.py:314 auth/password_admin_window.py:397
+#: auth/password_admin_window.py:352 auth/password_admin_window.py:436
 msgid "Password must be at least 6 characters long."
 msgstr "パスワードは6文字以上でなければなりません。"
 
-#: auth/password_admin_window.py:318
+#: auth/password_admin_window.py:357
 msgid "Password set successfully."
 msgstr "パスワードの設定に成功しました。"
 
-#: auth/password_admin_window.py:325
+#: auth/password_admin_window.py:364
 msgid "Failed to set password."
 msgstr "パスワードの設定に失敗しました。"
 
-#: auth/password_admin_window.py:354
+#: auth/password_admin_window.py:393
 msgid "Current Password:"
 msgstr "現在のパスワード："
 
-#: auth/password_admin_window.py:372
+#: auth/password_admin_window.py:411
 msgid "Confirm New Password:"
 msgstr "新しいパスワードを確認する："
 
-#: auth/password_admin_window.py:389
+#: auth/password_admin_window.py:428
 msgid "Current password is incorrect."
 msgstr "現在のパスワードが間違っています。"
 
-#: auth/password_admin_window.py:393
+#: auth/password_admin_window.py:432
 msgid "New passwords do not match."
 msgstr "新しいパスワードが一致しない。"
 
-#: auth/password_admin_window.py:401
+#: auth/password_admin_window.py:440
 msgid "Password changed successfully."
 msgstr "パスワードの変更に成功しました。"
 
-#: auth/password_admin_window.py:404
+#: auth/password_admin_window.py:443
 msgid "Failed to change password."
 msgstr "パスワードの変更に失敗しました。"
 
-#: auth/password_admin_window.py:420
+#: auth/password_admin_window.py:459
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
 msgstr "本当にパスワード保護を解除しますか？これにより、すべてのパスワード要件が無効になります。"
 
-#: auth/password_admin_window.py:425
+#: auth/password_admin_window.py:465
 msgid "Password removed successfully."
 msgstr "パスワードは正常に削除されました。"
 
-#: auth/password_admin_window.py:429
+#: auth/password_admin_window.py:469
 msgid "Failed to remove password."
 msgstr "パスワードの削除に失敗しました。"
 
-#: auth/password_admin_window.py:464
+#: auth/password_admin_window.py:504
 msgid "Cache exported as JSON to:"
 msgstr "キャッシュはJSONとしてエクスポートされる："
 
-#: auth/password_admin_window.py:466
+#: auth/password_admin_window.py:506
 msgid "Failed to export cache as JSON:"
 msgstr "キャッシュを JSON としてエクスポートできませんでした："
 
-#: auth/password_dialog.py:38 auth/password_dialog.py:93
+#: auth/password_dialog.py:40 auth/password_dialog.py:104
 msgid "Password Required"
 msgstr "パスワードが必要"
 
-#: auth/password_dialog.py:38
+#: auth/password_dialog.py:40
 msgid "Password Protection"
 msgstr "パスワード保護"
 
-#: auth/password_dialog.py:100
+#: auth/password_dialog.py:111
 msgid "Password required for: {0}"
 msgstr "パスワードが必要です： {0}"
 
-#: auth/password_dialog.py:145
+#: auth/password_dialog.py:156
 msgid "Password Protection Available"
 msgstr "パスワード保護あり"
 
-#: auth/password_dialog.py:152
+#: auth/password_dialog.py:163
 msgid "This action requires password protection: {0}"
 msgstr "このアクションにはパスワード保護が必要です： {0}"
 
-#: auth/password_dialog.py:168
+#: auth/password_dialog.py:179
 msgid "Password protection is not currently configured. You can:"
 msgstr "パスワード保護は現在設定されていません。できます："
 
-#: auth/password_dialog.py:178
+#: auth/password_dialog.py:189
 msgid "• Configure password protection for sensitive actions"
 msgstr "• 重要なアクションのパスワード保護を設定する"
 
-#: auth/password_dialog.py:183
+#: auth/password_dialog.py:194
 msgid "• Continue without password protection (less secure)"
 msgstr "• パスワード保護なしで続ける（安全性が低い）"
 
-#: auth/password_dialog.py:192 auth/password_dialog.py:213
+#: auth/password_dialog.py:211 auth/password_dialog.py:232
 msgid "Configure Protection"
 msgstr "プロテクションの設定"
 
-#: auth/password_dialog.py:196
+#: auth/password_dialog.py:215
 msgid "Continue Without Protection"
 msgstr "保護なしで続ける"
 
-#: auth/password_dialog.py:204
+#: auth/password_dialog.py:223
 msgid ""
 "Password protection is required for this action but is not currently "
 "configured."
@@ -2194,14 +2206,14 @@ msgstr "ファイルパスのバックスラッシュをエスケープする"
 msgid " etc."
 msgstr " その他"
 
-#: app.py:848
-msgid ""
-"A directory with a large number of files or a directory with a fair-sized "
-"number of files on external storage was detected, which may result in a slow"
-" load time. Please confirm you want to load the full directory."
-msgstr ""
-"外部ストレージに大量のファイルを含むディレクトリまたは相当数のファイルを含むディレクトリが検出されました。これにより、読み込み時間が遅くなる可能性があります。フルディレクトリを読み込むことを確認してください。"
+#: auth/password_admin_window.py:150
+msgid "Security Advice Settings"
+msgstr "セキュリティ アドバイス設定"
 
-#: app.py:849
-msgid "Large Directory Detected: {0}"
-msgstr "大規模なディレクトリが検出されました: {0}"
+#: auth/password_admin_window.py:156
+msgid "Show security advice when no password is configured"
+msgstr "パスワードが設定されていない場合にセキュリティに関するアドバイスを表示する"
+
+#: auth/password_dialog.py:201
+msgid "Don't show this security advice again"
+msgstr "このセキュリティに関するアドバイスを再び表示しない"

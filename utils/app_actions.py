@@ -7,7 +7,7 @@ class AppActions:
         "create_image", "show_next_media", "get_media_details",
         "run_image_generation", "set_marks_from_downstream_related_images",
         "set_base_dir", "get_base_dir", "go_to_file", "delete",
-        "hide_current_media", "open_move_marks_window",
+        "hide_current_media", "open_move_marks_window", "open_password_admin_window",
         "release_media_canvas", "store_info_cache",
         "_add_buttons_for_mode", "_set_label_state",
         "_set_toggled_view_matches", "refresh_all_compares",

@@ -214,6 +214,7 @@ class App():
             "get_base_dir": self.get_base_dir,
             "delete": self._handle_delete,
             "open_move_marks_window": self.open_move_marks_window,
+            "open_password_admin_window": self.open_password_admin_window,
             "release_media_canvas": lambda: self.media_canvas.release_media(),
             "hide_current_media": self.hide_current_media,
             "store_info_cache": self.store_info_cache,
