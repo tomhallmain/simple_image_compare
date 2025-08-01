@@ -1879,11 +1879,18 @@ class App():
             title = _("Error")
         self.alert(title, error_text, kind=kind)
 
-    def alert(self, title, message, kind="info", hidemain=True) -> None:
+    def alert(self, title, message, kind="info", hidemain=True, severity="normal") -> None:
         if kind not in ("error", "warning", "info", "askokcancel"):
             raise ValueError("Unsupported alert kind.")
 
         logger.warning(f"Alert - Title: \"{title}\" Message: {message}")
+        
+        # For dangerous operations with high severity, use custom colored dialog
+        if severity == "high" and kind == "askokcancel":
+            from lib.custom_dialogs import show_high_severity_dialog
+            return show_high_severity_dialog(self.master, title, message)
+        
+        # Use standard messagebox for normal cases
         if kind == "askokcancel":
             alert_method = getattr(messagebox, kind)
         else:

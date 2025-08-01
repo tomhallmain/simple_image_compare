@@ -745,9 +745,11 @@ class MarkedFiles():
         Unfortunately, since there are challenges with restoring files from trash folder
         an undo operation is not implemented.
         """
+        # Use high severity alert for dangerous operations (more than 5 files)
+        severity = "high" if len(MarkedFiles.file_marks) > 5 else "normal"
         res = self.app_actions.alert(_("Confirm Delete"),
                 _("Deleting %s marked files - Are you sure you want to proceed?").format(len(MarkedFiles.file_marks)),
-                kind="askokcancel")
+                kind="askokcancel", severity=severity)
         if res != messagebox.OK and res != True:
             return
 

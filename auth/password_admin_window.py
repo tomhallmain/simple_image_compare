@@ -221,7 +221,7 @@ class PasswordAdminWindow():
             # Set password button
             set_pwd_btn = Button(right_frame, text=_("Set Password"), 
                                 command=self.set_password)
-            set_pwd_btn.grid(column=0, row=7, pady=5, sticky="w")
+            set_pwd_btn.grid(column=0, row=9, pady=5, sticky="w")
 
         # Bottom buttons spanning both columns
         button_frame = Frame(self.frame)
@@ -437,6 +437,7 @@ class PasswordAdminWindow():
                 return
             
             if PasswordManager.set_password(new_pwd):
+                self.clear_sessions()
                 self._show_toast_or_messagebox(_("Password changed successfully."))
                 dialog.destroy()
             else:
