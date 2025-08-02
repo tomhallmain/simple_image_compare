@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-07-30 20:14-0400\n"
-"PO-Revision-Date: 2025-07-30 20:14-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-08-02 18:39-0400\n"
+"PO-Revision-Date: 2025-08-02 18:39-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -12,207 +12,207 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:97 app.py:931 app.py:2021
+#: app.py:98 app.py:942 app.py:2090
 msgid " Simple Image Compare "
 msgstr " シンプルな画像比較 "
 
-#: app.py:160
+#: app.py:171
 msgid "Theme switched to {0}."
 msgstr "テーマを{0}に切り替えます。"
 
-#: app.py:247 app.py:462 app.py:960 compare/compare_wrapper.py:480
+#: app.py:258 app.py:473 app.py:971 compare/compare_wrapper.py:489
 msgid "Set a directory to run comparison."
 msgstr "比較を実行するディレクトリを設定します。"
 
-#: app.py:254
+#: app.py:265
 msgid "Toggle theme"
 msgstr "トグルテーマ"
 
-#: app.py:255
+#: app.py:266
 msgid "Set directory"
 msgstr "ディレクトリを設定する"
 
-#: app.py:256
+#: app.py:267
 msgid "Add dirpath..."
 msgstr "ディレクトリパスの追加..."
 
-#: app.py:259
+#: app.py:270
 msgid "Set search file"
 msgstr "検索ファイルを設定する"
 
-#: app.py:267
+#: app.py:278
 msgid "Search text (embedding mode)"
 msgstr "検索テキスト (埋め込みモード)"
 
-#: app.py:278
+#: app.py:289
 msgid "Compare mode"
 msgstr "比較モード"
 
-#: app.py:296
+#: app.py:307
 msgid "Compare faces"
 msgstr "顔の比較"
 
-#: app.py:300
+#: app.py:311
 msgid "Overwrite cache"
 msgstr "キャッシュを上書き"
 
-#: app.py:304
+#: app.py:315
 msgid "Store checkpoints"
 msgstr "ストアチェックポイント"
 
-#: app.py:308
+#: app.py:319
 msgid "Max files to compare"
 msgstr "比較する最大ファイル"
 
-#: app.py:314
+#: app.py:325
 msgid "Filter files by glob pattern"
 msgstr "グロブパターンによるファイルのフィルタリング"
 
-#: app.py:321
+#: app.py:332
 msgid "Browsing mode - Sort by"
 msgstr "閲覧モード - 並べ替え"
 
-#: app.py:328
+#: app.py:339
 msgid "Recurse subdirectories"
 msgstr "サブディレクトリを再帰する"
 
-#: app.py:333
+#: app.py:344
 msgid "Image resize to full window"
 msgstr "フルウィンドウに画像のサイズを変更"
 
-#: app.py:337
+#: app.py:348
 msgid "Search only return closest"
 msgstr "一番近い順に検索"
 
-#: app.py:344
+#: app.py:355
 msgid "Run image compare"
 msgstr "画像比較の実行"
 
-#: app.py:346
+#: app.py:357
 msgid "Find duplicates"
 msgstr "重複を見つける"
 
-#: app.py:348 image/image_details.py:65
+#: app.py:359 image/image_details.py:65
 msgid "Image details"
 msgstr "画像詳細"
 
-#: app.py:359
+#: app.py:370
 msgid "Search current image"
 msgstr "現在の画像を検索"
 
-#: app.py:360 utils/help_and_config.py:78
+#: app.py:371 utils/help_and_config.py:78
 msgid "Open image location"
 msgstr "画像の場所を開く"
 
-#: app.py:361
+#: app.py:372
 msgid "Copy image path"
 msgstr "コピーイメージパス"
 
-#: app.py:362
+#: app.py:373
 msgid "---- DELETE ----"
 msgstr "---- 染料 ----"
 
-#: app.py:513
+#: app.py:524
 msgid "Confirm Quit"
 msgstr "終了を確認する"
 
-#: app.py:513
+#: app.py:524
 msgid "Would you like to quit the application?"
 msgstr "応募をお願いしたいですか?"
 
-#: app.py:613
+#: app.py:624
 msgid "Ended slideshows"
 msgstr "終了したスライドショー"
 
-#: app.py:666 app.py:1804 app.py:1866
+#: app.py:677 app.py:1866 app.py:1928
 msgid "Warning"
 msgstr "警告"
 
-#: app.py:666
+#: app.py:677
 msgid "No files found in directory after refresh."
 msgstr "更新後、ディレクトリにファイルが見つかりません。"
 
-#: app.py:698
+#: app.py:709
 msgid "Slideshow for new images started"
 msgstr "新しい画像のスライドショー開始"
 
-#: app.py:700
+#: app.py:711
 msgid "Slideshow started"
 msgstr "スライドショー開始"
 
-#: app.py:703
+#: app.py:714
 msgid "Slideshows ended"
 msgstr "スライドショー終了"
 
-#: app.py:716
+#: app.py:727
 msgid "Browsing mode set."
 msgstr "ブラウジングモードセット。"
 
-#: app.py:760 utils/constants.py:292
+#: app.py:771 utils/constants.py:292
 msgid "View Media Details"
 msgstr "メディア詳細を見る"
 
-#: app.py:761
+#: app.py:772
 msgid "Hide Media"
 msgstr "メディアを非表示にする"
 
-#: app.py:762
+#: app.py:773
 msgid "Remove from Marks"
 msgstr "マークから削除する"
 
-#: app.py:762
+#: app.py:773
 msgid "Add to Marks"
 msgstr "マークに追加"
 
-#: app.py:764
+#: app.py:775
 msgid "Remove from Favorites"
 msgstr "お気に入りから削除する"
 
-#: app.py:764
+#: app.py:775
 msgid "Add to Favorites"
 msgstr "お気に入りに追加"
 
-#: app.py:767
+#: app.py:778
 msgid "Open in GIMP"
 msgstr "GIMPで開く"
 
-#: app.py:768 image/image_details.py:191 utils/constants.py:298
+#: app.py:779 image/image_details.py:191 utils/constants.py:298
 msgid "Run Image Generation"
 msgstr "映像生成の実行"
 
-#: app.py:769
+#: app.py:780
 msgid "Show Source Image"
 msgstr "ソース画像を表示"
 
-#: app.py:770
+#: app.py:781
 msgid "Find Related Images"
 msgstr "関連する画像を探す"
 
-#: app.py:771
+#: app.py:782
 msgid "Set Marks from Downstream Related Images"
 msgstr "下流に関連する画像からマークを設定する"
 
-#: app.py:773
+#: app.py:784
 msgid "Set Current Image as Search Image"
 msgstr "現在の画像を検索結果の画像として設定する"
 
-#: app.py:774
+#: app.py:785
 msgid "Add Current Image to Negative Search"
 msgstr "現在の画像をネガティブ検索に追加する"
 
-#: app.py:775
+#: app.py:786
 msgid "Run Refacdir"
 msgstr "RefacDirを実行してください。"
 
-#: app.py:787
+#: app.py:798
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(インデックスの詳細を見るには、この画像をディレクトリの一部として開いてください）。"
 
-#: app.py:821 app.py:1530
+#: app.py:832 app.py:1541
 msgid "Many Files"
 msgstr "多くのファイル"
 
-#: app.py:849
+#: app.py:860
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
@@ -220,163 +220,163 @@ msgid ""
 msgstr ""
 "外部ストレージに大量のファイルを含むディレクトリまたは相当数のファイルを含むディレクトリが検出されました。これにより、読み込み時間が遅くなる可能性があります。フルディレクトリを読み込むことを確認してください。"
 
-#: app.py:850
+#: app.py:861
 msgid "Large Directory Detected: {0}"
 msgstr "大規模なディレクトリが検出されました: {0}"
 
-#: app.py:880
+#: app.py:891
 msgid "No downstream related image(s) found in {0}"
 msgstr "{0} に下流関連の画像は見つかりませんでした。"
 
-#: app.py:902
+#: app.py:913
 msgid "{0} file marks set"
 msgstr "{0} ファイル マーク セット"
 
-#: app.py:908
+#: app.py:919
 msgid "Help and Config"
 msgstr "ヘルプと設定"
 
-#: app.py:1003
+#: app.py:1014
 msgid "Set Image Comparison Directory"
 msgstr "画像比較ディレクトリの設定"
 
-#: app.py:1041
+#: app.py:1052
 msgid "Counter limit must be an integer value."
 msgstr "カウンターの上限は整数値でなければならない。"
 
-#: app.py:1041 app.py:1057
+#: app.py:1052 app.py:1068
 msgid "Invalid Setting"
 msgstr "無効な設定"
 
-#: app.py:1057
+#: app.py:1068
 msgid "No image selected."
 msgstr "選択した画像はありません。"
 
-#: app.py:1096
+#: app.py:1107
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "テキスト埋め込みを検索するには、比較モードを埋め込みモードに設定する必要があります。"
 
-#: app.py:1100
+#: app.py:1111
 msgid "Select image file"
 msgstr "画像ファイルの選択"
 
-#: app.py:1129
+#: app.py:1140
 msgid "Somehow, the search file is invalid"
 msgstr "どういうわけか、検索ファイルが無効です"
 
-#: app.py:1215 app.py:1240
+#: app.py:1226 app.py:1251
 msgid "Failed to get active image filepath"
 msgstr "アクティブなイメージファイルパスを取得する失敗"
 
-#: app.py:1325
+#: app.py:1336
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% 完了"
 
-#: app.py:1331
+#: app.py:1342
 msgid "Confirm comparison"
 msgstr "比較確認"
 
-#: app.py:1332
+#: app.py:1343
 msgid "No base directory has been set, will use current base directory of "
 msgstr "ベースディレクトリが設定されていないので、現在のベースディレクトリを使用する： "
 
-#: app.py:1333
+#: app.py:1344
 msgid "Are you sure you want to proceed?"
 msgstr "続行したいですか?"
 
-#: app.py:1354
+#: app.py:1365
 msgid "Error running compare"
 msgstr "エラー実行比較"
 
-#: app.py:1387
+#: app.py:1398
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションでマークが付かない"
 
-#: app.py:1398
+#: app.py:1409
 msgid "Mark removed. Remaining: {0}"
 msgstr "マーク削除 残っている {0}"
 
-#: app.py:1402
+#: app.py:1413
 msgid "Mark added. Total set: {0}"
 msgstr "マークが付け加えた。合計セット： {0}"
 
-#: app.py:1419
+#: app.py:1430
 msgid "Marks added. Total set: {0}"
 msgstr "マークが追加された。合計セット： {0}"
 
-#: app.py:1428
+#: app.py:1439
 msgid "First sorted mark"
 msgstr "ファーストソートマーク"
 
-#: app.py:1435
+#: app.py:1446
 msgid "Only one marked file set."
 msgstr "1つのマーク付きファイルセットのみ。"
 
-#: app.py:1447
+#: app.py:1458
 msgid "Including marks: {0}"
 msgstr "マークを含む：{0}"
 
-#: app.py:1455
+#: app.py:1466
 msgid "Move {0} Marked File(s)"
 msgstr "{0} つのマークされたファイルを移動しますか？"
 
-#: app.py:1494
+#: app.py:1505
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0}マークが設定された(>={1}の予定)。\n"
 "マークを設定するには Shift+M を使用します。"
 
-#: app.py:1530
+#: app.py:1541
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "本当にディレクトリ{0}ですべての事前検証を実行したいのですか？時間がかかるかもしれません。"
 
-#: app.py:1545
+#: app.py:1556
 msgid "Prevalidations now running"
 msgstr "今すぐ実行する準備"
 
-#: app.py:1545
+#: app.py:1556
 msgid "Prevalidations turned off"
 msgstr "無効化がオフ"
 
-#: app.py:1577
+#: app.py:1642
 msgid "File not found"
 msgstr "ファイルが見つかりません"
 
-#: app.py:1577
+#: app.py:1642
 msgid "No file was found for the search text: \"{0}\""
 msgstr "検索テキストに該当するファイルが見つかりませんでした： \"{0}\""
 
-#: app.py:1591
+#: app.py:1653
 msgid "No image selected"
 msgstr "選択した画像なし"
 
-#: app.py:1591
+#: app.py:1653
 msgid "No image was selected for comparison"
 msgstr "比較のために画像が選択されていない"
 
-#: app.py:1605
+#: app.py:1667
 msgid "No Text Search Presets Found"
 msgstr "テキスト検索プリセットが見つかりません"
 
-#: app.py:1606
+#: app.py:1668
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "テキスト埋め込み検索プリセットが見つかりません。config.jsonファイルに設定してください。"
 
-#: app.py:1705
+#: app.py:1767
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの場所を開くことができません。"
 
-#: app.py:1716
+#: app.py:1778
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "GIMPで現在のファイルを開くのに失敗しました。"
 
-#: app.py:1732
+#: app.py:1794
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -384,83 +384,83 @@ msgstr ""
 "現在の画像を隠す。\n"
 "非表示を解除するには、Shift+Bキーを押します。"
 
-#: app.py:1737
+#: app.py:1799
 msgid "Cleared all hidden images."
 msgstr "すべての隠し画像を消去。"
 
-#: app.py:1745
+#: app.py:1807
 msgid "DELETE_LOCK"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションが削除を阻止"
 
-#: app.py:1763
+#: app.py:1825
 msgid "Invalid action, no files found to delete"
 msgstr "無効なアクションです。"
 
-#: app.py:1766
+#: app.py:1828
 msgid "Invalid action, search image not found"
 msgstr "無効なアクションです。"
 
-#: app.py:1781
+#: app.py:1843
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの削除に失敗しました。"
 
-#: app.py:1786
+#: app.py:1848
 msgid "Removing file: {0}"
 msgstr "ファイルを削除しています： {0}"
 
-#: app.py:1805
+#: app.py:1867
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "ゴミ箱へのファイル送信に失敗しました。pipでsend2trashをインストールするか、config.jsonでゴミ箱フォルダを指定してください。"
 
-#: app.py:1822
+#: app.py:1884
 msgid "Invalid target filepath for replacement: "
 msgstr "置換対象のファイルパスが無効です： "
 
-#: app.py:1826
+#: app.py:1888
 msgid "Moved search image to "
 msgstr "検索画像を： "
 
-#: app.py:1864
+#: app.py:1926
 msgid "Running image gen: "
 msgstr "イメージ・ジェネレーションの実行： "
 
-#: app.py:1866
+#: app.py:1928
 msgid "Error running image generation:"
 msgstr "画像生成の実行エラー："
 
-#: app.py:1874
+#: app.py:1936
 msgid "Running refacdir"
 msgstr "ランニング refacdir"
 
-#: app.py:1879 auth/app_startup_auth.py:108 auth/password_dialog.py:247
+#: app.py:1941 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "エラー"
 
-#: app.py:1959
+#: app.py:2028
 msgid "GROUP_DETAILS"
 msgstr ""
 "グループ{0}/{1}\n"
 "サイズ：{2}"
 
-#: app.py:1963
+#: app.py:2032
 msgid "No image files found"
 msgstr "画像ファイルが見つかりません"
 
-#: app.py:1965
+#: app.py:2034
 msgid "1 image file found"
 msgstr "1 見つかった画像ファイル"
 
-#: app.py:1966
+#: app.py:2035
 msgid "{0} image files found"
 msgstr "{0} イメージファイルが見つかりました"
 
-#: app.py:1968
+#: app.py:2037
 msgid "(filtered)"
 msgstr "(フィルタリング)"
 
@@ -477,13 +477,14 @@ msgid "Password:"
 msgstr "パスワード :"
 
 #: auth/app_startup_auth.py:91 auth/password_dialog.py:147
+#: lib/custom_dialogs.py:75
 msgid "OK"
 msgstr "オーケー"
 
-#: auth/app_startup_auth.py:94 auth/password_admin_window.py:448
+#: auth/app_startup_auth.py:94 auth/password_admin_window.py:449
 #: auth/password_dialog.py:150 auth/password_dialog.py:219
 #: auth/password_dialog.py:236 files/pdf_options_window.py:78
-#: files/type_configuration_window.py:179
+#: files/type_configuration_window.py:179 lib/custom_dialogs.py:81
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -523,6 +524,14 @@ msgstr "セッションタイムアウトを有効にする（一定期間パス
 msgid "Session timeout duration (minutes):"
 msgstr "セッションのタイムアウト時間（分）："
 
+#: auth/password_admin_window.py:150
+msgid "Security Advice Settings"
+msgstr "セキュリティ アドバイス設定"
+
+#: auth/password_admin_window.py:156
+msgid "Show security advice when no password is configured"
+msgstr "パスワードが設定されていない場合にセキュリティに関するアドバイスを表示する"
+
 #: auth/password_admin_window.py:164
 msgid "Password Setup"
 msgstr "パスワード設定"
@@ -532,11 +541,11 @@ msgid "Password is configured"
 msgstr "パスワードが設定されている"
 
 #: auth/password_admin_window.py:180 auth/password_admin_window.py:370
-#: auth/password_admin_window.py:386 auth/password_admin_window.py:445
+#: auth/password_admin_window.py:386 auth/password_admin_window.py:446
 msgid "Change Password"
 msgstr "パスワードの変更"
 
-#: auth/password_admin_window.py:185 auth/password_admin_window.py:458
+#: auth/password_admin_window.py:185 auth/password_admin_window.py:459
 msgid "Remove Password"
 msgstr "パスワードの削除"
 
@@ -636,33 +645,33 @@ msgstr "現在のパスワードが間違っています。"
 msgid "New passwords do not match."
 msgstr "新しいパスワードが一致しない。"
 
-#: auth/password_admin_window.py:440
+#: auth/password_admin_window.py:441
 msgid "Password changed successfully."
 msgstr "パスワードの変更に成功しました。"
 
-#: auth/password_admin_window.py:443
+#: auth/password_admin_window.py:444
 msgid "Failed to change password."
 msgstr "パスワードの変更に失敗しました。"
 
-#: auth/password_admin_window.py:459
+#: auth/password_admin_window.py:460
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
 msgstr "本当にパスワード保護を解除しますか？これにより、すべてのパスワード要件が無効になります。"
 
-#: auth/password_admin_window.py:465
+#: auth/password_admin_window.py:466
 msgid "Password removed successfully."
 msgstr "パスワードは正常に削除されました。"
 
-#: auth/password_admin_window.py:469
+#: auth/password_admin_window.py:470
 msgid "Failed to remove password."
 msgstr "パスワードの削除に失敗しました。"
 
-#: auth/password_admin_window.py:504
+#: auth/password_admin_window.py:505
 msgid "Cache exported as JSON to:"
 msgstr "キャッシュはJSONとしてエクスポートされる："
 
-#: auth/password_admin_window.py:506
+#: auth/password_admin_window.py:507
 msgid "Failed to export cache as JSON:"
 msgstr "キャッシュを JSON としてエクスポートできませんでした："
 
@@ -697,6 +706,10 @@ msgstr "• 重要なアクションのパスワード保護を設定する"
 #: auth/password_dialog.py:194
 msgid "• Continue without password protection (less secure)"
 msgstr "• パスワード保護なしで続ける（安全性が低い）"
+
+#: auth/password_dialog.py:201
+msgid "Don't show this security advice again"
+msgstr "このセキュリティに関するアドバイスを再び表示しない"
 
 #: auth/password_dialog.py:211 auth/password_dialog.py:232
 msgid "Configure Protection"
@@ -742,105 +755,105 @@ msgstr "再開比較"
 msgid "Invalid mode"
 msgstr "無効なモード"
 
-#: compare/compare_wrapper.py:102 compare/compare_wrapper.py:119
+#: compare/compare_wrapper.py:102 compare/compare_wrapper.py:123
 msgid "Search required"
 msgstr "必須検索"
 
-#: compare/compare_wrapper.py:102 compare/compare_wrapper.py:119
+#: compare/compare_wrapper.py:102 compare/compare_wrapper.py:123
 msgid "No matches found. Search again to find potential matches."
 msgstr "該当する検索結果がありません。もう一度検索して一致する可能性のあるものを探してください。"
 
-#: compare/compare_wrapper.py:172
+#: compare/compare_wrapper.py:181
 msgid "Skipped %s images."
 msgstr "{0}枚の画像をスキップしました。"
 
-#: compare/compare_wrapper.py:178
+#: compare/compare_wrapper.py:187
 msgid "No Unrelated Images"
 msgstr "非関連画像なし"
 
-#: compare/compare_wrapper.py:178
+#: compare/compare_wrapper.py:187
 msgid "No unrelated images found."
 msgstr "関係のない画像が見つかりません。"
 
-#: compare/compare_wrapper.py:215 compare/compare_wrapper.py:377
+#: compare/compare_wrapper.py:224 compare/compare_wrapper.py:386
 msgid "No Groups Found"
 msgstr "グループが見つかりません"
 
-#: compare/compare_wrapper.py:285
+#: compare/compare_wrapper.py:294
 msgid ""
 "Gathering image data... setup may take a while depending on number of files "
 "involved."
 msgstr "画像データの収集...ファイル数によってはセットアップに時間がかかる。"
 
-#: compare/compare_wrapper.py:307
+#: compare/compare_wrapper.py:316
 msgid "Confirm group run"
 msgstr "グループ走行の確認"
 
-#: compare/compare_wrapper.py:308
+#: compare/compare_wrapper.py:317
 msgid ""
 "Search mode detected, please confirm switch to group mode before run. Group "
 "mode will take longer as all images in the base directory are compared."
 msgstr ""
 "検索モードが検出されたため、実行前にグループモードへの切り替えを確認してください。グループモードでは、ベースディレクトリ内のすべての画像を比較するため、時間がかかります。"
 
-#: compare/compare_wrapper.py:315
+#: compare/compare_wrapper.py:324
 msgid "Gathering image data for comparison"
 msgstr "比較のための画像データ収集"
 
-#: compare/compare_wrapper.py:343
+#: compare/compare_wrapper.py:352
 msgid "Searching images..."
 msgstr "画像検索..."
 
-#: compare/compare_wrapper.py:349
+#: compare/compare_wrapper.py:358
 msgid "Set a directory and search file or search text."
 msgstr "ディレクトリと検索ファイルまたは検索テキストを設定します。"
 
-#: compare/compare_wrapper.py:350
+#: compare/compare_wrapper.py:359
 msgid "No Match Found"
 msgstr "マッチが見つかりません"
 
-#: compare/compare_wrapper.py:350
+#: compare/compare_wrapper.py:359
 msgid "None of the files match the search filters with current settings."
 msgstr "現在の設定では、検索フィルターに一致するファイルはありません。"
 
-#: compare/compare_wrapper.py:363
+#: compare/compare_wrapper.py:372
 msgid "%s possibly related images found."
 msgstr "{0} 関連の画像が見つかる可能性があります。"
 
-#: compare/compare_wrapper.py:371
+#: compare/compare_wrapper.py:380
 msgid "Running image comparisons..."
 msgstr "実行イメージの比較..."
 
-#: compare/compare_wrapper.py:376 compare/compare_wrapper.py:391
+#: compare/compare_wrapper.py:385 compare/compare_wrapper.py:400
 msgid "Set a directory and search file."
 msgstr "ディレクトリと検索ファイルを設定します。"
 
-#: compare/compare_wrapper.py:377
+#: compare/compare_wrapper.py:386
 msgid "None of the files can be grouped with current settings."
 msgstr "現在の設定では、どのファイルもグループ化できない。"
 
-#: compare/compare_wrapper.py:392
+#: compare/compare_wrapper.py:401
 msgid "No Duplicates Found"
 msgstr "重複が見つかりません"
 
-#: compare/compare_wrapper.py:392
+#: compare/compare_wrapper.py:401
 msgid ""
 "None of the files appear to be duplicates based on the current settings."
 msgstr "現在の設定では、どのファイルも重複していないようです。"
 
-#: compare/compare_wrapper.py:416
+#: compare/compare_wrapper.py:425
 msgid "Stranded Group Members Found"
 msgstr "取り残されたグループメンバー発見"
 
-#: compare/compare_wrapper.py:416
+#: compare/compare_wrapper.py:425
 msgid "Some group members were left stranded by the grouping process."
 msgstr "グループ分けの過程で取り残されたメンバーもいた。"
 
-#: compare/compare_wrapper.py:471
+#: compare/compare_wrapper.py:480
 msgid "No More Groups"
 msgstr "グループなし"
 
-#: compare/compare_wrapper.py:472
+#: compare/compare_wrapper.py:481
 msgid ""
 "There are no more image groups remaining for this directory and current "
 "filter settings."
@@ -854,7 +867,7 @@ msgstr "(ポジなし）"
 msgid "(no negatives set)"
 msgstr "(ネガなし）"
 
-#: compare/prevalidations_window.py:31 compare/prevalidations_window.py:350
+#: compare/prevalidations_window.py:31 compare/prevalidations_window.py:351
 msgid "New Prevalidation"
 msgstr "新規登録"
 
@@ -882,157 +895,157 @@ msgstr " - マーク"
 msgid "Moving file: "
 msgstr "ファイルの移動: "
 
-#: compare/prevalidations_window.py:183
+#: compare/prevalidations_window.py:184
 msgid "Deleting file: "
 msgstr "ファイルの削除: "
 
-#: compare/prevalidations_window.py:230
+#: compare/prevalidations_window.py:231
 msgid "Action modifier is not a valid directory: "
 msgstr "アクション修飾子は有効なディレクトリではありません : "
 
-#: compare/prevalidations_window.py:232
+#: compare/prevalidations_window.py:233
 msgid "Run on folder is not a valid directory: "
 msgstr "フォルダ上で実行することは有効なディレクトリではありません : "
 
-#: compare/prevalidations_window.py:234
+#: compare/prevalidations_window.py:235
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr "無効な優先値 {0} は、エラーや実行できません。"
 
-#: compare/prevalidations_window.py:299
+#: compare/prevalidations_window.py:300
 msgid "embedding"
 msgstr "埋め込み"
 
-#: compare/prevalidations_window.py:301
+#: compare/prevalidations_window.py:302
 msgid "classifier {0}"
 msgstr "クラシファイア {0}"
 
-#: compare/prevalidations_window.py:303
+#: compare/prevalidations_window.py:304
 msgid "prompts"
 msgstr "プロンプト"
 
-#: compare/prevalidations_window.py:311
+#: compare/prevalidations_window.py:312
 msgid "categories: {0}"
 msgstr "カテゴリに分類されます： {0}"
 
-#: compare/prevalidations_window.py:315
+#: compare/prevalidations_window.py:316
 msgid "{0} positives, {1} negatives"
 msgstr "{0} 陽性、{1} 陰性"
 
-#: compare/prevalidations_window.py:319
+#: compare/prevalidations_window.py:320
 msgid " using {0} ({1})"
 msgstr " {0} ({1})"
 
-#: compare/prevalidations_window.py:321
+#: compare/prevalidations_window.py:322
 msgid " using {0}"
 msgstr " {0}"
 
-#: compare/prevalidations_window.py:323
+#: compare/prevalidations_window.py:324
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} 陽性、{1} 陰性)"
 
-#: compare/prevalidations_window.py:336
+#: compare/prevalidations_window.py:337
 msgid "Modify Prevalidation"
 msgstr "無効化の修正"
 
-#: compare/prevalidations_window.py:349
+#: compare/prevalidations_window.py:350
 msgid "Prevalidation Name"
 msgstr "バリデーション名"
 
-#: compare/prevalidations_window.py:356
+#: compare/prevalidations_window.py:357
 msgid "Positives"
 msgstr "ポジティブ"
 
-#: compare/prevalidations_window.py:363
+#: compare/prevalidations_window.py:364
 msgid "Negatives"
 msgstr "ネガティブ"
 
-#: compare/prevalidations_window.py:371
+#: compare/prevalidations_window.py:372
 msgid "Validation Types"
 msgstr "バリデーション・タイプ"
 
-#: compare/prevalidations_window.py:374
+#: compare/prevalidations_window.py:375
 msgid "Use Embedding"
 msgstr "埋め込みを使用する"
 
-#: compare/prevalidations_window.py:381
+#: compare/prevalidations_window.py:382
 msgid "Use Image Classifier"
 msgstr "画像分類器を使う"
 
-#: compare/prevalidations_window.py:388
+#: compare/prevalidations_window.py:389
 msgid "Use Prompts"
 msgstr "プロンプトの使用"
 
-#: compare/prevalidations_window.py:395
+#: compare/prevalidations_window.py:396
 msgid "Threshold"
 msgstr "しきい値"
 
-#: compare/prevalidations_window.py:402
+#: compare/prevalidations_window.py:403
 msgid "Action"
 msgstr "アクション"
 
-#: compare/prevalidations_window.py:414
+#: compare/prevalidations_window.py:415
 msgid "Action Modifier"
 msgstr "アクション修飾子"
 
-#: compare/prevalidations_window.py:421
+#: compare/prevalidations_window.py:422
 msgid "Run on Directory"
 msgstr "ディレクトリで実行"
 
-#: compare/prevalidations_window.py:428
+#: compare/prevalidations_window.py:429
 msgid "Image Classifier Name"
 msgstr "画像分類器名"
 
-#: compare/prevalidations_window.py:440
+#: compare/prevalidations_window.py:441
 msgid "Image Classifier Selected Category"
 msgstr "画像分類器 選択されたカテゴリー"
 
-#: compare/prevalidations_window.py:444
+#: compare/prevalidations_window.py:445
 msgid "Select Categories..."
 msgstr "カテゴリーを選択..."
 
-#: compare/prevalidations_window.py:450
+#: compare/prevalidations_window.py:451
 msgid "Done"
 msgstr "完了"
 
-#: compare/prevalidations_window.py:622
+#: compare/prevalidations_window.py:623
 msgid ""
 "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 msgstr "名前：{0} のプリバリデーションが見つかりません。プリバリデーションウィンドウで設定してください。"
 
-#: compare/prevalidations_window.py:633
+#: compare/prevalidations_window.py:634
 msgid "Prevalidations"
 msgstr "事前検証"
 
-#: compare/prevalidations_window.py:656
+#: compare/prevalidations_window.py:657
 msgid "Set Prevalidations"
 msgstr "プリセット"
 
-#: compare/prevalidations_window.py:658
+#: compare/prevalidations_window.py:659
 msgid "Add prevalidation"
 msgstr "優先権を追加"
 
-#: compare/prevalidations_window.py:660
+#: compare/prevalidations_window.py:661
 msgid "Clear prevalidations"
 msgstr "明確な優先順位"
 
-#: compare/prevalidations_window.py:667 utils/help_and_config.py:152
+#: compare/prevalidations_window.py:668 utils/help_and_config.py:152
 msgid "Enable Prevalidations"
 msgstr "プレバリデーションを有効にする"
 
-#: compare/prevalidations_window.py:704 files/hotkey_actions_window.py:95
+#: compare/prevalidations_window.py:705 files/hotkey_actions_window.py:95
 msgid "Set"
 msgstr "セット"
 
-#: compare/prevalidations_window.py:712 files/file_actions_window.py:273
-#: files/file_actions_window.py:316
+#: compare/prevalidations_window.py:713 files/file_actions_window.py:478
+#: files/file_actions_window.py:521
 msgid "Modify"
 msgstr "変更する"
 
-#: compare/prevalidations_window.py:719 image/prevalidation_action.py:34
+#: compare/prevalidations_window.py:720 image/prevalidation_action.py:34
 msgid "Delete"
 msgstr "削除"
 
-#: compare/prevalidations_window.py:726
+#: compare/prevalidations_window.py:727
 msgid "Move down"
 msgstr "移動する"
 
@@ -1078,53 +1091,53 @@ msgstr "お気に入りを新しいウィンドウで開く: "
 msgid "Removed favorite: "
 msgstr "お気に入りを削除しました: "
 
-#: files/file_actions_window.py:205
+#: files/file_actions_window.py:267
 msgid "File Actions"
 msgstr "ファイル操作"
 
-#: files/file_actions_window.py:227
+#: files/file_actions_window.py:291
 msgid "File Action History"
 msgstr "ファイル操作履歴"
 
-#: files/file_actions_window.py:229
+#: files/file_actions_window.py:293
 msgid "Search Image"
 msgstr "画像検索"
 
-#: files/file_actions_window.py:231
+#: files/file_actions_window.py:295
 msgid "Clear History"
 msgstr "明確な歴史"
 
-#: files/file_actions_window.py:257
+#: files/file_actions_window.py:462
 msgid " ({0} files)"
 msgstr " ({0} ファイル)"
 
-#: files/file_actions_window.py:262 files/marked_file_mover.py:273
+#: files/file_actions_window.py:467 files/marked_file_mover.py:273
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "交通アクセス"
 
-#: files/file_actions_window.py:262 files/marked_file_mover.py:280
+#: files/file_actions_window.py:467 files/marked_file_mover.py:280
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "コピー"
 
-#: files/file_actions_window.py:265 files/file_actions_window.py:308
+#: files/file_actions_window.py:470 files/file_actions_window.py:513
 msgid "Undo"
 msgstr "ログイン"
 
-#: files/file_actions_window.py:300
+#: files/file_actions_window.py:505
 msgid "View"
 msgstr "ニュース"
 
-#: files/file_actions_window.py:333
+#: files/file_actions_window.py:538
 msgid "Image does not exist: "
 msgstr "画像が存在しません。 "
 
-#: files/file_actions_window.py:334 files/file_actions_window.py:345
+#: files/file_actions_window.py:539 files/file_actions_window.py:550
 msgid "File Action Error"
 msgstr "ファイルアクションエラー"
 
-#: files/file_actions_window.py:344
+#: files/file_actions_window.py:549
 msgid "Images not found"
 msgstr "見つからない画像"
 
@@ -1168,7 +1181,7 @@ msgstr "対象ディレクトリ"
 msgid "(unset)"
 msgstr "(未設定)"
 
-#: files/marked_file_mover.py:95 files/marked_file_mover.py:931
+#: files/marked_file_mover.py:95 files/marked_file_mover.py:933
 msgid "Marks cleared."
 msgstr "マークはクリア。"
 
@@ -1232,11 +1245,11 @@ msgstr "無効なディレクトリです： {0}"
 msgid "Select target directory for marked files"
 msgstr "マークされたファイルのターゲットディレクトリを選択"
 
-#: files/marked_file_mover.py:391
+#: files/file_actions_window.py:349 files/marked_file_mover.py:391
 msgid "Moved"
 msgstr "移動する"
 
-#: files/marked_file_mover.py:391
+#: files/file_actions_window.py:355 files/marked_file_mover.py:391
 msgid "Copied"
 msgstr "コピッド"
 
@@ -1268,7 +1281,7 @@ msgstr "既存のファイル名が一致する！"
 msgid "WARNING: Exact file match."
 msgstr "警告：ファイルの完全一致。"
 
-#: files/marked_file_mover.py:493 files/marked_file_mover.py:844
+#: files/marked_file_mover.py:493 files/marked_file_mover.py:846
 msgid "WARNING: Short filenames."
 msgstr "警告:短いファイル名。"
 
@@ -1312,55 +1325,55 @@ msgstr "対象ディレクトリの親ディレクトリを選択"
 msgid "Sorted directories by embedding comparison."
 msgstr "比較を埋め込むことでソートされたディレクトリ。"
 
-#: files/marked_file_mover.py:748
+#: files/marked_file_mover.py:750
 msgid "Confirm Delete"
 msgstr "削除を確認する"
 
-#: files/marked_file_mover.py:749
+#: files/marked_file_mover.py:751
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr "{0}マークされたファイルを削除する - 続行したいですか?"
 
-#: files/marked_file_mover.py:769
+#: files/marked_file_mover.py:771
 msgid "Delete Failed"
 msgstr "失敗した削除"
 
-#: files/marked_file_mover.py:770
+#: files/marked_file_mover.py:772
 msgid "Failed to delete %s files - check log for details."
 msgstr "{0}ファイルを削除する失敗 - 詳細はログを確認してください。"
 
-#: files/marked_file_mover.py:773
+#: files/marked_file_mover.py:775
 msgid "Deleted %s marked files."
 msgstr "削除された {0} マークされたファイル。"
 
-#: files/marked_file_mover.py:838
+#: files/marked_file_mover.py:840
 msgid "Existing filenames found!"
 msgstr "既存のファイル名が見つかります!"
 
-#: files/marked_file_mover.py:840
+#: files/marked_file_mover.py:842
 msgid "WARNING: All file hashes match."
 msgstr "警告:すべてのファイルハッシュマッチ。"
 
-#: files/marked_file_mover.py:842
+#: files/marked_file_mover.py:844
 msgid "WARNING: %s of %s file hashes match."
 msgstr "警告: {1} ファイルのハッシュマッチの {0}。"
 
-#: files/marked_file_mover.py:848
+#: files/marked_file_mover.py:850
 msgid "No existing filenames found."
 msgstr "既存のファイル名が見つかりません。"
 
-#: files/marked_file_mover.py:876
+#: files/marked_file_mover.py:878
 msgid "Found %s downstream related images"
 msgstr "{0}下流関連画像が見つかりました"
 
-#: files/marked_file_mover.py:878
+#: files/marked_file_mover.py:880
 msgid "No downstream related images found"
 msgstr "下流関連画像が見つかりません"
 
-#: files/marked_file_mover.py:889
+#: files/marked_file_mover.py:891
 msgid "Cleared marked file"
 msgstr "マークされたファイルをクリア"
 
-#: files/marked_file_mover.py:933
+#: files/marked_file_mover.py:935
 msgid "Removed {0} marks"
 msgstr "{0}マークを削除"
 
@@ -1680,19 +1693,19 @@ msgstr " (正確なマッチが見つかりません)"
 msgid "(No related image found)"
 msgstr "(関連画像が見つかりません)"
 
-#: image/image_details.py:501 image/image_details.py:508
+#: image/image_details.py:503 image/image_details.py:510
 msgid "%s downstream image(s) found."
 msgstr "{0} 下流画像(s)が見つかります。"
 
-#: image/image_details.py:504
+#: image/image_details.py:506
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (キャッシュ済み) ダウンストリーム画像が見つかりました。"
 
-#: image/image_details.py:510
+#: image/image_details.py:512
 msgid "No downstream related images found in"
 msgstr "下流関連の画像が見つかりません"
 
-#: image/image_details.py:570
+#: image/image_details.py:572
 msgid "Updated tags for %s"
 msgstr "{0} のタグを更新"
 
@@ -2206,14 +2219,34 @@ msgstr "ファイルパスのバックスラッシュをエスケープする"
 msgid " etc."
 msgstr " その他"
 
-#: auth/password_admin_window.py:150
-msgid "Security Advice Settings"
-msgstr "セキュリティ アドバイス設定"
+#: app.py:114
+msgid "(Main Window)"
+msgstr "（メインウィンドウ）"
 
-#: auth/password_admin_window.py:156
-msgid "Show security advice when no password is configured"
-msgstr "パスワードが設定されていない場合にセキュリティに関するアドバイスを表示する"
+#: files/file_actions_window.py:329
+msgid "Today's File Actions"
+msgstr "本日のファイル操作"
 
-#: auth/password_dialog.py:201
-msgid "Don't show this security advice again"
-msgstr "このセキュリティに関するアドバイスを再び表示しない"
+#: files/file_actions_window.py:329
+msgid "File Action Statistics"
+msgstr "ファイル操作統計"
+
+#: files/file_actions_window.py:336 files/file_actions_window.py:743
+msgid "All Time"
+msgstr "全時代"
+
+#: files/file_actions_window.py:336 files/file_actions_window.py:745
+msgid "Today Only"
+msgstr "本日限定"
+
+#: files/file_actions_window.py:343
+msgid "Target Directory"
+msgstr "ターゲットディレクトリ"
+
+#: files/file_actions_window.py:361
+msgid "Total"
+msgstr "合計"
+
+#: files/file_actions_window.py:412
+msgid "... and {0} more"
+msgstr "...および{0}件以上"
