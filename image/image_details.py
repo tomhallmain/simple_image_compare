@@ -444,12 +444,14 @@ class ImageDetails():
         ImageDetails.open_temp_image_canvas(master=master, image_path=related_image_path, app_actions=app_actions)
 
     @staticmethod
-    def open_temp_image_canvas(master=None, image_path=None, app_actions=None):
+    def open_temp_image_canvas(master=None, image_path=None, app_actions=None, skip_get_window_check=False):
         if image_path is None:
             return
         base_dir = os.path.dirname(image_path)
-        if app_actions.get_window(base_dir=base_dir, img_path=image_path, refocus=True) is not None:
-            return
+        if not skip_get_window_check:
+            if app_actions.get_window(base_dir=base_dir, img_path=image_path, refocus=True,
+                                      disallow_if_compare_state=True) is not None:
+                return
         if ImageDetails.related_image_canvas is None:
             ImageDetails.set_related_image_canvas(master, image_path, app_actions)
         try:
