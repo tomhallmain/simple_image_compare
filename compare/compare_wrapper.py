@@ -105,8 +105,12 @@ class CompareWrapper:
         self._app_actions._set_toggled_view_matches()
         prev_image = self._get_prev_image()
         start_image = prev_image
-        while self.skip_image(prev_image) and prev_image != start_image:
+        # Skip images that should be skipped, but break if we've gone through all images
+        while self.skip_image(prev_image):
             prev_image = self._get_prev_image()
+            if prev_image == start_image:
+                # We've gone through all images and they all need to be skipped (TODO: show an alert)
+                break
         self._master.update()
         self._app_actions.create_image(prev_image)
         return True
@@ -122,8 +126,12 @@ class CompareWrapper:
         self._app_actions._set_toggled_view_matches()
         next_image = self._get_next_image()
         start_image = next_image
-        while self.skip_image(next_image) and next_image != start_image:
+        # Skip images that should be skipped, but break if we've gone through all images
+        while self.skip_image(next_image):
             next_image = self._get_next_image()
+            if next_image == start_image:
+                # We've gone through all images and they all need to be skipped (TODO: show an alert)
+                break
         self._master.update()
         self._app_actions.create_image(next_image)
         return True
@@ -132,6 +140,7 @@ class CompareWrapper:
         if image_path in self.hidden_images:
             return True
         if config.enable_prevalidations:
+            prevalidation_action = None
             try:
                 prevalidation_action = PrevalidationsWindow.prevalidate(
                     image_path,

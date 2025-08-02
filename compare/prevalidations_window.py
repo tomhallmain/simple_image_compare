@@ -163,6 +163,7 @@ class Prevalidation:
                     except Exception as e:
                         if (self.action == PrevalidationAction.MOVE and
                             "File already exists:" in str(e) and
+                            os.path.exists(image_path) and
                             Utils.calculate_hash(image_path) == Utils.calculate_hash(os.path.join(self.action_modifier, os.path.basename(image_path)))):
                             # The file already exists in target, so we need to remove it from the source
                             # NOTE: this is a hack to avoid an error that sometimes happens where a file gets stranded
