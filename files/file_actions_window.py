@@ -1,6 +1,7 @@
+from datetime import datetime
 import os
 
-from tkinter import Toplevel, Label, LEFT, W
+from tkinter import Toplevel, Frame, Label, W, CENTER, LEFT, RIGHT
 from tkinter.ttk import Button
 
 from utils.config import config
@@ -17,12 +18,13 @@ logger = get_logger("file_actions_window")
 
 
 class Action():
-    def __init__(self, action, target, original_marks=[], new_files=[], auto=False):
+    def __init__(self, action, target, original_marks=[], new_files=[], auto=False, timestamp=None):
         self.action = action
         self.target = target
         self.original_marks = original_marks[:]
         self.new_files = new_files[:]
         self.auto = auto
+        self.timestamp = timestamp or datetime.now()
 
     def add_file(self, file):
         self.new_files.append(file)
@@ -34,6 +36,27 @@ class Action():
 
     def is_move_action(self):
         return self.action.__name__.startswith("move")
+
+    def is_today(self):
+        """Check if this action was performed today or within 24 hours if it's early morning."""
+        if not self.timestamp:
+            return False
+        
+        now = datetime.now()
+        today = now.date()
+        action_date = self.timestamp.date()
+        
+        # If it's the same date, it's definitely today
+        if action_date == today:
+            return True
+        
+        # If it's early morning (before 5 AM), include actions from the past 24 hours
+        if now.hour < 5:
+            # Check if the action was within the last 24 hours
+            time_diff = now - self.timestamp
+            return time_diff.total_seconds() <= 24 * 3600  # 24 hours in seconds
+        
+        return False
 
     def any_new_files_exist(self):
         for file in self.new_files:
@@ -62,14 +85,24 @@ class Action():
             "action": Action.convert_action_to_text(self.action),
             "target": self.target,
             "original_marks": self.original_marks[:],
-            "new_files": self.new_files[:]
+            "new_files": self.new_files[:],
+            "auto": self.auto,
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None
             }
 
     @staticmethod
     def from_dict(dct):
+        timestamp = None
+        if "timestamp" in dct and dct["timestamp"]:
+            try:
+                timestamp = datetime.fromisoformat(dct["timestamp"])
+            except ValueError:
+                # Fallback for old format or invalid timestamps
+                timestamp = None
+        
         return Action(Action.convert_action_from_text(dct["action"]),
                       dct["target"], dct["original_marks"][:], dct["new_files"][:],
-                      dct["auto"] if "auto" in dct else False)
+                      dct["auto"] if "auto" in dct else False, timestamp)
 
     def __eq__(self, other):
         if not isinstance(other, Action):
@@ -170,7 +203,7 @@ class FileActionsWindow:
 
     @staticmethod
     def set_permanent_action(target_dir, move_func, toast_callback):
-        FileActionsWindow.permanent_action = Action(move_func, target_dir)
+        FileActionsWindow.permanent_action = Action(move_func, target_dir, timestamp=datetime.now())
         app_info_cache.set_meta("permanent_action", move_func.__name__)
         app_info_cache.set_meta("permanent_mark_target", target_dir)
         toast_callback(f"Set permanent action:\n{move_func.__name__} to {target_dir}")
@@ -178,7 +211,7 @@ class FileActionsWindow:
 
     @staticmethod
     def set_hotkey_action(number, target_dir, move_func, toast_callback):
-        FileActionsWindow.hotkey_actions[number] = Action(move_func, target_dir)
+        FileActionsWindow.hotkey_actions[number] = Action(move_func, target_dir, timestamp=datetime.now())
         hotkey_actions = app_info_cache.get_meta("hotkey_actions", default_val={})
         assert type(hotkey_actions) == dict
         hotkey_actions[number] = {"action": move_func.__name__, "target": target_dir}
@@ -200,6 +233,35 @@ class FileActionsWindow:
         new_action = Action(action, target, [source], [new_filepath], auto)
         FileActionsWindow.update_history(new_action)
 
+    @staticmethod
+    def get_action_statistics(today_only=False):
+        """
+        Calculate statistics from the action history.
+        Args:
+            today_only: If True, only include actions performed today
+        Returns a dictionary mapping target directories to their move/copy counts.
+        """
+        stats = {}
+        for action in FileActionsWindow.action_history:
+            # Skip if filtering for today and action is not from today
+            if action.auto or (today_only and not action.is_today()):
+                continue
+                
+            target_dir = action.target
+            if target_dir not in stats:
+                stats[target_dir] = {"moved": 0, "copied": 0}
+            
+            if action.is_move_action():
+                stats[target_dir]["moved"] += len(action.new_files)
+            else:
+                stats[target_dir]["copied"] += len(action.new_files)
+        
+        # Add total count for each directory
+        for target_dir in stats:
+            stats[target_dir]["total"] = stats[target_dir]["moved"] + stats[target_dir]["copied"]
+        
+        return stats
+
     def __init__(self, app_master, app_actions, view_image_callback, move_marks_callback, geometry="700x1200"):
         FileActionsWindow.top_level = Toplevel(app_master, bg=AppStyle.BG_COLOR)
         FileActionsWindow.top_level.title(_("File Actions"))
@@ -213,12 +275,14 @@ class FileActionsWindow:
         self.filter_text = ""
         self.filtered_action_history = FileActionsWindow.action_history[:]
         self.button_index = -1
+        self.show_today_only = False  # Track whether to show today's stats only
 
         self.label_filename_list = []
         self.label_action_list = []
         self.view_btn_list = []
         self.undo_btn_list = []
         self.modify_btn_list = []
+        self.statistics_widgets = []
 
         self.frame = ScrollFrame(self.master, bg_color=AppStyle.BG_COLOR)
         self.frame.pack(side="top", fill="both", expand=True)
@@ -229,7 +293,9 @@ class FileActionsWindow:
         self.add_btn("search_for_active_image_btn", _("Search Image"), self.search_for_active_image, column=1)
         self.clear_action_history_btn = None
         self.add_btn("clear_action_history_btn", _("Clear History"), self.clear_action_history, column=2)
+        # Note: toggle_stats_btn will be created in add_statistics_section() to be on the same row as the title
 
+        self.add_statistics_section()
         self.add_action_history_widgets()
 
         self.master.bind("<Key>", self.filter_targets)
@@ -239,8 +305,147 @@ class FileActionsWindow:
         self.master.protocol("WM_DELETE_WINDOW", self.close_windows)
         self.frame.after(1, lambda: self.frame.focus_force())
 
+    def add_statistics_section(self):
+        """Add a statistics section at the top of the window showing move/copy counts by target directory."""
+        stats = self.get_action_statistics(today_only=self.show_today_only)
+        
+        if not stats:
+            return
+        
+        # Sort directories by total activity (moved + copied) in descending order
+        sorted_stats = sorted(stats.items(), key=lambda x: x[1]["total"], reverse=True)
+        
+        # Limit to top 6 directories, with "etc." for the rest
+        MAX_DISPLAY_DIRS = 6
+        display_stats = sorted_stats[:MAX_DISPLAY_DIRS]
+        remaining_stats = sorted_stats[MAX_DISPLAY_DIRS:]
+        
+        # Create statistics frame
+        stats_frame = Frame(self.frame.viewPort, bg=AppStyle.BG_COLOR, relief="flat", bd=1)
+        stats_frame.grid(row=1, column=0, columnspan=5, sticky="ew", padx=5, pady=(10, 5))
+        self.statistics_widgets.append(stats_frame)
+        
+        # Statistics title and toggle button on the same row
+        title_text = _("Today's File Actions") if self.show_today_only else _("File Action Statistics")
+        stats_title = Label(stats_frame)
+        self.add_label(stats_title, title_text, row=0, column=0, 
+                       columnspan=3, sticky="nsew", justify=CENTER)
+        self.statistics_widgets.append(stats_title)
+        
+        # Add toggle button on the same row as the title
+        self.toggle_stats_btn = Button(stats_frame, text=_("All Time") if self.show_today_only else _("Today Only"), 
+                                      command=self.toggle_statistics_view)
+        self.toggle_stats_btn.grid(row=0, column=3, sticky="e", padx=5, pady=2)
+        self.statistics_widgets.append(self.toggle_stats_btn)
+        
+        # Headers
+        target_header = Label(stats_frame)
+        self.add_label(target_header, _("Target Directory"), row=1, column=0, 
+                      wraplength=150, justify=LEFT)
+        target_header.grid(sticky="ew", padx=1, pady=1)
+        self.statistics_widgets.append(target_header)
+        
+        moved_header = Label(stats_frame)
+        self.add_label(moved_header, _("Moved"), row=1, column=1, 
+                      wraplength=80, justify=RIGHT)
+        moved_header.grid(sticky="ew", padx=1, pady=1)
+        self.statistics_widgets.append(moved_header)
+        
+        copied_header = Label(stats_frame)
+        self.add_label(copied_header, _("Copied"), row=1, column=2, 
+                      wraplength=80, justify=RIGHT)
+        copied_header.grid(sticky="ew", padx=1, pady=1)
+        self.statistics_widgets.append(copied_header)
+        
+        total_header = Label(stats_frame)
+        self.add_label(total_header, _("Total"), row=1, column=3, 
+                      wraplength=80, justify=RIGHT)
+        total_header.grid(sticky="ew", padx=1, pady=1)
+        self.statistics_widgets.append(total_header)
+        
+        # Data rows
+        for i, (target_dir, counts) in enumerate(display_stats):
+            row = i + 2
+            
+            # Target directory (truncated for display)
+            target_display = Utils.get_relative_dirpath(target_dir, levels=2)
+            if len(target_display) > 30:
+                target_display = Utils.get_centrally_truncated_string(target_display, 30)
+            
+            target_label = Label(stats_frame)
+            self.add_label(target_label, target_display, row=row, column=0, 
+                          wraplength=150, justify=LEFT)
+            target_label.grid(padx=1, pady=1)
+            self.statistics_widgets.append(target_label)
+            
+            # Move count
+            moved_label = Label(stats_frame)
+            self.add_label(moved_label, str(counts["moved"]), row=row, column=1, 
+                          wraplength=80, justify=RIGHT)
+            moved_label.grid(sticky="e", padx=1, pady=1)
+            self.statistics_widgets.append(moved_label)
+            
+            # Copy count
+            copied_label = Label(stats_frame)
+            self.add_label(copied_label, str(counts["copied"]), row=row, column=2, 
+                          wraplength=80, justify=RIGHT)
+            copied_label.grid(sticky="e", padx=1, pady=1)
+            self.statistics_widgets.append(copied_label)
+            
+            # Total count
+            total_label = Label(stats_frame)
+            self.add_label(total_label, str(counts["total"]), row=row, column=3, 
+                          wraplength=80, justify=RIGHT)
+            total_label.grid(sticky="e", padx=1, pady=1)
+            self.statistics_widgets.append(total_label)
+        
+        # Add "etc." row if there are remaining directories
+        if remaining_stats:
+            row = len(display_stats) + 2
+            
+            # Calculate totals for remaining directories
+            remaining_moved = sum(counts["moved"] for _, counts in remaining_stats)
+            remaining_copied = sum(counts["copied"] for _, counts in remaining_stats)
+            remaining_total = sum(counts["total"] for _, counts in remaining_stats)
+            
+            etc_label = Label(stats_frame)
+            self.add_label(etc_label, _("... and {0} more").format(len(remaining_stats)), row=row, column=0, 
+                          wraplength=150, justify=LEFT)
+            etc_label.grid(padx=1, pady=1)
+            self.statistics_widgets.append(etc_label)
+            
+            etc_moved_label = Label(stats_frame)
+            self.add_label(etc_moved_label, str(remaining_moved), row=row, column=1, 
+                          wraplength=80, justify=RIGHT)
+            etc_moved_label.grid(sticky="e", padx=1, pady=1)
+            self.statistics_widgets.append(etc_moved_label)
+            
+            etc_copied_label = Label(stats_frame)
+            self.add_label(etc_copied_label, str(remaining_copied), row=row, column=2, 
+                          wraplength=80, justify=RIGHT)
+            etc_copied_label.grid(sticky="e", padx=1, pady=1)
+            self.statistics_widgets.append(etc_copied_label)
+            
+            etc_total_label = Label(stats_frame)
+            self.add_label(etc_total_label, str(remaining_total), row=row, column=3, 
+                          wraplength=80, justify=RIGHT)
+            etc_total_label.grid(sticky="e", padx=1, pady=1)
+            self.statistics_widgets.append(etc_total_label)
+        
+        # Configure column weights for proper sizing
+        stats_frame.columnconfigure(0, weight=3)  # Target directory gets more space
+        stats_frame.columnconfigure(1, weight=1)  # Move count
+        stats_frame.columnconfigure(2, weight=1)  # Copy count
+        stats_frame.columnconfigure(3, weight=1)  # Total count
+        
+        # Add visual divider below statistics section
+        divider_frame = Frame(self.frame.viewPort, bg=AppStyle.FG_COLOR, height=2)
+        divider_frame.grid(row=2, column=0, columnspan=5, sticky="ew", padx=5, pady=(10, 5))
+        divider_frame.grid_propagate(False)  # Maintain the height
+        self.statistics_widgets.append(divider_frame)
+
     def add_action_history_widgets(self):
-        row = 0
+        row = 3  # Start after statistics section (rows 0-2)
         base_col = 0
         last_action = None
         for i in range(len(self.filtered_action_history)):
@@ -364,6 +569,7 @@ class FileActionsWindow:
     def _refresh_widgets(self):
         self.clear_widget_lists()
         self.add_action_history_widgets()
+        self.add_statistics_section()
         self.master.update()
 
     def clear_widget_lists(self):
@@ -377,11 +583,14 @@ class FileActionsWindow:
             btn.destroy()
         for btn in self.modify_btn_list:
             btn.destroy()
+        for widget in self.statistics_widgets:
+            widget.destroy()
         self.label_filename_list = []
         self.label_action_list = []
         self.view_btn_list = []
         self.undo_btn_list = []
         self.modify_btn_list = []
+        self.statistics_widgets = []
 
     def _get_paging_length(self):
         return max(1, int(len(self.filtered_action_history) / 10))
@@ -418,28 +627,34 @@ class FileActionsWindow:
             if config.debug:
                 logger.info("Filter unset")
             # Restore the list of target directories to the full list
-            self.filtered_action_history.clear()
-            self.filtered_action_history = FileActionsWindow.action_history[:]
+            if self.show_today_only:
+                self.filtered_action_history = [action for action in FileActionsWindow.action_history if action.is_today()]
+            else:
+                self.filtered_action_history = FileActionsWindow.action_history[:]
         else:
+            if self.show_today_only:
+                actions = [action for action in FileActionsWindow.action_history if action.is_today()]
+            else:
+                actions = FileActionsWindow.action_history[:]
             temp = []
             # First pass try to match directory basename
-            for action in FileActionsWindow.action_history:
+            for action in actions:
                 basename = os.path.basename(os.path.normpath(action.target))
                 if basename.lower() == self.filter_text:
                     temp.append(action)
-            for action in FileActionsWindow.action_history:
+            for action in actions:
                 if not Action._is_matching_action_in_list(temp, action):
                     basename = os.path.basename(os.path.normpath(action.target))
                     if basename.lower().startswith(self.filter_text):
                         temp.append(action)
             # Second pass try to match parent directory name, so these will appear after
-            for action in FileActionsWindow.action_history:
+            for action in actions:
                 if not Action._is_matching_action_in_list(temp, action):
                     dirname = os.path.basename(os.path.dirname(os.path.normpath(action.target)))
                     if dirname and dirname.lower().startswith(self.filter_text):
                         temp.append(action)
             # Third pass try to match part of the basename
-            for action in FileActionsWindow.action_history:
+            for action in actions:
                 if not Action._is_matching_action_in_list(temp, action):
                     basename = os.path.basename(os.path.normpath(action.target))
                     if basename and (f" {self.filter_text}" in basename.lower() or f"_{self.filter_text}" in basename.lower()):
@@ -519,10 +734,23 @@ class FileActionsWindow:
         self.filtered_action_history = []
         self._refresh_widgets()
 
-    def add_label(self, label_ref, text, row=0, column=0, wraplength=500):
+    def toggle_statistics_view(self):
+        """Toggle between showing all-time statistics and today's statistics only."""
+        self.show_today_only = not self.show_today_only
+        
+        # Update button text
+        if self.show_today_only:
+            self.toggle_stats_btn.config(text=_("All Time"))
+        else:
+            self.toggle_stats_btn.config(text=_("Today Only"))
+        
+        # Refresh the statistics section
+        self._refresh_widgets()
+
+    def add_label(self, label_ref, text, row=0, column=0, columnspan=1, wraplength=500, sticky=W, justify=LEFT):
         label_ref['text'] = text
-        label_ref.grid(column=column, row=row, sticky=W)
-        label_ref.config(wraplength=wraplength, justify=LEFT, bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        label_ref.grid(column=column, row=row, columnspan=columnspan, sticky=sticky)
+        label_ref.config(wraplength=wraplength, justify=justify, bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
 
     def add_btn(self, button_ref_name, text, command, row=0, column=0):
         if getattr(self, button_ref_name) is None:
