@@ -37,9 +37,8 @@ class GoToFile:
         self.search_text_box.grid(row=0, column=0)
         self.search_text_box.bind("<Return>", self.go_to_file)
         self.search_files_btn = None
-        self.add_btn("search_files_btn", "Go To", self.go_to_file, column=1)
+        self.add_btn("search_files_btn", _("Go To"), self.go_to_file, column=1)
         
-        # Add file picker button
         self.file_picker_btn = None
         self.add_btn("file_picker_btn", _("Browse..."), self.pick_file, column=2)
 

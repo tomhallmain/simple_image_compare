@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-02 18:39-0400\n"
-"PO-Revision-Date: 2025-08-02 18:39-0400\n"
+"POT-Creation-Date: 2025-08-04 12:58-0400\n"
+"PO-Revision-Date: 2025-08-04 12:58-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: de Team <<EMAIL>>\n"
 "Language: de\n"
@@ -15,6 +15,10 @@ msgstr ""
 #: app.py:98 app.py:942 app.py:2090
 msgid " Simple Image Compare "
 msgstr " Einfacher Bildvergleich "
+
+#: app.py:114
+msgid "(Main Window)"
+msgstr "(Hauptfenster)"
 
 #: app.py:171
 msgid "Theme switched to {0}."
@@ -1160,6 +1164,42 @@ msgstr "Bild suchen"
 msgid "Clear History"
 msgstr "Geschichte löschen"
 
+#: files/file_actions_window.py:329
+msgid "Today's File Actions"
+msgstr "Dateiaktionen von heute"
+
+#: files/file_actions_window.py:329
+msgid "File Action Statistics"
+msgstr "Dateiaktionsstatistik"
+
+#: files/file_actions_window.py:336 files/file_actions_window.py:743
+msgid "All Time"
+msgstr "Alle Zeiten"
+
+#: files/file_actions_window.py:336 files/file_actions_window.py:745
+msgid "Today Only"
+msgstr "Nur heute"
+
+#: files/file_actions_window.py:343
+msgid "Target Directory"
+msgstr "Zielverzeichnis"
+
+#: files/file_actions_window.py:349 files/marked_file_mover.py:391
+msgid "Moved"
+msgstr "Verschiebt"
+
+#: files/file_actions_window.py:355 files/marked_file_mover.py:391
+msgid "Copied"
+msgstr "Kopiert"
+
+#: files/file_actions_window.py:361
+msgid "Total"
+msgstr "Gesamt"
+
+#: files/file_actions_window.py:412
+msgid "... and {0} more"
+msgstr "... und {0} weitere"
+
 #: files/file_actions_window.py:462
 msgid " ({0} files)"
 msgstr " ({0} Dateien)"
@@ -1211,11 +1251,11 @@ msgstr "{0} von {1} Dateien im Verzeichnis, {3} sortiert nach {2}"
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "Der an file_browser.find() übergebene Suchtext war ungültig."
 
-#: files/go_to_file.py:22
+#: files/go_to_file.py:23
 msgid "Go To File"
 msgstr "Gehe zu Datei"
 
-#: files/go_to_file.py:47
+#: files/go_to_file.py:52
 msgid "Invalid search string, please enter some text."
 msgstr "Ungültiger Suchbegriff, bitte geben Sie einen Text ein."
 
@@ -1298,14 +1338,6 @@ msgstr "Ungültiges Verzeichnis: {0}"
 #: files/marked_file_mover.py:321
 msgid "Select target directory for marked files"
 msgstr "Zielverzeichnis für markierte Dateien auswählen"
-
-#: files/file_actions_window.py:349 files/marked_file_mover.py:391
-msgid "Moved"
-msgstr "Verschiebt"
-
-#: files/file_actions_window.py:355 files/marked_file_mover.py:391
-msgid "Copied"
-msgstr "Kopiert"
 
 #: files/marked_file_mover.py:407
 msgid "Moving"
@@ -2288,34 +2320,46 @@ msgstr "Escape Backslash-Dateipfade"
 msgid " etc."
 msgstr " usw."
 
-#: app.py:114
-msgid "(Main Window)"
-msgstr "(Hauptfenster)"
+#: files/go_to_file.py:40
+msgid "Go To"
+msgstr "Los"
 
-#: files/file_actions_window.py:329
-msgid "Today's File Actions"
-msgstr "Dateiaktionen von heute"
+#: files/go_to_file.py:43
+msgid "Browse..."
+msgstr "Durchsuchen..."
 
-#: files/file_actions_window.py:329
-msgid "File Action Statistics"
-msgstr "Dateiaktionsstatistik"
+#: files/go_to_file.py:65
+msgid "Supported files"
+msgstr "Unterstützte Dateien"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:743
-msgid "All Time"
-msgstr "Alle Zeiten"
+#: files/go_to_file.py:69
+msgid "Image files"
+msgstr "Bilddateien"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:745
-msgid "Today Only"
-msgstr "Nur heute"
+#: files/go_to_file.py:72
+msgid "Video files"
+msgstr "Videodateien"
 
-#: files/file_actions_window.py:343
-msgid "Target Directory"
-msgstr "Zielverzeichnis"
+#: files/go_to_file.py:74
+msgid "GIF files"
+msgstr "GIF-Dateien"
 
-#: files/file_actions_window.py:361
-msgid "Total"
-msgstr "Gesamt"
+#: files/go_to_file.py:76
+msgid "PDF files"
+msgstr "PDF Dateien"
 
-#: files/file_actions_window.py:412
-msgid "... and {0} more"
-msgstr "... und {0} weitere"
+#: files/go_to_file.py:78
+msgid "SVG files"
+msgstr "SVG-Dateien"
+
+#: files/go_to_file.py:80
+msgid "HTML files"
+msgstr "HTML-Dateien"
+
+#: files/go_to_file.py:83
+msgid "All files"
+msgstr "Alle Dateien"
+
+#: files/go_to_file.py:86
+msgid "Select file to go to"
+msgstr "Datei auswählen, um dorthin zu gelangen"

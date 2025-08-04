@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-02 18:39-0400\n"
-"PO-Revision-Date: 2025-08-02 18:39-0400\n"
+"POT-Creation-Date: 2025-08-04 12:58-0400\n"
+"PO-Revision-Date: 2025-08-04 12:58-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
@@ -15,6 +15,10 @@ msgstr ""
 #: app.py:98 app.py:942 app.py:2090
 msgid " Simple Image Compare "
 msgstr " 简单图像比较 "
+
+#: app.py:114
+msgid "(Main Window)"
+msgstr "（主窗口）"
 
 #: app.py:171
 msgid "Theme switched to {0}."
@@ -1105,6 +1109,42 @@ msgstr "搜索图片"
 msgid "Clear History"
 msgstr "清除历史记录"
 
+#: files/file_actions_window.py:329
+msgid "Today's File Actions"
+msgstr "今日文件操作"
+
+#: files/file_actions_window.py:329
+msgid "File Action Statistics"
+msgstr "文件操作统计信息"
+
+#: files/file_actions_window.py:336 files/file_actions_window.py:743
+msgid "All Time"
+msgstr "历时"
+
+#: files/file_actions_window.py:336 files/file_actions_window.py:745
+msgid "Today Only"
+msgstr "仅限今日"
+
+#: files/file_actions_window.py:343
+msgid "Target Directory"
+msgstr "目标目录"
+
+#: files/file_actions_window.py:349 files/marked_file_mover.py:391
+msgid "Moved"
+msgstr "移动"
+
+#: files/file_actions_window.py:355 files/marked_file_mover.py:391
+msgid "Copied"
+msgstr "复制"
+
+#: files/file_actions_window.py:361
+msgid "Total"
+msgstr "总计"
+
+#: files/file_actions_window.py:412
+msgid "... and {0} more"
+msgstr "... 以及 {0} 项更多内容"
+
 #: files/file_actions_window.py:462
 msgid " ({0} files)"
 msgstr " ({0} 文件)"
@@ -1155,11 +1195,11 @@ msgstr "目录中 {1} 个文件中的 {0} 个，按{2}{3}排序"
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "提供给 file_browser.find() 的搜索文本无效。"
 
-#: files/go_to_file.py:22
+#: files/go_to_file.py:23
 msgid "Go To File"
 msgstr "转到文件"
 
-#: files/go_to_file.py:47
+#: files/go_to_file.py:52
 msgid "Invalid search string, please enter some text."
 msgstr "搜索字符串无效，请输入一些文本。"
 
@@ -1242,14 +1282,6 @@ msgstr "无效目录： {0}"
 #: files/marked_file_mover.py:321
 msgid "Select target directory for marked files"
 msgstr "为标记文件选择目标目录"
-
-#: files/file_actions_window.py:349 files/marked_file_mover.py:391
-msgid "Moved"
-msgstr "移动"
-
-#: files/file_actions_window.py:355 files/marked_file_mover.py:391
-msgid "Copied"
-msgstr "复制"
 
 #: files/marked_file_mover.py:407
 msgid "Moving"
@@ -2216,34 +2248,46 @@ msgstr "逃离文件路径中的反斜线"
 msgid " etc."
 msgstr " 等等"
 
-#: app.py:114
-msgid "(Main Window)"
-msgstr "（主窗口）"
+#: files/go_to_file.py:40
+msgid "Go To"
+msgstr "去"
 
-#: files/file_actions_window.py:329
-msgid "Today's File Actions"
-msgstr "今日文件操作"
+#: files/go_to_file.py:43
+msgid "Browse..."
+msgstr "浏览..."
 
-#: files/file_actions_window.py:329
-msgid "File Action Statistics"
-msgstr "文件操作统计信息"
+#: files/go_to_file.py:65
+msgid "Supported files"
+msgstr "支持的文件格式"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:743
-msgid "All Time"
-msgstr "历时"
+#: files/go_to_file.py:69
+msgid "Image files"
+msgstr "图像文件"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:745
-msgid "Today Only"
-msgstr "仅限今日"
+#: files/go_to_file.py:72
+msgid "Video files"
+msgstr "视频文件"
 
-#: files/file_actions_window.py:343
-msgid "Target Directory"
-msgstr "目标目录"
+#: files/go_to_file.py:74
+msgid "GIF files"
+msgstr "GIF 文件"
 
-#: files/file_actions_window.py:361
-msgid "Total"
-msgstr "总计"
+#: files/go_to_file.py:76
+msgid "PDF files"
+msgstr "PDF 文件"
 
-#: files/file_actions_window.py:412
-msgid "... and {0} more"
-msgstr "... 以及 {0} 项更多内容"
+#: files/go_to_file.py:78
+msgid "SVG files"
+msgstr "SVG 文件"
+
+#: files/go_to_file.py:80
+msgid "HTML files"
+msgstr "HTML 文件"
+
+#: files/go_to_file.py:83
+msgid "All files"
+msgstr "所有文件"
+
+#: files/go_to_file.py:86
+msgid "Select file to go to"
+msgstr "选择要跳转的文件"

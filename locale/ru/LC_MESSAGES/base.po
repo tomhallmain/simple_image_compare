@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-02 18:39-0400\n"
-"PO-Revision-Date: 2025-08-02 18:39-0400\n"
+"POT-Creation-Date: 2025-08-04 12:58-0400\n"
+"PO-Revision-Date: 2025-08-04 12:58-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ru Team <<EMAIL>>\n"
 "Language: ru\n"
@@ -15,6 +15,10 @@ msgstr ""
 #: app.py:98 app.py:942 app.py:2090
 msgid " Simple Image Compare "
 msgstr " Простое сравнение изображений "
+
+#: app.py:114
+msgid "(Main Window)"
+msgstr "(Главное окно)"
 
 #: app.py:171
 msgid "Theme switched to {0}."
@@ -1148,6 +1152,42 @@ msgstr "Поисковое изображение"
 msgid "Clear History"
 msgstr "Ясная история"
 
+#: files/file_actions_window.py:329
+msgid "Today's File Actions"
+msgstr "Сегодняшние действия с файлами"
+
+#: files/file_actions_window.py:329
+msgid "File Action Statistics"
+msgstr "Статистика действий с файлами"
+
+#: files/file_actions_window.py:336 files/file_actions_window.py:743
+msgid "All Time"
+msgstr "Все время"
+
+#: files/file_actions_window.py:336 files/file_actions_window.py:745
+msgid "Today Only"
+msgstr "Только сегодня"
+
+#: files/file_actions_window.py:343
+msgid "Target Directory"
+msgstr "Целевой каталог"
+
+#: files/file_actions_window.py:349 files/marked_file_mover.py:391
+msgid "Moved"
+msgstr "перемещенный"
+
+#: files/file_actions_window.py:355 files/marked_file_mover.py:391
+msgid "Copied"
+msgstr "Копирован"
+
+#: files/file_actions_window.py:361
+msgid "Total"
+msgstr "Всего"
+
+#: files/file_actions_window.py:412
+msgid "... and {0} more"
+msgstr "... и еще {0}"
+
 #: files/file_actions_window.py:462
 msgid " ({0} files)"
 msgstr " ({0} файлы)"
@@ -1198,11 +1238,11 @@ msgstr "{0} из {1} файлов в каталоге, упорядоченны�
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "Текст для поиска, переданный в file_browser.find(), был недопустимым."
 
-#: files/go_to_file.py:22
+#: files/go_to_file.py:23
 msgid "Go To File"
 msgstr "Перейти к файлу"
 
-#: files/go_to_file.py:47
+#: files/go_to_file.py:52
 msgid "Invalid search string, please enter some text."
 msgstr "Неверная строка поиска, пожалуйста, введите текст."
 
@@ -1285,14 +1325,6 @@ msgstr "Недопустимый каталог: {0}"
 #: files/marked_file_mover.py:321
 msgid "Select target directory for marked files"
 msgstr "Выберите целевой каталог для отмеченных файлов"
-
-#: files/file_actions_window.py:349 files/marked_file_mover.py:391
-msgid "Moved"
-msgstr "перемещенный"
-
-#: files/file_actions_window.py:355 files/marked_file_mover.py:391
-msgid "Copied"
-msgstr "Копирован"
 
 #: files/marked_file_mover.py:407
 msgid "Moving"
@@ -2268,34 +2300,46 @@ msgstr "Исключение обратных косых символов в п�
 msgid " etc."
 msgstr " и т.д."
 
-#: app.py:114
-msgid "(Main Window)"
-msgstr "(Главное окно)"
+#: files/go_to_file.py:40
+msgid "Go To"
+msgstr "Иди"
 
-#: files/file_actions_window.py:329
-msgid "Today's File Actions"
-msgstr "Сегодняшние действия с файлами"
+#: files/go_to_file.py:43
+msgid "Browse..."
+msgstr "Просмотр..."
 
-#: files/file_actions_window.py:329
-msgid "File Action Statistics"
-msgstr "Статистика действий с файлами"
+#: files/go_to_file.py:65
+msgid "Supported files"
+msgstr "Поддерживаемые файлы"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:743
-msgid "All Time"
-msgstr "Все время"
+#: files/go_to_file.py:69
+msgid "Image files"
+msgstr "Изображения файлы"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:745
-msgid "Today Only"
-msgstr "Только сегодня"
+#: files/go_to_file.py:72
+msgid "Video files"
+msgstr "Видеофайлы"
 
-#: files/file_actions_window.py:343
-msgid "Target Directory"
-msgstr "Целевой каталог"
+#: files/go_to_file.py:74
+msgid "GIF files"
+msgstr "GIF Файлы"
 
-#: files/file_actions_window.py:361
-msgid "Total"
-msgstr "Всего"
+#: files/go_to_file.py:76
+msgid "PDF files"
+msgstr "PDF файлы"
 
-#: files/file_actions_window.py:412
-msgid "... and {0} more"
-msgstr "... и еще {0}"
+#: files/go_to_file.py:78
+msgid "SVG files"
+msgstr "SVG Файлы"
+
+#: files/go_to_file.py:80
+msgid "HTML files"
+msgstr "HTML файлы"
+
+#: files/go_to_file.py:83
+msgid "All files"
+msgstr "Все файлы"
+
+#: files/go_to_file.py:86
+msgid "Select file to go to"
+msgstr "Выберите файл, в который нужно перейти"

@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-02 18:39-0400\n"
-"PO-Revision-Date: 2025-08-02 18:39-0400\n"
+"POT-Creation-Date: 2025-08-04 12:58-0400\n"
+"PO-Revision-Date: 2025-08-04 12:58-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
 "Language: ko\n"
@@ -15,6 +15,10 @@ msgstr ""
 #: app.py:98 app.py:942 app.py:2090
 msgid " Simple Image Compare "
 msgstr " 간단한 이미지 비교 "
+
+#: app.py:114
+msgid "(Main Window)"
+msgstr "(주 창)"
 
 #: app.py:171
 msgid "Theme switched to {0}."
@@ -1110,6 +1114,42 @@ msgstr "이미지 검색"
 msgid "Clear History"
 msgstr "기록 지우기"
 
+#: files/file_actions_window.py:329
+msgid "Today's File Actions"
+msgstr "오늘의 파일 작업"
+
+#: files/file_actions_window.py:329
+msgid "File Action Statistics"
+msgstr "파일 작업 통계"
+
+#: files/file_actions_window.py:336 files/file_actions_window.py:743
+msgid "All Time"
+msgstr "모든 시간"
+
+#: files/file_actions_window.py:336 files/file_actions_window.py:745
+msgid "Today Only"
+msgstr "오늘만"
+
+#: files/file_actions_window.py:343
+msgid "Target Directory"
+msgstr "대상 디렉토리"
+
+#: files/file_actions_window.py:349 files/marked_file_mover.py:391
+msgid "Moved"
+msgstr "지원하다"
+
+#: files/file_actions_window.py:355 files/marked_file_mover.py:391
+msgid "Copied"
+msgstr "뚱 베어"
+
+#: files/file_actions_window.py:361
+msgid "Total"
+msgstr "총계"
+
+#: files/file_actions_window.py:412
+msgid "... and {0} more"
+msgstr "... 및 {0}개 더"
+
 #: files/file_actions_window.py:462
 msgid " ({0} files)"
 msgstr " ({0} 파일)"
@@ -1160,11 +1200,11 @@ msgstr "디렉터리에 있는 파일 {1}개 중 {0}개, {2}별로 정렬{3}"
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "file_browser.find()에 제공된 검색 텍스트가 유효하지 않습니다."
 
-#: files/go_to_file.py:22
+#: files/go_to_file.py:23
 msgid "Go To File"
 msgstr "파일로 이동"
 
-#: files/go_to_file.py:47
+#: files/go_to_file.py:52
 msgid "Invalid search string, please enter some text."
 msgstr "잘못된 검색 문자열입니다. 텍스트를 입력하세요."
 
@@ -1247,14 +1287,6 @@ msgstr "잘못된 디렉터리입니다: {0}"
 #: files/marked_file_mover.py:321
 msgid "Select target directory for marked files"
 msgstr "표시된 파일의 대상 디렉터리 선택"
-
-#: files/file_actions_window.py:349 files/marked_file_mover.py:391
-msgid "Moved"
-msgstr "지원하다"
-
-#: files/file_actions_window.py:355 files/marked_file_mover.py:391
-msgid "Copied"
-msgstr "뚱 베어"
 
 #: files/marked_file_mover.py:407
 msgid "Moving"
@@ -2222,34 +2254,46 @@ msgstr "파일 경로의 백슬래시 이스케이프"
 msgid " etc."
 msgstr " 등"
 
-#: app.py:114
-msgid "(Main Window)"
-msgstr "(주 창)"
+#: files/go_to_file.py:40
+msgid "Go To"
+msgstr "가다"
 
-#: files/file_actions_window.py:329
-msgid "Today's File Actions"
-msgstr "오늘의 파일 작업"
+#: files/go_to_file.py:43
+msgid "Browse..."
+msgstr "찾아보기..."
 
-#: files/file_actions_window.py:329
-msgid "File Action Statistics"
-msgstr "파일 작업 통계"
+#: files/go_to_file.py:65
+msgid "Supported files"
+msgstr "지원되는 파일"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:743
-msgid "All Time"
-msgstr "모든 시간"
+#: files/go_to_file.py:69
+msgid "Image files"
+msgstr "이미지 파일"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:745
-msgid "Today Only"
-msgstr "오늘만"
+#: files/go_to_file.py:72
+msgid "Video files"
+msgstr "비디오 파일"
 
-#: files/file_actions_window.py:343
-msgid "Target Directory"
-msgstr "대상 디렉토리"
+#: files/go_to_file.py:74
+msgid "GIF files"
+msgstr "GIF 파일"
 
-#: files/file_actions_window.py:361
-msgid "Total"
-msgstr "총계"
+#: files/go_to_file.py:76
+msgid "PDF files"
+msgstr "PDF 파일"
 
-#: files/file_actions_window.py:412
-msgid "... and {0} more"
-msgstr "... 및 {0}개 더"
+#: files/go_to_file.py:78
+msgid "SVG files"
+msgstr "SVG 파일"
+
+#: files/go_to_file.py:80
+msgid "HTML files"
+msgstr "HTML 파일"
+
+#: files/go_to_file.py:83
+msgid "All files"
+msgstr "모든 파일"
+
+#: files/go_to_file.py:86
+msgid "Select file to go to"
+msgstr "파일 선택"

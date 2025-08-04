@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-02 18:39-0400\n"
-"PO-Revision-Date: 2025-08-02 18:39-0400\n"
+"POT-Creation-Date: 2025-08-04 12:58-0400\n"
+"PO-Revision-Date: 2025-08-04 12:58-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
@@ -15,6 +15,10 @@ msgstr ""
 #: app.py:98 app.py:942 app.py:2090
 msgid " Simple Image Compare "
 msgstr " シンプルな画像比較 "
+
+#: app.py:114
+msgid "(Main Window)"
+msgstr "（メインウィンドウ）"
 
 #: app.py:171
 msgid "Theme switched to {0}."
@@ -1107,6 +1111,42 @@ msgstr "画像検索"
 msgid "Clear History"
 msgstr "明確な歴史"
 
+#: files/file_actions_window.py:329
+msgid "Today's File Actions"
+msgstr "本日のファイル操作"
+
+#: files/file_actions_window.py:329
+msgid "File Action Statistics"
+msgstr "ファイル操作統計"
+
+#: files/file_actions_window.py:336 files/file_actions_window.py:743
+msgid "All Time"
+msgstr "全時代"
+
+#: files/file_actions_window.py:336 files/file_actions_window.py:745
+msgid "Today Only"
+msgstr "本日限定"
+
+#: files/file_actions_window.py:343
+msgid "Target Directory"
+msgstr "ターゲットディレクトリ"
+
+#: files/file_actions_window.py:349 files/marked_file_mover.py:391
+msgid "Moved"
+msgstr "移動する"
+
+#: files/file_actions_window.py:355 files/marked_file_mover.py:391
+msgid "Copied"
+msgstr "コピッド"
+
+#: files/file_actions_window.py:361
+msgid "Total"
+msgstr "合計"
+
+#: files/file_actions_window.py:412
+msgid "... and {0} more"
+msgstr "...および{0}件以上"
+
 #: files/file_actions_window.py:462
 msgid " ({0} files)"
 msgstr " ({0} ファイル)"
@@ -1157,11 +1197,11 @@ msgstr "ディレクトリ内の{1}ファイル中{0}ファイルを{2}順{3}で
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "file_browser.find() に指定された検索テキストが無効でした。"
 
-#: files/go_to_file.py:22
+#: files/go_to_file.py:23
 msgid "Go To File"
 msgstr "ファイルに移動"
 
-#: files/go_to_file.py:47
+#: files/go_to_file.py:52
 msgid "Invalid search string, please enter some text."
 msgstr "検索文字列が無効です。"
 
@@ -1244,14 +1284,6 @@ msgstr "無効なディレクトリです： {0}"
 #: files/marked_file_mover.py:321
 msgid "Select target directory for marked files"
 msgstr "マークされたファイルのターゲットディレクトリを選択"
-
-#: files/file_actions_window.py:349 files/marked_file_mover.py:391
-msgid "Moved"
-msgstr "移動する"
-
-#: files/file_actions_window.py:355 files/marked_file_mover.py:391
-msgid "Copied"
-msgstr "コピッド"
 
 #: files/marked_file_mover.py:407
 msgid "Moving"
@@ -2219,34 +2251,46 @@ msgstr "ファイルパスのバックスラッシュをエスケープする"
 msgid " etc."
 msgstr " その他"
 
-#: app.py:114
-msgid "(Main Window)"
-msgstr "（メインウィンドウ）"
+#: files/go_to_file.py:40
+msgid "Go To"
+msgstr "行け"
 
-#: files/file_actions_window.py:329
-msgid "Today's File Actions"
-msgstr "本日のファイル操作"
+#: files/go_to_file.py:43
+msgid "Browse..."
+msgstr "閲覧..."
 
-#: files/file_actions_window.py:329
-msgid "File Action Statistics"
-msgstr "ファイル操作統計"
+#: files/go_to_file.py:65
+msgid "Supported files"
+msgstr "対応ファイル"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:743
-msgid "All Time"
-msgstr "全時代"
+#: files/go_to_file.py:69
+msgid "Image files"
+msgstr "画像ファイル"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:745
-msgid "Today Only"
-msgstr "本日限定"
+#: files/go_to_file.py:72
+msgid "Video files"
+msgstr "動画ファイル"
 
-#: files/file_actions_window.py:343
-msgid "Target Directory"
-msgstr "ターゲットディレクトリ"
+#: files/go_to_file.py:74
+msgid "GIF files"
+msgstr "GIFファイル"
 
-#: files/file_actions_window.py:361
-msgid "Total"
-msgstr "合計"
+#: files/go_to_file.py:76
+msgid "PDF files"
+msgstr "PDFファイル"
 
-#: files/file_actions_window.py:412
-msgid "... and {0} more"
-msgstr "...および{0}件以上"
+#: files/go_to_file.py:78
+msgid "SVG files"
+msgstr "SVGファイル"
+
+#: files/go_to_file.py:80
+msgid "HTML files"
+msgstr "HTMLファイル"
+
+#: files/go_to_file.py:83
+msgid "All files"
+msgstr "すべてのファイル"
+
+#: files/go_to_file.py:86
+msgid "Select file to go to"
+msgstr "移動先のファイルを選択してください"
