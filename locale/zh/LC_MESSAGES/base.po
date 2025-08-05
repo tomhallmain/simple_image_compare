@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-04 12:58-0400\n"
-"PO-Revision-Date: 2025-08-04 12:58-0400\n"
+"POT-Creation-Date: 2025-08-05 17:21-0400\n"
+"PO-Revision-Date: 2025-08-05 17:21-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:98 app.py:942 app.py:2090
+#: app.py:98 app.py:942 app.py:2094
 msgid " Simple Image Compare "
 msgstr " 简单图像比较 "
 
@@ -128,7 +128,7 @@ msgstr "您想要退出申请吗 ?"
 msgid "Ended slideshows"
 msgstr "结束幻灯片放映"
 
-#: app.py:677 app.py:1866 app.py:1928
+#: app.py:677 app.py:1870 app.py:1932
 msgid "Warning"
 msgstr "警告"
 
@@ -375,11 +375,11 @@ msgstr "未找到文本嵌入搜索预设。请在 config.json 文件中进行�
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "打开当前文件位置失败，无法获取有效的文件路径"
 
-#: app.py:1778
+#: app.py:1782
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "在 GIMP 中打开当前文件失败，无法获取有效的文件路径"
 
-#: app.py:1794
+#: app.py:1798
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -387,83 +387,83 @@ msgstr ""
 "隐藏当前图像。\n"
 "要取消隐藏，请按 Shift+B。"
 
-#: app.py:1799
+#: app.py:1803
 msgid "Cleared all hidden images."
 msgstr "清除所有隐藏图像"
 
-#: app.py:1807
+#: app.py:1811
 msgid "DELETE_LOCK"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡阻止删除"
 
-#: app.py:1825
+#: app.py:1829
 msgid "Invalid action, no files found to delete"
 msgstr "无效操作，未找到要删除的文件"
 
-#: app.py:1828
+#: app.py:1832
 msgid "Invalid action, search image not found"
 msgstr "无效操作，未找到搜索图像"
 
-#: app.py:1843
+#: app.py:1847
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "删除当前文件失败，无法获取有效的文件路径"
 
-#: app.py:1848
+#: app.py:1852
 msgid "Removing file: {0}"
 msgstr "删除文件： {0}"
 
-#: app.py:1867
+#: app.py:1871
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "发送文件到垃圾箱失败，因此文件将被删除。要么用 pip 安装 send2trash，要么在 config.json 中设置特定的垃圾文件夹。"
 
-#: app.py:1884
+#: app.py:1888
 msgid "Invalid target filepath for replacement: "
 msgstr "替换的目标文件路径无效： "
 
-#: app.py:1888
+#: app.py:1892
 msgid "Moved search image to "
 msgstr "将搜索图像移至 ： "
 
-#: app.py:1926
+#: app.py:1930
 msgid "Running image gen: "
 msgstr "运行图像基因 ： "
 
-#: app.py:1928
+#: app.py:1932
 msgid "Error running image generation:"
 msgstr "生成图像时出错："
 
-#: app.py:1936
+#: app.py:1940
 msgid "Running refacdir"
 msgstr "正在运行 reacdir"
 
-#: app.py:1941 auth/app_startup_auth.py:108 auth/password_dialog.py:247
+#: app.py:1945 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "错误"
 
-#: app.py:2028
+#: app.py:2032
 msgid "GROUP_DETAILS"
 msgstr ""
 "第 {0} 组 {1}\n"
 "大小： {2}"
 
-#: app.py:2032
+#: app.py:2036
 msgid "No image files found"
 msgstr "未找到图像文件"
 
-#: app.py:2034
+#: app.py:2038
 msgid "1 image file found"
 msgstr "找到一个图像文件"
 
-#: app.py:2035
+#: app.py:2039
 msgid "{0} image files found"
 msgstr "找到 {0} 图像文件"
 
-#: app.py:2037
+#: app.py:2041
 msgid "(filtered)"
 msgstr "(过滤)"
 
@@ -1199,9 +1199,53 @@ msgstr "提供给 file_browser.find() 的搜索文本无效。"
 msgid "Go To File"
 msgstr "转到文件"
 
+#: files/go_to_file.py:40
+msgid "Go To"
+msgstr "去"
+
+#: files/go_to_file.py:43
+msgid "Browse..."
+msgstr "浏览..."
+
 #: files/go_to_file.py:52
 msgid "Invalid search string, please enter some text."
 msgstr "搜索字符串无效，请输入一些文本。"
+
+#: files/go_to_file.py:65
+msgid "Supported files"
+msgstr "支持的文件格式"
+
+#: files/go_to_file.py:69
+msgid "Image files"
+msgstr "图像文件"
+
+#: files/go_to_file.py:72
+msgid "Video files"
+msgstr "视频文件"
+
+#: files/go_to_file.py:74
+msgid "GIF files"
+msgstr "GIF 文件"
+
+#: files/go_to_file.py:76
+msgid "PDF files"
+msgstr "PDF 文件"
+
+#: files/go_to_file.py:78
+msgid "SVG files"
+msgstr "SVG 文件"
+
+#: files/go_to_file.py:80
+msgid "HTML files"
+msgstr "HTML 文件"
+
+#: files/go_to_file.py:83
+msgid "All files"
+msgstr "所有文件"
+
+#: files/go_to_file.py:86
+msgid "Select file to go to"
+msgstr "选择要跳转的文件"
 
 #: files/hotkey_actions_window.py:25
 msgid "Hotkey Actions"
@@ -2248,46 +2292,12 @@ msgstr "逃离文件路径中的反斜线"
 msgid " etc."
 msgstr " 等等"
 
-#: files/go_to_file.py:40
-msgid "Go To"
-msgstr "去"
+#: app.py:1772
+msgid ""
+"GIMP integration is not configured. Please set 'gimp_exe_loc' in "
+"config.json."
+msgstr "GIMP 集成未配置。请在 config.json 中设置 ‘gimp_exe_loc’。"
 
-#: files/go_to_file.py:43
-msgid "Browse..."
-msgstr "浏览..."
-
-#: files/go_to_file.py:65
-msgid "Supported files"
-msgstr "支持的文件格式"
-
-#: files/go_to_file.py:69
-msgid "Image files"
-msgstr "图像文件"
-
-#: files/go_to_file.py:72
-msgid "Video files"
-msgstr "视频文件"
-
-#: files/go_to_file.py:74
-msgid "GIF files"
-msgstr "GIF 文件"
-
-#: files/go_to_file.py:76
-msgid "PDF files"
-msgstr "PDF 文件"
-
-#: files/go_to_file.py:78
-msgid "SVG files"
-msgstr "SVG 文件"
-
-#: files/go_to_file.py:80
-msgid "HTML files"
-msgstr "HTML 文件"
-
-#: files/go_to_file.py:83
-msgid "All files"
-msgstr "所有文件"
-
-#: files/go_to_file.py:86
-msgid "Select file to go to"
-msgstr "选择要跳转的文件"
+#: app.py:1772
+msgid "GIMP Integration Error"
+msgstr "GIMP 集成错误"

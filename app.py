@@ -1767,6 +1767,10 @@ class App():
             self.handle_error(_("Failed to open location of current file, unable to get valid filepath"))
 
     def open_image_in_gimp(self, event=None) -> None:
+        config.validate_and_find_gimp() # Validate GIMP installation on first use
+        if not config.gimp_exe_loc:
+            self.handle_error(_("GIMP integration is not configured. Please set 'gimp_exe_loc' in config.json."), title=_("GIMP Integration Error"))
+            return
         if self.delete_lock:
             filepath = self.prev_img_path
         else:

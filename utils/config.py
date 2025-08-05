@@ -1,5 +1,8 @@
 import json
 import os
+import shutil
+import subprocess
+import sys
 
 from image.image_edit_configuration import ImageEditConfiguration
 from utils.constants import CompareMode, SortBy
@@ -79,6 +82,7 @@ class Config:
         self.refacdir_client_port = 6001
         self.refacdir_client_password = "<PASSWORD>"
         self.gimp_exe_loc = "gimp-2.10"
+        self._gimp_validated = False  # Cache for GIMP validation result
         self.image_edit_configuration = ImageEditConfiguration()
 
         dict_set = False
@@ -212,6 +216,109 @@ class Config:
             self.locale = Utils.get_default_user_language()
         os.environ["LANG"] = self.locale
 
+    def validate_and_find_gimp(self):
+        """Validate the configured GIMP installation and auto-detect if needed."""
+        if self._gimp_validated:
+            return  # Already validated in this session
+        
+        if self.gimp_exe_loc and self.gimp_exe_loc.strip():
+            # Check if the configured GIMP path is valid
+            if self._is_valid_gimp_installation(self.gimp_exe_loc):
+                logger.info(f"Using configured GIMP installation: {self.gimp_exe_loc}")
+                self._gimp_validated = True
+                return
+        
+        # If no valid GIMP found in config, try to auto-detect
+        detected_gimp = self._find_gimp_installation()
+        self.gimp_exe_loc = detected_gimp # Will be None if no valid GIMP installation is found
+        if detected_gimp:
+            logger.info(f"Auto-detected GIMP installation: {self.gimp_exe_loc}")
+            self._gimp_validated = True
+        else:
+            logger.warning("No valid GIMP installation found. GIMP integration will not be available.")
+            logger.info("To enable GIMP integration, set 'gimp_exe_loc' in your config.json file.")
+            self._gimp_validated = True
+
+    def _is_valid_gimp_installation(self, gimp_path):
+        """Check if a GIMP installation is valid and executable."""
+        try:
+            # Handle both full paths and executable names
+            if os.path.isfile(gimp_path):
+                # Full path provided
+                executable_path = gimp_path
+            else:
+                # Just executable name, check if it's in PATH
+                executable_path = shutil.which(gimp_path)
+                if not executable_path:
+                    return False
+            
+            # Test if the executable can be run (version check)
+            result = subprocess.run([executable_path, "--version"], 
+                                  capture_output=True, text=True, timeout=10)
+            if result.returncode == 0 and "GNU Image Manipulation Program" in result.stdout:
+                logger.debug("GIMP validation successful")
+                return True
+            else:
+                logger.debug("GIMP validation failed - return code or output check failed")
+        except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
+            logger.debug(f"GIMP validation exception: {type(e).__name__}: {e}")
+        return False
+
+    def _find_gimp_installation(self):
+        """Auto-detect GIMP installation on the current platform."""
+        if sys.platform == 'win32':
+            return self._find_gimp_windows()
+        else:
+            return self._find_gimp_unix()
+
+    def _find_gimp_windows(self):
+        """Find GIMP installation on Windows."""
+        possible_paths = []
+        program_dirs = [r"C:\Program Files", r"C:\Program Files (x86)"]
+        # GIMP major versions to check (prioritize newer versions)
+        gimp_major_versions = ["3", "2"]  # GIMP 3.x first, then 2.x
+        # GIMP minor versions to check (in order of preference)
+        gimp_minor_versions = {
+            "2": ["10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0"],  # GIMP 2.x versions
+            "3": ["2", "1", "0"]    # GIMP 3.x versions
+        }
+        
+        for program_dir in program_dirs:
+            if not os.path.exists(program_dir):
+                continue
+            for major_ver in gimp_major_versions:
+                for minor_ver in gimp_minor_versions[major_ver]:
+                    gimp_dir = f"GIMP {major_ver}"
+                    bin_path = os.path.join(program_dir, gimp_dir, "bin", f"gimp-{major_ver}.{minor_ver}.exe")
+                    if os.path.exists(bin_path):
+                        possible_paths.append(bin_path)
+                    else:
+                        logger.debug(f"GIMP executable not found: {bin_path}")
+
+        if possible_paths:
+            logger.debug(f"Found {len(possible_paths)} possible GIMP paths: {possible_paths}")
+        else:
+            logger.debug("No possible GIMP paths found")
+            
+        for path in possible_paths:
+            if self._is_valid_gimp_installation(path):
+                logger.debug(f"Valid GIMP installation found: {path}")
+                return path
+            else:
+                logger.debug(f"Invalid GIMP installation: {path}")
+        return None
+
+    def _find_gimp_unix(self):
+        """Find GIMP installation on Unix-like systems."""
+        # Common GIMP executable names
+        gimp_names = ["gimp-2.10", "gimp-2.8", "gimp-3.0", "gimp-3.2", "gimp"]
+        
+        for name in gimp_names:
+            if self._is_valid_gimp_installation(name):
+                return name
+        
+        return None
+
     def set_directories_to_search_for_related_images(self):
         temp_list = self.directories_to_search_for_related_images[:]
         for _dir in temp_list:
@@ -296,6 +403,10 @@ class Config:
             logger.info(f" - Using stable diffusion prompt reader path at {self.sd_prompt_reader_loc}")
         else:
             logger.info(f" - Stable diffusion prompt reader location is not set or invalid.")
+        if self.gimp_exe_loc:
+            logger.info(f" - Using GIMP installation: {self.gimp_exe_loc}")
+        else:
+            logger.info(f" - GIMP integration: Not configured or not found")
         logger.info(f" - Max files per compare: {self.file_counter_limit}")
 
     def toggle_video_mode(self):

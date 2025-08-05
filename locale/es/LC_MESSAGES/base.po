@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-04 12:58-0400\n"
-"PO-Revision-Date: 2025-08-04 12:58-0400\n"
+"POT-Creation-Date: 2025-08-05 17:21-0400\n"
+"PO-Revision-Date: 2025-08-05 17:21-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: es Team <<EMAIL>>\n"
 "Language: es\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:98 app.py:942 app.py:2090
+#: app.py:98 app.py:942 app.py:2094
 msgid " Simple Image Compare "
 msgstr " Comparación sencilla de imágenes "
 
@@ -128,7 +128,7 @@ msgstr "¿Desea abandonar la aplicación?"
 msgid "Ended slideshows"
 msgstr "Presentaciones finalizadas"
 
-#: app.py:677 app.py:1866 app.py:1928
+#: app.py:677 app.py:1870 app.py:1932
 msgid "Warning"
 msgstr "Advertencia"
 
@@ -392,13 +392,13 @@ msgstr ""
 "No se ha podido abrir la ubicación del archivo actual, no se ha podido "
 "obtener una ruta de archivo válida."
 
-#: app.py:1778
+#: app.py:1782
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 "Error al abrir el archivo actual en GIMP, no se puede obtener una ruta de "
 "archivo válida."
 
-#: app.py:1794
+#: app.py:1798
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -406,35 +406,35 @@ msgstr ""
 "Oculta la imagen actual.\n"
 "Para desocultar, pulse Mayús+B."
 
-#: app.py:1799
+#: app.py:1803
 msgid "Cleared all hidden images."
 msgstr "Borrado de todas las imágenes ocultas."
 
-#: app.py:1807
+#: app.py:1811
 msgid "DELETE_LOCK"
 msgstr ""
 "El bloqueo de borrado tras la transición\n"
 "de diapositivas impedía el borrado"
 
-#: app.py:1825
+#: app.py:1829
 msgid "Invalid action, no files found to delete"
 msgstr "Acción no válida, no se han encontrado archivos para eliminar"
 
-#: app.py:1828
+#: app.py:1832
 msgid "Invalid action, search image not found"
 msgstr "Acción no válida, imagen de búsqueda no encontrada"
 
-#: app.py:1843
+#: app.py:1847
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 "No se ha podido eliminar el archivo actual, no se ha podido obtener una ruta"
 " de archivo válida."
 
-#: app.py:1848
+#: app.py:1852
 msgid "Removing file: {0}"
 msgstr "Eliminando archivo: {0}"
 
-#: app.py:1867
+#: app.py:1871
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -442,50 +442,50 @@ msgstr ""
 "No se ha podido enviar el archivo a la papelera, por lo que se eliminará. "
 "Instale pip send2trash o establezca una carpeta específica en config.json."
 
-#: app.py:1884
+#: app.py:1888
 msgid "Invalid target filepath for replacement: "
 msgstr "Ruta de archivo de destino no válida para la sustitución: "
 
-#: app.py:1888
+#: app.py:1892
 msgid "Moved search image to "
 msgstr "Imagen de búsqueda trasladada a "
 
-#: app.py:1926
+#: app.py:1930
 msgid "Running image gen: "
 msgstr "Ejecutar la generación de imágenes: "
 
-#: app.py:1928
+#: app.py:1932
 msgid "Error running image generation:"
 msgstr "Error al generar la imagen:"
 
-#: app.py:1936
+#: app.py:1940
 msgid "Running refacdir"
 msgstr "Ejecución de la aplicación refacdir"
 
-#: app.py:1941 auth/app_startup_auth.py:108 auth/password_dialog.py:247
+#: app.py:1945 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "Error"
 
-#: app.py:2028
+#: app.py:2032
 msgid "GROUP_DETAILS"
 msgstr ""
 "Grupo {0} de {1}\n"
 "Tamaño: {2}"
 
-#: app.py:2032
+#: app.py:2036
 msgid "No image files found"
 msgstr "No se han encontrado archivos de imagen"
 
-#: app.py:2034
+#: app.py:2038
 msgid "1 image file found"
 msgstr "1 archivo de imagen encontrado"
 
-#: app.py:2035
+#: app.py:2039
 msgid "{0} image files found"
 msgstr "{0} archivos de imagen encontrados"
 
-#: app.py:2037
+#: app.py:2041
 msgid "(filtered)"
 msgstr "(filtrado)"
 
@@ -1257,9 +1257,53 @@ msgstr ""
 msgid "Go To File"
 msgstr "Ir al archivo"
 
+#: files/go_to_file.py:40
+msgid "Go To"
+msgstr "Ir"
+
+#: files/go_to_file.py:43
+msgid "Browse..."
+msgstr "Examine..."
+
 #: files/go_to_file.py:52
 msgid "Invalid search string, please enter some text."
 msgstr "Cadena de búsqueda no válida, por favor introduzca algún texto."
+
+#: files/go_to_file.py:65
+msgid "Supported files"
+msgstr "Archivos compatibles"
+
+#: files/go_to_file.py:69
+msgid "Image files"
+msgstr "Archivo de imágenes"
+
+#: files/go_to_file.py:72
+msgid "Video files"
+msgstr "Archivos de vídeo"
+
+#: files/go_to_file.py:74
+msgid "GIF files"
+msgstr "Archivo GIF"
+
+#: files/go_to_file.py:76
+msgid "PDF files"
+msgstr "Archivo PDF"
+
+#: files/go_to_file.py:78
+msgid "SVG files"
+msgstr "Archivos SVG"
+
+#: files/go_to_file.py:80
+msgid "HTML files"
+msgstr "Archivos HTML"
+
+#: files/go_to_file.py:83
+msgid "All files"
+msgstr "Todos los archivos"
+
+#: files/go_to_file.py:86
+msgid "Select file to go to"
+msgstr "Selecciona el archivo al que desea ir"
 
 #: files/hotkey_actions_window.py:25
 msgid "Hotkey Actions"
@@ -2327,46 +2371,14 @@ msgstr "Escape de barras invertidas en rutas de archivos"
 msgid " etc."
 msgstr " etc."
 
-#: files/go_to_file.py:40
-msgid "Go To"
-msgstr "Ir"
+#: app.py:1772
+msgid ""
+"GIMP integration is not configured. Please set 'gimp_exe_loc' in "
+"config.json."
+msgstr ""
+"La integración con GIMP no está configurada. Por favor, configure "
+"“gimp_exe_loc” en config.json."
 
-#: files/go_to_file.py:43
-msgid "Browse..."
-msgstr "Examine..."
-
-#: files/go_to_file.py:65
-msgid "Supported files"
-msgstr "Archivos compatibles"
-
-#: files/go_to_file.py:69
-msgid "Image files"
-msgstr "Archivo de imágenes"
-
-#: files/go_to_file.py:72
-msgid "Video files"
-msgstr "Archivos de vídeo"
-
-#: files/go_to_file.py:74
-msgid "GIF files"
-msgstr "Archivo GIF"
-
-#: files/go_to_file.py:76
-msgid "PDF files"
-msgstr "Archivo PDF"
-
-#: files/go_to_file.py:78
-msgid "SVG files"
-msgstr "Archivos SVG"
-
-#: files/go_to_file.py:80
-msgid "HTML files"
-msgstr "Archivos HTML"
-
-#: files/go_to_file.py:83
-msgid "All files"
-msgstr "Todos los archivos"
-
-#: files/go_to_file.py:86
-msgid "Select file to go to"
-msgstr "Selecciona el archivo al que desea ir"
+#: app.py:1772
+msgid "GIMP Integration Error"
+msgstr "Error de integración de GIMP"

@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-04 12:58-0400\n"
-"PO-Revision-Date: 2025-08-04 12:58-0400\n"
+"POT-Creation-Date: 2025-08-05 17:21-0400\n"
+"PO-Revision-Date: 2025-08-05 17:21-0400\n"
 "Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:98 app.py:942 app.py:2090
+#: app.py:98 app.py:942 app.py:2094
 msgid " Simple Image Compare "
 msgstr " シンプルな画像比較 "
 
@@ -128,7 +128,7 @@ msgstr "応募をお願いしたいですか?"
 msgid "Ended slideshows"
 msgstr "終了したスライドショー"
 
-#: app.py:677 app.py:1866 app.py:1928
+#: app.py:677 app.py:1870 app.py:1932
 msgid "Warning"
 msgstr "警告"
 
@@ -376,11 +376,11 @@ msgstr "テキスト埋め込み検索プリセットが見つかりません。
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの場所を開くことができません。"
 
-#: app.py:1778
+#: app.py:1782
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "GIMPで現在のファイルを開くのに失敗しました。"
 
-#: app.py:1794
+#: app.py:1798
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -388,83 +388,83 @@ msgstr ""
 "現在の画像を隠す。\n"
 "非表示を解除するには、Shift+Bキーを押します。"
 
-#: app.py:1799
+#: app.py:1803
 msgid "Cleared all hidden images."
 msgstr "すべての隠し画像を消去。"
 
-#: app.py:1807
+#: app.py:1811
 msgid "DELETE_LOCK"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションが削除を阻止"
 
-#: app.py:1825
+#: app.py:1829
 msgid "Invalid action, no files found to delete"
 msgstr "無効なアクションです。"
 
-#: app.py:1828
+#: app.py:1832
 msgid "Invalid action, search image not found"
 msgstr "無効なアクションです。"
 
-#: app.py:1843
+#: app.py:1847
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの削除に失敗しました。"
 
-#: app.py:1848
+#: app.py:1852
 msgid "Removing file: {0}"
 msgstr "ファイルを削除しています： {0}"
 
-#: app.py:1867
+#: app.py:1871
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "ゴミ箱へのファイル送信に失敗しました。pipでsend2trashをインストールするか、config.jsonでゴミ箱フォルダを指定してください。"
 
-#: app.py:1884
+#: app.py:1888
 msgid "Invalid target filepath for replacement: "
 msgstr "置換対象のファイルパスが無効です： "
 
-#: app.py:1888
+#: app.py:1892
 msgid "Moved search image to "
 msgstr "検索画像を： "
 
-#: app.py:1926
+#: app.py:1930
 msgid "Running image gen: "
 msgstr "イメージ・ジェネレーションの実行： "
 
-#: app.py:1928
+#: app.py:1932
 msgid "Error running image generation:"
 msgstr "画像生成の実行エラー："
 
-#: app.py:1936
+#: app.py:1940
 msgid "Running refacdir"
 msgstr "ランニング refacdir"
 
-#: app.py:1941 auth/app_startup_auth.py:108 auth/password_dialog.py:247
+#: app.py:1945 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "エラー"
 
-#: app.py:2028
+#: app.py:2032
 msgid "GROUP_DETAILS"
 msgstr ""
 "グループ{0}/{1}\n"
 "サイズ：{2}"
 
-#: app.py:2032
+#: app.py:2036
 msgid "No image files found"
 msgstr "画像ファイルが見つかりません"
 
-#: app.py:2034
+#: app.py:2038
 msgid "1 image file found"
 msgstr "1 見つかった画像ファイル"
 
-#: app.py:2035
+#: app.py:2039
 msgid "{0} image files found"
 msgstr "{0} イメージファイルが見つかりました"
 
-#: app.py:2037
+#: app.py:2041
 msgid "(filtered)"
 msgstr "(フィルタリング)"
 
@@ -1201,9 +1201,53 @@ msgstr "file_browser.find() に指定された検索テキストが無効でし�
 msgid "Go To File"
 msgstr "ファイルに移動"
 
+#: files/go_to_file.py:40
+msgid "Go To"
+msgstr "行け"
+
+#: files/go_to_file.py:43
+msgid "Browse..."
+msgstr "閲覧..."
+
 #: files/go_to_file.py:52
 msgid "Invalid search string, please enter some text."
 msgstr "検索文字列が無効です。"
+
+#: files/go_to_file.py:65
+msgid "Supported files"
+msgstr "対応ファイル"
+
+#: files/go_to_file.py:69
+msgid "Image files"
+msgstr "画像ファイル"
+
+#: files/go_to_file.py:72
+msgid "Video files"
+msgstr "動画ファイル"
+
+#: files/go_to_file.py:74
+msgid "GIF files"
+msgstr "GIFファイル"
+
+#: files/go_to_file.py:76
+msgid "PDF files"
+msgstr "PDFファイル"
+
+#: files/go_to_file.py:78
+msgid "SVG files"
+msgstr "SVGファイル"
+
+#: files/go_to_file.py:80
+msgid "HTML files"
+msgstr "HTMLファイル"
+
+#: files/go_to_file.py:83
+msgid "All files"
+msgstr "すべてのファイル"
+
+#: files/go_to_file.py:86
+msgid "Select file to go to"
+msgstr "移動先のファイルを選択してください"
 
 #: files/hotkey_actions_window.py:25
 msgid "Hotkey Actions"
@@ -2251,46 +2295,12 @@ msgstr "ファイルパスのバックスラッシュをエスケープする"
 msgid " etc."
 msgstr " その他"
 
-#: files/go_to_file.py:40
-msgid "Go To"
-msgstr "行け"
+#: app.py:1772
+msgid ""
+"GIMP integration is not configured. Please set 'gimp_exe_loc' in "
+"config.json."
+msgstr "GIMPの統合設定が有効になっていません。config.jsonファイルで『gimp_exe_loc』を設定してください。"
 
-#: files/go_to_file.py:43
-msgid "Browse..."
-msgstr "閲覧..."
-
-#: files/go_to_file.py:65
-msgid "Supported files"
-msgstr "対応ファイル"
-
-#: files/go_to_file.py:69
-msgid "Image files"
-msgstr "画像ファイル"
-
-#: files/go_to_file.py:72
-msgid "Video files"
-msgstr "動画ファイル"
-
-#: files/go_to_file.py:74
-msgid "GIF files"
-msgstr "GIFファイル"
-
-#: files/go_to_file.py:76
-msgid "PDF files"
-msgstr "PDFファイル"
-
-#: files/go_to_file.py:78
-msgid "SVG files"
-msgstr "SVGファイル"
-
-#: files/go_to_file.py:80
-msgid "HTML files"
-msgstr "HTMLファイル"
-
-#: files/go_to_file.py:83
-msgid "All files"
-msgstr "すべてのファイル"
-
-#: files/go_to_file.py:86
-msgid "Select file to go to"
-msgstr "移動先のファイルを選択してください"
+#: app.py:1772
+msgid "GIMP Integration Error"
+msgstr "GIMP 統合エラー"

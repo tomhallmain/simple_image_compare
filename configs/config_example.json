@@ -78,7 +78,7 @@
   "sd_runner_client_password": "<PASSWORD>",
   "refacdir_client_port": 6001,
   "refacdir_client_password": "<PASSWORD>",
-  "gimp_exe_loc": "gimp-2.10",
+  "gimp_exe_loc": "gimp-3.0",
   "image_edit_configuration": {
     "random_rotation_chance": 0.5,
     "random_flip_chance": 0.5,
