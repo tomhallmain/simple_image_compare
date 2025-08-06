@@ -14,6 +14,7 @@ class CompareData:
     EMBEDDINGS_FLAVA_DATA = "image_embeddings_flava.pkl"
     EMBEDDINGS_ALIGN_DATA = "image_embeddings_align.pkl"
     EMBEDDINGS_XVLM_DATA = "image_embeddings_xvlm.pkl"
+    EMBEDDINGS_LAION_DATA = "image_embeddings_laion.pkl"
     THUMB_COLORS_DATA = "image_thumb_colors.pkl"
     TOP_COLORS_DATA = "image_top_colors.pkl"
     FACES_DATA = "image_faces.pkl"
@@ -47,6 +48,9 @@ class CompareData:
             elif mode == CompareMode.XVLM_EMBEDDING:
                 self._file_data_filepath = os.path.join(
                     base_dir, CompareData.EMBEDDINGS_XVLM_DATA)
+            elif mode == CompareMode.LAION_EMBEDDING:
+                self._file_data_filepath = os.path.join(
+                    base_dir, CompareData.EMBEDDINGS_LAION_DATA)
             else:
                 self._file_data_filepath = os.path.join(
                     base_dir, CompareData.EMBEDDINGS_DATA)

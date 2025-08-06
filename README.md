@@ -7,6 +7,7 @@ Simple image comparison tool that detects color and face similarities using CLIP
 - ALIGN: 640D embeddings, high accuracy for retrieval
 - FLAVA: 768D embeddings, good for complex reasoning
 - X-VLM: 256D embeddings, efficient for region-text tasks - requires local copy of [X-VLM](https://github.com/zengyan-97/X-VLM)
+- LAION: 1024D embeddings, high-quality visual-language understanding - based on CLIP ViT-H/14 architecture
 
 Each model offers different tradeoffs between accuracy, speed, and resource usage. The default CLIP model provides a good balance for most use cases.
 
@@ -99,6 +100,8 @@ If a search image is set simultaneously with search text, its embedding will be 
 - fr (Français)
 - es (Español)
 - it (Italiano)
+- pt (Português)
+- ru (Русский)
 - ja (日本語)
 - ko (한국어)
 - zh (中文)

@@ -96,7 +96,7 @@ class ComparePrompts(BaseCompareEmbedding):
             self.print_settings()
 
     def print_settings(self):
-        logger.info("\n\n|--------------------------------------------------------------------|")
+        logger.info("|--------------------------------------------------------------------|")
         logger.info(" CONFIGURATION SETTINGS:")
         logger.info(f" run search: {self.is_run_search}")
         if self.is_run_search:

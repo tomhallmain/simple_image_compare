@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-05 17:21-0400\n"
-"PO-Revision-Date: 2025-08-05 17:21-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-08-06 14:42-0400\n"
+"PO-Revision-Date: 2025-08-06 14:42-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr "（主窗口）"
 msgid "Theme switched to {0}."
 msgstr "主题切换到{0} 。"
 
-#: app.py:258 app.py:473 app.py:971 compare/compare_wrapper.py:489
+#: app.py:258 app.py:473 app.py:971 compare/compare_wrapper.py:492
 msgid "Set a directory to run comparison."
 msgstr "设置目录以运行比较 。"
 
@@ -152,7 +152,7 @@ msgstr "幻灯片放映结束"
 msgid "Browsing mode set."
 msgstr "浏览模式设置 。"
 
-#: app.py:771 utils/constants.py:292
+#: app.py:771 utils/constants.py:295
 msgid "View Media Details"
 msgstr "查看媒体详情"
 
@@ -180,7 +180,7 @@ msgstr "添加到收藏夹"
 msgid "Open in GIMP"
 msgstr "在GIMP中打开"
 
-#: app.py:779 image/image_details.py:191 utils/constants.py:298
+#: app.py:779 image/image_details.py:191 utils/constants.py:301
 msgid "Run Image Generation"
 msgstr "运行图像生成"
 
@@ -374,6 +374,16 @@ msgstr "未找到文本嵌入搜索预设。请在 config.json 文件中进行�
 #: app.py:1767
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "打开当前文件位置失败，无法获取有效的文件路径"
+
+#: app.py:1772
+msgid ""
+"GIMP integration is not configured. Please set 'gimp_exe_loc' in "
+"config.json."
+msgstr "GIMP 集成未配置。请在 config.json 中设置 ‘gimp_exe_loc’。"
+
+#: app.py:1772
+msgid "GIMP Integration Error"
+msgstr "GIMP 集成错误"
 
 #: app.py:1782
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
@@ -754,108 +764,108 @@ msgstr "检查点数据包含无效索引。您想重新开始比较吗？"
 msgid "Restarting Comparison"
 msgstr "重新启动比较"
 
-#: compare/compare_wrapper.py:69 compare/compare_wrapper.py:72
+#: compare/compare_wrapper.py:70 compare/compare_wrapper.py:73
 msgid "Invalid mode"
 msgstr "无效模式"
 
-#: compare/compare_wrapper.py:102 compare/compare_wrapper.py:123
+#: compare/compare_wrapper.py:103 compare/compare_wrapper.py:124
 msgid "Search required"
 msgstr "需要搜索"
 
-#: compare/compare_wrapper.py:102 compare/compare_wrapper.py:123
+#: compare/compare_wrapper.py:103 compare/compare_wrapper.py:124
 msgid "No matches found. Search again to find potential matches."
 msgstr "未找到匹配项。请再次搜索，以找到可能的匹配项。"
 
-#: compare/compare_wrapper.py:181
+#: compare/compare_wrapper.py:182
 msgid "Skipped %s images."
 msgstr "跳过 {0} 幅图像。"
 
-#: compare/compare_wrapper.py:187
+#: compare/compare_wrapper.py:188
 msgid "No Unrelated Images"
 msgstr "无不相关的图像"
 
-#: compare/compare_wrapper.py:187
+#: compare/compare_wrapper.py:188
 msgid "No unrelated images found."
 msgstr "未找到不相关的图像 。"
 
-#: compare/compare_wrapper.py:224 compare/compare_wrapper.py:386
+#: compare/compare_wrapper.py:225 compare/compare_wrapper.py:389
 msgid "No Groups Found"
 msgstr "没有找到组"
 
-#: compare/compare_wrapper.py:294
+#: compare/compare_wrapper.py:295
 msgid ""
 "Gathering image data... setup may take a while depending on number of files "
 "involved."
 msgstr "收集图像数据......根据所涉及文件的数量，设置可能需要一段时间。"
 
-#: compare/compare_wrapper.py:316
+#: compare/compare_wrapper.py:317
 msgid "Confirm group run"
 msgstr "确认小组运行"
 
-#: compare/compare_wrapper.py:317
+#: compare/compare_wrapper.py:318
 msgid ""
 "Search mode detected, please confirm switch to group mode before run. Group "
 "mode will take longer as all images in the base directory are compared."
 msgstr "检测到搜索模式，请确认切换到组模式后再运行。群组模式将需要更长的时间，因为要对基本目录中的所有图像进行比较。"
 
-#: compare/compare_wrapper.py:324
+#: compare/compare_wrapper.py:325
 msgid "Gathering image data for comparison"
 msgstr "收集图像数据进行比较"
 
-#: compare/compare_wrapper.py:352
+#: compare/compare_wrapper.py:355
 msgid "Searching images..."
 msgstr "正在搜索图像..."
 
-#: compare/compare_wrapper.py:358
+#: compare/compare_wrapper.py:361
 msgid "Set a directory and search file or search text."
 msgstr "设置目录和搜索文件或搜索文本。"
 
-#: compare/compare_wrapper.py:359
+#: compare/compare_wrapper.py:362
 msgid "No Match Found"
 msgstr "找不到匹配"
 
-#: compare/compare_wrapper.py:359
+#: compare/compare_wrapper.py:362
 msgid "None of the files match the search filters with current settings."
 msgstr "在当前设置下，没有任何文件符合搜索筛选条件。"
 
-#: compare/compare_wrapper.py:372
+#: compare/compare_wrapper.py:375
 msgid "%s possibly related images found."
 msgstr "{0} 可能找到相关的图像 。"
 
-#: compare/compare_wrapper.py:380
+#: compare/compare_wrapper.py:383
 msgid "Running image comparisons..."
 msgstr "运行图像比较..."
 
-#: compare/compare_wrapper.py:385 compare/compare_wrapper.py:400
+#: compare/compare_wrapper.py:388 compare/compare_wrapper.py:403
 msgid "Set a directory and search file."
 msgstr "设置目录和搜索文件 。"
 
-#: compare/compare_wrapper.py:386
+#: compare/compare_wrapper.py:389
 msgid "None of the files can be grouped with current settings."
 msgstr "所有文件都无法按当前设置进行分组。"
 
-#: compare/compare_wrapper.py:401
+#: compare/compare_wrapper.py:404
 msgid "No Duplicates Found"
 msgstr "未找到复制件"
 
-#: compare/compare_wrapper.py:401
+#: compare/compare_wrapper.py:404
 msgid ""
 "None of the files appear to be duplicates based on the current settings."
 msgstr "根据当前设置，没有任何文件看起来是重复的。"
 
-#: compare/compare_wrapper.py:425
+#: compare/compare_wrapper.py:428
 msgid "Stranded Group Members Found"
 msgstr "找到受困的小组成员"
 
-#: compare/compare_wrapper.py:425
+#: compare/compare_wrapper.py:428
 msgid "Some group members were left stranded by the grouping process."
 msgstr "一些小组成员在分组过程中陷入困境。"
 
-#: compare/compare_wrapper.py:480
+#: compare/compare_wrapper.py:483
 msgid "No More Groups"
 msgstr "没有更多组"
 
-#: compare/compare_wrapper.py:481
+#: compare/compare_wrapper.py:484
 msgid ""
 "There are no more image groups remaining for this directory and current "
 "filter settings."
@@ -1551,7 +1561,7 @@ msgstr "HTML 支持需要 pyppeter 软件包"
 msgid "Media Type Configuration"
 msgstr "媒体类型配置"
 
-#: files/type_configuration_window.py:113 utils/constants.py:301
+#: files/type_configuration_window.py:113 utils/constants.py:304
 msgid "Configure Media Types"
 msgstr "配置媒体类型"
 
@@ -1594,7 +1604,7 @@ msgstr "颜色模式"
 msgid "Dimensions"
 msgstr "尺寸"
 
-#: image/image_details.py:126 utils/constants.py:101 utils/constants.py:121
+#: image/image_details.py:126 utils/constants.py:104 utils/constants.py:124
 msgid "Size"
 msgstr "大小"
 
@@ -1826,203 +1836,203 @@ msgstr "组合比较模式"
 msgid "Duplicate Detection Mode"
 msgstr "复制检测模式"
 
-#: utils/constants.py:36 utils/constants.py:46
+#: utils/constants.py:36 utils/constants.py:47
 msgid "Color Matching"
 msgstr "颜色匹配"
 
-#: utils/constants.py:37 utils/constants.py:48
+#: utils/constants.py:37 utils/constants.py:49
 msgid "CLIP Embedding"
-msgstr "《刑法》 嵌入"
+msgstr "CLIP 嵌入"
 
-#: utils/constants.py:38 utils/constants.py:50
+#: utils/constants.py:38 utils/constants.py:51
 msgid "SigLIP Embedding"
-msgstr "锡格利普 嵌入"
+msgstr "SigLIP 嵌入"
 
-#: utils/constants.py:39 utils/constants.py:52
+#: utils/constants.py:39 utils/constants.py:53
 msgid "FLAVA Embedding"
-msgstr "法国 嵌入"
+msgstr "FLAVA 嵌入"
 
-#: utils/constants.py:40 utils/constants.py:54
+#: utils/constants.py:40 utils/constants.py:55
 msgid "ALIGN Embedding"
-msgstr "阿联酋 嵌入"
+msgstr "ALIGN 嵌入"
 
-#: utils/constants.py:41 utils/constants.py:56
+#: utils/constants.py:41 utils/constants.py:57
 msgid "X-VLM Embedding"
-msgstr "X-VLM 常规 嵌入"
+msgstr "X-VLM 嵌入"
 
-#: utils/constants.py:77
+#: utils/constants.py:80
 msgid "Color diff threshold"
 msgstr "颜色 diff 阈值"
 
-#: utils/constants.py:79
+#: utils/constants.py:82
 msgid "Embedding similarity threshold"
 msgstr "嵌入类似阈值"
 
-#: utils/constants.py:96 utils/constants.py:111
+#: utils/constants.py:99 utils/constants.py:114
 msgid "Name"
 msgstr "名称"
 
-#: utils/constants.py:97 utils/constants.py:113
+#: utils/constants.py:100 utils/constants.py:116
 msgid "Full Path"
 msgstr "完整路径"
 
-#: utils/constants.py:98 utils/constants.py:115
+#: utils/constants.py:101 utils/constants.py:118
 msgid "Creation Time"
 msgstr "创建时间"
 
-#: utils/constants.py:99 utils/constants.py:117
+#: utils/constants.py:102 utils/constants.py:120
 msgid "Modify Time"
 msgstr "修改时间"
 
-#: utils/constants.py:100 utils/constants.py:119
+#: utils/constants.py:103 utils/constants.py:122
 msgid "Type"
 msgstr "类型"
 
-#: utils/constants.py:102 utils/constants.py:123
+#: utils/constants.py:105 utils/constants.py:126
 msgid "Name Length"
 msgstr "名称长度"
 
-#: utils/constants.py:103 utils/constants.py:125
+#: utils/constants.py:106 utils/constants.py:128
 msgid "Related Image"
 msgstr "相关图像"
 
-#: utils/constants.py:104 utils/constants.py:127
+#: utils/constants.py:107 utils/constants.py:130
 msgid "Random"
 msgstr "随机"
 
-#: utils/constants.py:105 utils/constants.py:129
+#: utils/constants.py:108 utils/constants.py:132
 msgid "Image Pixels"
 msgstr "图像像素"
 
-#: utils/constants.py:106 utils/constants.py:131
+#: utils/constants.py:109 utils/constants.py:134
 msgid "Image Height"
 msgstr "图像高度"
 
-#: utils/constants.py:107 utils/constants.py:133
+#: utils/constants.py:110 utils/constants.py:136
 msgid "Image Width"
 msgstr "图像宽度"
 
-#: utils/constants.py:152
+#: utils/constants.py:155
 msgid "ascending"
 msgstr "升职"
 
-#: utils/constants.py:153
+#: utils/constants.py:156
 msgid "descending"
 msgstr "下降"
 
-#: utils/constants.py:154
+#: utils/constants.py:157
 msgid "random"
 msgstr "随机"
 
-#: utils/constants.py:207
+#: utils/constants.py:210
 msgid "Image"
 msgstr "图像"
 
-#: utils/constants.py:209
+#: utils/constants.py:212
 msgid "GIF"
 msgstr "全球投资框架"
 
-#: utils/constants.py:211
+#: utils/constants.py:214
 msgid "Video"
 msgstr "视频"
 
-#: utils/constants.py:213
+#: utils/constants.py:216
 msgid "PDF"
 msgstr "专题报告"
 
-#: utils/constants.py:215
+#: utils/constants.py:218
 msgid "SVG"
 msgstr "SVG"
 
-#: utils/constants.py:217
+#: utils/constants.py:220
 msgid "HTML"
 msgstr "HTML"
 
-#: utils/constants.py:237
+#: utils/constants.py:240
 msgid "Moved files"
 msgstr "已移动文件"
 
-#: utils/constants.py:239
+#: utils/constants.py:242
 msgid "Copied files"
 msgstr "复制文件"
 
-#: utils/constants.py:241
+#: utils/constants.py:244
 msgid "Removed files"
 msgstr "删除的文件"
 
-#: utils/constants.py:243
+#: utils/constants.py:246
 msgid "Marked files"
 msgstr "标记文件"
 
-#: utils/constants.py:245
+#: utils/constants.py:248
 msgid "Unmarked files"
 msgstr "未标记的文件"
 
-#: utils/constants.py:247
+#: utils/constants.py:250
 msgid "Searched files"
 msgstr "已搜索文件"
 
-#: utils/constants.py:249
+#: utils/constants.py:252
 msgid "Compared files"
 msgstr "比较文件"
 
-#: utils/constants.py:251
+#: utils/constants.py:254
 msgid "Generated images"
 msgstr "生成图像"
 
-#: utils/constants.py:253
+#: utils/constants.py:256
 msgid "Changed directory"
 msgstr "更改目录"
 
-#: utils/constants.py:255
+#: utils/constants.py:258
 msgid "System"
 msgstr "系统"
 
-#: utils/constants.py:288
+#: utils/constants.py:291
 msgid "Start Application"
 msgstr "启动软件应用程序"
 
-#: utils/constants.py:289
+#: utils/constants.py:292
 msgid "Run Compares"
 msgstr "运行比较"
 
-#: utils/constants.py:290
+#: utils/constants.py:293
 msgid "Run Search"
 msgstr "运行搜索"
 
-#: utils/constants.py:291
+#: utils/constants.py:294
 msgid "Run Search Preset"
 msgstr "运行搜索预置"
 
-#: utils/constants.py:293
+#: utils/constants.py:296
 msgid "View Recent Directories"
 msgstr "查看最新目录"
 
-#: utils/constants.py:294
+#: utils/constants.py:297
 msgid "View File Actions"
 msgstr "查看文件操作"
 
-#: utils/constants.py:295
+#: utils/constants.py:298
 msgid "Run File Actions"
 msgstr "运行文件操作"
 
-#: utils/constants.py:296
+#: utils/constants.py:299
 msgid "Edit Prevalidations"
 msgstr "编辑批准书"
 
-#: utils/constants.py:297
+#: utils/constants.py:300
 msgid "Run Prevalidations"
 msgstr "运行审批"
 
-#: utils/constants.py:299
+#: utils/constants.py:302
 msgid "Run RefacDir"
 msgstr "运行 RefacDir"
 
-#: utils/constants.py:300
+#: utils/constants.py:303
 msgid "Delete Media"
 msgstr "删除媒体"
 
-#: utils/constants.py:302
+#: utils/constants.py:305
 msgid "Access Password Administration"
 msgstr "访问密码管理"
 
@@ -2292,12 +2302,6 @@ msgstr "逃离文件路径中的反斜线"
 msgid " etc."
 msgstr " 等等"
 
-#: app.py:1772
-msgid ""
-"GIMP integration is not configured. Please set 'gimp_exe_loc' in "
-"config.json."
-msgstr "GIMP 集成未配置。请在 config.json 中设置 ‘gimp_exe_loc’。"
-
-#: app.py:1772
-msgid "GIMP Integration Error"
-msgstr "GIMP 集成错误"
+#: utils/constants.py:42 utils/constants.py:59
+msgid "LAION Embedding"
+msgstr "LAION 嵌入"

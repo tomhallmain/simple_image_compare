@@ -49,6 +49,10 @@ _xvlm_model = None
 _xvlm_tokenizer = None
 _xvlm_img_transform = None
 
+# Lazy initialization variables for LAION
+_laion_model = None
+_laion_processor = None
+
 # Model and processor access functions
 
 def _get_clip_model():
@@ -157,6 +161,24 @@ def _get_xvlm_img_transform():
                                (0.26862954, 0.26130258, 0.27577711))
         ])
     return _xvlm_img_transform
+
+def _get_laion_model():
+    global _laion_model
+    if _laion_model is None:
+        if config.laion_enable_half_precision:
+            _laion_model = AutoModel.from_pretrained("laion/CLIP-ViT-H-14-laion2B-s32B-b79K", torch_dtype=torch.float16).to(device)
+        else:
+            _laion_model = AutoModel.from_pretrained("laion/CLIP-ViT-H-14-laion2B-s32B-b79K").to(device)
+    return _laion_model
+
+def _get_laion_processor():
+    global _laion_processor
+    if _laion_processor is None:
+        if config.laion_enable_half_precision:
+            _laion_processor = AutoProcessor.from_pretrained("laion/CLIP-ViT-H-14-laion2B-s32B-b79K", torch_dtype=torch.float16)
+        else:
+            _laion_processor = AutoProcessor.from_pretrained("laion/CLIP-ViT-H-14-laion2B-s32B-b79K")
+    return _laion_processor
 
 
 # Embedding similarity
@@ -322,3 +344,34 @@ def text_embeddings_xvlm(text):
         # Normalize the embeddings
         text_feat = text_feat / text_feat.norm(dim=-1, keepdim=True)
         return text_feat.tolist()[0]
+
+
+# LAION embeddings
+
+def image_embeddings_laion(image_path):
+    try:
+        image = Image.open(image_path).convert("RGB")
+    except Exception as e:
+        image_path = FrameCache.get_image_path(image_path)
+        image = Image.open(image_path).convert("RGB")
+    
+    # Process image with LAION processor
+    inputs = _get_laion_processor()(images=image, return_tensors="pt").to(device)
+    
+    with torch.no_grad():
+        # Get image features using LAION model
+        outputs = _get_laion_model().get_image_features(**inputs)
+        # Normalize the embeddings
+        outputs = outputs / outputs.norm(dim=-1, keepdim=True)
+        return outputs.tolist()[0]
+
+def text_embeddings_laion(text):
+    # Process text with LAION processor
+    inputs = _get_laion_processor()(text=[text], padding="max_length", return_tensors="pt").to(device)
+    
+    with torch.no_grad():
+        # Get text features using LAION model
+        outputs = _get_laion_model().get_text_features(**inputs)
+        # Normalize the embeddings
+        outputs = outputs / outputs.norm(dim=-1, keepdim=True)
+        return outputs.tolist()[0]

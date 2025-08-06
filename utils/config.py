@@ -57,6 +57,7 @@ class Config:
         self.xvlm_loc = None
         self.xvlm_model_loc = None
         self.xvlm_model_size = "4m"
+        self.laion_enable_half_precision = False
         self.always_open_new_windows = False
         self.image_types = [".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".bmp", ".heic", ".avif"]
         self.video_types = [".mp4", ".mkv", ".avi", ".wmv", ".mov", ".flv"]
@@ -149,6 +150,7 @@ class Config:
                             "clear_marks_with_errors_after_move",
                             "move_marks_overwrite_existing_file",
                             "siglip_enable_large_model",
+                            "laion_enable_half_precision",
                             "use_file_paths_json",
                             "text_embedding_search_presets_exclusive",
                             "store_checkpoints",

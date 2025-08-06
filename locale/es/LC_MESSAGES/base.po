@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-05 17:21-0400\n"
-"PO-Revision-Date: 2025-08-05 17:21-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-08-06 14:42-0400\n"
+"PO-Revision-Date: 2025-08-06 14:42-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: es Team <<EMAIL>>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr "(Ventana principal)"
 msgid "Theme switched to {0}."
 msgstr "Tema cambiado a {0}."
 
-#: app.py:258 app.py:473 app.py:971 compare/compare_wrapper.py:489
+#: app.py:258 app.py:473 app.py:971 compare/compare_wrapper.py:492
 msgid "Set a directory to run comparison."
 msgstr "Establece un directorio para ejecutar la comparación."
 
@@ -152,7 +152,7 @@ msgstr "Fin de las presentaciones"
 msgid "Browsing mode set."
 msgstr "Modo de navegación establecido."
 
-#: app.py:771 utils/constants.py:292
+#: app.py:771 utils/constants.py:295
 msgid "View Media Details"
 msgstr "Ver detalles de los medios"
 
@@ -180,7 +180,7 @@ msgstr "Añadir a favoritos"
 msgid "Open in GIMP"
 msgstr "Abrir en GIMP"
 
-#: app.py:779 image/image_details.py:191 utils/constants.py:298
+#: app.py:779 image/image_details.py:191 utils/constants.py:301
 msgid "Run Image Generation"
 msgstr "Ejecutar la generación de imágenes"
 
@@ -391,6 +391,18 @@ msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr ""
 "No se ha podido abrir la ubicación del archivo actual, no se ha podido "
 "obtener una ruta de archivo válida."
+
+#: app.py:1772
+msgid ""
+"GIMP integration is not configured. Please set 'gimp_exe_loc' in "
+"config.json."
+msgstr ""
+"La integración con GIMP no está configurada. Por favor, configure "
+"“gimp_exe_loc” en config.json."
+
+#: app.py:1772
+msgid "GIMP Integration Error"
+msgstr "Error de integración de GIMP"
 
 #: app.py:1782
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
@@ -790,37 +802,37 @@ msgstr ""
 msgid "Restarting Comparison"
 msgstr "Reestrellante Comparación"
 
-#: compare/compare_wrapper.py:69 compare/compare_wrapper.py:72
+#: compare/compare_wrapper.py:70 compare/compare_wrapper.py:73
 msgid "Invalid mode"
 msgstr "Modo no válido"
 
-#: compare/compare_wrapper.py:102 compare/compare_wrapper.py:123
+#: compare/compare_wrapper.py:103 compare/compare_wrapper.py:124
 msgid "Search required"
 msgstr "Búsqueda obligatoria"
 
-#: compare/compare_wrapper.py:102 compare/compare_wrapper.py:123
+#: compare/compare_wrapper.py:103 compare/compare_wrapper.py:124
 msgid "No matches found. Search again to find potential matches."
 msgstr ""
 "No se han encontrado coincidencias. Vuelva a buscar para encontrar posibles "
 "coincidencias."
 
-#: compare/compare_wrapper.py:181
+#: compare/compare_wrapper.py:182
 msgid "Skipped %s images."
 msgstr "Se han omitido {0} imágenes."
 
-#: compare/compare_wrapper.py:187
+#: compare/compare_wrapper.py:188
 msgid "No Unrelated Images"
 msgstr "Sin imágenes no relacionadas"
 
-#: compare/compare_wrapper.py:187
+#: compare/compare_wrapper.py:188
 msgid "No unrelated images found."
 msgstr "No se han encontrado imágenes no relacionadas."
 
-#: compare/compare_wrapper.py:224 compare/compare_wrapper.py:386
+#: compare/compare_wrapper.py:225 compare/compare_wrapper.py:389
 msgid "No Groups Found"
 msgstr "No se han encontrado grupos"
 
-#: compare/compare_wrapper.py:294
+#: compare/compare_wrapper.py:295
 msgid ""
 "Gathering image data... setup may take a while depending on number of files "
 "involved."
@@ -828,11 +840,11 @@ msgstr ""
 "Recopilación de datos de imagen... la configuración puede llevar un tiempo "
 "dependiendo del número de archivos implicados."
 
-#: compare/compare_wrapper.py:316
+#: compare/compare_wrapper.py:317
 msgid "Confirm group run"
 msgstr "Confirmar la ejecución en grupo"
 
-#: compare/compare_wrapper.py:317
+#: compare/compare_wrapper.py:318
 msgid ""
 "Search mode detected, please confirm switch to group mode before run. Group "
 "mode will take longer as all images in the base directory are compared."
@@ -841,72 +853,72 @@ msgstr ""
 "antes de ejecutar. El modo de grupo tardará más tiempo, ya que se comparan "
 "todas las imágenes del directorio base."
 
-#: compare/compare_wrapper.py:324
+#: compare/compare_wrapper.py:325
 msgid "Gathering image data for comparison"
 msgstr "Recopilación de datos de imágenes para su comparación"
 
-#: compare/compare_wrapper.py:352
+#: compare/compare_wrapper.py:355
 msgid "Searching images..."
 msgstr "Buscando imágenes..."
 
-#: compare/compare_wrapper.py:358
+#: compare/compare_wrapper.py:361
 msgid "Set a directory and search file or search text."
 msgstr ""
 "Establece un directorio y un archivo de búsqueda o un texto de búsqueda."
 
-#: compare/compare_wrapper.py:359
+#: compare/compare_wrapper.py:362
 msgid "No Match Found"
 msgstr "No se han encontrado coincidencias"
 
-#: compare/compare_wrapper.py:359
+#: compare/compare_wrapper.py:362
 msgid "None of the files match the search filters with current settings."
 msgstr ""
 "Ninguno de los archivos coincide con los filtros de búsqueda con la "
 "configuración actual."
 
-#: compare/compare_wrapper.py:372
+#: compare/compare_wrapper.py:375
 msgid "%s possibly related images found."
 msgstr "{0} imágenes posiblemente relacionadas encontradas."
 
-#: compare/compare_wrapper.py:380
+#: compare/compare_wrapper.py:383
 msgid "Running image comparisons..."
 msgstr "Ejecutar comparaciones de imágenes..."
 
-#: compare/compare_wrapper.py:385 compare/compare_wrapper.py:400
+#: compare/compare_wrapper.py:388 compare/compare_wrapper.py:403
 msgid "Set a directory and search file."
 msgstr "Establece un directorio y un archivo de búsqueda."
 
-#: compare/compare_wrapper.py:386
+#: compare/compare_wrapper.py:389
 msgid "None of the files can be grouped with current settings."
 msgstr ""
 "No se puede agrupar ninguno de los archivos con la configuración actual."
 
-#: compare/compare_wrapper.py:401
+#: compare/compare_wrapper.py:404
 msgid "No Duplicates Found"
 msgstr "No se han encontrado duplicados"
 
-#: compare/compare_wrapper.py:401
+#: compare/compare_wrapper.py:404
 msgid ""
 "None of the files appear to be duplicates based on the current settings."
 msgstr ""
 "Ninguno de los archivos parece estar duplicado según la configuración "
 "actual."
 
-#: compare/compare_wrapper.py:425
+#: compare/compare_wrapper.py:428
 msgid "Stranded Group Members Found"
 msgstr "Stranded Group Members Found"
 
-#: compare/compare_wrapper.py:425
+#: compare/compare_wrapper.py:428
 msgid "Some group members were left stranded by the grouping process."
 msgstr ""
 "Algunos miembros del grupo quedaron desamparados por el proceso de "
 "agrupación."
 
-#: compare/compare_wrapper.py:480
+#: compare/compare_wrapper.py:483
 msgid "No More Groups"
 msgstr "Encontrados los miembros del grupo varados"
 
-#: compare/compare_wrapper.py:481
+#: compare/compare_wrapper.py:484
 msgid ""
 "There are no more image groups remaining for this directory and current "
 "filter settings."
@@ -1612,7 +1624,7 @@ msgstr "Soporte HTML requiere paquete de pyppeteer"
 msgid "Media Type Configuration"
 msgstr "Configuración del tipo de medio"
 
-#: files/type_configuration_window.py:113 utils/constants.py:301
+#: files/type_configuration_window.py:113 utils/constants.py:304
 msgid "Configure Media Types"
 msgstr "Configurar Tipos de Medios"
 
@@ -1660,7 +1672,7 @@ msgstr "Modo de color"
 msgid "Dimensions"
 msgstr "Dimensiones"
 
-#: image/image_details.py:126 utils/constants.py:101 utils/constants.py:121
+#: image/image_details.py:126 utils/constants.py:104 utils/constants.py:124
 msgid "Size"
 msgstr "Tama00f1o"
 
@@ -1898,203 +1910,203 @@ msgstr "Modo de comparación de grupos"
 msgid "Duplicate Detection Mode"
 msgstr "Modo de detección de duplicados"
 
-#: utils/constants.py:36 utils/constants.py:46
+#: utils/constants.py:36 utils/constants.py:47
 msgid "Color Matching"
 msgstr "Combinación de colores"
 
-#: utils/constants.py:37 utils/constants.py:48
+#: utils/constants.py:37 utils/constants.py:49
 msgid "CLIP Embedding"
 msgstr "Incrustación CLIP"
 
-#: utils/constants.py:38 utils/constants.py:50
+#: utils/constants.py:38 utils/constants.py:51
 msgid "SigLIP Embedding"
 msgstr "Incrustación SigLIP"
 
-#: utils/constants.py:39 utils/constants.py:52
+#: utils/constants.py:39 utils/constants.py:53
 msgid "FLAVA Embedding"
 msgstr "Incrustación FLAVA"
 
-#: utils/constants.py:40 utils/constants.py:54
+#: utils/constants.py:40 utils/constants.py:55
 msgid "ALIGN Embedding"
 msgstr "Incrustación ALIGN"
 
-#: utils/constants.py:41 utils/constants.py:56
+#: utils/constants.py:41 utils/constants.py:57
 msgid "X-VLM Embedding"
 msgstr "Incrustación X-VLM"
 
-#: utils/constants.py:77
+#: utils/constants.py:80
 msgid "Color diff threshold"
 msgstr "Umbral de diferencia de color"
 
-#: utils/constants.py:79
+#: utils/constants.py:82
 msgid "Embedding similarity threshold"
 msgstr "Umbral de similitud de incrustación"
 
-#: utils/constants.py:96 utils/constants.py:111
+#: utils/constants.py:99 utils/constants.py:114
 msgid "Name"
 msgstr "Nombre"
 
-#: utils/constants.py:97 utils/constants.py:113
+#: utils/constants.py:100 utils/constants.py:116
 msgid "Full Path"
 msgstr "Ruta completa"
 
-#: utils/constants.py:98 utils/constants.py:115
+#: utils/constants.py:101 utils/constants.py:118
 msgid "Creation Time"
 msgstr "Tiempo de creación"
 
-#: utils/constants.py:99 utils/constants.py:117
+#: utils/constants.py:102 utils/constants.py:120
 msgid "Modify Time"
 msgstr "Modificar la hora"
 
-#: utils/constants.py:100 utils/constants.py:119
+#: utils/constants.py:103 utils/constants.py:122
 msgid "Type"
 msgstr "Tipo"
 
-#: utils/constants.py:102 utils/constants.py:123
+#: utils/constants.py:105 utils/constants.py:126
 msgid "Name Length"
 msgstr "Nombre Longitud"
 
-#: utils/constants.py:103 utils/constants.py:125
+#: utils/constants.py:106 utils/constants.py:128
 msgid "Related Image"
 msgstr "Imagen relacionada"
 
-#: utils/constants.py:104 utils/constants.py:127
+#: utils/constants.py:107 utils/constants.py:130
 msgid "Random"
 msgstr "Al azar"
 
-#: utils/constants.py:105 utils/constants.py:129
+#: utils/constants.py:108 utils/constants.py:132
 msgid "Image Pixels"
 msgstr "Pixels de imagen"
 
-#: utils/constants.py:106 utils/constants.py:131
+#: utils/constants.py:109 utils/constants.py:134
 msgid "Image Height"
 msgstr "Altura de imagen"
 
-#: utils/constants.py:107 utils/constants.py:133
+#: utils/constants.py:110 utils/constants.py:136
 msgid "Image Width"
 msgstr "Imagen ancho"
 
-#: utils/constants.py:152
+#: utils/constants.py:155
 msgid "ascending"
 msgstr "ascendente"
 
-#: utils/constants.py:153
+#: utils/constants.py:156
 msgid "descending"
 msgstr "descendente"
 
-#: utils/constants.py:154
+#: utils/constants.py:157
 msgid "random"
 msgstr "al azar"
 
-#: utils/constants.py:207
+#: utils/constants.py:210
 msgid "Image"
 msgstr "Imagen"
 
-#: utils/constants.py:209
+#: utils/constants.py:212
 msgid "GIF"
 msgstr "GIF"
 
-#: utils/constants.py:211
+#: utils/constants.py:214
 msgid "Video"
 msgstr "video"
 
-#: utils/constants.py:213
+#: utils/constants.py:216
 msgid "PDF"
 msgstr "PDF"
 
-#: utils/constants.py:215
+#: utils/constants.py:218
 msgid "SVG"
 msgstr "SVG"
 
-#: utils/constants.py:217
+#: utils/constants.py:220
 msgid "HTML"
 msgstr "HTML"
 
-#: utils/constants.py:237
+#: utils/constants.py:240
 msgid "Moved files"
 msgstr "Movidos los ficheros"
 
-#: utils/constants.py:239
+#: utils/constants.py:242
 msgid "Copied files"
 msgstr "Copiados los ficheros"
 
-#: utils/constants.py:241
+#: utils/constants.py:244
 msgid "Removed files"
 msgstr "Eliminados los ficheros"
 
-#: utils/constants.py:243
+#: utils/constants.py:246
 msgid "Marked files"
 msgstr "Marcados los ficheros"
 
-#: utils/constants.py:245
+#: utils/constants.py:248
 msgid "Unmarked files"
 msgstr "Desmarcados los ficheros"
 
-#: utils/constants.py:247
+#: utils/constants.py:250
 msgid "Searched files"
 msgstr "Buscados los ficheros"
 
-#: utils/constants.py:249
+#: utils/constants.py:252
 msgid "Compared files"
 msgstr "Comparados los ficheros"
 
-#: utils/constants.py:251
+#: utils/constants.py:254
 msgid "Generated images"
 msgstr "Imágenes generadas"
 
-#: utils/constants.py:253
+#: utils/constants.py:256
 msgid "Changed directory"
 msgstr "Cambiado de directorio"
 
-#: utils/constants.py:255
+#: utils/constants.py:258
 msgid "System"
 msgstr "Sistema"
 
-#: utils/constants.py:288
+#: utils/constants.py:291
 msgid "Start Application"
 msgstr "Iniciar aplicación"
 
-#: utils/constants.py:289
+#: utils/constants.py:292
 msgid "Run Compares"
 msgstr "Ejecutar comparaciones"
 
-#: utils/constants.py:290
+#: utils/constants.py:293
 msgid "Run Search"
 msgstr "Ejecutar búsqueda"
 
-#: utils/constants.py:291
+#: utils/constants.py:294
 msgid "Run Search Preset"
 msgstr "Ejecutar búsqueda preestablecida"
 
-#: utils/constants.py:293
+#: utils/constants.py:296
 msgid "View Recent Directories"
 msgstr "Ver directorios recientes"
 
-#: utils/constants.py:294
+#: utils/constants.py:297
 msgid "View File Actions"
 msgstr "Ver acciones de archivo"
 
-#: utils/constants.py:295
+#: utils/constants.py:298
 msgid "Run File Actions"
 msgstr "Ejecutar acciones de archivo"
 
-#: utils/constants.py:296
+#: utils/constants.py:299
 msgid "Edit Prevalidations"
 msgstr "Editar Prevalidaciones"
 
-#: utils/constants.py:297
+#: utils/constants.py:300
 msgid "Run Prevalidations"
 msgstr "Prevalidaciones de carrera"
 
-#: utils/constants.py:299
+#: utils/constants.py:302
 msgid "Run RefacDir"
 msgstr "Ejecutar RefacDir"
 
-#: utils/constants.py:300
+#: utils/constants.py:303
 msgid "Delete Media"
 msgstr "Borrar medios"
 
-#: utils/constants.py:302
+#: utils/constants.py:305
 msgid "Access Password Administration"
 msgstr "Administración de contraseñas de acceso"
 
@@ -2371,14 +2383,6 @@ msgstr "Escape de barras invertidas en rutas de archivos"
 msgid " etc."
 msgstr " etc."
 
-#: app.py:1772
-msgid ""
-"GIMP integration is not configured. Please set 'gimp_exe_loc' in "
-"config.json."
-msgstr ""
-"La integración con GIMP no está configurada. Por favor, configure "
-"“gimp_exe_loc” en config.json."
-
-#: app.py:1772
-msgid "GIMP Integration Error"
-msgstr "Error de integración de GIMP"
+#: utils/constants.py:42 utils/constants.py:59
+msgid "LAION Embedding"
+msgstr "Incrustación LAION"

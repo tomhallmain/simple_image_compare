@@ -38,6 +38,7 @@
   "xvlm_loc": null,
   "xvlm_model_loc": null,
   "xvlm_model_size": "4m",
+  "laion_enable_half_precision": false,
   "tag_suggestions_file": "tag_suggestions.json",
   "image_types": [
     ".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".bmp", ".heic", ".avif", ".ico"

@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-05 17:21-0400\n"
-"PO-Revision-Date: 2025-08-05 17:21-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-08-06 14:42-0400\n"
+"PO-Revision-Date: 2025-08-06 14:42-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr "（メインウィンドウ）"
 msgid "Theme switched to {0}."
 msgstr "テーマを{0}に切り替えます。"
 
-#: app.py:258 app.py:473 app.py:971 compare/compare_wrapper.py:489
+#: app.py:258 app.py:473 app.py:971 compare/compare_wrapper.py:492
 msgid "Set a directory to run comparison."
 msgstr "比較を実行するディレクトリを設定します。"
 
@@ -152,7 +152,7 @@ msgstr "スライドショー終了"
 msgid "Browsing mode set."
 msgstr "ブラウジングモードセット。"
 
-#: app.py:771 utils/constants.py:292
+#: app.py:771 utils/constants.py:295
 msgid "View Media Details"
 msgstr "メディア詳細を見る"
 
@@ -180,7 +180,7 @@ msgstr "お気に入りに追加"
 msgid "Open in GIMP"
 msgstr "GIMPで開く"
 
-#: app.py:779 image/image_details.py:191 utils/constants.py:298
+#: app.py:779 image/image_details.py:191 utils/constants.py:301
 msgid "Run Image Generation"
 msgstr "映像生成の実行"
 
@@ -375,6 +375,16 @@ msgstr "テキスト埋め込み検索プリセットが見つかりません。
 #: app.py:1767
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの場所を開くことができません。"
+
+#: app.py:1772
+msgid ""
+"GIMP integration is not configured. Please set 'gimp_exe_loc' in "
+"config.json."
+msgstr "GIMPの統合設定が有効になっていません。config.jsonファイルで『gimp_exe_loc』を設定してください。"
+
+#: app.py:1772
+msgid "GIMP Integration Error"
+msgstr "GIMP 統合エラー"
 
 #: app.py:1782
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
@@ -755,109 +765,109 @@ msgstr "チェックポイント・データに無効なインデックスが含
 msgid "Restarting Comparison"
 msgstr "再開比較"
 
-#: compare/compare_wrapper.py:69 compare/compare_wrapper.py:72
+#: compare/compare_wrapper.py:70 compare/compare_wrapper.py:73
 msgid "Invalid mode"
 msgstr "無効なモード"
 
-#: compare/compare_wrapper.py:102 compare/compare_wrapper.py:123
+#: compare/compare_wrapper.py:103 compare/compare_wrapper.py:124
 msgid "Search required"
 msgstr "必須検索"
 
-#: compare/compare_wrapper.py:102 compare/compare_wrapper.py:123
+#: compare/compare_wrapper.py:103 compare/compare_wrapper.py:124
 msgid "No matches found. Search again to find potential matches."
 msgstr "該当する検索結果がありません。もう一度検索して一致する可能性のあるものを探してください。"
 
-#: compare/compare_wrapper.py:181
+#: compare/compare_wrapper.py:182
 msgid "Skipped %s images."
 msgstr "{0}枚の画像をスキップしました。"
 
-#: compare/compare_wrapper.py:187
+#: compare/compare_wrapper.py:188
 msgid "No Unrelated Images"
 msgstr "非関連画像なし"
 
-#: compare/compare_wrapper.py:187
+#: compare/compare_wrapper.py:188
 msgid "No unrelated images found."
 msgstr "関係のない画像が見つかりません。"
 
-#: compare/compare_wrapper.py:224 compare/compare_wrapper.py:386
+#: compare/compare_wrapper.py:225 compare/compare_wrapper.py:389
 msgid "No Groups Found"
 msgstr "グループが見つかりません"
 
-#: compare/compare_wrapper.py:294
+#: compare/compare_wrapper.py:295
 msgid ""
 "Gathering image data... setup may take a while depending on number of files "
 "involved."
 msgstr "画像データの収集...ファイル数によってはセットアップに時間がかかる。"
 
-#: compare/compare_wrapper.py:316
+#: compare/compare_wrapper.py:317
 msgid "Confirm group run"
 msgstr "グループ走行の確認"
 
-#: compare/compare_wrapper.py:317
+#: compare/compare_wrapper.py:318
 msgid ""
 "Search mode detected, please confirm switch to group mode before run. Group "
 "mode will take longer as all images in the base directory are compared."
 msgstr ""
 "検索モードが検出されたため、実行前にグループモードへの切り替えを確認してください。グループモードでは、ベースディレクトリ内のすべての画像を比較するため、時間がかかります。"
 
-#: compare/compare_wrapper.py:324
+#: compare/compare_wrapper.py:325
 msgid "Gathering image data for comparison"
 msgstr "比較のための画像データ収集"
 
-#: compare/compare_wrapper.py:352
+#: compare/compare_wrapper.py:355
 msgid "Searching images..."
 msgstr "画像検索..."
 
-#: compare/compare_wrapper.py:358
+#: compare/compare_wrapper.py:361
 msgid "Set a directory and search file or search text."
 msgstr "ディレクトリと検索ファイルまたは検索テキストを設定します。"
 
-#: compare/compare_wrapper.py:359
+#: compare/compare_wrapper.py:362
 msgid "No Match Found"
 msgstr "マッチが見つかりません"
 
-#: compare/compare_wrapper.py:359
+#: compare/compare_wrapper.py:362
 msgid "None of the files match the search filters with current settings."
 msgstr "現在の設定では、検索フィルターに一致するファイルはありません。"
 
-#: compare/compare_wrapper.py:372
+#: compare/compare_wrapper.py:375
 msgid "%s possibly related images found."
 msgstr "{0} 関連の画像が見つかる可能性があります。"
 
-#: compare/compare_wrapper.py:380
+#: compare/compare_wrapper.py:383
 msgid "Running image comparisons..."
 msgstr "実行イメージの比較..."
 
-#: compare/compare_wrapper.py:385 compare/compare_wrapper.py:400
+#: compare/compare_wrapper.py:388 compare/compare_wrapper.py:403
 msgid "Set a directory and search file."
 msgstr "ディレクトリと検索ファイルを設定します。"
 
-#: compare/compare_wrapper.py:386
+#: compare/compare_wrapper.py:389
 msgid "None of the files can be grouped with current settings."
 msgstr "現在の設定では、どのファイルもグループ化できない。"
 
-#: compare/compare_wrapper.py:401
+#: compare/compare_wrapper.py:404
 msgid "No Duplicates Found"
 msgstr "重複が見つかりません"
 
-#: compare/compare_wrapper.py:401
+#: compare/compare_wrapper.py:404
 msgid ""
 "None of the files appear to be duplicates based on the current settings."
 msgstr "現在の設定では、どのファイルも重複していないようです。"
 
-#: compare/compare_wrapper.py:425
+#: compare/compare_wrapper.py:428
 msgid "Stranded Group Members Found"
 msgstr "取り残されたグループメンバー発見"
 
-#: compare/compare_wrapper.py:425
+#: compare/compare_wrapper.py:428
 msgid "Some group members were left stranded by the grouping process."
 msgstr "グループ分けの過程で取り残されたメンバーもいた。"
 
-#: compare/compare_wrapper.py:480
+#: compare/compare_wrapper.py:483
 msgid "No More Groups"
 msgstr "グループなし"
 
-#: compare/compare_wrapper.py:481
+#: compare/compare_wrapper.py:484
 msgid ""
 "There are no more image groups remaining for this directory and current "
 "filter settings."
@@ -1553,7 +1563,7 @@ msgstr "HTMLサポートは、pyppeteerパッケージが必要です"
 msgid "Media Type Configuration"
 msgstr "媒体のタイプ構成"
 
-#: files/type_configuration_window.py:113 utils/constants.py:301
+#: files/type_configuration_window.py:113 utils/constants.py:304
 msgid "Configure Media Types"
 msgstr "メディアタイプの設定"
 
@@ -1597,7 +1607,7 @@ msgstr "色モード"
 msgid "Dimensions"
 msgstr "サイズ:"
 
-#: image/image_details.py:126 utils/constants.py:101 utils/constants.py:121
+#: image/image_details.py:126 utils/constants.py:104 utils/constants.py:124
 msgid "Size"
 msgstr "サイズ:"
 
@@ -1829,203 +1839,203 @@ msgstr "グループ比較モード"
 msgid "Duplicate Detection Mode"
 msgstr "重複検出モード"
 
-#: utils/constants.py:36 utils/constants.py:46
+#: utils/constants.py:36 utils/constants.py:47
 msgid "Color Matching"
 msgstr "色の一致"
 
-#: utils/constants.py:37 utils/constants.py:48
+#: utils/constants.py:37 utils/constants.py:49
 msgid "CLIP Embedding"
-msgstr "ログイン エンベディング"
+msgstr "CLIP埋め込み"
 
-#: utils/constants.py:38 utils/constants.py:50
+#: utils/constants.py:38 utils/constants.py:51
 msgid "SigLIP Embedding"
-msgstr "シグリップ エンベディング"
+msgstr "SigLIP埋め込み"
 
-#: utils/constants.py:39 utils/constants.py:52
+#: utils/constants.py:39 utils/constants.py:53
 msgid "FLAVA Embedding"
-msgstr "フラヴァ エンベディング"
+msgstr "FLAVA埋め込み"
 
-#: utils/constants.py:40 utils/constants.py:54
+#: utils/constants.py:40 utils/constants.py:55
 msgid "ALIGN Embedding"
-msgstr "お問い合わせ エンベディング"
+msgstr "ALIGN埋め込み"
 
-#: utils/constants.py:41 utils/constants.py:56
+#: utils/constants.py:41 utils/constants.py:57
 msgid "X-VLM Embedding"
-msgstr "X-VLMシリーズ エンベディング"
+msgstr "X-VLM埋め込み"
 
-#: utils/constants.py:77
+#: utils/constants.py:80
 msgid "Color diff threshold"
 msgstr "色の相違のしきい値"
 
-#: utils/constants.py:79
+#: utils/constants.py:82
 msgid "Embedding similarity threshold"
 msgstr "類似性しきい値の埋め込み"
 
-#: utils/constants.py:96 utils/constants.py:111
+#: utils/constants.py:99 utils/constants.py:114
 msgid "Name"
 msgstr "お名前 (必須)"
 
-#: utils/constants.py:97 utils/constants.py:113
+#: utils/constants.py:100 utils/constants.py:116
 msgid "Full Path"
 msgstr "完全な道"
 
-#: utils/constants.py:98 utils/constants.py:115
+#: utils/constants.py:101 utils/constants.py:118
 msgid "Creation Time"
 msgstr "制作時間"
 
-#: utils/constants.py:99 utils/constants.py:117
+#: utils/constants.py:102 utils/constants.py:120
 msgid "Modify Time"
 msgstr "時間の変更"
 
-#: utils/constants.py:100 utils/constants.py:119
+#: utils/constants.py:103 utils/constants.py:122
 msgid "Type"
 msgstr "タイプ:"
 
-#: utils/constants.py:102 utils/constants.py:123
+#: utils/constants.py:105 utils/constants.py:126
 msgid "Name Length"
 msgstr "名前 長さ"
 
-#: utils/constants.py:103 utils/constants.py:125
+#: utils/constants.py:106 utils/constants.py:128
 msgid "Related Image"
 msgstr "関連画像"
 
-#: utils/constants.py:104 utils/constants.py:127
+#: utils/constants.py:107 utils/constants.py:130
 msgid "Random"
 msgstr "ランダム"
 
-#: utils/constants.py:105 utils/constants.py:129
+#: utils/constants.py:108 utils/constants.py:132
 msgid "Image Pixels"
 msgstr "画像ピクセル"
 
-#: utils/constants.py:106 utils/constants.py:131
+#: utils/constants.py:109 utils/constants.py:134
 msgid "Image Height"
 msgstr "イメージの高さ"
 
-#: utils/constants.py:107 utils/constants.py:133
+#: utils/constants.py:110 utils/constants.py:136
 msgid "Image Width"
 msgstr "イメージの幅"
 
-#: utils/constants.py:152
+#: utils/constants.py:155
 msgid "ascending"
 msgstr "アセンシング"
 
-#: utils/constants.py:153
+#: utils/constants.py:156
 msgid "descending"
 msgstr "降下降下"
 
-#: utils/constants.py:154
+#: utils/constants.py:157
 msgid "random"
 msgstr "ランダム"
 
-#: utils/constants.py:207
+#: utils/constants.py:210
 msgid "Image"
 msgstr "サイトマップ"
 
-#: utils/constants.py:209
+#: utils/constants.py:212
 msgid "GIF"
 msgstr "ギフト"
 
-#: utils/constants.py:211
+#: utils/constants.py:214
 msgid "Video"
 msgstr "ビデオ"
 
-#: utils/constants.py:213
+#: utils/constants.py:216
 msgid "PDF"
 msgstr "サイトマップ"
 
-#: utils/constants.py:215
+#: utils/constants.py:218
 msgid "SVG"
 msgstr "SVG"
 
-#: utils/constants.py:217
+#: utils/constants.py:220
 msgid "HTML"
 msgstr "HTML"
 
-#: utils/constants.py:237
+#: utils/constants.py:240
 msgid "Moved files"
 msgstr "ファイルの移動"
 
-#: utils/constants.py:239
+#: utils/constants.py:242
 msgid "Copied files"
 msgstr "コピーされたファイル"
 
-#: utils/constants.py:241
+#: utils/constants.py:244
 msgid "Removed files"
 msgstr "削除されたファイル"
 
-#: utils/constants.py:243
+#: utils/constants.py:246
 msgid "Marked files"
 msgstr "マークされたファイル"
 
-#: utils/constants.py:245
+#: utils/constants.py:248
 msgid "Unmarked files"
 msgstr "注目のファイル"
 
-#: utils/constants.py:247
+#: utils/constants.py:250
 msgid "Searched files"
 msgstr "ファイル検索"
 
-#: utils/constants.py:249
+#: utils/constants.py:252
 msgid "Compared files"
 msgstr "比較ファイル"
 
-#: utils/constants.py:251
+#: utils/constants.py:254
 msgid "Generated images"
 msgstr "生成された画像"
 
-#: utils/constants.py:253
+#: utils/constants.py:256
 msgid "Changed directory"
 msgstr "変更ディレクトリ"
 
-#: utils/constants.py:255
+#: utils/constants.py:258
 msgid "System"
 msgstr "システム"
 
-#: utils/constants.py:288
+#: utils/constants.py:291
 msgid "Start Application"
 msgstr "スタート・ソフトウェア"
 
-#: utils/constants.py:289
+#: utils/constants.py:292
 msgid "Run Compares"
 msgstr "比較実行"
 
-#: utils/constants.py:290
+#: utils/constants.py:293
 msgid "Run Search"
 msgstr "検索を実行する"
 
-#: utils/constants.py:291
+#: utils/constants.py:294
 msgid "Run Search Preset"
 msgstr "検索プリセットの実行"
 
-#: utils/constants.py:293
+#: utils/constants.py:296
 msgid "View Recent Directories"
 msgstr "最近のディレクトリを見る"
 
-#: utils/constants.py:294
+#: utils/constants.py:297
 msgid "View File Actions"
 msgstr "ファイルアクションを見る"
 
-#: utils/constants.py:295
+#: utils/constants.py:298
 msgid "Run File Actions"
 msgstr "ファイルアクションの実行"
 
-#: utils/constants.py:296
+#: utils/constants.py:299
 msgid "Edit Prevalidations"
 msgstr "プリヴァリッドを編集する"
 
-#: utils/constants.py:297
+#: utils/constants.py:300
 msgid "Run Prevalidations"
 msgstr "ラン・プレバリデーション"
 
-#: utils/constants.py:299
+#: utils/constants.py:302
 msgid "Run RefacDir"
 msgstr "RefacDirの実行"
 
-#: utils/constants.py:300
+#: utils/constants.py:303
 msgid "Delete Media"
 msgstr "メディア削除"
 
-#: utils/constants.py:302
+#: utils/constants.py:305
 msgid "Access Password Administration"
 msgstr "アクセスパスワードの管理"
 
@@ -2295,12 +2305,6 @@ msgstr "ファイルパスのバックスラッシュをエスケープする"
 msgid " etc."
 msgstr " その他"
 
-#: app.py:1772
-msgid ""
-"GIMP integration is not configured. Please set 'gimp_exe_loc' in "
-"config.json."
-msgstr "GIMPの統合設定が有効になっていません。config.jsonファイルで『gimp_exe_loc』を設定してください。"
-
-#: app.py:1772
-msgid "GIMP Integration Error"
-msgstr "GIMP 統合エラー"
+#: utils/constants.py:42 utils/constants.py:59
+msgid "LAION Embedding"
+msgstr "LAION埋め込み"
