@@ -2108,7 +2108,7 @@ if __name__ == "__main__":
             logger.info("Caught signal, shutting down gracefully...")
             if app is not None:
                 app.on_closing()
-            exit(0)
+            os._exit(0)
 
         # Register the signal handlers for graceful shutdown
         signal.signal(signal.SIGINT, graceful_shutdown)
@@ -2135,7 +2135,9 @@ if __name__ == "__main__":
                     traceback.print_exc()
             else:
                 # User cancelled the password dialog, exit
-                exit(0)
+                logger.info("User cancelled password dialog, exiting application")
+                # Force exit to ensure all processes are terminated
+                os._exit(0)
         
         # Check if startup password is required
         # This will either call the callback immediately (if no password required)
