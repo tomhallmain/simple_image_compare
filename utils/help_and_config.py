@@ -66,6 +66,7 @@ class HelpAndConfig():
             "Shift+C": _("Clear marks list"),
             "Shift+D": _("Show image details"),
             "Shift+Delete\nMouse Wheel Click": _("Delete image (or marked file group if marks window selected)"),
+            "Ctrl+Shift+Delete": _("Delete current base directory and all contents"),
             "Shift+G": _("Go to next mark"),
             "Shift+H": _("Show help window"),
             "Shift+I": _("Run image generation"),

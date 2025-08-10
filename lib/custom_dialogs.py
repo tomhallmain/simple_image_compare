@@ -26,16 +26,9 @@ def show_high_severity_dialog(master, title, message):
     # Create custom dialog
     dialog = Toplevel(master)
     dialog.title(title)
-    dialog.geometry("400x200")
     dialog.resizable(False, False)
     dialog.transient(master)
     dialog.grab_set()
-    
-    # Center the dialog
-    dialog.update_idletasks()
-    x = (dialog.winfo_screenwidth() // 2) - (400 // 2)
-    y = (dialog.winfo_screenheight() // 2) - (200 // 2)
-    dialog.geometry(f"400x200+{x}+{y}")
     
     # Create main frame with red warning colors
     main_frame = Frame(dialog, bg="#ff4444", relief="raised", bd=2)
@@ -89,6 +82,24 @@ def show_high_severity_dialog(master, title, message):
     # Bind Enter key to OK and Escape key to Cancel
     dialog.bind('<Return>', lambda e: on_ok())
     dialog.bind('<Escape>', lambda e: on_cancel())
+    
+    # Calculate dynamic geometry based on content
+    dialog.update_idletasks()
+    
+    # Get the required size for the content
+    required_width = max(400, title_label.winfo_reqwidth() + warning_label.winfo_reqwidth() + 100)
+    required_height = (title_label.winfo_reqheight() + 
+                      message_label.winfo_reqheight() + 
+                      button_frame.winfo_reqheight() + 80)  # Add padding
+    
+    # Ensure minimum dimensions
+    dialog_width = max(400, min(required_width, 600))
+    dialog_height = max(200, min(required_height, 500))
+    
+    # Center the dialog
+    x = (dialog.winfo_screenwidth() // 2) - (dialog_width // 2)
+    y = (dialog.winfo_screenheight() // 2) - (dialog_height // 2)
+    dialog.geometry(f"{dialog_width}x{dialog_height}+{x}+{y}")
     
     # Wait for dialog to close
     dialog.wait_window()

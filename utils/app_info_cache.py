@@ -141,6 +141,37 @@ class AppInfoCache:
             json.dump(self._cache, f, ensure_ascii=False, indent=2)
         return json_path
 
+    def clear_directory_cache(self, base_dir: str) -> None:
+        """
+        Clear all cache entries related to a specific base directory.
+        This includes secondary_base_dirs, per-directory settings, and meta base_dir.
+        """
+        normalized_base_dir = self.normalize_directory_key(base_dir)
+        
+        # Remove from secondary_base_dirs
+        try:
+            secondary_base_dirs = self.get_meta("secondary_base_dirs", default_val=[])
+            if base_dir in secondary_base_dirs:
+                secondary_base_dirs = [d for d in secondary_base_dirs if d != base_dir]
+                self.set_meta("secondary_base_dirs", secondary_base_dirs)
+        except Exception as e:
+            logger.error(f"Error updating secondary base dirs during delete: {e}")
+
+        # Clear per-directory cached settings (favorites, cursors, etc.)
+        try:
+            directory_info = self._get_directory_info()
+            if normalized_base_dir in directory_info:
+                del directory_info[normalized_base_dir]
+        except Exception as e:
+            logger.error(f"Error clearing directory cache during delete: {e}")
+
+        # If this was the stored main base_dir, clear it
+        try:
+            if self.get_meta("base_dir") == base_dir:
+                self.set_meta("base_dir", "")
+        except Exception as e:
+            logger.error(f"Error clearing meta base_dir during delete: {e}")
+
     def _get_backup_paths(self):
         """Get list of backup file paths in order of preference"""
         backup_paths = []

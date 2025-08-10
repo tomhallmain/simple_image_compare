@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-06 14:42-0400\n"
-"PO-Revision-Date: 2025-08-06 14:42-0400\n"
+"POT-Creation-Date: 2025-08-09 21:35-0400\n"
+"PO-Revision-Date: 2025-08-09 21:35-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
 "Language: ko\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:98 app.py:942 app.py:2094
+#: app.py:98 app.py:943 app.py:2167
 msgid " Simple Image Compare "
 msgstr " 간단한 이미지 비교 "
 
@@ -24,7 +24,7 @@ msgstr "(주 창)"
 msgid "Theme switched to {0}."
 msgstr "테마는 {0}에 전환."
 
-#: app.py:258 app.py:473 app.py:971 compare/compare_wrapper.py:492
+#: app.py:258 app.py:474 app.py:972 compare/compare_wrapper.py:492
 msgid "Set a directory to run comparison."
 msgstr "비교를 실행하려면 디렉토리를 설정합니다."
 
@@ -104,7 +104,7 @@ msgstr "이미지 세부 정보"
 msgid "Search current image"
 msgstr "현재 이미지 검색"
 
-#: app.py:371 utils/help_and_config.py:78
+#: app.py:371 utils/help_and_config.py:79
 msgid "Open image location"
 msgstr "본문 바로가기"
 
@@ -116,107 +116,108 @@ msgstr "본문 바로가기"
 msgid "---- DELETE ----"
 msgstr "---- 종료 ----"
 
-#: app.py:524
+#: app.py:525
 msgid "Confirm Quit"
 msgstr "자주 묻는 질문"
 
-#: app.py:524
+#: app.py:525
 msgid "Would you like to quit the application?"
 msgstr "응용 프로그램을 종료하시겠습니까?"
 
-#: app.py:624
+#: app.py:625
 msgid "Ended slideshows"
 msgstr "슬라이드 쇼 종료"
 
-#: app.py:677 app.py:1870 app.py:1932
+#: app.py:678 app.py:1866 app.py:1870 app.py:1874 app.py:1880 app.py:1884
+#: app.py:1890 app.py:2005
 msgid "Warning"
 msgstr "경고"
 
-#: app.py:677
+#: app.py:678
 msgid "No files found in directory after refresh."
 msgstr "새로 고침 후 디렉토리에 파일을 찾을 수 없습니다."
 
-#: app.py:709
+#: app.py:710
 msgid "Slideshow for new images started"
 msgstr "새 이미지 슬라이드쇼 시작"
 
-#: app.py:711
+#: app.py:712
 msgid "Slideshow started"
 msgstr "슬라이드쇼 시작"
 
-#: app.py:714
+#: app.py:715
 msgid "Slideshows ended"
 msgstr "슬라이드 쇼 종료"
 
-#: app.py:727
+#: app.py:728
 msgid "Browsing mode set."
 msgstr "검색 모드 설정."
 
-#: app.py:771 utils/constants.py:295
+#: app.py:772 utils/constants.py:295
 msgid "View Media Details"
 msgstr "미디어 세부 정보 보기"
 
-#: app.py:772
+#: app.py:773
 msgid "Hide Media"
 msgstr "미디어 숨기기"
 
-#: app.py:773
+#: app.py:774
 msgid "Remove from Marks"
 msgstr "마크에서 제거"
 
-#: app.py:773
+#: app.py:774
 msgid "Add to Marks"
 msgstr "마크에 추가하기"
 
-#: app.py:775
+#: app.py:776
 msgid "Remove from Favorites"
 msgstr "즐겨찾기에서 제거"
 
-#: app.py:775
+#: app.py:776
 msgid "Add to Favorites"
 msgstr "즐겨찾기에 추가"
 
-#: app.py:778
+#: app.py:779
 msgid "Open in GIMP"
 msgstr "GIMP에서 열기"
 
-#: app.py:779 image/image_details.py:191 utils/constants.py:301
+#: app.py:780 image/image_details.py:191 utils/constants.py:301
 msgid "Run Image Generation"
 msgstr "이미지 생성"
 
-#: app.py:780
+#: app.py:781
 msgid "Show Source Image"
 msgstr "원본 이미지 표시"
 
-#: app.py:781
+#: app.py:782
 msgid "Find Related Images"
 msgstr "관련 이미지 찾기"
 
-#: app.py:782
+#: app.py:783
 msgid "Set Marks from Downstream Related Images"
 msgstr "하류 관련 이미지에서 표시 설정"
 
-#: app.py:784
+#: app.py:785
 msgid "Set Current Image as Search Image"
 msgstr "현재 이미지를 검색 이미지로 설정"
 
-#: app.py:785
+#: app.py:786
 msgid "Add Current Image to Negative Search"
 msgstr "현재 이미지를 음수 검색에 추가하기"
 
-#: app.py:786
+#: app.py:787
 msgid "Run Refacdir"
 msgstr "RefacDir 실행"
 
-#: app.py:798
+#: app.py:799
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(인덱스 세부 정보를 보려면 이 이미지를 디렉토리의 일부로 엽니다.)"
 
-#: app.py:832 app.py:1541
+#: app.py:833 app.py:1542
 msgid "Many Files"
 msgstr "많은 파일"
 
-#: app.py:860
+#: app.py:861
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
@@ -225,173 +226,173 @@ msgstr ""
 "외부 저장 장치에 파일 수가 많은 디렉토리 또는 중간 규모의 파일 수를 가진 디렉토리가 감지되었습니다. 이 경우 로드 시간이 느려질 수 "
 "있습니다. 전체 디렉토리를 로드하시겠습니까?"
 
-#: app.py:861
+#: app.py:862
 msgid "Large Directory Detected: {0}"
 msgstr "대용량 디렉토리 감지: {0}"
 
-#: app.py:891
+#: app.py:892
 msgid "No downstream related image(s) found in {0}"
 msgstr "{0} 에서 다운스트림 관련 이미지를 찾을 수 없습니다."
 
-#: app.py:913
+#: app.py:914
 msgid "{0} file marks set"
 msgstr "{0} 파일 표시 세트"
 
-#: app.py:919
+#: app.py:920
 msgid "Help and Config"
 msgstr "도움말 및 불만"
 
-#: app.py:1014
+#: app.py:1015
 msgid "Set Image Comparison Directory"
 msgstr "이미지 비교 디렉토리 설정"
 
-#: app.py:1052
+#: app.py:1053
 msgid "Counter limit must be an integer value."
 msgstr "카운터 제한은 정수 값이어야 합니다."
 
-#: app.py:1052 app.py:1068
+#: app.py:1053 app.py:1069
 msgid "Invalid Setting"
 msgstr "잘못된 설정"
 
-#: app.py:1068
+#: app.py:1069
 msgid "No image selected."
 msgstr "선택된 이미지 없음."
 
-#: app.py:1107
+#: app.py:1108
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "텍스트 임베딩을 검색하려면 비교 모드를 임베딩 모드로 설정해야 합니다."
 
-#: app.py:1111
+#: app.py:1112
 msgid "Select image file"
 msgstr "이미지 파일 선택"
 
-#: app.py:1140
+#: app.py:1141
 msgid "Somehow, the search file is invalid"
 msgstr "Somehow, 검색 파일이 잘못되었습니다."
 
-#: app.py:1226 app.py:1251
+#: app.py:1227 app.py:1252
 msgid "Failed to get active image filepath"
 msgstr "Active image filepath를 얻는 실패"
 
-#: app.py:1336
+#: app.py:1337
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% 완료"
 
-#: app.py:1342
+#: app.py:1343
 msgid "Confirm comparison"
 msgstr "자주 묻는 질문"
 
-#: app.py:1343
+#: app.py:1344
 msgid "No base directory has been set, will use current base directory of "
 msgstr "기본 디렉터리가 설정되지 않은 경우 현재 기본 디렉터리를 사용합니다: "
 
-#: app.py:1344
+#: app.py:1345
 msgid "Are you sure you want to proceed?"
 msgstr "진행하시겠습니까?"
 
-#: app.py:1365
+#: app.py:1366
 msgid "Error running compare"
 msgstr "오류 실행 비교"
 
-#: app.py:1398
+#: app.py:1399
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "슬라이드쇼 후 잠금 삭제\n"
 "전환으로 마크 추가 방지"
 
-#: app.py:1409
+#: app.py:1410
 msgid "Mark removed. Remaining: {0}"
 msgstr "마크가 제거되었습니다. 남아있음: {0}"
 
-#: app.py:1413
+#: app.py:1414
 msgid "Mark added. Total set: {0}"
 msgstr "마크가 추가되었습니다. 총 집합입니다: {0}"
 
-#: app.py:1430
+#: app.py:1431
 msgid "Marks added. Total set: {0}"
 msgstr "마크가 추가되었습니다. 총 집합입니다: {0}"
 
-#: app.py:1439
+#: app.py:1440
 msgid "First sorted mark"
 msgstr "첫 번째 정렬 마크"
 
-#: app.py:1446
+#: app.py:1447
 msgid "Only one marked file set."
 msgstr "1개의 표시된 파일 세트만."
 
-#: app.py:1458
+#: app.py:1459
 msgid "Including marks: {0}"
 msgstr "마크 포함: {0}"
 
-#: app.py:1466
+#: app.py:1467
 msgid "Move {0} Marked File(s)"
 msgstr "{0} 개의 표시된 파일을 이동하시겠습니까?"
 
-#: app.py:1505
+#: app.py:1506
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0} 마크가 설정되었습니다(>={1} 예상).\n"
 "Shift+M을 사용하여 마크를 설정합니다."
 
-#: app.py:1541
+#: app.py:1542
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "디렉터리 {0}에서 모든 사전 유효성 검사를 실행하시겠습니까? 시간이 걸릴 수 있습니다."
 
-#: app.py:1556
+#: app.py:1557
 msgid "Prevalidations now running"
 msgstr "지금 실행"
 
-#: app.py:1556
+#: app.py:1557
 msgid "Prevalidations turned off"
 msgstr "사전 검증"
 
-#: app.py:1642
+#: app.py:1643
 msgid "File not found"
 msgstr "찾을 수 없음"
 
-#: app.py:1642
+#: app.py:1643
 msgid "No file was found for the search text: \"{0}\""
 msgstr "검색 텍스트에 대한 파일을 찾을 수 없습니다: \"{0}”"
 
-#: app.py:1653
+#: app.py:1654
 msgid "No image selected"
 msgstr "선택 없음"
 
-#: app.py:1653
+#: app.py:1654
 msgid "No image was selected for comparison"
 msgstr "이미지는 비교를 위해 선정되었습니다"
 
-#: app.py:1667
+#: app.py:1668
 msgid "No Text Search Presets Found"
 msgstr "텍스트 검색 사전 설정을 찾을 수 없음"
 
-#: app.py:1668
+#: app.py:1669
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "텍스트 임베딩 검색 사전 설정을 찾을 수 없습니다. config.json 파일에서 설정하세요."
 
-#: app.py:1767
+#: app.py:1768
 msgid "Failed to open location of current file, unable to get valid filepath"
 msgstr "현재 파일의 위치를 열지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:1772
+#: app.py:1773
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
 msgstr "GIMP 통합이 구성되지 않았습니다. config.json 파일에서 'gimp_exe_loc'을 설정해 주세요."
 
-#: app.py:1772
+#: app.py:1773
 msgid "GIMP Integration Error"
 msgstr "GIMP 통합 오류"
 
-#: app.py:1782
+#: app.py:1783
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "김프에서 현재 파일을 열지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:1798
+#: app.py:1799
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -399,21 +400,21 @@ msgstr ""
 "현재 이미지를 숨겼습니다.\n"
 "숨기기를 해제하려면 Shift+B를 누릅니다."
 
-#: app.py:1803
+#: app.py:1804
 msgid "Cleared all hidden images."
 msgstr "숨겨진 이미지를 모두 지웠습니다."
 
-#: app.py:1811
+#: app.py:1812
 msgid "DELETE_LOCK"
 msgstr ""
 "슬라이드쇼 후 잠금 삭제\n"
 "전환 후 삭제 방지"
 
-#: app.py:1829
+#: app.py:1830
 msgid "Invalid action, no files found to delete"
 msgstr "잘못된 작업, 삭제할 파일을 찾을 수 없음"
 
-#: app.py:1832
+#: app.py:1833
 msgid "Invalid action, search image not found"
 msgstr "잘못된 작업, 검색 이미지를 찾을 수 없음"
 
@@ -421,11 +422,43 @@ msgstr "잘못된 작업, 검색 이미지를 찾을 수 없음"
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "현재 파일을 삭제하지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:1852
+#: app.py:1854
+msgid "Removing directory: {0}"
+msgstr "디렉토리 제거: {0}"
+
+#: app.py:1856
 msgid "Removing file: {0}"
 msgstr "파일을 제거 중입니다: {0}"
 
+#: app.py:1866
+msgid "Failed to delete item."
+msgstr "항목을 삭제하지 못했습니다."
+
 #: app.py:1871
+msgid ""
+"Failed to move directory to {0}. Double check the trash folder is set "
+"properly in config.json."
+msgstr ""
+"{0}로 디렉토리를 이동하는 데 실패했습니다. config.json 파일에서 휴지통 폴더가 제대로 설정되어 있는지 다시 한 번 "
+"확인하세요."
+
+#: app.py:1875
+msgid ""
+"Failed to send file to {0}. Double check the trash folder is set properly in"
+" config.json."
+msgstr ""
+"{0}로 파일을 전송하는 데 실패했습니다. config.json 파일에서 휴지통 폴더가 제대로 설정되어 있는지 다시 한 번 확인해 "
+"주세요."
+
+#: app.py:1881
+msgid ""
+"Failed to move directory to the trash, so it will be deleted. Either pip "
+"install send2trash or set a specific trash folder in config.json."
+msgstr ""
+"디렉토리를 휴지통으로 이동하는 데 실패했기 때문에 해당 디렉토리가 삭제될 것입니다. pip install send2trash를 실행하거나"
+" config.json 파일에서 특정 휴지통 폴더를 설정하세요."
+
+#: app.py:1885
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -433,50 +466,82 @@ msgstr ""
 "파일을 휴지통으로 보내지 못했으므로 삭제됩니다. pip에서 send2trash를 설치하거나 config.json에서 특정 휴지통 폴더를 "
 "설정하세요."
 
-#: app.py:1888
+#: app.py:1866 app.py:1890
+msgid "Failed to delete item: {0}"
+msgstr "항목을 삭제하지 못했습니다: {0}"
+
+#: app.py:1895
+msgid "Invalid directory"
+msgstr "무효한 디렉토리"
+
+#: app.py:1895
+msgid "No valid base directory to delete"
+msgstr "삭제할 유효한 기본 디렉토리가 없습니다."
+
+#: app.py:1906
+msgid "Cannot Delete Directory"
+msgstr "디렉토리를 삭제할 수 없습니다."
+
+#: app.py:1909
+msgid "Confirm Delete Directory"
+msgstr "디렉토리 삭제 확인"
+
+#: app.py:1910
+msgid "Are you sure you want to delete the directory and all contents?"
+msgstr "이 디렉토리와 모든 내용을 삭제하시겠습니까?"
+
+#: app.py:1943
+msgid "Delete Directory Error"
+msgstr "디렉토리 삭제 오류"
+
+#: app.py:1945
+msgid "Directory {0} deleted."
+msgstr "디렉토리 {0}이 삭제되었습니다."
+
+#: app.py:1961
 msgid "Invalid target filepath for replacement: "
 msgstr "교체할 대상 파일 경로가 잘못되었습니다: "
 
-#: app.py:1892
+#: app.py:1965
 msgid "Moved search image to "
 msgstr "로 검색 이미지를 이동했습니다: "
 
-#: app.py:1930
+#: app.py:2003
 msgid "Running image gen: "
 msgstr "이미지 생성 실행 : "
 
-#: app.py:1932
+#: app.py:2005
 msgid "Error running image generation:"
 msgstr "이미지 생성 실행 중 오류 발생:"
 
-#: app.py:1940
+#: app.py:2013
 msgid "Running refacdir"
 msgstr "refacdir 실행"
 
-#: app.py:1945 auth/app_startup_auth.py:108 auth/password_dialog.py:247
+#: app.py:2018 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "계정 정보"
 
-#: app.py:2032
+#: app.py:2105
 msgid "GROUP_DETAILS"
 msgstr ""
 "그룹 {0} 중 {1}\n"
 "크기: {2}"
 
-#: app.py:2036
+#: app.py:2109
 msgid "No image files found"
 msgstr "이미지 파일 없음"
 
-#: app.py:2038
+#: app.py:2111
 msgid "1 image file found"
 msgstr "1 이미지 파일"
 
-#: app.py:2039
+#: app.py:2112
 msgid "{0} image files found"
 msgstr "{0} 이미지 파일 찾았습니다"
 
-#: app.py:2041
+#: app.py:2114
 msgid "(filtered)"
 msgstr "(필터)"
 
@@ -493,14 +558,14 @@ msgid "Password:"
 msgstr "비밀번호:"
 
 #: auth/app_startup_auth.py:91 auth/password_dialog.py:147
-#: lib/custom_dialogs.py:75
+#: lib/custom_dialogs.py:68
 msgid "OK"
 msgstr "확인"
 
 #: auth/app_startup_auth.py:94 auth/password_admin_window.py:449
 #: auth/password_dialog.py:150 auth/password_dialog.py:219
 #: auth/password_dialog.py:236 files/pdf_options_window.py:78
-#: files/type_configuration_window.py:179 lib/custom_dialogs.py:81
+#: files/type_configuration_window.py:179 lib/custom_dialogs.py:74
 msgid "Cancel"
 msgstr "취소"
 
@@ -1045,7 +1110,7 @@ msgstr "사전 검증"
 msgid "Clear prevalidations"
 msgstr "취소 정책"
 
-#: compare/prevalidations_window.py:668 utils/help_and_config.py:152
+#: compare/prevalidations_window.py:668 utils/help_and_config.py:153
 msgid "Enable Prevalidations"
 msgstr "사전 유효성 검사 사용"
 
@@ -1302,7 +1367,7 @@ msgstr ""
 "{0}에 대해 설정된 단축키 동작이 없습니다.\n"
 "마크 창에서 {1}로 설정합니다."
 
-#: files/marked_file_mover.py:221 files/recent_directory_window.py:153
+#: files/marked_file_mover.py:221 files/recent_directory_window.py:230
 msgid "Set a new target directory"
 msgstr "새 대상 디렉터리 설정"
 
@@ -1318,11 +1383,11 @@ msgstr "복사"
 msgid "DELETE"
 msgstr "삭제"
 
-#: files/marked_file_mover.py:231 files/recent_directory_window.py:157
+#: files/marked_file_mover.py:231 files/recent_directory_window.py:234
 msgid "Add directories from parent"
 msgstr "상위 디렉터리에서 디렉터리 추가"
 
-#: files/marked_file_mover.py:234 files/recent_directory_window.py:159
+#: files/marked_file_mover.py:234 files/recent_directory_window.py:236
 msgid "Clear targets"
 msgstr "목표 지우기"
 
@@ -1334,7 +1399,7 @@ msgstr "PDF 만들기"
 msgid "Recording next mark target and action."
 msgstr "다음 마크 대상 및 작업을 기록합니다."
 
-#: files/marked_file_mover.py:319 files/recent_directory_window.py:203
+#: files/marked_file_mover.py:319 files/recent_directory_window.py:280
 msgid "Invalid directory: %s"
 msgstr "잘못된 디렉터리입니다: {0}"
 
@@ -1518,11 +1583,11 @@ msgstr ""
 "활성화하면 이미지가 원래 품질과 형식을 유지합니다.\n"
 "비활성화하면 이미지가 압축되어 PDF 크기가 줄어듭니다."
 
-#: files/recent_directory_window.py:155
+#: files/recent_directory_window.py:232
 msgid "Add directory"
 msgstr "디렉토리"
 
-#: files/recent_directory_window.py:205
+#: files/recent_directory_window.py:282
 msgid "Set image comparison directory"
 msgstr "설정 이미지 비교 디렉토리"
 
@@ -1866,6 +1931,10 @@ msgstr "ALIGN 임베딩"
 msgid "X-VLM Embedding"
 msgstr "X-VLM의 특징 옵션 정보"
 
+#: utils/constants.py:42 utils/constants.py:59
+msgid "LAION Embedding"
+msgstr "LAION 임베딩"
+
 #: utils/constants.py:80
 msgid "Color diff threshold"
 msgstr "색깔 diff 문턱"
@@ -2142,7 +2211,7 @@ msgstr "새 비교 창 열기"
 msgid "Move previous marks to a different directory"
 msgstr "다른 디렉토리에 이전 표시를 이동"
 
-#: utils/help_and_config.py:58 utils/help_and_config.py:87
+#: utils/help_and_config.py:58 utils/help_and_config.py:88
 msgid "Undo previous marks changes"
 msgstr "이전 표 변경"
 
@@ -2187,120 +2256,124 @@ msgid "Delete image (or marked file group if marks window selected)"
 msgstr "이미지 삭제 (또는 표시된 파일 그룹 표시 창 선택)"
 
 #: utils/help_and_config.py:69
+msgid "Delete current base directory and all contents"
+msgstr "현재 기본 디렉토리와 모든 내용을 삭제합니다"
+
+#: utils/help_and_config.py:70
 msgid "Go to next mark"
 msgstr "본문 바로가기"
 
-#: utils/help_and_config.py:70
+#: utils/help_and_config.py:71
 msgid "Show help window"
 msgstr "공지사항"
 
-#: utils/help_and_config.py:71
+#: utils/help_and_config.py:72
 msgid "Run image generation"
 msgstr "이미지 생성"
 
-#: utils/help_and_config.py:72
+#: utils/help_and_config.py:73
 msgid "Open context menu"
 msgstr "컨텍스트 메뉴 열기"
 
-#: utils/help_and_config.py:73
+#: utils/help_and_config.py:74
 msgid "Run content filters for all files in the current directory"
 msgstr "현재 디렉토리의 모든 파일에 대한 콘텐츠 필터 실행"
 
-#: utils/help_and_config.py:74
+#: utils/help_and_config.py:75
 msgid "View last moved image mark"
 msgstr "마지막 이동 이미지 표시"
 
-#: utils/help_and_config.py:75
+#: utils/help_and_config.py:76
 msgid "Toggle content filters"
 msgstr "콘텐츠 필터"
 
-#: utils/help_and_config.py:76
+#: utils/help_and_config.py:77
 msgid "Add or remove a mark for current image"
 msgstr "현재 이미지의 표시 또는 제거"
 
-#: utils/help_and_config.py:77
+#: utils/help_and_config.py:78
 msgid ""
 "Add all marks between most recently set and current selected inclusive, or "
 "all marks in current group"
 msgstr "가장 최근 설정 및 현재 선택된 포괄적 인 사이 모든 표시, 또는 현재 그룹의 모든 표시"
 
-#: utils/help_and_config.py:79
+#: utils/help_and_config.py:80
 msgid "Open image in GIMP"
 msgstr "GIMP에서 이미지 열기"
 
-#: utils/help_and_config.py:80
+#: utils/help_and_config.py:81
 msgid "Randomly modify image"
 msgstr "무작위 이미지 수정"
 
-#: utils/help_and_config.py:81
+#: utils/help_and_config.py:82
 msgid "View related image (controlnet, etc.)"
 msgstr "관련 이미지 보기 (controlnet, 등)"
 
-#: utils/help_and_config.py:82
+#: utils/help_and_config.py:83
 msgid "Toggle slideshow"
 msgstr "슬라이드 쇼"
 
-#: utils/help_and_config.py:83
+#: utils/help_and_config.py:84
 msgid "Find related images in open window"
 msgstr "열린 창에서 관련 이미지 찾기"
 
-#: utils/help_and_config.py:84
+#: utils/help_and_config.py:85
 msgid "Run refacdir"
 msgstr "파일 형식"
 
-#: utils/help_and_config.py:85
+#: utils/help_and_config.py:86
 msgid "Hide current image"
 msgstr "현재 이미지 숨기기"
 
-#: utils/help_and_config.py:86
+#: utils/help_and_config.py:87
 msgid "Set marks from downstream related images"
 msgstr "downstream 관련 이미지 설정"
 
-#: utils/help_and_config.py:88
+#: utils/help_and_config.py:89
 msgid "Show previous/next group"
 msgstr "이전/다음 그룹보기"
 
-#: utils/help_and_config.py:142
+#: utils/help_and_config.py:143
 msgid "Show Toasts"
 msgstr "Toasts 소개"
 
-#: utils/help_and_config.py:144
+#: utils/help_and_config.py:145
 msgid "Slideshow Interval (sec)"
 msgstr "슬라이드쇼 간격(초)"
 
-#: utils/help_and_config.py:146
+#: utils/help_and_config.py:147
 msgid "File Check Interval (sec)"
 msgstr "파일 새로 고침 간격(초)"
 
-#: utils/help_and_config.py:148
+#: utils/help_and_config.py:149
 msgid "Max Search Results"
 msgstr "Max 검색 결과"
 
-#: utils/help_and_config.py:150
+#: utils/help_and_config.py:151
 msgid "Sort By"
 msgstr "정렬 기준"
 
-#: utils/help_and_config.py:154
+#: utils/help_and_config.py:155
 msgid "Toasts Persist (sec)"
 msgstr "토스트 지속 시간(초)"
 
-#: utils/help_and_config.py:156
+#: utils/help_and_config.py:157
 msgid "Title Notify Persist (sec)"
 msgstr "제목 알림 지속 (초)"
 
-#: utils/help_and_config.py:158
+#: utils/help_and_config.py:159
 msgid "Delete Instantly"
 msgstr "즉시 삭제"
 
-#: utils/help_and_config.py:160
+#: utils/help_and_config.py:161
 msgid "Trash Folder"
 msgstr "쓰레기 폴더"
 
-#: utils/help_and_config.py:162
+#: utils/help_and_config.py:163
 msgid "Image Tagging Enabled"
 msgstr "이미지 태그 사용"
 
-#: utils/help_and_config.py:164
+#: utils/help_and_config.py:165
 msgid "Escape Backslash Filepaths"
 msgstr "파일 경로의 백슬래시 이스케이프"
 
@@ -2308,6 +2381,10 @@ msgstr "파일 경로의 백슬래시 이스케이프"
 msgid " etc."
 msgstr " 등"
 
-#: utils/constants.py:42 utils/constants.py:59
-msgid "LAION Embedding"
-msgstr "LAION 임베딩"
+#: app.py:1881
+msgid ""
+"Failed to move directory to the trash. Either pip install send2trash or set "
+"a specific trash folder in config.json."
+msgstr ""
+"디렉토리를 휴지통으로 이동하는 데 실패했습니다. pip install send2trash를 실행하거나 config.json에서 특정 "
+"휴지통 폴더를 설정하세요."

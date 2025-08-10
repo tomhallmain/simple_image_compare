@@ -388,6 +388,7 @@ class App():
         self.master.bind('<Shift-O>', lambda e: self.check_focus(e, self.open_image_location))
         self.master.bind('<Shift-P>', lambda e: self.check_focus(e, self.open_image_in_gimp))
         self.master.bind('<Shift-Delete>', lambda e: self.check_focus(e, self.delete_image))
+        self.master.bind('<Control-Shift-Delete>', lambda e: self.check_focus(e, self.delete_current_base_dir))
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Shift-F>", lambda e: self.check_focus(e, self.toggle_fullscreen))
         self.master.bind("<Escape>", lambda e: self.end_fullscreen() and self.refocus())
@@ -1810,7 +1811,7 @@ class App():
         if self.delete_lock:
             self.toast(_("DELETE_LOCK"))
             return
-
+        
         if self.mode == Mode.BROWSE:
             self.file_browser.checking_files = False
             filepath = self.file_browser.current_file()
@@ -1839,37 +1840,106 @@ class App():
             if filepath == self.compare_wrapper.search_image_full_path:
                 self.compare_wrapper.search_image_full_path = None
             self.media_canvas.release_media()
-            self._handle_delete(filepath)
             if self.compare_wrapper._compare:
                 self.compare_wrapper.compare().remove_from_groups([filepath])
             self.compare_wrapper._update_groups_for_removed_file(self.mode, self.compare_wrapper.current_group_index, self.compare_wrapper.match_index, show_next_media=self.direction)
         else:
             self.handle_error(_("Failed to delete current file, unable to get valid filepath"))
 
-    def _handle_delete(self, filepath: str, toast: bool = True, manual_delete: bool = True) -> None:
+    def _handle_delete(self, filepath: str, toast: bool = True, manual_delete: bool = True, is_directory: bool = False) -> None:
         MarkedFiles.set_delete_lock()  # Undo deleting action is not supported
         if toast and manual_delete:
-            self.title_notify(_("Removing file: {0}").format(os.path.basename(filepath)), action_type=ActionType.REMOVE_FILE)
-        else:
-            logger.info("Removing file: " + filepath)
-        
-        with Utils.file_operation_lock:
-            if config.delete_instantly:
-                os.remove(filepath)
-            elif config.trash_folder is not None:
-                filepath = os.path.normpath(filepath)
-                sep = "\\" if "\\" in filepath else "/"
-                new_filepath = filepath[filepath.rfind(sep)+1:len(filepath)]
-                new_filepath = os.path.normpath(os.path.join(config.trash_folder, new_filepath))
-                os.rename(filepath, new_filepath)
+            item_name = os.path.basename(filepath)
+            if is_directory:
+                self.title_notify(_("Removing directory: {0}").format(item_name), action_type=ActionType.REMOVE_FILE)
             else:
-                try:
-                    send2trash(os.path.normpath(filepath))
-                except Exception as e:
-                    logger.error(e)
+                self.title_notify(_("Removing file: {0}").format(item_name), action_type=ActionType.REMOVE_FILE)
+        else:
+            logger.info(f"Removing {'directory' if is_directory else 'file'}: {filepath}")
+        
+        try:
+            Utils.remove_path(filepath, delete_instantly=config.delete_instantly, trash_folder=config.trash_folder, is_directory=is_directory)
+        except Exception as e:
+            logger.error(e)
+            if config.delete_instantly:
+                # Already attempted permanent deletion; nothing else to do
+                self.alert(_("Warning"), _("Failed to delete item: {0}").format(str(e)))
+            elif config.trash_folder is not None:
+                # The user may not want the item to be fully deleted so nothing to do, but use different alert
+                if is_directory:
+                    message = _("Failed to move directory to {0}. Double check the trash folder is set properly in config.json.").format(config.trash_folder)
+                else:
+                    message = _("Failed to send file to {0}. Double check the trash folder is set properly in config.json.").format(config.trash_folder)
+                self.alert(_("Warning"), message)
+            else:
+                # No trash folder configured; initial attempt was OS trash
+                if is_directory:
+                    self.alert(_("Warning"),
+                               _("Failed to move directory to the trash. Either pip install send2trash or set a specific trash folder in config.json."))
+                    return # Deleting directories could be risky, so stop here in this case
+                else:
                     self.alert(_("Warning"),
                                _("Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder in config.json."))
-                    os.remove(filepath)
+                try:
+                    Utils.remove_path(filepath, delete_instantly=True, trash_folder=None, is_directory=is_directory)
+                except Exception as e2:
+                    logger.error(e2)
+                    self.alert(_("Warning"), _("Failed to delete item: {0}").format(filepath))
+
+    def delete_current_base_dir(self, event=None) -> None:
+        base_dir = self.get_base_dir()
+        if base_dir is None or base_dir == "." or base_dir.strip() == "" or not os.path.isdir(base_dir):
+            self.alert(_("Invalid directory"), _("No valid base directory to delete"), kind="warning")
+            return
+        
+        # Get list of directories currently open in other windows
+        open_window_directories = [window.get_base_dir() for window in App.open_windows 
+                                   if window.window_id != self.window_id and window.get_base_dir()]
+        
+        # Find a suitable replacement directory before proceeding
+        try:
+            replacement_dir = RecentDirectories.find_replacement_directory(base_dir, open_window_directories)
+        except ValueError as e:
+            self.alert(_("Cannot Delete Directory"), str(e), kind="warning")
+            return
+        
+        res = self.alert(_("Confirm Delete Directory"),
+                         _("Are you sure you want to delete the directory and all contents?") + "\n\n" + str(base_dir),
+                         kind="askokcancel", severity="high")
+        if res != messagebox.OK and res != True:
+            return
+
+        # Set the replacement directory immediately after confirmation
+        logger.info(f"Setting base directory to {replacement_dir} before deleting {base_dir}")
+        self.set_base_dir_box.delete(0, "end")
+        self.set_base_dir_box.insert(0, replacement_dir)
+        self.set_base_dir(base_dir_from_dir_window=replacement_dir)
+
+        # Close other windows that are using this base directory
+        for window in App.open_windows[:]:
+            if window.window_id != self.window_id and window.base_dir == base_dir:
+                try:
+                    window.on_closing()
+                except Exception as e:
+                    logger.error(f"Error closing window for deleted directory: {e}")
+
+        try:
+            # Remove marks associated with this base directory if any
+            MarkedFiles.remove_marks_for_base_dir(base_dir, self.app_actions)
+        except Exception:
+            pass
+
+        try:
+            # Clear all cache entries related to this directory
+            RecentDirectories.remove_directory(base_dir)
+            app_info_cache.clear_directory_cache(base_dir)
+            app_info_cache.store()
+            # Delete the directory itself (uses same handler; now directory-aware)
+            self._handle_delete(base_dir, toast=True, manual_delete=True, is_directory=True)
+        except Exception as e:
+            self.handle_error(str(e), title=_("Delete Directory Error"))
+
+        self.toast(_("Directory {0} deleted.").format(base_dir), time_in_seconds=10)
 
     def replace_current_image_with_search_image(self) -> None:
         '''

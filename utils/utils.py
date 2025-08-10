@@ -222,6 +222,42 @@ class Utils:
         return shutil.copy2(existing_filepath, new_filepath)
 
     @staticmethod
+    def remove_path(
+        path: str,
+        delete_instantly: bool = False,
+        trash_folder: str | None = None,
+        is_directory: bool = False,
+    ) -> None:
+        """Remove a file or directory.
+
+        - If delete_instantly is True, permanently removes (file or directory).
+        - Else if trash_folder is set, moves into the trash folder (basename only).
+        - Else attempts to send to OS trash; on failure, permanently removes.
+        """
+        if path is None or str(path).strip() == "":
+            return
+        normalized_path = os.path.normpath(path)
+
+        with Utils.file_operation_lock:
+            if delete_instantly:
+                if is_directory:
+                    shutil.rmtree(normalized_path)
+                else:
+                    os.remove(normalized_path)
+                return
+
+            if trash_folder is not None:
+                normalized_trash = os.path.normpath(trash_folder)
+                sep = "\\" if "\\" in normalized_path else "/"
+                basename = normalized_path[normalized_path.rfind(sep)+1:]
+                target_path = os.path.join(normalized_trash, basename)
+                os.rename(normalized_path, target_path)
+                return
+
+            from send2trash import send2trash  # type: ignore
+            send2trash(normalized_path)
+
+    @staticmethod
     def open_file(filepath):
         if sys.platform == 'win32':
             os.startfile(filepath)
