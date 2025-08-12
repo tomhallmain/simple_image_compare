@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-09 21:35-0400\n"
-"PO-Revision-Date: 2025-08-09 21:35-0400\n"
+"POT-Creation-Date: 2025-08-12 16:37-0400\n"
+"PO-Revision-Date: 2025-08-12 16:37-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:98 app.py:943 app.py:2167
+#: app.py:98 app.py:943 app.py:2165
 msgid " Simple Image Compare "
 msgstr " シンプルな画像比較 "
 
@@ -128,8 +128,8 @@ msgstr "応募をお願いしたいですか?"
 msgid "Ended slideshows"
 msgstr "終了したスライドショー"
 
-#: app.py:678 app.py:1866 app.py:1870 app.py:1874 app.py:1880 app.py:1884
-#: app.py:1890 app.py:2005
+#: app.py:678 app.py:1867 app.py:1874 app.py:1878 app.py:1882 app.py:1888
+#: app.py:2003
 msgid "Warning"
 msgstr "警告"
 
@@ -417,21 +417,21 @@ msgstr "無効なアクションです。"
 msgid "Invalid action, search image not found"
 msgstr "無効なアクションです。"
 
-#: app.py:1847
+#: app.py:1848
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの削除に失敗しました。"
 
-#: app.py:1854
+#: app.py:1855
 msgid "Removing directory: {0}"
 msgstr "ディレクトリを削除中: {0}"
 
-#: app.py:1856
+#: app.py:1857
 msgid "Removing file: {0}"
 msgstr "ファイルを削除しています： {0}"
 
-#: app.py:1866
-msgid "Failed to delete item."
-msgstr "アイテムの削除に失敗しました。"
+#: app.py:1867 app.py:1888
+msgid "Failed to delete item: {0}"
+msgstr "アイテムの削除に失敗しました: {0}"
 
 #: app.py:1871
 msgid ""
@@ -439,103 +439,99 @@ msgid ""
 "properly in config.json."
 msgstr "ディレクトリを{0}に移動できませんでした。config.jsonでゴミ箱フォルダーが正しく設定されているか確認してください。"
 
-#: app.py:1875
+#: app.py:1873
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
 msgstr "ファイルを{0}に送信できませんでした。config.jsonでゴミ箱フォルダーが正しく設定されているか確認してください。"
 
-#: app.py:1881
+#: app.py:1879
 msgid ""
-"Failed to move directory to the trash, so it will be deleted. Either pip "
-"install send2trash or set a specific trash folder in config.json."
+"Failed to move directory to the trash. Either pip install send2trash or set "
+"a specific trash folder in config.json."
 msgstr ""
-"ディレクトリをゴミ箱に移動できませんでしたので、削除されます。pip install send2trash を実行するか、config.json "
+"ディレクトリをゴミ箱に移動できませんでしたので。pip install send2trash を実行するか、config.json "
 "で特定のゴミ箱フォルダーを設定してください。"
 
-#: app.py:1885
+#: app.py:1883
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "ゴミ箱へのファイル送信に失敗しました。pipでsend2trashをインストールするか、config.jsonでゴミ箱フォルダを指定してください。"
 
-#: app.py:1866 app.py:1890
-msgid "Failed to delete item: {0}"
-msgstr "アイテムの削除に失敗しました: {0}"
-
-#: app.py:1895
+#: app.py:1893
 msgid "Invalid directory"
 msgstr "無効なディレクトリ"
 
-#: app.py:1895
+#: app.py:1893
 msgid "No valid base directory to delete"
 msgstr "削除可能な有効なベースディレクトリがありません。"
 
-#: app.py:1906
+#: app.py:1904
 msgid "Cannot Delete Directory"
 msgstr "ディレクトリを削除できません"
 
-#: app.py:1909
+#: app.py:1907
 msgid "Confirm Delete Directory"
 msgstr "ディレクトリの削除を確認してください"
 
-#: app.py:1910
+#: app.py:1908
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "ディレクトリとすべてのコンテンツを削除してもよろしいですか？"
 
-#: app.py:1943
+#: app.py:1941
 msgid "Delete Directory Error"
 msgstr "ディレクトリ削除エラー"
 
-#: app.py:1945
+#: app.py:1943
 msgid "Directory {0} deleted."
 msgstr "ディレクトリ {0} が削除されました。"
 
-#: app.py:1961
+#: app.py:1959
 msgid "Invalid target filepath for replacement: "
 msgstr "置換対象のファイルパスが無効です： "
 
-#: app.py:1965
+#: app.py:1963
 msgid "Moved search image to "
 msgstr "検索画像を： "
 
-#: app.py:2003
+#: app.py:2001
 msgid "Running image gen: "
 msgstr "イメージ・ジェネレーションの実行： "
 
-#: app.py:2005
+#: app.py:2003
 msgid "Error running image generation:"
 msgstr "画像生成の実行エラー："
 
-#: app.py:2013
+#: app.py:2011
 msgid "Running refacdir"
 msgstr "ランニング refacdir"
 
-#: app.py:2018 auth/app_startup_auth.py:108 auth/password_dialog.py:247
+#: app.py:2016 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "エラー"
 
-#: app.py:2105
+#: app.py:2103
 msgid "GROUP_DETAILS"
 msgstr ""
 "グループ{0}/{1}\n"
 "サイズ：{2}"
 
-#: app.py:2109
+#: app.py:2107
 msgid "No image files found"
 msgstr "画像ファイルが見つかりません"
 
-#: app.py:2111
+#: app.py:2109
 msgid "1 image file found"
 msgstr "1 見つかった画像ファイル"
 
-#: app.py:2112
+#: app.py:2110
 msgid "{0} image files found"
 msgstr "{0} イメージファイルが見つかりました"
 
-#: app.py:2114
+#: app.py:2112
 msgid "(filtered)"
 msgstr "(フィルタリング)"
 
@@ -1111,8 +1107,8 @@ msgstr "プレバリデーションを有効にする"
 msgid "Set"
 msgstr "セット"
 
-#: compare/prevalidations_window.py:713 files/file_actions_window.py:478
-#: files/file_actions_window.py:521
+#: compare/prevalidations_window.py:713 files/file_actions_window.py:479
+#: files/file_actions_window.py:530
 msgid "Modify"
 msgstr "変更する"
 
@@ -1170,85 +1166,85 @@ msgstr "お気に入りを削除しました: "
 msgid "File Actions"
 msgstr "ファイル操作"
 
-#: files/file_actions_window.py:291
+#: files/file_actions_window.py:292
 msgid "File Action History"
 msgstr "ファイル操作履歴"
 
-#: files/file_actions_window.py:293
+#: files/file_actions_window.py:294
 msgid "Search Image"
 msgstr "画像検索"
 
-#: files/file_actions_window.py:295
+#: files/file_actions_window.py:296
 msgid "Clear History"
 msgstr "明確な歴史"
 
-#: files/file_actions_window.py:329
+#: files/file_actions_window.py:330
 msgid "Today's File Actions"
 msgstr "本日のファイル操作"
 
-#: files/file_actions_window.py:329
+#: files/file_actions_window.py:330
 msgid "File Action Statistics"
 msgstr "ファイル操作統計"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:743
+#: files/file_actions_window.py:337 files/file_actions_window.py:767
 msgid "All Time"
 msgstr "全時代"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:745
+#: files/file_actions_window.py:337 files/file_actions_window.py:769
 msgid "Today Only"
 msgstr "本日限定"
 
-#: files/file_actions_window.py:343
+#: files/file_actions_window.py:344
 msgid "Target Directory"
 msgstr "ターゲットディレクトリ"
 
-#: files/file_actions_window.py:349 files/marked_file_mover.py:391
+#: files/file_actions_window.py:350 files/marked_file_mover.py:391
 msgid "Moved"
 msgstr "移動する"
 
-#: files/file_actions_window.py:355 files/marked_file_mover.py:391
+#: files/file_actions_window.py:356 files/marked_file_mover.py:391
 msgid "Copied"
 msgstr "コピッド"
 
-#: files/file_actions_window.py:361
+#: files/file_actions_window.py:362
 msgid "Total"
 msgstr "合計"
 
-#: files/file_actions_window.py:412
+#: files/file_actions_window.py:413
 msgid "... and {0} more"
 msgstr "...および{0}件以上"
 
-#: files/file_actions_window.py:462
+#: files/file_actions_window.py:463
 msgid " ({0} files)"
 msgstr " ({0} ファイル)"
 
-#: files/file_actions_window.py:467 files/marked_file_mover.py:273
+#: files/file_actions_window.py:468 files/marked_file_mover.py:273
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "交通アクセス"
 
-#: files/file_actions_window.py:467 files/marked_file_mover.py:280
+#: files/file_actions_window.py:468 files/marked_file_mover.py:280
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "コピー"
 
-#: files/file_actions_window.py:470 files/file_actions_window.py:513
+#: files/file_actions_window.py:471 files/file_actions_window.py:522
 msgid "Undo"
 msgstr "ログイン"
 
-#: files/file_actions_window.py:505
+#: files/file_actions_window.py:506
 msgid "View"
 msgstr "ニュース"
 
-#: files/file_actions_window.py:538
+#: files/file_actions_window.py:547
 msgid "Image does not exist: "
 msgstr "画像が存在しません。 "
 
-#: files/file_actions_window.py:539 files/file_actions_window.py:550
+#: files/file_actions_window.py:548 files/file_actions_window.py:559
 msgid "File Action Error"
 msgstr "ファイルアクションエラー"
 
-#: files/file_actions_window.py:549
+#: files/file_actions_window.py:558
 msgid "Images not found"
 msgstr "見つからない画像"
 
@@ -2374,10 +2370,6 @@ msgstr "ファイルパスのバックスラッシュをエスケープする"
 msgid " etc."
 msgstr " その他"
 
-#: app.py:1881
-msgid ""
-"Failed to move directory to the trash. Either pip install send2trash or set "
-"a specific trash folder in config.json."
-msgstr ""
-"ディレクトリをゴミ箱に移動できませんでしたので。pip install send2trash を実行するか、config.json "
-"で特定のゴミ箱フォルダーを設定してください。"
+#: files/file_actions_window.py:514
+msgid "Copy Filename"
+msgstr "ファイル名コピー"

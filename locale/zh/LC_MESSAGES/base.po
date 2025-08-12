@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-09 21:35-0400\n"
-"PO-Revision-Date: 2025-08-09 21:35-0400\n"
+"POT-Creation-Date: 2025-08-12 16:37-0400\n"
+"PO-Revision-Date: 2025-08-12 16:37-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:98 app.py:943 app.py:2167
+#: app.py:98 app.py:943 app.py:2165
 msgid " Simple Image Compare "
 msgstr " 简单图像比较 "
 
@@ -128,8 +128,8 @@ msgstr "您想要退出申请吗 ?"
 msgid "Ended slideshows"
 msgstr "结束幻灯片放映"
 
-#: app.py:678 app.py:1866 app.py:1870 app.py:1874 app.py:1880 app.py:1884
-#: app.py:1890 app.py:2005
+#: app.py:678 app.py:1867 app.py:1874 app.py:1878 app.py:1882 app.py:1888
+#: app.py:2003
 msgid "Warning"
 msgstr "警告"
 
@@ -416,21 +416,21 @@ msgstr "无效操作，未找到要删除的文件"
 msgid "Invalid action, search image not found"
 msgstr "无效操作，未找到搜索图像"
 
-#: app.py:1847
+#: app.py:1848
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "删除当前文件失败，无法获取有效的文件路径"
 
-#: app.py:1854
+#: app.py:1855
 msgid "Removing directory: {0}"
 msgstr "删除目录：{0}"
 
-#: app.py:1856
+#: app.py:1857
 msgid "Removing file: {0}"
 msgstr "删除文件： {0}"
 
-#: app.py:1866
-msgid "Failed to delete item."
-msgstr "无法删除该项。"
+#: app.py:1867 app.py:1888
+msgid "Failed to delete item: {0}"
+msgstr "无法删除项目：{0}"
 
 #: app.py:1871
 msgid ""
@@ -438,103 +438,98 @@ msgid ""
 "properly in config.json."
 msgstr "无法将目录移动到 {0}。请确认 config.json 文件中垃圾桶文件夹的设置是否正确。"
 
-#: app.py:1875
+#: app.py:1873
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
 msgstr "无法将文件发送至 {0}。请确认 config.json 文件中垃圾箱文件夹的设置是否正确。"
 
-#: app.py:1881
+#: app.py:1879
 msgid ""
-"Failed to move directory to the trash, so it will be deleted. Either pip "
-"install send2trash or set a specific trash folder in config.json."
+"Failed to move directory to the trash. Either pip install send2trash or set "
+"a specific trash folder in config.json."
 msgstr ""
-"无法将目录移动到回收站，因此将被删除。请通过 pip install send2trash 安装该工具，或在 config.json "
-"文件中设置特定的回收站文件夹。"
+"无法将目录移动到回收站。请通过 pip install send2trash 安装该工具，或在 config.json 文件中设置特定的回收站文件夹。"
 
-#: app.py:1885
+#: app.py:1883
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "发送文件到垃圾箱失败，因此文件将被删除。要么用 pip 安装 send2trash，要么在 config.json 中设置特定的垃圾文件夹。"
 
-#: app.py:1866 app.py:1890
-msgid "Failed to delete item: {0}"
-msgstr "无法删除项目：{0}"
-
-#: app.py:1895
+#: app.py:1893
 msgid "Invalid directory"
 msgstr "无效目录"
 
-#: app.py:1895
+#: app.py:1893
 msgid "No valid base directory to delete"
 msgstr "没有有效的基目录可供删除。"
 
-#: app.py:1906
+#: app.py:1904
 msgid "Cannot Delete Directory"
 msgstr "无法删除目录"
 
-#: app.py:1909
+#: app.py:1907
 msgid "Confirm Delete Directory"
 msgstr "确认删除目录"
 
-#: app.py:1910
+#: app.py:1908
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "您确定要删除该目录及其所有内容吗？"
 
-#: app.py:1943
+#: app.py:1941
 msgid "Delete Directory Error"
 msgstr "删除目录错误"
 
-#: app.py:1945
+#: app.py:1943
 msgid "Directory {0} deleted."
 msgstr "目录 {0} 已删除。"
 
-#: app.py:1961
+#: app.py:1959
 msgid "Invalid target filepath for replacement: "
 msgstr "替换的目标文件路径无效： "
 
-#: app.py:1965
+#: app.py:1963
 msgid "Moved search image to "
 msgstr "将搜索图像移至 ： "
 
-#: app.py:2003
+#: app.py:2001
 msgid "Running image gen: "
 msgstr "运行图像基因 ： "
 
-#: app.py:2005
+#: app.py:2003
 msgid "Error running image generation:"
 msgstr "生成图像时出错："
 
-#: app.py:2013
+#: app.py:2011
 msgid "Running refacdir"
 msgstr "正在运行 reacdir"
 
-#: app.py:2018 auth/app_startup_auth.py:108 auth/password_dialog.py:247
+#: app.py:2016 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "错误"
 
-#: app.py:2105
+#: app.py:2103
 msgid "GROUP_DETAILS"
 msgstr ""
 "第 {0} 组 {1}\n"
 "大小： {2}"
 
-#: app.py:2109
+#: app.py:2107
 msgid "No image files found"
 msgstr "未找到图像文件"
 
-#: app.py:2111
+#: app.py:2109
 msgid "1 image file found"
 msgstr "找到一个图像文件"
 
-#: app.py:2112
+#: app.py:2110
 msgid "{0} image files found"
 msgstr "找到 {0} 图像文件"
 
-#: app.py:2114
+#: app.py:2112
 msgid "(filtered)"
 msgstr "(过滤)"
 
@@ -1109,8 +1104,8 @@ msgstr "启用预先批准"
 msgid "Set"
 msgstr "设定"
 
-#: compare/prevalidations_window.py:713 files/file_actions_window.py:478
-#: files/file_actions_window.py:521
+#: compare/prevalidations_window.py:713 files/file_actions_window.py:479
+#: files/file_actions_window.py:530
 msgid "Modify"
 msgstr "修改"
 
@@ -1168,85 +1163,85 @@ msgstr "已移除收藏： "
 msgid "File Actions"
 msgstr "文件操作"
 
-#: files/file_actions_window.py:291
+#: files/file_actions_window.py:292
 msgid "File Action History"
 msgstr "文件操作历史"
 
-#: files/file_actions_window.py:293
+#: files/file_actions_window.py:294
 msgid "Search Image"
 msgstr "搜索图片"
 
-#: files/file_actions_window.py:295
+#: files/file_actions_window.py:296
 msgid "Clear History"
 msgstr "清除历史记录"
 
-#: files/file_actions_window.py:329
+#: files/file_actions_window.py:330
 msgid "Today's File Actions"
 msgstr "今日文件操作"
 
-#: files/file_actions_window.py:329
+#: files/file_actions_window.py:330
 msgid "File Action Statistics"
 msgstr "文件操作统计信息"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:743
+#: files/file_actions_window.py:337 files/file_actions_window.py:767
 msgid "All Time"
 msgstr "历时"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:745
+#: files/file_actions_window.py:337 files/file_actions_window.py:769
 msgid "Today Only"
 msgstr "仅限今日"
 
-#: files/file_actions_window.py:343
+#: files/file_actions_window.py:344
 msgid "Target Directory"
 msgstr "目标目录"
 
-#: files/file_actions_window.py:349 files/marked_file_mover.py:391
+#: files/file_actions_window.py:350 files/marked_file_mover.py:391
 msgid "Moved"
 msgstr "移动"
 
-#: files/file_actions_window.py:355 files/marked_file_mover.py:391
+#: files/file_actions_window.py:356 files/marked_file_mover.py:391
 msgid "Copied"
 msgstr "复制"
 
-#: files/file_actions_window.py:361
+#: files/file_actions_window.py:362
 msgid "Total"
 msgstr "总计"
 
-#: files/file_actions_window.py:412
+#: files/file_actions_window.py:413
 msgid "... and {0} more"
 msgstr "... 以及 {0} 项更多内容"
 
-#: files/file_actions_window.py:462
+#: files/file_actions_window.py:463
 msgid " ({0} files)"
 msgstr " ({0} 文件)"
 
-#: files/file_actions_window.py:467 files/marked_file_mover.py:273
+#: files/file_actions_window.py:468 files/marked_file_mover.py:273
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "移动"
 
-#: files/file_actions_window.py:467 files/marked_file_mover.py:280
+#: files/file_actions_window.py:468 files/marked_file_mover.py:280
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "复制"
 
-#: files/file_actions_window.py:470 files/file_actions_window.py:513
+#: files/file_actions_window.py:471 files/file_actions_window.py:522
 msgid "Undo"
 msgstr "撤销"
 
-#: files/file_actions_window.py:505
+#: files/file_actions_window.py:506
 msgid "View"
 msgstr "视图"
 
-#: files/file_actions_window.py:538
+#: files/file_actions_window.py:547
 msgid "Image does not exist: "
 msgstr "图像不存在 : "
 
-#: files/file_actions_window.py:539 files/file_actions_window.py:550
+#: files/file_actions_window.py:548 files/file_actions_window.py:559
 msgid "File Action Error"
 msgstr "文件动作错误"
 
-#: files/file_actions_window.py:549
+#: files/file_actions_window.py:558
 msgid "Images not found"
 msgstr "未找到图像"
 
@@ -2371,9 +2366,6 @@ msgstr "逃离文件路径中的反斜线"
 msgid " etc."
 msgstr " 等等"
 
-#: app.py:1881
-msgid ""
-"Failed to move directory to the trash. Either pip install send2trash or set "
-"a specific trash folder in config.json."
-msgstr ""
-"无法将目录移动到回收站。请通过 pip install send2trash 安装该工具，或在 config.json 文件中设置特定的回收站文件夹。"
+#: files/file_actions_window.py:514
+msgid "Copy Filename"
+msgstr "复制文件名"

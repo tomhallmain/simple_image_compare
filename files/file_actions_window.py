@@ -2,7 +2,7 @@ from datetime import datetime
 import os
 
 from tkinter import Toplevel, Frame, Label, W, CENTER, LEFT, RIGHT
-from tkinter.ttk import Button
+from tkinter.ttk import Button, Style
 
 from utils.config import config
 from lib.tk_scroll_demo import ScrollFrame
@@ -282,10 +282,15 @@ class FileActionsWindow:
         self.view_btn_list = []
         self.undo_btn_list = []
         self.modify_btn_list = []
+        self.copy_filename_btn_list = []
         self.statistics_widgets = []
 
         self.frame = ScrollFrame(self.master, bg_color=AppStyle.BG_COLOR)
         self.frame.pack(side="top", fill="both", expand=True)
+
+        # Setup custom button styles
+        self.style = Style()
+        AppStyle.setup_custom_button_styles(self.style)
 
         self._label_info = Label(self.frame.viewPort)
         self.add_label(self._label_info, _("File Action History"), row=0, wraplength=FileActionsWindow.COL_0_WIDTH)
@@ -467,7 +472,7 @@ class FileActionsWindow:
                 action_text = _("Move") if action.is_move_action() else _("Copy")
                 self.add_label(_label_action, action_text, row=row, column=base_col+1, wraplength=FileActionsWindow.COL_0_WIDTH)
 
-                undo_btn = Button(self.frame.viewPort, text=_("Undo"))
+                undo_btn = Button(self.frame.viewPort, text=_("Undo"), style=AppStyle.HEADER_BUTTON_STYLE)
                 self.undo_btn_list.append(undo_btn)
                 undo_btn.grid(row=row, column=base_col+3)
                 def undo_handler(event, self=self, action=action):
@@ -475,7 +480,7 @@ class FileActionsWindow:
                 undo_btn.bind("<Button-1>", undo_handler)
                 undo_btn.bind("<Return>", undo_handler)
 
-                modify_btn = Button(self.frame.viewPort, text=_("Modify"))
+                modify_btn = Button(self.frame.viewPort, text=_("Modify"), style=AppStyle.HEADER_BUTTON_STYLE)
                 self.modify_btn_list.append(modify_btn)
                 modify_btn.grid(row=row, column=base_col+4)
                 def modify_handler(event, self=self, action=action):
@@ -504,11 +509,19 @@ class FileActionsWindow:
 
                 view_btn = Button(self.frame.viewPort, text=_("View"))
                 self.view_btn_list.append(view_btn)
-                view_btn.grid(row=row, column=base_col+2)
+                view_btn.grid(row=row, column=base_col+1)
                 def view_handler(event, self=self, image_path=filename):
                     return self.view(event, image_path)
                 view_btn.bind("<Button-1>", view_handler)
                 view_btn.bind("<Return>", view_handler)
+
+                copy_filename_btn = Button(self.frame.viewPort, text=_("Copy Filename"))
+                self.copy_filename_btn_list.append(copy_filename_btn)
+                copy_filename_btn.grid(row=row, column=base_col+2)
+                def copy_filename_handler(event, self=self, filename=filename):
+                    return self.copy_filename_to_clipboard(filename)
+                copy_filename_btn.bind("<Button-1>", copy_filename_handler)
+                copy_filename_btn.bind("<Return>", copy_filename_handler)
 
                 undo_btn = Button(self.frame.viewPort, text=_("Undo"))
                 self.undo_btn_list.append(undo_btn)
@@ -566,6 +579,18 @@ class FileActionsWindow:
 #            MarkedFileMover.undo_move_marks()
             pass
 
+    def copy_filename_to_clipboard(self, filepath):
+        """Copy the filename to the clipboard."""
+        if not filepath:
+            return
+        
+        filename = os.path.basename(filepath)
+        self.master.clipboard_clear()
+        self.master.clipboard_append(filename)
+        # Optional: Show a brief notification that filename was copied
+        if hasattr(self.app_actions, 'toast'):
+            self.app_actions.toast(f"Copied filename: {filename}")
+
     def _refresh_widgets(self):
         self.clear_widget_lists()
         self.add_action_history_widgets()
@@ -583,6 +608,8 @@ class FileActionsWindow:
             btn.destroy()
         for btn in self.modify_btn_list:
             btn.destroy()
+        for btn in self.copy_filename_btn_list:
+            btn.destroy()
         for widget in self.statistics_widgets:
             widget.destroy()
         self.label_filename_list = []
@@ -590,6 +617,7 @@ class FileActionsWindow:
         self.view_btn_list = []
         self.undo_btn_list = []
         self.modify_btn_list = []
+        self.copy_filename_btn_list = []
         self.statistics_widgets = []
 
     def _get_paging_length(self):

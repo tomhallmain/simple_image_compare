@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-09 21:35-0400\n"
-"PO-Revision-Date: 2025-08-09 21:35-0400\n"
+"POT-Creation-Date: 2025-08-12 16:37-0400\n"
+"PO-Revision-Date: 2025-08-12 16:37-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: it Team <<EMAIL>>\n"
 "Language: it\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:98 app.py:943 app.py:2167
+#: app.py:98 app.py:943 app.py:2165
 msgid " Simple Image Compare "
 msgstr " Confronto semplice delle immagini "
 
@@ -128,8 +128,8 @@ msgstr "Volete abbandonare l'applicazione?"
 msgid "Ended slideshows"
 msgstr "Presentazione conclusa"
 
-#: app.py:678 app.py:1866 app.py:1870 app.py:1874 app.py:1880 app.py:1884
-#: app.py:1890 app.py:2005
+#: app.py:678 app.py:1867 app.py:1874 app.py:1878 app.py:1882 app.py:1888
+#: app.py:2003
 msgid "Warning"
 msgstr "Avvertenze"
 
@@ -436,23 +436,23 @@ msgstr "Azione non valida, nessun file trovato da eliminare"
 msgid "Invalid action, search image not found"
 msgstr "Azione non valida, immagine di ricerca non trovata"
 
-#: app.py:1847
+#: app.py:1848
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 "Impossibile cancellare il file corrente, non è stato possibile ottenere un "
 "percorso di file valido."
 
-#: app.py:1854
+#: app.py:1855
 msgid "Removing directory: {0}"
 msgstr "Rimozione della directory: {0}"
 
-#: app.py:1856
+#: app.py:1857
 msgid "Removing file: {0}"
 msgstr "Rimozione del file: {0}"
 
-#: app.py:1866
-msgid "Failed to delete item."
-msgstr "Impossibile eliminare l'elemento."
+#: app.py:1867 app.py:1888
+msgid "Failed to delete item: {0}"
+msgstr "Impossibile eliminare l'elemento: {0}"
 
 #: app.py:1871
 msgid ""
@@ -462,7 +462,7 @@ msgstr ""
 "Impossibile spostare la directory in {0}. Verificare che la cartella del "
 "cestino sia impostata correttamente nel file config.json."
 
-#: app.py:1875
+#: app.py:1873
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
@@ -470,16 +470,15 @@ msgstr ""
 "Échec de l'envoi du fichier à {0}. Vérifiez que le dossier corbeille est "
 "correctement configuré dans config.json."
 
-#: app.py:1881
+#: app.py:1879
 msgid ""
-"Failed to move directory to the trash, so it will be deleted. Either pip "
-"install send2trash or set a specific trash folder in config.json."
+"Failed to move directory to the trash. Either pip install send2trash or set "
+"a specific trash folder in config.json."
 msgstr ""
-"Impossibile spostare la directory nel cestino, quindi verrà eliminata. "
-"Eseguire pip install send2trash oppure impostare una cartella cestino "
-"specifica in config.json."
+"Impossibile spostare la directory nel cestino. Eseguire pip install "
+"send2trash oppure impostare una cartella cestino specifica in config.json."
 
-#: app.py:1885
+#: app.py:1883
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -488,82 +487,78 @@ msgstr ""
 "Installare con pip send2trash o impostare una cartella specifica per il "
 "cestino in config.json."
 
-#: app.py:1866 app.py:1890
-msgid "Failed to delete item: {0}"
-msgstr "Impossibile eliminare l'elemento: {0}"
-
-#: app.py:1895
+#: app.py:1893
 msgid "Invalid directory"
 msgstr "Directory non valida"
 
-#: app.py:1895
+#: app.py:1893
 msgid "No valid base directory to delete"
 msgstr "Nessuna directory di base valida da eliminare"
 
-#: app.py:1906
+#: app.py:1904
 msgid "Cannot Delete Directory"
 msgstr "Impossibile eliminare la directory"
 
-#: app.py:1909
+#: app.py:1907
 msgid "Confirm Delete Directory"
 msgstr "Conferma eliminazione directory"
 
-#: app.py:1910
+#: app.py:1908
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "Sei sicuro di voler eliminare la directory e tutti i suoi contenuti?"
 
-#: app.py:1943
+#: app.py:1941
 msgid "Delete Directory Error"
 msgstr "Errore di eliminazione della directory"
 
-#: app.py:1945
+#: app.py:1943
 msgid "Directory {0} deleted."
 msgstr "Directory {0} eliminata."
 
-#: app.py:1961
+#: app.py:1959
 msgid "Invalid target filepath for replacement: "
 msgstr "Percorso del file di destinazione non valido per la sostituzione: "
 
-#: app.py:1965
+#: app.py:1963
 msgid "Moved search image to "
 msgstr "Spostata l'immagine di ricerca in "
 
-#: app.py:2003
+#: app.py:2001
 msgid "Running image gen: "
 msgstr "Esecuzione dell'immagine gen: "
 
-#: app.py:2005
+#: app.py:2003
 msgid "Error running image generation:"
 msgstr "Errore nell'esecuzione della generazione di immagini:"
 
-#: app.py:2013
+#: app.py:2011
 msgid "Running refacdir"
 msgstr "Esecuzione di refacdir"
 
-#: app.py:2018 auth/app_startup_auth.py:108 auth/password_dialog.py:247
+#: app.py:2016 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "Errore"
 
-#: app.py:2105
+#: app.py:2103
 msgid "GROUP_DETAILS"
 msgstr ""
 "Gruppo {0} di {1}\n"
 "Dimensione: {2}"
 
-#: app.py:2109
+#: app.py:2107
 msgid "No image files found"
 msgstr "Nessun file immagine trovato"
 
-#: app.py:2111
+#: app.py:2109
 msgid "1 image file found"
 msgstr "1 file immagine trovato"
 
-#: app.py:2112
+#: app.py:2110
 msgid "{0} image files found"
 msgstr "{0} file immagine trovati"
 
-#: app.py:2114
+#: app.py:2112
 msgid "(filtered)"
 msgstr "(filtrato)"
 
@@ -1173,8 +1168,8 @@ msgstr "Abilitare le preconvalide"
 msgid "Set"
 msgstr "Impostare"
 
-#: compare/prevalidations_window.py:713 files/file_actions_window.py:478
-#: files/file_actions_window.py:521
+#: compare/prevalidations_window.py:713 files/file_actions_window.py:479
+#: files/file_actions_window.py:530
 msgid "Modify"
 msgstr "Modificare"
 
@@ -1232,85 +1227,85 @@ msgstr "Preferito rimosso: "
 msgid "File Actions"
 msgstr "Azioni sui file"
 
-#: files/file_actions_window.py:291
+#: files/file_actions_window.py:292
 msgid "File Action History"
 msgstr "Cronologia delle azioni dei file"
 
-#: files/file_actions_window.py:293
+#: files/file_actions_window.py:294
 msgid "Search Image"
 msgstr "Ricerca immagine"
 
-#: files/file_actions_window.py:295
+#: files/file_actions_window.py:296
 msgid "Clear History"
 msgstr "Storia chiara"
 
-#: files/file_actions_window.py:329
+#: files/file_actions_window.py:330
 msgid "Today's File Actions"
 msgstr "Azioni file odierne"
 
-#: files/file_actions_window.py:329
+#: files/file_actions_window.py:330
 msgid "File Action Statistics"
 msgstr "Statistiche sulle azioni dei file"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:743
+#: files/file_actions_window.py:337 files/file_actions_window.py:767
 msgid "All Time"
 msgstr "Di tutti i tempi"
 
-#: files/file_actions_window.py:336 files/file_actions_window.py:745
+#: files/file_actions_window.py:337 files/file_actions_window.py:769
 msgid "Today Only"
 msgstr "Solo oggi"
 
-#: files/file_actions_window.py:343
+#: files/file_actions_window.py:344
 msgid "Target Directory"
 msgstr "Elenco dei destinatari"
 
-#: files/file_actions_window.py:349 files/marked_file_mover.py:391
+#: files/file_actions_window.py:350 files/marked_file_mover.py:391
 msgid "Moved"
 msgstr "Trasferito"
 
-#: files/file_actions_window.py:355 files/marked_file_mover.py:391
+#: files/file_actions_window.py:356 files/marked_file_mover.py:391
 msgid "Copied"
 msgstr "Copiato"
 
-#: files/file_actions_window.py:361
+#: files/file_actions_window.py:362
 msgid "Total"
 msgstr "Totale"
 
-#: files/file_actions_window.py:412
+#: files/file_actions_window.py:413
 msgid "... and {0} more"
 msgstr "... e {0} altro ancora"
 
-#: files/file_actions_window.py:462
+#: files/file_actions_window.py:463
 msgid " ({0} files)"
 msgstr " ({0} file)"
 
-#: files/file_actions_window.py:467 files/marked_file_mover.py:273
+#: files/file_actions_window.py:468 files/marked_file_mover.py:273
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "Muoversi"
 
-#: files/file_actions_window.py:467 files/marked_file_mover.py:280
+#: files/file_actions_window.py:468 files/marked_file_mover.py:280
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "Copia"
 
-#: files/file_actions_window.py:470 files/file_actions_window.py:513
+#: files/file_actions_window.py:471 files/file_actions_window.py:522
 msgid "Undo"
 msgstr "Annullare"
 
-#: files/file_actions_window.py:505
+#: files/file_actions_window.py:506
 msgid "View"
 msgstr "Vista"
 
-#: files/file_actions_window.py:538
+#: files/file_actions_window.py:547
 msgid "Image does not exist: "
 msgstr "L'immagine non esiste: "
 
-#: files/file_actions_window.py:539 files/file_actions_window.py:550
+#: files/file_actions_window.py:548 files/file_actions_window.py:559
 msgid "File Action Error"
 msgstr "Errore nell'azione del file"
 
-#: files/file_actions_window.py:549
+#: files/file_actions_window.py:558
 msgid "Images not found"
 msgstr "Immagini non trovate"
 
@@ -2455,10 +2450,6 @@ msgstr "Sfuggire ai backslash nei percorsi dei file"
 msgid " etc."
 msgstr " ecc."
 
-#: app.py:1881
-msgid ""
-"Failed to move directory to the trash. Either pip install send2trash or set "
-"a specific trash folder in config.json."
-msgstr ""
-"Impossibile spostare la directory nel cestino. Eseguire pip install "
-"send2trash oppure impostare una cartella cestino specifica in config.json."
+#: files/file_actions_window.py:514
+msgid "Copy Filename"
+msgstr "Copia nome file"
