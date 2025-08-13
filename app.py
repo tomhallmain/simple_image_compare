@@ -412,7 +412,7 @@ class App():
         self.master.bind("<Shift-Z>", lambda e: self.check_focus(e, self.add_current_image_to_negative_search))
         self.master.bind("<Shift-U>", lambda e: self.check_focus(e, self.run_refacdir))
         self.master.bind("<Shift-I>", lambda e: self.check_focus(e, lambda: ImageDetails.run_image_generation_static(self.app_actions)))
-        self.master.bind("<Shift-Q>", lambda e: self.check_focus(e, lambda: ImageDetails.randomly_modify_image(self.get_active_media_filepath(), self.app_actions)))
+        self.master.bind("<Shift-Q>", lambda e: self.check_focus(e, lambda: ImageDetails.randomly_modify_image(self.get_active_media_filepath(), self.app_actions, self.master)))
         self.master.bind("<Shift-L>", lambda e: self.check_focus(e, self.toggle_prevalidations))
         self.master.bind("<Shift-E>", lambda e: self.check_focus(e, lambda: ImageDetails.copy_prompt_no_break_static(self.get_active_media_filepath(), self.master, self.app_actions)))
         self.master.bind("<Control-Return>", lambda event: ImageDetails.run_image_generation_static(self.app_actions, event=event))

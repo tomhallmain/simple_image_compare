@@ -302,13 +302,13 @@ class ImageDetails():
         return prompt
 
     def rotate_image(self, right=False):
-        ImageOps.rotate_image(self.image_path, right)
+        new_filepath = ImageOps.rotate_image(self.image_path, right)
         self.close_windows()
         self.app_actions.refresh()
-        # TODO properly set the file info on the rotated file instead of having to use this callback
-        self.app_actions.go_to_file(search_text=os.path.basename(self.image_path), exact_match=True)
         rotation_text = _("Rotated image right") if right else _("Rotated image left")
         self.app_actions.toast(rotation_text)
+        if os.path.exists(new_filepath):
+            ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
 
     def crop_image(self, event=None):
         saved_files = Cropper.smart_crop_multi_detect(self.image_path, "")
@@ -317,49 +317,67 @@ class ImageDetails():
             self.app_actions.refresh()
             # TODO actually go to the new file. In this case we don't want to replace the original because there may be errors in some cases.
             self.app_actions.toast(_("Cropped image"))
+            if len(saved_files) > 0:
+                ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=saved_files[0], app_actions=self.app_actions)
         else:
             self.app_actions.toast(_("No crops found"))
 
     def enhance_image(self):
-        ImageOps.enhance_image(self.image_path)
+        new_filepath = ImageOps.enhance_image(self.image_path)
         self.close_windows()
         self.app_actions.refresh()
         # TODO actually go to the new file. In this case we don't want to replace the original because there may be errors in some cases.
         self.app_actions.toast(_("Enhanced image"))
+        if os.path.exists(new_filepath):
+            ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
 
     def random_crop(self):
-        ImageOps.random_crop_and_upscale(self.image_path)
+        new_filepath = ImageOps.random_crop_and_upscale(self.image_path)
         self.app_actions.refresh()
         self.app_actions.toast(_("Randomly cropped image"))
+        if os.path.exists(new_filepath):
+            ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
 
     def random_modification(self):
-        ImageDetails.randomly_modify_image(self.image_path, self.app_actions)
+        ImageDetails.randomly_modify_image(self.image_path, self.app_actions, self.parent_master)
 
     @staticmethod
-    def randomly_modify_image(image_path, app_actions):
-        ImageOps.randomly_modify_image(image_path)
+    def randomly_modify_image(image_path, app_actions, master=None):
+        new_filepath = ImageOps.randomly_modify_image(image_path)
         app_actions.refresh()
-        app_actions.toast(_("Randomly modified image"))
+        if os.path.exists(new_filepath):
+            app_actions.toast(_("Randomly modified image"))
+            # Open the newly created image in temp canvas if master is provided
+            if master is not None:
+                ImageDetails.open_temp_image_canvas(master=master, image_path=new_filepath, app_actions=app_actions)
+        else:
+            app_actions.toast(_("No new image created"))
 
     def flip_image(self, top_bottom=False):
-        ImageOps.flip_image(self.image_path, top_bottom=top_bottom)
+        new_filepath = ImageOps.flip_image(self.image_path, top_bottom=top_bottom)
         self.app_actions.refresh()
         self.app_actions.toast(_("Flipped image"))
+        if os.path.exists(new_filepath):
+            ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
 
     def copy_without_exif(self):
         try:
-            image_data_extractor.copy_without_exif(self.image_path)
+            new_filepath = image_data_extractor.copy_without_exif(self.image_path)
             self.app_actions.refresh()
             self.app_actions.toast(_("Copied image without EXIF data"))
+            if os.path.exists(new_filepath):
+                ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
         except Exception as e:
             logger.error(f"Error copying image without EXIF: {e}")
             self.app_actions.toast(_("Error copying image without EXIF"))
 
     def convert_to_jpg(self):
         try:
-            ImageOps.convert_to_jpg(self.image_path)
+            new_filepath = ImageOps.convert_to_jpg(self.image_path)
             self.app_actions.refresh()
             self.app_actions.toast(_("Converted image to JPG"))
+            if os.path.exists(new_filepath):
+                ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
         except Exception as e:
             logger.error(f"Error converting image to JPG: {e}")
             self.app_actions.toast(_("Error converting image to JPG"))

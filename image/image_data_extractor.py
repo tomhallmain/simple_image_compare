@@ -251,6 +251,7 @@ class ImageDataExtractor:
         # strip exif
         new_image_path = self.new_image_with_info(image, image_path=image_path, image_copy_path=image_copy_path, target_dir=target_dir)
         logger.info("Copied image without exif data to: " + new_image_path)
+        return new_image_path
 
     def new_image_with_info(self, image, info=None, image_path=None, image_copy_path=None, target_dir=None, append="_"):
         data = list(image.getdata())

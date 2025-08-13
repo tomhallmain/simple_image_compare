@@ -44,8 +44,10 @@ class ImageOps:
             current_extension = os.path.splitext(image_path)[-1]
             new_filepath = ImageOps.new_filepath(image_path, append_part="_rot")
             cv2.imwrite(new_filepath, rotated)
+            return new_filepath
         except Exception as e:
             logger.error(f'Error in rotate image: {e}')
+            return None
 
     @staticmethod
     def rotate_image_partial(image_path, angle=90, center=None, scale=1.0):
@@ -96,6 +98,7 @@ class ImageOps:
         image = contrasted
         image.save(new_file)
         image.close()
+        return new_file
 
     @staticmethod
     def flip_image(image_path, top_bottom=False):
@@ -105,6 +108,7 @@ class ImageOps:
         mod_img.save(new_filepath)
         original_img.close()
         mod_img.close()
+        return new_filepath
 
     @staticmethod
     def convert_to_jpg(image_path, quality=85):
@@ -189,6 +193,7 @@ class ImageOps:
         im.close()
         new_filepath = ImageOps.new_filepath(image_path, append_part="_crop")
         cropped.save(new_filepath)
+        return new_filepath
 
     @staticmethod
     def random_rotate_and_crop():
@@ -296,6 +301,8 @@ class ImageOps:
             im_final.close()
         except Exception:
             pass
+        
+        return new_filepath
 
     @staticmethod
     def random_draw(image_path):
