@@ -1576,7 +1576,14 @@ class App():
         # This may be a full file path, so get basename first
         original_search_text = search_text
         if not exact_match:
-            search_text = os.path.basename(search_text)
+            if search_text and ("\\" in search_text or "/" in search_text) and os.path.isfile(search_text):
+                resolved_path = Utils.get_valid_file(self.get_base_dir(), search_text)
+                if resolved_path and os.path.isfile(resolved_path):
+                    # It's an absolute path to a file
+                    ImageDetails.open_temp_image_canvas(master=self.master, image_path=resolved_path, app_actions=self.app_actions, skip_get_window_check=True)
+                    return True
+            else:
+                search_text = os.path.basename(search_text)
         # First try to find the file in the current window
         if self.mode == Mode.BROWSE:
             self.file_browser.refresh()
