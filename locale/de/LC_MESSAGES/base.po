@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-19 10:38-0400\n"
-"PO-Revision-Date: 2025-08-19 10:38-0400\n"
+"POT-Creation-Date: 2025-08-19 14:40-0400\n"
+"PO-Revision-Date: 2025-08-19 14:40-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: de Team <<EMAIL>>\n"
 "Language: de\n"
@@ -501,14 +501,18 @@ msgstr "Kein gültiges Basisverzeichnis zum Löschen"
 msgid "Cannot Delete Directory"
 msgstr "Verzeichnis kann nicht gelöscht werden"
 
-#: app.py:1912
-msgid "Confirm Delete Directory"
-msgstr "Löschen des Verzeichnisses bestätigen"
-
 #: app.py:1908
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr ""
 "Sind Sie sicher, dass Sie das Verzeichnis und alle Inhalte löschen möchten?"
+
+#: app.py:1910
+msgid "Contents to be deleted:"
+msgstr "Zu löschende Inhalte:"
+
+#: app.py:1912
+msgid "Confirm Delete Directory"
+msgstr "Löschen des Verzeichnisses bestätigen"
 
 #: app.py:1946
 msgid "Delete Directory Error"
@@ -1331,6 +1335,10 @@ msgstr "{0} von {1} Dateien im Verzeichnis, {3} sortiert nach {2}"
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "Der an file_browser.find() übergebene Suchtext war ungültig."
 
+#: files/file_browser.py:471
+msgid "No files found"
+msgstr "Keine Dateien gefunden"
+
 #: files/go_to_file.py:23
 msgid "Go To File"
 msgstr "Gehe zu Datei"
@@ -1881,6 +1889,10 @@ msgstr "Zufällig beschnittenes Bild"
 #: image/image_details.py:349
 msgid "Randomly modified image"
 msgstr "Zufällig modifiziertes Bild"
+
+#: image/image_details.py:354
+msgid "No new image created"
+msgstr "Es wurde kein neues Bild erstellt"
 
 #: image/image_details.py:359
 msgid "Flipped image"
@@ -2452,14 +2464,16 @@ msgstr "Escape Backslash-Dateipfade"
 msgid " etc."
 msgstr " usw."
 
-#: app.py:1910
-msgid "Contents to be deleted:"
-msgstr "Zu löschende Inhalte:"
+#: app.py:371 utils/help_and_config.py:79
+msgid "Open media location"
+msgstr "Medienstandort öffnen"
 
-#: files/file_browser.py:471
-msgid "No files found"
-msgstr "Keine Dateien gefunden"
+#: app.py:1765
+msgid "Opening media file: {0}"
+msgstr "Öffnen der Mediendatei: {0}"
 
-#: image/image_details.py:354
-msgid "No new image created"
-msgstr "Es wurde kein neues Bild erstellt"
+#: app.py:1768
+msgid "Failed to open current media file, unable to get valid filepath"
+msgstr ""
+"Die aktuelle Mediendatei konnte nicht geöffnet werden, es konnte kein "
+"gültiger Dateipfad abgerufen werden"

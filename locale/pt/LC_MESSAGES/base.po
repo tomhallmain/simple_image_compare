@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-19 10:38-0400\n"
-"PO-Revision-Date: 2025-08-19 10:38-0400\n"
+"POT-Creation-Date: 2025-08-19 14:40-0400\n"
+"PO-Revision-Date: 2025-08-19 14:40-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: pt Team <<EMAIL>>\n"
 "Language: pt\n"
@@ -497,14 +497,18 @@ msgstr "Não há diretório base válido para excluir"
 msgid "Cannot Delete Directory"
 msgstr "Não é possível eliminar o diretório"
 
-#: app.py:1912
-msgid "Confirm Delete Directory"
-msgstr "Confirmar eliminação do diretório"
-
 #: app.py:1908
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr ""
 "Tem a certeza de que deseja eliminar o diretório e todo o seu conteúdo?"
+
+#: app.py:1910
+msgid "Contents to be deleted:"
+msgstr "Conteúdo a ser eliminado:"
+
+#: app.py:1912
+msgid "Confirm Delete Directory"
+msgstr "Confirmar eliminação do diretório"
 
 #: app.py:1946
 msgid "Delete Directory Error"
@@ -1324,6 +1328,10 @@ msgstr "{0} de {1} ficheiros no diretório, ordenados por {2} {3}"
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "O texto de pesquisa fornecido a file_browser.find() era inválido."
 
+#: files/file_browser.py:471
+msgid "No files found"
+msgstr "Não foram encontrados ficheiros"
+
 #: files/go_to_file.py:23
 msgid "Go To File"
 msgstr "Ir para o ficheiro"
@@ -1870,6 +1878,10 @@ msgstr "Imagem recortada aleatoriamente"
 #: image/image_details.py:349
 msgid "Randomly modified image"
 msgstr "Imagem modificada aleatoriamente"
+
+#: image/image_details.py:354
+msgid "No new image created"
+msgstr "Nenhuma nova imagem criada"
 
 #: image/image_details.py:359
 msgid "Flipped image"
@@ -2443,14 +2455,16 @@ msgstr "Escape as barras invertidas nos caminhos dos ficheiros"
 msgid " etc."
 msgstr " etc."
 
-#: app.py:1910
-msgid "Contents to be deleted:"
-msgstr "Conteúdo a ser eliminado:"
+#: app.py:371 utils/help_and_config.py:79
+msgid "Open media location"
+msgstr "Abrir localização de mídia"
 
-#: files/file_browser.py:471
-msgid "No files found"
-msgstr "Não foram encontrados ficheiros"
+#: app.py:1765
+msgid "Opening media file: {0}"
+msgstr "Abrindo ficheiro de mídia: {0}"
 
-#: image/image_details.py:354
-msgid "No new image created"
-msgstr "Nenhuma nova imagem criada"
+#: app.py:1768
+msgid "Failed to open current media file, unable to get valid filepath"
+msgstr ""
+"Não foi possível abrir o ficheiro multimédia atual, impossível obter o "
+"caminho válido do ficheiro"

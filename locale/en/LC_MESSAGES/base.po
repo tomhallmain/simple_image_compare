@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-19 10:38-0400\n"
-"PO-Revision-Date: 2025-08-19 10:38-0400\n"
+"POT-Creation-Date: 2025-08-19 14:40-0400\n"
+"PO-Revision-Date: 2025-08-19 14:40-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: en Team <<EMAIL>>\n"
 "Language: en\n"
@@ -485,13 +485,17 @@ msgstr "No valid base directory to delete"
 msgid "Cannot Delete Directory"
 msgstr "Cannot Delete Directory"
 
-#: app.py:1912
-msgid "Confirm Delete Directory"
-msgstr "Confirm Delete Directory"
-
 #: app.py:1908
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "Are you sure you want to delete the directory and all contents?"
+
+#: app.py:1910
+msgid "Contents to be deleted:"
+msgstr "Contents to be deleted:"
+
+#: app.py:1912
+msgid "Confirm Delete Directory"
+msgstr "Confirm Delete Directory"
 
 #: app.py:1946
 msgid "Delete Directory Error"
@@ -1298,6 +1302,10 @@ msgstr "{0} out of {1} files in directory, ordered by {2} {3}"
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "Search text provided to file_browser.find() was invalid."
 
+#: files/file_browser.py:471
+msgid "No files found"
+msgstr "No files found"
+
 #: files/go_to_file.py:23
 msgid "Go To File"
 msgstr "Go To File"
@@ -1839,6 +1847,10 @@ msgstr "Randomly cropped image"
 #: image/image_details.py:349
 msgid "Randomly modified image"
 msgstr "Randomly modified image"
+
+#: image/image_details.py:354
+msgid "No new image created"
+msgstr "No new image created"
 
 #: image/image_details.py:359
 msgid "Flipped image"
@@ -2408,14 +2420,14 @@ msgstr "Escape Backslash Filepaths"
 msgid " etc."
 msgstr " etc."
 
-#: app.py:1910
-msgid "Contents to be deleted:"
-msgstr "Contents to be deleted:"
+#: app.py:371 utils/help_and_config.py:79
+msgid "Open media location"
+msgstr "Open media location"
 
-#: files/file_browser.py:471
-msgid "No files found"
-msgstr "No files found"
+#: app.py:1765
+msgid "Opening media file: {0}"
+msgstr "Opening media file: {0}"
 
-#: image/image_details.py:354
-msgid "No new image created"
-msgstr "No new image created"
+#: app.py:1768
+msgid "Failed to open current media file, unable to get valid filepath"
+msgstr "Failed to open current media file, unable to get valid filepath"

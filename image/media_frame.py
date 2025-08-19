@@ -178,6 +178,19 @@ class MediaFrame(Frame):
     def video_seek(self, pos):
         self.vlc_media_player.set_position(pos)
 
+    def pause_video_if_playing(self):
+        """
+        Check if the current media is a video and pause it if it's playing.
+        This is useful before opening the video externally.
+        
+        Returns:
+            bool: True if a video was paused, False otherwise
+        """
+        if isinstance(self.__image, VideoUI):
+            self.video_pause()
+            return True
+        return False
+
     def ensure_video_frame(self):
         # set the window id where to render VLC's video output
         if platform.system() == 'Windows':

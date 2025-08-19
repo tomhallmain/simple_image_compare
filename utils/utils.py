@@ -282,6 +282,43 @@ class Utils:
                     "Unsupported distribution for opening file location.")
 
     @staticmethod
+    def open_media_file(filepath: str, is_video: bool = False) -> None:
+        """
+        Open a media file with the appropriate application.
+        
+        Args:
+            filepath: Path to the media file to open
+            is_video: Whether the file is a video (determines opening method)
+        """
+        if is_video:
+            Utils._open_video_file(filepath)
+        else:
+            Utils.open_file_location(filepath)
+
+    @staticmethod
+    def _open_video_file(filepath: str) -> None:
+        """Open a video file with VLC or default video player."""
+        if sys.platform == 'win32':
+            try:
+                subprocess.Popen(['vlc', filepath])
+                return
+            except FileNotFoundError:
+                pass
+        elif sys.platform == 'darwin':
+            try:
+                subprocess.Popen(['vlc', filepath])
+                return
+            except FileNotFoundError:
+                pass
+        else:
+            try:
+                subprocess.Popen(['vlc', filepath])
+                return
+            except FileNotFoundError:
+                pass
+        Utils.open_file_location(filepath)
+
+    @staticmethod
     def open_file_in_gimp(filepath, gimp_exe_loc="gimp-2.10"):
         def gimp_process():
             command = ["set", "LANG=en", "&&", gimp_exe_loc, filepath]

@@ -76,7 +76,7 @@ class HelpAndConfig():
             "Shift+L": _("Toggle content filters"),
             "Shift+M": _("Add or remove a mark for current image"),
             "Shift+N": _("Add all marks between most recently set and current selected inclusive, or all marks in current group"),
-            "Shift+O": _("Open image location"),
+            "Shift+O": _("Open media location"),
             "Shift+P": _("Open image in GIMP"),
             "Shift+Q": _("Randomly modify image"),
             "Shift+R": _("View related image (controlnet, etc.)"),

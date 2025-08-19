@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-19 10:38-0400\n"
-"PO-Revision-Date: 2025-08-19 10:38-0400\n"
+"POT-Creation-Date: 2025-08-19 14:40-0400\n"
+"PO-Revision-Date: 2025-08-19 14:40-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
@@ -470,13 +470,17 @@ msgstr "没有有效的基目录可供删除。"
 msgid "Cannot Delete Directory"
 msgstr "无法删除目录"
 
-#: app.py:1912
-msgid "Confirm Delete Directory"
-msgstr "确认删除目录"
-
 #: app.py:1908
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "您确定要删除该目录及其所有内容吗？"
+
+#: app.py:1910
+msgid "Contents to be deleted:"
+msgstr "需删除的内容："
+
+#: app.py:1912
+msgid "Confirm Delete Directory"
+msgstr "确认删除目录"
 
 #: app.py:1946
 msgid "Delete Directory Error"
@@ -1265,6 +1269,10 @@ msgstr "目录中 {1} 个文件中的 {0} 个，按{2}{3}排序"
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "提供给 file_browser.find() 的搜索文本无效。"
 
+#: files/file_browser.py:471
+msgid "No files found"
+msgstr "未找到任何文件"
+
 #: files/go_to_file.py:23
 msgid "Go To File"
 msgstr "转到文件"
@@ -1803,6 +1811,10 @@ msgstr "随机裁剪的图像"
 #: image/image_details.py:349
 msgid "Randomly modified image"
 msgstr "随机修改的图像"
+
+#: image/image_details.py:354
+msgid "No new image created"
+msgstr "未创建新图像"
 
 #: image/image_details.py:359
 msgid "Flipped image"
@@ -2370,14 +2382,14 @@ msgstr "逃离文件路径中的反斜线"
 msgid " etc."
 msgstr " 等等"
 
-#: app.py:1910
-msgid "Contents to be deleted:"
-msgstr "需删除的内容："
+#: app.py:371 utils/help_and_config.py:79
+msgid "Open media location"
+msgstr "打开媒体位置"
 
-#: files/file_browser.py:471
-msgid "No files found"
-msgstr "未找到任何文件"
+#: app.py:1765
+msgid "Opening media file: {0}"
+msgstr "打开媒体文件：{0}"
 
-#: image/image_details.py:354
-msgid "No new image created"
-msgstr "未创建新图像"
+#: app.py:1768
+msgid "Failed to open current media file, unable to get valid filepath"
+msgstr "无法打开当前媒体文件，无法获取有效的文件路径。"

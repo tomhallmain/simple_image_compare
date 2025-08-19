@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-19 10:38-0400\n"
-"PO-Revision-Date: 2025-08-19 10:38-0400\n"
+"POT-Creation-Date: 2025-08-19 14:40-0400\n"
+"PO-Revision-Date: 2025-08-19 14:40-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ru Team <<EMAIL>>\n"
 "Language: ru\n"
@@ -495,13 +495,17 @@ msgstr "Нет действительного базового каталога 
 msgid "Cannot Delete Directory"
 msgstr "Невозможно удалить каталог"
 
-#: app.py:1912
-msgid "Confirm Delete Directory"
-msgstr "Подтвердить удаление каталога"
-
 #: app.py:1908
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "Вы уверены, что хотите удалить каталог и все его содержимое?"
+
+#: app.py:1910
+msgid "Contents to be deleted:"
+msgstr "Содержание, подлежащее удалению:"
+
+#: app.py:1912
+msgid "Confirm Delete Directory"
+msgstr "Подтвердить удаление каталога"
 
 #: app.py:1946
 msgid "Delete Directory Error"
@@ -1315,6 +1319,10 @@ msgstr "{0} из {1} файлов в каталоге, упорядоченны�
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "Текст для поиска, переданный в file_browser.find(), был недопустимым."
 
+#: files/file_browser.py:471
+msgid "No files found"
+msgstr "Файлы не найдены"
+
 #: files/go_to_file.py:23
 msgid "Go To File"
 msgstr "Перейти к файлу"
@@ -1858,6 +1866,10 @@ msgstr "Случайно обрезанное изображение"
 #: image/image_details.py:349
 msgid "Randomly modified image"
 msgstr "Случайно измененное изображение"
+
+#: image/image_details.py:354
+msgid "No new image created"
+msgstr "Новое изображение не создано"
 
 #: image/image_details.py:359
 msgid "Flipped image"
@@ -2429,14 +2441,16 @@ msgstr "Исключение обратных косых символов в п�
 msgid " etc."
 msgstr " и т.д."
 
-#: app.py:1910
-msgid "Contents to be deleted:"
-msgstr "Содержание, подлежащее удалению:"
+#: app.py:371 utils/help_and_config.py:79
+msgid "Open media location"
+msgstr "Открыть местоположение мультимедиа"
 
-#: files/file_browser.py:471
-msgid "No files found"
-msgstr "Файлы не найдены"
+#: app.py:1765
+msgid "Opening media file: {0}"
+msgstr "Открытие медиафайла: {0}"
 
-#: image/image_details.py:354
-msgid "No new image created"
-msgstr "Новое изображение не создано"
+#: app.py:1768
+msgid "Failed to open current media file, unable to get valid filepath"
+msgstr ""
+"Не удалось открыть текущий медиафайл, невозможно получить действительный "
+"путь к файлу"

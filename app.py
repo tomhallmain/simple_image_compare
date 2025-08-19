@@ -365,10 +365,10 @@ class App():
         self.label_current_image_name = None
         self.rename_image_btn = None
         self.delete_image_btn = None
-        self.open_image_location_btn = None
+        self.open_media_location_btn = None
         self.copy_image_path_btn = None
         self.add_button("search_current_image_btn", _("Search current image"), self.set_current_image_run_search)
-        self.add_button("open_image_location_btn", _("Open image location"), self.open_image_location)
+        self.add_button("open_media_location_btn", _("Open media location"), self.open_media_location)
         self.add_button("copy_image_path_btn", _("Copy image path"), self.copy_image_path)
         self.add_button("delete_image_btn", _("---- DELETE ----"), self.delete_image)
 
@@ -385,7 +385,7 @@ class App():
         self.master.bind('<Shift-BackSpace>', lambda e: self.check_focus(e, self.go_to_previous_image))
         self.master.bind('<Shift-Left>', lambda event: self.compare_wrapper.show_prev_group(file_browser=(self.file_browser if self.mode == Mode.BROWSE else None)))
         self.master.bind('<Shift-Right>', lambda event: self.compare_wrapper.show_next_group(file_browser=(self.file_browser if self.mode == Mode.BROWSE else None)))
-        self.master.bind('<Shift-O>', lambda e: self.check_focus(e, self.open_image_location))
+        self.master.bind('<Shift-O>', lambda e: self.check_focus(e, self.open_media_location))
         self.master.bind('<Shift-P>', lambda e: self.check_focus(e, self.open_image_in_gimp))
         self.master.bind('<Shift-Delete>', lambda e: self.check_focus(e, self.delete_image))
         self.master.bind('<Control-Shift-Delete>', lambda e: self.check_focus(e, self.delete_current_base_dir))
@@ -1301,7 +1301,7 @@ class App():
         self.destroy_grid_element("prev_group_btn")
         self.destroy_grid_element("next_group_btn")
         # self.destroy_grid_element("search_current_image_btn")
-        # self.destroy_grid_element("open_image_location_btn")
+        # self.destroy_grid_element("open_media_location_btn")
         # self.destroy_grid_element("copy_image_path")
         # self.destroy_grid_element("delete_image_btn")
         for mode in self.has_added_buttons_for_mode.keys():
@@ -1758,14 +1758,15 @@ class App():
             filepath = self.compare_wrapper.current_match()
         return Utils.get_valid_file(self.get_base_dir(), filepath)
 
-    def open_image_location(self, event=None) -> None:
+    def open_media_location(self, event=None) -> None:
         filepath = self.get_active_media_filepath()
 
         if filepath is not None:
-            self.toast("Opening file location: " + filepath)
-            Utils.open_file_location(filepath)
+            is_video = self.media_canvas.pause_video_if_playing()
+            self.toast(_("Opening media file: {0}").format(filepath))
+            Utils.open_media_file(filepath, is_video=is_video)
         else:
-            self.handle_error(_("Failed to open location of current file, unable to get valid filepath"))
+            self.handle_error(_("Failed to open current media file, unable to get valid filepath"))
 
     def open_image_in_gimp(self, event=None) -> None:
         config.validate_and_find_gimp() # Validate GIMP installation on first use
