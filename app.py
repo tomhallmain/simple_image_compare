@@ -1827,7 +1827,7 @@ class App():
                 self.media_canvas.release_media()
                 self._handle_delete(filepath)
                 MarkedFiles.handle_file_removal(filepath)
-                self.file_browser.refresh(refresh_cursor=False, removed_files=[filepath], direction=self.direction)
+                self.file_browser.refresh(refresh_cursor=False, removed_files=[filepath], direction=self.direction, file_check=True)
                 self.last_chosen_direction_func()
             self.file_browser.checking_files = True
             return
