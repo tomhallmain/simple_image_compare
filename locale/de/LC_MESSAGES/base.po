@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-12 16:37-0400\n"
-"PO-Revision-Date: 2025-08-12 16:37-0400\n"
+"POT-Creation-Date: 2025-08-19 10:38-0400\n"
+"PO-Revision-Date: 2025-08-19 10:38-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: de Team <<EMAIL>>\n"
 "Language: de\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:98 app.py:943 app.py:2165
+#: app.py:98 app.py:943 app.py:2170
 msgid " Simple Image Compare "
 msgstr " Einfacher Bildvergleich "
 
@@ -129,7 +129,7 @@ msgid "Ended slideshows"
 msgstr "Beendete Diashows"
 
 #: app.py:678 app.py:1867 app.py:1874 app.py:1878 app.py:1882 app.py:1888
-#: app.py:2003
+#: app.py:2008
 msgid "Warning"
 msgstr "Warnung"
 
@@ -501,7 +501,7 @@ msgstr "Kein gültiges Basisverzeichnis zum Löschen"
 msgid "Cannot Delete Directory"
 msgstr "Verzeichnis kann nicht gelöscht werden"
 
-#: app.py:1907
+#: app.py:1912
 msgid "Confirm Delete Directory"
 msgstr "Löschen des Verzeichnisses bestätigen"
 
@@ -510,58 +510,58 @@ msgid "Are you sure you want to delete the directory and all contents?"
 msgstr ""
 "Sind Sie sicher, dass Sie das Verzeichnis und alle Inhalte löschen möchten?"
 
-#: app.py:1941
+#: app.py:1946
 msgid "Delete Directory Error"
 msgstr "Verzeichnislöschungsfehler"
 
-#: app.py:1943
+#: app.py:1948
 msgid "Directory {0} deleted."
 msgstr "Verzeichnis {0} gelöscht."
 
-#: app.py:1959
+#: app.py:1964
 msgid "Invalid target filepath for replacement: "
 msgstr "Ungültiger Zieldateipfad für Ersetzung: "
 
-#: app.py:1963
+#: app.py:1968
 msgid "Moved search image to "
 msgstr "Suchbild verschoben nach "
 
-#: app.py:2001
+#: app.py:2006
 msgid "Running image gen: "
 msgstr "Laufende Bilderzeugung: "
 
-#: app.py:2003
+#: app.py:2008
 msgid "Error running image generation:"
 msgstr "Fehler bei der Bilderzeugung:"
 
-#: app.py:2011
+#: app.py:2016
 msgid "Running refacdir"
 msgstr "Ausführen der refacdir-App"
 
-#: app.py:2016 auth/app_startup_auth.py:108 auth/password_dialog.py:247
+#: app.py:2021 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "Fehler"
 
-#: app.py:2103
+#: app.py:2108
 msgid "GROUP_DETAILS"
 msgstr ""
 "Gruppe {0} von {1}\n"
 "Größe: {2}"
 
-#: app.py:2107
+#: app.py:2112
 msgid "No image files found"
 msgstr "Keine Bilddateien gefunden"
 
-#: app.py:2109
+#: app.py:2114
 msgid "1 image file found"
 msgstr "1 Bilddatei gefunden"
 
-#: app.py:2110
+#: app.py:2115
 msgid "{0} image files found"
 msgstr "{0} Bilddateien gefunden"
 
-#: app.py:2112
+#: app.py:2117
 msgid "(filtered)"
 msgstr "(gefiltert)"
 
@@ -1169,8 +1169,8 @@ msgstr "Freigabe von Prävalidierungen"
 msgid "Set"
 msgstr "Einstellen"
 
-#: compare/prevalidations_window.py:713 files/file_actions_window.py:479
-#: files/file_actions_window.py:530
+#: compare/prevalidations_window.py:713 files/file_actions_window.py:483
+#: files/file_actions_window.py:534
 msgid "Modify"
 msgstr "Ändern"
 
@@ -1228,85 +1228,89 @@ msgstr "Favorit entfernt: "
 msgid "File Actions"
 msgstr "Datei-Aktionen"
 
-#: files/file_actions_window.py:292
+#: files/file_actions_window.py:296
 msgid "File Action History"
 msgstr "Datei Aktionsverlauf"
 
-#: files/file_actions_window.py:294
+#: files/file_actions_window.py:298
 msgid "Search Image"
 msgstr "Bild suchen"
 
-#: files/file_actions_window.py:296
+#: files/file_actions_window.py:300
 msgid "Clear History"
 msgstr "Geschichte löschen"
 
-#: files/file_actions_window.py:330
+#: files/file_actions_window.py:334
 msgid "Today's File Actions"
 msgstr "Dateiaktionen von heute"
 
-#: files/file_actions_window.py:330
+#: files/file_actions_window.py:334
 msgid "File Action Statistics"
 msgstr "Dateiaktionsstatistik"
 
-#: files/file_actions_window.py:337 files/file_actions_window.py:767
+#: files/file_actions_window.py:341 files/file_actions_window.py:771
 msgid "All Time"
 msgstr "Alle Zeiten"
 
-#: files/file_actions_window.py:337 files/file_actions_window.py:769
+#: files/file_actions_window.py:341 files/file_actions_window.py:773
 msgid "Today Only"
 msgstr "Nur heute"
 
-#: files/file_actions_window.py:344
+#: files/file_actions_window.py:348
 msgid "Target Directory"
 msgstr "Zielverzeichnis"
 
-#: files/file_actions_window.py:350 files/marked_file_mover.py:391
+#: files/file_actions_window.py:354 files/marked_file_mover.py:391
 msgid "Moved"
 msgstr "Verschiebt"
 
-#: files/file_actions_window.py:356 files/marked_file_mover.py:391
+#: files/file_actions_window.py:360 files/marked_file_mover.py:391
 msgid "Copied"
 msgstr "Kopiert"
 
-#: files/file_actions_window.py:362
+#: files/file_actions_window.py:366
 msgid "Total"
 msgstr "Gesamt"
 
-#: files/file_actions_window.py:413
+#: files/file_actions_window.py:417
 msgid "... and {0} more"
 msgstr "... und {0} weitere"
 
-#: files/file_actions_window.py:463
+#: files/file_actions_window.py:467
 msgid " ({0} files)"
 msgstr " ({0} Dateien)"
 
-#: files/file_actions_window.py:468 files/marked_file_mover.py:273
+#: files/file_actions_window.py:472 files/marked_file_mover.py:273
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "Bewegen"
 
-#: files/file_actions_window.py:468 files/marked_file_mover.py:280
+#: files/file_actions_window.py:472 files/marked_file_mover.py:280
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "Kopie"
 
-#: files/file_actions_window.py:471 files/file_actions_window.py:522
+#: files/file_actions_window.py:475 files/file_actions_window.py:526
 msgid "Undo"
 msgstr "Rückgängig"
 
-#: files/file_actions_window.py:506
+#: files/file_actions_window.py:510
 msgid "View"
 msgstr "Siehe"
 
-#: files/file_actions_window.py:547
+#: files/file_actions_window.py:518
+msgid "Copy Filename"
+msgstr "Name kopieren"
+
+#: files/file_actions_window.py:551
 msgid "Image does not exist: "
 msgstr "Das Bild existiert nicht: "
 
-#: files/file_actions_window.py:548 files/file_actions_window.py:559
+#: files/file_actions_window.py:552 files/file_actions_window.py:563
 msgid "File Action Error"
 msgstr "Datei Aktion Fehler"
 
-#: files/file_actions_window.py:558
+#: files/file_actions_window.py:562
 msgid "Images not found"
 msgstr "Bilder nicht gefunden"
 
@@ -1850,11 +1854,11 @@ msgstr "Kopierte Aufforderung"
 msgid "Copied prompt without BREAK"
 msgstr "Kopierte Aufforderung ohne \"BREAK\""
 
-#: image/image_details.py:310
+#: image/image_details.py:308
 msgid "Rotated image right"
 msgstr "Gedrehtes Bild rechts"
 
-#: image/image_details.py:310
+#: image/image_details.py:308
 msgid "Rotated image left"
 msgstr "Gedrehtes Bild links"
 
@@ -1862,67 +1866,67 @@ msgstr "Gedrehtes Bild links"
 msgid "Cropped image"
 msgstr "Bild beschnitten"
 
-#: image/image_details.py:321
+#: image/image_details.py:323
 msgid "No crops found"
 msgstr "Keine Bildausschnitte gefunden"
 
-#: image/image_details.py:328
+#: image/image_details.py:330
 msgid "Enhanced image"
 msgstr "Bild verbessert"
 
-#: image/image_details.py:333
+#: image/image_details.py:337
 msgid "Randomly cropped image"
 msgstr "Zufällig beschnittenes Bild"
 
-#: image/image_details.py:342
+#: image/image_details.py:349
 msgid "Randomly modified image"
 msgstr "Zufällig modifiziertes Bild"
 
-#: image/image_details.py:347
+#: image/image_details.py:359
 msgid "Flipped image"
 msgstr "Umgekehrtes Bild"
 
-#: image/image_details.py:353
+#: image/image_details.py:367
 msgid "Copied image without EXIF data"
 msgstr "Kopiertes Bild ohne EXIF-Daten"
 
-#: image/image_details.py:356
+#: image/image_details.py:372
 msgid "Error copying image without EXIF"
 msgstr "Fehler beim Kopieren des Bildes ohne EXIF"
 
-#: image/image_details.py:362
+#: image/image_details.py:378
 msgid "Converted image to JPG"
 msgstr "Bild wurde zu JPG konvertiert"
 
-#: image/image_details.py:365
+#: image/image_details.py:383
 msgid "Error converting image to JPG"
 msgstr "Fehler beim Konvertieren des Bildes zu JPG"
 
-#: image/image_details.py:370
+#: image/image_details.py:388
 msgid "No metadata found"
 msgstr "Keine Metadaten gefunden"
 
-#: image/image_details.py:384 image/image_details.py:442
+#: image/image_details.py:402 image/image_details.py:460
 msgid " (Exact Match Not Found)"
 msgstr " (Genaue Übereinstimmung nicht gefunden)"
 
-#: image/image_details.py:386 image/image_details.py:439
+#: image/image_details.py:404 image/image_details.py:457
 msgid "(No related image found)"
 msgstr "(Kein zugehöriges Bild gefunden)"
 
-#: image/image_details.py:503 image/image_details.py:510
+#: image/image_details.py:521 image/image_details.py:528
 msgid "%s downstream image(s) found."
 msgstr "{0} nachgeschaltete(s) Bild(er) gefunden."
 
-#: image/image_details.py:506
+#: image/image_details.py:524
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (zwischengespeicherte) nachgelagerte Bilder gefunden."
 
-#: image/image_details.py:512
+#: image/image_details.py:530
 msgid "No downstream related images found in"
 msgstr "Keine stromabwärts gerichteten Bilder im Verzeichnis gefunden:"
 
-#: image/image_details.py:572
+#: image/image_details.py:590
 msgid "Updated tags for %s"
 msgstr "Aktualisierte Tags für {0}"
 
@@ -2448,6 +2452,14 @@ msgstr "Escape Backslash-Dateipfade"
 msgid " etc."
 msgstr " usw."
 
-#: files/file_actions_window.py:514
-msgid "Copy Filename"
-msgstr "Name kopieren"
+#: app.py:1910
+msgid "Contents to be deleted:"
+msgstr "Zu löschende Inhalte:"
+
+#: files/file_browser.py:471
+msgid "No files found"
+msgstr "Keine Dateien gefunden"
+
+#: image/image_details.py:354
+msgid "No new image created"
+msgstr "Es wurde kein neues Bild erstellt"

@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-12 16:37-0400\n"
-"PO-Revision-Date: 2025-08-12 16:37-0400\n"
+"POT-Creation-Date: 2025-08-19 10:38-0400\n"
+"PO-Revision-Date: 2025-08-19 10:38-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:98 app.py:943 app.py:2165
+#: app.py:98 app.py:943 app.py:2170
 msgid " Simple Image Compare "
 msgstr " シンプルな画像比較 "
 
@@ -129,7 +129,7 @@ msgid "Ended slideshows"
 msgstr "終了したスライドショー"
 
 #: app.py:678 app.py:1867 app.py:1874 app.py:1878 app.py:1882 app.py:1888
-#: app.py:2003
+#: app.py:2008
 msgid "Warning"
 msgstr "警告"
 
@@ -472,7 +472,7 @@ msgstr "削除可能な有効なベースディレクトリがありません。
 msgid "Cannot Delete Directory"
 msgstr "ディレクトリを削除できません"
 
-#: app.py:1907
+#: app.py:1912
 msgid "Confirm Delete Directory"
 msgstr "ディレクトリの削除を確認してください"
 
@@ -480,58 +480,58 @@ msgstr "ディレクトリの削除を確認してください"
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "ディレクトリとすべてのコンテンツを削除してもよろしいですか？"
 
-#: app.py:1941
+#: app.py:1946
 msgid "Delete Directory Error"
 msgstr "ディレクトリ削除エラー"
 
-#: app.py:1943
+#: app.py:1948
 msgid "Directory {0} deleted."
 msgstr "ディレクトリ {0} が削除されました。"
 
-#: app.py:1959
+#: app.py:1964
 msgid "Invalid target filepath for replacement: "
 msgstr "置換対象のファイルパスが無効です： "
 
-#: app.py:1963
+#: app.py:1968
 msgid "Moved search image to "
 msgstr "検索画像を： "
 
-#: app.py:2001
+#: app.py:2006
 msgid "Running image gen: "
 msgstr "イメージ・ジェネレーションの実行： "
 
-#: app.py:2003
+#: app.py:2008
 msgid "Error running image generation:"
 msgstr "画像生成の実行エラー："
 
-#: app.py:2011
+#: app.py:2016
 msgid "Running refacdir"
 msgstr "ランニング refacdir"
 
-#: app.py:2016 auth/app_startup_auth.py:108 auth/password_dialog.py:247
+#: app.py:2021 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "エラー"
 
-#: app.py:2103
+#: app.py:2108
 msgid "GROUP_DETAILS"
 msgstr ""
 "グループ{0}/{1}\n"
 "サイズ：{2}"
 
-#: app.py:2107
+#: app.py:2112
 msgid "No image files found"
 msgstr "画像ファイルが見つかりません"
 
-#: app.py:2109
+#: app.py:2114
 msgid "1 image file found"
 msgstr "1 見つかった画像ファイル"
 
-#: app.py:2110
+#: app.py:2115
 msgid "{0} image files found"
 msgstr "{0} イメージファイルが見つかりました"
 
-#: app.py:2112
+#: app.py:2117
 msgid "(filtered)"
 msgstr "(フィルタリング)"
 
@@ -1107,8 +1107,8 @@ msgstr "プレバリデーションを有効にする"
 msgid "Set"
 msgstr "セット"
 
-#: compare/prevalidations_window.py:713 files/file_actions_window.py:479
-#: files/file_actions_window.py:530
+#: compare/prevalidations_window.py:713 files/file_actions_window.py:483
+#: files/file_actions_window.py:534
 msgid "Modify"
 msgstr "変更する"
 
@@ -1166,85 +1166,89 @@ msgstr "お気に入りを削除しました: "
 msgid "File Actions"
 msgstr "ファイル操作"
 
-#: files/file_actions_window.py:292
+#: files/file_actions_window.py:296
 msgid "File Action History"
 msgstr "ファイル操作履歴"
 
-#: files/file_actions_window.py:294
+#: files/file_actions_window.py:298
 msgid "Search Image"
 msgstr "画像検索"
 
-#: files/file_actions_window.py:296
+#: files/file_actions_window.py:300
 msgid "Clear History"
 msgstr "明確な歴史"
 
-#: files/file_actions_window.py:330
+#: files/file_actions_window.py:334
 msgid "Today's File Actions"
 msgstr "本日のファイル操作"
 
-#: files/file_actions_window.py:330
+#: files/file_actions_window.py:334
 msgid "File Action Statistics"
 msgstr "ファイル操作統計"
 
-#: files/file_actions_window.py:337 files/file_actions_window.py:767
+#: files/file_actions_window.py:341 files/file_actions_window.py:771
 msgid "All Time"
 msgstr "全時代"
 
-#: files/file_actions_window.py:337 files/file_actions_window.py:769
+#: files/file_actions_window.py:341 files/file_actions_window.py:773
 msgid "Today Only"
 msgstr "本日限定"
 
-#: files/file_actions_window.py:344
+#: files/file_actions_window.py:348
 msgid "Target Directory"
 msgstr "ターゲットディレクトリ"
 
-#: files/file_actions_window.py:350 files/marked_file_mover.py:391
+#: files/file_actions_window.py:354 files/marked_file_mover.py:391
 msgid "Moved"
 msgstr "移動する"
 
-#: files/file_actions_window.py:356 files/marked_file_mover.py:391
+#: files/file_actions_window.py:360 files/marked_file_mover.py:391
 msgid "Copied"
 msgstr "コピッド"
 
-#: files/file_actions_window.py:362
+#: files/file_actions_window.py:366
 msgid "Total"
 msgstr "合計"
 
-#: files/file_actions_window.py:413
+#: files/file_actions_window.py:417
 msgid "... and {0} more"
 msgstr "...および{0}件以上"
 
-#: files/file_actions_window.py:463
+#: files/file_actions_window.py:467
 msgid " ({0} files)"
 msgstr " ({0} ファイル)"
 
-#: files/file_actions_window.py:468 files/marked_file_mover.py:273
+#: files/file_actions_window.py:472 files/marked_file_mover.py:273
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "交通アクセス"
 
-#: files/file_actions_window.py:468 files/marked_file_mover.py:280
+#: files/file_actions_window.py:472 files/marked_file_mover.py:280
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "コピー"
 
-#: files/file_actions_window.py:471 files/file_actions_window.py:522
+#: files/file_actions_window.py:475 files/file_actions_window.py:526
 msgid "Undo"
 msgstr "ログイン"
 
-#: files/file_actions_window.py:506
+#: files/file_actions_window.py:510
 msgid "View"
 msgstr "ニュース"
 
-#: files/file_actions_window.py:547
+#: files/file_actions_window.py:518
+msgid "Copy Filename"
+msgstr "ファイル名コピー"
+
+#: files/file_actions_window.py:551
 msgid "Image does not exist: "
 msgstr "画像が存在しません。 "
 
-#: files/file_actions_window.py:548 files/file_actions_window.py:559
+#: files/file_actions_window.py:552 files/file_actions_window.py:563
 msgid "File Action Error"
 msgstr "ファイルアクションエラー"
 
-#: files/file_actions_window.py:558
+#: files/file_actions_window.py:562
 msgid "Images not found"
 msgstr "見つからない画像"
 
@@ -1776,11 +1780,11 @@ msgstr "Copiedのプロンプト"
 msgid "Copied prompt without BREAK"
 msgstr "BREAKなしでコピーされたプロンプト"
 
-#: image/image_details.py:310
+#: image/image_details.py:308
 msgid "Rotated image right"
 msgstr "右に回転した画像"
 
-#: image/image_details.py:310
+#: image/image_details.py:308
 msgid "Rotated image left"
 msgstr "左に回転した画像"
 
@@ -1788,67 +1792,67 @@ msgstr "左に回転した画像"
 msgid "Cropped image"
 msgstr "Croppedイメージ"
 
-#: image/image_details.py:321
+#: image/image_details.py:323
 msgid "No crops found"
 msgstr "作物が見つかりません"
 
-#: image/image_details.py:328
+#: image/image_details.py:330
 msgid "Enhanced image"
 msgstr "高められたイメージ"
 
-#: image/image_details.py:333
+#: image/image_details.py:337
 msgid "Randomly cropped image"
 msgstr "ランダムにクロップされた画像"
 
-#: image/image_details.py:342
+#: image/image_details.py:349
 msgid "Randomly modified image"
 msgstr "ランダムに修正された画像"
 
-#: image/image_details.py:347
+#: image/image_details.py:359
 msgid "Flipped image"
 msgstr "フリップイメージ"
 
-#: image/image_details.py:353
+#: image/image_details.py:367
 msgid "Copied image without EXIF data"
 msgstr "EXIFデータのないコピー画像"
 
-#: image/image_details.py:356
+#: image/image_details.py:372
 msgid "Error copying image without EXIF"
 msgstr "EXIFのない画像のコピーエラー"
 
-#: image/image_details.py:362
+#: image/image_details.py:378
 msgid "Converted image to JPG"
 msgstr "画像をJPGに変換"
 
-#: image/image_details.py:365
+#: image/image_details.py:383
 msgid "Error converting image to JPG"
 msgstr "画像をJPGに変換する際のエラー"
 
-#: image/image_details.py:370
+#: image/image_details.py:388
 msgid "No metadata found"
 msgstr "メタデータが見つかりません"
 
-#: image/image_details.py:384 image/image_details.py:442
+#: image/image_details.py:402 image/image_details.py:460
 msgid " (Exact Match Not Found)"
 msgstr " (正確なマッチが見つかりません)"
 
-#: image/image_details.py:386 image/image_details.py:439
+#: image/image_details.py:404 image/image_details.py:457
 msgid "(No related image found)"
 msgstr "(関連画像が見つかりません)"
 
-#: image/image_details.py:503 image/image_details.py:510
+#: image/image_details.py:521 image/image_details.py:528
 msgid "%s downstream image(s) found."
 msgstr "{0} 下流画像(s)が見つかります。"
 
-#: image/image_details.py:506
+#: image/image_details.py:524
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (キャッシュ済み) ダウンストリーム画像が見つかりました。"
 
-#: image/image_details.py:512
+#: image/image_details.py:530
 msgid "No downstream related images found in"
 msgstr "下流関連の画像が見つかりません"
 
-#: image/image_details.py:572
+#: image/image_details.py:590
 msgid "Updated tags for %s"
 msgstr "{0} のタグを更新"
 
@@ -2370,6 +2374,14 @@ msgstr "ファイルパスのバックスラッシュをエスケープする"
 msgid " etc."
 msgstr " その他"
 
-#: files/file_actions_window.py:514
-msgid "Copy Filename"
-msgstr "ファイル名コピー"
+#: app.py:1910
+msgid "Contents to be deleted:"
+msgstr "削除対象の内容："
+
+#: files/file_browser.py:471
+msgid "No files found"
+msgstr "ファイルが見つかりませんでした"
+
+#: image/image_details.py:354
+msgid "No new image created"
+msgstr "新しい画像が作成されませんでした"

@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-12 16:37-0400\n"
-"PO-Revision-Date: 2025-08-12 16:37-0400\n"
+"POT-Creation-Date: 2025-08-19 10:38-0400\n"
+"PO-Revision-Date: 2025-08-19 10:38-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
 "Language: ko\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:98 app.py:943 app.py:2165
+#: app.py:98 app.py:943 app.py:2170
 msgid " Simple Image Compare "
 msgstr " 간단한 이미지 비교 "
 
@@ -129,7 +129,7 @@ msgid "Ended slideshows"
 msgstr "슬라이드 쇼 종료"
 
 #: app.py:678 app.py:1867 app.py:1874 app.py:1878 app.py:1882 app.py:1888
-#: app.py:2003
+#: app.py:2008
 msgid "Warning"
 msgstr "경고"
 
@@ -478,7 +478,7 @@ msgstr "삭제할 유효한 기본 디렉토리가 없습니다."
 msgid "Cannot Delete Directory"
 msgstr "디렉토리를 삭제할 수 없습니다."
 
-#: app.py:1907
+#: app.py:1912
 msgid "Confirm Delete Directory"
 msgstr "디렉토리 삭제 확인"
 
@@ -486,58 +486,58 @@ msgstr "디렉토리 삭제 확인"
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "이 디렉토리와 모든 내용을 삭제하시겠습니까?"
 
-#: app.py:1941
+#: app.py:1946
 msgid "Delete Directory Error"
 msgstr "디렉토리 삭제 오류"
 
-#: app.py:1943
+#: app.py:1948
 msgid "Directory {0} deleted."
 msgstr "디렉토리 {0}이 삭제되었습니다."
 
-#: app.py:1959
+#: app.py:1964
 msgid "Invalid target filepath for replacement: "
 msgstr "교체할 대상 파일 경로가 잘못되었습니다: "
 
-#: app.py:1963
+#: app.py:1968
 msgid "Moved search image to "
 msgstr "로 검색 이미지를 이동했습니다: "
 
-#: app.py:2001
+#: app.py:2006
 msgid "Running image gen: "
 msgstr "이미지 생성 실행 : "
 
-#: app.py:2003
+#: app.py:2008
 msgid "Error running image generation:"
 msgstr "이미지 생성 실행 중 오류 발생:"
 
-#: app.py:2011
+#: app.py:2016
 msgid "Running refacdir"
 msgstr "refacdir 실행"
 
-#: app.py:2016 auth/app_startup_auth.py:108 auth/password_dialog.py:247
+#: app.py:2021 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "계정 정보"
 
-#: app.py:2103
+#: app.py:2108
 msgid "GROUP_DETAILS"
 msgstr ""
 "그룹 {0} 중 {1}\n"
 "크기: {2}"
 
-#: app.py:2107
+#: app.py:2112
 msgid "No image files found"
 msgstr "이미지 파일 없음"
 
-#: app.py:2109
+#: app.py:2114
 msgid "1 image file found"
 msgstr "1 이미지 파일"
 
-#: app.py:2110
+#: app.py:2115
 msgid "{0} image files found"
 msgstr "{0} 이미지 파일 찾았습니다"
 
-#: app.py:2112
+#: app.py:2117
 msgid "(filtered)"
 msgstr "(필터)"
 
@@ -1114,8 +1114,8 @@ msgstr "사전 유효성 검사 사용"
 msgid "Set"
 msgstr "설치하기"
 
-#: compare/prevalidations_window.py:713 files/file_actions_window.py:479
-#: files/file_actions_window.py:530
+#: compare/prevalidations_window.py:713 files/file_actions_window.py:483
+#: files/file_actions_window.py:534
 msgid "Modify"
 msgstr "수정하기"
 
@@ -1173,85 +1173,89 @@ msgstr "즐겨찾기에서 제거됨: "
 msgid "File Actions"
 msgstr "파일 작업"
 
-#: files/file_actions_window.py:292
+#: files/file_actions_window.py:296
 msgid "File Action History"
 msgstr "파일 작업 기록"
 
-#: files/file_actions_window.py:294
+#: files/file_actions_window.py:298
 msgid "Search Image"
 msgstr "이미지 검색"
 
-#: files/file_actions_window.py:296
+#: files/file_actions_window.py:300
 msgid "Clear History"
 msgstr "기록 지우기"
 
-#: files/file_actions_window.py:330
+#: files/file_actions_window.py:334
 msgid "Today's File Actions"
 msgstr "오늘의 파일 작업"
 
-#: files/file_actions_window.py:330
+#: files/file_actions_window.py:334
 msgid "File Action Statistics"
 msgstr "파일 작업 통계"
 
-#: files/file_actions_window.py:337 files/file_actions_window.py:767
+#: files/file_actions_window.py:341 files/file_actions_window.py:771
 msgid "All Time"
 msgstr "모든 시간"
 
-#: files/file_actions_window.py:337 files/file_actions_window.py:769
+#: files/file_actions_window.py:341 files/file_actions_window.py:773
 msgid "Today Only"
 msgstr "오늘만"
 
-#: files/file_actions_window.py:344
+#: files/file_actions_window.py:348
 msgid "Target Directory"
 msgstr "대상 디렉토리"
 
-#: files/file_actions_window.py:350 files/marked_file_mover.py:391
+#: files/file_actions_window.py:354 files/marked_file_mover.py:391
 msgid "Moved"
 msgstr "지원하다"
 
-#: files/file_actions_window.py:356 files/marked_file_mover.py:391
+#: files/file_actions_window.py:360 files/marked_file_mover.py:391
 msgid "Copied"
 msgstr "뚱 베어"
 
-#: files/file_actions_window.py:362
+#: files/file_actions_window.py:366
 msgid "Total"
 msgstr "총계"
 
-#: files/file_actions_window.py:413
+#: files/file_actions_window.py:417
 msgid "... and {0} more"
 msgstr "... 및 {0}개 더"
 
-#: files/file_actions_window.py:463
+#: files/file_actions_window.py:467
 msgid " ({0} files)"
 msgstr " ({0} 파일)"
 
-#: files/file_actions_window.py:468 files/marked_file_mover.py:273
+#: files/file_actions_window.py:472 files/marked_file_mover.py:273
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "이동"
 
-#: files/file_actions_window.py:468 files/marked_file_mover.py:280
+#: files/file_actions_window.py:472 files/marked_file_mover.py:280
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "복사"
 
-#: files/file_actions_window.py:471 files/file_actions_window.py:522
+#: files/file_actions_window.py:475 files/file_actions_window.py:526
 msgid "Undo"
 msgstr "실행 취소"
 
-#: files/file_actions_window.py:506
+#: files/file_actions_window.py:510
 msgid "View"
 msgstr "보기"
 
-#: files/file_actions_window.py:547
+#: files/file_actions_window.py:518
+msgid "Copy Filename"
+msgstr "파일 이름 복사"
+
+#: files/file_actions_window.py:551
 msgid "Image does not exist: "
 msgstr "이미지가 존재하지 않습니다: "
 
-#: files/file_actions_window.py:548 files/file_actions_window.py:559
+#: files/file_actions_window.py:552 files/file_actions_window.py:563
 msgid "File Action Error"
 msgstr "파일 작업 오류"
 
-#: files/file_actions_window.py:558
+#: files/file_actions_window.py:562
 msgid "Images not found"
 msgstr "이미지를 찾을 수 없습니다"
 
@@ -1783,11 +1787,11 @@ msgstr "비밀번호"
 msgid "Copied prompt without BREAK"
 msgstr "BREAK없이 복사 된 프롬프트"
 
-#: image/image_details.py:310
+#: image/image_details.py:308
 msgid "Rotated image right"
 msgstr "연락처"
 
-#: image/image_details.py:310
+#: image/image_details.py:308
 msgid "Rotated image left"
 msgstr "왼쪽된 이미지"
 
@@ -1795,67 +1799,67 @@ msgstr "왼쪽된 이미지"
 msgid "Cropped image"
 msgstr "Cropped 이미지"
 
-#: image/image_details.py:321
+#: image/image_details.py:323
 msgid "No crops found"
 msgstr "발견되지 않은 작물"
 
-#: image/image_details.py:328
+#: image/image_details.py:330
 msgid "Enhanced image"
 msgstr "향상된 이미지"
 
-#: image/image_details.py:333
+#: image/image_details.py:337
 msgid "Randomly cropped image"
 msgstr "무작위 이미지"
 
-#: image/image_details.py:342
+#: image/image_details.py:349
 msgid "Randomly modified image"
 msgstr "무작위 이미지"
 
-#: image/image_details.py:347
+#: image/image_details.py:359
 msgid "Flipped image"
 msgstr "좋은 이미지"
 
-#: image/image_details.py:353
+#: image/image_details.py:367
 msgid "Copied image without EXIF data"
 msgstr "EXIF 데이터 없이 복사된 이미지"
 
-#: image/image_details.py:356
+#: image/image_details.py:372
 msgid "Error copying image without EXIF"
 msgstr "EXIF가 없는 이미지 복사 오류"
 
-#: image/image_details.py:362
+#: image/image_details.py:378
 msgid "Converted image to JPG"
 msgstr "이미지를 JPG로 변환"
 
-#: image/image_details.py:365
+#: image/image_details.py:383
 msgid "Error converting image to JPG"
 msgstr "이미지를 JPG로 변환하는 중 오류 발생"
 
-#: image/image_details.py:370
+#: image/image_details.py:388
 msgid "No metadata found"
 msgstr "메타데이터 없음"
 
-#: image/image_details.py:384 image/image_details.py:442
+#: image/image_details.py:402 image/image_details.py:460
 msgid " (Exact Match Not Found)"
 msgstr " (Exact Match 찾을 수 없음)"
 
-#: image/image_details.py:386 image/image_details.py:439
+#: image/image_details.py:404 image/image_details.py:457
 msgid "(No related image found)"
 msgstr "(찾은 관련 이미지 없음)"
 
-#: image/image_details.py:503 image/image_details.py:510
+#: image/image_details.py:521 image/image_details.py:528
 msgid "%s downstream image(s) found."
 msgstr "{0} 다운스트림 이미지(s)가 있습니다."
 
-#: image/image_details.py:506
+#: image/image_details.py:524
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (예정) 다운스트림 이미지(s) 발견."
 
-#: image/image_details.py:512
+#: image/image_details.py:530
 msgid "No downstream related images found in"
 msgstr "downstream 관련 이미지가 없습니다."
 
-#: image/image_details.py:572
+#: image/image_details.py:590
 msgid "Updated tags for %s"
 msgstr "{0}에 대한 업데이트 된 태그"
 
@@ -2377,6 +2381,14 @@ msgstr "파일 경로의 백슬래시 이스케이프"
 msgid " etc."
 msgstr " 등"
 
-#: files/file_actions_window.py:514
-msgid "Copy Filename"
-msgstr "파일 이름 복사"
+#: app.py:1910
+msgid "Contents to be deleted:"
+msgstr "삭제할 내용:"
+
+#: files/file_browser.py:471
+msgid "No files found"
+msgstr "파일が見つかりません"
+
+#: image/image_details.py:354
+msgid "No new image created"
+msgstr "새로운 이미지가 생성되지 않았습니다"

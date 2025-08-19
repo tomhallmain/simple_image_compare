@@ -406,3 +406,92 @@ class FileBrowser:
                                         files.append(entry.path)
                     except PermissionError:
                         logger.warning(f"Permission denied: {current_dir}")
+
+    def count_files_by_type_in_directory(self, recursive: bool = True) -> dict:
+        """
+        Count ALL files by type in a specified directory, including unsupported file types.
+        This is used for delete confirmation to show users exactly what they're deleting.
+        
+        Args:
+            directory_path: Path to the directory to scan
+            recursive: Whether to scan subdirectories recursively
+            
+        Returns:
+            Dictionary mapping file extensions to counts, plus 'total' and 'subdirectories' keys
+        """
+        if not os.path.exists(self.directory) or not os.path.isdir(self.directory):
+            return {}
+            
+        file_counts = {}
+        total_count = 0
+        subdirectory_count = 0
+        
+        try:
+            with Utils.file_operation_lock:
+                to_scan = [self.directory]
+                while to_scan:
+                    current_dir = to_scan.pop()
+                    try:
+                        with os.scandir(current_dir) as it:
+                            for entry in it:
+                                if entry.is_dir(follow_symlinks=False) and recursive:
+                                    to_scan.append(entry.path)
+                                    subdirectory_count += 1
+                                elif entry.is_file(follow_symlinks=False):
+                                    ext = os.path.splitext(entry.name)[1].lower()
+                                    if ext == "":  # Files with no extension
+                                        ext = "(no extension)"
+                                    file_counts[ext] = file_counts.get(ext, 0) + 1
+                                    total_count += 1
+                    except PermissionError:
+                        logger.warning(f"Permission denied: {current_dir}")
+        except Exception as e:
+            logger.error(f"Error counting files in directory {self.directory}: {e}")
+            return {}
+            
+        file_counts['__total'] = total_count
+        file_counts['__subdirectories'] = subdirectory_count
+        return file_counts
+
+    def get_file_type_summary_for_directory(self, recursive: bool = True) -> str:
+        """
+        Get a human-readable summary of ALL file types in a directory.
+        This shows users exactly what they're about to delete.
+        
+        Args:
+            directory_path: Path to the directory to scan
+            recursive: Whether to scan subdirectories recursively
+            
+        Returns:
+            Formatted string showing file type counts and subdirectory count
+        """
+        file_counts = self.count_files_by_type_in_directory(recursive)
+        
+        if not file_counts or file_counts.get('__total', 0) == 0:
+            return _("No files found")
+
+        total = file_counts.pop('__total', 0)
+        subdirectories = file_counts.pop('__subdirectories', 0)
+        
+        # Sort by count (descending) and then by extension
+        sorted_counts = sorted(file_counts.items(), key=lambda x: (-x[1], x[0]))
+        
+        # Build the summary string
+        summary_parts = []
+        for ext, count in sorted_counts:
+            if count == 1:
+                summary_parts.append(f"{ext}: {count} file")
+            else:
+                summary_parts.append(f"{ext}: {count} files")
+                
+        summary = "\n".join(summary_parts)
+        # Add totals
+        if subdirectories > 0:
+            if subdirectories == 1:
+                summary += f"\n\n{_('Subdirectories')}: {subdirectories}"
+            else:
+                summary += f"\n\n{_('Subdirectories')}: {subdirectories}"
+        
+        summary += f"\n{_('Total files')}: {total}"
+        
+        return summary

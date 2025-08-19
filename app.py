@@ -1904,8 +1904,13 @@ class App():
             self.alert(_("Cannot Delete Directory"), str(e), kind="warning")
             return
         
+        file_summary = self.file_browser.get_file_type_summary_for_directory(recursive=True)
+        alert_message = (_("Are you sure you want to delete the directory and all contents?") + 
+                        "\n\n" + str(base_dir) + "\n\n" + 
+                        _("Contents to be deleted:") + "\n" + file_summary)
+        
         res = self.alert(_("Confirm Delete Directory"),
-                         _("Are you sure you want to delete the directory and all contents?") + "\n\n" + str(base_dir),
+                         alert_message,
                          kind="askokcancel", severity="high")
         if res != messagebox.OK and res != True:
             return

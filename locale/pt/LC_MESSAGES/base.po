@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-08-12 16:37-0400\n"
-"PO-Revision-Date: 2025-08-12 16:37-0400\n"
+"POT-Creation-Date: 2025-08-19 10:38-0400\n"
+"PO-Revision-Date: 2025-08-19 10:38-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: pt Team <<EMAIL>>\n"
 "Language: pt\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:98 app.py:943 app.py:2165
+#: app.py:98 app.py:943 app.py:2170
 msgid " Simple Image Compare "
 msgstr " Comparação simples de imagens "
 
@@ -129,7 +129,7 @@ msgid "Ended slideshows"
 msgstr "Apresentações de diapositivos terminadas"
 
 #: app.py:678 app.py:1867 app.py:1874 app.py:1878 app.py:1882 app.py:1888
-#: app.py:2003
+#: app.py:2008
 msgid "Warning"
 msgstr "Atenção"
 
@@ -497,7 +497,7 @@ msgstr "Não há diretório base válido para excluir"
 msgid "Cannot Delete Directory"
 msgstr "Não é possível eliminar o diretório"
 
-#: app.py:1907
+#: app.py:1912
 msgid "Confirm Delete Directory"
 msgstr "Confirmar eliminação do diretório"
 
@@ -506,58 +506,58 @@ msgid "Are you sure you want to delete the directory and all contents?"
 msgstr ""
 "Tem a certeza de que deseja eliminar o diretório e todo o seu conteúdo?"
 
-#: app.py:1941
+#: app.py:1946
 msgid "Delete Directory Error"
 msgstr "Erro ao eliminar diretório"
 
-#: app.py:1943
+#: app.py:1948
 msgid "Directory {0} deleted."
 msgstr "Diretório {0} eliminado."
 
-#: app.py:1959
+#: app.py:1964
 msgid "Invalid target filepath for replacement: "
 msgstr "Caminho de ficheiro de destino inválido para substituição: "
 
-#: app.py:1963
+#: app.py:1968
 msgid "Moved search image to "
 msgstr "Mover a imagem de pesquisa para "
 
-#: app.py:2001
+#: app.py:2006
 msgid "Running image gen: "
 msgstr "Geração da imagem em execução: "
 
-#: app.py:2003
+#: app.py:2008
 msgid "Error running image generation:"
 msgstr "Erro ao executar a geração de imagens:"
 
-#: app.py:2011
+#: app.py:2016
 msgid "Running refacdir"
 msgstr "A executar o refacdir"
 
-#: app.py:2016 auth/app_startup_auth.py:108 auth/password_dialog.py:247
+#: app.py:2021 auth/app_startup_auth.py:108 auth/password_dialog.py:247
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "Erro"
 
-#: app.py:2103
+#: app.py:2108
 msgid "GROUP_DETAILS"
 msgstr ""
 "Grupo {0} de {1}\n"
 "Tamanho: {2}"
 
-#: app.py:2107
+#: app.py:2112
 msgid "No image files found"
 msgstr "Nenhum ficheiro de imagem encontrado"
 
-#: app.py:2109
+#: app.py:2114
 msgid "1 image file found"
 msgstr "1 ficheiro de imagem encontrado"
 
-#: app.py:2110
+#: app.py:2115
 msgid "{0} image files found"
 msgstr "{0} ficheiros de imagem encontrados"
 
-#: app.py:2112
+#: app.py:2117
 msgid "(filtered)"
 msgstr "(filtrado)"
 
@@ -1162,8 +1162,8 @@ msgstr "Ativar as pré-validações"
 msgid "Set"
 msgstr "Definir"
 
-#: compare/prevalidations_window.py:713 files/file_actions_window.py:479
-#: files/file_actions_window.py:530
+#: compare/prevalidations_window.py:713 files/file_actions_window.py:483
+#: files/file_actions_window.py:534
 msgid "Modify"
 msgstr "Modificar"
 
@@ -1221,85 +1221,89 @@ msgstr "Favorito removido: "
 msgid "File Actions"
 msgstr "Acções do Ficheiro"
 
-#: files/file_actions_window.py:292
+#: files/file_actions_window.py:296
 msgid "File Action History"
 msgstr "Histórico de Ação de Arquivo"
 
-#: files/file_actions_window.py:294
+#: files/file_actions_window.py:298
 msgid "Search Image"
 msgstr "Procurar imagem"
 
-#: files/file_actions_window.py:296
+#: files/file_actions_window.py:300
 msgid "Clear History"
 msgstr "Limpar o Histórico"
 
-#: files/file_actions_window.py:330
+#: files/file_actions_window.py:334
 msgid "Today's File Actions"
 msgstr "Ações do ficheiro de hoje"
 
-#: files/file_actions_window.py:330
+#: files/file_actions_window.py:334
 msgid "File Action Statistics"
 msgstr "Estatísticas de ações de ficheiros"
 
-#: files/file_actions_window.py:337 files/file_actions_window.py:767
+#: files/file_actions_window.py:341 files/file_actions_window.py:771
 msgid "All Time"
 msgstr "De todos os tempos"
 
-#: files/file_actions_window.py:337 files/file_actions_window.py:769
+#: files/file_actions_window.py:341 files/file_actions_window.py:773
 msgid "Today Only"
 msgstr "Apenas hoje"
 
-#: files/file_actions_window.py:344
+#: files/file_actions_window.py:348
 msgid "Target Directory"
 msgstr "Diretório de destino"
 
-#: files/file_actions_window.py:350 files/marked_file_mover.py:391
+#: files/file_actions_window.py:354 files/marked_file_mover.py:391
 msgid "Moved"
 msgstr "Movido"
 
-#: files/file_actions_window.py:356 files/marked_file_mover.py:391
+#: files/file_actions_window.py:360 files/marked_file_mover.py:391
 msgid "Copied"
 msgstr "Copiado"
 
-#: files/file_actions_window.py:362
+#: files/file_actions_window.py:366
 msgid "Total"
 msgstr "Total"
 
-#: files/file_actions_window.py:413
+#: files/file_actions_window.py:417
 msgid "... and {0} more"
 msgstr "... e {0} mais"
 
-#: files/file_actions_window.py:463
+#: files/file_actions_window.py:467
 msgid " ({0} files)"
 msgstr " ({0} ficheiros)"
 
-#: files/file_actions_window.py:468 files/marked_file_mover.py:273
+#: files/file_actions_window.py:472 files/marked_file_mover.py:273
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "Mover"
 
-#: files/file_actions_window.py:468 files/marked_file_mover.py:280
+#: files/file_actions_window.py:472 files/marked_file_mover.py:280
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "Copiar"
 
-#: files/file_actions_window.py:471 files/file_actions_window.py:522
+#: files/file_actions_window.py:475 files/file_actions_window.py:526
 msgid "Undo"
 msgstr "Desfazer"
 
-#: files/file_actions_window.py:506
+#: files/file_actions_window.py:510
 msgid "View"
 msgstr "Ver"
 
-#: files/file_actions_window.py:547
+#: files/file_actions_window.py:518
+msgid "Copy Filename"
+msgstr "Copiar nome"
+
+#: files/file_actions_window.py:551
 msgid "Image does not exist: "
 msgstr "A imagem não existe: "
 
-#: files/file_actions_window.py:548 files/file_actions_window.py:559
+#: files/file_actions_window.py:552 files/file_actions_window.py:563
 msgid "File Action Error"
 msgstr "Erro na Acção do Ficheiro"
 
-#: files/file_actions_window.py:558
+#: files/file_actions_window.py:562
 msgid "Images not found"
 msgstr "Imagens não encontradas"
 
@@ -1839,11 +1843,11 @@ msgstr "Prompt copiada"
 msgid "Copied prompt without BREAK"
 msgstr "Copiou o prompt sem “BREAK”"
 
-#: image/image_details.py:310
+#: image/image_details.py:308
 msgid "Rotated image right"
 msgstr "Imagem rotacionada à direita"
 
-#: image/image_details.py:310
+#: image/image_details.py:308
 msgid "Rotated image left"
 msgstr "Imagem rotacionada à esquerda"
 
@@ -1851,67 +1855,67 @@ msgstr "Imagem rotacionada à esquerda"
 msgid "Cropped image"
 msgstr "Imagem recortada"
 
-#: image/image_details.py:321
+#: image/image_details.py:323
 msgid "No crops found"
 msgstr "Não foram encontradas recortas"
 
-#: image/image_details.py:328
+#: image/image_details.py:330
 msgid "Enhanced image"
 msgstr "Imagem melhorada"
 
-#: image/image_details.py:333
+#: image/image_details.py:337
 msgid "Randomly cropped image"
 msgstr "Imagem recortada aleatoriamente"
 
-#: image/image_details.py:342
+#: image/image_details.py:349
 msgid "Randomly modified image"
 msgstr "Imagem modificada aleatoriamente"
 
-#: image/image_details.py:347
+#: image/image_details.py:359
 msgid "Flipped image"
 msgstr "Imagem virada"
 
-#: image/image_details.py:353
+#: image/image_details.py:367
 msgid "Copied image without EXIF data"
 msgstr "Imagem copiada sem dados EXIF"
 
-#: image/image_details.py:356
+#: image/image_details.py:372
 msgid "Error copying image without EXIF"
 msgstr "Erro ao copiar imagem sem EXIF"
 
-#: image/image_details.py:362
+#: image/image_details.py:378
 msgid "Converted image to JPG"
 msgstr "Imagem convertida em JPG"
 
-#: image/image_details.py:365
+#: image/image_details.py:383
 msgid "Error converting image to JPG"
 msgstr "Erro ao converter a imagem em JPG"
 
-#: image/image_details.py:370
+#: image/image_details.py:388
 msgid "No metadata found"
 msgstr "Não foram encontrados metadados"
 
-#: image/image_details.py:384 image/image_details.py:442
+#: image/image_details.py:402 image/image_details.py:460
 msgid " (Exact Match Not Found)"
 msgstr " (Correspondência exacta não encontrada)"
 
-#: image/image_details.py:386 image/image_details.py:439
+#: image/image_details.py:404 image/image_details.py:457
 msgid "(No related image found)"
 msgstr "(Nenhuma imagem relacionada encontrada)"
 
-#: image/image_details.py:503 image/image_details.py:510
+#: image/image_details.py:521 image/image_details.py:528
 msgid "%s downstream image(s) found."
 msgstr "{0} imagem(ns) a jusante encontrada(s)."
 
-#: image/image_details.py:506
+#: image/image_details.py:524
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (em cache) imagem(ns) a jusante encontrada(s)."
 
-#: image/image_details.py:512
+#: image/image_details.py:530
 msgid "No downstream related images found in"
 msgstr "Não foram encontradas imagens relacionadas com o downstream em"
 
-#: image/image_details.py:572
+#: image/image_details.py:590
 msgid "Updated tags for %s"
 msgstr "Etiquetas actualizadas para {0}"
 
@@ -2439,6 +2443,14 @@ msgstr "Escape as barras invertidas nos caminhos dos ficheiros"
 msgid " etc."
 msgstr " etc."
 
-#: files/file_actions_window.py:514
-msgid "Copy Filename"
-msgstr "Copiar nome"
+#: app.py:1910
+msgid "Contents to be deleted:"
+msgstr "Conteúdo a ser eliminado:"
+
+#: files/file_browser.py:471
+msgid "No files found"
+msgstr "Não foram encontrados ficheiros"
+
+#: image/image_details.py:354
+msgid "No new image created"
+msgstr "Nenhuma nova imagem criada"
