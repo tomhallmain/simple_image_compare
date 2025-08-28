@@ -122,7 +122,7 @@ class App():
                     (base_dir is not None and window.base_dir == base_dir) or \
                     (img_path is not None and window.img_path == img_path):
                 if img_path is not None:
-                    window.go_to_file(search_text=os.path.basename(img_path), exact_match=True)
+                    window.go_to_file(search_text=os.path.basename(img_path))
                 if refocus:
                     window.refocus()
                 if disallow_if_compare_state and window.mode != Mode.BROWSE:
@@ -1446,7 +1446,7 @@ class App():
             if len(MarkedFiles.file_marks) == 1:
                 self.toast(_("Only one marked file set."))
         else:
-            self.go_to_file(search_text=os.path.basename(marked_file), exact_match=True)
+            self.go_to_file(search_text=os.path.basename(marked_file))
 
     def copy_marks_list(self, event=None) -> None:
         self.master.clipboard_clear()
@@ -1572,18 +1572,14 @@ class App():
         except Exception as e:
             self.handle_error(str(e), title="Go To File Window Error")
 
-    def go_to_file(self, event=None, search_text: str = "", retry_with_delay: int = 0, exact_match: bool = False) -> bool:
+    def go_to_file(self, event=None, search_text: str = "", retry_with_delay: int = 0, exact_match: bool = True) -> bool:
         # This may be a full file path, so get basename first
         original_search_text = search_text
+        resolved_path = Utils.get_valid_file(self.get_base_dir(), original_search_text)
+        original_search_text_is_file = resolved_path and os.path.isfile(resolved_path)
+        exact_match = exact_match or original_search_text_is_file
         if not exact_match:
-            if search_text and ("\\" in search_text or "/" in search_text) and os.path.isfile(search_text):
-                resolved_path = Utils.get_valid_file(self.get_base_dir(), search_text)
-                if resolved_path and os.path.isfile(resolved_path):
-                    # It's an absolute path to a file
-                    ImageDetails.open_temp_image_canvas(master=self.master, image_path=resolved_path, app_actions=self.app_actions, skip_get_window_check=True)
-                    return True
-            else:
-                search_text = os.path.basename(search_text)
+            search_text = os.path.basename(search_text)
         # First try to find the file in the current window
         if self.mode == Mode.BROWSE:
             self.file_browser.refresh()
@@ -1599,13 +1595,6 @@ class App():
             if group_indexes:
                 self.compare_wrapper.current_group_index = group_indexes[0]
                 self.compare_wrapper.set_current_group(start_match_index=group_indexes[1])
-                return True
-            # If not found in comparison results, search the full directory
-            self.file_browser.refresh()
-            image_path = self.file_browser.find(
-                search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match)
-            if image_path: # If found outside comparison results, use temp canvas to avoid disrupting compare state
-                ImageDetails.open_temp_image_canvas(master=self.master, image_path=image_path, app_actions=self.app_actions, skip_get_window_check=True)
                 return True
         
         # If file not found in current window, search in other open windows
@@ -1640,19 +1629,17 @@ class App():
         
         # If file not found in any open window, check if it's a valid filepath
         # and if so, open a new window with that file's directory
-        resolved_path = Utils.get_valid_file(self.get_base_dir(), original_search_text)
-        if resolved_path and os.path.isfile(resolved_path):
-            # It's an absolute path to a file
-            ImageDetails.open_temp_image_canvas(master=self.master, image_path=resolved_path, app_actions=self.app_actions, skip_get_window_check=True)
+        if original_search_text_is_file:
+            ImageDetails.open_temp_image_canvas(master=self.master, image_path=original_search_text, app_actions=self.app_actions, skip_get_window_check=True)
             return True
-        
+
         # File not found anywhere
         self.alert(_("File not found"), _("No file was found for the search text: \"{0}\"").format(search_text))
         return False
 
     def go_to_previous_image(self, event=None) -> None:
         if self.prev_img_path is not None:
-            self.go_to_file(event=event, search_text=self.prev_img_path, exact_match=True)
+            self.go_to_file(event=event, search_text=self.prev_img_path)
 
     def open_secondary_compare_window(self, event=None, run_compare_image: Optional[str] = None) -> None:
         if run_compare_image is None:

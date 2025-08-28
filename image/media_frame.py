@@ -229,11 +229,11 @@ class MediaFrame(Frame):
         with warnings.catch_warnings():  # suppress DecompressionBombWarning
             warnings.simplefilter('ignore')
             try:
-                self.__image = Image.open(self.path)  # open image, but down't load it
+                self.__image = Image.open(self.path)  # open image, but don't load it
             except Exception as e:
                 if "truncated" in str(e):
                     time.sleep(0.25) # If the image was just created in the directory, it's possible it's still being filled with data
-                    self.__image = Image.open(self.path)  # open image, but down't load it
+                    self.__image = Image.open(self.path)  # open image, but don't load it
                 else:
                     raise e
         self.imwidth, self.imheight = self.__image.size  # public for outer classes

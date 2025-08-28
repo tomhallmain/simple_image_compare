@@ -52,7 +52,7 @@ class GoToFile:
             self.app_actions.toast(_("Invalid search string, please enter some text."))
             return
         GoToFile.last_search_text = search_text
-        self.app_actions.go_to_file(search_text=search_text)
+        self.app_actions.go_to_file(search_text=search_text, exact_match=False)
         self.close_windows()
 
     def pick_file(self, event=None):

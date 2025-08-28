@@ -96,8 +96,8 @@ class ImageDataExtractor:
                 prompt = json.loads(info[ImageDataExtractor.COMFYUI_PROMPT_KEY])
                 return prompt, SoftwareType.COMFYUI
             else:
-                logger.debug(info.keys())
-                logger.debug("Unhandled exif data: " + image_path)
+                # logger.debug(info.keys())
+                # logger.debug("Unhandled exif data: " + image_path)
                 pass
         else:
             logger.warning("Exif data not found: " + image_path)
@@ -310,7 +310,9 @@ class ImageDataExtractor:
         models = []
         loras = []
         try:
-            models, loras = self.get_models(image_path)
+            if positive is not None:
+                # This is probably a generated image, so we can get the models from the prompt.
+                models, loras = self.get_models(image_path)
         except Exception as e:
             pass
 
