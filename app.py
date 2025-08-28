@@ -13,7 +13,7 @@ from tkinter.ttk import Button, Entry, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
 
 from auth.password_admin_window import PasswordAdminWindow
-from auth.password_utils import require_password
+from auth.password_utils import require_password, check_session_expired
 from compare.compare_args import CompareArgs
 from compare.compare_wrapper import CompareWrapper
 from compare.prevalidations_window import PrevalidationsWindow
@@ -789,6 +789,12 @@ class App():
 
     @require_password(ProtectedActions.VIEW_MEDIA_DETAILS)
     def get_media_details(self, event=None, media_path: Optional[str] = None, manually_keyed: bool = True) -> None:
+        # Check if existing image details window should be closed due to expired session
+        if self.app_actions.image_details_window() is not None:
+            if check_session_expired(ProtectedActions.VIEW_MEDIA_DETAILS): # should never be True if we just entered the password
+                self.app_actions.image_details_window().close_windows()
+                self.app_actions.set_image_details_window(None)
+        
         preset_image_path = True
         if media_path is None:
             media_path = self.img_path
@@ -2158,6 +2164,9 @@ class App():
 
 if __name__ == "__main__":
     try:
+        # Single instance check - prevent multiple instances from running
+        lock_file, cleanup_lock = Utils.check_single_instance("Simple Image Compare")
+        
         I18N.install_locale(config.locale, verbose=config.print_settings)
 
         def create_root() -> ThemedTk:
@@ -2179,6 +2188,7 @@ if __name__ == "__main__":
             logger.info("Caught signal, shutting down gracefully...")
             if app is not None:
                 app.on_closing()
+            cleanup_lock()  # Clean up lock file or mutex
             os._exit(0)
 
         # Register the signal handlers for graceful shutdown
@@ -2201,12 +2211,15 @@ if __name__ == "__main__":
                 try:
                     root.mainloop()
                 except KeyboardInterrupt:
+                    cleanup_lock()  # Clean up lock file or mutex
                     pass
                 except Exception:
+                    cleanup_lock()  # Clean up lock file or mutex
                     traceback.print_exc()
             else:
                 # User cancelled the password dialog, exit
                 logger.info("User cancelled password dialog, exiting application")
+                cleanup_lock()  # Clean up lock file or mutex
                 # Force exit to ensure all processes are terminated
                 os._exit(0)
         
@@ -2216,4 +2229,5 @@ if __name__ == "__main__":
         from auth.app_startup_auth import check_startup_password_required
         check_startup_password_required(startup_callback)
     except KeyboardInterrupt:
+        cleanup_lock()  # Clean up lock file or mutex
         pass
