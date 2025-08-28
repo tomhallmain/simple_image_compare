@@ -228,6 +228,7 @@ class App():
             "open_password_admin_window": self.open_password_admin_window,
             "release_media_canvas": lambda: self.media_canvas.release_media(),
             "hide_current_media": self.hide_current_media,
+            "copy_media_path": self.copy_media_path,
             "store_info_cache": self.store_info_cache,
             "_set_toggled_view_matches": self._set_toggled_view_matches,
             "_set_label_state": self._set_label_state,
@@ -369,7 +370,7 @@ class App():
         self.copy_image_path_btn = None
         self.add_button("search_current_image_btn", _("Search current image"), self.set_current_image_run_search)
         self.add_button("open_media_location_btn", _("Open media location"), self.open_media_location)
-        self.add_button("copy_image_path_btn", _("Copy image path"), self.copy_image_path)
+        self.add_button("copy_image_path_btn", _("Copy image path"), self.copy_media_path)
         self.add_button("delete_image_btn", _("---- DELETE ----"), self.delete_image)
 
         # Image panel and state management
@@ -1783,8 +1784,9 @@ class App():
         else:
             self.handle_error(_("Failed to open current file in GIMP, unable to get valid filepath"))
 
-    def copy_image_path(self) -> None:
-        filepath = self.get_active_media_filepath()
+    def copy_media_path(self, filepath: Optional[str] = None) -> None:
+        if filepath is None:
+            filepath = self.get_active_media_filepath()
         if sys.platform == 'win32':
             filepath = os.path.normpath(filepath)
             if config.escape_backslash_filepaths:

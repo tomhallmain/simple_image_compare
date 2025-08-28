@@ -467,7 +467,7 @@ class MarkedFiles():
                     if error_msg.startswith("File already exists"):
                         if Utils.calculate_hash(marked_file) == Utils.calculate_hash(target_filepath):
                             matching_files = True
-                            logger.info(f"File hashes match: {marked_file} <> {exc_tuple[1]}")
+                            logger.info(f"File hashes match: {marked_file} <> {target_filepath}")
                             if is_moving and marked_file != target_filepath:
                                 # The other effect of this operation would have been to remove the
                                 # file from source, so try to do that
@@ -482,7 +482,15 @@ class MarkedFiles():
                                     app_actions.title_notify(error_text)
                         elif len(os.path.basename(marked_file)) < 13 and not names_are_short:
                             names_are_short = True
-                        some_files_already_present = True
+                        if not some_files_already_present:
+                            some_files_already_present = True
+                            # Copy first file path to clipboard if no matching files
+                            if not matching_files:
+                                try:
+                                    app_actions.copy_media_path(target_filepath)
+                                    logger.info(f"Copied first target file path to clipboard: {target_filepath}")
+                                except Exception as e:
+                                    logger.warning(f"Failed to copy file path to clipboard: {e}")
             if some_files_already_present:
                 if config.clear_marks_with_errors_after_move and not single_image:
                     logger.info("Cleared invalid marks by config option")
