@@ -465,6 +465,8 @@ class FileActionsWindow:
                 action_text = Utils.get_relative_dirpath(action.target, levels=2)
                 if len(action.new_files) > 1:
                     action_text += _(" ({0} files)").format(len(action.new_files))
+                if action.auto:
+                    action_text += (" " + _("(auto)"))
                 self.add_label(_label_target_dir, action_text, row=row, column=base_col, wraplength=FileActionsWindow.COL_0_WIDTH)
 
                 _label_action = Label(self.frame.viewPort)

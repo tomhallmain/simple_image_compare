@@ -475,7 +475,7 @@ class MarkedFiles():
                                     app_actions.delete(marked_file)
                                     if marked_file in MarkedFiles.file_marks:
                                         MarkedFiles.file_marks.remove(marked_file)
-                                    app_actions.toast(f"Removed marked file from source: {marked_file}")
+                                    app_actions.toast(_("Removed marked file from source: {0}").format(marked_file))
                                 except Exception as e:
                                     error_text = f"Failed to remove marked file from source: {marked_file} - {e}"
                                     logger.warning(error_text)
