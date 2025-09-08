@@ -365,37 +365,6 @@ class MarkedFiles():
         self.close_windows()
 
     @staticmethod
-    def _process_single_file_operation(marked_file: str, target_dir: str, move_func: Callable, 
-                                      new_filename: str, current_image: Optional[str] = None, 
-                                      app_actions=None) -> Tuple[bool, str]:
-        """
-        Process a single file operation using a thread-safe lock.
-        
-        Returns:
-            Tuple[bool, str]: (success, new_filename)
-        """
-        new_filename = os.path.join(target_dir, os.path.basename(marked_file))
-        is_moving = move_func == Utils.move_file
-        
-        try:
-            # Use lock to ensure thread-safe file operations
-            with Utils.file_operation_lock:
-                # Handle media canvas release for moving operations
-                if is_moving and current_image == marked_file:
-                    if app_actions:
-                        app_actions.release_media_canvas()
-                
-                # Perform the actual file operation
-                move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
-            
-            action_part2 = _("Moved") if is_moving else _("Copied")
-            logger.info(f"{action_part2} file to {new_filename}")
-            return True, new_filename
-                
-        except Exception as e:
-            return False, str(e)
-
-    @staticmethod
     def move_marks_to_dir_static(app_actions, target_dir=None, move_func=Utils.move_file, files=None,
                                  single_image=False, current_image=None) -> Tuple[bool, bool]:
         """
@@ -953,9 +922,33 @@ class MarkedFiles():
         PDFOptionsWindow.show(self.master, self.app_actions, pdf_callback)
 
     @staticmethod
-    def get_queue_status():
-        """Get the current status of the file operation system."""
-        return {
-            'lock_held': Utils.file_operation_lock.locked(),
-            'thread_safe': True
-        }
+    def _process_single_file_operation(marked_file: str, target_dir: str, move_func: Callable, 
+                                      new_filename: str, current_image: Optional[str] = None, 
+                                      app_actions=None) -> Tuple[bool, str]:
+        """
+        Process a single file operation using a thread-safe lock.
+        
+        Returns:
+            Tuple[bool, str]: (success, new_filename)
+        """
+        new_filename = os.path.join(target_dir, os.path.basename(marked_file))
+        is_moving = move_func == Utils.move_file
+        
+        try:
+            # Use lock to ensure thread-safe file operations
+            with Utils.file_operation_lock:
+                # Handle media canvas release for moving operations
+                if is_moving and current_image == marked_file:
+                    if app_actions:
+                        app_actions.release_media_canvas()
+                
+                # Perform the actual file operation
+                move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
+            
+            action_part2 = _("Moved") if is_moving else _("Copied")
+            logger.info(f"{action_part2} file to {new_filename}")
+            return True, new_filename
+                
+        except Exception as e:
+            return False, str(e)
+

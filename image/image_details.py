@@ -72,6 +72,7 @@ class ImageDetails():
         self.frame.columnconfigure(0, weight=9)
         self.frame.config(bg=AppStyle.BG_COLOR)
         self.do_refresh = do_refresh
+        self.has_closed = False
         col_0_width = 100
         self.row_count0 = 0
         self.row_count1 = 0
@@ -333,6 +334,7 @@ class ImageDetails():
 
     def random_crop(self):
         new_filepath = ImageOps.random_crop_and_upscale(self.image_path)
+        self.close_windows()
         self.app_actions.refresh()
         self.app_actions.toast(_("Randomly cropped image"))
         if os.path.exists(new_filepath):
@@ -355,6 +357,7 @@ class ImageDetails():
 
     def flip_image(self, top_bottom=False):
         new_filepath = ImageOps.flip_image(self.image_path, top_bottom=top_bottom)
+        self.close_windows()
         self.app_actions.refresh()
         self.app_actions.toast(_("Flipped image"))
         if os.path.exists(new_filepath):
@@ -374,6 +377,7 @@ class ImageDetails():
     def convert_to_jpg(self):
         try:
             new_filepath = ImageOps.convert_to_jpg(self.image_path)
+            self.close_windows()
             self.app_actions.refresh()
             self.app_actions.toast(_("Converted image to JPG"))
             if os.path.exists(new_filepath):
@@ -592,6 +596,7 @@ class ImageDetails():
     def close_windows(self, event=None):
         self.app_actions.set_image_details_window(None)
         self.master.destroy()
+        self.has_closed = True
 
     def add_label(self, label_ref, text, row=None, column=0, wraplength=500):
         increment_row_counter = row == None

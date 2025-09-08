@@ -817,7 +817,7 @@ class App():
                 index_text = f"{_index} of {len_files_matched} ({self.file_browser.get_index_details()})"
             else:
                 index_text = ""  # shouldn't happen
-        if self.app_actions.image_details_window() is not None:
+        if self.app_actions.image_details_window() is not None and not self.app_actions.image_details_window().has_closed:
             if self.app_actions.image_details_window().do_refresh:
                 self.app_actions.image_details_window().update_image_details(media_path, index_text)
             if manually_keyed:
