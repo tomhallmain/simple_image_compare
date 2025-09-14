@@ -2,7 +2,7 @@ from typing import Callable, Dict, Any
 
 class AppActions:
     REQUIRED_ACTIONS = {
-        "new_window", "get_window", "toast", "alert", "refresh",
+        "new_window", "get_window", "toast", "alert", "title_notify", "refresh",
         "refocus", "set_mode", "get_active_media_filepath",
         "create_image", "show_next_media", "get_media_details",
         "run_image_generation", "set_marks_from_downstream_related_images",

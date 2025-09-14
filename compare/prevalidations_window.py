@@ -136,15 +136,15 @@ class Prevalidation:
     def run_action(self, image_path, hide_callback, notify_callback, add_mark_callback=None):
         base_message = self.name + _(" detected")
         if self.action == PrevalidationAction.SKIP:
-            notify_callback(_(" - skipped"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
+            notify_callback("\n" + base_message + _(" - skipped"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
         elif self.action == PrevalidationAction.HIDE:
             hide_callback(image_path)
-            notify_callback(_(" - hidden"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
+            notify_callback("\n" + base_message + _(" - hidden"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
         elif self.action == PrevalidationAction.NOTIFY:
-            notify_callback(base_message, base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
+            notify_callback("\n" + base_message, base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
         elif self.action == PrevalidationAction.ADD_MARK:
             add_mark_callback(image_path)
-            notify_callback(_(" - marked"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
+            notify_callback("\n" + base_message + _(" - marked"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
         elif self.action == PrevalidationAction.MOVE or self.action == PrevalidationAction.COPY:
             if self.action_modifier is not None and len(self.action_modifier) > 0:
                 if not os.path.exists(self.action_modifier):
