@@ -2,13 +2,13 @@ import os
 import sys
 
 from PIL import Image, ImageTk
-from tkinter import Toplevel, Frame, Canvas, Label
+from tkinter import Frame, Canvas, Label
 
 from files.marked_file_mover import MarkedFiles
 from image.frame_cache import FrameCache
+from lib.multi_display import SmartToplevel
 from utils.config import config
 from utils.app_style import AppStyle
-from utils.multi_display import SmartToplevel
 from utils.utils import Utils
 from utils.translations import I18N
 

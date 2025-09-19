@@ -15,12 +15,12 @@ from image.image_ops import ImageOps
 from image.metadata_viewer_window import MetadataViewerWindow
 from image.smart_crop import Cropper
 from image.temp_image_canvas import TempImageCanvas
+from lib.multi_display import SmartToplevel
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
 from utils.constants import ImageGenerationType
 from utils.logging_setup import get_logger
-from utils.multi_display import SmartToplevel
 from utils.translations import I18N
 from utils.utils import Utils, ModifierKey
 

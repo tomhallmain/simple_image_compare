@@ -28,6 +28,7 @@ from files.recent_directory_window import RecentDirectories, RecentDirectoryWind
 from files.type_configuration_window import TypeConfigurationWindow
 from image.media_frame import MediaFrame
 from lib.aware_entry import AwareEntry
+from lib.multi_display import SmartToplevel
 from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
@@ -35,7 +36,6 @@ from utils.config import config, FileCheckConfig, SlideshowConfig
 from utils.constants import Mode, CompareMode, Direction, ActionType, ProtectedActions
 from utils.help_and_config import HelpAndConfig
 from utils.logging_setup import get_logger
-from utils.multi_display import SmartToplevel
 from utils.notification_manager import notification_manager
 from utils.running_tasks_registry import periodic, start_thread
 from utils.translations import I18N

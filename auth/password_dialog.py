@@ -3,8 +3,8 @@ import tkinter.font as fnt
 
 from auth.password_core import PasswordManager
 from auth.password_session_manager import PasswordSessionManager
+from lib.multi_display import SmartToplevel
 from utils.app_style import AppStyle
-from utils.multi_display import SmartToplevel
 from utils.translations import I18N
 
 _ = I18N._

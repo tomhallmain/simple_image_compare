@@ -7,7 +7,7 @@ functionality beyond what's available in standard Tkinter messagebox.
 
 from tkinter import Frame, Label, Button, messagebox
 
-from utils.multi_display import SmartToplevel
+from lib.multi_display import SmartToplevel
 from utils.translations import I18N
 
 _ = I18N._
