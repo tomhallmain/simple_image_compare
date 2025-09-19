@@ -1,9 +1,10 @@
-from tkinter import Toplevel, Frame, Label, StringVar, Entry, Button, messagebox, Checkbutton, BooleanVar
+from tkinter import Frame, Label, StringVar, Entry, Button, messagebox, Checkbutton, BooleanVar
 import tkinter.font as fnt
 
 from auth.password_core import PasswordManager
 from auth.password_session_manager import PasswordSessionManager
 from utils.app_style import AppStyle
+from utils.multi_display import SmartToplevel
 from utils.translations import I18N
 
 _ = I18N._
@@ -35,32 +36,29 @@ class PasswordDialog:
         # Check if password is configured
         self.password_configured = self._is_password_configured()
         
-        # Create dialog window
-        self.dialog = Toplevel(master, bg=AppStyle.BG_COLOR)
+        # Create dialog window using SmartToplevel
+        self.dialog = SmartToplevel(
+            parent=master,
+            center=True  # Center on the same display as parent
+        )
         self.dialog.title(_("Password Required") if self.password_configured else _("Password Protection"))
         
-        # Adjust geometry based on whether custom text is provided
+        # Determine the appropriate size based on custom text length
         if self.custom_text and len(self.custom_text) > 100:
             # Larger window for long custom text
-            self.dialog.geometry("500x400" if self.password_configured else "550x450")
+            geometry = "500x400" if self.password_configured else "550x450"
         else:
-            self.dialog.geometry("450x300" if self.password_configured else "500x350")
+            geometry = "450x300" if self.password_configured else "500x350"
+        
+        # Center the dialog on the same display as parent with the specified size
+        self.dialog.center_on_display(
+            width=int(geometry.split('x')[0]),
+            height=int(geometry.split('x')[1])
+        )
             
         self.dialog.resizable(False, False)
         self.dialog.transient(master)
         self.dialog.grab_set()
-        
-        # Center the dialog
-        self.dialog.update_idletasks()
-        if self.custom_text and len(self.custom_text) > 100:
-            width = 500 if self.password_configured else 550
-            height = 400 if self.password_configured else 450
-        else:
-            width = 450 if self.password_configured else 500
-            height = 300 if self.password_configured else 350
-        x = (self.dialog.winfo_screenwidth() // 2) - (width // 2)
-        y = (self.dialog.winfo_screenheight() // 2) - (height // 2)
-        self.dialog.geometry(f"{width}x{height}+{x}+{y}")
         
         self.setup_ui()
         

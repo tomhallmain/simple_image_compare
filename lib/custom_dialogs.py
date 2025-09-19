@@ -5,8 +5,9 @@ This module contains custom dialog implementations that provide enhanced
 functionality beyond what's available in standard Tkinter messagebox.
 """
 
-from tkinter import Toplevel, Frame, Label, Button, messagebox
+from tkinter import Frame, Label, Button, messagebox
 
+from utils.multi_display import SmartToplevel
 from utils.translations import I18N
 
 _ = I18N._
@@ -23,8 +24,8 @@ def show_high_severity_dialog(master, title, message):
     Returns:
         messagebox.OK or messagebox.CANCEL depending on user choice
     """
-    # Create custom dialog
-    dialog = Toplevel(master)
+    # Create custom dialog using SmartToplevel for multi-display positioning
+    dialog = SmartToplevel(parent=master, center=True)
     dialog.title(title)
     dialog.resizable(False, False)
     dialog.transient(master)
@@ -96,10 +97,8 @@ def show_high_severity_dialog(master, title, message):
     dialog_width = max(400, min(required_width, 600))
     dialog_height = max(200, min(required_height, 500))
     
-    # Center the dialog
-    x = (dialog.winfo_screenwidth() // 2) - (dialog_width // 2)
-    y = (dialog.winfo_screenheight() // 2) - (dialog_height // 2)
-    dialog.geometry(f"{dialog_width}x{dialog_height}+{x}+{y}")
+    # Set the geometry - SmartToplevel with center=True will handle positioning
+    dialog.set_geometry_preserving_position(f"{dialog_width}x{dialog_height}")
     
     # Wait for dialog to close
     dialog.wait_window()

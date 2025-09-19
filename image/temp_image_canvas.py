@@ -8,6 +8,7 @@ from files.marked_file_mover import MarkedFiles
 from image.frame_cache import FrameCache
 from utils.config import config
 from utils.app_style import AppStyle
+from utils.multi_display import SmartToplevel
 from utils.utils import Utils
 from utils.translations import I18N
 
@@ -53,8 +54,19 @@ class TempImageCanvas:
     image = None
 
     def __init__(self, master, title="Temp Image Canvas", dimensions="600x600", app_actions=None):
-        TempImageCanvas.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
-        TempImageCanvas.top_level.geometry(dimensions)
+        # Get parent window position to determine which display to use
+        parent_x = master.winfo_x()
+        
+        # Position at the top of the screen (Y=0) on the same display as parent
+        # but slightly offset horizontally to avoid completely overlapping the parent window
+        offset_x = 50  # Small horizontal offset from parent
+        new_x = parent_x + offset_x
+        new_y = 0  # Always position at the top of the screen
+        
+        # Create geometry string with custom positioning
+        geometry = f"{dimensions}+{new_x}+{new_y}"
+        
+        TempImageCanvas.top_level = SmartToplevel(parent=master, geometry=geometry, auto_position=False)
         self.master = TempImageCanvas.top_level
 #        self.app_master = master
         self.frame = Frame(self.master)

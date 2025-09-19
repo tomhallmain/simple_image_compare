@@ -32,11 +32,8 @@ class StartupPasswordDialog:
         self.root.geometry("500x300")
         self.root.resizable(False, False)
         
-        # Center the dialog
-        self.root.update_idletasks()
-        x = (self.root.winfo_screenwidth() // 2) - (500 // 2)
-        y = (self.root.winfo_screenheight() // 2) - (300 // 2)
-        self.root.geometry(f"500x300+{x}+{y}")
+        # Try to position the dialog on the same display as the main app
+        self._position_dialog()
         
         self.setup_ui()
         
@@ -47,6 +44,38 @@ class StartupPasswordDialog:
         
         # Focus on password entry
         self.password_entry.focus()
+    
+    def _position_dialog(self):
+        """Position the dialog on the same display as the main app if possible."""
+        try:
+            from utils.app_info_cache import app_info_cache
+            from lib.position_data import PositionData
+            
+            # Get cached display position
+            position_data = app_info_cache.get_display_position()
+            if position_data and position_data.is_valid():
+                # Position dialog near the main window
+                dialog_x = position_data.x + (position_data.width - 500) // 2  # Center horizontally relative to main window
+                dialog_y = position_data.y + (position_data.height - 300) // 2  # Center vertically relative to main window
+                
+                # Check if dialog position would be visible
+                dialog_position = PositionData(dialog_x, dialog_y, 500, 300)
+                if dialog_position.is_visible_on_display(self.root):
+                    self.root.geometry(dialog_position.get_geometry())
+                    return
+            
+            # Fallback to screen center
+            self.root.update_idletasks()
+            x = (self.root.winfo_screenwidth() // 2) - (500 // 2)
+            y = (self.root.winfo_screenheight() // 2) - (300 // 2)
+            self.root.geometry(f"500x300+{x}+{y}")
+            
+        except Exception as e:
+            # Fallback to screen center if anything fails
+            self.root.update_idletasks()
+            x = (self.root.winfo_screenwidth() // 2) - (500 // 2)
+            y = (self.root.winfo_screenheight() // 2) - (300 // 2)
+            self.root.geometry(f"500x300+{x}+{y}")
     
     def setup_ui(self):
         """Set up the UI components."""

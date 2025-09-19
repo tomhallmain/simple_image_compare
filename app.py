@@ -35,6 +35,7 @@ from utils.config import config, FileCheckConfig, SlideshowConfig
 from utils.constants import Mode, CompareMode, Direction, ActionType, ProtectedActions
 from utils.help_and_config import HelpAndConfig
 from utils.logging_setup import get_logger
+from utils.multi_display import SmartToplevel
 from utils.notification_manager import notification_manager
 from utils.running_tasks_registry import periodic, start_thread
 from utils.translations import I18N
@@ -94,9 +95,8 @@ class App():
             # Usually want to do this because if a secondary window is the source of another secondary window and that initial secondary window
             # is closed, the second secondary window will also be closed because its master has been destroyed.
             master = App.true_master
-        top_level = Toplevel(master)
+        top_level = SmartToplevel(parent=master, geometry=config.default_secondary_window_size)
         top_level.title(_(" Simple Image Compare "))
-        top_level.geometry(config.default_secondary_window_size)
         window_id = random.randint(1000000000, 9999999999)
         App.secondary_top_levels[window_id] = top_level  # Keep reference to avoid gc
         if do_search and (image_path is None or image_path == ""):
@@ -452,6 +452,10 @@ class App():
         self.toggle_theme(to_theme=(AppStyle.get_theme_name() if self.is_secondary() else None), do_toast=False)
         self.master.update()
 
+        # Apply cached display position for main window
+        if not self.is_secondary():
+            self.apply_cached_display_position()
+
         if config.use_file_paths_json:
             self.set_file_paths()
 
@@ -542,6 +546,28 @@ class App():
         except Exception as e:
             logger.error(e)
 
+    def apply_cached_display_position(self) -> bool:
+        """
+        Apply the cached display position to the main window if it's still visible.
+        
+        Returns:
+            bool: True if position was applied, False if not available or not visible
+        """
+        try:
+            position_data = app_info_cache.get_display_position()
+            if not position_data:
+                return False
+            if not position_data.is_valid():
+                logger.warning("Invalid cached display position data")
+                return False
+            if not position_data.is_visible_on_display(self.master):
+                return False
+            self.master.geometry(position_data.get_geometry())
+            return True
+        except Exception as e:
+            logger.warning(f"Failed to apply cached display position: {e}")
+            return False
+
     def store_info_cache(self, store_window_state: bool = False) -> None:
         base_dir = self.get_base_dir()
         logger.info(f"Storing app info cache")
@@ -559,6 +585,13 @@ class App():
                 if _app.is_secondary() and _app.base_dir not in secondary_base_dirs:
                     secondary_base_dirs.append(_app.base_dir)
             app_info_cache.set_meta("secondary_base_dirs", secondary_base_dirs)
+            
+            # Store main window display position
+            if not self.is_secondary():
+                try:
+                    app_info_cache.set_display_position(self.master)
+                except Exception as e:
+                    logger.warning(f"Failed to store display position: {e}")
         RecentDirectories.store_recent_directories()
         MarkedFiles.store_target_dirs()
         FileActionsWindow.store_action_history()
@@ -823,9 +856,8 @@ class App():
             if manually_keyed:
                 self.app_actions.image_details_window().focus()
         else:
-            top_level = Toplevel(self.master, bg=AppStyle.BG_COLOR)
             try:
-                image_details_window = ImageDetails(self.master, top_level, media_path, index_text,
+                image_details_window = ImageDetails(self.master, media_path, index_text,
                                                     self.app_actions, do_refresh=not preset_image_path)
                 self.app_actions.set_image_details_window(image_details_window)
             except Exception as e:
@@ -923,9 +955,8 @@ class App():
             window.media_canvas.focus()
 
     def get_help_and_config(self, event=None) -> None:
-        top_level = Toplevel(self.master, bg=AppStyle.BG_COLOR)
+        top_level = SmartToplevel(parent=self.master, geometry="900x600")
         top_level.title(_("Help and Config"))
-        top_level.geometry("900x600")
         try:
             help_and_config = HelpAndConfig(top_level)
         except Exception as e:
@@ -1018,9 +1049,8 @@ class App():
         self.master.update()
 
     def open_recent_directory_window(self, event=None, open_gui: bool = True, run_compare_image: Optional[str] = None, extra_callback_args: Optional[list[Any]] = None) -> None:
-        top_level = Toplevel(self.master, bg=AppStyle.BG_COLOR)
+        top_level = SmartToplevel(parent=self.master, geometry=RecentDirectoryWindow.get_geometry(is_gui=open_gui))
         top_level.title(_("Set Image Comparison Directory"))
-        top_level.geometry(RecentDirectoryWindow.get_geometry(is_gui=open_gui))
         if not open_gui:
             top_level.attributes('-alpha', 0.3)
         try:
@@ -1470,9 +1500,8 @@ class App():
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
             single_image = True
-        top_level = Toplevel(self.master, bg=AppStyle.BG_COLOR)
+        top_level = SmartToplevel(parent=self.master, geometry=MarkedFiles.get_geometry(is_gui=open_gui))
         top_level.title(_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)))
-        top_level.geometry(MarkedFiles.get_geometry(is_gui=open_gui))
         if not open_gui:
             top_level.attributes('-alpha', 0.3)
         try:
@@ -2047,15 +2076,24 @@ class App():
         if not config.show_toasts:
             return
 
-        # Set the position of the toast on the screen (top right)
+        # Set the position of the toast on the screen (top right of parent's display)
         width = 300
         height = 100
-        x = self.master.winfo_screenwidth() - width
-        y = 0
+        
+        # Get parent window position and calculate toast position relative to parent's display
+        parent_x = self.master.winfo_x()
+        parent_y = self.master.winfo_y()
+        parent_width = self.master.winfo_width()
+        
+        # Position toast at top-right of parent's display area
+        # TODO: Potential issue - if the parent window is positioned such that the top-right
+        # corner is obscured by other windows or off-screen, the toast may not be visible.
+        # Consider adding collision detection or fallback positioning if needed.
+        x = parent_x + parent_width - width
+        y = parent_y
 
         # Create the toast on the top level
-        toast = Toplevel(self.master, bg=AppStyle.BG_COLOR)
-        toast.geometry(f'{width}x{height}+{int(x)}+{int(y)}')
+        toast = SmartToplevel(parent=self.master, geometry=f'{width}x{height}+{int(x)}+{int(y)}', auto_position=False)
         self.container = Frame(toast)
         self.container.config(bg=AppStyle.BG_COLOR)
         self.container.pack(fill=BOTH, expand=YES)
@@ -2177,7 +2215,22 @@ if __name__ == "__main__":
             assets = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets")
             icon = PhotoImage(file=os.path.join(assets, "icon.png"))
             root.iconphoto(False, icon)
-            root.geometry(config.default_main_window_size)
+            
+            # Try to apply cached display position first
+            try:
+                position_data = app_info_cache.get_display_position()
+                if position_data and position_data.is_valid():
+                    if position_data.is_visible_on_display(root):
+                        root.geometry(position_data.get_geometry())
+                        # logger.debug(f"Applied cached position to root window: {position_data.get_geometry()}")
+                    else:
+                        root.geometry(config.default_main_window_size)
+                else:
+                    root.geometry(config.default_main_window_size)
+            except Exception as e:
+                logger.warning(f"Failed to apply cached position to root window: {e}")
+                root.geometry(config.default_main_window_size)
+            
             # root.attributes('-fullscreen', True)
             return root
 

@@ -6,6 +6,7 @@ from tkinter.ttk import Button
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
+from utils.multi_display import SmartToplevel
 from utils.translations import I18N
 from utils.utils import ModifierKey, Utils
 from utils.logging_setup import get_logger

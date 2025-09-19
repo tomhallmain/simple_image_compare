@@ -3,6 +3,7 @@ import os
 import shutil
 import sys
 
+from lib.position_data import PositionData
 from utils.constants import AppInfo
 from utils.encryptor import encrypt_data_to_file, decrypt_data_from_file
 from utils.logging_setup import get_logger
@@ -112,6 +113,17 @@ class AppInfoCache:
         if AppInfoCache.META_INFO_KEY not in self._cache or key not in self._cache[AppInfoCache.META_INFO_KEY]:
             return default_val
         return self._cache[AppInfoCache.META_INFO_KEY][key]
+
+    def set_display_position(self, master):
+        """Store the main window's display position and size."""
+        self.set_meta("display_position", PositionData.from_master(master).to_dict())
+
+    def get_display_position(self):
+        """Get the cached display position, returns None if not set or invalid."""
+        position_data = self.get_meta("display_position")
+        if not position_data:
+            return None
+        return PositionData.from_dict(position_data)
 
     def set(self, directory, key, value):
         directory = AppInfoCache.normalize_directory_key(directory)
