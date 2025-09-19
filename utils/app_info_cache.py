@@ -117,6 +117,20 @@ class AppInfoCache:
     def set_display_position(self, master):
         """Store the main window's display position and size."""
         self.set_meta("display_position", PositionData.from_master(master).to_dict())
+    
+    def set_virtual_screen_info(self, master):
+        """Store the virtual screen information."""
+        try:
+            self.set_meta("virtual_screen_info", PositionData.from_master_virtual_screen(master).to_dict())
+        except Exception as e:
+            logger.warning(f"Failed to store virtual screen info: {e}")
+    
+    def get_virtual_screen_info(self):
+        """Get the cached virtual screen info, returns None if not set or invalid."""
+        virtual_screen_data = self.get_meta("virtual_screen_info")
+        if not virtual_screen_data:
+            return None
+        return PositionData.from_dict(virtual_screen_data)
 
     def get_display_position(self):
         """Get the cached display position, returns None if not set or invalid."""

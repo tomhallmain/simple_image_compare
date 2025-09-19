@@ -58,9 +58,9 @@ class StartupPasswordDialog:
                 dialog_x = position_data.x + (position_data.width - 500) // 2  # Center horizontally relative to main window
                 dialog_y = position_data.y + (position_data.height - 300) // 2  # Center vertically relative to main window
                 
-                # Check if dialog position would be visible
+                # Check if dialog position would be visible using cached virtual screen info
                 dialog_position = PositionData(dialog_x, dialog_y, 500, 300)
-                if dialog_position.is_visible_on_display(self.root):
+                if dialog_position.is_visible_on_display(self.root, app_info_cache.get_virtual_screen_info()):
                     self.root.geometry(dialog_position.get_geometry())
                     return
             

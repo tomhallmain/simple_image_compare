@@ -202,7 +202,7 @@ class MultiDisplayManager:
             logger.error(f"Error getting display bounds: {e}")
             return (0, 0, window.winfo_screenwidth(), window.winfo_screenheight())
     
-    def is_window_on_primary_display(self, window):
+    def is_window_on_primary_display(self, window: tk.Tk):
         """
         Check if a window is on the primary display.
         
@@ -336,7 +336,7 @@ class SmartToplevel(tk.Toplevel):
         """
         return display_manager.is_window_on_primary_display(self)
     
-    def reposition_on_same_display(self, parent, offset_x=50, offset_y=50, center=False):
+    def reposition_on_same_display(self, parent: tk.Tk, offset_x=50, offset_y=50, center=False):
         """
         Reposition this window on the same display as the given parent.
         
@@ -356,7 +356,7 @@ class SmartToplevel(tk.Toplevel):
         except Exception as e:
             logger.warning(f"Failed to reposition SmartToplevel: {e}")
     
-    def position_on_same_display(self, parent, offset_x=50, offset_y=50, center=False):
+    def position_on_same_display(self, parent: tk.Tk, offset_x=50, offset_y=50, center=False):
         """
         Position this window on the same display as the given parent.
         This is a convenience method that can be called after window creation.
@@ -426,162 +426,3 @@ class SmartToplevel(tk.Toplevel):
             logger.warning(f"Failed to center window on display: {e}")
 
 
-class SmartToplevelFactory:
-    """
-    Factory class for creating SmartToplevel windows with different positioning strategies.
-    
-    This provides a convenient way to create windows with common positioning patterns.
-    """
-    
-    @staticmethod
-    def create_offset(parent, title=None, geometry=None, offset_x=50, offset_y=50, **kwargs):
-        """
-        Create a SmartToplevel positioned with an offset from the parent.
-        
-        Args:
-            parent: Parent window
-            title: Window title
-            geometry: Window geometry
-            offset_x: X offset from parent
-            offset_y: Y offset from parent
-            **kwargs: Additional Toplevel arguments
-            
-        Returns:
-            SmartToplevel: The created window
-        """
-        return SmartToplevel(parent, title, geometry, offset_x, offset_y, center=False, **kwargs)
-    
-    @staticmethod
-    def create_centered(parent, title=None, geometry=None, **kwargs):
-        """
-        Create a SmartToplevel centered on the same display as the parent.
-        
-        Args:
-            parent: Parent window
-            title: Window title
-            geometry: Window geometry
-            **kwargs: Additional Toplevel arguments
-            
-        Returns:
-            SmartToplevel: The created window
-        """
-        return SmartToplevel(parent, title, geometry, center=True, **kwargs)
-    
-    @staticmethod
-    def create_dialog(parent, title=None, geometry="400x300", **kwargs):
-        """
-        Create a SmartToplevel suitable for dialogs (centered, modal-like).
-        
-        Args:
-            parent: Parent window
-            title: Window title
-            geometry: Window geometry
-            **kwargs: Additional Toplevel arguments
-            
-        Returns:
-            SmartToplevel: The created window
-        """
-        window = SmartToplevel(parent, title, geometry, center=True, **kwargs)
-        # Make it behave more like a dialog
-        window.transient(parent)
-        window.grab_set()
-        return window
-
-
-def create_window_on_same_display(parent_window, window_class, *args, **kwargs):
-    """
-    Convenience function to create a new window on the same display as parent.
-    
-    Args:
-        parent_window: The parent window to match display for
-        window_class: The window class to instantiate (e.g., tk.Toplevel)
-        *args: Arguments to pass to window_class constructor
-        **kwargs: Keyword arguments to pass to window_class constructor
-        
-    Returns:
-        The created window instance
-    """
-    # If using SmartToplevel, it handles positioning automatically
-    if window_class == SmartToplevel:
-        return window_class(parent_window, *args, **kwargs)
-    
-    # For other window classes, create and position manually
-    new_window = window_class(parent_window, *args, **kwargs)
-    display_manager.position_window_on_same_display(parent_window, new_window)
-    return new_window
-
-
-def position_toplevel_on_same_display(parent_window, toplevel, **position_kwargs):
-    """
-    Convenience function to position an existing Toplevel on the same display.
-    
-    Args:
-        parent_window: The parent window to match display for
-        toplevel: The Toplevel window to position
-        **position_kwargs: Additional arguments for position_window_on_same_display
-    """
-    return display_manager.position_window_on_same_display(
-        parent_window, toplevel, **position_kwargs
-    )
-
-
-# Example usage and testing functions
-def test_multi_display():
-    """Test function to demonstrate multi-display functionality."""
-    root = tk.Tk()
-    root.title("Multi-Display Test")
-    root.geometry("400x300")
-    
-    def create_test_window():
-        # Method 1: Using the convenience function
-        new_window = create_window_on_same_display(
-            root, tk.Toplevel, 
-            bg='lightblue'
-        )
-        new_window.title("Test Window (Method 1)")
-        
-        # Add some content
-        tk.Label(new_window, text="This window should appear on the same display as the parent").pack(pady=20)
-        tk.Button(new_window, text="Close", command=new_window.destroy).pack()
-    
-    def create_centered_window():
-        # Method 2: Using the manager directly with centering
-        new_window = tk.Toplevel(root, bg='lightgreen')
-        new_window.title("Centered Test Window")
-        
-        # Position it centered on the same display
-        display_manager.position_window_on_same_display(
-            root, new_window, center=True, geometry="300x200"
-        )
-        
-        # Add some content
-        tk.Label(new_window, text="This window is centered on the same display").pack(pady=20)
-        tk.Button(new_window, text="Close", command=new_window.destroy).pack()
-    
-    def show_display_info():
-        # Show information about the current display
-        info = display_manager.get_window_display_info(root)
-        info_text = f"""Display Info:
-Index: {info['display_index']}
-Primary: {info['is_primary']}
-Bounds: {info['bounds']}
-Window Position: {info['window_position']}"""
-        
-        info_window = tk.Toplevel(root, bg='lightyellow')
-        info_window.title("Display Information")
-        display_manager.position_window_on_same_display(root, info_window, offset_x=100, offset_y=100)
-        
-        tk.Label(info_window, text=info_text, justify='left').pack(pady=20, padx=20)
-        tk.Button(info_window, text="Close", command=info_window.destroy).pack()
-    
-    # Create test buttons
-    tk.Button(root, text="Create Test Window", command=create_test_window).pack(pady=10)
-    tk.Button(root, text="Create Centered Window", command=create_centered_window).pack(pady=10)
-    tk.Button(root, text="Show Display Info", command=show_display_info).pack(pady=10)
-    tk.Button(root, text="Exit", command=root.quit).pack(pady=10)
-    
-    root.mainloop()
-
-
-if __name__ == "__main__":
-    test_multi_display()

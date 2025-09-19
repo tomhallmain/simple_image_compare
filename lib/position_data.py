@@ -39,17 +39,18 @@ class PositionData:
                 # If not available, assume (0, 0)
                 pass
                 
-            return virtual_x, virtual_y, virtual_width, virtual_height
+            return PositionData(x=virtual_x, y=virtual_y, width=virtual_width, height=virtual_height)
         except Exception as e:
             logger.warning(f"Could not get virtual screen info: {e}")
             raise TclError("Virtual screen methods not available")
 
-    def is_visible_on_display(self, root: Tk):
+    def is_visible_on_display(self, root: Tk, cached_virtual_screen: 'PositionData' = None):
         """
         Check if a window position is still visible on any connected display.
         
         Args:
             root: Root window to use for screen detection
+            cached_virtual_screen: Cached virtual screen info (optional)
             
         Returns:
             bool: True if the position is visible on any display, False otherwise
@@ -68,16 +69,23 @@ class PositionData:
             # For multi-display setups, try to get virtual screen info
             # but fall back to regular screen if virtual methods aren't available
             try:
-                virtual_screen_x, virtual_screen_y, virtual_screen_width, virtual_screen_height = self._get_virtual_screen_info(root)
-                # logger.debug(f"Virtual screen: x={virtual_screen_x}, y={virtual_screen_y}, width={virtual_screen_width}, height={virtual_screen_height}")
+                current_virtual_screen = self._get_virtual_screen_info(root)
+                
+                # If we have cached virtual screen info, compare it with current
+                if cached_virtual_screen is not None:
+                    if cached_virtual_screen != current_virtual_screen:
+                        logger.debug("Virtual screen configuration has changed, position not visible")
+                        return False
+                
+                # logger.debug(f"Virtual screen: x={current_virtual_screen.x}, y={current_virtual_screen.y}, width={current_virtual_screen.width}, height={current_virtual_screen.height}")
                 # logger.debug(f"Window: x={self.x}, y={self.y}, width={self.width}, height={self.height}")
                 # logger.debug(f"Window bounds: right={window_right}, bottom={window_bottom}")
                 
                 # Use virtual screen bounds for multi-display detection
-                is_visible = (window_right > virtual_screen_x and 
-                             self.x < virtual_screen_x + virtual_screen_width and
-                             window_bottom > virtual_screen_y and 
-                             self.y < virtual_screen_y + virtual_screen_height)
+                is_visible = (window_right > current_virtual_screen.x and 
+                             self.x < current_virtual_screen.x + current_virtual_screen.width and
+                             window_bottom > current_virtual_screen.y and 
+                             self.y < current_virtual_screen.y + current_virtual_screen.height)
                 
             except (AttributeError, TclError) as e:
                 logger.warning(f"Virtual screen methods not available: {e}")
@@ -116,6 +124,17 @@ class PositionData:
 
     def __str__(self):
         return f"PositionData(x={self.x}, y={self.y}, width={self.width}, height={self.height})"
+    
+    def __eq__(self, other):
+        if not isinstance(other, PositionData):
+            return False
+        return (self.x == other.x and 
+                self.y == other.y and 
+                self.width == other.width and 
+                self.height == other.height)
+    
+    def __hash__(self):
+        return hash((self.x, self.y, self.width, self.height))
 
     def to_dict(self):
         return {
@@ -128,6 +147,10 @@ class PositionData:
     @staticmethod
     def from_master(master):
         return PositionData(x=master.winfo_x(), y=master.winfo_y(), width=master.winfo_width(), height=master.winfo_height())
+
+    @staticmethod
+    def from_master_virtual_screen(master):
+        return PositionData.from_master(master)._get_virtual_screen_info(master)
 
     @staticmethod
     def from_dict(data: dict):

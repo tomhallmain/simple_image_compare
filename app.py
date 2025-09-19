@@ -46,12 +46,6 @@ from image.image_details import ImageDetails
 _ = I18N._
 logger = get_logger("app")
 
-try:
-    from send2trash import send2trash
-except Exception:
-    logger.error("Could not import trashing utility - all deleted images will be deleted instantly")
-
-
 
 class Sidebar(Frame):
     def __init__(self, master=None, cnf={}, **kw):
@@ -560,7 +554,7 @@ class App():
             if not position_data.is_valid():
                 logger.warning("Invalid cached display position data")
                 return False
-            if not position_data.is_visible_on_display(self.master):
+            if not position_data.is_visible_on_display(self.master, app_info_cache.get_virtual_screen_info()):
                 return False
             self.master.geometry(position_data.get_geometry())
             return True
@@ -586,12 +580,13 @@ class App():
                     secondary_base_dirs.append(_app.base_dir)
             app_info_cache.set_meta("secondary_base_dirs", secondary_base_dirs)
             
-            # Store main window display position
+            # Store main window display position and virtual screen info
             if not self.is_secondary():
                 try:
                     app_info_cache.set_display_position(self.master)
+                    app_info_cache.set_virtual_screen_info(self.master)
                 except Exception as e:
-                    logger.warning(f"Failed to store display position: {e}")
+                    logger.warning(f"Failed to store display position or virtual screen info: {e}")
         RecentDirectories.store_recent_directories()
         MarkedFiles.store_target_dirs()
         FileActionsWindow.store_action_history()
@@ -2220,7 +2215,8 @@ if __name__ == "__main__":
             try:
                 position_data = app_info_cache.get_display_position()
                 if position_data and position_data.is_valid():
-                    if position_data.is_visible_on_display(root):
+                    # Get cached virtual screen info for visibility check
+                    if position_data.is_visible_on_display(root, app_info_cache.get_virtual_screen_info()):
                         root.geometry(position_data.get_geometry())
                         # logger.debug(f"Applied cached position to root window: {position_data.get_geometry()}")
                     else:
