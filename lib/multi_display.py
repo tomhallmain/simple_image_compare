@@ -239,10 +239,14 @@ class SmartToplevel(tk.Toplevel):
     Usage:
         # Instead of: new_window = tk.Toplevel(parent)
         new_window = SmartToplevel(parent, title="My Window", geometry="400x300")
+        
+        # For staggered positioning, pass the last window as parent:
+        new_window = SmartToplevel(previous_window, title="My Window", geometry="400x300", 
+                                 offset_x=30, offset_y=30)
     """
     
     def __init__(self, parent=None, title=None, geometry=None, 
-                 offset_x=50, offset_y=50, center=False, 
+                 offset_x=30, offset_y=30, center=False, 
                  auto_position=True, **kwargs):
         """
         Initialize a SmartToplevel window.
@@ -251,8 +255,8 @@ class SmartToplevel(tk.Toplevel):
             parent: Parent window (used for display detection and positioning)
             title: Window title
             geometry: Window geometry string (e.g., "400x300")
-            offset_x: X offset from parent window (default: 50)
-            offset_y: Y offset from parent window (default: 50)
+            offset_x: X offset from parent window (default: 30)
+            offset_y: Y offset from parent window (default: 30)
             center: If True, center the window on the display (default: False)
             auto_position: If True, automatically position on same display (default: True)
             **kwargs: Additional arguments passed to Toplevel constructor
@@ -279,16 +283,11 @@ class SmartToplevel(tk.Toplevel):
         if geometry:
             self.geometry(geometry)
         
-        # Debug logging before positioning condition
-        if parent:
-            try:
-                parent_x = parent.winfo_x()
-                parent_y = parent.winfo_y()
-            except Exception as e:
-                logger.warning(f"Could not get parent position: {e}")
+        # Check if geometry already includes position information
+        geometry_has_position = geometry and '+' in geometry
         
         # Position on the same display as parent (if auto_position is True)
-        if parent and auto_position:
+        if parent and auto_position and not geometry_has_position:
             try:
                 # Debug: Log parent window position
                 # parent_x = parent.winfo_x()
@@ -315,9 +314,32 @@ class SmartToplevel(tk.Toplevel):
                 except Exception as fallback_e:
                     logger.warning(f"Fallback positioning also failed: {fallback_e}")
                     pass  # Use default positioning
+        elif parent and not auto_position and not geometry_has_position:
+            # Parent provided but auto_position is False - still position relative to parent
+            try:
+                parent_x = parent.winfo_x()
+                parent_y = parent.winfo_y()
+                new_x = parent_x + offset_x
+                new_y = parent_y + offset_y
+                
+                # Create geometry string with calculated position
+                if geometry and '+' in geometry:
+                    size_part = geometry.split('+')[0]
+                    final_geometry = f"{size_part}+{new_x}+{new_y}"
+                else:
+                    final_geometry = f"{geometry or '400x300'}+{new_x}+{new_y}"
+                
+                self.geometry(final_geometry)
+                logger.debug(f"Positioning relative to parent (auto_position=False): {final_geometry}")
+                
+            except Exception as e:
+                logger.warning(f"Failed to position relative to parent: {e}")
         else:
-            logger.debug(f"Skipping positioning - parent={parent}, auto_position={auto_position}")
-    
+            if geometry_has_position:
+                logger.debug(f"Skipping positioning - geometry already includes position: {geometry}")
+            else:
+                logger.debug(f"Skipping positioning - parent={parent}, auto_position={auto_position}")
+
     def get_display_info(self):
         """
         Get information about which display this window is currently on.
@@ -424,5 +446,6 @@ class SmartToplevel(tk.Toplevel):
             
         except Exception as e:
             logger.warning(f"Failed to center window on display: {e}")
+    
 
 

@@ -89,7 +89,16 @@ class App():
             # Usually want to do this because if a secondary window is the source of another secondary window and that initial secondary window
             # is closed, the second secondary window will also be closed because its master has been destroyed.
             master = App.true_master
-        top_level = SmartToplevel(parent=master, geometry=config.default_secondary_window_size)
+        
+        # For staggered positioning, use the last secondary window as parent if available
+        parent_for_positioning = master
+        for window in reversed(App.open_windows):
+            if window.is_secondary():
+                parent_for_positioning = window.master
+                break
+        
+        # Use SmartToplevel with staggered positioning for secondary windows
+        top_level = SmartToplevel(parent=parent_for_positioning, geometry=config.default_secondary_window_size)
         top_level.title(_(" Simple Image Compare "))
         window_id = random.randint(1000000000, 9999999999)
         App.secondary_top_levels[window_id] = top_level  # Keep reference to avoid gc
