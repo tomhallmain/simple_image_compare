@@ -770,6 +770,10 @@ msgstr ""
 msgid "Password protection is required for this action but is not currently configured."
 msgstr ""
 
+#: auth/password_dialog.py:301
+msgid "⚠ Caps Lock is ON"
+msgstr ""
+
 #: compare/base_compare.py:229
 msgid "Image data collection"
 msgstr ""

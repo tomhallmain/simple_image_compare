@@ -3,6 +3,7 @@ import tkinter.font as fnt
 
 from auth.password_core import PasswordManager
 from auth.password_session_manager import PasswordSessionManager
+from lib.caps_lock_mixin import CapsLockMixin
 from lib.multi_display import SmartToplevel
 from utils.app_style import AppStyle
 from utils.translations import I18N
@@ -10,7 +11,7 @@ from utils.translations import I18N
 _ = I18N._
 
 
-class PasswordDialog:
+class PasswordDialog(CapsLockMixin):
     """Simple password dialog for authentication."""
     
     def __init__(self,
@@ -137,6 +138,9 @@ class PasswordDialog:
         self.password_entry = Entry(password_frame, textvariable=self.password_var, 
                                    show="*", width=30, font=fnt.Font(size=10))
         self.password_entry.pack(fill="x", pady=(5, 0))
+        
+        # Set up caps lock detection using mixin
+        self.setup_caps_lock_detection(password_frame, self.password_entry, self.dialog)
         
         # Buttons
         button_frame = Frame(main_frame, bg=AppStyle.BG_COLOR)
@@ -272,6 +276,7 @@ class PasswordDialog:
             PasswordSessionManager.record_successful_verification(self.action_enum, is_authenticated=False)
         
         self.cancel(result=True)
+    
     
     def cancel(self, event=None, result=False):
         """Cancel the password dialog."""

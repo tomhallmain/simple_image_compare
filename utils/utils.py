@@ -570,3 +570,4 @@ class ModifierKey(Enum):
     SHIFT = 0x1
     CTRL = 0x4
     ALT = 0x20000
+    CAPS_LOCK = 0x2
