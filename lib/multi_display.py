@@ -14,6 +14,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Module-level constants
+BUFFER_DISTANCE_FROM_SCREEN_BOTTOM = 20  # Buffer from bottom of screen
+
 
 class MultiDisplayManager:
     """
@@ -23,6 +26,29 @@ class MultiDisplayManager:
     def __init__(self):
         self.system = platform.system().lower()
         self._display_info_cache = {}
+    
+    def _extract_window_dimensions(self, geometry, new_window):
+        """
+        Extract width and height from geometry string or window.
+        
+        Args:
+            geometry: Geometry string (e.g., "400x300" or "400x300+100+200")
+            new_window: Window object to get natural size from
+            
+        Returns:
+            tuple: (width, height)
+        """
+        if geometry:
+            if '+' in geometry:
+                size_part = geometry.split('+')[0]
+                width, height = map(int, size_part.split('x'))
+            else:
+                width, height = map(int, geometry.split('x'))
+        else:
+            # Use window's natural size
+            width = new_window.winfo_reqwidth()
+            height = new_window.winfo_reqheight()
+        return width, height
     
     def get_window_display_info(self, window):
         """
@@ -111,19 +137,7 @@ class MultiDisplayManager:
             
             if center:
                 # Center the window on the same display as parent
-                if geometry:
-                    # Parse geometry string to get width and height
-                    if 'x' in geometry and '+' in geometry:
-                        size_part = geometry.split('+')[0]
-                        width, height = map(int, size_part.split('x'))
-                    elif 'x' in geometry:
-                        width, height = map(int, geometry.split('x'))
-                    else:
-                        width, height = 400, 300  # Default size
-                else:
-                    # Use window's natural size
-                    width = new_window.winfo_reqwidth()
-                    height = new_window.winfo_reqheight()
+                width, height = self._extract_window_dimensions(geometry, new_window)
                 
                 # Calculate center position
                 center_x = parent_x + (parent_width - width) // 2
@@ -142,6 +156,18 @@ class MultiDisplayManager:
                 new_x = parent_x + offset_x
                 new_y = parent_y + offset_y
                 
+                # Get window dimensions for bounds checking
+                width, height = self._extract_window_dimensions(geometry, new_window)
+                
+                # Check if window would go off the bottom of the screen
+                screen_height = parent_window.winfo_screenheight()
+                
+                if new_y + height > screen_height - BUFFER_DISTANCE_FROM_SCREEN_BOTTOM:
+                    # Wrap to top and add horizontal offset
+                    new_y = 50  # Start near top of screen
+                    new_x = parent_x + offset_x + 100  # Add extra horizontal offset
+                    logger.debug(f"Window would go off-screen, wrapping to top with increased horizontal offset")
+                
                 # For multi-display setups, we need to allow negative coordinates
                 # Only apply minimal bounds checking to prevent windows from being completely off-screen
                 # Don't clamp to screen bounds as that breaks multi-display positioning
@@ -157,8 +183,6 @@ class MultiDisplayManager:
                         final_geometry = f"{geometry}+{new_x}+{new_y}"
                 else:
                     # Use window's natural size
-                    width = new_window.winfo_reqwidth()
-                    height = new_window.winfo_reqheight()
                     final_geometry = f"{width}x{height}+{new_x}+{new_y}"
             
             # Apply the geometry
@@ -245,6 +269,26 @@ class SmartToplevel(tk.Toplevel):
                                  offset_x=30, offset_y=30)
     """
     
+    def _extract_window_dimensions(self, geometry):
+        """
+        Extract width and height from geometry string or use defaults.
+        
+        Args:
+            geometry: Geometry string (e.g., "400x300" or "400x300+100+200")
+            
+        Returns:
+            tuple: (width, height)
+        """
+        if geometry:
+            if '+' in geometry:
+                size_part = geometry.split('+')[0]
+                width, height = map(int, size_part.split('x'))
+            else:
+                width, height = map(int, geometry.split('x'))
+        else:
+            width, height = 400, 300  # Default size
+        return width, height
+    
     def __init__(self, parent=None, title=None, geometry=None, 
                  offset_x=30, offset_y=30, center=False, 
                  auto_position=True, **kwargs):
@@ -304,11 +348,27 @@ class SmartToplevel(tk.Toplevel):
                 
             except Exception as e:
                 logger.warning(f"Failed to position SmartToplevel on same display: {e}")
-                # Fallback to simple offset positioning
+                # Fallback to simple offset positioning with bounds checking
                 try:
                     parent_x = parent.winfo_x()
                     parent_y = parent.winfo_y()
-                    fallback_geometry = f"+{parent_x + offset_x}+{parent_y + offset_y}"
+                    new_x = parent_x + offset_x
+                    new_y = parent_y + offset_y
+                    
+                    # Check if window would go off the bottom of the screen
+                    screen_height = parent.winfo_screenheight()
+                    
+                    # Get window height for bounds checking
+                    _, window_height = self._extract_window_dimensions(geometry)
+                    
+                    # Check if window would go off bottom of screen
+                    if new_y + window_height > screen_height - BUFFER_DISTANCE_FROM_SCREEN_BOTTOM:
+                        # Wrap to top and add horizontal offset
+                        new_y = 50  # Start near top of screen
+                        new_x = parent_x + offset_x + 100  # Add extra horizontal offset
+                        logger.debug(f"Window would go off-screen, wrapping to top with increased horizontal offset")
+                    
+                    fallback_geometry = f"+{new_x}+{new_y}"
                     self.geometry(fallback_geometry)
                     logger.debug(f"Fallback positioning: {fallback_geometry}")
                 except Exception as fallback_e:
@@ -321,6 +381,19 @@ class SmartToplevel(tk.Toplevel):
                 parent_y = parent.winfo_y()
                 new_x = parent_x + offset_x
                 new_y = parent_y + offset_y
+                
+                # Check if window would go off the bottom of the screen
+                screen_height = parent.winfo_screenheight()
+                
+                # Get window height for bounds checking
+                _, window_height = self._extract_window_dimensions(geometry)
+                
+                # Check if window would go off bottom of screen
+                if new_y + window_height > screen_height - BUFFER_DISTANCE_FROM_SCREEN_BOTTOM:
+                    # Wrap to top and add horizontal offset
+                    new_y = 50  # Start near top of screen
+                    new_x = parent_x + offset_x + 100  # Add extra horizontal offset
+                    logger.debug(f"Window would go off-screen, wrapping to top with increased horizontal offset")
                 
                 # Create geometry string with calculated position
                 if geometry and '+' in geometry:
@@ -446,6 +519,5 @@ class SmartToplevel(tk.Toplevel):
             
         except Exception as e:
             logger.warning(f"Failed to center window on display: {e}")
-    
 
 
