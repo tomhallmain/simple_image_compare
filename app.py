@@ -93,11 +93,14 @@ class App():
         # For staggered positioning, use the last secondary window as parent if available
         parent_for_positioning = master
         for window in reversed(App.open_windows):
-            if window.is_secondary():
+            if window.is_secondary() and window.master.winfo_exists():
                 parent_for_positioning = window.master
                 break
         
         # Use SmartToplevel with staggered positioning for secondary windows
+        # Ensure the parent window is still valid before creating the new window
+        if not parent_for_positioning.winfo_exists():
+            parent_for_positioning = App.true_master
         top_level = SmartToplevel(parent=parent_for_positioning, geometry=config.default_secondary_window_size)
         top_level.title(_(" Simple Image Compare "))
         window_id = random.randint(1000000000, 9999999999)
@@ -726,6 +729,9 @@ class App():
     def _check_files_main_thread(self):
         """Check files on the main thread to avoid Tkinter threading issues"""
         try:
+            # Check if the window has been destroyed before accessing widgets
+            if not self.master.winfo_exists():
+                return
             base_dir = self.set_base_dir_box.get()
             if base_dir and base_dir != "":
                 self.refresh(show_new_images=self.slideshow_config.show_new_images)
@@ -738,6 +744,9 @@ class App():
         if self.slideshow_config.slideshow_running:
             if config.debug:
                 logger.debug("Slideshow next image")
+            # Check if the window has been destroyed before accessing widgets
+            if not self.master.winfo_exists():
+                return
             base_dir = self.set_base_dir_box.get()
             if base_dir and base_dir != "":
                 self.show_next_media()
@@ -1612,7 +1621,8 @@ class App():
         except Exception as e:
             self.handle_error(str(e), title="Go To File Window Error")
 
-    def go_to_file(self, event=None, search_text: str = "", retry_with_delay: int = 0, exact_match: bool = True) -> bool:
+    def go_to_file(self, event=None, search_text: str = "", retry_with_delay: int = 0,
+                   exact_match: bool = True, closest_sort_by: Optional[SortBy] = None) -> bool:
         # This may be a full file path, so get basename first
         original_search_text = search_text
         resolved_path = Utils.get_valid_file(self.get_base_dir(), original_search_text)
@@ -1623,8 +1633,9 @@ class App():
         # First try to find the file in the current window
         if self.mode == Mode.BROWSE:
             self.file_browser.refresh()
+            logger.debug(f"Finding file in current window: {search_text}, closest sort by: {closest_sort_by}")
             image_path = self.file_browser.find(
-                search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match)
+                search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match, closest_sort_by=closest_sort_by)
             # If file found in current window, display it
             if image_path:
                 self.create_image(image_path)
@@ -1644,7 +1655,7 @@ class App():
             if window.mode == Mode.BROWSE:
                 window.file_browser.refresh()
                 found_path = window.file_browser.find(
-                    search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match)
+                    search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match, closest_sort_by=closest_sort_by)
                 if found_path:
                     # Switch to the window that has the file
                     window.media_canvas.focus()
@@ -1662,7 +1673,7 @@ class App():
                 # If not found in comparison results, search the full directory
                 window.file_browser.refresh()
                 found_path = window.file_browser.find(
-                    search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match)
+                    search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match, closest_sort_by=closest_sort_by)
                 if found_path: # Use temp canvas to avoid disrupting compare state
                     ImageDetails.open_temp_image_canvas(master=self.master, image_path=found_path, app_actions=self.app_actions, skip_get_window_check=True)
                     return True

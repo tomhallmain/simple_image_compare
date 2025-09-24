@@ -1,8 +1,9 @@
-from tkinter import Toplevel, Frame, StringVar, LEFT, W, filedialog
-from tkinter.ttk import Entry, Button
+from tkinter import Toplevel, Frame, StringVar, BooleanVar, LEFT, W, filedialog
+from tkinter.ttk import Entry, Button, Checkbutton, OptionMenu
 
 from utils.app_style import AppStyle
 from utils.config import config
+from utils.constants import SortBy
 from utils.translations import I18N
 
 _ = I18N._
@@ -11,11 +12,13 @@ _ = I18N._
 class GoToFile:
     top_level = None
     last_search_text = ""
+    last_use_closest = False
+    last_closest_sort_by = SortBy.NAME
 
     @staticmethod
     def get_geometry():
         width = 700
-        height = 100
+        height = 160
         return f"{width}x{height}"
 
     def __init__(self, master, app_actions):
@@ -41,6 +44,24 @@ class GoToFile:
         
         self.file_picker_btn = None
         self.add_btn("file_picker_btn", _("Browse..."), self.pick_file, column=2)
+        
+        # Add closest file checkbox
+        self.use_closest = BooleanVar()
+        self.use_closest.set(GoToFile.last_use_closest)
+        self.closest_checkbox = Checkbutton(
+            self.frame, 
+            text=_("Go to closest file if exact match not found"), 
+            variable=self.use_closest,
+            command=self.toggle_closest_options
+        )
+        self.closest_checkbox.grid(row=1, column=0, columnspan=3, sticky=W, pady=(5, 0))
+        
+        # Add SortBy selector for closest file search
+        self.closest_sort_by = StringVar()
+        self.closest_sort_by.set(GoToFile.last_closest_sort_by.get_text())
+        self.sort_by_label = None
+        self.sort_by_choice = None
+        self.add_sort_by_selector()
 
         self.master.bind("<Escape>", self.close_windows)
         self.frame.after(1, lambda: self.frame.focus_force())
@@ -52,7 +73,16 @@ class GoToFile:
             self.app_actions.toast(_("Invalid search string, please enter some text."))
             return
         GoToFile.last_search_text = search_text
-        self.app_actions.go_to_file(search_text=search_text, exact_match=False)
+        GoToFile.last_use_closest = self.use_closest.get()
+        GoToFile.last_closest_sort_by = SortBy.get(self.closest_sort_by.get())
+        
+        # Pass closest_sort_by only if the checkbox is checked
+        closest_sort_by = GoToFile.last_closest_sort_by if GoToFile.last_use_closest else None
+        self.app_actions.go_to_file(
+            search_text=search_text, 
+            exact_match=False, 
+            closest_sort_by=closest_sort_by
+        )
         self.close_windows()
 
     def pick_file(self, event=None):
@@ -108,4 +138,28 @@ class GoToFile:
             setattr(self, button_ref_name, button)
             button # for some reason this is necessary to maintain the reference?
             button.grid(row=row, column=column)
+
+    def add_sort_by_selector(self):
+        """Add the SortBy selector for closest file search."""
+        from tkinter import Label
+        self.sort_by_label = Label(self.frame, text=_("Sort by for closest search:"), bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        self.sort_by_label.grid(row=2, column=0, sticky=W, pady=(5, 0))
+        self.sort_by_choice = OptionMenu(
+            self.frame, 
+            self.closest_sort_by, 
+            GoToFile.last_closest_sort_by.get_text(),
+            *SortBy.members()
+        )
+        self.sort_by_choice.grid(row=2, column=1, sticky=W, pady=(5, 0))
+        self.toggle_closest_options()
+
+    def toggle_closest_options(self):
+        """Show/hide the SortBy selector based on closest file checkbox state."""
+        if self.sort_by_label and self.sort_by_choice:
+            if self.use_closest.get():
+                self.sort_by_label.grid()
+                self.sort_by_choice.grid()
+            else:
+                self.sort_by_label.grid_remove()
+                self.sort_by_choice.grid_remove()
 

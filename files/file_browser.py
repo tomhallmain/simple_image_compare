@@ -1,7 +1,7 @@
 import glob
 import json
 import os
-from random import shuffle, choice
+from random import choice, randint, shuffle
 import re
 import threading
 from time import sleep
@@ -221,7 +221,7 @@ class FileBrowser:
                 selected.extend(files[start_index:end_index+1])
         return selected
 
-    def find(self, search_text=None, retry_with_delay=0, exact_match=False):
+    def find(self, search_text=None, retry_with_delay=0, exact_match=False, closest_sort_by=None):
         if not search_text or search_text.strip() == "":
             raise Exception(_("Search text provided to file_browser.find() was invalid."))
         files = self.get_files_with_retry(retry_with_delay)
@@ -256,7 +256,299 @@ class FileBrowser:
                     logger.debug(f"Index of {filename}: {i}")
                 self.file_cursor = i
                 return files[self.file_cursor]
+        
+        # If no match found and closest_sort_by is specified, find the closest file based on specified sorting
+        if closest_sort_by is not None and len(files) > 0:
+            return self._find_closest_file_by_position(search_text, files, closest_sort_by)
+        
         return None
+
+    def _find_closest_file_by_position(self, search_text, files, closest_sort_by):
+        """
+        Find the closest file to the search text based on positional distance in a sorted list.
+        This finds files that would be positioned closest to the search text in the specified sort order.
+        """
+        if not files:
+            return None
+        
+        logger.debug(f"Finding closest file by position: {search_text}, closest sort by: {closest_sort_by}")
+        
+        # Create a properly sorted list for the requested sort type
+        sorted_files = self._get_sorted_files_for_sort_type(files, closest_sort_by)
+        if not sorted_files:
+            return None
+        
+        # Route to appropriate handler based on sort type
+        if closest_sort_by in [SortBy.NAME, SortBy.FULL_PATH]:
+            return self._find_closest_by_name(search_text, sorted_files, files)
+        elif closest_sort_by in [SortBy.CREATION_TIME, SortBy.MODIFY_TIME]:
+            return self._find_closest_by_time(search_text, sorted_files, files, closest_sort_by)
+        elif closest_sort_by == SortBy.SIZE:
+            return self._find_closest_by_size(search_text, sorted_files, files)
+        elif closest_sort_by == SortBy.TYPE:
+            return self._find_closest_by_type(search_text, sorted_files, files)
+        elif closest_sort_by == SortBy.NAME_LENGTH:
+            return self._find_closest_by_name_length(search_text, sorted_files, files)
+        elif closest_sort_by in [SortBy.IMAGE_PIXELS, SortBy.IMAGE_HEIGHT, SortBy.IMAGE_WIDTH]:
+            return self._find_closest_by_image_property(search_text, sorted_files, files, closest_sort_by)
+        elif closest_sort_by == SortBy.RELATED_IMAGE:
+            return self._find_closest_by_related_image(search_text, sorted_files, files)
+        elif closest_sort_by == SortBy.RANDOMIZE:
+            return self._find_closest_by_random(search_text, sorted_files, files)
+        else:
+            # Unknown sort type, return first file
+            self.file_cursor = 0
+            if config.debug:
+                logger.debug(f"Unknown sort type {closest_sort_by}, returning first file")
+            return files[0]
+
+    def _get_sorted_files_for_sort_type(self, files, sort_by):
+        """
+        Create a properly sorted list of files for the specified sort type.
+        This ensures we're working with the correct sort order for closest file finding.
+        """
+        try:
+            # Create a temporary file browser with the specified sorting
+            temp_browser = FileBrowser(
+                directory=self.directory, 
+                recursive=self.recursive, 
+                filter=self.filter, 
+                sort_by=sort_by
+            )
+            temp_browser._files = self._files.copy()  # Use the same file cache
+            temp_browser._get_sortable_files()
+            return temp_browser.get_files()
+        except Exception as e:
+            if config.debug:
+                logger.debug(f"Error creating sorted files for {sort_by}: {e}")
+            return files  # Fallback to original files
+
+    def _find_closest_by_name(self, search_text, sorted_files, original_files):
+        """
+        Simple name-based closest file finder.
+        Finds the file whose name would be closest alphabetically to the search text.
+        """
+        search_text_lower = search_text.lower()
+        filenames = [os.path.basename(f).lower() for f in sorted_files]
+        
+        # Find the position where search_text would fit alphabetically
+        for i, filename in enumerate(filenames):
+            if filename >= search_text_lower:
+                closest_file = sorted_files[i]
+                # Map back to original file index
+                self.file_cursor = original_files.index(closest_file)
+                if config.debug:
+                    logger.debug(f"Closest file by name: position {self.file_cursor}")
+                return closest_file
+        
+        # If search_text would go at the end, return the last file
+        closest_file = sorted_files[-1]
+        self.file_cursor = original_files.index(closest_file)
+        if config.debug:
+            logger.debug(f"Closest file by name: last file")
+        return closest_file
+
+    def _find_closest_by_time(self, search_text, sorted_files, original_files, sort_by):
+        """Find closest file by creation or modification time."""
+        # For time-based sorting, find files with similar names and pick the most recent
+        similar_files = []
+        for i, filepath in enumerate(sorted_files):
+            filename = os.path.basename(filepath).lower()
+            if self._has_similarity(search_text.lower(), filename):
+                try:
+                    if sort_by == SortBy.CREATION_TIME:
+                        time_value = os.path.getctime(filepath)
+                    else:  # MODIFY_TIME
+                        time_value = os.path.getmtime(filepath)
+                    similar_files.append((i, time_value, filepath))
+                except OSError:
+                    continue
+        
+        if similar_files:
+            # Return the most recent similar file
+            similar_files.sort(key=lambda x: x[1], reverse=True)
+            closest_file = similar_files[0][2]
+            self.file_cursor = original_files.index(closest_file)
+            if config.debug:
+                logger.debug(f"Closest file by time: position {self.file_cursor}")
+            return closest_file
+        else:
+            # No similar files, return first file
+            closest_file = sorted_files[0]
+            self.file_cursor = original_files.index(closest_file)
+            if config.debug:
+                logger.debug(f"Closest file by time: no similar files, returning first")
+            return closest_file
+
+    def _find_closest_by_size(self, search_text, sorted_files, original_files):
+        """Find closest file by size."""
+        try:
+            target_size = int(search_text)
+            closest_file = None
+            closest_size_diff = float('inf')
+            
+            for i, filepath in enumerate(sorted_files):
+                try:
+                    file_size = os.path.getsize(filepath)
+                    size_diff = abs(file_size - target_size)
+                    if size_diff < closest_size_diff:
+                        closest_size_diff = size_diff
+                        closest_file = filepath
+                except OSError:
+                    continue
+            
+            if closest_file:
+                self.file_cursor = original_files.index(closest_file)
+                if config.debug:
+                    logger.debug(f"Closest file by size: position {self.file_cursor}")
+                return closest_file
+        except ValueError:
+            pass  # Search text is not numeric
+        
+        # Fallback: return first file
+        closest_file = sorted_files[0]
+        self.file_cursor = original_files.index(closest_file)
+        if config.debug:
+            logger.debug(f"Closest file by size: non-numeric search, returning first")
+        return closest_file
+
+    def _find_closest_by_type(self, search_text, sorted_files, original_files):
+        """Find closest file by file type/extension."""
+        search_text_lower = search_text.lower()
+        
+        # Try to find files with matching extension
+        for i, filepath in enumerate(sorted_files):
+            filename = os.path.basename(filepath).lower()
+            if filename.endswith(search_text_lower) or search_text_lower in filename:
+                self.file_cursor = original_files.index(filepath)
+                if config.debug:
+                    logger.debug(f"Closest file by type: position {self.file_cursor}")
+                return filepath
+        
+        # Fallback: return first file
+        closest_file = sorted_files[0]
+        self.file_cursor = original_files.index(closest_file)
+        if config.debug:
+            logger.debug(f"Closest file by type: no match, returning first")
+        return closest_file
+
+    def _find_closest_by_name_length(self, search_text, sorted_files, original_files):
+        """Find closest file by name length."""
+        try:
+            target_length = len(search_text)
+            closest_file = None
+            closest_length_diff = float('inf')
+            
+            for i, filepath in enumerate(sorted_files):
+                filename = os.path.basename(filepath)
+                length_diff = abs(len(filename) - target_length)
+                if length_diff < closest_length_diff:
+                    closest_length_diff = length_diff
+                    closest_file = filepath
+            
+            if closest_file:
+                self.file_cursor = original_files.index(closest_file)
+                if config.debug:
+                    logger.debug(f"Closest file by name length: position {self.file_cursor}")
+                return closest_file
+        except Exception:
+            pass
+        
+        # Fallback: return first file
+        closest_file = sorted_files[0]
+        self.file_cursor = original_files.index(closest_file)
+        if config.debug:
+            logger.debug(f"Closest file by name length: error, returning first")
+        return closest_file
+
+    def _find_closest_by_image_property(self, search_text, sorted_files, original_files, sort_by):
+        """Find closest file by image properties (pixels, height, width)."""
+        try:
+            target_value = int(search_text)
+            closest_file = None
+            closest_diff = float('inf')
+            
+            for i, filepath in enumerate(sorted_files):
+                try:
+                    # Get the appropriate image property
+                    sortable_file = SortableFile(filepath)
+                    if sort_by == SortBy.IMAGE_PIXELS:
+                        current_value = sortable_file.get_image_pixels()
+                    elif sort_by == SortBy.IMAGE_HEIGHT:
+                        current_value = sortable_file.get_image_height()
+                    else:  # IMAGE_WIDTH
+                        current_value = sortable_file.get_image_width()
+                    
+                    if current_value is not None:
+                        diff = abs(current_value - target_value)
+                        if diff < closest_diff:
+                            closest_diff = diff
+                            closest_file = filepath
+                except Exception:
+                    continue
+            
+            if closest_file:
+                self.file_cursor = original_files.index(closest_file)
+                if config.debug:
+                    logger.debug(f"Closest file by {sort_by.get_text()}: position {self.file_cursor}")
+                return closest_file
+        except ValueError:
+            pass  # Search text is not numeric
+        
+        # Fallback: return first file
+        closest_file = sorted_files[0]
+        self.file_cursor = original_files.index(closest_file)
+        if config.debug:
+            logger.debug(f"Closest file by {sort_by.get_text()}: non-numeric search, returning first")
+        return closest_file
+
+    def _find_closest_by_related_image(self, search_text, sorted_files, original_files):
+        """Find closest file by related image."""
+        # For related image sorting, find files with similar names
+        search_text_lower = search_text.lower()
+        
+        for i, filepath in enumerate(sorted_files):
+            filename = os.path.basename(filepath).lower()
+            if self._has_similarity(search_text_lower, filename):
+                self.file_cursor = original_files.index(filepath)
+                if config.debug:
+                    logger.debug(f"Closest file by related image: position {self.file_cursor}")
+                return filepath
+        
+        # Fallback: return first file
+        closest_file = sorted_files[0]
+        self.file_cursor = original_files.index(closest_file)
+        if config.debug:
+            logger.debug(f"Closest file by related image: no match, returning first")
+        return closest_file
+
+    def _find_closest_by_random(self, search_text, sorted_files, original_files):
+        """Find closest file for random sorting."""
+        # For random sorting, just return a random file
+        random_index = randint(0, len(sorted_files) - 1)
+        closest_file = sorted_files[random_index]
+        self.file_cursor = original_files.index(closest_file)
+        if config.debug:
+            logger.debug(f"Closest file by random: position {self.file_cursor}")
+        return closest_file
+
+    def _has_similarity(self, search_text, filename):
+        """Check if filename has some similarity to search text."""
+        # Check if search text is contained in filename
+        if search_text in filename:
+            return True
+        
+        # Check if any significant part of search text matches filename
+        if len(search_text) >= 3:
+            for i in range(len(filename) - len(search_text) + 1):
+                if filename[i:i+len(search_text)] == search_text:
+                    return True
+        
+        # Check if filename starts with search text
+        if filename.startswith(search_text):
+            return True
+            
+        return False
 
     def page_down(self, half_length=False):
         paging_length = self._get_paging_length(half_length=half_length)

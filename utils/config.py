@@ -21,7 +21,7 @@ class Config:
         self.locale = Utils.get_default_user_language()
         self.foreground_color = None
         self.background_color = None
-        self.debug = False
+        self.debug = True
         self.log_level = "info"
         self.clip_model = "ViT-B/32"
         self.compare_mode = CompareMode.CLIP_EMBEDDING
