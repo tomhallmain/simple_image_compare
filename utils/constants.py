@@ -40,7 +40,8 @@ class CompareMode(Enum):
     ALIGN_EMBEDDING = _("ALIGN Embedding")
     XVLM_EMBEDDING = _("X-VLM Embedding")
     LAION_EMBEDDING = _("LAION Embedding")
-#    PROMPTS = _("Prompts")
+    PROMPTS = _("Prompts")
+    PROMPTS_EXACT = _("Prompts (Exact Match)")
 
     def get_text(self):
         if self == CompareMode.COLOR_MATCHING:
@@ -57,8 +58,10 @@ class CompareMode(Enum):
             return _("X-VLM Embedding")
         elif self == CompareMode.LAION_EMBEDDING:
             return _("LAION Embedding")
-#        elif self == CompareMode.PROMPTS:
-#            return _("Prompts")
+        elif self == CompareMode.PROMPTS:
+            return _("Prompts")
+        elif self == CompareMode.PROMPTS_EXACT:
+            return _("Prompts (Exact Match)")
         raise Exception("Unhandled Compare Mode text: " + str(self))
 
     def __str__(self):

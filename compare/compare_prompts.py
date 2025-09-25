@@ -4,8 +4,9 @@ import numpy as np
 
 from compare.base_compare_embedding import BaseCompareEmbedding, gather_files
 from compare.compare_args import CompareArgs
+from compare.compare_data import CompareData
 from compare.compare_result import CompareResult
-from compare.model import text_embeddings_siglip
+from compare.model import text_embeddings_flava
 from image.image_data_extractor import ImageDataExtractor
 from utils.config import config
 from utils.constants import CompareMode
@@ -18,7 +19,52 @@ _ = I18N._
 logger = get_logger("compare_prompts")
 
 
-# TODO enable comparisons between images on the basis of positive and negative prompts, to allow for searching prompts by text
+_image_data_extractor = None
+
+def get_image_data_extractor():
+    global _image_data_extractor
+    if _image_data_extractor is None:
+        _image_data_extractor = ImageDataExtractor()
+    return _image_data_extractor
+
+def extract_prompts_from_image(image_path):
+    """
+    Module-level helper to extract (positive, negative) prompts from image metadata.
+    Returns (None, None) if none found or on handled error.
+    """
+    try:
+        extractor = get_image_data_extractor()
+        positive, negative = extractor.extract_with_sd_prompt_reader(image_path)
+        if positive is not None:
+            return positive, negative
+        return None, None
+    except Exception as e:
+        logger.error(f"Error extracting prompt from {image_path}: {e}")
+        return None, None
+
+def prompt_embedding_from_image(image_path):
+    """
+    Module-level helper to extract prompts and convert them to a single embedding
+    vector using FLAVA, combined as (positive - 0.5 * negative).
+    """
+    try:
+        extractor = get_image_data_extractor()
+        positive_prompt, negative_prompt = extractor.extract_with_sd_prompt_reader(image_path)
+        if positive_prompt is None and negative_prompt is None:
+            return np.zeros(768)
+
+        if positive_prompt and len(positive_prompt) > 2000:
+            positive_prompt = positive_prompt[:2000] + "..."
+        if negative_prompt and len(negative_prompt) > 2000:
+            negative_prompt = negative_prompt[:2000] + "..."
+
+        positive_embedding = np.array(text_embeddings_flava(positive_prompt or ""))
+        negative_embedding = np.array(text_embeddings_flava(negative_prompt or ""))
+        return positive_embedding - (0.5 * negative_embedding)
+    except Exception as e:
+        logger.error(f"Error extracting prompt embedding from {image_path}: {e}")
+        return np.zeros(768)
+
 
 class ComparePrompts(BaseCompareEmbedding):
     COMPARE_MODE = CompareMode.PROMPTS
@@ -33,17 +79,20 @@ class ComparePrompts(BaseCompareEmbedding):
 
     def __init__(self, args=CompareArgs(), gather_files_func=gather_files):
         super().__init__(args, gather_files_func)
-        self._file_embeddings = np.empty((0, 1024 if config.siglip_enable_large_model else 768))
+        self._file_embeddings = np.empty((0, 768))  # FLAVA uses 768-dimensional embeddings
         self._file_faces = np.empty((0))
         self.threshold_duplicate = ComparePrompts.THRESHHOLD_POTENTIAL_DUPLICATE
         self.threshold_probable_match = ComparePrompts.THRESHHOLD_PROBABLE_MATCH
         self.threshold_group_cutoff = ComparePrompts.THRESHHOLD_GROUP_CUTOFF
-        self.text_embeddings_func = text_embeddings_siglip
+        self.text_embeddings_func = text_embeddings_flava
         self.text_embedding_cache = ComparePrompts.TEXT_EMBEDDING_CACHE
         self.multi_embedding_cache = ComparePrompts.MULTI_EMBEDDING_CACHE
-        self.image_data_extractor = ImageDataExtractor()
         self._probable_duplicates = []
         self.settings_updated = False
+        self.compare_data = CompareData(base_dir=self.base_dir, mode=CompareMode.PROMPTS)
+        
+        # Set up image embeddings function for text search
+        self.image_embeddings_func = prompt_embedding_from_image
 
     def set_base_dir(self, base_dir):
         '''
@@ -52,7 +101,7 @@ class ComparePrompts(BaseCompareEmbedding):
         self.base_dir = base_dir
         self.search_output_path = os.path.join(base_dir, ComparePrompts.SEARCH_OUTPUT_FILE)
         self.groups_output_path = os.path.join(base_dir, ComparePrompts.GROUPS_OUTPUT_FILE)
-        self._file_colors_filepath = os.path.join(base_dir, ComparePrompts.PROMPTS_DATA)
+        self.compare_data = CompareData(base_dir=base_dir, mode=CompareMode.PROMPTS)
 
     def set_search_file_path(self, search_file_path):
         '''
@@ -107,24 +156,9 @@ class ComparePrompts(BaseCompareEmbedding):
         logger.info(f" recursive: {self.args.recursive}")
         logger.info(f" file glob pattern: {self.args.inclusion_pattern}")
         logger.info(f" include gifs: {self.args.include_gifs}")
-        logger.info(f" file colors filepath: {self._file_colors_filepath}")
+        logger.info(f" file prompts filepath: {self.compare_data._file_data_filepath}")
         logger.info(f" overwrite image data: {self.args.overwrite}")
         logger.info("|--------------------------------------------------------------------|\n\n")
-
-    def _extract_prompt_from_image(self, image_path):
-        """
-        Extract prompt data from image metadata using ImageDataExtractor.
-        Returns tuple of (positive_prompt, negative_prompt) or (None, None) if no prompts found.
-        """
-        try:
-            positive, negative = self.image_data_extractor.extract_with_sd_prompt_reader(image_path)
-            if positive is not None:
-                return positive, negative
-            return None, None
-        except Exception as e:
-            if self.verbose:
-                logger.error(f"Error extracting prompt from {image_path}: {e}")
-            return None, None
 
     def get_data(self):
         '''
@@ -150,29 +184,26 @@ class ComparePrompts(BaseCompareEmbedding):
             if f in self.compare_data.file_data_dict:
                 prompts = self.compare_data.file_data_dict[f]
             else:
-                positive_prompt, negative_prompt = self._extract_prompt_from_image(f)
+                positive_prompt, negative_prompt = extract_prompts_from_image(f)
                 if positive_prompt is None and negative_prompt is None:
-                    # Skip files only if both prompts are None
+                    # Skip files with no prompt data - this is normal for many images
+                    if self.verbose:
+                        logger.debug(f"No prompt data found in {f}, skipping")
                     continue
                 prompts = (positive_prompt, negative_prompt)
                 self.compare_data.file_data_dict[f] = prompts
                 self.compare_data.has_new_file_data = True
 
             counter += 1
-            # Convert prompts to embeddings using text embedding model
+            # Convert prompts to embeddings using the centralized method
             try:
-                # Always generate embeddings for both positive and negative prompts
-                positive_embedding = self.text_embeddings_func(prompts[0] if prompts[0] is not None else "")
-                negative_embedding = self.text_embeddings_func(prompts[1] if prompts[1] is not None else "")
-                # Always subtract negative from positive (weighted)
-                prompt_embedding = positive_embedding - (0.5 * negative_embedding)
-                
+                prompt_embedding = prompt_embedding_from_image(f)
                 self._file_embeddings = np.vstack((self._file_embeddings, [prompt_embedding]))
                 self.compare_data.files_found.append(f)
                 self._handle_progress(counter, self.max_files_processed_even)
             except Exception as e:
                 if self.verbose:
-                    logger.error(f"Error generating embedding for prompt in {f}: {e}")
+                    logger.warning(f"Skipping file {f} due to embedding error: {e}")
                 continue
 
         # Save prompt data
@@ -245,36 +276,42 @@ class ComparePrompts(BaseCompareEmbedding):
                 else:
                     logger.info("")
 
-        # Gather new image data if it was not in the initial list
-
-        if search_file_path not in self._files_found:
+        # Gather new prompt data if it was not in the initial list
+        if search_file_path not in self.compare_data.files_found:
             if self.verbose:
-                logger.info("Filepath not found in initial list - gathering new file data")
+                logger.info("Filepath not found in initial list - gathering new prompt data")
             try:
-                image = Utils.get_image_array(search_file_path)
+                # Extract prompts from the search image and store them
+                positive_prompt, negative_prompt = extract_prompts_from_image(search_file_path)
+                if positive_prompt is None and negative_prompt is None:
+                    raise AssertionError("No prompt data found in the provided image. This image may not contain prompt metadata.")
+                
+                # Generate embedding for the search image using the centralized method
+                search_embedding = prompt_embedding_from_image(search_file_path)
+                
+                # Add to the beginning of our data
+                self._file_embeddings = np.insert(self._file_embeddings, 0, [search_embedding], 0)
+                self.compare_data.files_found.insert(0, search_file_path)
+                self.compare_data.file_data_dict[search_file_path] = (positive_prompt, negative_prompt)
+                
             except OSError as e:
                 if self.verbose:
                     logger.error(f"{search_file_path} - {e}")
                 raise AssertionError(
                     "Encountered an error accessing the provided file path in the file system.")
-
-            try:
-                colors = self.color_getter(image, self.modifier)
-            except ValueError as e:
+            except Exception as e:
                 if self.verbose:
                     logger.error(e)
                 raise AssertionError(
-                    "Encountered an error gathering colors from the file provided.")
-            self._file_colors = np.insert(self._file_colors, 0, [colors], 0)
-            self._files_found.insert(0, search_file_path)
+                    "Encountered an error gathering prompt data from the file provided.")
 
         files_grouped = self.find_similars_to_image(
-            search_file_path, self._files_found.index(search_file_path))
+            search_file_path, self.compare_data.files_found.index(search_file_path))
         search_file_path = None
         return files_grouped
 
-    def run_search(self):
-        return self._run_search_on_path(self.search_file_path)
+    # Use the base class run_search method which handles both file and text searches
+    # via search_multimodal()
 
     def run_comparison(self, store_checkpoints=False):
         '''
@@ -405,7 +442,10 @@ class ComparePrompts(BaseCompareEmbedding):
 
     @staticmethod
     def is_related(image1, image2):
-        # TODO implement this method for this compare mode
-        return False
+        return BaseCompareEmbedding.is_related(
+            image1,
+            image2,
+            prompt_embedding_from_image
+        )
 
 
