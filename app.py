@@ -14,6 +14,7 @@ from ttkthemes import ThemedTk
 
 from auth.password_admin_window import PasswordAdminWindow
 from auth.password_utils import require_password, check_session_expired
+from compare.base_compare import CompareCancelled
 from compare.compare_args import CompareArgs
 from compare.compare_wrapper import CompareWrapper
 from compare.prevalidations_window import PrevalidationsWindow
@@ -519,6 +520,12 @@ class App():
     def on_closing(self) -> None:
         self.store_info_cache(store_window_state=not self.is_secondary())
         if self.is_secondary():
+            # Attempt to cancel any running compare for this window
+            try:
+                if self.compare_wrapper.has_compare():
+                    self.compare_wrapper.cancel()
+            except Exception as e:
+                logger.error(f"Error signalling compare cancellation: {e}")
             MarkedFiles.remove_marks_for_base_dir(self.base_dir, self.app_actions)
             for i in range(len(App.open_windows)):
                 if App.open_windows[i].window_id == self.window_id:
@@ -1413,6 +1420,8 @@ class App():
             self.progress_bar.start()
             try:
                 exec_func(*args)
+            except CompareCancelled:
+                pass
             except Exception as e:
                 traceback.print_exc()
                 self.alert(_("Error running compare"), str(e), kind="error")

@@ -53,6 +53,11 @@ class CompareWrapper:
     def has_compare(self):
         return self._compare is not None
 
+    def cancel(self):
+        """Cancel any running compare operation."""
+        if self._compare is not None:
+            self._compare.cancel()
+
     def get_args(self):
         if self.has_compare():
             return self._compare.args.clone()

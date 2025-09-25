@@ -52,6 +52,10 @@ def gather_files(base_dir=".", exts=config.image_types, recursive=True, include_
     return files
 
 
+class CompareCancelled(Exception):
+    pass
+
+
 class BaseCompare:
     def __init__(self, args=CompareArgs(), gather_files_func=gather_files):
         self.args = args
@@ -63,6 +67,7 @@ class BaseCompare:
         self.verbose = self.args.verbose
         self.progress_listener = self.args.listener
         self._faceCascade = None
+        self._cancelled = False
         if self.compare_faces:
             self._set_face_cascade()
         self.gather_files_func = gather_files_func
@@ -70,6 +75,18 @@ class BaseCompare:
 
     def is_runnable(self):
         return True
+
+    def cancel(self):
+        """Signal that the compare operation should be cancelled."""
+        self._cancelled = True
+
+    def is_cancelled(self):
+        """Check if the compare operation has been cancelled."""
+        return self._cancelled
+
+    def raise_cancellation_exception(self):
+        """Raise CompareCancelled exception."""
+        raise CompareCancelled("Compare cancelled by user")
 
     @staticmethod
     def calculate_chunk_size(embeddings, max_mem_gb=None):
@@ -217,6 +234,9 @@ class BaseCompare:
         pass
 
     def _handle_progress(self, counter, total, gathering_data=True):
+        if self.is_cancelled():
+            self.raise_cancellation_exception()
+        
         percent_complete = counter / total * 100
         if percent_complete % 10 == 0 or counter % 500 == 0:
             if self.verbose:

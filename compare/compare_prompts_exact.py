@@ -227,6 +227,9 @@ class ComparePromptsExact(BaseCompare):
         counter = 0
 
         for f in self.files:
+            if self.is_cancelled():
+                self.raise_cancellation_exception()
+            
             if Utils.is_invalid_file(f, counter, self.is_run_search, self.args.inclusion_pattern):
                 continue
 
@@ -508,6 +511,9 @@ class ComparePromptsExact(BaseCompare):
 
             # Compare with all other files
             for j in range(i + 1, self.compare_data.n_files_found):
+                if self.is_cancelled():
+                    self.raise_cancellation_exception()
+                
                 compare_file = self.compare_data.files_found[j]
                 if compare_file not in self.compare_data.file_data_dict:
                     continue

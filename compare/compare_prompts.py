@@ -175,6 +175,10 @@ class ComparePrompts(BaseCompareEmbedding):
         counter = 0
 
         for f in self.files:
+            # Check for cancellation during data gathering
+            if self.is_cancelled():
+                self.raise_cancellation_exception()
+            
             if Utils.is_invalid_file(f, counter, self.is_run_search, self.args.inclusion_pattern):
                 continue
 
