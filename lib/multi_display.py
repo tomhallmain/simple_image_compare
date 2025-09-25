@@ -262,32 +262,12 @@ class SmartToplevel(tk.Toplevel):
     
     Usage:
         # Instead of: new_window = tk.Toplevel(parent)
-        new_window = SmartToplevel(parent, title="My Window", geometry="400x300")
+        new_window = SmartToplevel(persistent_parent=parent, title="My Window", geometry="400x300")
         
-        # For staggered positioning, pass the last window as parent:
-        new_window = SmartToplevel(previous_window, title="My Window", geometry="400x300", 
-                                 offset_x=30, offset_y=30)
+        # For staggered positioning, pass the last window as position_parent:
+        new_window = SmartToplevel(persistent_parent=main_root, position_parent=previous_window,
+                                   title="My Window", geometry="400x300", offset_x=30, offset_y=30)
     """
-    
-    def _extract_window_dimensions(self, geometry):
-        """
-        Extract width and height from geometry string or use defaults.
-        
-        Args:
-            geometry: Geometry string (e.g., "400x300" or "400x300+100+200")
-            
-        Returns:
-            tuple: (width, height)
-        """
-        if geometry:
-            if '+' in geometry:
-                size_part = geometry.split('+')[0]
-                width, height = map(int, size_part.split('x'))
-            else:
-                width, height = map(int, geometry.split('x'))
-        else:
-            width, height = 400, 300  # Default size
-        return width, height
     
     def __init__(self, persistent_parent=None, position_parent=None, title=None, geometry=None, 
                  offset_x=30, offset_y=30, center=False, 
@@ -522,5 +502,25 @@ class SmartToplevel(tk.Toplevel):
             
         except Exception as e:
             logger.warning(f"Failed to center window on display: {e}")
+    
+    def _extract_window_dimensions(self, geometry):
+        """
+        Extract width and height from geometry string or use defaults.
+        
+        Args:
+            geometry: Geometry string (e.g., "400x300" or "400x300+100+200")
+            
+        Returns:
+            tuple: (width, height)
+        """
+        if geometry:
+            if '+' in geometry:
+                size_part = geometry.split('+')[0]
+                width, height = map(int, size_part.split('x'))
+            else:
+                width, height = map(int, geometry.split('x'))
+        else:
+            width, height = 400, 300  # Default size
+        return width, height
 
 

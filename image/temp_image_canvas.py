@@ -66,7 +66,7 @@ class TempImageCanvas:
         # Create geometry string with custom positioning
         geometry = f"{dimensions}+{new_x}+{new_y}"
         
-        TempImageCanvas.top_level = SmartToplevel(parent=master, geometry=geometry, auto_position=False)
+        TempImageCanvas.top_level = SmartToplevel(persistent_parent=master, geometry=geometry, auto_position=False)
         self.master = TempImageCanvas.top_level
 #        self.app_master = master
         self.frame = Frame(self.master)

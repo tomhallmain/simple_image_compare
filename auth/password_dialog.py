@@ -39,7 +39,7 @@ class PasswordDialog(CapsLockMixin):
         
         # Create dialog window using SmartToplevel
         self.dialog = SmartToplevel(
-            parent=master,
+            persistent_parent=master,
             center=True  # Center on the same display as parent
         )
         self.dialog.title(_("Password Required") if self.password_configured else _("Password Protection"))

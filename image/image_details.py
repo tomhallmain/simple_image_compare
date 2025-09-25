@@ -62,7 +62,7 @@ class ImageDetails():
 
     def __init__(self, parent_master, media_path, index_text, app_actions, do_refresh=True):
         self.parent_master = parent_master
-        self.master = SmartToplevel(parent=parent_master)
+        self.master = SmartToplevel(persistent_parent=parent_master)
         self.master.title(_("Image details"))
         
         # Set the size while preserving the position set by SmartToplevel
