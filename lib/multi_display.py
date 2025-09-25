@@ -289,14 +289,15 @@ class SmartToplevel(tk.Toplevel):
             width, height = 400, 300  # Default size
         return width, height
     
-    def __init__(self, parent=None, title=None, geometry=None, 
+    def __init__(self, persistent_parent=None, position_parent=None, title=None, geometry=None, 
                  offset_x=30, offset_y=30, center=False, 
                  auto_position=True, **kwargs):
         """
         Initialize a SmartToplevel window.
         
         Args:
-            parent: Parent window (used for display detection and positioning)
+            persistent_parent: The actual Tk parent used for lifecycle/persistence
+            position_parent: The window used solely for positioning calculations
             title: Window title
             geometry: Window geometry string (e.g., "400x300")
             offset_x: X offset from parent window (default: 30)
@@ -316,8 +317,10 @@ class SmartToplevel(tk.Toplevel):
         except ImportError as e:
             logger.warning(f"Error setting default styling: {e}")
         
-        # Initialize the Toplevel
-        super().__init__(parent, **kwargs)
+        # Initialize the Toplevel with persistent parent
+        super().__init__(persistent_parent, **kwargs)
+        if position_parent is None:
+            position_parent = persistent_parent
         
         # Set title if provided
         if title:
@@ -330,16 +333,16 @@ class SmartToplevel(tk.Toplevel):
         # Check if geometry already includes position information
         geometry_has_position = geometry and '+' in geometry
         
-        # Position on the same display as parent (if auto_position is True)
-        if parent and auto_position and not geometry_has_position:
+        # Position on the same display as given positioning parent (if auto_position is True)
+        if position_parent and auto_position and not geometry_has_position:
             try:
                 # Debug: Log parent window position
-                # parent_x = parent.winfo_x()
-                # parent_y = parent.winfo_y()
+                # parent_x = position_parent.winfo_x()
+                # parent_y = position_parent.winfo_y()
                 # logger.debug(f"Parent window position: ({parent_x}, {parent_y})")
                 
                 display_manager.position_window_on_same_display(
-                    parent, self, 
+                    position_parent, self, 
                     offset_x=offset_x, 
                     offset_y=offset_y, 
                     center=center,
@@ -350,13 +353,13 @@ class SmartToplevel(tk.Toplevel):
                 logger.warning(f"Failed to position SmartToplevel on same display: {e}")
                 # Fallback to simple offset positioning with bounds checking
                 try:
-                    parent_x = parent.winfo_x()
-                    parent_y = parent.winfo_y()
+                    parent_x = position_parent.winfo_x()
+                    parent_y = position_parent.winfo_y()
                     new_x = parent_x + offset_x
                     new_y = parent_y + offset_y
                     
                     # Check if window would go off the bottom of the screen
-                    screen_height = parent.winfo_screenheight()
+                    screen_height = position_parent.winfo_screenheight()
                     
                     # Get window height for bounds checking
                     _, window_height = self._extract_window_dimensions(geometry)
@@ -374,16 +377,16 @@ class SmartToplevel(tk.Toplevel):
                 except Exception as fallback_e:
                     logger.warning(f"Fallback positioning also failed: {fallback_e}")
                     pass  # Use default positioning
-        elif parent and not auto_position and not geometry_has_position:
+        elif position_parent and not auto_position and not geometry_has_position:
             # Parent provided but auto_position is False - still position relative to parent
             try:
-                parent_x = parent.winfo_x()
-                parent_y = parent.winfo_y()
+                parent_x = position_parent.winfo_x()
+                parent_y = position_parent.winfo_y()
                 new_x = parent_x + offset_x
                 new_y = parent_y + offset_y
                 
                 # Check if window would go off the bottom of the screen
-                screen_height = parent.winfo_screenheight()
+                screen_height = position_parent.winfo_screenheight()
                 
                 # Get window height for bounds checking
                 _, window_height = self._extract_window_dimensions(geometry)
@@ -411,7 +414,7 @@ class SmartToplevel(tk.Toplevel):
             if geometry_has_position:
                 logger.debug(f"Skipping positioning - geometry already includes position: {geometry}")
             else:
-                logger.debug(f"Skipping positioning - parent={parent}, auto_position={auto_position}")
+                logger.debug(f"Skipping positioning - position_parent={position_parent}, auto_position={auto_position}")
 
     def get_display_info(self):
         """

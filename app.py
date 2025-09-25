@@ -90,18 +90,20 @@ class App():
             # is closed, the second secondary window will also be closed because its master has been destroyed.
             master = App.true_master
         
-        # For staggered positioning, use the last secondary window as parent if available
-        parent_for_positioning = master
+        # For staggered positioning, choose a positioning parent (last secondary if available),
+        # but always use App.true_master as the actual Tk parent to avoid destruction chaining.
+        positioning_parent = master
         for window in reversed(App.open_windows):
             if window.is_secondary() and window.master.winfo_exists():
-                parent_for_positioning = window.master
+                positioning_parent = window.master
                 break
-        
-        # Use SmartToplevel with staggered positioning for secondary windows
-        # Ensure the parent window is still valid before creating the new window
-        if not parent_for_positioning.winfo_exists():
-            parent_for_positioning = App.true_master
-        top_level = SmartToplevel(parent=parent_for_positioning, geometry=config.default_secondary_window_size)
+
+        # Ensure the positioning parent is still valid
+        if not positioning_parent.winfo_exists():
+            positioning_parent = App.true_master
+
+        # Create the toplevel with persistent parent and position relative to positioning_parent
+        top_level = SmartToplevel(persistent_parent=App.true_master, position_parent=positioning_parent, geometry=config.default_secondary_window_size)
         top_level.title(_(" Simple Image Compare "))
         window_id = random.randint(1000000000, 9999999999)
         App.secondary_top_levels[window_id] = top_level  # Keep reference to avoid gc
@@ -968,7 +970,7 @@ class App():
             window.media_canvas.focus()
 
     def get_help_and_config(self, event=None) -> None:
-        top_level = SmartToplevel(parent=self.master, geometry="900x600")
+        top_level = SmartToplevel(persistent_parent=self.master, geometry="900x600")
         top_level.title(_("Help and Config"))
         try:
             help_and_config = HelpAndConfig(top_level)
@@ -1062,7 +1064,7 @@ class App():
         self.master.update()
 
     def open_recent_directory_window(self, event=None, open_gui: bool = True, run_compare_image: Optional[str] = None, extra_callback_args: Optional[list[Any]] = None) -> None:
-        top_level = SmartToplevel(parent=self.master, geometry=RecentDirectoryWindow.get_geometry(is_gui=open_gui))
+        top_level = SmartToplevel(persistent_parent=self.master, geometry=RecentDirectoryWindow.get_geometry(is_gui=open_gui))
         top_level.title(_("Set Image Comparison Directory"))
         if not open_gui:
             top_level.attributes('-alpha', 0.3)
@@ -1513,7 +1515,7 @@ class App():
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark_for_current_image()
             single_image = True
-        top_level = SmartToplevel(parent=self.master, geometry=MarkedFiles.get_geometry(is_gui=open_gui))
+        top_level = SmartToplevel(persistent_parent=self.master, geometry=MarkedFiles.get_geometry(is_gui=open_gui))
         top_level.title(_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)))
         if not open_gui:
             top_level.attributes('-alpha', 0.3)
@@ -2108,7 +2110,7 @@ class App():
         y = parent_y
 
         # Create the toast on the top level
-        toast = SmartToplevel(parent=self.master, geometry=f'{width}x{height}+{int(x)}+{int(y)}', auto_position=False)
+        toast = SmartToplevel(persistent_parent=self.master, geometry=f'{width}x{height}+{int(x)}+{int(y)}', auto_position=False)
         self.container = Frame(toast)
         self.container.config(bg=AppStyle.BG_COLOR)
         self.container.pack(fill=BOTH, expand=YES)

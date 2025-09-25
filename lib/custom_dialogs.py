@@ -25,7 +25,7 @@ def show_high_severity_dialog(master, title, message):
         messagebox.OK or messagebox.CANCEL depending on user choice
     """
     # Create custom dialog using SmartToplevel for multi-display positioning
-    dialog = SmartToplevel(parent=master, center=True)
+    dialog = SmartToplevel(persistent_parent=master, center=True)
     dialog.title(title)
     dialog.resizable(False, False)
     dialog.transient(master)
