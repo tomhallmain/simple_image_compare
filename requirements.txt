@@ -19,6 +19,7 @@ tensorflow
 tensorflow_hub
 tf_keras
 torch
+torchvision
 transformers
 ttkthemes
 ttkthemes>=3.2.2
