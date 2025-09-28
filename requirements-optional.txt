@@ -2,5 +2,4 @@
 piexif  # EXIF data manipulation for images
 
 # Quantum-safe cryptography (not available on PyPI)
-# Install from GitHub: pip install git+https://github.com/open-quantum-safe/liboqs-python.git
 git+https://github.com/open-quantum-safe/liboqs-python.git

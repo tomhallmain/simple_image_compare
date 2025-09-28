@@ -17,10 +17,15 @@ class H5ImageClassifier:
             custom_objects: Dictionary of custom layer classes {name: class}
         """
         self.is_loaded = False
+        self.load_errors = []
         self.model = self._load_model(model_path, custom_objects or {})
         if self.is_loaded:
             self.input_shape = self._get_input_shape()
             self._verify_model_compatibility()
+        else:
+            # Print collected errors if model failed to load
+            for error in self.load_errors:
+                logger.error(error)
 
     def _load_model(self, model_path, custom_objects):
         """Load model with fallback strategies"""
@@ -42,7 +47,7 @@ class H5ImageClassifier:
         return None
 
     def _register_common_layers(self, custom_objects):
-        """Auto-register common custom layers"""
+        """Auto-register common custom layers and handle compatibility issues"""
         try:
             import tensorflow_hub as hub
             custom_objects['KerasLayer'] = hub.KerasLayer
@@ -58,7 +63,7 @@ class H5ImageClassifier:
                 logger.info("Attempting TensorFlow Keras load...")
                 return tf_load_model(model_path)
         except Exception as e:
-            logger.error(f"TensorFlow Keras load failed: {str(e)[:200]}")
+            self.load_errors.append(f"TensorFlow Keras load failed: {str(e)[:300]}")
             return None
 
     def _load_model_tf_keras(self, model_path, custom_objects):
@@ -68,7 +73,7 @@ class H5ImageClassifier:
             logger.info("Attempting tf_keras load...")
             return load_model(model_path, custom_objects=custom_objects)
         except Exception as e:
-            logger.error(f"tf_keras load failed: {str(e)[:200]}")
+            self.load_errors.append(f"tf_keras load failed: {str(e)[:300]}")
             return None
 
     def _load_model_keras(self, model_path, custom_objects):
@@ -80,7 +85,7 @@ class H5ImageClassifier:
                 logger.info("Attempting standalone Keras load...")
                 return keras_load_model(model_path)
         except Exception as e:
-            logger.error(f"Standalone Keras load failed: {str(e)[:200]}")
+            self.load_errors.append(f"Standalone Keras load failed: {str(e)[:300]}")
             return None
 
     def _get_input_shape(self):
