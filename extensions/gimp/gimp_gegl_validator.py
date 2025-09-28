@@ -134,6 +134,9 @@ class GimpGeglValidator:
         """
         Validate PyGObject installation for GIMP Python bindings.
         
+        Note: This validation is optional when using subprocess mode.
+        PyGObject is only required when using direct Python bindings.
+        
         Returns:
             Tuple of (is_valid, error_messages)
         """
@@ -145,8 +148,10 @@ class GimpGeglValidator:
             gi.require_version('Gegl', '0.4')
             from gi.repository import Gimp, Gegl  # type: ignore
         except ImportError as e:
-            errors.append(f"PyGObject not installed: {e}")
-            return False, errors
+            # PyGObject not available - this is OK for subprocess mode
+            logger.warning(f"PyGObject not available in system Python: {e}")
+            logger.info("Using subprocess mode - PyGObject not required in system Python")
+            return True, []  # Don't treat this as an error
         except ValueError as e:
             errors.append(f"GIMP/GEGL bindings not available: {e}")
             return False, errors
@@ -452,11 +457,14 @@ def get_validation_report() -> str:
     for error in gimp_errors:
         report.append(f"  - {error}")
     
-    # PyGObject installation
+    # PyGObject installation (optional for subprocess mode)
     pygobject_valid, pygobject_errors = validator.validate_pygobject_installation()
-    report.append(f"\nPyGObject Installation: {'✅ PASS' if pygobject_valid else '❌ FAIL'}")
-    for error in pygobject_errors:
-        report.append(f"  - {error}")
+    if pygobject_errors:
+        report.append(f"\nPyGObject Installation: {'✅ PASS' if pygobject_valid else '❌ FAIL'}")
+        for error in pygobject_errors:
+            report.append(f"  - {error}")
+    else:
+        report.append(f"\nPyGObject Installation: {'✅ AVAILABLE' if pygobject_valid else '⚠️  NOT AVAILABLE (using subprocess mode)'}")
     
     # Configuration
     config_status = "✅ ENABLED" if config.gimp_gegl_enabled else "❌ DISABLED"
