@@ -1,5 +1,7 @@
 cairosvg
+cryptography
 imageio==2.31.6
+keyring
 matplotlib>=3.8.0
 numpy>=1.26.1
 openai-clip
