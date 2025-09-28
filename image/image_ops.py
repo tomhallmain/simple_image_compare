@@ -10,12 +10,16 @@ import PIL.Image
 
 from utils.config import config
 from utils.logging_setup import get_logger
+from extensions.gimp.gimp_gegl_client import GimpGeglClient
 
 logger = get_logger("image_ops")
 
 
 class ImageOps:
     COLORS = ["red", "green", "blue", "yellow", "purple", "orange", "black", "white", "gray", "pink", "brown"]
+    
+    # Class-level cache for GEGL validation
+    _gegl_validation_cache = None
 
     @staticmethod
     def new_filepath(image_path: str, new_filename: str = "", append_part: str | None = None) -> str:
@@ -383,6 +387,340 @@ class ImageOps:
         color_converted = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
         pil_image = PIL.Image.fromarray(color_converted)
         return pil_image
+
+    # GIMP GEGL Integration Methods
+    @staticmethod
+    def is_gimp_gegl_available():
+        """Check if GIMP GEGL integration is available."""
+        # Check if we've already validated this session
+        if ImageOps._gegl_validation_cache is not None:
+            return ImageOps._gegl_validation_cache
+        
+        # Trigger lazy GIMP validation if not already done
+        config.validate_and_find_gimp()
+        
+        # If GIMP is not available, GEGL is not available
+        if not config.gimp_gegl_enabled:
+            ImageOps._gegl_validation_cache = False
+            return False
+        
+        # Perform comprehensive GEGL validation
+        try:
+            from extensions.gimp.gimp_gegl_validator import GimpGeglValidator
+            validator = GimpGeglValidator()
+            is_valid, errors = validator.validate_complete_setup()
+            
+            if is_valid:
+                logger.debug("GEGL setup validation successful")
+                ImageOps._gegl_validation_cache = True
+                return True
+            else:
+                logger.warning(f"GEGL setup validation failed: {', '.join(errors)}")
+                # Update config to disable GEGL for this session
+                config.gimp_gegl_enabled = False
+                ImageOps._gegl_validation_cache = False
+                return False
+                
+        except Exception as e:
+            logger.error(f"Failed to validate GEGL setup: {e}")
+            # Update config to disable GEGL for this session
+            config.gimp_gegl_enabled = False
+            ImageOps._gegl_validation_cache = False
+            return False
+
+    @staticmethod
+    def clear_gegl_validation_cache():
+        """Clear the GEGL validation cache to force re-validation on next check."""
+        ImageOps._gegl_validation_cache = None
+        logger.debug("GEGL validation cache cleared")
+
+    @staticmethod
+    def apply_gegl_operation(image_path: str, operation_name: str, parameters: dict, output_path: str = None, 
+                           opacity: float = None, blend_mode = None) -> str:
+        """
+        Apply a GEGL operation to an image using GIMP 3.
+        
+        Args:
+            image_path: Path to the input image
+            operation_name: Name of the GEGL operation (e.g., "gegl:brightness-contrast")
+            parameters: Dictionary of parameters for the operation
+            output_path: Optional output path. If None, generates one automatically
+            opacity: Opacity for the operation (0.0 to 1.0). If None, uses default (1.0)
+            blend_mode: Blend mode for the operation. If None, uses default (normal)
+            
+        Returns:
+            Path to the processed image
+            
+        Raises:
+            RuntimeError: If GIMP GEGL is not available or operation fails
+        """
+        if not ImageOps.is_gimp_gegl_available():
+            raise RuntimeError("GIMP GEGL integration is not available. Check GIMP installation and configuration.")
+        
+        try:
+            with GimpGeglClient() as client:
+                return client.apply_gegl_operation(image_path, operation_name, parameters, output_path, opacity, blend_mode)
+        except Exception as e:
+            logger.error(f"GEGL operation failed: {e}")
+            raise RuntimeError(f"GEGL operation '{operation_name}' failed: {e}")
+
+    @staticmethod
+    def gegl_brightness_contrast(image_path: str, brightness: float = 0.0, contrast: float = 0.0, output_path: str = None) -> str:
+        """
+        Apply brightness and contrast adjustment using GEGL.
+        
+        Args:
+            image_path: Path to the input image
+            brightness: Brightness adjustment (-1.0 to 1.0)
+            contrast: Contrast adjustment (-1.0 to 1.0)
+            output_path: Optional output path
+            
+        Returns:
+            Path to the processed image
+        """
+        return ImageOps.apply_gegl_operation(
+            image_path, 
+            "gegl:brightness-contrast", 
+            {"brightness": brightness, "contrast": contrast},
+            output_path
+        )
+
+    @staticmethod
+    def gegl_color_balance(image_path: str, cyan_red: float = 0.0, magenta_green: float = 0.0, 
+                          yellow_blue: float = 0.0, output_path: str = None) -> str:
+        """
+        Apply color balance adjustment using GEGL.
+        
+        Args:
+            image_path: Path to the input image
+            cyan_red: Cyan-Red balance (-1.0 to 1.0)
+            magenta_green: Magenta-Green balance (-1.0 to 1.0)
+            yellow_blue: Yellow-Blue balance (-1.0 to 1.0)
+            output_path: Optional output path
+            
+        Returns:
+            Path to the processed image
+        """
+        return ImageOps.apply_gegl_operation(
+            image_path,
+            "gegl:color-balance",
+            {"cyan-red": cyan_red, "magenta-green": magenta_green, "yellow-blue": yellow_blue},
+            output_path
+        )
+
+    @staticmethod
+    def gegl_hue_saturation(image_path: str, hue: float = 0.0, saturation: float = 0.0, 
+                           lightness: float = 0.0, output_path: str = None) -> str:
+        """
+        Apply hue, saturation, and lightness adjustment using GEGL.
+        
+        Args:
+            image_path: Path to the input image
+            hue: Hue shift (-180.0 to 180.0 degrees)
+            saturation: Saturation adjustment (-100.0 to 100.0)
+            lightness: Lightness adjustment (-100.0 to 100.0)
+            output_path: Optional output path
+            
+        Returns:
+            Path to the processed image
+        """
+        return ImageOps.apply_gegl_operation(
+            image_path,
+            "gegl:hue-saturation",
+            {"hue": hue, "saturation": saturation, "lightness": lightness},
+            output_path
+        )
+
+    @staticmethod
+    def gegl_gaussian_blur(image_path: str, std_dev_x: float = 1.0, std_dev_y: float = 1.0, 
+                          output_path: str = None) -> str:
+        """
+        Apply Gaussian blur using GEGL.
+        
+        Args:
+            image_path: Path to the input image
+            std_dev_x: Standard deviation in X direction (0.0 to 100.0)
+            std_dev_y: Standard deviation in Y direction (0.0 to 100.0)
+            output_path: Optional output path
+            
+        Returns:
+            Path to the processed image
+        """
+        return ImageOps.apply_gegl_operation(
+            image_path,
+            "gegl:gaussian-blur",
+            {"std-dev-x": std_dev_x, "std-dev-y": std_dev_y},
+            output_path
+        )
+
+    @staticmethod
+    def gegl_unsharp_mask(image_path: str, std_dev: float = 1.0, scale: float = 0.5, 
+                         output_path: str = None) -> str:
+        """
+        Apply unsharp mask using GEGL.
+        
+        Args:
+            image_path: Path to the input image
+            std_dev: Standard deviation (0.0 to 10.0)
+            scale: Scale factor (0.0 to 10.0)
+            output_path: Optional output path
+            
+        Returns:
+            Path to the processed image
+        """
+        return ImageOps.apply_gegl_operation(
+            image_path,
+            "gegl:unsharp-mask",
+            {"std-dev": std_dev, "scale": scale},
+            output_path
+        )
+
+    @staticmethod
+    def gegl_noise_reduce(image_path: str, iterations: int = 1, spatial_radius: float = 1.0, 
+                         temporal_radius: float = 0.0, output_path: str = None) -> str:
+        """
+        Apply noise reduction using GEGL.
+        
+        Args:
+            image_path: Path to the input image
+            iterations: Number of iterations (1 to 10)
+            spatial_radius: Spatial radius (0.0 to 10.0)
+            temporal_radius: Temporal radius (0.0 to 10.0)
+            output_path: Optional output path
+            
+        Returns:
+            Path to the processed image
+        """
+        return ImageOps.apply_gegl_operation(
+            image_path,
+            "gegl:noise-reduce",
+            {"iterations": iterations, "spatial-radius": spatial_radius, "temporal-radius": temporal_radius},
+            output_path
+        )
+
+    @staticmethod
+    def gegl_levels(image_path: str, in_low: float = 0.0, in_high: float = 1.0, 
+                   out_low: float = 0.0, out_high: float = 1.0, gamma: float = 1.0, 
+                   output_path: str = None) -> str:
+        """
+        Apply levels adjustment using GEGL.
+        
+        Args:
+            image_path: Path to the input image
+            in_low: Input low level (0.0 to 1.0)
+            in_high: Input high level (0.0 to 1.0)
+            out_low: Output low level (0.0 to 1.0)
+            out_high: Output high level (0.0 to 1.0)
+            gamma: Gamma correction (0.0 to 10.0)
+            output_path: Optional output path
+            
+        Returns:
+            Path to the processed image
+        """
+        return ImageOps.apply_gegl_operation(
+            image_path,
+            "gegl:levels",
+            {"in-low": in_low, "in-high": in_high, "out-low": out_low, "out-high": out_high, "gamma": gamma},
+            output_path
+        )
+
+    @staticmethod
+    def gegl_exposure(image_path: str, black: float = 0.0, exposure: float = 0.0, 
+                     gamma: float = 1.0, output_path: str = None) -> str:
+        """
+        Apply exposure adjustment using GEGL.
+        
+        Args:
+            image_path: Path to the input image
+            black: Black point (0.0 to 1.0)
+            exposure: Exposure adjustment (-10.0 to 10.0)
+            gamma: Gamma correction (0.0 to 10.0)
+            output_path: Optional output path
+            
+        Returns:
+            Path to the processed image
+        """
+        return ImageOps.apply_gegl_operation(
+            image_path,
+            "gegl:exposure",
+            {"black": black, "exposure": exposure, "gamma": gamma},
+            output_path
+        )
+
+    @staticmethod
+    def get_available_gegl_operations():
+        """Get list of available GEGL operations."""
+        if not ImageOps.is_gimp_gegl_available():
+            return []
+        
+        try:
+            with GimpGeglClient() as client:
+                return client.get_available_operations()
+        except Exception as e:
+            logger.error(f"Failed to get GEGL operations: {e}")
+            return []
+
+    @staticmethod
+    def get_gegl_operation_schema(operation_name: str):
+        """Get parameter schema for a GEGL operation."""
+        if not ImageOps.is_gimp_gegl_available():
+            return {}
+        
+        try:
+            with GimpGeglClient() as client:
+                return client.get_operation_schema(operation_name)
+        except Exception as e:
+            logger.error(f"Failed to get GEGL operation schema: {e}")
+            return {}
+
+    @staticmethod
+    def get_gegl_validation_report():
+        """
+        Get a comprehensive validation report for GIMP GEGL setup.
+        
+        Returns:
+            Formatted validation report string
+        """
+        try:
+            from extensions.gimp.gimp_gegl_validator import get_validation_report
+            return get_validation_report()
+        except Exception as e:
+            logger.error(f"Failed to generate validation report: {e}")
+            return f"Error generating validation report: {e}"
+
+    @staticmethod
+    def get_available_blend_modes():
+        """Get list of available GIMP blend modes."""
+        if not ImageOps.is_gimp_gegl_available():
+            return []
+        
+        try:
+            from extensions.gimp.gimp_gegl_client import GimpBlendMode
+            return [mode.value for mode in GimpBlendMode]
+        except Exception as e:
+            logger.error(f"Failed to get blend modes: {e}")
+            return []
+
+    @staticmethod
+    def create_gegl_client_with_settings(default_opacity: float = 1.0, default_blend_mode = None):
+        """
+        Create a GimpGeglClient with custom default settings.
+        
+        Args:
+            default_opacity: Default opacity for operations (0.0 to 1.0)
+            default_blend_mode: Default blend mode for operations
+            
+        Returns:
+            Configured GimpGeglClient instance
+        """
+        if not ImageOps.is_gimp_gegl_available():
+            raise RuntimeError("GIMP GEGL integration is not available")
+        
+        try:
+            return GimpGeglClient(default_opacity=default_opacity, default_blend_mode=default_blend_mode)
+        except Exception as e:
+            logger.error(f"Failed to create GEGL client: {e}")
+            raise RuntimeError(f"Failed to create GEGL client: {e}")
 
 if __name__ == "__main__":
    ImageOps.randomly_modify_image(sys.argv[1])

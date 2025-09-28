@@ -84,6 +84,10 @@ class Config:
         self.refacdir_client_password = "<PASSWORD>"
         self.gimp_exe_loc = "gimp-2.10"
         self._gimp_validated = False  # Cache for GIMP validation result
+        self.gimp_gegl_enabled = True  # Will be overridden if GIMP 3 not available
+        self.gimp_gegl_timeout = 60  # Timeout for GIMP operations in seconds
+        self.gimp_gegl_temp_dir = None  # Custom temp directory for GIMP operations
+        self.gimp_gegl_auto_cleanup = True  # Automatically clean up temporary files
         self.image_edit_configuration = ImageEditConfiguration()
 
         dict_set = False
@@ -209,6 +213,8 @@ class Config:
         self.set_directories_to_search_for_related_images()
         self.check_image_edit_configuration()
         self.remove_example_h5_model_details()
+        
+        # GIMP and GEGL availability will be checked lazily when first needed
 
         if self.print_settings:
             self.print_config_settings()
@@ -227,6 +233,8 @@ class Config:
             # Check if the configured GIMP path is valid
             if self._is_valid_gimp_installation(self.gimp_exe_loc):
                 logger.info(f"Using configured GIMP installation: {self.gimp_exe_loc}")
+                # Check if it's GIMP 3+ for GEGL support
+                self._check_gimp_version_for_gegl()
                 self._gimp_validated = True
                 return
         
@@ -235,10 +243,14 @@ class Config:
         self.gimp_exe_loc = detected_gimp # Will be None if no valid GIMP installation is found
         if detected_gimp:
             logger.info(f"Auto-detected GIMP installation: {self.gimp_exe_loc}")
+            # Check if it's GIMP 3+ for GEGL support
+            self._check_gimp_version_for_gegl()
             self._gimp_validated = True
         else:
             logger.warning("No valid GIMP installation found. GIMP integration will not be available.")
             logger.info("To enable GIMP integration, set 'gimp_exe_loc' in your config.json file.")
+            # No GIMP found, disable GEGL
+            self.gimp_gegl_enabled = False
             self._gimp_validated = True
 
     def _is_valid_gimp_installation(self, gimp_path):
@@ -320,6 +332,73 @@ class Config:
                 return name
         
         return None
+
+    def _check_gimp_version_for_gegl(self):
+        """Check if the current GIMP installation supports GEGL (requires GIMP 3+)."""
+        try:
+            if self._is_gimp_3_or_later(self.gimp_exe_loc):
+                logger.debug("GIMP 3+ detected, GEGL operations enabled")
+                # GEGL is already enabled by default, no need to change
+            else:
+                logger.warning("GIMP 2.x or lower detected, disabling GEGL operations (requires GIMP 3+)")
+                self.gimp_gegl_enabled = False
+        except Exception as e:
+            logger.warning(f"Error checking GIMP version: {e}")
+            logger.info("Disabling GEGL operations due to error")
+            self.gimp_gegl_enabled = False
+
+    def _is_gimp_3_or_later(self, gimp_path):
+        """Check if the GIMP installation is version 3.0 or later."""
+        try:
+            # Handle both full paths and executable names
+            if os.path.isfile(gimp_path):
+                executable_path = gimp_path
+            else:
+                executable_path = shutil.which(gimp_path)
+                if not executable_path:
+                    return False
+            
+            # Test if the executable can be run (version check)
+            result = subprocess.run([executable_path, "--version"], 
+                                  capture_output=True, text=True, timeout=10)
+            if result.returncode != 0:
+                return False
+            
+            # Check version in output
+            version_output = result.stdout
+            if "GNU Image Manipulation Program" not in version_output:
+                return False
+            
+            # Look for version 3.x or later
+            import re
+            # Try multiple patterns to handle different GIMP version output formats
+            patterns = [
+                r'GIMP\s+(\d+)\.(\d+)',  # "GIMP 3.0.4"
+                r'Version\s+(\d+)\.(\d+)',  # "Version 3.0.4"
+                r'GNU Image Manipulation Program.*?(\d+)\.(\d+)',  # "GNU Image Manipulation Program Version 3.0.4"
+            ]
+            
+            version_match = None
+            for pattern in patterns:
+                version_match = re.search(pattern, version_output)
+                if version_match:
+                    break
+            
+            if version_match:
+                major_version = int(version_match.group(1))
+                minor_version = int(version_match.group(2))
+                logger.debug(f"Parsed GIMP version: {major_version}.{minor_version}")
+                if major_version >= 3:
+                    return True
+                elif major_version == 2 and minor_version >= 99:  # GIMP 2.99 is development version of 3.0
+                    return True
+            else:
+                logger.debug(f"No version match found in GIMP output: {repr(version_output)}")
+            
+            return False
+            
+        except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError, OSError, ValueError):
+            return False
 
     def set_directories_to_search_for_related_images(self):
         temp_list = self.directories_to_search_for_related_images[:]
@@ -408,7 +487,7 @@ class Config:
         if self.gimp_exe_loc:
             logger.info(f" - Using GIMP installation: {self.gimp_exe_loc}")
         else:
-            logger.info(f" - GIMP integration: Not configured or not found")
+            logger.info(f" - GIMP integration: Not found")
         logger.info(f" - Max files per compare: {self.file_counter_limit}")
 
     def toggle_video_mode(self):
