@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-09-25 16:23-0400\n"
-"PO-Revision-Date: 2025-09-25 16:23-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-10-02 18:28-0400\n"
+"PO-Revision-Date: 2025-10-02 18:28-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -945,193 +945,193 @@ msgid ""
 "filter settings."
 msgstr "이 디렉터리 및 현재 필터 설정에 더 이상 이미지 그룹이 남아 있지 않습니다."
 
-#: compare/prevalidations_window.py:28
+#: compare/prevalidations_window.py:29
 msgid "(no positives set)"
 msgstr "(포지티브 설정 없음)"
 
-#: compare/prevalidations_window.py:29
+#: compare/prevalidations_window.py:30
 msgid "(no negatives set)"
 msgstr "(네거티브 설정 없음)"
 
-#: compare/prevalidations_window.py:31 compare/prevalidations_window.py:351
+#: compare/prevalidations_window.py:32 compare/prevalidations_window.py:369
 msgid "New Prevalidation"
 msgstr "새로운 유효성"
 
-#: compare/prevalidations_window.py:79
+#: compare/prevalidations_window.py:80
 msgid "Loading image classifier <{0}> ..."
 msgstr "이미지 분류기 <{0}> 로드 중 ..."
 
-#: compare/prevalidations_window.py:137
+#: compare/prevalidations_window.py:138
 msgid " detected"
 msgstr " 관련 기사"
 
-#: compare/prevalidations_window.py:139
+#: compare/prevalidations_window.py:140
 msgid " - skipped"
 msgstr " - 건너뛰기"
 
-#: compare/prevalidations_window.py:142
+#: compare/prevalidations_window.py:143
 msgid " - hidden"
 msgstr " - 숨겨진"
 
-#: compare/prevalidations_window.py:147
+#: compare/prevalidations_window.py:148
 msgid " - marked"
 msgstr " - 표시"
 
-#: compare/prevalidations_window.py:155
+#: compare/prevalidations_window.py:156
 msgid "Moving file: "
 msgstr "파일 이동: "
 
-#: compare/prevalidations_window.py:184
+#: compare/prevalidations_window.py:202
 msgid "Deleting file: "
 msgstr "파일 삭제: "
 
-#: compare/prevalidations_window.py:231
+#: compare/prevalidations_window.py:249
 msgid "Action modifier is not a valid directory: "
 msgstr "작업 수정자가 유효한 디렉터리가 아닙니다 : "
 
-#: compare/prevalidations_window.py:233
+#: compare/prevalidations_window.py:251
 msgid "Run on folder is not a valid directory: "
 msgstr "실행 위치 폴더가 올바른 디렉터리가 아닙니다 : "
 
-#: compare/prevalidations_window.py:235
+#: compare/prevalidations_window.py:253
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr "유효성 검사 {0}이(가) 잘못되어 오류가 발생하거나 실행할 수 없습니다!"
 
-#: compare/prevalidations_window.py:300
+#: compare/prevalidations_window.py:318
 msgid "embedding"
 msgstr "임베딩"
 
-#: compare/prevalidations_window.py:302
+#: compare/prevalidations_window.py:320
 msgid "classifier {0}"
 msgstr "분류자 {0}"
 
-#: compare/prevalidations_window.py:304
+#: compare/prevalidations_window.py:322
 msgid "prompts"
 msgstr "프롬프트"
 
-#: compare/prevalidations_window.py:312
+#: compare/prevalidations_window.py:330
 msgid "categories: {0}"
 msgstr "카테고리: {0}"
 
-#: compare/prevalidations_window.py:316
+#: compare/prevalidations_window.py:334
 msgid "{0} positives, {1} negatives"
 msgstr "{0} 포지티브, {1} 네거티브"
 
-#: compare/prevalidations_window.py:320
+#: compare/prevalidations_window.py:338
 msgid " using {0} ({1})"
 msgstr " {0} ({1})"
 
-#: compare/prevalidations_window.py:322
+#: compare/prevalidations_window.py:340
 msgid " using {0}"
 msgstr " {0}"
 
-#: compare/prevalidations_window.py:324
+#: compare/prevalidations_window.py:342
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} 포지티브, {1} 네거티브)"
 
-#: compare/prevalidations_window.py:337
+#: compare/prevalidations_window.py:355
 msgid "Modify Prevalidation"
 msgstr "수정하기"
 
-#: compare/prevalidations_window.py:350
+#: compare/prevalidations_window.py:368
 msgid "Prevalidation Name"
 msgstr "유효성 검사 이름"
 
-#: compare/prevalidations_window.py:357
+#: compare/prevalidations_window.py:375
 msgid "Positives"
 msgstr "긍정적"
 
-#: compare/prevalidations_window.py:364
+#: compare/prevalidations_window.py:382
 msgid "Negatives"
 msgstr "네거티브"
 
-#: compare/prevalidations_window.py:372
+#: compare/prevalidations_window.py:390
 msgid "Validation Types"
 msgstr "유효성 검사 유형"
 
-#: compare/prevalidations_window.py:375
+#: compare/prevalidations_window.py:393
 msgid "Use Embedding"
 msgstr "임베딩 사용"
 
-#: compare/prevalidations_window.py:382
+#: compare/prevalidations_window.py:400
 msgid "Use Image Classifier"
 msgstr "이미지 분류기 사용"
 
-#: compare/prevalidations_window.py:389
+#: compare/prevalidations_window.py:407
 msgid "Use Prompts"
 msgstr "프롬프트 사용"
 
-#: compare/prevalidations_window.py:396
+#: compare/prevalidations_window.py:414
 msgid "Threshold"
 msgstr "임계값"
 
-#: compare/prevalidations_window.py:403
+#: compare/prevalidations_window.py:421
 msgid "Action"
 msgstr "액션"
 
-#: compare/prevalidations_window.py:415
+#: compare/prevalidations_window.py:433
 msgid "Action Modifier"
 msgstr "액션 수정자"
 
-#: compare/prevalidations_window.py:422
+#: compare/prevalidations_window.py:440
 msgid "Run on Directory"
 msgstr "연락처"
 
-#: compare/prevalidations_window.py:429
+#: compare/prevalidations_window.py:447
 msgid "Image Classifier Name"
 msgstr "이미지 분류기 이름"
 
-#: compare/prevalidations_window.py:441
+#: compare/prevalidations_window.py:459
 msgid "Image Classifier Selected Category"
 msgstr "이미지 분류기 선택 카테고리"
 
-#: compare/prevalidations_window.py:445
+#: compare/prevalidations_window.py:463
 msgid "Select Categories..."
 msgstr "카테고리 선택..."
 
-#: compare/prevalidations_window.py:451
+#: compare/prevalidations_window.py:469
 msgid "Done"
 msgstr "완료"
 
-#: compare/prevalidations_window.py:623
+#: compare/prevalidations_window.py:641
 msgid ""
 "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 msgstr "이름: {0}에 대한 유효성 검사를 찾을 수 없습니다. 유효성 검사 창에서 설정하세요."
 
-#: compare/prevalidations_window.py:634
+#: compare/prevalidations_window.py:652
 msgid "Prevalidations"
 msgstr "법적고지"
 
-#: compare/prevalidations_window.py:657
+#: compare/prevalidations_window.py:675
 msgid "Set Prevalidations"
 msgstr "설정 유효성"
 
-#: compare/prevalidations_window.py:659
+#: compare/prevalidations_window.py:677
 msgid "Add prevalidation"
 msgstr "사전 검증"
 
-#: compare/prevalidations_window.py:661
+#: compare/prevalidations_window.py:679
 msgid "Clear prevalidations"
 msgstr "취소 정책"
 
-#: compare/prevalidations_window.py:668 utils/help_and_config.py:153
+#: compare/prevalidations_window.py:686 utils/help_and_config.py:153
 msgid "Enable Prevalidations"
 msgstr "사전 유효성 검사 사용"
 
-#: compare/prevalidations_window.py:705 files/hotkey_actions_window.py:95
+#: compare/prevalidations_window.py:723 files/hotkey_actions_window.py:95
 msgid "Set"
 msgstr "설치하기"
 
-#: compare/prevalidations_window.py:713 files/file_actions_window.py:485
+#: compare/prevalidations_window.py:731 files/file_actions_window.py:485
 #: files/file_actions_window.py:536
 msgid "Modify"
 msgstr "수정하기"
 
-#: compare/prevalidations_window.py:720 image/prevalidation_action.py:34
+#: compare/prevalidations_window.py:738 image/prevalidation_action.py:34
 msgid "Delete"
 msgstr "삭제"
 
-#: compare/prevalidations_window.py:727
+#: compare/prevalidations_window.py:745
 msgid "Move down"
 msgstr "맨 위로"
 
@@ -1213,11 +1213,11 @@ msgstr "오늘만"
 msgid "Target Directory"
 msgstr "대상 디렉토리"
 
-#: files/file_actions_window.py:354 files/marked_file_mover.py:948
+#: files/file_actions_window.py:354 files/marked_file_mover.py:990
 msgid "Moved"
 msgstr "지원하다"
 
-#: files/file_actions_window.py:360 files/marked_file_mover.py:948
+#: files/file_actions_window.py:360 files/marked_file_mover.py:990
 msgid "Copied"
 msgstr "뚱 베어"
 
@@ -1237,12 +1237,12 @@ msgstr " ({0} 파일)"
 msgid "(auto)"
 msgstr "(자동)"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:273
+#: files/file_actions_window.py:474 files/marked_file_mover.py:274
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "이동"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:280
+#: files/file_actions_window.py:474 files/marked_file_mover.py:281
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "복사"
@@ -1367,195 +1367,195 @@ msgstr "대상 디렉터리"
 msgid "(unset)"
 msgstr "(미설정)"
 
-#: files/marked_file_mover.py:95 files/marked_file_mover.py:910
+#: files/marked_file_mover.py:96 files/marked_file_mover.py:952
 msgid "Marks cleared."
 msgstr "표시가 지워졌습니다."
 
-#: files/marked_file_mover.py:102
+#: files/marked_file_mover.py:103
 msgid "Set current marks from previous."
 msgstr "이전 마크에서 현재 마크를 설정합니다."
 
-#: files/marked_file_mover.py:102
+#: files/marked_file_mover.py:103
 msgid "Total set: {0}"
 msgstr "총 집합입니다: {0}"
 
-#: files/marked_file_mover.py:129
+#: files/marked_file_mover.py:130
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "영구 마크 대상이 설정되지 않았습니다!\n"
 "마크 창에서 Ctrl+T로 설정합니다."
 
-#: files/marked_file_mover.py:141
+#: files/marked_file_mover.py:142
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "{0}에 대해 설정된 단축키 동작이 없습니다.\n"
 "마크 창에서 {1}로 설정합니다."
 
-#: files/marked_file_mover.py:221 files/recent_directory_window.py:230
+#: files/marked_file_mover.py:222 files/recent_directory_window.py:230
 msgid "Set a new target directory"
 msgstr "새 대상 디렉터리 설정"
 
-#: files/marked_file_mover.py:223
+#: files/marked_file_mover.py:224
 msgid "MOVE"
 msgstr "이동"
 
-#: files/marked_file_mover.py:227
+#: files/marked_file_mover.py:228
 msgid "COPY"
 msgstr "복사"
 
-#: files/marked_file_mover.py:229
+#: files/marked_file_mover.py:230
 msgid "DELETE"
 msgstr "삭제"
 
-#: files/marked_file_mover.py:231 files/recent_directory_window.py:234
+#: files/marked_file_mover.py:232 files/recent_directory_window.py:234
 msgid "Add directories from parent"
 msgstr "상위 디렉터리에서 디렉터리 추가"
 
-#: files/marked_file_mover.py:234 files/recent_directory_window.py:236
+#: files/marked_file_mover.py:235 files/recent_directory_window.py:236
 msgid "Clear targets"
 msgstr "목표 지우기"
 
-#: files/marked_file_mover.py:236 files/pdf_options_window.py:81
+#: files/marked_file_mover.py:237 files/pdf_options_window.py:81
 msgid "Create PDF"
 msgstr "PDF 만들기"
 
-#: files/marked_file_mover.py:300 files/marked_file_mover.py:306
+#: files/marked_file_mover.py:301 files/marked_file_mover.py:307
 msgid "Recording next mark target and action."
 msgstr "다음 마크 대상 및 작업을 기록합니다."
 
-#: files/marked_file_mover.py:319 files/recent_directory_window.py:280
+#: files/marked_file_mover.py:320 files/recent_directory_window.py:280
 msgid "Invalid directory: %s"
 msgstr "잘못된 디렉터리입니다: {0}"
 
-#: files/marked_file_mover.py:321
+#: files/marked_file_mover.py:322
 msgid "Select target directory for marked files"
 msgstr "표시된 파일의 대상 디렉터리 선택"
 
-#: files/marked_file_mover.py:376
+#: files/marked_file_mover.py:377
 msgid "Moving"
 msgstr "기타"
 
-#: files/marked_file_mover.py:376
+#: files/marked_file_mover.py:377
 msgid "Copying"
 msgstr "관련 기사"
 
-#: files/marked_file_mover.py:415
+#: files/marked_file_mover.py:417
 msgid "Moved {0} files to {1}"
 msgstr ""
 "파일 {0}개를\n"
 "{1}로 옮겼습니다."
 
-#: files/marked_file_mover.py:417
+#: files/marked_file_mover.py:419
 msgid "Copied {0} files to {1}"
 msgstr ""
 "{1}\n"
 "에 파일 {0}개를 복사했습니다."
 
-#: files/marked_file_mover.py:447
+#: files/marked_file_mover.py:450
 msgid "Removed marked file from source: {0}"
 msgstr "소스에서 표시된 파일 제거됨: {0}"
 
-#: files/marked_file_mover.py:466
+#: files/marked_file_mover.py:496
 msgid "Existing filenames match!"
 msgstr "기존 파일 이름이 일치합니다!"
 
-#: files/marked_file_mover.py:468
+#: files/marked_file_mover.py:498
 msgid "WARNING: Exact file match."
 msgstr "경고: 정확한 파일 일치."
 
-#: files/marked_file_mover.py:470 files/marked_file_mover.py:823
+#: files/marked_file_mover.py:502 files/marked_file_mover.py:865
 msgid "WARNING: Short filenames."
 msgstr "경고: 짧은 파일명."
 
-#: files/marked_file_mover.py:494
+#: files/marked_file_mover.py:526
 msgid "Moving back"
 msgstr "뒤로 이동"
 
-#: files/marked_file_mover.py:494
+#: files/marked_file_mover.py:526
 msgid "Removing"
 msgstr "뚱 베어"
 
-#: files/marked_file_mover.py:495
+#: files/marked_file_mover.py:527
 msgid "Moved back"
 msgstr "뒤로 이동"
 
-#: files/marked_file_mover.py:495
+#: files/marked_file_mover.py:527
 msgid "Removed"
 msgstr "기타 제품"
 
-#: files/marked_file_mover.py:501
+#: files/marked_file_mover.py:533
 msgid "Where should the marked files have gone?"
 msgstr "표시된 파일은 어디로 갔을까요?"
 
-#: files/marked_file_mover.py:526
+#: files/marked_file_mover.py:558
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "{1}\n"
 "에서 파일 {0}개 다시 옮기기"
 
-#: files/marked_file_mover.py:528
+#: files/marked_file_mover.py:560
 msgid "Removed {0} files from {1}"
 msgstr ""
 "{1}\n"
 "에서 파일 {0}개 제거"
 
-#: files/marked_file_mover.py:545
+#: files/marked_file_mover.py:577
 msgid "Select parent directory for target directories"
 msgstr "대상 디렉토리 선택"
 
-#: files/marked_file_mover.py:705
+#: files/marked_file_mover.py:737
 msgid "Sorted directories by embedding comparison."
 msgstr "분류 된 감독 by embedding 비교."
 
-#: files/marked_file_mover.py:727
+#: files/marked_file_mover.py:759
 msgid "Confirm Delete"
 msgstr "자주 묻는 질문"
 
-#: files/marked_file_mover.py:728
+#: files/marked_file_mover.py:760
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr "삭제 {0} 표시된 파일 - 진행하시겠습니까?"
 
-#: files/marked_file_mover.py:748
+#: files/marked_file_mover.py:780
 msgid "Delete Failed"
 msgstr "실패 삭제"
 
-#: files/marked_file_mover.py:749
+#: files/marked_file_mover.py:781
 msgid "Failed to delete %s files - check log for details."
 msgstr "{0} 파일을 삭제 취소 - 세부 사항에 대한 로그 확인."
 
-#: files/marked_file_mover.py:752
+#: files/marked_file_mover.py:784
 msgid "Deleted %s marked files."
 msgstr "표시된 파일 {0}개를 삭제했습니다."
 
-#: files/marked_file_mover.py:817
+#: files/marked_file_mover.py:855
 msgid "Existing filenames found!"
 msgstr "발견 된 파일 이름!"
 
-#: files/marked_file_mover.py:819
+#: files/marked_file_mover.py:857
 msgid "WARNING: All file hashes match."
 msgstr "경고: 모든 파일 해시가 일치합니다."
 
-#: files/marked_file_mover.py:821
+#: files/marked_file_mover.py:859
 msgid "WARNING: %s of %s file hashes match."
 msgstr "경고: {1} 파일 해시 중 {0}개가 일치합니다."
 
-#: files/marked_file_mover.py:827
+#: files/marked_file_mover.py:869
 msgid "No existing filenames found."
 msgstr "찾을 수 없음."
 
-#: files/marked_file_mover.py:855
+#: files/marked_file_mover.py:897
 msgid "Found %s downstream related images"
 msgstr "Found {0} downstream 관련 이미지"
 
-#: files/marked_file_mover.py:857
+#: files/marked_file_mover.py:899
 msgid "No downstream related images found"
 msgstr "찾을 수 없음 downstream 관련 이미지"
 
-#: files/marked_file_mover.py:868
+#: files/marked_file_mover.py:910
 msgid "Cleared marked file"
 msgstr "표시된 파일"
 
-#: files/marked_file_mover.py:912
+#: files/marked_file_mover.py:954
 msgid "Removed {0} marks"
 msgstr "제거 {0} 표"
 
@@ -2424,3 +2424,15 @@ msgstr "파일 경로의 백슬래시 이스케이프"
 #: utils/notification_manager.py:26
 msgid " etc."
 msgstr " 등"
+
+#: files/marked_file_mover.py:500
+msgid "INFO: Target files with different EXIF data replaced."
+msgstr "INFO: 다른 EXIF 데이터를 가진 대상 파일 교체됨."
+
+#: files/marked_file_mover.py:861
+msgid "INFO: %s files have identical content but different EXIF data."
+msgstr "INFO: 동일한 내용을 가진 %s 개의 파일이 EXIF 정보는 다릅니다."
+
+#: files/marked_file_mover.py:863
+msgid "WARNING: All files are either identical or have matching content."
+msgstr "경고: 모든 파일은 동일하거나 내용이 일치합니다."

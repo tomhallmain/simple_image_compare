@@ -10,6 +10,7 @@ from compare.compare_embeddings_clip import CompareEmbeddingClip
 from files.file_actions_window import FileActionsWindow
 from image.image_classifier_manager import image_classifier_manager
 from image.image_data_extractor import image_data_extractor
+from image.image_ops import ImageOps
 from image.prevalidation_action import PrevalidationAction
 from lib.multiselect_dropdown import MultiSelectDropdown
 from utils.app_style import AppStyle
@@ -163,19 +164,36 @@ class Prevalidation:
                     except Exception as e:
                         if (self.action == PrevalidationAction.MOVE and
                             "File already exists:" in str(e) and
-                            os.path.exists(image_path) and
-                            Utils.calculate_hash(image_path) == Utils.calculate_hash(os.path.join(self.action_modifier, os.path.basename(image_path)))):
-                            # The file already exists in target, so we need to remove it from the source
-                            # NOTE: this is a hack to avoid an error that sometimes happens where a file gets stranded
-                            # possibly due to the sd-runner application re-saving it after the move, but it could 
-                            # technically happen for other more valid reasons. Ideally need to identify why this error
-                            # occurs and fix it.
-                            try:
-                                with Utils.file_operation_lock:
-                                    os.remove(image_path)
-                                    logger.info("Removed file from source: " + image_path)
-                            except Exception as e:
-                                logger.error("Error removing file from source: " + image_path + ": " + str(e))
+                            os.path.exists(image_path)):
+                            target_path = os.path.join(self.action_modifier, os.path.basename(image_path))
+                            if Utils.calculate_hash(image_path) == Utils.calculate_hash(target_path):
+                                # The file already exists in target, so we need to remove it from the source
+                                # NOTE: this is a hack to avoid an error that sometimes happens where a file gets stranded
+                                # possibly due to the sd-runner application re-saving it after the move, but it could 
+                                # technically happen for other more valid reasons. Ideally need to identify why this error
+                                # occurs and fix it.
+                                try:
+                                    with Utils.file_operation_lock:
+                                        os.remove(image_path)
+                                        logger.info("Removed file from source: " + image_path)
+                                except Exception as e:
+                                    logger.error("Error removing file from source: " + image_path + ": " + str(e))
+                            elif ImageOps.compare_image_content_without_exif(image_path, target_path):
+                                # Hash comparison failed, but image content is identical
+                                # (different EXIF data but same visual content)
+                                logger.info(f"File hashes differ but image content matches: {image_path} <> {target_path}")
+                                logger.info("Replacing target file with source file (source has more EXIF data)")
+                                try:
+                                    # Replace target with source file (source has more information)
+                                    FileActionsWindow.add_file_action(
+                                        Utils.move_file if self.action == PrevalidationAction.MOVE else Utils.copy_file,
+                                        image_path, self.action_modifier, auto=True, overwrite_existing=True
+                                    )
+                                    logger.info("Replaced target file with source: " + image_path)
+                                except Exception as e:
+                                    logger.error("Error replacing target file with source: " + image_path + ": " + str(e))
+                            else:
+                                logger.error(e)
                         else:
                             logger.error(e)
             else:

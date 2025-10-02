@@ -13,6 +13,7 @@ from files.hotkey_actions_window import HotkeyActionsWindow
 from files.pdf_creator import PDFCreator
 from files.pdf_options_window import PDFOptionsWindow
 from image.image_data_extractor import image_data_extractor
+from image.image_ops import ImageOps
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
@@ -390,7 +391,8 @@ class MarkedFiles():
                 MarkedFiles.last_moved_image = new_filename
                 set_last_moved_file = True
             success, result = MarkedFiles._process_single_file_operation(
-                marked_file, target_dir, move_func, new_filename, current_image, app_actions
+                marked_file, target_dir, move_func, new_filename, current_image, app_actions,
+                overwrite_existing=config.move_marks_overwrite_existing_file
             )
             
             if success:
@@ -425,6 +427,7 @@ class MarkedFiles():
             logger.error(f"Failed to {action_part3} some files:")
             names_are_short = False
             matching_files = False
+            content_matching_files = False
             for marked_file, exc_tuple in exceptions.items():
                 error_msg = exc_tuple[0]
                 target_filepath = exc_tuple[1]
@@ -449,6 +452,33 @@ class MarkedFiles():
                                     error_text = f"Failed to remove marked file from source: {marked_file} - {e}"
                                     logger.warning(error_text)
                                     app_actions.title_notify(error_text)
+                        elif ImageOps.compare_image_content_without_exif(marked_file, target_filepath):
+                            # Hash comparison failed, but check if image content is identical
+                            # (different EXIF data but same visual content)
+                            logger.info(f"File hashes differ but image content matches: {marked_file} <> {target_filepath}")
+                            logger.info("Replacing target file with source file (source has more EXIF data)")
+                            try:
+                                # Replace target with source file (source has more information)
+                                success, result = MarkedFiles._process_single_file_operation(
+                                    marked_file, os.path.dirname(target_filepath), move_func, target_filepath, current_image, app_actions,
+                                    overwrite_existing=True
+                                )
+                                if success:
+                                    content_matching_files = True
+                                    logger.info("Replaced target file with source: " + marked_file)
+                                    # Remove from exceptions since it was successfully handled
+                                    del exceptions[marked_file]
+                                    # Add to successful operations
+                                    action.add_file(target_filepath)
+                                    MarkedFiles.previous_marks.append(marked_file)
+                                else:
+                                    error_text = f"Failed to replace target file with source: {marked_file} - {result}"
+                                    logger.warning(error_text)
+                                    app_actions.title_notify(error_text)
+                            except Exception as e:
+                                error_text = f"Failed to replace target file with source: {marked_file} - {e}"
+                                logger.warning(error_text)
+                                app_actions.title_notify(error_text)
                         elif len(os.path.basename(marked_file)) < 13 and not names_are_short:
                             names_are_short = True
                         if not some_files_already_present:
@@ -466,6 +496,8 @@ class MarkedFiles():
                 warning = _("Existing filenames match!")
                 if matching_files:
                     warning += "\n" + _("WARNING: Exact file match.")
+                if content_matching_files:
+                    warning += "\n" + _("INFO: Target files with different EXIF data replaced.")
                 if names_are_short:
                     warning += "\n" + _("WARNING: Short filenames.")
                 app_actions.toast(warning)
@@ -805,10 +837,16 @@ class MarkedFiles():
 #        MarkedFiles.file_marks.clear() MAYBE use if not config.clear_marks_with_errors_after_move and not single_image
         names_are_short = False
         matching_files = 0
+        content_matching_files = 0
         for marked_file, new_filename in found_files:
             if Utils.calculate_hash(marked_file) == Utils.calculate_hash(new_filename):
                 matching_files += 1
                 logger.info(f"File hashes match: {marked_file} <> {new_filename}")
+            elif ImageOps.compare_image_content_without_exif(marked_file, new_filename):
+                # Hash comparison failed, but check if image content is identical
+                # (different EXIF data but same visual content)
+                content_matching_files += 1
+                logger.info(f"File hashes differ but image content matches: {marked_file} <> {new_filename}")
             elif len(os.path.basename(marked_file)) < 13 and not names_are_short:
                 names_are_short = True
         if len(found_files) > 0:
@@ -819,6 +857,10 @@ class MarkedFiles():
                 warning += "\n" + _("WARNING: All file hashes match.")
             elif matching_files > 0:
                 warning += "\n" + _("WARNING: %s of %s file hashes match.").format(matching_files, len(MarkedFiles.file_marks))
+            if content_matching_files > 0:
+                warning += "\n" + _("INFO: %s files have identical content but different EXIF data.").format(content_matching_files)
+            if (matching_files + content_matching_files) == len(MarkedFiles.file_marks):
+                warning += "\n" + _("WARNING: All files are either identical or have matching content.")
             if names_are_short:
                 warning += "\n" + _("WARNING: Short filenames.")
             app_actions.toast(warning)
@@ -924,7 +966,7 @@ class MarkedFiles():
     @staticmethod
     def _process_single_file_operation(marked_file: str, target_dir: str, move_func: Callable, 
                                       new_filename: str, current_image: Optional[str] = None, 
-                                      app_actions=None) -> Tuple[bool, str]:
+                                      app_actions=None, overwrite_existing: bool = False) -> Tuple[bool, str]:
         """
         Process a single file operation using a thread-safe lock.
         
@@ -943,7 +985,7 @@ class MarkedFiles():
                         app_actions.release_media_canvas()
                 
                 # Perform the actual file operation
-                move_func(marked_file, target_dir, overwrite_existing=config.move_marks_overwrite_existing_file)
+                move_func(marked_file, target_dir, overwrite_existing=overwrite_existing)
             
             action_part2 = _("Moved") if is_moving else _("Copied")
             logger.info(f"{action_part2} file to {new_filename}")

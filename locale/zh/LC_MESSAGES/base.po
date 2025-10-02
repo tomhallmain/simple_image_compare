@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-09-25 16:23-0400\n"
-"PO-Revision-Date: 2025-09-25 16:23-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-10-02 18:28-0400\n"
+"PO-Revision-Date: 2025-10-02 18:28-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
 "MIME-Version: 1.0\n"
@@ -935,193 +935,193 @@ msgid ""
 "filter settings."
 msgstr "此目录和当前过滤器设置已没有剩余的图像组。"
 
-#: compare/prevalidations_window.py:28
+#: compare/prevalidations_window.py:29
 msgid "(no positives set)"
 msgstr "(无正片设置）"
 
-#: compare/prevalidations_window.py:29
+#: compare/prevalidations_window.py:30
 msgid "(no negatives set)"
 msgstr "(没有底片）"
 
-#: compare/prevalidations_window.py:31 compare/prevalidations_window.py:351
+#: compare/prevalidations_window.py:32 compare/prevalidations_window.py:369
 msgid "New Prevalidation"
 msgstr "新建前缀"
 
-#: compare/prevalidations_window.py:79
+#: compare/prevalidations_window.py:80
 msgid "Loading image classifier <{0}> ..."
 msgstr "加载图像分类器 <{0}> ..."
 
-#: compare/prevalidations_window.py:137
+#: compare/prevalidations_window.py:138
 msgid " detected"
 msgstr " 检测"
 
-#: compare/prevalidations_window.py:139
+#: compare/prevalidations_window.py:140
 msgid " - skipped"
 msgstr " - 跳过"
 
-#: compare/prevalidations_window.py:142
+#: compare/prevalidations_window.py:143
 msgid " - hidden"
 msgstr " - 隐藏"
 
-#: compare/prevalidations_window.py:147
+#: compare/prevalidations_window.py:148
 msgid " - marked"
 msgstr " - 显著的"
 
-#: compare/prevalidations_window.py:155
+#: compare/prevalidations_window.py:156
 msgid "Moving file: "
 msgstr "移动文件 : "
 
-#: compare/prevalidations_window.py:184
+#: compare/prevalidations_window.py:202
 msgid "Deleting file: "
 msgstr "删除文件 : "
 
-#: compare/prevalidations_window.py:231
+#: compare/prevalidations_window.py:249
 msgid "Action modifier is not a valid directory: "
 msgstr "修改动作不是一个有效的目录 : "
 
-#: compare/prevalidations_window.py:233
+#: compare/prevalidations_window.py:251
 msgid "Run on folder is not a valid directory: "
 msgstr "在文件夹上运行不是一个有效的目录 : "
 
-#: compare/prevalidations_window.py:235
+#: compare/prevalidations_window.py:253
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr "无效的预先验证{0}, 可能导致错误或无法运行 !"
 
-#: compare/prevalidations_window.py:300
+#: compare/prevalidations_window.py:318
 msgid "embedding"
 msgstr "嵌入"
 
-#: compare/prevalidations_window.py:302
+#: compare/prevalidations_window.py:320
 msgid "classifier {0}"
 msgstr "幅图像 {0}"
 
-#: compare/prevalidations_window.py:304
+#: compare/prevalidations_window.py:322
 msgid "prompts"
 msgstr "提示"
 
-#: compare/prevalidations_window.py:312
+#: compare/prevalidations_window.py:330
 msgid "categories: {0}"
 msgstr "类别： {0}"
 
-#: compare/prevalidations_window.py:316
+#: compare/prevalidations_window.py:334
 msgid "{0} positives, {1} negatives"
 msgstr "{0}阳性，{1}阴性"
 
-#: compare/prevalidations_window.py:320
+#: compare/prevalidations_window.py:338
 msgid " using {0} ({1})"
 msgstr " {0} ({1})"
 
-#: compare/prevalidations_window.py:322
+#: compare/prevalidations_window.py:340
 msgid " using {0}"
 msgstr " {0}"
 
-#: compare/prevalidations_window.py:324
+#: compare/prevalidations_window.py:342
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0}阳性，{1}阴性)"
 
-#: compare/prevalidations_window.py:337
+#: compare/prevalidations_window.py:355
 msgid "Modify Prevalidation"
 msgstr "修改前缀"
 
-#: compare/prevalidations_window.py:350
+#: compare/prevalidations_window.py:368
 msgid "Prevalidation Name"
 msgstr "预验证名称"
 
-#: compare/prevalidations_window.py:357
+#: compare/prevalidations_window.py:375
 msgid "Positives"
 msgstr "积极方面"
 
-#: compare/prevalidations_window.py:364
+#: compare/prevalidations_window.py:382
 msgid "Negatives"
 msgstr "底片"
 
-#: compare/prevalidations_window.py:372
+#: compare/prevalidations_window.py:390
 msgid "Validation Types"
 msgstr "验证类型"
 
-#: compare/prevalidations_window.py:375
+#: compare/prevalidations_window.py:393
 msgid "Use Embedding"
 msgstr "使用嵌入"
 
-#: compare/prevalidations_window.py:382
+#: compare/prevalidations_window.py:400
 msgid "Use Image Classifier"
 msgstr "使用图像分类器"
 
-#: compare/prevalidations_window.py:389
+#: compare/prevalidations_window.py:407
 msgid "Use Prompts"
 msgstr "使用提示"
 
-#: compare/prevalidations_window.py:396
+#: compare/prevalidations_window.py:414
 msgid "Threshold"
 msgstr "阈值"
 
-#: compare/prevalidations_window.py:403
+#: compare/prevalidations_window.py:421
 msgid "Action"
 msgstr "行动"
 
-#: compare/prevalidations_window.py:415
+#: compare/prevalidations_window.py:433
 msgid "Action Modifier"
 msgstr "动作修改器"
 
-#: compare/prevalidations_window.py:422
+#: compare/prevalidations_window.py:440
 msgid "Run on Directory"
 msgstr "在目录上运行"
 
-#: compare/prevalidations_window.py:429
+#: compare/prevalidations_window.py:447
 msgid "Image Classifier Name"
 msgstr "图像分类器名称"
 
-#: compare/prevalidations_window.py:441
+#: compare/prevalidations_window.py:459
 msgid "Image Classifier Selected Category"
 msgstr "图像分类器选定类别"
 
-#: compare/prevalidations_window.py:445
+#: compare/prevalidations_window.py:463
 msgid "Select Categories..."
 msgstr "选择类别..."
 
-#: compare/prevalidations_window.py:451
+#: compare/prevalidations_window.py:469
 msgid "Done"
 msgstr "已完成"
 
-#: compare/prevalidations_window.py:623
+#: compare/prevalidations_window.py:641
 msgid ""
 "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 msgstr "未找到名称为 {0} 的预审。请在预验证窗口中进行设置。"
 
-#: compare/prevalidations_window.py:634
+#: compare/prevalidations_window.py:652
 msgid "Prevalidations"
 msgstr "前言"
 
-#: compare/prevalidations_window.py:657
+#: compare/prevalidations_window.py:675
 msgid "Set Prevalidations"
 msgstr "设置前缀"
 
-#: compare/prevalidations_window.py:659
+#: compare/prevalidations_window.py:677
 msgid "Add prevalidation"
 msgstr "添加预验证"
 
-#: compare/prevalidations_window.py:661
+#: compare/prevalidations_window.py:679
 msgid "Clear prevalidations"
 msgstr "清除预先验证"
 
-#: compare/prevalidations_window.py:668 utils/help_and_config.py:153
+#: compare/prevalidations_window.py:686 utils/help_and_config.py:153
 msgid "Enable Prevalidations"
 msgstr "启用预先批准"
 
-#: compare/prevalidations_window.py:705 files/hotkey_actions_window.py:95
+#: compare/prevalidations_window.py:723 files/hotkey_actions_window.py:95
 msgid "Set"
 msgstr "设定"
 
-#: compare/prevalidations_window.py:713 files/file_actions_window.py:485
+#: compare/prevalidations_window.py:731 files/file_actions_window.py:485
 #: files/file_actions_window.py:536
 msgid "Modify"
 msgstr "修改"
 
-#: compare/prevalidations_window.py:720 image/prevalidation_action.py:34
+#: compare/prevalidations_window.py:738 image/prevalidation_action.py:34
 msgid "Delete"
 msgstr "删除"
 
-#: compare/prevalidations_window.py:727
+#: compare/prevalidations_window.py:745
 msgid "Move down"
 msgstr "向下移动"
 
@@ -1203,11 +1203,11 @@ msgstr "仅限今日"
 msgid "Target Directory"
 msgstr "目标目录"
 
-#: files/file_actions_window.py:354 files/marked_file_mover.py:948
+#: files/file_actions_window.py:354 files/marked_file_mover.py:990
 msgid "Moved"
 msgstr "移动"
 
-#: files/file_actions_window.py:360 files/marked_file_mover.py:948
+#: files/file_actions_window.py:360 files/marked_file_mover.py:990
 msgid "Copied"
 msgstr "复制"
 
@@ -1227,12 +1227,12 @@ msgstr " ({0} 文件)"
 msgid "(auto)"
 msgstr "(自动)"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:273
+#: files/file_actions_window.py:474 files/marked_file_mover.py:274
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "移动"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:280
+#: files/file_actions_window.py:474 files/marked_file_mover.py:281
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "复制"
@@ -1357,195 +1357,195 @@ msgstr "目标目录"
 msgid "(unset)"
 msgstr "(未设定)"
 
-#: files/marked_file_mover.py:95 files/marked_file_mover.py:910
+#: files/marked_file_mover.py:96 files/marked_file_mover.py:952
 msgid "Marks cleared."
 msgstr "标记清除。"
 
-#: files/marked_file_mover.py:102
+#: files/marked_file_mover.py:103
 msgid "Set current marks from previous."
 msgstr "从上一个标记设置当前标记。"
 
-#: files/marked_file_mover.py:102
+#: files/marked_file_mover.py:103
 msgid "Total set: {0}"
 msgstr "全套： {0}"
 
-#: files/marked_file_mover.py:129
+#: files/marked_file_mover.py:130
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "未设置永久标记目标！\n"
 "使用 “标记 ”窗口中的 Ctrl+T 进行设置。"
 
-#: files/marked_file_mover.py:141
+#: files/marked_file_mover.py:142
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "未为 {0} 设置热键操作。\n"
 "在标记窗口中用 {1} 设置。"
 
-#: files/marked_file_mover.py:221 files/recent_directory_window.py:230
+#: files/marked_file_mover.py:222 files/recent_directory_window.py:230
 msgid "Set a new target directory"
 msgstr "设置新的目标目录"
 
-#: files/marked_file_mover.py:223
+#: files/marked_file_mover.py:224
 msgid "MOVE"
 msgstr "移动"
 
-#: files/marked_file_mover.py:227
+#: files/marked_file_mover.py:228
 msgid "COPY"
 msgstr "复制"
 
-#: files/marked_file_mover.py:229
+#: files/marked_file_mover.py:230
 msgid "DELETE"
 msgstr "删除"
 
-#: files/marked_file_mover.py:231 files/recent_directory_window.py:234
+#: files/marked_file_mover.py:232 files/recent_directory_window.py:234
 msgid "Add directories from parent"
 msgstr "从父目录添加目录"
 
-#: files/marked_file_mover.py:234 files/recent_directory_window.py:236
+#: files/marked_file_mover.py:235 files/recent_directory_window.py:236
 msgid "Clear targets"
 msgstr "明确目标"
 
-#: files/marked_file_mover.py:236 files/pdf_options_window.py:81
+#: files/marked_file_mover.py:237 files/pdf_options_window.py:81
 msgid "Create PDF"
 msgstr "创建 PDF"
 
-#: files/marked_file_mover.py:300 files/marked_file_mover.py:306
+#: files/marked_file_mover.py:301 files/marked_file_mover.py:307
 msgid "Recording next mark target and action."
 msgstr "记录下一个标记目标和行动。"
 
-#: files/marked_file_mover.py:319 files/recent_directory_window.py:280
+#: files/marked_file_mover.py:320 files/recent_directory_window.py:280
 msgid "Invalid directory: %s"
 msgstr "无效目录： {0}"
 
-#: files/marked_file_mover.py:321
+#: files/marked_file_mover.py:322
 msgid "Select target directory for marked files"
 msgstr "为标记文件选择目标目录"
 
-#: files/marked_file_mover.py:376
+#: files/marked_file_mover.py:377
 msgid "Moving"
 msgstr "移动"
 
-#: files/marked_file_mover.py:376
+#: files/marked_file_mover.py:377
 msgid "Copying"
 msgstr "复制"
 
-#: files/marked_file_mover.py:415
+#: files/marked_file_mover.py:417
 msgid "Moved {0} files to {1}"
 msgstr ""
 "将 {0} 文件移至\n"
 "{1}"
 
-#: files/marked_file_mover.py:417
+#: files/marked_file_mover.py:419
 msgid "Copied {0} files to {1}"
 msgstr ""
 "将 {0} 个文件复制到\n"
 "{1}"
 
-#: files/marked_file_mover.py:447
+#: files/marked_file_mover.py:450
 msgid "Removed marked file from source: {0}"
 msgstr "已从源位置移除标记文件：{0}"
 
-#: files/marked_file_mover.py:466
+#: files/marked_file_mover.py:496
 msgid "Existing filenames match!"
 msgstr "现有文件名匹配！"
 
-#: files/marked_file_mover.py:468
+#: files/marked_file_mover.py:498
 msgid "WARNING: Exact file match."
 msgstr "警告：文件完全匹配。"
 
-#: files/marked_file_mover.py:470 files/marked_file_mover.py:823
+#: files/marked_file_mover.py:502 files/marked_file_mover.py:865
 msgid "WARNING: Short filenames."
 msgstr "警告:文件短。"
 
-#: files/marked_file_mover.py:494
+#: files/marked_file_mover.py:526
 msgid "Moving back"
 msgstr "向后移动"
 
-#: files/marked_file_mover.py:494
+#: files/marked_file_mover.py:526
 msgid "Removing"
 msgstr "删除"
 
-#: files/marked_file_mover.py:495
+#: files/marked_file_mover.py:527
 msgid "Moved back"
 msgstr "向后移动"
 
-#: files/marked_file_mover.py:495
+#: files/marked_file_mover.py:527
 msgid "Removed"
 msgstr "已删除"
 
-#: files/marked_file_mover.py:501
+#: files/marked_file_mover.py:533
 msgid "Where should the marked files have gone?"
 msgstr "做了标记的文件应该放在哪里？"
 
-#: files/marked_file_mover.py:526
+#: files/marked_file_mover.py:558
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "从 {1}\n"
 "移回 {0} 个文件"
 
-#: files/marked_file_mover.py:528
+#: files/marked_file_mover.py:560
 msgid "Removed {0} files from {1}"
 msgstr ""
 "从 {1}\n"
 "移除 {0} 个文件"
 
-#: files/marked_file_mover.py:545
+#: files/marked_file_mover.py:577
 msgid "Select parent directory for target directories"
 msgstr "选择目标目录的父目录"
 
-#: files/marked_file_mover.py:705
+#: files/marked_file_mover.py:737
 msgid "Sorted directories by embedding comparison."
 msgstr "通过嵌入比较排序目录 。"
 
-#: files/marked_file_mover.py:727
+#: files/marked_file_mover.py:759
 msgid "Confirm Delete"
 msgstr "确认删除"
 
-#: files/marked_file_mover.py:728
+#: files/marked_file_mover.py:760
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr "删除{0} 标记的文件 - 您确定要继续吗 ?"
 
-#: files/marked_file_mover.py:748
+#: files/marked_file_mover.py:780
 msgid "Delete Failed"
 msgstr "删除失败"
 
-#: files/marked_file_mover.py:749
+#: files/marked_file_mover.py:781
 msgid "Failed to delete %s files - check log for details."
 msgstr "删除 {0} 文件 - 检查日志以获取细节失败 。"
 
-#: files/marked_file_mover.py:752
+#: files/marked_file_mover.py:784
 msgid "Deleted %s marked files."
 msgstr "删除{0} 标记的文件 。"
 
-#: files/marked_file_mover.py:817
+#: files/marked_file_mover.py:855
 msgid "Existing filenames found!"
 msgstr "找到已有文件名 !"
 
-#: files/marked_file_mover.py:819
+#: files/marked_file_mover.py:857
 msgid "WARNING: All file hashes match."
 msgstr "所有档案都匹配"
 
-#: files/marked_file_mover.py:821
+#: files/marked_file_mover.py:859
 msgid "WARNING: %s of %s file hashes match."
 msgstr "警告 : {0} {1} 文件散列匹配 。"
 
-#: files/marked_file_mover.py:827
+#: files/marked_file_mover.py:869
 msgid "No existing filenames found."
 msgstr "未找到现有文件名 。"
 
-#: files/marked_file_mover.py:855
+#: files/marked_file_mover.py:897
 msgid "Found %s downstream related images"
 msgstr "找到 {0} 下游相关图像"
 
-#: files/marked_file_mover.py:857
+#: files/marked_file_mover.py:899
 msgid "No downstream related images found"
 msgstr "未找到下游相关图像"
 
-#: files/marked_file_mover.py:868
+#: files/marked_file_mover.py:910
 msgid "Cleared marked file"
 msgstr "清除已标记的文件"
 
-#: files/marked_file_mover.py:912
+#: files/marked_file_mover.py:954
 msgid "Removed {0} marks"
 msgstr "删除{0}标记"
 
@@ -2413,3 +2413,15 @@ msgstr "逃离文件路径中的反斜线"
 #: utils/notification_manager.py:26
 msgid " etc."
 msgstr " 等等"
+
+#: files/marked_file_mover.py:500
+msgid "INFO: Target files with different EXIF data replaced."
+msgstr "INFO: 替换了具有不同EXIF数据的目标文件。"
+
+#: files/marked_file_mover.py:861
+msgid "INFO: %s files have identical content but different EXIF data."
+msgstr "INFO: %s 个文件内容相同但 EXIF 数据不同。"
+
+#: files/marked_file_mover.py:863
+msgid "WARNING: All files are either identical or have matching content."
+msgstr "警告：所有文件要么完全相同，要么内容完全一致。"

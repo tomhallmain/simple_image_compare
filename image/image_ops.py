@@ -5,7 +5,7 @@ import sys
 import cv2
 import numpy as np
 
-from PIL import ImageDraw, ImageEnhance
+from PIL import Image, ImageDraw, ImageEnhance
 import PIL.Image
 
 from utils.config import config
@@ -721,6 +721,45 @@ class ImageOps:
         except Exception as e:
             logger.error(f"Failed to create GEGL client: {e}")
             raise RuntimeError(f"Failed to create GEGL client: {e}")
+
+    @staticmethod
+    def compare_image_content_without_exif(filepath1, filepath2):
+        """
+        Compare two images for exact pixel content equality without considering EXIF data.
+        This is useful when images have identical visual content but different metadata.
+        
+        Args:
+            filepath1: Path to first image
+            filepath2: Path to second image
+            
+        Returns:
+            bool: True if images have identical pixel content, False otherwise
+        """
+        try:
+            # Open images and convert to RGB to normalize format
+            img1 = Image.open(filepath1).convert('RGB')
+            img2 = Image.open(filepath2).convert('RGB')
+            
+            # Check if dimensions are identical
+            if img1.size != img2.size:
+                img1.close()
+                img2.close()
+                return False
+            
+            # Convert to numpy arrays for pixel-by-pixel comparison
+            arr1 = np.array(img1)
+            arr2 = np.array(img2)
+            
+            # Close images to free memory
+            img1.close()
+            img2.close()
+            
+            # Check for exact pixel equality
+            return np.array_equal(arr1, arr2)
+            
+        except Exception as e:
+            logger.error(f"Error comparing image content: {e}")
+            return False
 
 if __name__ == "__main__":
    ImageOps.randomly_modify_image(sys.argv[1])

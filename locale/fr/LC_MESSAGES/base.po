@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-09-25 16:23-0400\n"
-"PO-Revision-Date: 2025-09-25 16:23-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-10-02 18:28-0400\n"
+"PO-Revision-Date: 2025-10-02 18:28-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: fr Team <<EMAIL>>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -997,197 +997,197 @@ msgstr ""
 "Il ne reste plus de groupes d'images pour ce répertoire et les paramètres de"
 " filtrage actuels."
 
-#: compare/prevalidations_window.py:28
+#: compare/prevalidations_window.py:29
 msgid "(no positives set)"
 msgstr "(pas d'ensemble de posatifs)"
 
-#: compare/prevalidations_window.py:29
+#: compare/prevalidations_window.py:30
 msgid "(no negatives set)"
 msgstr "(pas d'ensemble de négatifs)"
 
-#: compare/prevalidations_window.py:31 compare/prevalidations_window.py:351
+#: compare/prevalidations_window.py:32 compare/prevalidations_window.py:369
 msgid "New Prevalidation"
 msgstr "Nouvelle prévalidation"
 
-#: compare/prevalidations_window.py:79
+#: compare/prevalidations_window.py:80
 msgid "Loading image classifier <{0}> ..."
 msgstr "Chargement du classifieur d'images <{0}> ..."
 
-#: compare/prevalidations_window.py:137
+#: compare/prevalidations_window.py:138
 msgid " detected"
 msgstr " détecté"
 
-#: compare/prevalidations_window.py:139
+#: compare/prevalidations_window.py:140
 msgid " - skipped"
 msgstr " - sauté"
 
-#: compare/prevalidations_window.py:142
+#: compare/prevalidations_window.py:143
 msgid " - hidden"
 msgstr " - caché"
 
-#: compare/prevalidations_window.py:147
+#: compare/prevalidations_window.py:148
 msgid " - marked"
 msgstr " - marqués"
 
-#: compare/prevalidations_window.py:155
+#: compare/prevalidations_window.py:156
 msgid "Moving file: "
 msgstr "Déplacement d'un fichier : "
 
-#: compare/prevalidations_window.py:184
+#: compare/prevalidations_window.py:202
 msgid "Deleting file: "
 msgstr "Suppression d'un fichier : "
 
-#: compare/prevalidations_window.py:231
+#: compare/prevalidations_window.py:249
 msgid "Action modifier is not a valid directory: "
 msgstr "Le modificateur d'action n'est pas un répertoire valide : "
 
-#: compare/prevalidations_window.py:233
+#: compare/prevalidations_window.py:251
 msgid "Run on folder is not a valid directory: "
 msgstr "Exécuter sur le dossier n'est pas un répertoire valide : "
 
-#: compare/prevalidations_window.py:235
+#: compare/prevalidations_window.py:253
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr ""
 "Prévalidation invalide {0}, peut causer des erreurs ou être incapable de "
 "courir!"
 
-#: compare/prevalidations_window.py:300
+#: compare/prevalidations_window.py:318
 msgid "embedding"
 msgstr "intégration"
 
-#: compare/prevalidations_window.py:302
+#: compare/prevalidations_window.py:320
 msgid "classifier {0}"
 msgstr "classificateur {0}"
 
-#: compare/prevalidations_window.py:304
+#: compare/prevalidations_window.py:322
 msgid "prompts"
 msgstr "invitations"
 
-#: compare/prevalidations_window.py:312
+#: compare/prevalidations_window.py:330
 msgid "categories: {0}"
 msgstr "catégories : {0}"
 
-#: compare/prevalidations_window.py:316
+#: compare/prevalidations_window.py:334
 msgid "{0} positives, {1} negatives"
 msgstr "{0} positifs, {1} négatifs"
 
-#: compare/prevalidations_window.py:320
+#: compare/prevalidations_window.py:338
 msgid " using {0} ({1})"
 msgstr " utilisant {0} ({1})"
 
-#: compare/prevalidations_window.py:322
+#: compare/prevalidations_window.py:340
 msgid " using {0}"
 msgstr " utilisant {0}"
 
-#: compare/prevalidations_window.py:324
+#: compare/prevalidations_window.py:342
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} positifs, {1} négatifs)"
 
-#: compare/prevalidations_window.py:337
+#: compare/prevalidations_window.py:355
 msgid "Modify Prevalidation"
 msgstr "Modifier la prévalidation"
 
-#: compare/prevalidations_window.py:350
+#: compare/prevalidations_window.py:368
 msgid "Prevalidation Name"
 msgstr "Nom de la prévalidation"
 
-#: compare/prevalidations_window.py:357
+#: compare/prevalidations_window.py:375
 msgid "Positives"
 msgstr "Positif"
 
-#: compare/prevalidations_window.py:364
+#: compare/prevalidations_window.py:382
 msgid "Negatives"
 msgstr "Négatif"
 
-#: compare/prevalidations_window.py:372
+#: compare/prevalidations_window.py:390
 msgid "Validation Types"
 msgstr "Types de validation"
 
-#: compare/prevalidations_window.py:375
+#: compare/prevalidations_window.py:393
 msgid "Use Embedding"
 msgstr "Utiliser l'intégration"
 
-#: compare/prevalidations_window.py:382
+#: compare/prevalidations_window.py:400
 msgid "Use Image Classifier"
 msgstr "Utiliser un classificateur d'images"
 
-#: compare/prevalidations_window.py:389
+#: compare/prevalidations_window.py:407
 msgid "Use Prompts"
 msgstr "Utiliser des invites"
 
-#: compare/prevalidations_window.py:396
+#: compare/prevalidations_window.py:414
 msgid "Threshold"
 msgstr "Seuil"
 
-#: compare/prevalidations_window.py:403
+#: compare/prevalidations_window.py:421
 msgid "Action"
 msgstr "Action"
 
-#: compare/prevalidations_window.py:415
+#: compare/prevalidations_window.py:433
 msgid "Action Modifier"
 msgstr "Modificateur d'action"
 
-#: compare/prevalidations_window.py:422
+#: compare/prevalidations_window.py:440
 msgid "Run on Directory"
 msgstr "Exécuter sur le répertoire"
 
-#: compare/prevalidations_window.py:429
+#: compare/prevalidations_window.py:447
 msgid "Image Classifier Name"
 msgstr "Nom du classificateur d'images"
 
-#: compare/prevalidations_window.py:441
+#: compare/prevalidations_window.py:459
 msgid "Image Classifier Selected Category"
 msgstr "Classificateur d'images Catégorie sélectionnée"
 
-#: compare/prevalidations_window.py:445
+#: compare/prevalidations_window.py:463
 msgid "Select Categories..."
 msgstr "Sélectionner les catégories..."
 
-#: compare/prevalidations_window.py:451
+#: compare/prevalidations_window.py:469
 msgid "Done"
 msgstr "Fait"
 
-#: compare/prevalidations_window.py:623
+#: compare/prevalidations_window.py:641
 msgid ""
 "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 msgstr ""
 "Aucune prévalidation n'a été trouvée avec le nom : {0}. Réglez-le dans la "
 "fenêtre des prévalidations."
 
-#: compare/prevalidations_window.py:634
+#: compare/prevalidations_window.py:652
 msgid "Prevalidations"
 msgstr "Prévalidations"
 
-#: compare/prevalidations_window.py:657
+#: compare/prevalidations_window.py:675
 msgid "Set Prevalidations"
 msgstr "Fixer les prévalidations"
 
-#: compare/prevalidations_window.py:659
+#: compare/prevalidations_window.py:677
 msgid "Add prevalidation"
 msgstr "Ajouter la prévalidation"
 
-#: compare/prevalidations_window.py:661
+#: compare/prevalidations_window.py:679
 msgid "Clear prevalidations"
 msgstr "Prévalidations claires"
 
-#: compare/prevalidations_window.py:668 utils/help_and_config.py:153
+#: compare/prevalidations_window.py:686 utils/help_and_config.py:153
 msgid "Enable Prevalidations"
 msgstr "Activer les prévalidations"
 
-#: compare/prevalidations_window.py:705 files/hotkey_actions_window.py:95
+#: compare/prevalidations_window.py:723 files/hotkey_actions_window.py:95
 msgid "Set"
 msgstr "Régler"
 
-#: compare/prevalidations_window.py:713 files/file_actions_window.py:485
+#: compare/prevalidations_window.py:731 files/file_actions_window.py:485
 #: files/file_actions_window.py:536
 msgid "Modify"
 msgstr "Modifier"
 
-#: compare/prevalidations_window.py:720 image/prevalidation_action.py:34
+#: compare/prevalidations_window.py:738 image/prevalidation_action.py:34
 msgid "Delete"
 msgstr "Supprimer"
 
-#: compare/prevalidations_window.py:727
+#: compare/prevalidations_window.py:745
 msgid "Move down"
 msgstr "Descendre"
 
@@ -1269,11 +1269,11 @@ msgstr "Aujourd'hui seulement"
 msgid "Target Directory"
 msgstr "Répertoire cible"
 
-#: files/file_actions_window.py:354 files/marked_file_mover.py:948
+#: files/file_actions_window.py:354 files/marked_file_mover.py:990
 msgid "Moved"
 msgstr "Déplacé"
 
-#: files/file_actions_window.py:360 files/marked_file_mover.py:948
+#: files/file_actions_window.py:360 files/marked_file_mover.py:990
 msgid "Copied"
 msgstr "Copié"
 
@@ -1293,12 +1293,12 @@ msgstr " ({0} fichiers)"
 msgid "(auto)"
 msgstr "(auto)"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:273
+#: files/file_actions_window.py:474 files/marked_file_mover.py:274
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "Déplacer"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:280
+#: files/file_actions_window.py:474 files/marked_file_mover.py:281
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "Copie"
@@ -1427,198 +1427,198 @@ msgstr "Répertoire cible"
 msgid "(unset)"
 msgstr "(non défini)"
 
-#: files/marked_file_mover.py:95 files/marked_file_mover.py:910
+#: files/marked_file_mover.py:96 files/marked_file_mover.py:952
 msgid "Marks cleared."
 msgstr "Les marques sont effacées."
 
-#: files/marked_file_mover.py:102
+#: files/marked_file_mover.py:103
 msgid "Set current marks from previous."
 msgstr "Définir les marques actuelles par rapport aux marques précédentes."
 
-#: files/marked_file_mover.py:102
+#: files/marked_file_mover.py:103
 msgid "Total set: {0}"
 msgstr "Total des points: {0}"
 
-#: files/marked_file_mover.py:129
+#: files/marked_file_mover.py:130
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "Aucune cible de marque permanente n'est définie !\n"
 "Définir avec Ctrl+T dans la fenêtre Marques."
 
-#: files/marked_file_mover.py:141
+#: files/marked_file_mover.py:142
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "Aucune action de raccourci clavier n'est définie pour {0}.\n"
 "Définir avec {1} sur la fenêtre Marks."
 
-#: files/marked_file_mover.py:221 files/recent_directory_window.py:230
+#: files/marked_file_mover.py:222 files/recent_directory_window.py:230
 msgid "Set a new target directory"
 msgstr "Définir un nouveau répertoire cible"
 
-#: files/marked_file_mover.py:223
+#: files/marked_file_mover.py:224
 msgid "MOVE"
 msgstr "DÉPLACER"
 
-#: files/marked_file_mover.py:227
+#: files/marked_file_mover.py:228
 msgid "COPY"
 msgstr "COPIE"
 
-#: files/marked_file_mover.py:229
+#: files/marked_file_mover.py:230
 msgid "DELETE"
 msgstr "SUPPRIMER"
 
-#: files/marked_file_mover.py:231 files/recent_directory_window.py:234
+#: files/marked_file_mover.py:232 files/recent_directory_window.py:234
 msgid "Add directories from parent"
 msgstr "Ajouter des répertoires à partir du parent"
 
-#: files/marked_file_mover.py:234 files/recent_directory_window.py:236
+#: files/marked_file_mover.py:235 files/recent_directory_window.py:236
 msgid "Clear targets"
 msgstr "Des objectifs clairs"
 
-#: files/marked_file_mover.py:236 files/pdf_options_window.py:81
+#: files/marked_file_mover.py:237 files/pdf_options_window.py:81
 msgid "Create PDF"
 msgstr "Créer un PDF"
 
-#: files/marked_file_mover.py:300 files/marked_file_mover.py:306
+#: files/marked_file_mover.py:301 files/marked_file_mover.py:307
 msgid "Recording next mark target and action."
 msgstr "Enregistrement de la prochaine marque, de la cible et de l'action."
 
-#: files/marked_file_mover.py:319 files/recent_directory_window.py:280
+#: files/marked_file_mover.py:320 files/recent_directory_window.py:280
 msgid "Invalid directory: %s"
 msgstr "Répertoire non valide : {0}"
 
-#: files/marked_file_mover.py:321
+#: files/marked_file_mover.py:322
 msgid "Select target directory for marked files"
 msgstr "Sélection du répertoire cible pour les fichiers marqués"
 
-#: files/marked_file_mover.py:376
+#: files/marked_file_mover.py:377
 msgid "Moving"
 msgstr "Déplacement"
 
-#: files/marked_file_mover.py:376
+#: files/marked_file_mover.py:377
 msgid "Copying"
 msgstr "Copie"
 
-#: files/marked_file_mover.py:415
+#: files/marked_file_mover.py:417
 msgid "Moved {0} files to {1}"
 msgstr ""
 "Déplacement de {0} fichiers vers\n"
 "{1}"
 
-#: files/marked_file_mover.py:417
+#: files/marked_file_mover.py:419
 msgid "Copied {0} files to {1}"
 msgstr ""
 "Copie de {0} fichiers sur\n"
 "{1}"
 
-#: files/marked_file_mover.py:447
+#: files/marked_file_mover.py:450
 msgid "Removed marked file from source: {0}"
 msgstr "Fichier marqué supprimé de la source : {0}"
 
-#: files/marked_file_mover.py:466
+#: files/marked_file_mover.py:496
 msgid "Existing filenames match!"
 msgstr "Les noms de fichiers existants correspondent !"
 
-#: files/marked_file_mover.py:468
+#: files/marked_file_mover.py:498
 msgid "WARNING: Exact file match."
 msgstr "AVERTISSEMENT : Correspondance exacte des fichiers."
 
-#: files/marked_file_mover.py:470 files/marked_file_mover.py:823
+#: files/marked_file_mover.py:502 files/marked_file_mover.py:865
 msgid "WARNING: Short filenames."
 msgstr "AVERTISSEMENT : Noms de fichiers courts."
 
-#: files/marked_file_mover.py:494
+#: files/marked_file_mover.py:526
 msgid "Moving back"
 msgstr "Reculer"
 
-#: files/marked_file_mover.py:494
+#: files/marked_file_mover.py:526
 msgid "Removing"
 msgstr "Suppression"
 
-#: files/marked_file_mover.py:495
+#: files/marked_file_mover.py:527
 msgid "Moved back"
 msgstr "Déplacé vers l'arrière"
 
-#: files/marked_file_mover.py:495
+#: files/marked_file_mover.py:527
 msgid "Removed"
 msgstr "Supprimé"
 
-#: files/marked_file_mover.py:501
+#: files/marked_file_mover.py:533
 msgid "Where should the marked files have gone?"
 msgstr "Où auraient dû se trouver les fichiers marqués ?"
 
-#: files/marked_file_mover.py:526
+#: files/marked_file_mover.py:558
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "Recule de {0} fichiers à partir de\n"
 "{1}"
 
-#: files/marked_file_mover.py:528
+#: files/marked_file_mover.py:560
 msgid "Removed {0} files from {1}"
 msgstr ""
 "Suppression de {0} fichiers de\n"
 "{1}"
 
-#: files/marked_file_mover.py:545
+#: files/marked_file_mover.py:577
 msgid "Select parent directory for target directories"
 msgstr "Sélection du répertoire parent pour les répertoires cibles"
 
-#: files/marked_file_mover.py:705
+#: files/marked_file_mover.py:737
 msgid "Sorted directories by embedding comparison."
 msgstr "Annuaires triés par comparaison d'encastrement."
 
-#: files/marked_file_mover.py:727
+#: files/marked_file_mover.py:759
 msgid "Confirm Delete"
 msgstr "Confirmer Supprimer"
 
-#: files/marked_file_mover.py:728
+#: files/marked_file_mover.py:760
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr ""
 "Suppression de {0} fichiers marqués - Êtes-vous sûr de vouloir continuer ?"
 
-#: files/marked_file_mover.py:748
+#: files/marked_file_mover.py:780
 msgid "Delete Failed"
 msgstr "Échec de la suppression"
 
-#: files/marked_file_mover.py:749
+#: files/marked_file_mover.py:781
 msgid "Failed to delete %s files - check log for details."
 msgstr ""
 "Échec de la suppression de {0} fichiers - vérifier le journal pour plus de "
 "détails."
 
-#: files/marked_file_mover.py:752
+#: files/marked_file_mover.py:784
 msgid "Deleted %s marked files."
 msgstr "Suppression de {0} fichiers marqués."
 
-#: files/marked_file_mover.py:817
+#: files/marked_file_mover.py:855
 msgid "Existing filenames found!"
 msgstr "Noms de fichiers existants trouvés !"
 
-#: files/marked_file_mover.py:819
+#: files/marked_file_mover.py:857
 msgid "WARNING: All file hashes match."
 msgstr "AVERTISSEMENT : Tous les hachages de fichiers correspondent."
 
-#: files/marked_file_mover.py:821
+#: files/marked_file_mover.py:859
 msgid "WARNING: %s of %s file hashes match."
 msgstr "AVERTISSEMENT : {0} des {1} hachages de fichiers correspondent."
 
-#: files/marked_file_mover.py:827
+#: files/marked_file_mover.py:869
 msgid "No existing filenames found."
 msgstr "Aucun nom de fichier existant n'a été trouvé."
 
-#: files/marked_file_mover.py:855
+#: files/marked_file_mover.py:897
 msgid "Found %s downstream related images"
 msgstr "{0} images liées à l'aval ont été trouvées"
 
-#: files/marked_file_mover.py:857
+#: files/marked_file_mover.py:899
 msgid "No downstream related images found"
 msgstr "Aucune image liée à l'aval n'a été trouvée"
 
-#: files/marked_file_mover.py:868
+#: files/marked_file_mover.py:910
 msgid "Cleared marked file"
 msgstr "Effacement du fichier marqué"
 
-#: files/marked_file_mover.py:912
+#: files/marked_file_mover.py:954
 msgid "Removed {0} marks"
 msgstr "Suppression de {0} marques"
 
@@ -2503,3 +2503,19 @@ msgstr "Échapper à la barre oblique inverse chemins d'accès aux fichiers"
 #: utils/notification_manager.py:26
 msgid " etc."
 msgstr " etc."
+
+#: files/marked_file_mover.py:500
+msgid "INFO: Target files with different EXIF data replaced."
+msgstr "INFO : Fichiers cibles avec différentes données EXIF remplacées."
+
+#: files/marked_file_mover.py:861
+msgid "INFO: %s files have identical content but different EXIF data."
+msgstr ""
+"INFO : %s fichiers ont un contenu identique mais des données EXIF "
+"différentes."
+
+#: files/marked_file_mover.py:863
+msgid "WARNING: All files are either identical or have matching content."
+msgstr ""
+"AVERTISSEMENT : tous les fichiers sont identiques ou ont un contenu "
+"similaire."

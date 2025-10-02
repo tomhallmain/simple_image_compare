@@ -225,10 +225,10 @@ class FileActionsWindow:
             del FileActionsWindow.action_history[-1]
 
     @staticmethod
-    def add_file_action(action, source, target, auto=True):
+    def add_file_action(action, source, target, auto=True, overwrite_existing=False):
         # Use lock to ensure thread-safe file operations
         with Utils.file_operation_lock:
-            new_filepath = str(action(source, target))
+            new_filepath = str(action(source, target, overwrite_existing=overwrite_existing))
         logger.info("Moved file to " + new_filepath)
         new_action = Action(action, target, [source], [new_filepath], auto)
         FileActionsWindow.update_history(new_action)
