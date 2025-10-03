@@ -3,8 +3,10 @@
 from tkinter import Toplevel, Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
+from auth.password_utils import require_password
 from files.file_actions_window import FileActionsWindow
 from utils.app_style import AppStyle
+from utils.constants import ProtectedActions
 from utils.translations import I18N
 
 _ = I18N._
@@ -96,12 +98,17 @@ class HotkeyActionsWindow():
         self.manual_set_btn_list.append(set_btn)
         set_btn.grid(row=row, column=base_col+2)
         def set_handler(event, self=self, hotkey=key):
-            if hotkey == "T":
-                self.set_permanent_action_callback()
-            else:
-                self.set_hotkey_action_callback(hotkey_override=key_index)
+            self._protected_set_hotkey_action(hotkey, key_index)
         set_btn.bind("<Button-1>", set_handler)
 
+    @require_password(ProtectedActions.SET_HOTKEY_ACTIONS)
+    def _protected_set_hotkey_action(self, hotkey, key_index):
+        if hotkey == "T":
+            self.set_permanent_action_callback()
+        else:
+            self.set_hotkey_action_callback(hotkey_override=key_index)
+
+    @require_password(ProtectedActions.SET_HOTKEY_ACTIONS)
     def set_hotkey_action(self, event):
         if event.keysym == "T":
             self.set_permanent_action_callback()

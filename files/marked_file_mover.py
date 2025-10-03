@@ -17,10 +17,11 @@ from image.image_ops import ImageOps
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
-from utils.constants import Mode, ActionType
+from utils.constants import Mode, ActionType, ProtectedActions
 from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils, ModifierKey
+from auth.password_utils import require_password
 
 _ = I18N._
 logger = get_logger("marked_file_mover")
@@ -289,12 +290,18 @@ class MarkedFiles():
         MarkedFiles.clear_file_marks(self.app_actions.toast)
         self.close_windows()
     
+    @require_password(ProtectedActions.SET_HOTKEY_ACTIONS)
     def open_hotkey_actions_window(self, event):
         try:
             hotkey_actions_window = HotkeyActionsWindow(self.master, self.app_actions, self.set_permanent_mark_target, self.set_hotkey_action)
         except Exception as e:
             self.app_actions.alert("Error opening hotkey actions window: " + str(e))
 
+    @require_password(
+        ProtectedActions.SET_HOTKEY_ACTIONS,
+        custom_text=_("WARNING: This action sets hotkey actions that will be used for future file operations. You may have accidentally triggered this shortcut due to a sticky Control key. Please confirm you want to proceed."),
+        allow_unauthenticated=False
+    )
     def set_permanent_mark_target(self, event=None):
         self.do_set_permanent_mark_target = True
         logger.debug(f"Setting permanent mark target hotkey action")

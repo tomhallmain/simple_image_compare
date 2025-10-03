@@ -278,6 +278,7 @@ class ProtectedActions(Enum):
     RUN_REFACDIR = "run_refacdir"
     DELETE_MEDIA = "delete_media"
     CONFIGURE_MEDIA_TYPES = "configure_media_types"
+    SET_HOTKEY_ACTIONS = "set_hotkey_actions"
     ACCESS_ADMIN = "access_admin"
     
     @staticmethod
@@ -305,6 +306,7 @@ class ProtectedActions(Enum):
             ProtectedActions.RUN_REFACDIR: _("Run RefacDir"),
             ProtectedActions.DELETE_MEDIA: _("Delete Media"),
             ProtectedActions.CONFIGURE_MEDIA_TYPES: _("Configure Media Types"),
+            ProtectedActions.SET_HOTKEY_ACTIONS: _("Set Hotkey Actions"),
             ProtectedActions.ACCESS_ADMIN: _("Access Password Administration")
         }
         return descriptions.get(self, self.value)

@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-10-02 18:28-0400\n"
-"PO-Revision-Date: 2025-10-02 18:28-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-10-03 02:31-0400\n"
+"PO-Revision-Date: 2025-10-03 02:31-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: en Team <<EMAIL>>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -153,7 +153,7 @@ msgstr "Slideshows ended"
 msgid "Browsing mode set."
 msgstr "Browsing mode set."
 
-#: app.py:828 utils/constants.py:298
+#: app.py:828 utils/constants.py:299
 msgid "View Media Details"
 msgstr "View Media Details"
 
@@ -181,7 +181,7 @@ msgstr "Add to Favorites"
 msgid "Open in GIMP"
 msgstr "Open in GIMP"
 
-#: app.py:836 image/image_details.py:195 utils/constants.py:304
+#: app.py:836 image/image_details.py:195 utils/constants.py:305
 msgid "Run Image Generation"
 msgstr "Run Image Generation"
 
@@ -1141,7 +1141,7 @@ msgstr "Clear prevalidations"
 msgid "Enable Prevalidations"
 msgstr "Enable Prevalidations"
 
-#: compare/prevalidations_window.py:723 files/hotkey_actions_window.py:95
+#: compare/prevalidations_window.py:723 files/hotkey_actions_window.py:97
 msgid "Set"
 msgstr "Set"
 
@@ -1236,11 +1236,11 @@ msgstr "Today Only"
 msgid "Target Directory"
 msgstr "Target Directory"
 
-#: files/file_actions_window.py:354 files/marked_file_mover.py:990
+#: files/file_actions_window.py:354 files/marked_file_mover.py:997
 msgid "Moved"
 msgstr "Moved"
 
-#: files/file_actions_window.py:360 files/marked_file_mover.py:990
+#: files/file_actions_window.py:360 files/marked_file_mover.py:997
 msgid "Copied"
 msgstr "Copied"
 
@@ -1260,12 +1260,12 @@ msgstr " ({0} files)"
 msgid "(auto)"
 msgstr "(auto)"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:274
+#: files/file_actions_window.py:474 files/marked_file_mover.py:275
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "Move"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:281
+#: files/file_actions_window.py:474 files/marked_file_mover.py:282
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "Copy"
@@ -1374,211 +1374,223 @@ msgstr "Select file to go to"
 msgid "Sort by for closest search:"
 msgstr "Sort by for closest search:"
 
-#: files/hotkey_actions_window.py:25
+#: files/hotkey_actions_window.py:27
 msgid "Hotkey Actions"
 msgstr "Hotkey Actions"
 
-#: files/hotkey_actions_window.py:49
+#: files/hotkey_actions_window.py:51
 msgid "Key name"
 msgstr "Key name"
 
-#: files/hotkey_actions_window.py:53
+#: files/hotkey_actions_window.py:55
 msgid "Target directory"
 msgstr "Target directory"
 
-#: files/hotkey_actions_window.py:85 files/hotkey_actions_window.py:90
+#: files/hotkey_actions_window.py:87 files/hotkey_actions_window.py:92
 msgid "(unset)"
 msgstr "(unset)"
 
-#: files/marked_file_mover.py:96 files/marked_file_mover.py:952
+#: files/marked_file_mover.py:97 files/marked_file_mover.py:959
 msgid "Marks cleared."
 msgstr "Marks cleared."
 
-#: files/marked_file_mover.py:103
+#: files/marked_file_mover.py:104
 msgid "Set current marks from previous."
 msgstr "Set current marks from previous."
 
-#: files/marked_file_mover.py:103
+#: files/marked_file_mover.py:104
 msgid "Total set: {0}"
 msgstr "Total set: {0}"
 
-#: files/marked_file_mover.py:130
+#: files/marked_file_mover.py:131
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "No permanent mark target set!\n"
 "Set with Ctrl+T on Marks window."
 
-#: files/marked_file_mover.py:142
+#: files/marked_file_mover.py:143
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "No hotkey action set for {0}.\n"
 "Set with {1} on Marks window."
 
-#: files/marked_file_mover.py:222 files/recent_directory_window.py:230
+#: files/marked_file_mover.py:223 files/recent_directory_window.py:230
 msgid "Set a new target directory"
 msgstr "Set a new target directory"
 
-#: files/marked_file_mover.py:224
+#: files/marked_file_mover.py:225
 msgid "MOVE"
 msgstr "MOVE"
 
-#: files/marked_file_mover.py:228
+#: files/marked_file_mover.py:229
 msgid "COPY"
 msgstr "COPY"
 
-#: files/marked_file_mover.py:230
+#: files/marked_file_mover.py:231
 msgid "DELETE"
 msgstr "DELETE"
 
-#: files/marked_file_mover.py:232 files/recent_directory_window.py:234
+#: files/marked_file_mover.py:233 files/recent_directory_window.py:234
 msgid "Add directories from parent"
 msgstr "Add directories from parent"
 
-#: files/marked_file_mover.py:235 files/recent_directory_window.py:236
+#: files/marked_file_mover.py:236 files/recent_directory_window.py:236
 msgid "Clear targets"
 msgstr "Clear targets"
 
-#: files/marked_file_mover.py:237 files/pdf_options_window.py:81
+#: files/marked_file_mover.py:238 files/pdf_options_window.py:81
 msgid "Create PDF"
 msgstr "Create PDF"
 
-#: files/marked_file_mover.py:301 files/marked_file_mover.py:307
+#: files/marked_file_mover.py:308 files/marked_file_mover.py:314
 msgid "Recording next mark target and action."
 msgstr "Recording next mark target and action."
 
-#: files/marked_file_mover.py:320 files/recent_directory_window.py:280
+#: files/marked_file_mover.py:327 files/recent_directory_window.py:280
 msgid "Invalid directory: %s"
 msgstr "Invalid directory: {0}"
 
-#: files/marked_file_mover.py:322
+#: files/marked_file_mover.py:329
 msgid "Select target directory for marked files"
 msgstr "Select target directory for marked files"
 
-#: files/marked_file_mover.py:377
+#: files/marked_file_mover.py:384
 msgid "Moving"
 msgstr "Moving"
 
-#: files/marked_file_mover.py:377
+#: files/marked_file_mover.py:384
 msgid "Copying"
 msgstr "Copying"
 
-#: files/marked_file_mover.py:417
+#: files/marked_file_mover.py:424
 msgid "Moved {0} files to {1}"
 msgstr ""
 "Moved {0} files to\n"
 "{1}"
 
-#: files/marked_file_mover.py:419
+#: files/marked_file_mover.py:426
 msgid "Copied {0} files to {1}"
 msgstr ""
 "Copied {0} files to\n"
 "{1}"
 
-#: files/marked_file_mover.py:450
+#: files/marked_file_mover.py:457
 msgid "Removed marked file from source: {0}"
 msgstr "Removed marked file from source: {0}"
 
-#: files/marked_file_mover.py:496
+#: files/marked_file_mover.py:503
 msgid "Existing filenames match!"
 msgstr "Existing filenames match!"
 
-#: files/marked_file_mover.py:498
+#: files/marked_file_mover.py:505
 msgid "WARNING: Exact file match."
 msgstr "WARNING: Exact file match."
 
-#: files/marked_file_mover.py:502 files/marked_file_mover.py:865
+#: files/marked_file_mover.py:507
+msgid "INFO: Target files with different EXIF data replaced."
+msgstr "INFO: Target files with different EXIF data replaced."
+
+#: files/marked_file_mover.py:509 files/marked_file_mover.py:872
 msgid "WARNING: Short filenames."
 msgstr "WARNING: Short filenames."
 
-#: files/marked_file_mover.py:526
+#: files/marked_file_mover.py:533
 msgid "Moving back"
 msgstr "Moving back"
 
-#: files/marked_file_mover.py:526
+#: files/marked_file_mover.py:533
 msgid "Removing"
 msgstr "Removing"
 
-#: files/marked_file_mover.py:527
+#: files/marked_file_mover.py:534
 msgid "Moved back"
 msgstr "Moved back"
 
-#: files/marked_file_mover.py:527
+#: files/marked_file_mover.py:534
 msgid "Removed"
 msgstr "Removed"
 
-#: files/marked_file_mover.py:533
+#: files/marked_file_mover.py:540
 msgid "Where should the marked files have gone?"
 msgstr "Where should the marked files have gone?"
 
-#: files/marked_file_mover.py:558
+#: files/marked_file_mover.py:565
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "Moved back {0} files from\n"
 "{1}"
 
-#: files/marked_file_mover.py:560
+#: files/marked_file_mover.py:567
 msgid "Removed {0} files from {1}"
 msgstr ""
 "Removed {0} files from\n"
 "{1}"
 
-#: files/marked_file_mover.py:577
+#: files/marked_file_mover.py:584
 msgid "Select parent directory for target directories"
 msgstr "Select parent directory for target directories"
 
-#: files/marked_file_mover.py:737
+#: files/marked_file_mover.py:744
 msgid "Sorted directories by embedding comparison."
 msgstr "Sorted directories by embedding comparison."
 
-#: files/marked_file_mover.py:759
+#: files/marked_file_mover.py:766
 msgid "Confirm Delete"
 msgstr "Confirm Delete"
 
-#: files/marked_file_mover.py:760
+#: files/marked_file_mover.py:767
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr "Deleting {0} marked files - Are you sure you want to proceed?"
 
-#: files/marked_file_mover.py:780
+#: files/marked_file_mover.py:787
 msgid "Delete Failed"
 msgstr "Delete Failed"
 
-#: files/marked_file_mover.py:781
+#: files/marked_file_mover.py:788
 msgid "Failed to delete %s files - check log for details."
 msgstr "Failed to delete {0} files - check log for details."
 
-#: files/marked_file_mover.py:784
+#: files/marked_file_mover.py:791
 msgid "Deleted %s marked files."
 msgstr "Deleted {0} marked files."
 
-#: files/marked_file_mover.py:855
+#: files/marked_file_mover.py:862
 msgid "Existing filenames found!"
 msgstr "Existing filenames found!"
 
-#: files/marked_file_mover.py:857
+#: files/marked_file_mover.py:864
 msgid "WARNING: All file hashes match."
 msgstr "WARNING: All file hashes match."
 
-#: files/marked_file_mover.py:859
+#: files/marked_file_mover.py:866
 msgid "WARNING: %s of %s file hashes match."
 msgstr "WARNING: {0} of {1} file hashes match."
 
-#: files/marked_file_mover.py:869
+#: files/marked_file_mover.py:868
+msgid "INFO: %s files have identical content but different EXIF data."
+msgstr "INFO: %s files have identical content but different EXIF data."
+
+#: files/marked_file_mover.py:870
+msgid "WARNING: All files are either identical or have matching content."
+msgstr "WARNING: All files are either identical or have matching content."
+
+#: files/marked_file_mover.py:876
 msgid "No existing filenames found."
 msgstr "No existing filenames found."
 
-#: files/marked_file_mover.py:897
+#: files/marked_file_mover.py:904
 msgid "Found %s downstream related images"
 msgstr "Found {0} downstream related images"
 
-#: files/marked_file_mover.py:899
+#: files/marked_file_mover.py:906
 msgid "No downstream related images found"
 msgstr "No downstream related images found"
 
-#: files/marked_file_mover.py:910
+#: files/marked_file_mover.py:917
 msgid "Cleared marked file"
 msgstr "Cleared marked file"
 
-#: files/marked_file_mover.py:954
+#: files/marked_file_mover.py:961
 msgid "Removed {0} marks"
 msgstr "Removed {0} marks"
 
@@ -1682,7 +1694,7 @@ msgstr "HTML support requires pyppeteer package"
 msgid "Media Type Configuration"
 msgstr "Media Type Configuration"
 
-#: files/type_configuration_window.py:113 utils/constants.py:307
+#: files/type_configuration_window.py:113 utils/constants.py:308
 msgid "Configure Media Types"
 msgstr "Configure Media Types"
 
@@ -2132,51 +2144,51 @@ msgstr "Changed directory"
 msgid "System"
 msgstr "System"
 
-#: utils/constants.py:294
+#: utils/constants.py:295
 msgid "Start Application"
 msgstr "Start Application"
 
-#: utils/constants.py:295
+#: utils/constants.py:296
 msgid "Run Compares"
 msgstr "Run Compares"
 
-#: utils/constants.py:296
+#: utils/constants.py:297
 msgid "Run Search"
 msgstr "Run Search"
 
-#: utils/constants.py:297
+#: utils/constants.py:298
 msgid "Run Search Preset"
 msgstr "Run Search Preset"
 
-#: utils/constants.py:299
+#: utils/constants.py:300
 msgid "View Recent Directories"
 msgstr "View Recent Directories"
 
-#: utils/constants.py:300
+#: utils/constants.py:301
 msgid "View File Actions"
 msgstr "View File Actions"
 
-#: utils/constants.py:301
+#: utils/constants.py:302
 msgid "Run File Actions"
 msgstr "Run File Actions"
 
-#: utils/constants.py:302
+#: utils/constants.py:303
 msgid "Edit Prevalidations"
 msgstr "Edit Prevalidations"
 
-#: utils/constants.py:303
+#: utils/constants.py:304
 msgid "Run Prevalidations"
 msgstr "Run Prevalidations"
 
-#: utils/constants.py:305
+#: utils/constants.py:306
 msgid "Run RefacDir"
 msgstr "Run RefacDir"
 
-#: utils/constants.py:306
+#: utils/constants.py:307
 msgid "Delete Media"
 msgstr "Delete Media"
 
-#: utils/constants.py:308
+#: utils/constants.py:310
 msgid "Access Password Administration"
 msgstr "Access Password Administration"
 
@@ -2452,14 +2464,16 @@ msgstr "Escape Backslash Filepaths"
 msgid " etc."
 msgstr " etc."
 
-#: files/marked_file_mover.py:500
-msgid "INFO: Target files with different EXIF data replaced."
-msgstr "INFO: Target files with different EXIF data replaced."
+#: files/marked_file_mover.py:302
+msgid ""
+"WARNING: This action sets hotkey actions that will be used for future file "
+"operations. You may have accidentally triggered this shortcut due to a "
+"sticky Control key. Please confirm you want to proceed."
+msgstr ""
+"WARNING: This action sets hotkey actions that will be used for future file "
+"operations. You may have accidentally triggered this shortcut due to a "
+"sticky Control key. Please confirm you want to proceed."
 
-#: files/marked_file_mover.py:861
-msgid "INFO: %s files have identical content but different EXIF data."
-msgstr "INFO: %s files have identical content but different EXIF data."
-
-#: files/marked_file_mover.py:863
-msgid "WARNING: All files are either identical or have matching content."
-msgstr "WARNING: All files are either identical or have matching content."
+#: utils/constants.py:309
+msgid "Set Hotkey Actions"
+msgstr "Set Hotkey Actions"

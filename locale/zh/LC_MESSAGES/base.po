@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-10-02 18:28-0400\n"
-"PO-Revision-Date: 2025-10-02 18:28-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-10-03 02:31-0400\n"
+"PO-Revision-Date: 2025-10-03 02:31-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
 "MIME-Version: 1.0\n"
@@ -153,7 +153,7 @@ msgstr "幻灯片放映结束"
 msgid "Browsing mode set."
 msgstr "浏览模式设置 。"
 
-#: app.py:828 utils/constants.py:298
+#: app.py:828 utils/constants.py:299
 msgid "View Media Details"
 msgstr "查看媒体详情"
 
@@ -181,7 +181,7 @@ msgstr "添加到收藏夹"
 msgid "Open in GIMP"
 msgstr "在GIMP中打开"
 
-#: app.py:836 image/image_details.py:195 utils/constants.py:304
+#: app.py:836 image/image_details.py:195 utils/constants.py:305
 msgid "Run Image Generation"
 msgstr "运行图像生成"
 
@@ -1108,7 +1108,7 @@ msgstr "清除预先验证"
 msgid "Enable Prevalidations"
 msgstr "启用预先批准"
 
-#: compare/prevalidations_window.py:723 files/hotkey_actions_window.py:95
+#: compare/prevalidations_window.py:723 files/hotkey_actions_window.py:97
 msgid "Set"
 msgstr "设定"
 
@@ -1203,11 +1203,11 @@ msgstr "仅限今日"
 msgid "Target Directory"
 msgstr "目标目录"
 
-#: files/file_actions_window.py:354 files/marked_file_mover.py:990
+#: files/file_actions_window.py:354 files/marked_file_mover.py:997
 msgid "Moved"
 msgstr "移动"
 
-#: files/file_actions_window.py:360 files/marked_file_mover.py:990
+#: files/file_actions_window.py:360 files/marked_file_mover.py:997
 msgid "Copied"
 msgstr "复制"
 
@@ -1227,12 +1227,12 @@ msgstr " ({0} 文件)"
 msgid "(auto)"
 msgstr "(自动)"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:274
+#: files/file_actions_window.py:474 files/marked_file_mover.py:275
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "移动"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:281
+#: files/file_actions_window.py:474 files/marked_file_mover.py:282
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "复制"
@@ -1341,211 +1341,223 @@ msgstr "选择要跳转的文件"
 msgid "Sort by for closest search:"
 msgstr "按以下条件排序以获得最接近的搜索结果："
 
-#: files/hotkey_actions_window.py:25
+#: files/hotkey_actions_window.py:27
 msgid "Hotkey Actions"
 msgstr "热键操作"
 
-#: files/hotkey_actions_window.py:49
+#: files/hotkey_actions_window.py:51
 msgid "Key name"
 msgstr "关键名称"
 
-#: files/hotkey_actions_window.py:53
+#: files/hotkey_actions_window.py:55
 msgid "Target directory"
 msgstr "目标目录"
 
-#: files/hotkey_actions_window.py:85 files/hotkey_actions_window.py:90
+#: files/hotkey_actions_window.py:87 files/hotkey_actions_window.py:92
 msgid "(unset)"
 msgstr "(未设定)"
 
-#: files/marked_file_mover.py:96 files/marked_file_mover.py:952
+#: files/marked_file_mover.py:97 files/marked_file_mover.py:959
 msgid "Marks cleared."
 msgstr "标记清除。"
 
-#: files/marked_file_mover.py:103
+#: files/marked_file_mover.py:104
 msgid "Set current marks from previous."
 msgstr "从上一个标记设置当前标记。"
 
-#: files/marked_file_mover.py:103
+#: files/marked_file_mover.py:104
 msgid "Total set: {0}"
 msgstr "全套： {0}"
 
-#: files/marked_file_mover.py:130
+#: files/marked_file_mover.py:131
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "未设置永久标记目标！\n"
 "使用 “标记 ”窗口中的 Ctrl+T 进行设置。"
 
-#: files/marked_file_mover.py:142
+#: files/marked_file_mover.py:143
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "未为 {0} 设置热键操作。\n"
 "在标记窗口中用 {1} 设置。"
 
-#: files/marked_file_mover.py:222 files/recent_directory_window.py:230
+#: files/marked_file_mover.py:223 files/recent_directory_window.py:230
 msgid "Set a new target directory"
 msgstr "设置新的目标目录"
 
-#: files/marked_file_mover.py:224
+#: files/marked_file_mover.py:225
 msgid "MOVE"
 msgstr "移动"
 
-#: files/marked_file_mover.py:228
+#: files/marked_file_mover.py:229
 msgid "COPY"
 msgstr "复制"
 
-#: files/marked_file_mover.py:230
+#: files/marked_file_mover.py:231
 msgid "DELETE"
 msgstr "删除"
 
-#: files/marked_file_mover.py:232 files/recent_directory_window.py:234
+#: files/marked_file_mover.py:233 files/recent_directory_window.py:234
 msgid "Add directories from parent"
 msgstr "从父目录添加目录"
 
-#: files/marked_file_mover.py:235 files/recent_directory_window.py:236
+#: files/marked_file_mover.py:236 files/recent_directory_window.py:236
 msgid "Clear targets"
 msgstr "明确目标"
 
-#: files/marked_file_mover.py:237 files/pdf_options_window.py:81
+#: files/marked_file_mover.py:238 files/pdf_options_window.py:81
 msgid "Create PDF"
 msgstr "创建 PDF"
 
-#: files/marked_file_mover.py:301 files/marked_file_mover.py:307
+#: files/marked_file_mover.py:308 files/marked_file_mover.py:314
 msgid "Recording next mark target and action."
 msgstr "记录下一个标记目标和行动。"
 
-#: files/marked_file_mover.py:320 files/recent_directory_window.py:280
+#: files/marked_file_mover.py:327 files/recent_directory_window.py:280
 msgid "Invalid directory: %s"
 msgstr "无效目录： {0}"
 
-#: files/marked_file_mover.py:322
+#: files/marked_file_mover.py:329
 msgid "Select target directory for marked files"
 msgstr "为标记文件选择目标目录"
 
-#: files/marked_file_mover.py:377
+#: files/marked_file_mover.py:384
 msgid "Moving"
 msgstr "移动"
 
-#: files/marked_file_mover.py:377
+#: files/marked_file_mover.py:384
 msgid "Copying"
 msgstr "复制"
 
-#: files/marked_file_mover.py:417
+#: files/marked_file_mover.py:424
 msgid "Moved {0} files to {1}"
 msgstr ""
 "将 {0} 文件移至\n"
 "{1}"
 
-#: files/marked_file_mover.py:419
+#: files/marked_file_mover.py:426
 msgid "Copied {0} files to {1}"
 msgstr ""
 "将 {0} 个文件复制到\n"
 "{1}"
 
-#: files/marked_file_mover.py:450
+#: files/marked_file_mover.py:457
 msgid "Removed marked file from source: {0}"
 msgstr "已从源位置移除标记文件：{0}"
 
-#: files/marked_file_mover.py:496
+#: files/marked_file_mover.py:503
 msgid "Existing filenames match!"
 msgstr "现有文件名匹配！"
 
-#: files/marked_file_mover.py:498
+#: files/marked_file_mover.py:505
 msgid "WARNING: Exact file match."
 msgstr "警告：文件完全匹配。"
 
-#: files/marked_file_mover.py:502 files/marked_file_mover.py:865
+#: files/marked_file_mover.py:507
+msgid "INFO: Target files with different EXIF data replaced."
+msgstr "INFO: 替换了具有不同EXIF数据的目标文件。"
+
+#: files/marked_file_mover.py:509 files/marked_file_mover.py:872
 msgid "WARNING: Short filenames."
 msgstr "警告:文件短。"
 
-#: files/marked_file_mover.py:526
+#: files/marked_file_mover.py:533
 msgid "Moving back"
 msgstr "向后移动"
 
-#: files/marked_file_mover.py:526
+#: files/marked_file_mover.py:533
 msgid "Removing"
 msgstr "删除"
 
-#: files/marked_file_mover.py:527
+#: files/marked_file_mover.py:534
 msgid "Moved back"
 msgstr "向后移动"
 
-#: files/marked_file_mover.py:527
+#: files/marked_file_mover.py:534
 msgid "Removed"
 msgstr "已删除"
 
-#: files/marked_file_mover.py:533
+#: files/marked_file_mover.py:540
 msgid "Where should the marked files have gone?"
 msgstr "做了标记的文件应该放在哪里？"
 
-#: files/marked_file_mover.py:558
+#: files/marked_file_mover.py:565
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "从 {1}\n"
 "移回 {0} 个文件"
 
-#: files/marked_file_mover.py:560
+#: files/marked_file_mover.py:567
 msgid "Removed {0} files from {1}"
 msgstr ""
 "从 {1}\n"
 "移除 {0} 个文件"
 
-#: files/marked_file_mover.py:577
+#: files/marked_file_mover.py:584
 msgid "Select parent directory for target directories"
 msgstr "选择目标目录的父目录"
 
-#: files/marked_file_mover.py:737
+#: files/marked_file_mover.py:744
 msgid "Sorted directories by embedding comparison."
 msgstr "通过嵌入比较排序目录 。"
 
-#: files/marked_file_mover.py:759
+#: files/marked_file_mover.py:766
 msgid "Confirm Delete"
 msgstr "确认删除"
 
-#: files/marked_file_mover.py:760
+#: files/marked_file_mover.py:767
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr "删除{0} 标记的文件 - 您确定要继续吗 ?"
 
-#: files/marked_file_mover.py:780
+#: files/marked_file_mover.py:787
 msgid "Delete Failed"
 msgstr "删除失败"
 
-#: files/marked_file_mover.py:781
+#: files/marked_file_mover.py:788
 msgid "Failed to delete %s files - check log for details."
 msgstr "删除 {0} 文件 - 检查日志以获取细节失败 。"
 
-#: files/marked_file_mover.py:784
+#: files/marked_file_mover.py:791
 msgid "Deleted %s marked files."
 msgstr "删除{0} 标记的文件 。"
 
-#: files/marked_file_mover.py:855
+#: files/marked_file_mover.py:862
 msgid "Existing filenames found!"
 msgstr "找到已有文件名 !"
 
-#: files/marked_file_mover.py:857
+#: files/marked_file_mover.py:864
 msgid "WARNING: All file hashes match."
 msgstr "所有档案都匹配"
 
-#: files/marked_file_mover.py:859
+#: files/marked_file_mover.py:866
 msgid "WARNING: %s of %s file hashes match."
 msgstr "警告 : {0} {1} 文件散列匹配 。"
 
-#: files/marked_file_mover.py:869
+#: files/marked_file_mover.py:868
+msgid "INFO: %s files have identical content but different EXIF data."
+msgstr "INFO: %s 个文件内容相同但 EXIF 数据不同。"
+
+#: files/marked_file_mover.py:870
+msgid "WARNING: All files are either identical or have matching content."
+msgstr "警告：所有文件要么完全相同，要么内容完全一致。"
+
+#: files/marked_file_mover.py:876
 msgid "No existing filenames found."
 msgstr "未找到现有文件名 。"
 
-#: files/marked_file_mover.py:897
+#: files/marked_file_mover.py:904
 msgid "Found %s downstream related images"
 msgstr "找到 {0} 下游相关图像"
 
-#: files/marked_file_mover.py:899
+#: files/marked_file_mover.py:906
 msgid "No downstream related images found"
 msgstr "未找到下游相关图像"
 
-#: files/marked_file_mover.py:910
+#: files/marked_file_mover.py:917
 msgid "Cleared marked file"
 msgstr "清除已标记的文件"
 
-#: files/marked_file_mover.py:954
+#: files/marked_file_mover.py:961
 msgid "Removed {0} marks"
 msgstr "删除{0}标记"
 
@@ -1649,7 +1661,7 @@ msgstr "HTML 支持需要 pyppeter 软件包"
 msgid "Media Type Configuration"
 msgstr "媒体类型配置"
 
-#: files/type_configuration_window.py:113 utils/constants.py:307
+#: files/type_configuration_window.py:113 utils/constants.py:308
 msgid "Configure Media Types"
 msgstr "配置媒体类型"
 
@@ -2096,51 +2108,51 @@ msgstr "更改目录"
 msgid "System"
 msgstr "系统"
 
-#: utils/constants.py:294
+#: utils/constants.py:295
 msgid "Start Application"
 msgstr "启动软件应用程序"
 
-#: utils/constants.py:295
+#: utils/constants.py:296
 msgid "Run Compares"
 msgstr "运行比较"
 
-#: utils/constants.py:296
+#: utils/constants.py:297
 msgid "Run Search"
 msgstr "运行搜索"
 
-#: utils/constants.py:297
+#: utils/constants.py:298
 msgid "Run Search Preset"
 msgstr "运行搜索预置"
 
-#: utils/constants.py:299
+#: utils/constants.py:300
 msgid "View Recent Directories"
 msgstr "查看最新目录"
 
-#: utils/constants.py:300
+#: utils/constants.py:301
 msgid "View File Actions"
 msgstr "查看文件操作"
 
-#: utils/constants.py:301
+#: utils/constants.py:302
 msgid "Run File Actions"
 msgstr "运行文件操作"
 
-#: utils/constants.py:302
+#: utils/constants.py:303
 msgid "Edit Prevalidations"
 msgstr "编辑批准书"
 
-#: utils/constants.py:303
+#: utils/constants.py:304
 msgid "Run Prevalidations"
 msgstr "运行审批"
 
-#: utils/constants.py:305
+#: utils/constants.py:306
 msgid "Run RefacDir"
 msgstr "运行 RefacDir"
 
-#: utils/constants.py:306
+#: utils/constants.py:307
 msgid "Delete Media"
 msgstr "删除媒体"
 
-#: utils/constants.py:308
+#: utils/constants.py:310
 msgid "Access Password Administration"
 msgstr "访问密码管理"
 
@@ -2414,14 +2426,13 @@ msgstr "逃离文件路径中的反斜线"
 msgid " etc."
 msgstr " 等等"
 
-#: files/marked_file_mover.py:500
-msgid "INFO: Target files with different EXIF data replaced."
-msgstr "INFO: 替换了具有不同EXIF数据的目标文件。"
+#: files/marked_file_mover.py:302
+msgid ""
+"WARNING: This action sets hotkey actions that will be used for future file "
+"operations. You may have accidentally triggered this shortcut due to a "
+"sticky Control key. Please confirm you want to proceed."
+msgstr "警告：此操作将设置用于未来文件操作的快捷键动作。您可能因Control键卡住而意外触发此快捷键。请确认是否继续操作。"
 
-#: files/marked_file_mover.py:861
-msgid "INFO: %s files have identical content but different EXIF data."
-msgstr "INFO: %s 个文件内容相同但 EXIF 数据不同。"
-
-#: files/marked_file_mover.py:863
-msgid "WARNING: All files are either identical or have matching content."
-msgstr "警告：所有文件要么完全相同，要么内容完全一致。"
+#: utils/constants.py:309
+msgid "Set Hotkey Actions"
+msgstr "设置热键操作"
