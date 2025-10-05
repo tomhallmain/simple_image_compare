@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: APPLICATION 1.0\n"
 "Report-Msgid-Bugs-To: Thomas Hall <tomhall.main@gmail.com>\n"
-"POT-Creation-Date: 2025-10-03 02:25-0400\n"
-"PO-Revision-Date: 2025-10-03 02:25-0400\n"
+"POT-Creation-Date: 2025-10-05 16:01-0400\n"
+"PO-Revision-Date: 2025-10-05 16:01-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1235,63 +1235,71 @@ msgstr ""
 msgid "No files found"
 msgstr ""
 
-#: files/go_to_file.py:26
+#: files/go_to_file.py:29
 msgid "Go To File"
 msgstr ""
 
-#: files/go_to_file.py:43
+#: files/go_to_file.py:46
 msgid "Go To"
 msgstr ""
 
-#: files/go_to_file.py:46
+#: files/go_to_file.py:49
 msgid "Browse..."
 msgstr ""
 
 #: files/go_to_file.py:53
+msgid "Go To Last Moved"
+msgstr ""
+
+#: files/go_to_file.py:60
 msgid "Go to closest file if exact match not found"
 msgstr ""
 
-#: files/go_to_file.py:73
+#: files/go_to_file.py:80
 msgid "Invalid search string, please enter some text."
 msgstr ""
 
-#: files/go_to_file.py:95
+#: files/go_to_file.py:102
 msgid "Supported files"
 msgstr ""
 
-#: files/go_to_file.py:99
+#: files/go_to_file.py:106
 msgid "Image files"
 msgstr ""
 
-#: files/go_to_file.py:102
+#: files/go_to_file.py:109
 msgid "Video files"
 msgstr ""
 
-#: files/go_to_file.py:104
+#: files/go_to_file.py:111
 msgid "GIF files"
 msgstr ""
 
-#: files/go_to_file.py:106
+#: files/go_to_file.py:113
 msgid "PDF files"
 msgstr ""
 
-#: files/go_to_file.py:108
+#: files/go_to_file.py:115
 msgid "SVG files"
 msgstr ""
 
-#: files/go_to_file.py:110
+#: files/go_to_file.py:117
 msgid "HTML files"
 msgstr ""
 
-#: files/go_to_file.py:113
+#: files/go_to_file.py:120
 msgid "All files"
 msgstr ""
 
-#: files/go_to_file.py:116
+#: files/go_to_file.py:123
 msgid "Select file to go to"
 msgstr ""
 
-#: files/go_to_file.py:145
+#: files/go_to_file.py:142
+msgid "No last moved image found."
+msgstr ""
+
+#: files/go_to_file.py:171
 msgid "Sort by for closest search:"
 msgstr ""
 

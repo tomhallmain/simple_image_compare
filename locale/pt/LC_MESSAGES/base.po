@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-10-03 02:31-0400\n"
-"PO-Revision-Date: 2025-10-03 02:31-0400\n"
+"POT-Creation-Date: 2025-10-05 16:04-0400\n"
+"PO-Revision-Date: 2025-10-05 16:04-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: pt Team <<EMAIL>>\n"
 "Language: pt\n"
@@ -1340,65 +1340,65 @@ msgstr "O texto de pesquisa fornecido a file_browser.find() era inválido."
 msgid "No files found"
 msgstr "Não foram encontrados ficheiros"
 
-#: files/go_to_file.py:26
+#: files/go_to_file.py:29
 msgid "Go To File"
 msgstr "Ir para o ficheiro"
 
-#: files/go_to_file.py:43
+#: files/go_to_file.py:46
 msgid "Go To"
 msgstr "Vá"
 
-#: files/go_to_file.py:46
+#: files/go_to_file.py:49
 msgid "Browse..."
 msgstr "Navegar..."
 
-#: files/go_to_file.py:53
+#: files/go_to_file.py:60
 msgid "Go to closest file if exact match not found"
 msgstr ""
 "Ir para o ficheiro mais próximo se não for encontrada uma correspondência "
 "exata"
 
-#: files/go_to_file.py:73
+#: files/go_to_file.py:80
 msgid "Invalid search string, please enter some text."
 msgstr "Cadeia de pesquisa inválida, por favor introduza algum texto."
 
-#: files/go_to_file.py:95
+#: files/go_to_file.py:102
 msgid "Supported files"
 msgstr "Ficheiros suportados"
 
-#: files/go_to_file.py:99
+#: files/go_to_file.py:106
 msgid "Image files"
 msgstr "Ficheiros de imagem"
 
-#: files/go_to_file.py:102
+#: files/go_to_file.py:109
 msgid "Video files"
 msgstr "Ficheiros de vídeo"
 
-#: files/go_to_file.py:104
+#: files/go_to_file.py:111
 msgid "GIF files"
 msgstr "Ficheiros GIF"
 
-#: files/go_to_file.py:106
+#: files/go_to_file.py:113
 msgid "PDF files"
 msgstr "Arquivos PDF"
 
-#: files/go_to_file.py:108
+#: files/go_to_file.py:115
 msgid "SVG files"
 msgstr "Arquivos SVG"
 
-#: files/go_to_file.py:110
+#: files/go_to_file.py:117
 msgid "HTML files"
 msgstr "Ficheiros HTML"
 
-#: files/go_to_file.py:113
+#: files/go_to_file.py:120
 msgid "All files"
 msgstr "Todos os arquivos"
 
-#: files/go_to_file.py:116
+#: files/go_to_file.py:123
 msgid "Select file to go to"
 msgstr "Selecione o ficheiro para o qual deseja ir"
 
-#: files/go_to_file.py:145
+#: files/go_to_file.py:171
 msgid "Sort by for closest search:"
 msgstr "Ordenar por para pesquisa mais próxima:"
 
@@ -1469,6 +1469,16 @@ msgstr "Alvos claros"
 #: files/marked_file_mover.py:238 files/pdf_options_window.py:81
 msgid "Create PDF"
 msgstr "Criar PDF"
+
+#: files/marked_file_mover.py:302
+msgid ""
+"WARNING: This action sets hotkey actions that will be used for future file "
+"operations. You may have accidentally triggered this shortcut due to a "
+"sticky Control key. Please confirm you want to proceed."
+msgstr ""
+"AVISO: Esta ação define ações de teclas de atalho que serão usadas para "
+"operações futuras com ficheiros. Pode ter acionado acidentalmente este "
+"atalho devido a uma tecla Control presa. Confirme se deseja continuar."
 
 #: files/marked_file_mover.py:308 files/marked_file_mover.py:314
 msgid "Recording next mark target and action."
@@ -2222,6 +2232,10 @@ msgstr "Executar RefacDir"
 msgid "Delete Media"
 msgstr "Eliminar meios"
 
+#: utils/constants.py:309
+msgid "Set Hotkey Actions"
+msgstr "Definir ações de teclas de atalho"
+
 #: utils/constants.py:310
 msgid "Access Password Administration"
 msgstr "Acesso à administração da palavra-passe"
@@ -2502,16 +2516,10 @@ msgstr "Escape as barras invertidas nos caminhos dos ficheiros"
 msgid " etc."
 msgstr " etc."
 
-#: files/marked_file_mover.py:302
-msgid ""
-"WARNING: This action sets hotkey actions that will be used for future file "
-"operations. You may have accidentally triggered this shortcut due to a "
-"sticky Control key. Please confirm you want to proceed."
-msgstr ""
-"AVISO: Esta ação define ações de teclas de atalho que serão usadas para "
-"operações futuras com ficheiros. Pode ter acionado acidentalmente este "
-"atalho devido a uma tecla Control presa. Confirme se deseja continuar."
+#: files/go_to_file.py:53
+msgid "Go To Last Moved"
+msgstr "Ir para Última mudança"
 
-#: utils/constants.py:309
-msgid "Set Hotkey Actions"
-msgstr "Definir ações de teclas de atalho"
+#: files/go_to_file.py:142
+msgid "No last moved image found."
+msgstr "Não foi encontrado nenhum ficheiro multimédia movido recentemente."

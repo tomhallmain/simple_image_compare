@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-10-03 02:31-0400\n"
-"PO-Revision-Date: 2025-10-03 02:31-0400\n"
+"POT-Creation-Date: 2025-10-05 16:04-0400\n"
+"PO-Revision-Date: 2025-10-05 16:04-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
@@ -1284,63 +1284,63 @@ msgstr "file_browser.find() に指定された検索テキストが無効でし�
 msgid "No files found"
 msgstr "ファイルが見つかりませんでした"
 
-#: files/go_to_file.py:26
+#: files/go_to_file.py:29
 msgid "Go To File"
 msgstr "ファイルに移動"
 
-#: files/go_to_file.py:43
+#: files/go_to_file.py:46
 msgid "Go To"
 msgstr "行け"
 
-#: files/go_to_file.py:46
+#: files/go_to_file.py:49
 msgid "Browse..."
 msgstr "閲覧..."
 
-#: files/go_to_file.py:53
+#: files/go_to_file.py:60
 msgid "Go to closest file if exact match not found"
 msgstr "完全一致が見つからない場合は、最も近いファイルに移動する"
 
-#: files/go_to_file.py:73
+#: files/go_to_file.py:80
 msgid "Invalid search string, please enter some text."
 msgstr "検索文字列が無効です。"
 
-#: files/go_to_file.py:95
+#: files/go_to_file.py:102
 msgid "Supported files"
 msgstr "対応ファイル"
 
-#: files/go_to_file.py:99
+#: files/go_to_file.py:106
 msgid "Image files"
 msgstr "画像ファイル"
 
-#: files/go_to_file.py:102
+#: files/go_to_file.py:109
 msgid "Video files"
 msgstr "動画ファイル"
 
-#: files/go_to_file.py:104
+#: files/go_to_file.py:111
 msgid "GIF files"
 msgstr "GIFファイル"
 
-#: files/go_to_file.py:106
+#: files/go_to_file.py:113
 msgid "PDF files"
 msgstr "PDFファイル"
 
-#: files/go_to_file.py:108
+#: files/go_to_file.py:115
 msgid "SVG files"
 msgstr "SVGファイル"
 
-#: files/go_to_file.py:110
+#: files/go_to_file.py:117
 msgid "HTML files"
 msgstr "HTMLファイル"
 
-#: files/go_to_file.py:113
+#: files/go_to_file.py:120
 msgid "All files"
 msgstr "すべてのファイル"
 
-#: files/go_to_file.py:116
+#: files/go_to_file.py:123
 msgid "Select file to go to"
 msgstr "移動先のファイルを選択してください"
 
-#: files/go_to_file.py:145
+#: files/go_to_file.py:171
 msgid "Sort by for closest search:"
 msgstr "最も近い検索で並べ替え:"
 
@@ -1411,6 +1411,15 @@ msgstr "明確な目標"
 #: files/marked_file_mover.py:238 files/pdf_options_window.py:81
 msgid "Create PDF"
 msgstr "PDFを作成する"
+
+#: files/marked_file_mover.py:302
+msgid ""
+"WARNING: This action sets hotkey actions that will be used for future file "
+"operations. You may have accidentally triggered this shortcut due to a "
+"sticky Control key. Please confirm you want to proceed."
+msgstr ""
+"警告: "
+"この操作は、今後のファイル操作に使用されるホットキーアクションを設定します。Controlキーが粘着状態になっているため、誤ってこのショートカットを起動した可能性があります。続行することを確認してください。"
 
 #: files/marked_file_mover.py:308 files/marked_file_mover.py:314
 msgid "Recording next mark target and action."
@@ -2156,6 +2165,10 @@ msgstr "RefacDirの実行"
 msgid "Delete Media"
 msgstr "メディア削除"
 
+#: utils/constants.py:309
+msgid "Set Hotkey Actions"
+msgstr "ホットキーアクションの設定"
+
 #: utils/constants.py:310
 msgid "Access Password Administration"
 msgstr "アクセスパスワードの管理"
@@ -2430,15 +2443,10 @@ msgstr "ファイルパスのバックスラッシュをエスケープする"
 msgid " etc."
 msgstr " その他"
 
-#: files/marked_file_mover.py:302
-msgid ""
-"WARNING: This action sets hotkey actions that will be used for future file "
-"operations. You may have accidentally triggered this shortcut due to a "
-"sticky Control key. Please confirm you want to proceed."
-msgstr ""
-"警告: "
-"この操作は、今後のファイル操作に使用されるホットキーアクションを設定します。Controlキーが粘着状態になっているため、誤ってこのショートカットを起動した可能性があります。続行することを確認してください。"
+#: files/go_to_file.py:53
+msgid "Go To Last Moved"
+msgstr "最後移動箇所へ移動"
 
-#: utils/constants.py:309
-msgid "Set Hotkey Actions"
-msgstr "ホットキーアクションの設定"
+#: files/go_to_file.py:142
+msgid "No last moved image found."
+msgstr "最後に移動したメディアファイルが見つかりませんでした。"

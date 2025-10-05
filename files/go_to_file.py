@@ -1,6 +1,9 @@
+import os
 from tkinter import Toplevel, Frame, StringVar, BooleanVar, LEFT, W, filedialog
 from tkinter.ttk import Entry, Button, Checkbutton, OptionMenu
 
+from files.file_actions_window import FileActionsWindow
+from files.marked_file_mover import MarkedFiles
 from utils.app_style import AppStyle
 from utils.config import config
 from utils.constants import SortBy
@@ -44,6 +47,10 @@ class GoToFile:
         
         self.file_picker_btn = None
         self.add_btn("file_picker_btn", _("Browse..."), self.pick_file, column=2)
+        
+        # Button to go to last moved image basename with closest search
+        self.last_moved_btn = None
+        self.add_btn("last_moved_btn", _("Go To Last Moved"), self.go_to_last_moved, column=3)
         
         # Add closest file checkbox
         self.use_closest = BooleanVar()
@@ -123,6 +130,25 @@ class GoToFile:
             self.search_text.set(selected_file)
             # Go to the selected file
             self.go_to_file()
+
+    def go_to_last_moved(self, event=None):
+        """Set closest search, populate with basename of last moved image, and go."""
+        last_moved = MarkedFiles.last_moved_image
+        if not last_moved:
+            action = FileActionsWindow.get_history_action(start_index=0, exclude_auto=True)
+            if action and getattr(action, "new_files", None) and len(action.new_files) > 0:
+                last_moved = action.new_files[0]
+            else:
+                self.app_actions.toast(_("No last moved image found."))
+                return
+        # Ensure closest search is enabled
+        GoToFile.last_use_closest = True
+        self.use_closest.set(True)
+        self.toggle_closest_options()
+        # Populate with basename and go
+        self.search_text.set(os.path.basename(last_moved))
+        self.master.update()
+        self.go_to_file()
 
     def close_windows(self, event=None):
         self.master.destroy()
