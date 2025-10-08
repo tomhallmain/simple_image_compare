@@ -196,10 +196,12 @@ def embedding_similarity(embedding0, embedding1):
 
 def image_embeddings_clip(image_path):
     try:
-        image = _get_clip_preprocess()(Image.open(image_path)).unsqueeze(0).to(device)
+        with Image.open(image_path) as pil_img:
+            image = _get_clip_preprocess()(pil_img).unsqueeze(0).to(device)
     except Exception as e:
         image_path = FrameCache.get_image_path(image_path)
-        image = _get_clip_preprocess()(Image.open(image_path)).unsqueeze(0).to(device)
+        with Image.open(image_path) as pil_img:
+            image = _get_clip_preprocess()(pil_img).unsqueeze(0).to(device)
     with torch.no_grad():
         embedding = _get_clip_model().encode_image(image)
         embedding /= embedding.norm(dim=-1, keepdim=True)
@@ -218,13 +220,13 @@ def text_embeddings_clip(text):
 
 def image_embeddings_siglip(image_path):
     try:
-        image = Image.open(image_path)
+        with Image.open(image_path) as pil_img:
+            # Process image with SIGLIP processor
+            inputs = _get_siglip_processor()(images=pil_img, return_tensors="pt").to(device)
     except Exception as e:
         image_path = FrameCache.get_image_path(image_path)
-        image = Image.open(image_path)
-    
-    # Process image with SIGLIP processor
-    inputs = _get_siglip_processor()(images=image, return_tensors="pt").to(device)
+        with Image.open(image_path) as pil_img:
+            inputs = _get_siglip_processor()(images=pil_img, return_tensors="pt").to(device)
     
     with torch.no_grad():
         # Get image features using SIGLIP model
@@ -249,13 +251,17 @@ def text_embeddings_siglip(text):
 
 def image_embeddings_flava(image_path):
     try:
-        image = Image.open(image_path).convert("RGB")
+        with Image.open(image_path) as img:
+            image = img.convert("RGB")
+            # Process image with FLAVA processor
+            inputs = _get_flava_processor()(images=image, return_tensors="pt").to(device)
+            image.close()
     except Exception as e:
         image_path = FrameCache.get_image_path(image_path)
-        image = Image.open(image_path).convert("RGB")
-    
-    # Process image with FLAVA processor
-    inputs = _get_flava_processor()(images=image, return_tensors="pt").to(device)
+        with Image.open(image_path) as img:
+            image = img.convert("RGB")
+            inputs = _get_flava_processor()(images=image, return_tensors="pt").to(device)
+            image.close()
     
     with torch.no_grad():
         # Get image features using FLAVA model
@@ -282,13 +288,17 @@ def text_embeddings_flava(text):
 
 def image_embeddings_align(image_path):
     try:
-        image = Image.open(image_path).convert("RGB")
+        with Image.open(image_path) as img:
+            image = img.convert("RGB")
+            # Process image with ALIGN processor
+            inputs = _get_align_processor()(images=image, return_tensors="pt").to(device)
+            image.close()
     except Exception as e:
         image_path = FrameCache.get_image_path(image_path)
-        image = Image.open(image_path).convert("RGB")
-    
-    # Process image with ALIGN processor
-    inputs = _get_align_processor()(images=image, return_tensors="pt").to(device)
+        with Image.open(image_path) as img:
+            image = img.convert("RGB")
+            inputs = _get_align_processor()(images=image, return_tensors="pt").to(device)
+            image.close()
     
     with torch.no_grad():
         # Get image features using ALIGN model
@@ -316,13 +326,17 @@ def text_embeddings_align(text):
 
 def image_embeddings_xvlm(image_path):
     try:
-        image = Image.open(image_path).convert("RGB")
+        with Image.open(image_path) as img:
+            image = img.convert("RGB")
+            # Process image with XVLM transform
+            image_tensor = _get_xvlm_img_transform()(image).unsqueeze(0).to(device)
+            image.close()
     except Exception as e:
         image_path = FrameCache.get_image_path(image_path)
-        image = Image.open(image_path).convert("RGB")
-    
-    # Process image with XVLM transform
-    image_tensor = _get_xvlm_img_transform()(image).unsqueeze(0).to(device)
+        with Image.open(image_path) as img:
+            image = img.convert("RGB")
+            image_tensor = _get_xvlm_img_transform()(image).unsqueeze(0).to(device)
+            image.close()
     
     with torch.no_grad():
         # Get image features using XVLM model
@@ -350,13 +364,17 @@ def text_embeddings_xvlm(text):
 
 def image_embeddings_laion(image_path):
     try:
-        image = Image.open(image_path).convert("RGB")
+        with Image.open(image_path) as img:
+            image = img.convert("RGB")
+            # Process image with LAION processor
+            inputs = _get_laion_processor()(images=image, return_tensors="pt").to(device)
+            image.close()
     except Exception as e:
         image_path = FrameCache.get_image_path(image_path)
-        image = Image.open(image_path).convert("RGB")
-    
-    # Process image with LAION processor
-    inputs = _get_laion_processor()(images=image, return_tensors="pt").to(device)
+        with Image.open(image_path) as img:
+            image = img.convert("RGB")
+            inputs = _get_laion_processor()(images=image, return_tensors="pt").to(device)
+            image.close()
     
     with torch.no_grad():
         # Get image features using LAION model

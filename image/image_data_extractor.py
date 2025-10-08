@@ -42,15 +42,18 @@ class ImageDataExtractor:
         pass
 
     def is_xl(self, image_path):
-        width, height = Image.open(image_path).size
+        with Image.open(image_path) as img:
+            width, height = img.size
         return width > 768 and height > 768
 
     def equals_resolution(self, image_path, ex_width=512, ex_height=512):
-        width, height = Image.open(image_path).size
+        with Image.open(image_path) as img:
+            width, height = img.size
         return width == ex_width and height == ex_height
 
     def higher_than_resolution(self, image_path, max_width=512, max_height=512, inclusive=True):
-        width, height = Image.open(image_path).size
+        with Image.open(image_path) as img:
+            width, height = img.size
         if max_width:
             if inclusive:
                 if max_width > width:
@@ -66,7 +69,8 @@ class ImageDataExtractor:
         return True
 
     def lower_than_resolution(self, image_path, max_width=512, max_height=512, inclusive=True):
-        width, height = Image.open(image_path).size
+        with Image.open(image_path) as img:
+            width, height = img.size
         if max_width:
             if inclusive:
                 if max_width < width:
@@ -82,13 +86,15 @@ class ImageDataExtractor:
         return True
 
     def get_raw_metadata_text(self, image_path):
-        info = Image.open(image_path).info
+        with Image.open(image_path) as img:
+            info = img.info
         if not isinstance(info, dict):
             return None
         return pprint.pformat(info)
 
     def extract_prompt(self, image_path):
-        info = Image.open(image_path).info
+        with Image.open(image_path) as img:
+            info = img.info
         if isinstance(info, dict):
             if ImageDataExtractor.A1111_PARAMS_KEY in info:
                 return self._build_a1111_prompt_info_object(info[ImageDataExtractor.A1111_PARAMS_KEY]), SoftwareType.A1111
@@ -119,7 +125,8 @@ class ImageDataExtractor:
         raise Exception("Could not find node with class type " + class_type)
 
     def extract_tags(self, image_path):
-        info = Image.open(image_path).info
+        with Image.open(image_path) as img:
+            info = img.info
         if isinstance(info, dict):
             if ImageDataExtractor.TAGS_KEY in info:
                 tags = json.loads(info[ImageDataExtractor.TAGS_KEY])
@@ -134,9 +141,9 @@ class ImageDataExtractor:
 
     ## TODO TODO
     def set_tags(self, image_path, tags):
-        image = Image.open(image_path)
-        new_info = {}
-        new_image_path = self.new_image_with_info(image, new_info, image_path=image_path, image_copy_path=None, target_dir=None)
+        with Image.open(image_path) as image:
+            new_info = {}
+            new_image_path = self.new_image_with_info(image, new_info, image_path=image_path, image_copy_path=None, target_dir=None)
 
     def copy_prompt_to_file(self, image_path, prompt_file_path):
         prompt, _ = self.extract_prompt(image_path)
@@ -246,10 +253,9 @@ class ImageDataExtractor:
         return None
 
     def copy_without_exif(self, image_path, image_copy_path=None, target_dir=None):
-        image = Image.open(image_path)
-
-        # strip exif
-        new_image_path = self.new_image_with_info(image, image_path=image_path, image_copy_path=image_copy_path, target_dir=target_dir)
+        with Image.open(image_path) as image:
+            # strip exif
+            new_image_path = self.new_image_with_info(image, image_path=image_path, image_copy_path=image_copy_path, target_dir=target_dir)
         logger.info("Copied image without exif data to: " + new_image_path)
         return new_image_path
 
@@ -278,7 +284,8 @@ class ImageDataExtractor:
 
 
     def print_imageinfo(self, image_path):
-        info = Image.open(image_path).info
+        with Image.open(image_path) as img:
+            info = img.info
         logger.info("Image info for image: " + image_path)
         pprint.pprint(info)
 
@@ -333,7 +340,8 @@ class ImageDataExtractor:
         except Exception:
             related_image_path = None
         if related_image_path is None:
-            info = Image.open(image_path).info
+            with Image.open(image_path) as img:
+                info = img.info
             if ImageDataExtractor.RELATED_IMAGE_KEY in info:
                 return str(info[ImageDataExtractor.RELATED_IMAGE_KEY])
         return related_image_path

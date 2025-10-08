@@ -491,9 +491,9 @@ class ImageDetails():
 
     @staticmethod
     def set_related_image_canvas(master, related_image_path, app_actions):
-        image = Image.open(related_image_path)
-        width = min(700, image.size[0])
-        height = int(image.size[1] * width / image.size[0])
+        with Image.open(related_image_path) as image:
+            width = min(700, image.size[0])
+            height = int(image.size[1] * width / image.size[0])
         ImageDetails.related_image_canvas = TempImageCanvas(master, title=related_image_path,
                 dimensions=f"{width}x{height}", app_actions=app_actions)
 

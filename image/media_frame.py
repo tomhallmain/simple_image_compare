@@ -428,7 +428,9 @@ class MediaFrame(Frame):
         canvas_height = int(size_float[1])
         fit_dims = Utils.scale_dims((img.width, img.height), (canvas_width, canvas_height), maximize=self.fill_canvas)
         img = img.resize(fit_dims)
-        return ImageTk.PhotoImage(img)
+        photo = ImageTk.PhotoImage(img)
+        img.close()
+        return photo
 
     def __move_from(self, event):
         """ Remember previous coordinates for scrolling with the mouse """
