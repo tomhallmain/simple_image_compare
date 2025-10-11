@@ -54,11 +54,25 @@ class ImageOps:
             return None
 
     @staticmethod
-    def rotate_image_partial(image_path, angle=90, center=None, scale=1.0):
+    def rotate_image_partial(image_path, angle=90, center=None, scale=1.0, texture_probability=0.75):
+        """
+        Rotate image with random texture or solid color background.
+        
+        Args:
+            image_path: Path to the image file
+            angle: Rotation angle in degrees
+            center: Rotation center point (defaults to image center)
+            scale: Scale factor for rotation
+            texture_probability: Probability of using texture (0.0-1.0, default 0.75)
+        """
         image = cv2.imread(image_path)
-        rotated = ImageOps._rotate_image_partial(image, angle=angle, center=center, scale=scale)
+        
+        # Randomly decide whether to use texture based on probability
+        use_texture = random.random() < texture_probability
+        
+        rotated = ImageOps._rotate_image_partial(image, angle=angle, center=center, scale=scale, use_texture=use_texture)
         new_filepath = ImageOps.new_filepath(image_path, append_part="_rot")
-        rotated.imsave(new_filepath)
+        cv2.imwrite(new_filepath, rotated)
         image.close()
 
     @staticmethod
@@ -69,19 +83,161 @@ class ImageOps:
             return (0, 0, 0) if random.random() > 0.5 else (255, 255, 255)
 
     @staticmethod
-    def _rotate_image_partial(image, angle=90, center=None, scale=1.0):
+    def generate_noise_texture(width, height, texture_type="perlin"):
+        """Generate various types of random textures for background filling."""
+        if texture_type == "perlin":
+            return ImageOps._generate_perlin_noise(width, height)
+        elif texture_type == "gaussian":
+            return ImageOps._generate_gaussian_noise(width, height)
+        elif texture_type == "gradient":
+            return ImageOps._generate_gradient_texture(width, height)
+        elif texture_type == "cellular":
+            return ImageOps._generate_cellular_texture(width, height)
+        else:
+            # Default to solid color if unknown type
+            return ImageOps._generate_solid_color(width, height)
+
+    @staticmethod
+    def _generate_perlin_noise(width, height):
+        """Generate Perlin-like noise texture using OpenCV."""
+        # Create multiple octaves of noise
+        texture = np.zeros((height, width, 3), dtype=np.uint8)
+        
+        for octave in range(3):
+            scale = 2 ** octave
+            noise = np.random.rand(height // scale, width // scale, 3) * 255
+            noise_resized = cv2.resize(noise, (width, height), interpolation=cv2.INTER_LINEAR)
+            texture = cv2.addWeighted(texture, 0.7, noise_resized.astype(np.uint8), 0.3, 0)
+        
+        return texture
+
+    @staticmethod
+    def _generate_gaussian_noise(width, height):
+        """Generate Gaussian noise texture."""
+        # Generate noise with controlled variance
+        noise = np.random.normal(128, 50, (height, width, 3))
+        noise = np.clip(noise, 0, 255).astype(np.uint8)
+        return noise
+
+    @staticmethod
+    def _generate_gradient_texture(width, height):
+        """Generate radial or linear gradient texture."""
+        texture = np.zeros((height, width, 3), dtype=np.uint8)
+        
+        if random.random() > 0.5:
+            # Radial gradient
+            center_x, center_y = width // 2, height // 2
+            y, x = np.ogrid[:height, :width]
+            distance = np.sqrt((x - center_x)**2 + (y - center_y)**2)
+            max_distance = np.sqrt(center_x**2 + center_y**2)
+            gradient = (distance / max_distance * 255).astype(np.uint8)
+            
+            # Apply random color tinting
+            color = ImageOps.get_random_color()
+            for i in range(3):
+                texture[:, :, i] = (gradient * color[i] / 255).astype(np.uint8)
+        else:
+            # Linear gradient
+            direction = random.choice(['horizontal', 'vertical', 'diagonal'])
+            if direction == 'horizontal':
+                gradient = np.linspace(0, 255, width)
+                gradient = np.tile(gradient, (height, 1))
+            elif direction == 'vertical':
+                gradient = np.linspace(0, 255, height)
+                gradient = np.tile(gradient, (width, 1)).T
+            else:  # diagonal
+                gradient = np.zeros((height, width))
+                for i in range(height):
+                    for j in range(width):
+                        gradient[i, j] = ((i + j) / (height + width)) * 255
+            
+            # Apply random color tinting
+            color = ImageOps.get_random_color()
+            for i in range(3):
+                texture[:, :, i] = (gradient * color[i] / 255).astype(np.uint8)
+        
+        return texture
+
+    @staticmethod
+    def _generate_cellular_texture(width, height):
+        """Generate cellular/Voronoi-like texture."""
+        # Create random points
+        num_points = random.randint(5, 15)
+        points = np.random.rand(num_points, 2) * [width, height]
+        
+        # Create distance map
+        y, x = np.ogrid[:height, :width]
+        texture = np.zeros((height, width, 3), dtype=np.uint8)
+        
+        for i in range(height):
+            for j in range(width):
+                distances = np.sqrt((points[:, 0] - j)**2 + (points[:, 1] - i)**2)
+                min_dist = np.min(distances)
+                # Normalize and apply color
+                intensity = int((min_dist / max(width, height)) * 255)
+                color = ImageOps.get_random_color()
+                texture[i, j] = [int(c * intensity / 255) for c in color]
+        
+        return texture
+
+    @staticmethod
+    def _generate_solid_color(width, height):
+        """Generate solid color texture (fallback)."""
+        color = ImageOps.get_random_color()
+        texture = np.full((height, width, 3), color, dtype=np.uint8)
+        return texture
+
+    @staticmethod
+    def get_random_texture_type():
+        """Get a random texture type for variety."""
+        texture_types = ["perlin", "gaussian", "gradient", "cellular"]
+        return random.choice(texture_types)
+
+    @staticmethod
+    def _rotate_image_partial(image, angle=90, center=None, scale=1.0, use_texture=True):
         # grab the dimensions of the image
         (h, w) = image.shape[:2]
         # if the center is None, initialize it as the center of the image
         if center is None:
             center = (w // 2, h // 2)
-        # perform the rotation
-        M = cv2.getRotationMatrix2D(center, angle, scale)
-        rotated = cv2.warpAffine(image, M, (w, h),
-                                 borderMode=cv2.BORDER_CONSTANT,
-                                 borderValue=ImageOps.get_random_color())
-        # return the rotated image
-        return rotated
+        
+        if use_texture:
+            # Create a background texture
+            texture_type = ImageOps.get_random_texture_type()
+            background_texture = ImageOps.generate_noise_texture(w, h, texture_type)
+            
+            # Perform rotation with transparent border (we'll handle the background ourselves)
+            M = cv2.getRotationMatrix2D(center, angle, scale)
+            rotated = cv2.warpAffine(image, M, (w, h),
+                                   borderMode=cv2.BORDER_TRANSPARENT)
+            
+            # Create a mask to identify the transparent areas (where the original image wasn't)
+            # We'll use a different approach: rotate a white image to create a mask
+            white_image = np.ones((h, w, 3), dtype=np.uint8) * 255
+            rotated_mask = cv2.warpAffine(white_image, M, (w, h),
+                                        borderMode=cv2.BORDER_CONSTANT,
+                                        borderValue=(0, 0, 0))
+            
+            # Convert mask to grayscale and normalize
+            mask_gray = cv2.cvtColor(rotated_mask, cv2.COLOR_BGR2GRAY)
+            mask_normalized = mask_gray.astype(np.float32) / 255.0
+            
+            # Composite the rotated image with the background texture
+            # Where mask is 1 (original image), use rotated image
+            # Where mask is 0 (background), use texture
+            result = np.zeros_like(image)
+            for i in range(3):  # For each color channel
+                result[:, :, i] = (rotated[:, :, i] * mask_normalized + 
+                                 background_texture[:, :, i] * (1 - mask_normalized)).astype(np.uint8)
+            
+            return result
+        else:
+            # Original behavior with solid color
+            M = cv2.getRotationMatrix2D(center, angle, scale)
+            rotated = cv2.warpAffine(image, M, (w, h),
+                                   borderMode=cv2.BORDER_CONSTANT,
+                                   borderValue=ImageOps.get_random_color())
+            return rotated
 
     @staticmethod
     def enhance_image(image_path):
