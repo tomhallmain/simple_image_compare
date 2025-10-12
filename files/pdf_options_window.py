@@ -1,7 +1,8 @@
-from tkinter import Toplevel, Frame, Label, BooleanVar, W, StringVar
+from tkinter import Frame, Label, BooleanVar, W, StringVar
 from tkinter.ttk import Checkbutton, Button, Entry
 
 from utils.app_style import AppStyle
+from lib.multi_display import SmartToplevel
 from utils.translations import I18N
 
 _ = I18N._
@@ -27,9 +28,7 @@ class PDFOptionsWindow:
             cls.top_level.lift()
             return
             
-        cls.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
-        cls.top_level.title(_("PDF Creation Options"))
-        cls.top_level.geometry("500x250")
+        cls.top_level = SmartToplevel(persistent_parent=master, title=_("PDF Creation Options"), geometry="500x250")
         cls.top_level.protocol("WM_DELETE_WINDOW", cls.on_closing)
         cls.top_level.bind("<Escape>", cls.on_closing)
         

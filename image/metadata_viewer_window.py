@@ -1,6 +1,7 @@
-from tkinter import Toplevel, Label, LEFT, W
+from tkinter import Label, LEFT, W
 from tkinter.ttk import Button
 
+from lib.multi_display import SmartToplevel
 from lib.tk_scroll_demo import ScrollFrame
 from utils.app_style import AppStyle
 from utils.translations import I18N
@@ -17,8 +18,7 @@ class MetadataViewerWindow:
     top_level = None
 
     def __init__(self, master, app_actions, metadata_text, image_path, dimensions="600x600"):
-        MetadataViewerWindow.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
-        MetadataViewerWindow.top_level.geometry(dimensions)
+        MetadataViewerWindow.top_level = SmartToplevel(persistent_parent=master, geometry=dimensions)
         MetadataViewerWindow.set_title(image_path)
         self.master = MetadataViewerWindow.top_level
         self.app_actions = app_actions

@@ -1,5 +1,5 @@
 import os
-from tkinter import Toplevel, Frame, Label, StringVar, BooleanVar, LEFT, W, E, Checkbutton
+from tkinter import Frame, Label, StringVar, BooleanVar, LEFT, W, E, Checkbutton
 import tkinter.font as fnt
 from tkinter.ttk import Entry, Button
 from tkinter import messagebox
@@ -7,6 +7,7 @@ from tkinter import messagebox
 from utils.app_style import AppStyle
 from auth.password_core import PasswordManager, get_security_config
 from auth.password_utils import require_password
+from lib.multi_display import SmartToplevel
 from utils.constants import ProtectedActions
 from utils.translations import I18N
 
@@ -17,10 +18,21 @@ class PasswordAdminWindow():
     top_level = None
     
     def __init__(self, master, app_actions):
-        PasswordAdminWindow.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
-        PasswordAdminWindow.top_level.title(_("Password Administration"))
-        PasswordAdminWindow.top_level.geometry(PasswordAdminWindow.get_geometry(is_gui=True))
-
+        # Get parent window position to determine which display to use
+        parent_x = master.winfo_x()
+        parent_y = master.winfo_y()
+        
+        # For large windows, position at the top of the screen (Y=0) on the same display as parent
+        # but slightly offset horizontally to avoid completely overlapping the parent window
+        offset_x = 50  # Small horizontal offset from parent
+        new_x = parent_x + offset_x
+        new_y = 0  # Always position at the top of the screen
+        
+        # Create geometry string with custom positioning
+        geometry = PasswordAdminWindow.get_geometry(is_gui=True)
+        positioned_geometry = f"{geometry}+{new_x}+{new_y}"
+        
+        PasswordAdminWindow.top_level = SmartToplevel(persistent_parent=master, title=_("Password Administration"), geometry=positioned_geometry, auto_position=False)
         self.master = PasswordAdminWindow.top_level
         self.app_actions = app_actions
         
@@ -57,6 +69,9 @@ class PasswordAdminWindow():
         
         self.master.bind("<Escape>", self.close_window)
         self.master.protocol("WM_DELETE_WINDOW", self.close_window)
+        
+        # Set focus to the window after it's fully created
+        self.master.after(1, lambda: self.master.focus_force())
 
     @staticmethod
     def get_geometry(is_gui=True):
@@ -366,9 +381,7 @@ class PasswordAdminWindow():
     def show_change_password_dialog(self):
         """Show dialog to change password."""
         # Create a simple dialog for changing password
-        dialog = Toplevel(self.master, bg=AppStyle.BG_COLOR)
-        dialog.title(_("Change Password"))
-        dialog.geometry("400x320")
+        dialog = SmartToplevel(persistent_parent=self.master, title=_("Change Password"), geometry="400x320")
         dialog.transient(self.master)
         dialog.grab_set()
         

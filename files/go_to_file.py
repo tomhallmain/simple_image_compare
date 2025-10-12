@@ -1,9 +1,10 @@
 import os
-from tkinter import Toplevel, Frame, StringVar, BooleanVar, LEFT, W, filedialog
+from tkinter import Frame, StringVar, BooleanVar, LEFT, W, filedialog
 from tkinter.ttk import Entry, Button, Checkbutton, OptionMenu
 
 from files.file_actions_window import FileActionsWindow
 from files.marked_file_mover import MarkedFiles
+from lib.multi_display import SmartToplevel
 from utils.app_style import AppStyle
 from utils.config import config
 from utils.constants import SortBy
@@ -25,9 +26,7 @@ class GoToFile:
         return f"{width}x{height}"
 
     def __init__(self, master, app_actions):
-        GoToFile.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
-        GoToFile.top_level.title(_("Go To File"))
-        GoToFile.top_level.geometry(GoToFile.get_geometry())
+        GoToFile.top_level = SmartToplevel(persistent_parent=master, title=_("Go To File"), geometry=GoToFile.get_geometry())
         self.master = GoToFile.top_level
         self.app_actions = app_actions
         self.frame = Frame(self.master)

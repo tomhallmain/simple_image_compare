@@ -2,7 +2,7 @@ from enum import Enum
 import os
 from typing import Optional
 
-from tkinter import Toplevel, Frame, Label, Scale, Checkbutton, BooleanVar, StringVar, LEFT, W, HORIZONTAL
+from tkinter import Frame, Label, Scale, Checkbutton, BooleanVar, StringVar, LEFT, W, HORIZONTAL
 import tkinter.font as fnt
 from tkinter.ttk import Entry, Button, Combobox
 
@@ -13,6 +13,7 @@ from image.image_data_extractor import image_data_extractor
 from image.image_ops import ImageOps
 from image.prevalidation_action import PrevalidationAction
 from lib.multiselect_dropdown import MultiSelectDropdown
+from lib.multi_display import SmartToplevel
 from utils.app_style import AppStyle
 from utils.app_info_cache import app_info_cache
 from utils.config import config
@@ -346,8 +347,7 @@ class PrevalidationModifyWindow():
     COL_0_WIDTH = 600
 
     def __init__(self, master, app_actions, refresh_callback, prevalidation, dimensions="600x600"):
-        PrevalidationModifyWindow.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
-        PrevalidationModifyWindow.top_level.geometry(dimensions)
+        PrevalidationModifyWindow.top_level = SmartToplevel(persistent_parent=master, geometry=dimensions)
         self.master = PrevalidationModifyWindow.top_level
         self.app_actions = app_actions
         self.refresh_callback = refresh_callback
@@ -647,9 +647,7 @@ class PrevalidationsWindow():
         return f"{width}x{height}"
 
     def __init__(self, master, app_actions):
-        PrevalidationsWindow.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
-        PrevalidationsWindow.top_level.geometry(PrevalidationsWindow.get_geometry())
-        PrevalidationsWindow.top_level.title(_("Prevalidations"))
+        PrevalidationsWindow.top_level = SmartToplevel(persistent_parent=master, title=_("Prevalidations"), geometry=PrevalidationsWindow.get_geometry())
         self.master = PrevalidationsWindow.top_level
         self.app_actions = app_actions
         self.filter_text = ""

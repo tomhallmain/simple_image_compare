@@ -1,10 +1,11 @@
 
 
-from tkinter import Toplevel, Frame, Label, filedialog, messagebox, LEFT, W
+from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
 from tkinter.ttk import Button
 
 from auth.password_utils import require_password
 from files.file_actions_window import FileActionsWindow
+from lib.multi_display import SmartToplevel
 from utils.app_style import AppStyle
 from utils.constants import ProtectedActions
 from utils.translations import I18N
@@ -23,9 +24,7 @@ class HotkeyActionsWindow():
         return f"{width}x{height}"
 
     def __init__(self, master, app_actions, set_permanent_action_callback, set_hotkey_action_callback):
-        HotkeyActionsWindow.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
-        HotkeyActionsWindow.top_level.title(_("Hotkey Actions"))
-        HotkeyActionsWindow.top_level.geometry(HotkeyActionsWindow.get_geometry())
+        HotkeyActionsWindow.top_level = SmartToplevel(persistent_parent=master, title=_("Hotkey Actions"), geometry=HotkeyActionsWindow.get_geometry())
         self.master = HotkeyActionsWindow.top_level
         self.app_actions = app_actions
         self.set_permanent_action_callback = set_permanent_action_callback

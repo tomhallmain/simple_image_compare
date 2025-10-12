@@ -1,10 +1,11 @@
 import os
-from tkinter import Toplevel, Label, LEFT, W, font
+from tkinter import Label, LEFT, W, font
 from tkinter.ttk import Button
 
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from lib.tk_scroll_demo import ScrollFrame
+from lib.multi_display import SmartToplevel
 from utils.translations import I18N
 
 _ = I18N._
@@ -52,9 +53,21 @@ class FavoritesWindow:
     def __init__(self, app_master, app_actions, geometry="700x800"):
         self.app_master = app_master
         self.app_actions = app_actions
-        self.master = Toplevel(app_master, bg=AppStyle.BG_COLOR)
-        self.master.title(_("Favorites"))
-        self.master.geometry(geometry)
+        
+        # Get parent window position to determine which display to use
+        parent_x = app_master.winfo_x()
+        parent_y = app_master.winfo_y()
+        
+        # For large windows, position at the top of the screen (Y=0) on the same display as parent
+        # but slightly offset horizontally to avoid completely overlapping the parent window
+        offset_x = 50  # Small horizontal offset from parent
+        new_x = parent_x + offset_x
+        new_y = 0  # Always position at the top of the screen
+        
+        # Create geometry string with custom positioning
+        positioned_geometry = f"{geometry}+{new_x}+{new_y}"
+        
+        self.master = SmartToplevel(persistent_parent=app_master, title=_("Favorites"), geometry=positioned_geometry, auto_position=False)
         self.frame = ScrollFrame(self.master, bg_color=AppStyle.BG_COLOR)
         self.frame.pack(side="top", fill="both", expand=True)
         self.favorite_btns = []

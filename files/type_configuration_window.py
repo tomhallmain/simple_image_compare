@@ -1,6 +1,7 @@
-from tkinter import Toplevel, Frame, Label, BooleanVar, LEFT, W, messagebox
+from tkinter import Frame, Label, BooleanVar, LEFT, W, messagebox
 from tkinter.ttk import Checkbutton, Button, Separator
 
+from lib.multi_display import SmartToplevel
 from utils.app_style import AppStyle
 from utils.app_info_cache import app_info_cache
 from utils.config import config
@@ -92,9 +93,7 @@ class TypeConfigurationWindow:
             CompareMediaType.HTML: config.enable_html,
         }
             
-        cls.top_level = Toplevel(master, bg=AppStyle.BG_COLOR)
-        cls.top_level.title(_("Media Type Configuration"))
-        cls.top_level.geometry(cls.get_geometry())
+        cls.top_level = SmartToplevel(persistent_parent=master, title=_("Media Type Configuration"), geometry=cls.get_geometry())
         cls.top_level.protocol("WM_DELETE_WINDOW", cls.on_closing)
         cls.top_level.bind("<Escape>", cls.on_closing)
         

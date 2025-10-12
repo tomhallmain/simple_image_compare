@@ -1,11 +1,12 @@
 from datetime import datetime
 import os
 
-from tkinter import Toplevel, Frame, Label, W, CENTER, LEFT, RIGHT
+from tkinter import Frame, Label, W, CENTER, LEFT, RIGHT
 from tkinter.ttk import Button, Style
 
 from utils.config import config
 from lib.tk_scroll_demo import ScrollFrame
+from lib.multi_display import SmartToplevel
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.logging_setup import get_logger
@@ -263,9 +264,20 @@ class FileActionsWindow:
         return stats
 
     def __init__(self, app_master, app_actions, view_image_callback, move_marks_callback, geometry="700x1200"):
-        FileActionsWindow.top_level = Toplevel(app_master, bg=AppStyle.BG_COLOR)
-        FileActionsWindow.top_level.title(_("File Actions"))
-        FileActionsWindow.top_level.geometry(geometry)
+        # Get parent window position to determine which display to use
+        parent_x = app_master.winfo_x()
+        parent_y = app_master.winfo_y()
+        
+        # For large windows, position at the top of the screen (Y=0) on the same display as parent
+        # but slightly offset horizontally to avoid completely overlapping the parent window
+        offset_x = 50  # Small horizontal offset from parent
+        new_x = parent_x + offset_x
+        new_y = 0  # Always position at the top of the screen
+        
+        # Create geometry string with custom positioning
+        positioned_geometry = f"{geometry}+{new_x}+{new_y}"
+        
+        FileActionsWindow.top_level = SmartToplevel(persistent_parent=app_master, title=_("File Actions"), geometry=positioned_geometry, auto_position=False)
         self.master = FileActionsWindow.top_level
         self.app_master = app_master
         self.is_sorted_by_embedding = False
