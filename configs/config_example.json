@@ -97,6 +97,7 @@
     "random_invert_chance": 0.2,
     "random_sepia_chance": 0.1,
     "random_grayscale_chance": 0.5,
-    "random_pixelate_chance": 0.3
+    "random_pixelate_chance": 0.3,
+    "texture_draw_probability": 0.6
   }
 }

@@ -17,6 +17,7 @@ logger = get_logger("image_ops")
 
 class ImageOps:
     COLORS = ["red", "green", "blue", "yellow", "purple", "orange", "black", "white", "gray", "pink", "brown"]
+    TEXTURE_DRAW_TYPES = ["perlin", "gaussian", "gradient", "cellular"]
     
     # Class-level cache for GEGL validation
     _gegl_validation_cache = None
@@ -476,13 +477,29 @@ class ImageOps:
     def _random_draw(image):
         draw = ImageDraw.Draw(image)
         for i in range(random.randint(1, 5)):
-            choice = random.randint(0, 4)
-            if choice == 0:
-                ImageOps._arc(image, draw)
-            elif choice == 1:
-                ImageOps._line(image, draw)
-            elif choice == 2:
-                ImageOps._chord(image, draw)
+            # Decide whether to use texture-based drawing based on configuration
+            use_texture = random.random() < config.image_edit_configuration.texture_draw_probability
+            
+            if use_texture:
+                # Use texture-based drawing methods
+                choice = random.randint(0, 3)
+                if choice == 0:
+                    ImageOps._texture_arc(image, draw)
+                elif choice == 1:
+                    ImageOps._texture_line(image, draw)
+                elif choice == 2:
+                    ImageOps._texture_chord(image, draw)
+                elif choice == 3:
+                    ImageOps._texture_shape(image, draw)
+            else:
+                # Use traditional solid color drawing methods
+                choice = random.randint(0, 2)
+                if choice == 0:
+                    ImageOps._arc(image, draw)
+                elif choice == 1:
+                    ImageOps._line(image, draw)
+                elif choice == 2:
+                    ImageOps._chord(image, draw)
 
     @staticmethod
     def _color():
@@ -526,6 +543,249 @@ class ImageOps:
             end1 = random.randint(start1, image.size[1])
             bounds = (start0, start1, end0, end1)
             image_draw.chord(bounds, start=start, end=end, fill=ImageOps._color(), outline=ImageOps._color(), width=random.randint(2, 40))
+
+    @staticmethod
+    def _texture_line(image, image_draw):
+        """Draw lines with texture-based patterns instead of solid colors."""
+        if random.randint(0, 1) == 0:
+            # Parallel lines with texture variation
+            for i in range(0, 100, 20):
+                # Generate a small texture patch for this line segment
+                texture_type = random.choice(ImageOps.TEXTURE_DRAW_TYPES)
+                line_width = random.randint(2, 20)
+                texture_patch = ImageOps.generate_noise_texture(line_width * 2, line_width * 2, texture_type)
+                
+                # Convert texture to PIL Image and resize
+                texture_img = PIL.Image.fromarray(texture_patch)
+                texture_img = texture_img.resize((line_width * 2, line_width * 2))
+                
+                # Create a temporary image for the line with texture
+                temp_img = PIL.Image.new('RGBA', image.size, (0, 0, 0, 0))
+                temp_draw = ImageDraw.Draw(temp_img)
+                temp_draw.line((i, 0) + image.size, width=line_width, fill=(255, 255, 255, 255))
+                
+                # Apply texture to the line area
+                ImageOps._apply_texture_to_mask(image, temp_img, texture_img)
+                temp_img.close()
+                texture_img.close()
+        else:
+            # Curved lines with texture
+            points = []
+            for i in range(random.randint(2, 4)):
+                points.append((random.randint(0, image.size[0]), random.randint(0, image.size[1])))
+            
+            line_width = random.randint(2, 40)
+            texture_type = random.choice(ImageOps.TEXTURE_DRAW_TYPES)
+            texture_patch = ImageOps.generate_noise_texture(line_width * 3, line_width * 3, texture_type)
+            
+            # Convert texture to PIL Image
+            texture_img = PIL.Image.fromarray(texture_patch)
+            texture_img = texture_img.resize((line_width * 3, line_width * 3))
+            
+            # Create temporary image for curved line
+            temp_img = PIL.Image.new('RGBA', image.size, (0, 0, 0, 0))
+            temp_draw = ImageDraw.Draw(temp_img)
+            temp_draw.line(points, width=line_width, fill=(255, 255, 255, 255), joint="curve")
+            
+            # Apply texture to the line area
+            ImageOps._apply_texture_to_mask(image, temp_img, texture_img)
+            temp_img.close()
+            texture_img.close()
+
+    @staticmethod
+    def _texture_arc(image, image_draw):
+        """Draw arcs with texture-based patterns."""
+        for i in range(random.randint(1, 5)):
+            start = random.randint(0, image.size[0])
+            end = random.randint(start, image.size[0])            
+            start0 = random.randint(0, image.size[0])
+            end0 = random.randint(start0, image.size[0])
+            start1 = random.randint(0, image.size[1])
+            end1 = random.randint(start1, image.size[1])
+            bounds = (start0, start1, end0, end1)
+            
+            arc_width = random.randint(2, 40)
+            texture_type = random.choice(ImageOps.TEXTURE_DRAW_TYPES)
+            texture_patch = ImageOps.generate_noise_texture(arc_width * 2, arc_width * 2, texture_type)
+            
+            # Convert texture to PIL Image
+            texture_img = PIL.Image.fromarray(texture_patch)
+            texture_img = texture_img.resize((arc_width * 2, arc_width * 2))
+            
+            # Create temporary image for arc
+            temp_img = PIL.Image.new('RGBA', image.size, (0, 0, 0, 0))
+            temp_draw = ImageDraw.Draw(temp_img)
+            temp_draw.arc(bounds, start=start, end=end, fill=(255, 255, 255, 255), width=arc_width)
+            
+            # Apply texture to the arc area
+            ImageOps._apply_texture_to_mask(image, temp_img, texture_img)
+            temp_img.close()
+            texture_img.close()
+
+    @staticmethod
+    def _texture_chord(image, image_draw):
+        """Draw chords with texture-based patterns."""
+        for i in range(random.randint(1, 5)):
+            start = random.randint(0, image.size[0])
+            end = random.randint(start, image.size[0])            
+            start0 = random.randint(0, image.size[0])
+            end0 = random.randint(start0, image.size[0])
+            start1 = random.randint(0, image.size[1])
+            end1 = random.randint(start1, image.size[1])
+            bounds = (start0, start1, end0, end1)
+            
+            chord_width = random.randint(2, 40)
+            texture_type = random.choice(ImageOps.TEXTURE_DRAW_TYPES)
+            texture_patch = ImageOps.generate_noise_texture(chord_width * 2, chord_width * 2, texture_type)
+            
+            # Convert texture to PIL Image
+            texture_img = PIL.Image.fromarray(texture_patch)
+            texture_img = texture_img.resize((chord_width * 2, chord_width * 2))
+            
+            # Create temporary image for chord
+            temp_img = PIL.Image.new('RGBA', image.size, (0, 0, 0, 0))
+            temp_draw = ImageDraw.Draw(temp_img)
+            temp_draw.chord(bounds, start=start, end=end, fill=(255, 255, 255, 255), outline=(255, 255, 255, 255), width=chord_width)
+            
+            # Apply texture to the chord area
+            ImageOps._apply_texture_to_mask(image, temp_img, texture_img)
+            temp_img.close()
+            texture_img.close()
+
+    @staticmethod
+    def _texture_shape(image, image_draw):
+        """Draw various shapes with texture-based patterns."""
+        shape_type = random.choice(['rectangle', 'ellipse', 'polygon'])
+        
+        if shape_type == 'rectangle':
+            # Random rectangle
+            x0 = random.randint(0, image.size[0] // 2)
+            y0 = random.randint(0, image.size[1] // 2)
+            x1 = random.randint(x0, image.size[0])
+            y1 = random.randint(y0, image.size[1])
+            bounds = (x0, y0, x1, y1)
+            
+            texture_type = random.choice(ImageOps.TEXTURE_DRAW_TYPES)
+            texture_patch = ImageOps.generate_noise_texture(x1-x0, y1-y0, texture_type)
+            
+            # Convert texture to PIL Image
+            texture_img = PIL.Image.fromarray(texture_patch)
+            texture_img = texture_img.resize((x1-x0, y1-y0))
+            
+            # Create temporary image for rectangle
+            temp_img = PIL.Image.new('RGBA', image.size, (0, 0, 0, 0))
+            temp_draw = ImageDraw.Draw(temp_img)
+            temp_draw.rectangle(bounds, fill=(255, 255, 255, 255), outline=(255, 255, 255, 255))
+            
+            # Apply texture to the rectangle area
+            ImageOps._apply_texture_to_mask(image, temp_img, texture_img)
+            temp_img.close()
+            texture_img.close()
+            
+        elif shape_type == 'ellipse':
+            # Random ellipse
+            x0 = random.randint(0, image.size[0] // 2)
+            y0 = random.randint(0, image.size[1] // 2)
+            x1 = random.randint(x0, image.size[0])
+            y1 = random.randint(y0, image.size[1])
+            bounds = (x0, y0, x1, y1)
+            
+            texture_type = random.choice(ImageOps.TEXTURE_DRAW_TYPES)
+            texture_patch = ImageOps.generate_noise_texture(x1-x0, y1-y0, texture_type)
+            
+            # Convert texture to PIL Image
+            texture_img = PIL.Image.fromarray(texture_patch)
+            texture_img = texture_img.resize((x1-x0, y1-y0))
+            
+            # Create temporary image for ellipse
+            temp_img = PIL.Image.new('RGBA', image.size, (0, 0, 0, 0))
+            temp_draw = ImageDraw.Draw(temp_img)
+            temp_draw.ellipse(bounds, fill=(255, 255, 255, 255), outline=(255, 255, 255, 255))
+            
+            # Apply texture to the ellipse area
+            ImageOps._apply_texture_to_mask(image, temp_img, texture_img)
+            temp_img.close()
+            texture_img.close()
+            
+        else:  # polygon
+            # Random polygon
+            num_points = random.randint(3, 8)
+            points = []
+            for i in range(num_points):
+                points.append((random.randint(0, image.size[0]), random.randint(0, image.size[1])))
+            
+            # Calculate bounding box for texture sizing
+            min_x = min(p[0] for p in points)
+            max_x = max(p[0] for p in points)
+            min_y = min(p[1] for p in points)
+            max_y = max(p[1] for p in points)
+            
+            texture_type = random.choice(ImageOps.TEXTURE_DRAW_TYPES)
+            texture_patch = ImageOps.generate_noise_texture(max_x-min_x, max_y-min_y, texture_type)
+            
+            # Convert texture to PIL Image
+            texture_img = PIL.Image.fromarray(texture_patch)
+            texture_img = texture_img.resize((max_x-min_x, max_y-min_y))
+            
+            # Create temporary image for polygon
+            temp_img = PIL.Image.new('RGBA', image.size, (0, 0, 0, 0))
+            temp_draw = ImageDraw.Draw(temp_img)
+            temp_draw.polygon(points, fill=(255, 255, 255, 255), outline=(255, 255, 255, 255))
+            
+            # Apply texture to the polygon area
+            ImageOps._apply_texture_to_mask(image, temp_img, texture_img)
+            temp_img.close()
+            texture_img.close()
+
+    @staticmethod
+    def _apply_texture_to_mask(target_image, mask_image, texture_image):
+        """Apply texture to areas defined by a mask on the target image."""
+        # Convert images to numpy arrays for processing
+        target_array = np.array(target_image)
+        mask_array = np.array(mask_image)
+        texture_array = np.array(texture_image)
+        
+        # Get mask alpha channel
+        if mask_array.shape[2] == 4:  # RGBA
+            mask_alpha = mask_array[:, :, 3] / 255.0
+        else:  # RGB
+            mask_alpha = np.ones((mask_array.shape[0], mask_array.shape[1]))
+        
+        # Find bounding box of non-zero mask area
+        coords = np.where(mask_alpha > 0)
+        if len(coords[0]) == 0:
+            return  # No mask area to process
+        
+        min_y, max_y = coords[0].min(), coords[0].max()
+        min_x, max_x = coords[1].min(), coords[1].max()
+        
+        # Resize texture to match mask area
+        mask_height = max_y - min_y + 1
+        mask_width = max_x - min_x + 1
+        
+        if texture_array.shape[0] != mask_height or texture_array.shape[1] != mask_width:
+            texture_resized = cv2.resize(texture_array, (mask_width, mask_height))
+        else:
+            texture_resized = texture_array
+        
+        # Apply texture to masked area
+        mask_region = mask_alpha[min_y:max_y+1, min_x:max_x+1]
+        
+        for i in range(3):  # RGB channels
+            target_region = target_array[min_y:max_y+1, min_x:max_x+1, i]
+            texture_region = texture_resized[:, :, i]
+            
+            # Blend texture with existing image based on mask
+            blended = (target_region * (1 - mask_region) + 
+                      texture_region * mask_region).astype(np.uint8)
+            
+            target_array[min_y:max_y+1, min_x:max_x+1, i] = blended
+        
+        # Convert back to PIL Image
+        result_image = PIL.Image.fromarray(target_array)
+        
+        # Paste the modified region back to the original image
+        target_image.paste(result_image, (0, 0))
 
     @staticmethod
     def pil_to_cv2(pil_image):

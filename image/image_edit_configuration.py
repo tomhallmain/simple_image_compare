@@ -21,6 +21,9 @@ class ImageEditConfiguration:
         self.random_sepia_chance = 0.1
         self.random_grayscale_chance = 0.5
         self.random_pixelate_chance = 0.3
+        
+        # Texture-based drawing configuration
+        self.texture_draw_probability = 0.6  # Probability of using texture-based drawing vs solid colors
 
     def set_from_dict(self, config: dict):
         self.__dict__.update(config)
