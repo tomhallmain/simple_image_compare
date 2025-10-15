@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-10-05 16:04-0400\n"
-"PO-Revision-Date: 2025-10-05 16:04-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-10-14 21:15-0400\n"
+"PO-Revision-Date: 2025-10-14 21:15-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
 "MIME-Version: 1.0\n"
@@ -515,6 +515,7 @@ msgid "Running refacdir"
 msgstr "正在运行 reacdir"
 
 #: app.py:2079 auth/app_startup_auth.py:141 auth/password_dialog.py:249
+#: extensions/gimp/gimp_wrapper.py:687 extensions/gimp/gimp_wrapper.py:716
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "错误"
@@ -558,10 +559,10 @@ msgstr "密码:"
 msgid "OK"
 msgstr "好的"
 
-#: auth/app_startup_auth.py:127 auth/password_admin_window.py:449
+#: auth/app_startup_auth.py:127 auth/password_admin_window.py:462
 #: auth/password_dialog.py:152 auth/password_dialog.py:221
-#: auth/password_dialog.py:238 files/pdf_options_window.py:78
-#: files/type_configuration_window.py:179 lib/custom_dialogs.py:75
+#: auth/password_dialog.py:238 files/pdf_options_window.py:77
+#: files/type_configuration_window.py:178 lib/custom_dialogs.py:75
 msgid "Cancel"
 msgstr "取消"
 
@@ -569,186 +570,186 @@ msgstr "取消"
 msgid "Incorrect password"
 msgstr "密码错误"
 
-#: auth/password_admin_window.py:21
+#: auth/password_admin_window.py:35
 msgid "Password Administration"
 msgstr "密码管理"
 
-#: auth/password_admin_window.py:70
+#: auth/password_admin_window.py:85
 msgid "Password Protection Settings"
 msgstr "密码保护设置"
 
-#: auth/password_admin_window.py:82
+#: auth/password_admin_window.py:97
 msgid "Protected Actions"
 msgstr "受保护的行动"
 
-#: auth/password_admin_window.py:88
+#: auth/password_admin_window.py:103
 msgid "Select which actions require password authentication:"
 msgstr "选择哪些操作需要密码验证："
 
-#: auth/password_admin_window.py:104
+#: auth/password_admin_window.py:119
 msgid "(Always protected if a password is set)"
 msgstr "(如果设置了密码，则始终受保护）"
 
-#: auth/password_admin_window.py:123
+#: auth/password_admin_window.py:138
 msgid "Session Timeout Settings"
 msgstr "会话超时设置"
 
-#: auth/password_admin_window.py:129
+#: auth/password_admin_window.py:144
 msgid "Enable session timeout (remember password for a period)"
 msgstr "启用会话超时（在一段时间内记住密码）"
 
-#: auth/password_admin_window.py:141
+#: auth/password_admin_window.py:156
 msgid "Session timeout duration (minutes):"
 msgstr "会话超时时间（分钟）："
 
-#: auth/password_admin_window.py:150
+#: auth/password_admin_window.py:165
 msgid "Security Advice Settings"
 msgstr "安全建议设置"
 
-#: auth/password_admin_window.py:156
+#: auth/password_admin_window.py:171
 msgid "Show security advice when no password is configured"
 msgstr "当未配置密码时显示安全提示"
 
-#: auth/password_admin_window.py:164
+#: auth/password_admin_window.py:179
 msgid "Password Setup"
 msgstr "密码设置"
 
-#: auth/password_admin_window.py:174
+#: auth/password_admin_window.py:189
 msgid "Password is configured"
 msgstr "密码已配置"
 
-#: auth/password_admin_window.py:180 auth/password_admin_window.py:370
-#: auth/password_admin_window.py:386 auth/password_admin_window.py:446
+#: auth/password_admin_window.py:195 auth/password_admin_window.py:384
+#: auth/password_admin_window.py:399 auth/password_admin_window.py:459
 msgid "Change Password"
 msgstr "更改密码"
 
-#: auth/password_admin_window.py:185 auth/password_admin_window.py:459
+#: auth/password_admin_window.py:200 auth/password_admin_window.py:472
 msgid "Remove Password"
 msgstr "删除密码"
 
-#: auth/password_admin_window.py:190
+#: auth/password_admin_window.py:205
 msgid "Set up a password to enable protection:"
 msgstr "设置密码以启用保护："
 
-#: auth/password_admin_window.py:200 auth/password_admin_window.py:402
+#: auth/password_admin_window.py:215 auth/password_admin_window.py:415
 msgid "New Password:"
 msgstr "新密码："
 
-#: auth/password_admin_window.py:213
+#: auth/password_admin_window.py:228
 msgid "Confirm Password:"
 msgstr "确认密码："
 
-#: auth/password_admin_window.py:222
+#: auth/password_admin_window.py:237
 msgid "Set Password"
 msgstr "设置密码"
 
-#: auth/password_admin_window.py:232 auth/password_admin_window.py:291
+#: auth/password_admin_window.py:247 auth/password_admin_window.py:306
 msgid "Reset to Defaults"
 msgstr "重置为默认值"
 
-#: auth/password_admin_window.py:236 auth/password_admin_window.py:316
+#: auth/password_admin_window.py:251 auth/password_admin_window.py:331
 msgid "Set to Current"
 msgstr "设置为当前"
 
-#: auth/password_admin_window.py:240
+#: auth/password_admin_window.py:255
 msgid "Export Cache as JSON"
 msgstr "以 JSON 格式导出缓存"
 
-#: auth/password_admin_window.py:244
+#: auth/password_admin_window.py:259
 msgid "Save Settings"
 msgstr "保存设置"
 
-#: auth/password_admin_window.py:248
+#: auth/password_admin_window.py:263
 msgid "Close"
 msgstr "关闭"
 
-#: auth/password_admin_window.py:285
+#: auth/password_admin_window.py:300
 msgid "Password protection settings saved."
 msgstr "保存密码保护设置。"
 
-#: auth/password_admin_window.py:292
+#: auth/password_admin_window.py:307
 msgid ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
 msgstr "您确定要将所有密码保护设置重置为默认值吗？"
 
-#: auth/password_admin_window.py:311
+#: auth/password_admin_window.py:326
 msgid "Settings reset to defaults."
 msgstr "设置重置为默认值。"
 
-#: auth/password_admin_window.py:317
+#: auth/password_admin_window.py:332
 msgid ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
 msgstr "您确定要将所有设置恢复到当前保存的状态吗？这将放弃任何未保存的更改。"
 
-#: auth/password_admin_window.py:335
+#: auth/password_admin_window.py:350
 msgid "Settings restored to current saved state."
 msgstr "设置恢复到当前保存状态。"
 
-#: auth/password_admin_window.py:344
+#: auth/password_admin_window.py:359
 msgid "Please enter a password."
 msgstr "请输入密码。"
 
-#: auth/password_admin_window.py:348
+#: auth/password_admin_window.py:363
 msgid "Passwords do not match."
 msgstr "密码不匹配。"
 
-#: auth/password_admin_window.py:352 auth/password_admin_window.py:436
+#: auth/password_admin_window.py:367 auth/password_admin_window.py:449
 msgid "Password must be at least 6 characters long."
 msgstr "密码长度至少为 6 个字符。"
 
-#: auth/password_admin_window.py:357
+#: auth/password_admin_window.py:372
 msgid "Password set successfully."
 msgstr "密码设置成功。"
 
-#: auth/password_admin_window.py:364
+#: auth/password_admin_window.py:379
 msgid "Failed to set password."
 msgstr "密码设置失败。"
 
-#: auth/password_admin_window.py:393
+#: auth/password_admin_window.py:406
 msgid "Current Password:"
 msgstr "当前密码:"
 
-#: auth/password_admin_window.py:411
+#: auth/password_admin_window.py:424
 msgid "Confirm New Password:"
 msgstr "确认新密码："
 
-#: auth/password_admin_window.py:428
+#: auth/password_admin_window.py:441
 msgid "Current password is incorrect."
 msgstr "当前密码不正确。"
 
-#: auth/password_admin_window.py:432
+#: auth/password_admin_window.py:445
 msgid "New passwords do not match."
 msgstr "新密码不匹配。"
 
-#: auth/password_admin_window.py:441
+#: auth/password_admin_window.py:454
 msgid "Password changed successfully."
 msgstr "密码更改成功。"
 
-#: auth/password_admin_window.py:444
+#: auth/password_admin_window.py:457
 msgid "Failed to change password."
 msgstr "更改密码失败。"
 
-#: auth/password_admin_window.py:460
+#: auth/password_admin_window.py:473
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
 msgstr "您确定要取消密码保护吗？这将禁用所有密码要求。"
 
-#: auth/password_admin_window.py:466
+#: auth/password_admin_window.py:479
 msgid "Password removed successfully."
 msgstr "密码已成功删除。"
 
-#: auth/password_admin_window.py:470
+#: auth/password_admin_window.py:483
 msgid "Failed to remove password."
 msgstr "删除密码失败。"
 
-#: auth/password_admin_window.py:505
+#: auth/password_admin_window.py:518
 msgid "Cache exported as JSON to:"
 msgstr "缓存以 JSON 格式导出到:"
 
-#: auth/password_admin_window.py:507
+#: auth/password_admin_window.py:520
 msgid "Failed to export cache as JSON:"
 msgstr "以 JSON 格式导出缓存失败："
 
@@ -935,87 +936,87 @@ msgid ""
 "filter settings."
 msgstr "此目录和当前过滤器设置已没有剩余的图像组。"
 
-#: compare/prevalidations_window.py:29
+#: compare/prevalidations_window.py:30
 msgid "(no positives set)"
 msgstr "(无正片设置）"
 
-#: compare/prevalidations_window.py:30
+#: compare/prevalidations_window.py:31
 msgid "(no negatives set)"
 msgstr "(没有底片）"
 
-#: compare/prevalidations_window.py:32 compare/prevalidations_window.py:369
+#: compare/prevalidations_window.py:33 compare/prevalidations_window.py:369
 msgid "New Prevalidation"
 msgstr "新建前缀"
 
-#: compare/prevalidations_window.py:80
+#: compare/prevalidations_window.py:81
 msgid "Loading image classifier <{0}> ..."
 msgstr "加载图像分类器 <{0}> ..."
 
-#: compare/prevalidations_window.py:138
+#: compare/prevalidations_window.py:139
 msgid " detected"
 msgstr " 检测"
 
-#: compare/prevalidations_window.py:140
+#: compare/prevalidations_window.py:141
 msgid " - skipped"
 msgstr " - 跳过"
 
-#: compare/prevalidations_window.py:143
+#: compare/prevalidations_window.py:144
 msgid " - hidden"
 msgstr " - 隐藏"
 
-#: compare/prevalidations_window.py:148
+#: compare/prevalidations_window.py:149
 msgid " - marked"
 msgstr " - 显著的"
 
-#: compare/prevalidations_window.py:156
+#: compare/prevalidations_window.py:157
 msgid "Moving file: "
 msgstr "移动文件 : "
 
-#: compare/prevalidations_window.py:202
+#: compare/prevalidations_window.py:203
 msgid "Deleting file: "
 msgstr "删除文件 : "
 
-#: compare/prevalidations_window.py:249
+#: compare/prevalidations_window.py:250
 msgid "Action modifier is not a valid directory: "
 msgstr "修改动作不是一个有效的目录 : "
 
-#: compare/prevalidations_window.py:251
+#: compare/prevalidations_window.py:252
 msgid "Run on folder is not a valid directory: "
 msgstr "在文件夹上运行不是一个有效的目录 : "
 
-#: compare/prevalidations_window.py:253
+#: compare/prevalidations_window.py:254
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr "无效的预先验证{0}, 可能导致错误或无法运行 !"
 
-#: compare/prevalidations_window.py:318
+#: compare/prevalidations_window.py:319
 msgid "embedding"
 msgstr "嵌入"
 
-#: compare/prevalidations_window.py:320
+#: compare/prevalidations_window.py:321
 msgid "classifier {0}"
 msgstr "幅图像 {0}"
 
-#: compare/prevalidations_window.py:322
+#: compare/prevalidations_window.py:323
 msgid "prompts"
 msgstr "提示"
 
-#: compare/prevalidations_window.py:330
+#: compare/prevalidations_window.py:331
 msgid "categories: {0}"
 msgstr "类别： {0}"
 
-#: compare/prevalidations_window.py:334
+#: compare/prevalidations_window.py:335
 msgid "{0} positives, {1} negatives"
 msgstr "{0}阳性，{1}阴性"
 
-#: compare/prevalidations_window.py:338
+#: compare/prevalidations_window.py:339
 msgid " using {0} ({1})"
 msgstr " {0} ({1})"
 
-#: compare/prevalidations_window.py:340
+#: compare/prevalidations_window.py:341
 msgid " using {0}"
 msgstr " {0}"
 
-#: compare/prevalidations_window.py:342
+#: compare/prevalidations_window.py:343
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0}阳性，{1}阴性)"
 
@@ -1088,40 +1089,40 @@ msgid ""
 "No prevalidation found with name: {0}. Set it on the Prevalidations Window."
 msgstr "未找到名称为 {0} 的预审。请在预验证窗口中进行设置。"
 
-#: compare/prevalidations_window.py:652
+#: compare/prevalidations_window.py:650
 msgid "Prevalidations"
 msgstr "前言"
 
-#: compare/prevalidations_window.py:675
+#: compare/prevalidations_window.py:673
 msgid "Set Prevalidations"
 msgstr "设置前缀"
 
-#: compare/prevalidations_window.py:677
+#: compare/prevalidations_window.py:675
 msgid "Add prevalidation"
 msgstr "添加预验证"
 
-#: compare/prevalidations_window.py:679
+#: compare/prevalidations_window.py:677
 msgid "Clear prevalidations"
 msgstr "清除预先验证"
 
-#: compare/prevalidations_window.py:686 utils/help_and_config.py:153
+#: compare/prevalidations_window.py:684 utils/help_and_config.py:153
 msgid "Enable Prevalidations"
 msgstr "启用预先批准"
 
-#: compare/prevalidations_window.py:723 files/hotkey_actions_window.py:97
+#: compare/prevalidations_window.py:721 files/hotkey_actions_window.py:96
 msgid "Set"
 msgstr "设定"
 
-#: compare/prevalidations_window.py:731 files/file_actions_window.py:485
-#: files/file_actions_window.py:536
+#: compare/prevalidations_window.py:729 files/file_actions_window.py:497
+#: files/file_actions_window.py:548
 msgid "Modify"
 msgstr "修改"
 
-#: compare/prevalidations_window.py:738 image/prevalidation_action.py:34
+#: compare/prevalidations_window.py:736 image/prevalidation_action.py:34
 msgid "Delete"
 msgstr "删除"
 
-#: compare/prevalidations_window.py:745
+#: compare/prevalidations_window.py:743
 msgid "Move down"
 msgstr "向下移动"
 
@@ -1129,15 +1130,115 @@ msgstr "向下移动"
 msgid "Image does not contain a prompt to redo!"
 msgstr "图像不包含重做提示！"
 
-#: files/favorites_window.py:50
+#: extensions/gimp/gimp_wrapper.py:257
+msgid "Process Error"
+msgstr "进程错误"
+
+#: extensions/gimp/gimp_wrapper.py:258
+msgid "Error monitoring GIMP process: {0}"
+msgstr "错误监控 GIMP 进程：{0}"
+
+#: extensions/gimp/gimp_wrapper.py:333
+msgid "File is already being opened in GIMP"
+msgstr "该文件已在GIMP中打开"
+
+#: extensions/gimp/gimp_wrapper.py:381
+msgid "Opening {0} in existing GIMP process"
+msgstr "在现有 GIMP 进程中打开 {0}"
+
+#: extensions/gimp/gimp_wrapper.py:383
+msgid "Opening file in GIMP: {0}"
+msgstr "在GIMP中打开文件：{0}"
+
+#: extensions/gimp/gimp_wrapper.py:422 extensions/gimp/gimp_wrapper.py:480
+msgid "GIMP Error"
+msgstr "GIMP 错误"
+
+#: extensions/gimp/gimp_wrapper.py:423
+msgid "Failed to open file in GIMP: {0}"
+msgstr "在 GIMP 中打开文件失败：{0}"
+
+#: extensions/gimp/gimp_wrapper.py:450
+msgid "Opening {0} in GIMP (using temporary directory for performance)"
+msgstr "在 GIMP 中打开 {0}（为提高性能使用临时目录）"
+
+#: extensions/gimp/gimp_wrapper.py:481
+msgid ""
+"Failed to open file in GIMP: {0}\n"
+"\n"
+"Check that GIMP is properly installed and configured."
+msgstr ""
+"在 GIMP 中打开文件失败：{0}\n"
+"\n"
+"请检查 GIMP 是否已正确安装并配置。"
+
+#: extensions/gimp/gimp_wrapper.py:499
+msgid "Setup Error"
+msgstr "设置错误"
+
+#: extensions/gimp/gimp_wrapper.py:500
+msgid "Failed to set up temporary directory: {0}"
+msgstr "设置临时目录失败：{0}"
+
+#: extensions/gimp/gimp_wrapper.py:552
+msgid "File Processing Error"
+msgstr "文件处理错误"
+
+#: extensions/gimp/gimp_wrapper.py:553
+msgid "Error processing files after GIMP completion: {0}"
+msgstr "处理GIMP完成后的文件时出错：{0}"
+
+#: extensions/gimp/gimp_wrapper.py:683
+msgid "File updated: {0}"
+msgstr "文件更新时间：{0}"
+
+#: extensions/gimp/gimp_wrapper.py:687
+msgid "Failed to update file: {0}"
+msgstr "更新文件失败：{0}"
+
+#: extensions/gimp/gimp_wrapper.py:710
+msgid "New file created: {0}"
+msgstr "新建文件：{0}"
+
+#: extensions/gimp/gimp_wrapper.py:712
+msgid "{0} new files created"
+msgstr "{0} 个新文件创建"
+
+#: extensions/gimp/gimp_wrapper.py:716
+msgid "Failed to move new files: {0}"
+msgstr "无法移动新文件：{0}"
+
+#: extensions/gimp/gimp_wrapper.py:740
+msgid ""
+"The following files already exist and will be overwritten:\n"
+"\n"
+"{0}\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"以下文件已存在并将被覆盖：\n"
+"\n"
+"{0}\n"
+"\n"
+"是否继续？"
+
+#: extensions/gimp/gimp_wrapper.py:743
+msgid "Confirm Overwrite"
+msgstr "确认覆盖"
+
+#: extensions/gimp/gimp_wrapper.py:750
+msgid "File overwrite cancelled"
+msgstr "文件覆盖已取消"
+
+#: files/favorites_window.py:51
 msgid "Added favorite: "
 msgstr "已添加到收藏夹： "
 
-#: files/favorites_window.py:56
+#: files/favorites_window.py:70
 msgid "Favorites"
 msgstr "收藏夹"
 
-#: files/favorites_window.py:112
+#: files/favorites_window.py:125
 msgid ""
 "No favorites set.\n"
 "\n"
@@ -1147,117 +1248,117 @@ msgstr ""
 "\n"
 "要添加收藏夹，请右键点击图片并选择“添加到收藏夹”。"
 
-#: files/favorites_window.py:129
+#: files/favorites_window.py:142
 msgid "Open"
 msgstr "打开"
 
-#: files/favorites_window.py:135
+#: files/favorites_window.py:148
 msgid "Remove Favorite"
 msgstr "移除收藏"
 
-#: files/favorites_window.py:161
+#: files/favorites_window.py:174
 msgid "Opened favorite: "
 msgstr "已添加到收藏夹： "
 
-#: files/favorites_window.py:166
+#: files/favorites_window.py:179
 msgid "Opened favorite in new window: "
 msgstr "在新窗口中打开收藏夹： "
 
-#: files/favorites_window.py:174
+#: files/favorites_window.py:187
 msgid "Removed favorite: "
 msgstr "已移除收藏： "
 
-#: files/file_actions_window.py:267
+#: files/file_actions_window.py:280
 msgid "File Actions"
 msgstr "文件操作"
 
-#: files/file_actions_window.py:296
+#: files/file_actions_window.py:308
 msgid "File Action History"
 msgstr "文件操作历史"
 
-#: files/file_actions_window.py:298
+#: files/file_actions_window.py:310
 msgid "Search Image"
 msgstr "搜索图片"
 
-#: files/file_actions_window.py:300
+#: files/file_actions_window.py:312
 msgid "Clear History"
 msgstr "清除历史记录"
 
-#: files/file_actions_window.py:334
+#: files/file_actions_window.py:346
 msgid "Today's File Actions"
 msgstr "今日文件操作"
 
-#: files/file_actions_window.py:334
+#: files/file_actions_window.py:346
 msgid "File Action Statistics"
 msgstr "文件操作统计信息"
 
-#: files/file_actions_window.py:341 files/file_actions_window.py:773
+#: files/file_actions_window.py:353 files/file_actions_window.py:785
 msgid "All Time"
 msgstr "历时"
 
-#: files/file_actions_window.py:341 files/file_actions_window.py:775
+#: files/file_actions_window.py:353 files/file_actions_window.py:787
 msgid "Today Only"
 msgstr "仅限今日"
 
-#: files/file_actions_window.py:348
+#: files/file_actions_window.py:360
 msgid "Target Directory"
 msgstr "目标目录"
 
-#: files/file_actions_window.py:354 files/marked_file_mover.py:997
+#: files/file_actions_window.py:366 files/marked_file_mover.py:997
 msgid "Moved"
 msgstr "移动"
 
-#: files/file_actions_window.py:360 files/marked_file_mover.py:997
+#: files/file_actions_window.py:372 files/marked_file_mover.py:997
 msgid "Copied"
 msgstr "复制"
 
-#: files/file_actions_window.py:366
+#: files/file_actions_window.py:378
 msgid "Total"
 msgstr "总计"
 
-#: files/file_actions_window.py:417
+#: files/file_actions_window.py:429
 msgid "... and {0} more"
 msgstr "... 以及 {0} 项更多内容"
 
-#: files/file_actions_window.py:467
+#: files/file_actions_window.py:479
 msgid " ({0} files)"
 msgstr " ({0} 文件)"
 
-#: files/file_actions_window.py:469
+#: files/file_actions_window.py:481
 msgid "(auto)"
 msgstr "(自动)"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:275
+#: files/file_actions_window.py:486 files/marked_file_mover.py:275
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "移动"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:282
+#: files/file_actions_window.py:486 files/marked_file_mover.py:282
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "复制"
 
-#: files/file_actions_window.py:477 files/file_actions_window.py:528
+#: files/file_actions_window.py:489 files/file_actions_window.py:540
 msgid "Undo"
 msgstr "撤销"
 
-#: files/file_actions_window.py:512
+#: files/file_actions_window.py:524
 msgid "View"
 msgstr "视图"
 
-#: files/file_actions_window.py:520
+#: files/file_actions_window.py:532
 msgid "Copy Filename"
 msgstr "复制文件名"
 
-#: files/file_actions_window.py:553
+#: files/file_actions_window.py:565
 msgid "Image does not exist: "
 msgstr "图像不存在 : "
 
-#: files/file_actions_window.py:554 files/file_actions_window.py:565
+#: files/file_actions_window.py:566 files/file_actions_window.py:577
 msgid "File Action Error"
 msgstr "文件动作错误"
 
-#: files/file_actions_window.py:564
+#: files/file_actions_window.py:576
 msgid "Images not found"
 msgstr "未找到图像"
 
@@ -1285,59 +1386,67 @@ msgstr "未找到任何文件"
 msgid "Go To File"
 msgstr "转到文件"
 
-#: files/go_to_file.py:46
+#: files/go_to_file.py:45
 msgid "Go To"
 msgstr "去"
 
-#: files/go_to_file.py:49
+#: files/go_to_file.py:48
 msgid "Browse..."
 msgstr "浏览..."
 
-#: files/go_to_file.py:60
+#: files/go_to_file.py:52
+msgid "Go To Last Moved"
+msgstr "转到最后移动位置"
+
+#: files/go_to_file.py:59
 msgid "Go to closest file if exact match not found"
 msgstr "若未找到完全匹配项，则转至最近的文件"
 
-#: files/go_to_file.py:80
+#: files/go_to_file.py:79
 msgid "Invalid search string, please enter some text."
 msgstr "搜索字符串无效，请输入一些文本。"
 
-#: files/go_to_file.py:102
+#: files/go_to_file.py:101
 msgid "Supported files"
 msgstr "支持的文件格式"
 
-#: files/go_to_file.py:106
+#: files/go_to_file.py:105
 msgid "Image files"
 msgstr "图像文件"
 
-#: files/go_to_file.py:109
+#: files/go_to_file.py:108
 msgid "Video files"
 msgstr "视频文件"
 
-#: files/go_to_file.py:111
+#: files/go_to_file.py:110
 msgid "GIF files"
 msgstr "GIF 文件"
 
-#: files/go_to_file.py:113
+#: files/go_to_file.py:112
 msgid "PDF files"
 msgstr "PDF 文件"
 
-#: files/go_to_file.py:115
+#: files/go_to_file.py:114
 msgid "SVG files"
 msgstr "SVG 文件"
 
-#: files/go_to_file.py:117
+#: files/go_to_file.py:116
 msgid "HTML files"
 msgstr "HTML 文件"
 
-#: files/go_to_file.py:120
+#: files/go_to_file.py:119
 msgid "All files"
 msgstr "所有文件"
 
-#: files/go_to_file.py:123
+#: files/go_to_file.py:122
 msgid "Select file to go to"
 msgstr "选择要跳转的文件"
 
-#: files/go_to_file.py:171
+#: files/go_to_file.py:141
+msgid "No last moved image found."
+msgstr "未找到最近移动的媒体文件。"
+
+#: files/go_to_file.py:170
 msgid "Sort by for closest search:"
 msgstr "按以下条件排序以获得最接近的搜索结果："
 
@@ -1345,15 +1454,15 @@ msgstr "按以下条件排序以获得最接近的搜索结果："
 msgid "Hotkey Actions"
 msgstr "热键操作"
 
-#: files/hotkey_actions_window.py:51
+#: files/hotkey_actions_window.py:50
 msgid "Key name"
 msgstr "关键名称"
 
-#: files/hotkey_actions_window.py:55
+#: files/hotkey_actions_window.py:54
 msgid "Target directory"
 msgstr "目标目录"
 
-#: files/hotkey_actions_window.py:87 files/hotkey_actions_window.py:92
+#: files/hotkey_actions_window.py:86 files/hotkey_actions_window.py:91
 msgid "(unset)"
 msgstr "(未设定)"
 
@@ -1405,7 +1514,7 @@ msgstr "从父目录添加目录"
 msgid "Clear targets"
 msgstr "明确目标"
 
-#: files/marked_file_mover.py:238 files/pdf_options_window.py:81
+#: files/marked_file_mover.py:238 files/pdf_options_window.py:80
 msgid "Create PDF"
 msgstr "创建 PDF"
 
@@ -1572,7 +1681,7 @@ msgstr "删除{0}标记"
 msgid "No files to create PDF"
 msgstr "没有文件可以创建 PDF"
 
-#: files/pdf_creator.py:49 files/pdf_options_window.py:53
+#: files/pdf_creator.py:49 files/pdf_options_window.py:52
 msgid "combined_images"
 msgstr "合并图片"
 
@@ -1600,19 +1709,19 @@ msgstr "PDF 无法添加任何页面"
 msgid "PDF creation requires pypdfium2 package"
 msgstr "创建 PDF 需要 pypdfium2 软件包"
 
-#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
+#: files/pdf_options_window.py:31 files/pdf_options_window.py:42
 msgid "PDF Creation Options"
 msgstr "PDF 创建选项"
 
-#: files/pdf_options_window.py:49
+#: files/pdf_options_window.py:48
 msgid "PDF Filename:"
 msgstr "PDF 文件名："
 
-#: files/pdf_options_window.py:61
+#: files/pdf_options_window.py:60
 msgid "Preserve original image quality and format"
 msgstr "保留原始图像质量和格式"
 
-#: files/pdf_options_window.py:68
+#: files/pdf_options_window.py:67
 msgid ""
 "If enabled, images will maintain their original quality and format.\n"
 "If disabled, images will be compressed to reduce PDF size."
@@ -1628,39 +1737,39 @@ msgstr "添加目录"
 msgid "Set image comparison directory"
 msgstr "设定图像比较目录"
 
-#: files/type_configuration_window.py:26
+#: files/type_configuration_window.py:27
 msgid "Basic image files (PNG, JPG, etc.)"
 msgstr "基本图片文件(PNG、JPG 等)"
 
-#: files/type_configuration_window.py:27
+#: files/type_configuration_window.py:28
 msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
 msgstr "视频文件( MP4, AVI等) - 将提取第一帧"
 
-#: files/type_configuration_window.py:28
+#: files/type_configuration_window.py:29
 msgid "Animated GIF files - First frame will be extracted"
 msgstr "GIF 动画文件 - 第一个框架将被提取"
 
-#: files/type_configuration_window.py:29
+#: files/type_configuration_window.py:30
 msgid "PDF documents - First page will be extracted"
 msgstr "PDF 文档 - 将提取第一页"
 
-#: files/type_configuration_window.py:30
+#: files/type_configuration_window.py:31
 msgid "Vector graphics - Will be converted to raster image"
 msgstr "矢量图形 - 将转换为光栅图像"
 
-#: files/type_configuration_window.py:31
+#: files/type_configuration_window.py:32
 msgid "HTML files - Will be rendered and converted to image"
 msgstr "HTML 文件 - 将渲染并转换成图像"
 
-#: files/type_configuration_window.py:39
+#: files/type_configuration_window.py:40
 msgid "PDF support requires pypdfium2 package"
 msgstr "PDF 支持需要 pypdfium2 软件包"
 
-#: files/type_configuration_window.py:44
+#: files/type_configuration_window.py:45
 msgid "SVG support requires cairosvg package"
 msgstr "SVG 支持需要 cairosvg 软件包"
 
-#: files/type_configuration_window.py:49
+#: files/type_configuration_window.py:50
 msgid "HTML support requires pyppeteer package"
 msgstr "HTML 支持需要 pyppeter 软件包"
 
@@ -1668,30 +1777,30 @@ msgstr "HTML 支持需要 pyppeter 软件包"
 msgid "Media Type Configuration"
 msgstr "媒体类型配置"
 
-#: files/type_configuration_window.py:113 utils/constants.py:308
+#: files/type_configuration_window.py:112 utils/constants.py:308
 msgid "Configure Media Types"
 msgstr "配置媒体类型"
 
-#: files/type_configuration_window.py:118
+#: files/type_configuration_window.py:117
 msgid ""
 "Select which types of media files you want to compare. Changes will require "
 "a refresh of open comparisons but files in browsing mode should update "
 "automatically."
 msgstr "选择要比较的媒体文件类型。更改将需要刷新打开的比较，但浏览模式下的文件应会自动更新。"
 
-#: files/type_configuration_window.py:184
+#: files/type_configuration_window.py:183
 msgid "Apply Changes"
 msgstr "应用更改"
 
-#: files/type_configuration_window.py:226
+#: files/type_configuration_window.py:225
 msgid "Confirm Changes"
 msgstr "确认更改"
 
-#: files/type_configuration_window.py:227
+#: files/type_configuration_window.py:226
 msgid "This will clear all existing compares in open windows. Continue?"
 msgstr "这将清除所有在开放窗口中的比较 。 继续?"
 
-#: files/type_configuration_window.py:286
+#: files/type_configuration_window.py:285
 msgid "Media type configuration updated"
 msgstr "更新媒体类型配置"
 
@@ -2436,11 +2545,3 @@ msgstr "逃离文件路径中的反斜线"
 #: utils/notification_manager.py:26
 msgid " etc."
 msgstr " 等等"
-
-#: files/go_to_file.py:53
-msgid "Go To Last Moved"
-msgstr "转到最后移动位置"
-
-#: files/go_to_file.py:142
-msgid "No last moved image found."
-msgstr "未找到最近移动的媒体文件。"

@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-10-05 16:04-0400\n"
-"PO-Revision-Date: 2025-10-05 16:04-0400\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-10-14 21:15-0400\n"
+"PO-Revision-Date: 2025-10-14 21:15-0400\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: it Team <<EMAIL>>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -544,6 +544,7 @@ msgid "Running refacdir"
 msgstr "Esecuzione di refacdir"
 
 #: app.py:2079 auth/app_startup_auth.py:141 auth/password_dialog.py:249
+#: extensions/gimp/gimp_wrapper.py:687 extensions/gimp/gimp_wrapper.py:716
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "Errore"
@@ -587,10 +588,10 @@ msgstr "Password:"
 msgid "OK"
 msgstr "OK"
 
-#: auth/app_startup_auth.py:127 auth/password_admin_window.py:449
+#: auth/app_startup_auth.py:127 auth/password_admin_window.py:462
 #: auth/password_dialog.py:152 auth/password_dialog.py:221
-#: auth/password_dialog.py:238 files/pdf_options_window.py:78
-#: files/type_configuration_window.py:179 lib/custom_dialogs.py:75
+#: auth/password_dialog.py:238 files/pdf_options_window.py:77
+#: files/type_configuration_window.py:178 lib/custom_dialogs.py:75
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -598,108 +599,108 @@ msgstr "Annulla"
 msgid "Incorrect password"
 msgstr "Password errata"
 
-#: auth/password_admin_window.py:21
+#: auth/password_admin_window.py:35
 msgid "Password Administration"
 msgstr "Amministrazione della password"
 
-#: auth/password_admin_window.py:70
+#: auth/password_admin_window.py:85
 msgid "Password Protection Settings"
 msgstr "Impostazioni di protezione con password"
 
-#: auth/password_admin_window.py:82
+#: auth/password_admin_window.py:97
 msgid "Protected Actions"
 msgstr "Azioni protette"
 
-#: auth/password_admin_window.py:88
+#: auth/password_admin_window.py:103
 msgid "Select which actions require password authentication:"
 msgstr ""
 "Selezionare le azioni che richiedono l'autenticazione tramite password:"
 
-#: auth/password_admin_window.py:104
+#: auth/password_admin_window.py:119
 msgid "(Always protected if a password is set)"
 msgstr "(Sempre protetto se è impostata una password)"
 
-#: auth/password_admin_window.py:123
+#: auth/password_admin_window.py:138
 msgid "Session Timeout Settings"
 msgstr "Impostazioni di timeout della sessione"
 
-#: auth/password_admin_window.py:129
+#: auth/password_admin_window.py:144
 msgid "Enable session timeout (remember password for a period)"
 msgstr ""
 "Abilitare il timeout della sessione (ricordare la password per un certo "
 "periodo)"
 
-#: auth/password_admin_window.py:141
+#: auth/password_admin_window.py:156
 msgid "Session timeout duration (minutes):"
 msgstr "Durata del timeout della sessione (minuti):"
 
-#: auth/password_admin_window.py:150
+#: auth/password_admin_window.py:165
 msgid "Security Advice Settings"
 msgstr "Impostazioni dei consigli di sicurezza"
 
-#: auth/password_admin_window.py:156
+#: auth/password_admin_window.py:171
 msgid "Show security advice when no password is configured"
 msgstr ""
 "Mostra i consigli di sicurezza quando non è configurata alcuna password"
 
-#: auth/password_admin_window.py:164
+#: auth/password_admin_window.py:179
 msgid "Password Setup"
 msgstr "Impostazione della password"
 
-#: auth/password_admin_window.py:174
+#: auth/password_admin_window.py:189
 msgid "Password is configured"
 msgstr "La password è configurata"
 
-#: auth/password_admin_window.py:180 auth/password_admin_window.py:370
-#: auth/password_admin_window.py:386 auth/password_admin_window.py:446
+#: auth/password_admin_window.py:195 auth/password_admin_window.py:384
+#: auth/password_admin_window.py:399 auth/password_admin_window.py:459
 msgid "Change Password"
 msgstr "Modifica password"
 
-#: auth/password_admin_window.py:185 auth/password_admin_window.py:459
+#: auth/password_admin_window.py:200 auth/password_admin_window.py:472
 msgid "Remove Password"
 msgstr "Rimuovi password"
 
-#: auth/password_admin_window.py:190
+#: auth/password_admin_window.py:205
 msgid "Set up a password to enable protection:"
 msgstr "Impostare una password per attivare la protezione:"
 
-#: auth/password_admin_window.py:200 auth/password_admin_window.py:402
+#: auth/password_admin_window.py:215 auth/password_admin_window.py:415
 msgid "New Password:"
 msgstr "Nuova password:"
 
-#: auth/password_admin_window.py:213
+#: auth/password_admin_window.py:228
 msgid "Confirm Password:"
 msgstr "Confermare la password:"
 
-#: auth/password_admin_window.py:222
+#: auth/password_admin_window.py:237
 msgid "Set Password"
 msgstr "Impostare la password"
 
-#: auth/password_admin_window.py:232 auth/password_admin_window.py:291
+#: auth/password_admin_window.py:247 auth/password_admin_window.py:306
 msgid "Reset to Defaults"
 msgstr "Ripristino dei valori predefiniti"
 
-#: auth/password_admin_window.py:236 auth/password_admin_window.py:316
+#: auth/password_admin_window.py:251 auth/password_admin_window.py:331
 msgid "Set to Current"
 msgstr "Imposta su corrente"
 
-#: auth/password_admin_window.py:240
+#: auth/password_admin_window.py:255
 msgid "Export Cache as JSON"
 msgstr "Esportare la cache come JSON"
 
-#: auth/password_admin_window.py:244
+#: auth/password_admin_window.py:259
 msgid "Save Settings"
 msgstr "Salva le impostazioni"
 
-#: auth/password_admin_window.py:248
+#: auth/password_admin_window.py:263
 msgid "Close"
 msgstr "Chiudere"
 
-#: auth/password_admin_window.py:285
+#: auth/password_admin_window.py:300
 msgid "Password protection settings saved."
 msgstr "Impostazioni di protezione con password salvate."
 
-#: auth/password_admin_window.py:292
+#: auth/password_admin_window.py:307
 msgid ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
@@ -707,11 +708,11 @@ msgstr ""
 "Siete sicuri di voler ripristinare tutte le impostazioni di protezione della"
 " password ai valori predefiniti?"
 
-#: auth/password_admin_window.py:311
+#: auth/password_admin_window.py:326
 msgid "Settings reset to defaults."
 msgstr "Le impostazioni vengono ripristinate ai valori predefiniti."
 
-#: auth/password_admin_window.py:317
+#: auth/password_admin_window.py:332
 msgid ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
@@ -719,56 +720,56 @@ msgstr ""
 "Siete sicuri di voler ripristinare tutte le impostazioni allo stato attuale "
 "di salvataggio? In questo modo si elimina qualsiasi modifica non salvata."
 
-#: auth/password_admin_window.py:335
+#: auth/password_admin_window.py:350
 msgid "Settings restored to current saved state."
 msgstr ""
 "Le impostazioni vengono ripristinate allo stato correntemente salvato."
 
-#: auth/password_admin_window.py:344
+#: auth/password_admin_window.py:359
 msgid "Please enter a password."
 msgstr "Inserire una password."
 
-#: auth/password_admin_window.py:348
+#: auth/password_admin_window.py:363
 msgid "Passwords do not match."
 msgstr "Le password non corrispondono."
 
-#: auth/password_admin_window.py:352 auth/password_admin_window.py:436
+#: auth/password_admin_window.py:367 auth/password_admin_window.py:449
 msgid "Password must be at least 6 characters long."
 msgstr "La password deve essere lunga almeno 6 caratteri."
 
-#: auth/password_admin_window.py:357
+#: auth/password_admin_window.py:372
 msgid "Password set successfully."
 msgstr "Password impostata con successo."
 
-#: auth/password_admin_window.py:364
+#: auth/password_admin_window.py:379
 msgid "Failed to set password."
 msgstr "Impossibile impostare la password."
 
-#: auth/password_admin_window.py:393
+#: auth/password_admin_window.py:406
 msgid "Current Password:"
 msgstr "Password attuale:"
 
-#: auth/password_admin_window.py:411
+#: auth/password_admin_window.py:424
 msgid "Confirm New Password:"
 msgstr "Confermare la nuova password:"
 
-#: auth/password_admin_window.py:428
+#: auth/password_admin_window.py:441
 msgid "Current password is incorrect."
 msgstr "La password attuale non è corretta."
 
-#: auth/password_admin_window.py:432
+#: auth/password_admin_window.py:445
 msgid "New passwords do not match."
 msgstr "Le nuove password non corrispondono."
 
-#: auth/password_admin_window.py:441
+#: auth/password_admin_window.py:454
 msgid "Password changed successfully."
 msgstr "La password è stata modificata con successo."
 
-#: auth/password_admin_window.py:444
+#: auth/password_admin_window.py:457
 msgid "Failed to change password."
 msgstr "Impossibile modificare la password."
 
-#: auth/password_admin_window.py:460
+#: auth/password_admin_window.py:473
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
@@ -776,19 +777,19 @@ msgstr ""
 "Siete sicuri di voler rimuovere la protezione con password? In questo modo "
 "si disabilitano tutti i requisiti di password."
 
-#: auth/password_admin_window.py:466
+#: auth/password_admin_window.py:479
 msgid "Password removed successfully."
 msgstr "La password è stata rimossa con successo."
 
-#: auth/password_admin_window.py:470
+#: auth/password_admin_window.py:483
 msgid "Failed to remove password."
 msgstr "Impossibile rimuovere la password."
 
-#: auth/password_admin_window.py:505
+#: auth/password_admin_window.py:518
 msgid "Cache exported as JSON to:"
 msgstr "Cache esportata come JSON in:"
 
-#: auth/password_admin_window.py:507
+#: auth/password_admin_window.py:520
 msgid "Failed to export cache as JSON:"
 msgstr "Esportazione fallita della cache come JSON:"
 
@@ -995,89 +996,89 @@ msgstr ""
 "Non ci sono più gruppi di immagini per questa cartella e per le impostazioni"
 " correnti del filtro."
 
-#: compare/prevalidations_window.py:29
+#: compare/prevalidations_window.py:30
 msgid "(no positives set)"
 msgstr "(nessun positivo impostato)"
 
-#: compare/prevalidations_window.py:30
+#: compare/prevalidations_window.py:31
 msgid "(no negatives set)"
 msgstr "(nessun set di negativi)"
 
-#: compare/prevalidations_window.py:32 compare/prevalidations_window.py:369
+#: compare/prevalidations_window.py:33 compare/prevalidations_window.py:369
 msgid "New Prevalidation"
 msgstr "Nuova preconvalida"
 
-#: compare/prevalidations_window.py:80
+#: compare/prevalidations_window.py:81
 msgid "Loading image classifier <{0}> ..."
 msgstr "Caricamento del classificatore di immagini <{0}> ..."
 
-#: compare/prevalidations_window.py:138
+#: compare/prevalidations_window.py:139
 msgid " detected"
 msgstr " rilevato"
 
-#: compare/prevalidations_window.py:140
+#: compare/prevalidations_window.py:141
 msgid " - skipped"
 msgstr " - saltato"
 
-#: compare/prevalidations_window.py:143
+#: compare/prevalidations_window.py:144
 msgid " - hidden"
 msgstr " - nascosto"
 
-#: compare/prevalidations_window.py:148
+#: compare/prevalidations_window.py:149
 msgid " - marked"
 msgstr " - contrassegnate"
 
-#: compare/prevalidations_window.py:156
+#: compare/prevalidations_window.py:157
 msgid "Moving file: "
 msgstr "File in movimento: "
 
-#: compare/prevalidations_window.py:202
+#: compare/prevalidations_window.py:203
 msgid "Deleting file: "
 msgstr "Eliminazione del file: "
 
-#: compare/prevalidations_window.py:249
+#: compare/prevalidations_window.py:250
 msgid "Action modifier is not a valid directory: "
 msgstr "Il modificatore di azione non è una directory valida: "
 
-#: compare/prevalidations_window.py:251
+#: compare/prevalidations_window.py:252
 msgid "Run on folder is not a valid directory: "
 msgstr "Esegui su cartella non è una directory valida: "
 
-#: compare/prevalidations_window.py:253
+#: compare/prevalidations_window.py:254
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr ""
 "Prevalidazione non valida {0}, può causare errori o non essere in grado di "
 "eseguire!"
 
-#: compare/prevalidations_window.py:318
+#: compare/prevalidations_window.py:319
 msgid "embedding"
 msgstr "incorporazione"
 
-#: compare/prevalidations_window.py:320
+#: compare/prevalidations_window.py:321
 msgid "classifier {0}"
 msgstr "classificatore {0}"
 
-#: compare/prevalidations_window.py:322
+#: compare/prevalidations_window.py:323
 msgid "prompts"
 msgstr "richieste"
 
-#: compare/prevalidations_window.py:330
+#: compare/prevalidations_window.py:331
 msgid "categories: {0}"
 msgstr "categorie: {0}"
 
-#: compare/prevalidations_window.py:334
+#: compare/prevalidations_window.py:335
 msgid "{0} positives, {1} negatives"
 msgstr "{0} positivi, {1} negativi"
 
-#: compare/prevalidations_window.py:338
+#: compare/prevalidations_window.py:339
 msgid " using {0} ({1})"
 msgstr " utilizzando {0} ({1})"
 
-#: compare/prevalidations_window.py:340
+#: compare/prevalidations_window.py:341
 msgid " using {0}"
 msgstr " utilizzando {0}v"
 
-#: compare/prevalidations_window.py:342
+#: compare/prevalidations_window.py:343
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} positivi, {1} negativi)"
 
@@ -1152,40 +1153,40 @@ msgstr ""
 "Non è stata trovata alcuna prevalidazione con il nome: {0}. Impostarla nella"
 " finestra Prevalidazioni."
 
-#: compare/prevalidations_window.py:652
+#: compare/prevalidations_window.py:650
 msgid "Prevalidations"
 msgstr "Prevalidazioni"
 
-#: compare/prevalidations_window.py:675
+#: compare/prevalidations_window.py:673
 msgid "Set Prevalidations"
 msgstr "Impostare le preconvalide"
 
-#: compare/prevalidations_window.py:677
+#: compare/prevalidations_window.py:675
 msgid "Add prevalidation"
 msgstr "Aggiungere la prevalidazione"
 
-#: compare/prevalidations_window.py:679
+#: compare/prevalidations_window.py:677
 msgid "Clear prevalidations"
 msgstr "Prevalenze chiare"
 
-#: compare/prevalidations_window.py:686 utils/help_and_config.py:153
+#: compare/prevalidations_window.py:684 utils/help_and_config.py:153
 msgid "Enable Prevalidations"
 msgstr "Abilitare le preconvalide"
 
-#: compare/prevalidations_window.py:723 files/hotkey_actions_window.py:97
+#: compare/prevalidations_window.py:721 files/hotkey_actions_window.py:96
 msgid "Set"
 msgstr "Impostare"
 
-#: compare/prevalidations_window.py:731 files/file_actions_window.py:485
-#: files/file_actions_window.py:536
+#: compare/prevalidations_window.py:729 files/file_actions_window.py:497
+#: files/file_actions_window.py:548
 msgid "Modify"
 msgstr "Modificare"
 
-#: compare/prevalidations_window.py:738 image/prevalidation_action.py:34
+#: compare/prevalidations_window.py:736 image/prevalidation_action.py:34
 msgid "Delete"
 msgstr "Eliminare"
 
-#: compare/prevalidations_window.py:745
+#: compare/prevalidations_window.py:743
 msgid "Move down"
 msgstr "Scendere"
 
@@ -1193,15 +1194,118 @@ msgstr "Scendere"
 msgid "Image does not contain a prompt to redo!"
 msgstr "L'immagine non contiene una richiesta di ripetizione!"
 
-#: files/favorites_window.py:50
+#: extensions/gimp/gimp_wrapper.py:257
+msgid "Process Error"
+msgstr "Errore di processo"
+
+#: extensions/gimp/gimp_wrapper.py:258
+msgid "Error monitoring GIMP process: {0}"
+msgstr "Monitoraggio errori processo GIMP: {0}"
+
+#: extensions/gimp/gimp_wrapper.py:333
+msgid "File is already being opened in GIMP"
+msgstr "Il file è già stato aperto in GIMP."
+
+#: extensions/gimp/gimp_wrapper.py:381
+msgid "Opening {0} in existing GIMP process"
+msgstr "Apertura di {0} nel processo GIMP esistente"
+
+#: extensions/gimp/gimp_wrapper.py:383
+msgid "Opening file in GIMP: {0}"
+msgstr "Apertura del file in GIMP: {0}"
+
+#: extensions/gimp/gimp_wrapper.py:422 extensions/gimp/gimp_wrapper.py:480
+msgid "GIMP Error"
+msgstr "Errore GIMP"
+
+#: extensions/gimp/gimp_wrapper.py:423
+msgid "Failed to open file in GIMP: {0}"
+msgstr "Impossibile aprire il file in GIMP: {0}"
+
+#: extensions/gimp/gimp_wrapper.py:450
+msgid "Opening {0} in GIMP (using temporary directory for performance)"
+msgstr ""
+"Apertura di {0} in GIMP (utilizzando una directory temporanea per migliorare"
+" le prestazioni)"
+
+#: extensions/gimp/gimp_wrapper.py:481
+msgid ""
+"Failed to open file in GIMP: {0}\n"
+"\n"
+"Check that GIMP is properly installed and configured."
+msgstr ""
+"Impossibile aprire il file in GIMP: {0}\n"
+"\n"
+"Verificare che GIMP sia installato e configurato correttamente."
+
+#: extensions/gimp/gimp_wrapper.py:499
+msgid "Setup Error"
+msgstr "Errore di configurazione"
+
+#: extensions/gimp/gimp_wrapper.py:500
+msgid "Failed to set up temporary directory: {0}"
+msgstr "Impossibile configurare la directory temporanea: {0}"
+
+#: extensions/gimp/gimp_wrapper.py:552
+msgid "File Processing Error"
+msgstr "Errore di elaborazione del file"
+
+#: extensions/gimp/gimp_wrapper.py:553
+msgid "Error processing files after GIMP completion: {0}"
+msgstr ""
+"Errore durante l'elaborazione dei file dopo il completamento di GIMP: {0}"
+
+#: extensions/gimp/gimp_wrapper.py:683
+msgid "File updated: {0}"
+msgstr "File aggiornato: {0}"
+
+#: extensions/gimp/gimp_wrapper.py:687
+msgid "Failed to update file: {0}"
+msgstr "Impossibile aggiornare il file: {0}"
+
+#: extensions/gimp/gimp_wrapper.py:710
+msgid "New file created: {0}"
+msgstr "Nuovo file creato: {0}"
+
+#: extensions/gimp/gimp_wrapper.py:712
+msgid "{0} new files created"
+msgstr "{0} nuovi file creati"
+
+#: extensions/gimp/gimp_wrapper.py:716
+msgid "Failed to move new files: {0}"
+msgstr "Impossibile spostare i nuovi file: {0}"
+
+#: extensions/gimp/gimp_wrapper.py:740
+msgid ""
+"The following files already exist and will be overwritten:\n"
+"\n"
+"{0}\n"
+"\n"
+"Do you want to proceed?"
+msgstr ""
+"I seguenti file esistono già e verranno sovrascritti:\n"
+"\n"
+"{0}\n"
+"\n"
+"Vuoi procedere?"
+
+#: extensions/gimp/gimp_wrapper.py:743
+msgid "Confirm Overwrite"
+msgstr "Conferma sovrascrittura"
+
+#: extensions/gimp/gimp_wrapper.py:750
+msgid "File overwrite cancelled"
+msgstr "Sovrascrittura file annullata"
+
+#: files/favorites_window.py:51
 msgid "Added favorite: "
 msgstr "Aggiunto ai preferiti: "
 
-#: files/favorites_window.py:56
+#: files/favorites_window.py:70
 msgid "Favorites"
 msgstr "Preferiti"
 
-#: files/favorites_window.py:112
+#: files/favorites_window.py:125
 msgid ""
 "No favorites set.\n"
 "\n"
@@ -1211,117 +1315,117 @@ msgstr ""
 "\n"
 "Per aggiungere un preferito, clicca con il tasto destro su un'immagine e seleziona “Aggiungi ai preferiti”."
 
-#: files/favorites_window.py:129
+#: files/favorites_window.py:142
 msgid "Open"
 msgstr "Media aperti"
 
-#: files/favorites_window.py:135
+#: files/favorites_window.py:148
 msgid "Remove Favorite"
 msgstr "Rimuovi i preferiti"
 
-#: files/favorites_window.py:161
+#: files/favorites_window.py:174
 msgid "Opened favorite: "
 msgstr "Apri preferiti: "
 
-#: files/favorites_window.py:166
+#: files/favorites_window.py:179
 msgid "Opened favorite in new window: "
 msgstr "Aperto il preferito in una nuova finestra: "
 
-#: files/favorites_window.py:174
+#: files/favorites_window.py:187
 msgid "Removed favorite: "
 msgstr "Preferito rimosso: "
 
-#: files/file_actions_window.py:267
+#: files/file_actions_window.py:280
 msgid "File Actions"
 msgstr "Azioni sui file"
 
-#: files/file_actions_window.py:296
+#: files/file_actions_window.py:308
 msgid "File Action History"
 msgstr "Cronologia delle azioni dei file"
 
-#: files/file_actions_window.py:298
+#: files/file_actions_window.py:310
 msgid "Search Image"
 msgstr "Ricerca immagine"
 
-#: files/file_actions_window.py:300
+#: files/file_actions_window.py:312
 msgid "Clear History"
 msgstr "Storia chiara"
 
-#: files/file_actions_window.py:334
+#: files/file_actions_window.py:346
 msgid "Today's File Actions"
 msgstr "Azioni file odierne"
 
-#: files/file_actions_window.py:334
+#: files/file_actions_window.py:346
 msgid "File Action Statistics"
 msgstr "Statistiche sulle azioni dei file"
 
-#: files/file_actions_window.py:341 files/file_actions_window.py:773
+#: files/file_actions_window.py:353 files/file_actions_window.py:785
 msgid "All Time"
 msgstr "Di tutti i tempi"
 
-#: files/file_actions_window.py:341 files/file_actions_window.py:775
+#: files/file_actions_window.py:353 files/file_actions_window.py:787
 msgid "Today Only"
 msgstr "Solo oggi"
 
-#: files/file_actions_window.py:348
+#: files/file_actions_window.py:360
 msgid "Target Directory"
 msgstr "Elenco dei destinatari"
 
-#: files/file_actions_window.py:354 files/marked_file_mover.py:997
+#: files/file_actions_window.py:366 files/marked_file_mover.py:997
 msgid "Moved"
 msgstr "Trasferito"
 
-#: files/file_actions_window.py:360 files/marked_file_mover.py:997
+#: files/file_actions_window.py:372 files/marked_file_mover.py:997
 msgid "Copied"
 msgstr "Copiato"
 
-#: files/file_actions_window.py:366
+#: files/file_actions_window.py:378
 msgid "Total"
 msgstr "Totale"
 
-#: files/file_actions_window.py:417
+#: files/file_actions_window.py:429
 msgid "... and {0} more"
 msgstr "... e {0} altro ancora"
 
-#: files/file_actions_window.py:467
+#: files/file_actions_window.py:479
 msgid " ({0} files)"
 msgstr " ({0} file)"
 
-#: files/file_actions_window.py:469
+#: files/file_actions_window.py:481
 msgid "(auto)"
 msgstr "(auto)"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:275
+#: files/file_actions_window.py:486 files/marked_file_mover.py:275
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "Muoversi"
 
-#: files/file_actions_window.py:474 files/marked_file_mover.py:282
+#: files/file_actions_window.py:486 files/marked_file_mover.py:282
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "Copia"
 
-#: files/file_actions_window.py:477 files/file_actions_window.py:528
+#: files/file_actions_window.py:489 files/file_actions_window.py:540
 msgid "Undo"
 msgstr "Annullare"
 
-#: files/file_actions_window.py:512
+#: files/file_actions_window.py:524
 msgid "View"
 msgstr "Vista"
 
-#: files/file_actions_window.py:520
+#: files/file_actions_window.py:532
 msgid "Copy Filename"
 msgstr "Copia nome file"
 
-#: files/file_actions_window.py:553
+#: files/file_actions_window.py:565
 msgid "Image does not exist: "
 msgstr "L'immagine non esiste: "
 
-#: files/file_actions_window.py:554 files/file_actions_window.py:565
+#: files/file_actions_window.py:566 files/file_actions_window.py:577
 msgid "File Action Error"
 msgstr "Errore nell'azione del file"
 
-#: files/file_actions_window.py:564
+#: files/file_actions_window.py:576
 msgid "Images not found"
 msgstr "Immagini non trovate"
 
@@ -1349,59 +1453,67 @@ msgstr "Nessun file trovato"
 msgid "Go To File"
 msgstr "Vai al file"
 
-#: files/go_to_file.py:46
+#: files/go_to_file.py:45
 msgid "Go To"
 msgstr "Vai"
 
-#: files/go_to_file.py:49
+#: files/go_to_file.py:48
 msgid "Browse..."
 msgstr "Sfoglia..."
 
-#: files/go_to_file.py:60
+#: files/go_to_file.py:52
+msgid "Go To Last Moved"
+msgstr "Vai all'ultimo spostato"
+
+#: files/go_to_file.py:59
 msgid "Go to closest file if exact match not found"
 msgstr "Vai al file più vicino se non viene trovata una corrispondenza esatta"
 
-#: files/go_to_file.py:80
+#: files/go_to_file.py:79
 msgid "Invalid search string, please enter some text."
 msgstr "Stringa di ricerca non valida, inserire un testo."
 
-#: files/go_to_file.py:102
+#: files/go_to_file.py:101
 msgid "Supported files"
 msgstr "File supportati"
 
-#: files/go_to_file.py:106
+#: files/go_to_file.py:105
 msgid "Image files"
 msgstr "File immagine"
 
-#: files/go_to_file.py:109
+#: files/go_to_file.py:108
 msgid "Video files"
 msgstr "File video"
 
-#: files/go_to_file.py:111
+#: files/go_to_file.py:110
 msgid "GIF files"
 msgstr "File GIF"
 
-#: files/go_to_file.py:113
+#: files/go_to_file.py:112
 msgid "PDF files"
 msgstr "File PDF"
 
-#: files/go_to_file.py:115
+#: files/go_to_file.py:114
 msgid "SVG files"
 msgstr "File SVG"
 
-#: files/go_to_file.py:117
+#: files/go_to_file.py:116
 msgid "HTML files"
 msgstr "File HTML"
 
-#: files/go_to_file.py:120
+#: files/go_to_file.py:119
 msgid "All files"
 msgstr "Tutti i file"
 
-#: files/go_to_file.py:123
+#: files/go_to_file.py:122
 msgid "Select file to go to"
 msgstr "Seleziona il file a cui andare"
 
-#: files/go_to_file.py:171
+#: files/go_to_file.py:141
+msgid "No last moved image found."
+msgstr "Nessun file multimediale spostato di recente trovato."
+
+#: files/go_to_file.py:170
 msgid "Sort by for closest search:"
 msgstr "Ordina per ricerca più vicina:"
 
@@ -1409,15 +1521,15 @@ msgstr "Ordina per ricerca più vicina:"
 msgid "Hotkey Actions"
 msgstr "Azioni di scelta rapida"
 
-#: files/hotkey_actions_window.py:51
+#: files/hotkey_actions_window.py:50
 msgid "Key name"
 msgstr "Nome chiave"
 
-#: files/hotkey_actions_window.py:55
+#: files/hotkey_actions_window.py:54
 msgid "Target directory"
 msgstr "Elenco degli obiettivi"
 
-#: files/hotkey_actions_window.py:87 files/hotkey_actions_window.py:92
+#: files/hotkey_actions_window.py:86 files/hotkey_actions_window.py:91
 msgid "(unset)"
 msgstr "(non impostato)"
 
@@ -1469,7 +1581,7 @@ msgstr "Aggiungere cartella dal genitore"
 msgid "Clear targets"
 msgstr "Obiettivi chiari"
 
-#: files/marked_file_mover.py:238 files/pdf_options_window.py:81
+#: files/marked_file_mover.py:238 files/pdf_options_window.py:80
 msgid "Create PDF"
 msgstr "Creare PDF"
 
@@ -1643,7 +1755,7 @@ msgstr "Rimossi {0} marchi"
 msgid "No files to create PDF"
 msgstr "Nessun file per creare PDF"
 
-#: files/pdf_creator.py:49 files/pdf_options_window.py:53
+#: files/pdf_creator.py:49 files/pdf_options_window.py:52
 msgid "combined_images"
 msgstr "immagini_combinate"
 
@@ -1671,19 +1783,19 @@ msgstr "Non è stato possibile aggiungere pagine al PDF"
 msgid "PDF creation requires pypdfium2 package"
 msgstr "La creazione di PDF richiede il pacchetto pypdfium2"
 
-#: files/pdf_options_window.py:31 files/pdf_options_window.py:43
+#: files/pdf_options_window.py:31 files/pdf_options_window.py:42
 msgid "PDF Creation Options"
 msgstr "Opzioni di creazione PDF"
 
-#: files/pdf_options_window.py:49
+#: files/pdf_options_window.py:48
 msgid "PDF Filename:"
 msgstr "PDF Nome del file:"
 
-#: files/pdf_options_window.py:61
+#: files/pdf_options_window.py:60
 msgid "Preserve original image quality and format"
 msgstr "Conservare la qualità e il formato dell'immagine originali"
 
-#: files/pdf_options_window.py:68
+#: files/pdf_options_window.py:67
 msgid ""
 "If enabled, images will maintain their original quality and format.\n"
 "If disabled, images will be compressed to reduce PDF size."
@@ -1699,39 +1811,39 @@ msgstr "Aggiungi cartella"
 msgid "Set image comparison directory"
 msgstr "Impostare la cartella di confronto delle immagini"
 
-#: files/type_configuration_window.py:26
+#: files/type_configuration_window.py:27
 msgid "Basic image files (PNG, JPG, etc.)"
 msgstr "File di immagini di base (PNG, JPG, ecc.)"
 
-#: files/type_configuration_window.py:27
+#: files/type_configuration_window.py:28
 msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
 msgstr "File video (MP4, AVI, ecc.) - Prima cornice verrà estratta"
 
-#: files/type_configuration_window.py:28
+#: files/type_configuration_window.py:29
 msgid "Animated GIF files - First frame will be extracted"
 msgstr "File GIF animati - Prima cornice verrà estratta"
 
-#: files/type_configuration_window.py:29
+#: files/type_configuration_window.py:30
 msgid "PDF documents - First page will be extracted"
 msgstr "Documenti PDF - La prima pagina verrà estratta"
 
-#: files/type_configuration_window.py:30
+#: files/type_configuration_window.py:31
 msgid "Vector graphics - Will be converted to raster image"
 msgstr "Grafica vettoriale - Sarà convertito in immagine raster"
 
-#: files/type_configuration_window.py:31
+#: files/type_configuration_window.py:32
 msgid "HTML files - Will be rendered and converted to image"
 msgstr "File HTML - Verranno resi e convertiti in immagine"
 
-#: files/type_configuration_window.py:39
+#: files/type_configuration_window.py:40
 msgid "PDF support requires pypdfium2 package"
 msgstr "Il supporto PDF richiede il pacchetto pypdfium2"
 
-#: files/type_configuration_window.py:44
+#: files/type_configuration_window.py:45
 msgid "SVG support requires cairosvg package"
 msgstr "Il supporto SVG richiede il pacchetto cairosvg"
 
-#: files/type_configuration_window.py:49
+#: files/type_configuration_window.py:50
 msgid "HTML support requires pyppeteer package"
 msgstr "Supporto HTML richiede pacchetto pippeteer"
 
@@ -1739,11 +1851,11 @@ msgstr "Supporto HTML richiede pacchetto pippeteer"
 msgid "Media Type Configuration"
 msgstr "Configurazione del tipo di media"
 
-#: files/type_configuration_window.py:113 utils/constants.py:308
+#: files/type_configuration_window.py:112 utils/constants.py:308
 msgid "Configure Media Types"
 msgstr "Configurare Tipi di Medio"
 
-#: files/type_configuration_window.py:118
+#: files/type_configuration_window.py:117
 msgid ""
 "Select which types of media files you want to compare. Changes will require "
 "a refresh of open comparisons but files in browsing mode should update "
@@ -1753,21 +1865,21 @@ msgstr ""
 "modifiche richiedono un aggiornamento di confronti aperti, ma i file in "
 "modalità di navigazione dovrebbero aggiornarsi automaticamente."
 
-#: files/type_configuration_window.py:184
+#: files/type_configuration_window.py:183
 msgid "Apply Changes"
 msgstr "Applica modifiche"
 
-#: files/type_configuration_window.py:226
+#: files/type_configuration_window.py:225
 msgid "Confirm Changes"
 msgstr "Conferma modifiche"
 
-#: files/type_configuration_window.py:227
+#: files/type_configuration_window.py:226
 msgid "This will clear all existing compares in open windows. Continue?"
 msgstr ""
 "Questa eliminerà tutte le compari esistenti nelle finestre aperte. "
 "Proseguire?"
 
-#: files/type_configuration_window.py:286
+#: files/type_configuration_window.py:285
 msgid "Media type configuration updated"
 msgstr "Configurazione del tipo di supporto aggiornata"
 
@@ -2525,11 +2637,3 @@ msgstr "Sfuggire ai backslash nei percorsi dei file"
 #: utils/notification_manager.py:26
 msgid " etc."
 msgstr " ecc."
-
-#: files/go_to_file.py:53
-msgid "Go To Last Moved"
-msgstr "Vai all'ultimo spostato"
-
-#: files/go_to_file.py:142
-msgid "No last moved image found."
-msgstr "Nessun file multimediale spostato di recente trovato."

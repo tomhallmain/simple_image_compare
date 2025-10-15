@@ -1834,8 +1834,8 @@ class App():
         else:
             filepath = self.get_active_media_filepath()
         if filepath is not None:
-            self.toast("Opening file in GIMP: " + filepath)
-            Utils.open_file_in_gimp(filepath, config.gimp_exe_loc)
+            from extensions.gimp.gimp_wrapper import open_image_in_gimp_wrapper
+            open_image_in_gimp_wrapper(filepath, config.gimp_exe_loc, self.file_browser.is_slow_total_files, self.app_actions)
         else:
             self.handle_error(_("Failed to open current file in GIMP, unable to get valid filepath"))
 
