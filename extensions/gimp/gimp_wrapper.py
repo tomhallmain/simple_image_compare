@@ -387,6 +387,7 @@ class GimpWrapper:
         _current_wrapper = self  # Set this instance as the current wrapper
         
         def gimp_process():
+            global _gimp_process, _current_filepath, _is_gimp_running, _current_wrapper
             try:
                 start_time = time.time()
                 command = ["set", "LANG=en", "&&", gimp_exe_loc, filepath]
@@ -457,6 +458,7 @@ class GimpWrapper:
             
             # Start GIMP process in a thread
             def gimp_process():
+                global _gimp_process, _current_filepath, _is_gimp_running, _current_wrapper
                 try:
                     # Use subprocess.Popen for better process control
                     process = subprocess.Popen(
