@@ -26,6 +26,7 @@ from files.file_browser import FileBrowser, SortBy
 from files.go_to_file import GoToFile
 from files.marked_file_mover import MarkedFiles
 from files.recent_directory_window import RecentDirectories, RecentDirectoryWindow
+from files.target_directory_window import TargetDirectoryWindow
 from files.type_configuration_window import TypeConfigurationWindow
 from image.media_frame import MediaFrame
 from lib.aware_entry import AwareEntry
@@ -560,6 +561,7 @@ class App():
             PrevalidationsWindow.set_prevalidations()
             FavoritesWindow.load_favorites()
             GoToFile.load_persisted_data()
+            TargetDirectoryWindow.load_recent_directories()
             return app_info_cache.get_meta("base_dir")
         except Exception as e:
             logger.error(e)
@@ -618,6 +620,7 @@ class App():
         PrevalidationsWindow.store_prevalidations()
         FavoritesWindow.store_favorites()
         GoToFile.save_persisted_data()
+        TargetDirectoryWindow.save_recent_directories()
         app_info_cache.store()
 
     def toggle_fullscreen(self, event=None) -> None:

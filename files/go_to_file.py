@@ -5,6 +5,7 @@ from tkinter.ttk import Entry, Button, Checkbutton, OptionMenu, Progressbar
 
 from files.file_actions_window import FileActionsWindow
 from files.marked_file_mover import MarkedFiles
+from files.target_directory_window import TargetDirectoryWindow
 from lib.multi_display import SmartToplevel
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
@@ -289,8 +290,9 @@ class GoToFile:
         title_label.grid(row=0, column=0, columnspan=3, sticky=W, pady=(0, 10))
         
         # Status label
-        self.status_label = Label(self.related_frame, text=_("Enter a base ID manually or click 'Extract from filename' to auto-extract from the filename above."), 
-                                 bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        initial_text = _("Enter a base ID manually or click 'Extract from filename' to auto-extract from the filename above.")
+        self.status_label = Label(self.related_frame, text=initial_text, 
+                                 bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR, wraplength=600, justify=LEFT)
         self.status_label.grid(row=1, column=0, sticky=W, pady=(0, 8))
         
         # Base ID selection
@@ -357,16 +359,41 @@ class GoToFile:
         scrollbar.grid(row=0, column=1, sticky='ns')
         self.results_listbox.config(yscrollcommand=scrollbar.set)
 
+    def update_status_label(self, text, fg_color=None):
+        """Update the status label with wrapped text."""
+        if fg_color is None:
+            fg_color = AppStyle.FG_COLOR
+        
+        # Use Utils method to wrap text to fit the label width
+        wrapped_text = Utils._wrap_text_to_fit_length(text, 600)
+        self.status_label.config(text=wrapped_text, fg=fg_color, justify=LEFT)
+
     def browse_target_directory(self):
-        """Open directory picker for target directory."""
-        target_dir = filedialog.askdirectory(
-            title=_("Select directory to search for related files"),
-            initialdir=self.app_actions.get_base_dir() if hasattr(self.app_actions, 'get_base_dir') else "."
-        )
-        if target_dir:
-            self.target_dir_var.set(target_dir)
-            GoToFile.last_target_directory = target_dir
+        """Open target directory selection window."""
+        def on_directory_selected(directory):
+            """Callback when a directory is selected."""
+            self.target_dir_var.set(directory)
+            GoToFile.last_target_directory = directory
             GoToFile.save_persisted_data()
+            # Add to recent directories for future use
+            TargetDirectoryWindow.add_recent_directory(directory)
+            
+            # Check if we can run the search automatically
+            base_id = self.base_id_var.get().strip()
+            if base_id and os.path.isdir(directory):
+                # All elements are in place, run the search
+                self.find_related_files()
+            else:
+                # Elements not ready, lift and focus the go_to_file window
+                self.master.lift()
+                self.master.focus_force()
+        
+        # Open the target directory window
+        TargetDirectoryWindow(
+            master=self.master,
+            callback=on_directory_selected,
+            initial_dir=self.app_actions.get_base_dir() if hasattr(self.app_actions, 'get_base_dir') else "."
+        )
 
     def get_current_media_filename(self, event=None):
         """Get the current media filename from the active window and set it in the search field."""
@@ -395,7 +422,7 @@ class GoToFile:
         """Show an indeterminate loading bar and optionally update the status text."""
         try:
             if message is not None:
-                self.status_label.config(text=message, fg=AppStyle.FG_COLOR)
+                self.update_status_label(message, AppStyle.FG_COLOR)
             if self.loading_bar is None:
                 self.loading_bar = Progressbar(self.loading_container, orient='horizontal', mode='indeterminate', length=160)
                 self.loading_bar.grid(row=0, column=0, padx=(10, 0))
@@ -414,7 +441,8 @@ class GoToFile:
                 self.loading_bar.destroy()
                 self.loading_bar = None
             if final_message is not None:
-                self.status_label.config(text=final_message, fg=("orange" if warn else AppStyle.FG_COLOR))
+                fg_color = "orange" if warn else AppStyle.FG_COLOR
+                self.update_status_label(final_message, fg_color)
             self.master.update_idletasks()
         except Exception:
             pass
@@ -446,10 +474,10 @@ class GoToFile:
         base_id = self.extract_base_id(search_text)
         if base_id:
             self.base_id_var.set(base_id)
-            self.status_label.config(text=_("Base ID extracted: {}").format(base_id), fg=AppStyle.FG_COLOR)
+            self.update_status_label(_("Base ID extracted: {}").format(base_id), AppStyle.FG_COLOR)
         else:
             self.app_actions.toast(_("Could not extract base ID from filename. Please enter it manually."))
-            self.status_label.config(text=_("Could not extract base ID. Please enter it manually."), fg="orange")
+            self.update_status_label(_("Could not extract base ID. Please enter it manually."), "orange")
 
     def find_related_files(self, event=None):
         """Find files with related filenames in the target directory."""
@@ -472,6 +500,9 @@ class GoToFile:
         GoToFile.last_target_directory = target_dir
         GoToFile.save_persisted_data()
         
+        # Add to recent directories for the target directory window
+        TargetDirectoryWindow.add_recent_directory(target_dir)
+        
         # Find matching files (includes large directory confirmation)
         matching_files = self.find_matching_files(target_dir, base_id)
         
@@ -481,10 +512,10 @@ class GoToFile:
             for file_path in matching_files:
                 self.results_listbox.insert('end', file_path)
             # Restore normal font color when results are found
-            self.status_label.config(text=_("Found {} related filenames").format(len(matching_files)), fg=AppStyle.FG_COLOR)
+            self.update_status_label(_("Found {} related filenames").format(len(matching_files)), AppStyle.FG_COLOR)
         else:
             # Use a warning color when no results are found
-            self.status_label.config(text=_("No related filenames found with base ID \"{0}\" in {1}").format(base_id, target_dir), fg="orange")
+            self.update_status_label(_("No related filenames found with base ID \"{0}\" in {1}").format(base_id, target_dir), "orange")
 
     def extract_base_id(self, filename):
         """
@@ -578,6 +609,6 @@ class GoToFile:
             # Set the file path in the search box and go to it
             self.search_text.set(file_path)
             # Update status to indicate we're opening the file
-            self.status_label.config(text=_("Opening file: {}").format(os.path.basename(file_path)), fg=AppStyle.FG_COLOR)
+            self.update_status_label(_("Opening file: {}").format(os.path.basename(file_path)), AppStyle.FG_COLOR)
             self.go_to_file()
 
