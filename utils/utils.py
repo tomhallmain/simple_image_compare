@@ -79,6 +79,28 @@ class Utils:
         return os.path.expanduser("~")
 
     @staticmethod
+    def get_pictures_dir():
+        """Get the Pictures directory for the current OS."""
+        import platform
+        system = platform.system()
+        
+        if system == "Windows":
+            # Windows: Use Pictures folder
+            pictures_dir = os.path.join(os.path.expanduser("~"), "Pictures")
+        elif system == "Darwin":  # macOS
+            # macOS: Use Pictures folder
+            pictures_dir = os.path.join(os.path.expanduser("~"), "Pictures")
+        else:  # Linux and others
+            # Linux: Use Pictures folder, fallback to user dir
+            pictures_dir = os.path.join(os.path.expanduser("~"), "Pictures")
+        
+        # If Pictures directory doesn't exist, fallback to user directory
+        if not os.path.exists(pictures_dir):
+            pictures_dir = Utils.get_user_dir()
+        
+        return pictures_dir
+
+    @staticmethod
     def calculate_available_ram():
         return psutil.virtual_memory().available / (1024 ** 3)
 

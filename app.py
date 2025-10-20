@@ -206,6 +206,7 @@ class App():
         self.is_toggled_view_matches = True
         self.direction = Direction.FORWARD
         self.has_added_buttons_for_mode = {Mode.BROWSE: False, Mode.GROUP: False, Mode.SEARCH: False, Mode.DUPLICATES: False}
+        self.go_to_file_window = None
 
         Style().configure(".", font=('Helvetica', config.font_size))
 
@@ -434,6 +435,7 @@ class App():
         self.master.bind("<Control-w>", self.open_secondary_compare_window)
         self.master.bind("<Control-a>", lambda event: self.open_secondary_compare_window(run_compare_image=self.img_path))
         self.master.bind("<Control-g>", self.open_go_to_file_window)
+        self.master.bind("<Control-i>", self.open_go_to_file_with_current_media)
         self.master.bind("<Control-h>", self.toggle_sidebar)
         self.master.bind("<Control-C>", self.copy_marks_list)
         self.master.bind("<Control-f>", self.open_favorites_window)
@@ -557,6 +559,7 @@ class App():
             ImageDetails.load_image_generation_mode()
             PrevalidationsWindow.set_prevalidations()
             FavoritesWindow.load_favorites()
+            GoToFile.load_persisted_data()
             return app_info_cache.get_meta("base_dir")
         except Exception as e:
             logger.error(e)
@@ -614,6 +617,7 @@ class App():
         ImageDetails.store_image_generation_mode()
         PrevalidationsWindow.store_prevalidations()
         FavoritesWindow.store_favorites()
+        GoToFile.save_persisted_data()
         app_info_cache.store()
 
     def toggle_fullscreen(self, event=None) -> None:
@@ -1628,7 +1632,40 @@ class App():
 
     def open_go_to_file_window(self, event=None) -> None:
         try:
-            go_to_file = GoToFile(self.master, self.app_actions)
+            # Check if window already exists and is still valid
+            if self.go_to_file_window is not None and hasattr(self.go_to_file_window, 'master'):
+                try:
+                    # Check if the window still exists
+                    if self.go_to_file_window.master.winfo_exists():
+                        # Window exists, just focus it
+                        self.go_to_file_window.master.lift()
+                        self.go_to_file_window.master.focus_force()
+                        return
+                except:
+                    # Window was destroyed, clear the reference
+                    self.go_to_file_window = None
+            
+            # Create new window
+            self.go_to_file_window = GoToFile(self.master, self.app_actions)
+        except Exception as e:
+            self.handle_error(str(e), title="Go To File Window Error")
+
+    def open_go_to_file_with_current_media(self, event=None) -> None:
+        """Open Go To File window, show it, then schedule loading current media and searching."""
+        try:
+            # Check if window already exists and is still valid
+            if self.go_to_file_window is not None and hasattr(self.go_to_file_window, 'master'):
+                try:
+                    if self.go_to_file_window.master.winfo_exists():
+                        # Window exists, update it with current media
+                        self.go_to_file_window.update_with_current_media()
+                        return
+                except:
+                    self.go_to_file_window = None
+            
+            # Create new window and show it, then schedule the load
+            self.go_to_file_window = GoToFile(self.master, self.app_actions)
+            self.go_to_file_window.update_with_current_media(focus=True)
         except Exception as e:
             self.handle_error(str(e), title="Go To File Window Error")
 

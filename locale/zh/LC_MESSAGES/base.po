@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-10-14 21:15-0400\n"
-"PO-Revision-Date: 2025-10-14 21:15-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-10-20 10:57-0400\n"
+"PO-Revision-Date: 2025-10-20 10:57-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:108 app.py:1003 app.py:2240
+#: app.py:108 app.py:1007 app.py:2277
 msgid " Simple Image Compare "
 msgstr " 简单图像比较 "
 
@@ -24,377 +24,377 @@ msgstr "（主窗口）"
 msgid "Theme switched to {0}."
 msgstr "主题切换到{0} 。"
 
-#: app.py:268 app.py:488 app.py:1032 compare/compare_wrapper.py:503
+#: app.py:269 app.py:490 app.py:1036 compare/compare_wrapper.py:503
 msgid "Set a directory to run comparison."
 msgstr "设置目录以运行比较 。"
 
-#: app.py:275
+#: app.py:276
 msgid "Toggle theme"
 msgstr "切换主题"
 
-#: app.py:276
+#: app.py:277
 msgid "Set directory"
 msgstr "设置目录"
 
-#: app.py:277
+#: app.py:278
 msgid "Add dirpath..."
 msgstr "添加目录路径..."
 
-#: app.py:280
+#: app.py:281
 msgid "Set search file"
 msgstr "设定搜索文件"
 
-#: app.py:288
+#: app.py:289
 msgid "Search text (embedding mode)"
 msgstr "搜索文本 (嵌入模式)"
 
-#: app.py:299
+#: app.py:300
 msgid "Compare mode"
 msgstr "比较模式"
 
-#: app.py:317
+#: app.py:318
 msgid "Compare faces"
 msgstr "比较面孔"
 
-#: app.py:321
+#: app.py:322
 msgid "Overwrite cache"
 msgstr "覆盖缓存"
 
-#: app.py:325
+#: app.py:326
 msgid "Store checkpoints"
 msgstr "储存检查站"
 
-#: app.py:329
+#: app.py:330
 msgid "Max files to compare"
 msgstr "要比较的最大文件"
 
-#: app.py:335
+#: app.py:336
 msgid "Filter files by glob pattern"
 msgstr "用 glob 模式筛选文件"
 
-#: app.py:342
+#: app.py:343
 msgid "Browsing mode - Sort by"
 msgstr "浏览模式 - 排序"
 
-#: app.py:349
+#: app.py:350
 msgid "Recurse subdirectories"
 msgstr "递归子目录"
 
-#: app.py:354
+#: app.py:355
 msgid "Image resize to full window"
 msgstr "图像大小调整到全窗口"
 
-#: app.py:358
+#: app.py:359
 msgid "Search only return closest"
 msgstr "仅最接近返回"
 
-#: app.py:365
+#: app.py:366
 msgid "Run image compare"
 msgstr "运行图像对比"
 
-#: app.py:367
+#: app.py:368
 msgid "Find duplicates"
 msgstr "查找复制件"
 
-#: app.py:369 image/image_details.py:66
+#: app.py:370 image/image_details.py:66
 msgid "Image details"
 msgstr "图片详情"
 
-#: app.py:380
+#: app.py:381
 msgid "Search current image"
 msgstr "搜索当前图像"
 
-#: app.py:381 utils/help_and_config.py:79
+#: app.py:382 utils/help_and_config.py:79
 msgid "Open media location"
 msgstr "打开媒体位置"
 
-#: app.py:382
+#: app.py:383
 msgid "Copy image path"
 msgstr "复制图像路径"
 
-#: app.py:383
+#: app.py:384
 msgid "---- DELETE ----"
 msgstr "---- 删除 ----"
 
-#: app.py:545
+#: app.py:547
 msgid "Confirm Quit"
 msgstr "确认退出"
 
-#: app.py:545
+#: app.py:547
 msgid "Would you like to quit the application?"
 msgstr "您想要退出申请吗 ?"
 
-#: app.py:675
+#: app.py:679
 msgid "Ended slideshows"
 msgstr "结束幻灯片放映"
 
-#: app.py:728 app.py:1925 app.py:1932 app.py:1936 app.py:1940 app.py:1946
-#: app.py:2066
+#: app.py:732 app.py:1962 app.py:1969 app.py:1973 app.py:1977 app.py:1983
+#: app.py:2103
 msgid "Warning"
 msgstr "警告"
 
-#: app.py:728
+#: app.py:732
 msgid "No files found in directory after refresh."
 msgstr "刷新后在目录中未发现文件。"
 
-#: app.py:766
+#: app.py:770
 msgid "Slideshow for new images started"
 msgstr "开始播放新图像的幻灯片"
 
-#: app.py:768
+#: app.py:772
 msgid "Slideshow started"
 msgstr "幻灯片播放开始"
 
-#: app.py:771
+#: app.py:775
 msgid "Slideshows ended"
 msgstr "幻灯片放映结束"
 
-#: app.py:784
+#: app.py:788
 msgid "Browsing mode set."
 msgstr "浏览模式设置 。"
 
-#: app.py:828 utils/constants.py:299
+#: app.py:832 utils/constants.py:299
 msgid "View Media Details"
 msgstr "查看媒体详情"
 
-#: app.py:829
+#: app.py:833
 msgid "Hide Media"
 msgstr "隐藏媒体"
 
-#: app.py:830
+#: app.py:834
 msgid "Remove from Marks"
 msgstr "从标记中移除"
 
-#: app.py:830
+#: app.py:834
 msgid "Add to Marks"
 msgstr "添加到标记"
 
-#: app.py:832
+#: app.py:836
 msgid "Remove from Favorites"
 msgstr "从收藏夹中移除"
 
-#: app.py:832
+#: app.py:836
 msgid "Add to Favorites"
 msgstr "添加到收藏夹"
 
-#: app.py:835
+#: app.py:839
 msgid "Open in GIMP"
 msgstr "在GIMP中打开"
 
-#: app.py:836 image/image_details.py:195 utils/constants.py:305
+#: app.py:840 image/image_details.py:195 utils/constants.py:305
 msgid "Run Image Generation"
 msgstr "运行图像生成"
 
-#: app.py:837
+#: app.py:841
 msgid "Show Source Image"
 msgstr "显示源图像"
 
-#: app.py:838
+#: app.py:842
 msgid "Find Related Images"
 msgstr "查找相关图片"
 
-#: app.py:839
+#: app.py:843
 msgid "Set Marks from Downstream Related Images"
 msgstr "从下游相关图像中设置标记"
 
-#: app.py:841
+#: app.py:845
 msgid "Set Current Image as Search Image"
 msgstr "将当前图像设置为搜索图像"
 
-#: app.py:842
+#: app.py:846
 msgid "Add Current Image to Negative Search"
 msgstr "将当前图像添加到负片搜索中"
 
-#: app.py:843
+#: app.py:847
 msgid "Run Refacdir"
 msgstr "运行 RefacDir"
 
-#: app.py:861
+#: app.py:865
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(将此图片作为目录的一部分打开，可查看索引详情）。"
 
-#: app.py:894 app.py:1602
+#: app.py:898 app.py:1606
 msgid "Many Files"
 msgstr "许多文件"
 
-#: app.py:922
+#: app.py:926
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
 " load time. Please confirm you want to load the full directory."
 msgstr "检测到外部存储设备中存在包含大量文件的目录或包含一定数量文件的目录，这可能导致加载速度变慢。请确认您是否要加载整个目录。"
 
-#: app.py:923
+#: app.py:927
 msgid "Large Directory Detected: {0}"
 msgstr "检测到大型目录：{0}"
 
-#: app.py:953
+#: app.py:957
 msgid "No downstream related image(s) found in {0}"
 msgstr "在 {0} 中未发现与下游相关的图像"
 
-#: app.py:975
+#: app.py:979
 msgid "{0} file marks set"
 msgstr "{0} 文件标记设定"
 
-#: app.py:981
+#: app.py:985
 msgid "Help and Config"
 msgstr "帮助和配置"
 
-#: app.py:1075
+#: app.py:1079
 msgid "Set Image Comparison Directory"
 msgstr "设置图像比较目录"
 
-#: app.py:1112
+#: app.py:1116
 msgid "Counter limit must be an integer value."
 msgstr "计数器限值必须是整数。"
 
-#: app.py:1112 app.py:1128
+#: app.py:1116 app.py:1132
 msgid "Invalid Setting"
 msgstr "无效设置"
 
-#: app.py:1128
+#: app.py:1132
 msgid "No image selected."
 msgstr "未选择图像 。"
 
-#: app.py:1167
+#: app.py:1171
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "比较模式必须设置为嵌入模式，才能搜索文本嵌入内容"
 
-#: app.py:1171
+#: app.py:1175
 msgid "Select image file"
 msgstr "选择图像文件"
 
-#: app.py:1200
+#: app.py:1204
 msgid "Somehow, the search file is invalid"
 msgstr "不知何故, 搜索文件无效"
 
-#: app.py:1286 app.py:1311
+#: app.py:1290 app.py:1315
 msgid "Failed to get active image filepath"
 msgstr "获取活动图像文件路径失败"
 
-#: app.py:1396
+#: app.py:1400
 msgid "{0}: {1}% complete"
 msgstr "{0} : {1} 完成"
 
-#: app.py:1402
+#: app.py:1406
 msgid "Confirm comparison"
 msgstr "确认比较"
 
-#: app.py:1403
+#: app.py:1407
 msgid "No base directory has been set, will use current base directory of "
 msgstr "未设置基本目录，将使用当前基本目录： "
 
-#: app.py:1404
+#: app.py:1408
 msgid "Are you sure you want to proceed?"
 msgstr "你确定要继续吗?"
 
-#: app.py:1427
+#: app.py:1431
 msgid "Error running compare"
 msgstr "运行比较出错"
 
-#: app.py:1460
+#: app.py:1464
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡时无法添加标记"
 
-#: app.py:1471
+#: app.py:1475
 msgid "Mark removed. Remaining: {0}"
 msgstr "标记已去除。剩余 {0}"
 
-#: app.py:1475
+#: app.py:1479
 msgid "Mark added. Total set: {0}"
 msgstr "马克补充道。全套 {0}"
 
-#: app.py:1492
+#: app.py:1496
 msgid "Marks added. Total set: {0}"
 msgstr "标记已添加。总分 {0}"
 
-#: app.py:1501
+#: app.py:1505
 msgid "First sorted mark"
 msgstr "第一个排序标记"
 
-#: app.py:1508
+#: app.py:1512
 msgid "Only one marked file set."
 msgstr "只有一个标记的文件集 。"
 
-#: app.py:1520
+#: app.py:1524
 msgid "Including marks: {0}"
 msgstr "包括标记：{0}"
 
-#: app.py:1528
+#: app.py:1532
 msgid "Move {0} Marked File(s)"
 msgstr "移动 {0} 个标记文件？"
 
-#: app.py:1566
+#: app.py:1570
 msgid "NO_MARKS_SET"
 msgstr ""
 "已设置 {0} 标记(预计 >={1})。\n"
 "使用 Shift+M 设置标记。"
 
-#: app.py:1602
+#: app.py:1606
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "您确定要在目录{0}上运行所有预验证吗？这可能需要一些时间。"
 
-#: app.py:1617
+#: app.py:1621
 msgid "Prevalidations now running"
 msgstr "前缀正在运行"
 
-#: app.py:1617
+#: app.py:1621
 msgid "Prevalidations turned off"
 msgstr "关闭前缀"
 
-#: app.py:1699
+#: app.py:1736
 msgid "File not found"
 msgstr "未找到文件"
 
-#: app.py:1699
+#: app.py:1736
 msgid "No file was found for the search text: \"{0}\""
 msgstr "没有找到搜索文本的文件 \"{0}”"
 
-#: app.py:1710
+#: app.py:1747
 msgid "No image selected"
 msgstr "未选择图像"
 
-#: app.py:1710
+#: app.py:1747
 msgid "No image was selected for comparison"
 msgstr "没有选择图像进行比较"
 
-#: app.py:1724
+#: app.py:1761
 msgid "No Text Search Presets Found"
 msgstr "未找到文本搜索预设"
 
-#: app.py:1725
+#: app.py:1762
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "未找到文本嵌入搜索预设。请在 config.json 文件中进行设置。"
 
-#: app.py:1822
+#: app.py:1859
 msgid "Opening media file: {0}"
 msgstr "打开媒体文件：{0}"
 
-#: app.py:1825
+#: app.py:1862
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr "无法打开当前媒体文件，无法获取有效的文件路径。"
 
-#: app.py:1830
+#: app.py:1867
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
 msgstr "GIMP 集成未配置。请在 config.json 中设置 ‘gimp_exe_loc’。"
 
-#: app.py:1830
+#: app.py:1867
 msgid "GIMP Integration Error"
 msgstr "GIMP 集成错误"
 
-#: app.py:1840
+#: app.py:1877
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "在 GIMP 中打开当前文件失败，无法获取有效的文件路径"
 
-#: app.py:1857
+#: app.py:1894
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -402,143 +402,143 @@ msgstr ""
 "隐藏当前图像。\n"
 "要取消隐藏，请按 Shift+B。"
 
-#: app.py:1862
+#: app.py:1899
 msgid "Cleared all hidden images."
 msgstr "清除所有隐藏图像"
 
-#: app.py:1870
+#: app.py:1907
 msgid "DELETE_LOCK"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡阻止删除"
 
-#: app.py:1888
+#: app.py:1925
 msgid "Invalid action, no files found to delete"
 msgstr "无效操作，未找到要删除的文件"
 
-#: app.py:1891
+#: app.py:1928
 msgid "Invalid action, search image not found"
 msgstr "无效操作，未找到搜索图像"
 
-#: app.py:1906
+#: app.py:1943
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "删除当前文件失败，无法获取有效的文件路径"
 
-#: app.py:1913
+#: app.py:1950
 msgid "Removing directory: {0}"
 msgstr "删除目录：{0}"
 
-#: app.py:1915
+#: app.py:1952
 msgid "Removing file: {0}"
 msgstr "删除文件： {0}"
 
-#: app.py:1925 app.py:1946
+#: app.py:1962 app.py:1983
 msgid "Failed to delete item: {0}"
 msgstr "无法删除项目：{0}"
 
-#: app.py:1929
+#: app.py:1966
 msgid ""
 "Failed to move directory to {0}. Double check the trash folder is set "
 "properly in config.json."
 msgstr "无法将目录移动到 {0}。请确认 config.json 文件中垃圾桶文件夹的设置是否正确。"
 
-#: app.py:1931
+#: app.py:1968
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
 msgstr "无法将文件发送至 {0}。请确认 config.json 文件中垃圾箱文件夹的设置是否正确。"
 
-#: app.py:1937
+#: app.py:1974
 msgid ""
 "Failed to move directory to the trash. Either pip install send2trash or set "
 "a specific trash folder in config.json."
 msgstr ""
 "无法将目录移动到回收站。请通过 pip install send2trash 安装该工具，或在 config.json 文件中设置特定的回收站文件夹。"
 
-#: app.py:1941
+#: app.py:1978
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "发送文件到垃圾箱失败，因此文件将被删除。要么用 pip 安装 send2trash，要么在 config.json 中设置特定的垃圾文件夹。"
 
-#: app.py:1951
+#: app.py:1988
 msgid "Invalid directory"
 msgstr "无效目录"
 
-#: app.py:1951
+#: app.py:1988
 msgid "No valid base directory to delete"
 msgstr "没有有效的基目录可供删除。"
 
-#: app.py:1962
+#: app.py:1999
 msgid "Cannot Delete Directory"
 msgstr "无法删除目录"
 
-#: app.py:1966
+#: app.py:2003
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "您确定要删除该目录及其所有内容吗？"
 
-#: app.py:1968
+#: app.py:2005
 msgid "Contents to be deleted:"
 msgstr "需删除的内容："
 
-#: app.py:1970
+#: app.py:2007
 msgid "Confirm Delete Directory"
 msgstr "确认删除目录"
 
-#: app.py:2004
+#: app.py:2041
 msgid "Delete Directory Error"
 msgstr "删除目录错误"
 
-#: app.py:2006
+#: app.py:2043
 msgid "Directory {0} deleted."
 msgstr "目录 {0} 已删除。"
 
-#: app.py:2022
+#: app.py:2059
 msgid "Invalid target filepath for replacement: "
 msgstr "替换的目标文件路径无效： "
 
-#: app.py:2026
+#: app.py:2063
 msgid "Moved search image to "
 msgstr "将搜索图像移至 ： "
 
-#: app.py:2064
+#: app.py:2101
 msgid "Running image gen: "
 msgstr "运行图像基因 ： "
 
-#: app.py:2066
+#: app.py:2103
 msgid "Error running image generation:"
 msgstr "生成图像时出错："
 
-#: app.py:2074
+#: app.py:2111
 msgid "Running refacdir"
 msgstr "正在运行 reacdir"
 
-#: app.py:2079 auth/app_startup_auth.py:141 auth/password_dialog.py:249
-#: extensions/gimp/gimp_wrapper.py:687 extensions/gimp/gimp_wrapper.py:716
+#: app.py:2116 auth/app_startup_auth.py:141 auth/password_dialog.py:249
+#: extensions/gimp/gimp_wrapper.py:689 extensions/gimp/gimp_wrapper.py:718
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "错误"
 
-#: app.py:2175
+#: app.py:2212
 msgid "GROUP_DETAILS"
 msgstr ""
 "第 {0} 组 {1}\n"
 "大小： {2}"
 
-#: app.py:2179
+#: app.py:2216
 msgid "No image files found"
 msgstr "未找到图像文件"
 
-#: app.py:2181
+#: app.py:2218
 msgid "1 image file found"
 msgstr "找到一个图像文件"
 
-#: app.py:2182
+#: app.py:2219
 msgid "{0} image files found"
 msgstr "找到 {0} 图像文件"
 
-#: app.py:2184
+#: app.py:2221
 msgid "(filtered)"
 msgstr "(过滤)"
 
@@ -1150,19 +1150,19 @@ msgstr "在现有 GIMP 进程中打开 {0}"
 msgid "Opening file in GIMP: {0}"
 msgstr "在GIMP中打开文件：{0}"
 
-#: extensions/gimp/gimp_wrapper.py:422 extensions/gimp/gimp_wrapper.py:480
+#: extensions/gimp/gimp_wrapper.py:423 extensions/gimp/gimp_wrapper.py:482
 msgid "GIMP Error"
 msgstr "GIMP 错误"
 
-#: extensions/gimp/gimp_wrapper.py:423
+#: extensions/gimp/gimp_wrapper.py:424
 msgid "Failed to open file in GIMP: {0}"
 msgstr "在 GIMP 中打开文件失败：{0}"
 
-#: extensions/gimp/gimp_wrapper.py:450
+#: extensions/gimp/gimp_wrapper.py:451
 msgid "Opening {0} in GIMP (using temporary directory for performance)"
 msgstr "在 GIMP 中打开 {0}（为提高性能使用临时目录）"
 
-#: extensions/gimp/gimp_wrapper.py:481
+#: extensions/gimp/gimp_wrapper.py:483
 msgid ""
 "Failed to open file in GIMP: {0}\n"
 "\n"
@@ -1172,43 +1172,43 @@ msgstr ""
 "\n"
 "请检查 GIMP 是否已正确安装并配置。"
 
-#: extensions/gimp/gimp_wrapper.py:499
+#: extensions/gimp/gimp_wrapper.py:501
 msgid "Setup Error"
 msgstr "设置错误"
 
-#: extensions/gimp/gimp_wrapper.py:500
+#: extensions/gimp/gimp_wrapper.py:502
 msgid "Failed to set up temporary directory: {0}"
 msgstr "设置临时目录失败：{0}"
 
-#: extensions/gimp/gimp_wrapper.py:552
+#: extensions/gimp/gimp_wrapper.py:554
 msgid "File Processing Error"
 msgstr "文件处理错误"
 
-#: extensions/gimp/gimp_wrapper.py:553
+#: extensions/gimp/gimp_wrapper.py:555
 msgid "Error processing files after GIMP completion: {0}"
 msgstr "处理GIMP完成后的文件时出错：{0}"
 
-#: extensions/gimp/gimp_wrapper.py:683
+#: extensions/gimp/gimp_wrapper.py:685
 msgid "File updated: {0}"
 msgstr "文件更新时间：{0}"
 
-#: extensions/gimp/gimp_wrapper.py:687
+#: extensions/gimp/gimp_wrapper.py:689
 msgid "Failed to update file: {0}"
 msgstr "更新文件失败：{0}"
 
-#: extensions/gimp/gimp_wrapper.py:710
+#: extensions/gimp/gimp_wrapper.py:712
 msgid "New file created: {0}"
 msgstr "新建文件：{0}"
 
-#: extensions/gimp/gimp_wrapper.py:712
+#: extensions/gimp/gimp_wrapper.py:714
 msgid "{0} new files created"
 msgstr "{0} 个新文件创建"
 
-#: extensions/gimp/gimp_wrapper.py:716
+#: extensions/gimp/gimp_wrapper.py:718
 msgid "Failed to move new files: {0}"
 msgstr "无法移动新文件：{0}"
 
-#: extensions/gimp/gimp_wrapper.py:740
+#: extensions/gimp/gimp_wrapper.py:742
 msgid ""
 "The following files already exist and will be overwritten:\n"
 "\n"
@@ -1222,11 +1222,11 @@ msgstr ""
 "\n"
 "是否继续？"
 
-#: extensions/gimp/gimp_wrapper.py:743
+#: extensions/gimp/gimp_wrapper.py:745
 msgid "Confirm Overwrite"
 msgstr "确认覆盖"
 
-#: extensions/gimp/gimp_wrapper.py:750
+#: extensions/gimp/gimp_wrapper.py:752
 msgid "File overwrite cancelled"
 msgstr "文件覆盖已取消"
 
@@ -1382,73 +1382,183 @@ msgstr "提供给 file_browser.find() 的搜索文本无效。"
 msgid "No files found"
 msgstr "未找到任何文件"
 
-#: files/go_to_file.py:29
+#: files/go_to_file.py:83 files/go_to_file.py:102
 msgid "Go To File"
 msgstr "转到文件"
 
-#: files/go_to_file.py:45
+#: files/go_to_file.py:118
 msgid "Go To"
 msgstr "去"
 
-#: files/go_to_file.py:48
+#: files/go_to_file.py:121 files/go_to_file.py:329
 msgid "Browse..."
 msgstr "浏览..."
 
-#: files/go_to_file.py:52
+#: files/go_to_file.py:125
 msgid "Go To Last Moved"
 msgstr "转到最后移动位置"
 
-#: files/go_to_file.py:59
+#: files/go_to_file.py:132
 msgid "Go to closest file if exact match not found"
 msgstr "若未找到完全匹配项，则转至最近的文件"
 
-#: files/go_to_file.py:79
+#: files/go_to_file.py:155
 msgid "Invalid search string, please enter some text."
 msgstr "搜索字符串无效，请输入一些文本。"
 
-#: files/go_to_file.py:101
+#: files/go_to_file.py:177
 msgid "Supported files"
 msgstr "支持的文件格式"
 
-#: files/go_to_file.py:105
+#: files/go_to_file.py:181
 msgid "Image files"
 msgstr "图像文件"
 
-#: files/go_to_file.py:108
+#: files/go_to_file.py:184
 msgid "Video files"
 msgstr "视频文件"
 
-#: files/go_to_file.py:110
+#: files/go_to_file.py:186
 msgid "GIF files"
 msgstr "GIF 文件"
 
-#: files/go_to_file.py:112
+#: files/go_to_file.py:188
 msgid "PDF files"
 msgstr "PDF 文件"
 
-#: files/go_to_file.py:114
+#: files/go_to_file.py:190
 msgid "SVG files"
 msgstr "SVG 文件"
 
-#: files/go_to_file.py:116
+#: files/go_to_file.py:192
 msgid "HTML files"
 msgstr "HTML 文件"
 
-#: files/go_to_file.py:119
+#: files/go_to_file.py:195
 msgid "All files"
 msgstr "所有文件"
 
-#: files/go_to_file.py:122
+#: files/go_to_file.py:198
 msgid "Select file to go to"
 msgstr "选择要跳转的文件"
 
-#: files/go_to_file.py:141
+#: files/go_to_file.py:217
 msgid "No last moved image found."
 msgstr "未找到最近移动的媒体文件。"
 
-#: files/go_to_file.py:170
+#: files/go_to_file.py:252
 msgid "Sort by for closest search:"
 msgstr "按以下条件排序以获得最接近的搜索结果："
+
+#: files/go_to_file.py:287
+msgid "Find Related Filenames"
+msgstr "查找相关文件名"
+
+#: files/go_to_file.py:292
+msgid ""
+"Enter a base ID manually or click 'Extract from filename' to auto-extract "
+"from the filename above."
+msgstr "手动输入基础ID，或点击“从文件名提取”自动从上方文件名中提取。"
+
+#: files/go_to_file.py:301
+msgid "Base ID:"
+msgstr "基础ID："
+
+#: files/go_to_file.py:313
+msgid "Extract from filename"
+msgstr "从文件名中提取"
+
+#: files/go_to_file.py:321
+msgid "Target Directory:"
+msgstr "目标目录："
+
+#: files/go_to_file.py:336
+msgid "Current Media"
+msgstr "当前媒体"
+
+#: files/go_to_file.py:339
+msgid "Find Related"
+msgstr "查找相关"
+
+#: files/go_to_file.py:363
+msgid "Select directory to search for related files"
+msgstr "选择目录以搜索相关文件"
+
+#: files/go_to_file.py:374
+msgid "Loading current media and searching..."
+msgstr "正在加载当前媒体并搜索..."
+
+#: files/go_to_file.py:386
+msgid ""
+"Current media filename loaded. Select a target directory to find related "
+"filenames."
+msgstr "当前加载的媒体文件名。请选择目标目录以查找相关文件名。"
+
+#: files/go_to_file.py:388
+msgid "No active media file found in the current window."
+msgstr "当前窗口中未找到有效的媒体文件。"
+
+#: files/go_to_file.py:390
+msgid "Error getting current media filename: {}"
+msgstr "获取当前媒体文件名时出错：{}"
+
+#: files/go_to_file.py:443
+msgid "Please enter a filename first."
+msgstr "请先输入文件名。"
+
+#: files/go_to_file.py:449
+msgid "Base ID extracted: {}"
+msgstr "提取的基础ID：{}"
+
+#: files/go_to_file.py:451
+msgid "Could not extract base ID from filename. Please enter it manually."
+msgstr "无法从文件名中提取基础ID。请手动输入。"
+
+#: files/go_to_file.py:452
+msgid "Could not extract base ID. Please enter it manually."
+msgstr "无法提取基础ID。请手动输入。"
+
+#: files/go_to_file.py:460
+msgid "Please enter a base ID or extract it from a filename."
+msgstr "请输入基础ID或从文件名中提取。"
+
+#: files/go_to_file.py:464
+msgid "Please select a target directory to search in."
+msgstr "请选择要搜索的目标目录。"
+
+#: files/go_to_file.py:468
+msgid "Target directory does not exist."
+msgstr "目标目录不存在。"
+
+#: files/go_to_file.py:484
+msgid "Found {} related filenames"
+msgstr "找到 {} 个相关的文件名"
+
+#: files/go_to_file.py:487
+msgid "No related filenames found with base ID \"{0}\" in {1}"
+msgstr "在 {1} 中未找到基准ID为 “{0}” 的相关文件名。"
+
+#: files/go_to_file.py:537
+msgid ""
+"The directory '{0}' contains many files ({1} files found so far). Searching "
+"may take a while. Do you want to proceed?"
+msgstr "目录'{0}'包含大量文件（迄今已发现{1}个文件）。搜索可能需要一段时间。是否继续？"
+
+#: files/go_to_file.py:538
+msgid "Large Directory"
+msgstr "大型目录"
+
+#: files/go_to_file.py:547
+msgid "Search cancelled by user."
+msgstr "搜索被用户取消。"
+
+#: files/go_to_file.py:569
+msgid "Error searching directory: {}"
+msgstr "搜索目录错误：{}"
+
+#: files/go_to_file.py:581
+msgid "Opening file: {}"
+msgstr "打开文件：{}"
 
 #: files/hotkey_actions_window.py:27
 msgid "Hotkey Actions"

@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-10-14 21:15-0400\n"
-"PO-Revision-Date: 2025-10-14 21:15-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-10-20 10:57-0400\n"
+"PO-Revision-Date: 2025-10-20 10:57-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ru Team <<EMAIL>>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:108 app.py:1003 app.py:2240
+#: app.py:108 app.py:1007 app.py:2277
 msgid " Simple Image Compare "
 msgstr " Простое сравнение изображений "
 
@@ -24,201 +24,201 @@ msgstr "(Главное окно)"
 msgid "Theme switched to {0}."
 msgstr "Тема переключается на {0}."
 
-#: app.py:268 app.py:488 app.py:1032 compare/compare_wrapper.py:503
+#: app.py:269 app.py:490 app.py:1036 compare/compare_wrapper.py:503
 msgid "Set a directory to run comparison."
 msgstr "Задайте каталог для запуска сравнения."
 
-#: app.py:275
+#: app.py:276
 msgid "Toggle theme"
 msgstr "Тема переключения"
 
-#: app.py:276
+#: app.py:277
 msgid "Set directory"
 msgstr "Установите каталог"
 
-#: app.py:277
+#: app.py:278
 msgid "Add dirpath..."
 msgstr "Добавьте путь к каталогу..."
 
-#: app.py:280
+#: app.py:281
 msgid "Set search file"
 msgstr "Настройка файла поиска"
 
-#: app.py:288
+#: app.py:289
 msgid "Search text (embedding mode)"
 msgstr "Search text (режим встраивания)"
 
-#: app.py:299
+#: app.py:300
 msgid "Compare mode"
 msgstr "Сравнить режим"
 
-#: app.py:317
+#: app.py:318
 msgid "Compare faces"
 msgstr "Сравнить лица"
 
-#: app.py:321
+#: app.py:322
 msgid "Overwrite cache"
 msgstr "Перезаписывать кэш"
 
-#: app.py:325
+#: app.py:326
 msgid "Store checkpoints"
 msgstr "Контрольные точки магазина"
 
-#: app.py:329
+#: app.py:330
 msgid "Max files to compare"
 msgstr "Файлы Max для сравнения"
 
-#: app.py:335
+#: app.py:336
 msgid "Filter files by glob pattern"
 msgstr "Фильтр файлов по шаблону glob"
 
-#: app.py:342
+#: app.py:343
 msgid "Browsing mode - Sort by"
 msgstr "Режим просмотра - Сортировать по"
 
-#: app.py:349
+#: app.py:350
 msgid "Recurse subdirectories"
 msgstr "Повторяющиеся подкаталоги"
 
-#: app.py:354
+#: app.py:355
 msgid "Image resize to full window"
 msgstr "Размер изображения до полного окна"
 
-#: app.py:358
+#: app.py:359
 msgid "Search only return closest"
 msgstr "Поиск возвращается ближе всего"
 
-#: app.py:365
+#: app.py:366
 msgid "Run image compare"
 msgstr "Сравнение изображений"
 
-#: app.py:367
+#: app.py:368
 msgid "Find duplicates"
 msgstr "Найти дубликаты"
 
-#: app.py:369 image/image_details.py:66
+#: app.py:370 image/image_details.py:66
 msgid "Image details"
 msgstr "Фотографии"
 
-#: app.py:380
+#: app.py:381
 msgid "Search current image"
 msgstr "Поиск текущее изображение"
 
-#: app.py:381 utils/help_and_config.py:79
+#: app.py:382 utils/help_and_config.py:79
 msgid "Open media location"
 msgstr "Открыть местоположение мультимедиа"
 
-#: app.py:382
+#: app.py:383
 msgid "Copy image path"
 msgstr "Путь копирования изображений"
 
-#: app.py:383
+#: app.py:384
 msgid "---- DELETE ----"
 msgstr "---- УДАЛИТЬ ----"
 
-#: app.py:545
+#: app.py:547
 msgid "Confirm Quit"
 msgstr "Подтвердите выход"
 
-#: app.py:545
+#: app.py:547
 msgid "Would you like to quit the application?"
 msgstr "Вы хотите выйти из приложения?"
 
-#: app.py:675
+#: app.py:679
 msgid "Ended slideshows"
 msgstr "Конец слайдшоу"
 
-#: app.py:728 app.py:1925 app.py:1932 app.py:1936 app.py:1940 app.py:1946
-#: app.py:2066
+#: app.py:732 app.py:1962 app.py:1969 app.py:1973 app.py:1977 app.py:1983
+#: app.py:2103
 msgid "Warning"
 msgstr "Предупреждение"
 
-#: app.py:728
+#: app.py:732
 msgid "No files found in directory after refresh."
 msgstr "После обновления в каталоге не найдено ни одного файла."
 
-#: app.py:766
+#: app.py:770
 msgid "Slideshow for new images started"
 msgstr "Началось слайдшоу для новых изображений"
 
-#: app.py:768
+#: app.py:772
 msgid "Slideshow started"
 msgstr "Слайдшоу началось"
 
-#: app.py:771
+#: app.py:775
 msgid "Slideshows ended"
 msgstr "Слайдшоу закончились"
 
-#: app.py:784
+#: app.py:788
 msgid "Browsing mode set."
 msgstr "Установлен режим просмотра."
 
-#: app.py:828 utils/constants.py:299
+#: app.py:832 utils/constants.py:299
 msgid "View Media Details"
 msgstr "Посмотреть детали СМИ"
 
-#: app.py:829
+#: app.py:833
 msgid "Hide Media"
 msgstr "Скрыть медиа"
 
-#: app.py:830
+#: app.py:834
 msgid "Remove from Marks"
 msgstr "Удалить из отметок"
 
-#: app.py:830
+#: app.py:834
 msgid "Add to Marks"
 msgstr "Добавить к отметкам"
 
-#: app.py:832
+#: app.py:836
 msgid "Remove from Favorites"
 msgstr "Удалить из избранного"
 
-#: app.py:832
+#: app.py:836
 msgid "Add to Favorites"
 msgstr "Добавить в избранное"
 
-#: app.py:835
+#: app.py:839
 msgid "Open in GIMP"
 msgstr "Открыть в GIMP"
 
-#: app.py:836 image/image_details.py:195 utils/constants.py:305
+#: app.py:840 image/image_details.py:195 utils/constants.py:305
 msgid "Run Image Generation"
 msgstr "Поколение изображений"
 
-#: app.py:837
+#: app.py:841
 msgid "Show Source Image"
 msgstr "Показать исходное изображение"
 
-#: app.py:838
+#: app.py:842
 msgid "Find Related Images"
 msgstr "Найти похожие изображения"
 
-#: app.py:839
+#: app.py:843
 msgid "Set Marks from Downstream Related Images"
 msgstr "Установить метки из нижестоящих связанных изображений"
 
-#: app.py:841
+#: app.py:845
 msgid "Set Current Image as Search Image"
 msgstr "Установить текущее изображение в качестве изображения для поиска"
 
-#: app.py:842
+#: app.py:846
 msgid "Add Current Image to Negative Search"
 msgstr "Добавить текущее изображение к отрицательному поиску"
 
-#: app.py:843
+#: app.py:847
 msgid "Run Refacdir"
 msgstr "Запустить RefacDir"
 
-#: app.py:861
+#: app.py:865
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr ""
 "(Откройте это изображение как часть каталога, чтобы увидеть детали индекса)."
 
-#: app.py:894 app.py:1602
+#: app.py:898 app.py:1606
 msgid "Many Files"
 msgstr "Много файлов"
 
-#: app.py:922
+#: app.py:926
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
@@ -228,119 +228,119 @@ msgstr ""
 "большим количеством файлов на внешнем носителе, что может привести к "
 "замедлению загрузки. Подтвердите, что вы хотите загрузить весь каталог."
 
-#: app.py:923
+#: app.py:927
 msgid "Large Directory Detected: {0}"
 msgstr "Обнаружен большой каталог: {0}"
 
-#: app.py:953
+#: app.py:957
 msgid "No downstream related image(s) found in {0}"
 msgstr "Не найдено ни одного изображения, связанного с течением, в {0}"
 
-#: app.py:975
+#: app.py:979
 msgid "{0} file marks set"
 msgstr "{0} файловые метки"
 
-#: app.py:981
+#: app.py:985
 msgid "Help and Config"
 msgstr "Помощь и конфигурация"
 
-#: app.py:1075
+#: app.py:1079
 msgid "Set Image Comparison Directory"
 msgstr "Установите каталог сравнения изображений"
 
-#: app.py:1112
+#: app.py:1116
 msgid "Counter limit must be an integer value."
 msgstr "Контрлимит должен быть целочисленным значением."
 
-#: app.py:1112 app.py:1128
+#: app.py:1116 app.py:1132
 msgid "Invalid Setting"
 msgstr "Недействительная настройка"
 
-#: app.py:1128
+#: app.py:1132
 msgid "No image selected."
 msgstr "Изображение не выбрано."
 
-#: app.py:1167
+#: app.py:1171
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr ""
 "Режим сравнения должен быть настроен на режим встраивания для встраивания "
 "текста поиска"
 
-#: app.py:1171
+#: app.py:1175
 msgid "Select image file"
 msgstr "Выберите файл изображения"
 
-#: app.py:1200
+#: app.py:1204
 msgid "Somehow, the search file is invalid"
 msgstr "Каким-то образом файл поиска недействителен."
 
-#: app.py:1286 app.py:1311
+#: app.py:1290 app.py:1315
 msgid "Failed to get active image filepath"
 msgstr "Не удалось получить активный файлообмен"
 
-#: app.py:1396
+#: app.py:1400
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% полный"
 
-#: app.py:1402
+#: app.py:1406
 msgid "Confirm comparison"
 msgstr "Подтверждает сравнение"
 
-#: app.py:1403
+#: app.py:1407
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 "Базовый каталог не был задан, будет использоваться текущий базовый каталог "
 
-#: app.py:1404
+#: app.py:1408
 msgid "Are you sure you want to proceed?"
 msgstr "Вы уверены, что хотите продолжить?"
 
-#: app.py:1427
+#: app.py:1431
 msgid "Error running compare"
 msgstr "Сравнение ошибок"
 
-#: app.py:1460
+#: app.py:1464
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "Удаление блокировки после перехода слайд-шоу\n"
 "предотвратило добавление метки"
 
-#: app.py:1471
+#: app.py:1475
 msgid "Mark removed. Remaining: {0}"
 msgstr "Отметка удалена. Осталось: {0}"
 
-#: app.py:1475
+#: app.py:1479
 msgid "Mark added. Total set: {0}"
 msgstr "Марк добавил. Полный набор: {0}"
 
-#: app.py:1492
+#: app.py:1496
 msgid "Marks added. Total set: {0}"
 msgstr "Маркс добавил. Полный набор: {0}"
 
-#: app.py:1501
+#: app.py:1505
 msgid "First sorted mark"
 msgstr "Первый сортированный знак"
 
-#: app.py:1508
+#: app.py:1512
 msgid "Only one marked file set."
 msgstr "Только один отмеченный файл."
 
-#: app.py:1520
+#: app.py:1524
 msgid "Including marks: {0}"
 msgstr "Включая отметки: {0}"
 
-#: app.py:1528
+#: app.py:1532
 msgid "Move {0} Marked File(s)"
 msgstr "Переместить {0} отмеченный файл(ы)"
 
-#: app.py:1566
+#: app.py:1570
 msgid "NO_MARKS_SET"
 msgstr ""
 "Установлено {0} отметок (ожидалось >={1}).\n"
 "Для установки метки используйте Shift+M."
 
-#: app.py:1602
+#: app.py:1606
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
@@ -348,52 +348,52 @@ msgstr ""
 "Вы уверены, что хотите запустить все превалидации в каталоге {0}? Это может "
 "занять некоторое время."
 
-#: app.py:1617
+#: app.py:1621
 msgid "Prevalidations now running"
 msgstr "В настоящее время проводятся проверки"
 
-#: app.py:1617
+#: app.py:1621
 msgid "Prevalidations turned off"
 msgstr "Протесты отключились"
 
-#: app.py:1699
+#: app.py:1736
 msgid "File not found"
 msgstr "Файл не найден"
 
-#: app.py:1699
+#: app.py:1736
 msgid "No file was found for the search text: \"{0}\""
 msgstr "Файл для поискового текста не найден: \"{0}\""
 
-#: app.py:1710
+#: app.py:1747
 msgid "No image selected"
 msgstr "Изображение не выбрано"
 
-#: app.py:1710
+#: app.py:1747
 msgid "No image was selected for comparison"
 msgstr "Изображение не было выбрано для сравнения"
 
-#: app.py:1724
+#: app.py:1761
 msgid "No Text Search Presets Found"
 msgstr "Предустановки текстового поиска не найдены"
 
-#: app.py:1725
+#: app.py:1762
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 "Не найдено текстового встраивания предустановок поиска. Установите их в "
 "файле config.json."
 
-#: app.py:1822
+#: app.py:1859
 msgid "Opening media file: {0}"
 msgstr "Открытие медиафайла: {0}"
 
-#: app.py:1825
+#: app.py:1862
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr ""
 "Не удалось открыть текущий медиафайл, невозможно получить действительный "
 "путь к файлу"
 
-#: app.py:1830
+#: app.py:1867
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
@@ -401,17 +401,17 @@ msgstr ""
 "Интеграция с GIMP не настроена. Пожалуйста, установите „gimp_exe_loc“ в "
 "config.json."
 
-#: app.py:1830
+#: app.py:1867
 msgid "GIMP Integration Error"
 msgstr "Ошибка интеграции GIMP"
 
-#: app.py:1840
+#: app.py:1877
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 "Не удалось открыть текущий файл в GIMP, не смог получить действительный "
 "файлообменник"
 
-#: app.py:1857
+#: app.py:1894
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -419,42 +419,42 @@ msgstr ""
 "Скрыть текущее изображение.\n"
 "Чтобы скрыться, нажмите Shift + B."
 
-#: app.py:1862
+#: app.py:1899
 msgid "Cleared all hidden images."
 msgstr "Очистили все скрытые изображения."
 
-#: app.py:1870
+#: app.py:1907
 msgid "DELETE_LOCK"
 msgstr ""
 "Удалить замок после слайд-шоу\n"
 "Переход предотвратил удаление"
 
-#: app.py:1888
+#: app.py:1925
 msgid "Invalid action, no files found to delete"
 msgstr "Недействительные действия, файлы не найдены для удаления"
 
-#: app.py:1891
+#: app.py:1928
 msgid "Invalid action, search image not found"
 msgstr "Недействительное действие, поиск изображения не найден"
 
-#: app.py:1906
+#: app.py:1943
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 "Не удалось удалить текущий файл, не смог получить действительный путь файла"
 
-#: app.py:1913
+#: app.py:1950
 msgid "Removing directory: {0}"
 msgstr "Удаление каталога: {0}"
 
-#: app.py:1915
+#: app.py:1952
 msgid "Removing file: {0}"
 msgstr "Удаление файла: {0}"
 
-#: app.py:1925 app.py:1946
+#: app.py:1962 app.py:1983
 msgid "Failed to delete item: {0}"
 msgstr "Не удалось удалить элемент: {0}"
 
-#: app.py:1929
+#: app.py:1966
 msgid ""
 "Failed to move directory to {0}. Double check the trash folder is set "
 "properly in config.json."
@@ -462,7 +462,7 @@ msgstr ""
 "Не удалось переместить каталог в {0}. Дважды проверьте, правильно ли "
 "настроена папка «Корзина» в файле config.json."
 
-#: app.py:1931
+#: app.py:1968
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
@@ -470,7 +470,7 @@ msgstr ""
 "Не удалось отправить файл в {0}. Дважды проверьте, правильно ли настроена "
 "папка «Корзина» в файле config.json."
 
-#: app.py:1937
+#: app.py:1974
 msgid ""
 "Failed to move directory to the trash. Either pip install send2trash or set "
 "a specific trash folder in config.json."
@@ -478,7 +478,7 @@ msgstr ""
 "Не удалось переместить каталог в корзину. Установите pip install send2trash "
 "или укажите конкретную папку корзины в config.json."
 
-#: app.py:1941
+#: app.py:1978
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -487,83 +487,83 @@ msgstr ""
 "установите pip send2trash, либо задайте конкретную папку для корзины в "
 "config.json."
 
-#: app.py:1951
+#: app.py:1988
 msgid "Invalid directory"
 msgstr "Недопустимый каталог"
 
-#: app.py:1951
+#: app.py:1988
 msgid "No valid base directory to delete"
 msgstr "Нет действительного базового каталога для удаления"
 
-#: app.py:1962
+#: app.py:1999
 msgid "Cannot Delete Directory"
 msgstr "Невозможно удалить каталог"
 
-#: app.py:1966
+#: app.py:2003
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "Вы уверены, что хотите удалить каталог и все его содержимое?"
 
-#: app.py:1968
+#: app.py:2005
 msgid "Contents to be deleted:"
 msgstr "Содержание, подлежащее удалению:"
 
-#: app.py:1970
+#: app.py:2007
 msgid "Confirm Delete Directory"
 msgstr "Подтвердить удаление каталога"
 
-#: app.py:2004
+#: app.py:2041
 msgid "Delete Directory Error"
 msgstr "Ошибка удаления каталога"
 
-#: app.py:2006
+#: app.py:2043
 msgid "Directory {0} deleted."
 msgstr "Каталог {0} удален."
 
-#: app.py:2022
+#: app.py:2059
 msgid "Invalid target filepath for replacement: "
 msgstr "Недействительный целевой файловый путь для замены: "
 
-#: app.py:2026
+#: app.py:2063
 msgid "Moved search image to "
 msgstr "Перемещенное поисковое изображение на "
 
-#: app.py:2064
+#: app.py:2101
 msgid "Running image gen: "
 msgstr "Запуск Image Gen: "
 
-#: app.py:2066
+#: app.py:2103
 msgid "Error running image generation:"
 msgstr "Ошибка генерации изображений:"
 
-#: app.py:2074
+#: app.py:2111
 msgid "Running refacdir"
 msgstr "Запуск факультатива"
 
-#: app.py:2079 auth/app_startup_auth.py:141 auth/password_dialog.py:249
-#: extensions/gimp/gimp_wrapper.py:687 extensions/gimp/gimp_wrapper.py:716
+#: app.py:2116 auth/app_startup_auth.py:141 auth/password_dialog.py:249
+#: extensions/gimp/gimp_wrapper.py:689 extensions/gimp/gimp_wrapper.py:718
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "ошибка"
 
-#: app.py:2175
+#: app.py:2212
 msgid "GROUP_DETAILS"
 msgstr ""
 "Группа {0} {1}\n"
 "Размер: {2}"
 
-#: app.py:2179
+#: app.py:2216
 msgid "No image files found"
 msgstr "Файлы изображений не найдены"
 
-#: app.py:2181
+#: app.py:2218
 msgid "1 image file found"
 msgstr "Найден 1 файл изображения"
 
-#: app.py:2182
+#: app.py:2219
 msgid "{0} image files found"
 msgstr "Найдено {0} файлов изображений"
 
-#: app.py:2184
+#: app.py:2221
 msgid "(filtered)"
 msgstr "(фильтровано)"
 
@@ -1200,21 +1200,21 @@ msgstr "Открытие {0} в существующем процессе GIMP"
 msgid "Opening file in GIMP: {0}"
 msgstr "Открытие файла в GIMP: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:422 extensions/gimp/gimp_wrapper.py:480
+#: extensions/gimp/gimp_wrapper.py:423 extensions/gimp/gimp_wrapper.py:482
 msgid "GIMP Error"
 msgstr "Ошибка GIMP"
 
-#: extensions/gimp/gimp_wrapper.py:423
+#: extensions/gimp/gimp_wrapper.py:424
 msgid "Failed to open file in GIMP: {0}"
 msgstr "Не удалось открыть файл в GIMP: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:450
+#: extensions/gimp/gimp_wrapper.py:451
 msgid "Opening {0} in GIMP (using temporary directory for performance)"
 msgstr ""
 "Открытие {0} в GIMP (с использованием временного каталога для повышения "
 "производительности)"
 
-#: extensions/gimp/gimp_wrapper.py:481
+#: extensions/gimp/gimp_wrapper.py:483
 msgid ""
 "Failed to open file in GIMP: {0}\n"
 "\n"
@@ -1224,43 +1224,43 @@ msgstr ""
 "\n"
 "Убедитесь, что GIMP правильно установлен и настроен."
 
-#: extensions/gimp/gimp_wrapper.py:499
+#: extensions/gimp/gimp_wrapper.py:501
 msgid "Setup Error"
 msgstr "Ошибка настройки"
 
-#: extensions/gimp/gimp_wrapper.py:500
+#: extensions/gimp/gimp_wrapper.py:502
 msgid "Failed to set up temporary directory: {0}"
 msgstr "Не удалось создать временный каталог: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:552
+#: extensions/gimp/gimp_wrapper.py:554
 msgid "File Processing Error"
 msgstr "Ошибка обработки файла"
 
-#: extensions/gimp/gimp_wrapper.py:553
+#: extensions/gimp/gimp_wrapper.py:555
 msgid "Error processing files after GIMP completion: {0}"
 msgstr "Ошибка при обработке файлов после завершения работы GIMP: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:683
+#: extensions/gimp/gimp_wrapper.py:685
 msgid "File updated: {0}"
 msgstr "Файл обновлен: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:687
+#: extensions/gimp/gimp_wrapper.py:689
 msgid "Failed to update file: {0}"
 msgstr "Не удалось обновить файл: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:710
+#: extensions/gimp/gimp_wrapper.py:712
 msgid "New file created: {0}"
 msgstr "Создан новый файл: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:712
+#: extensions/gimp/gimp_wrapper.py:714
 msgid "{0} new files created"
 msgstr "{0} новых файлов создано"
 
-#: extensions/gimp/gimp_wrapper.py:716
+#: extensions/gimp/gimp_wrapper.py:718
 msgid "Failed to move new files: {0}"
 msgstr "Не удалось переместить новые файлы: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:740
+#: extensions/gimp/gimp_wrapper.py:742
 msgid ""
 "The following files already exist and will be overwritten:\n"
 "\n"
@@ -1274,11 +1274,11 @@ msgstr ""
 "\n"
 "Хотите продолжить?"
 
-#: extensions/gimp/gimp_wrapper.py:743
+#: extensions/gimp/gimp_wrapper.py:745
 msgid "Confirm Overwrite"
 msgstr "Подтвердить перезапись"
 
-#: extensions/gimp/gimp_wrapper.py:750
+#: extensions/gimp/gimp_wrapper.py:752
 msgid "File overwrite cancelled"
 msgstr "Перезапись файла отменена"
 
@@ -1434,73 +1434,191 @@ msgstr "Текст для поиска, переданный в file_browser.fin
 msgid "No files found"
 msgstr "Файлы не найдены"
 
-#: files/go_to_file.py:29
+#: files/go_to_file.py:83 files/go_to_file.py:102
 msgid "Go To File"
 msgstr "Перейти к файлу"
 
-#: files/go_to_file.py:45
+#: files/go_to_file.py:118
 msgid "Go To"
 msgstr "Иди"
 
-#: files/go_to_file.py:48
+#: files/go_to_file.py:121 files/go_to_file.py:329
 msgid "Browse..."
 msgstr "Просмотр..."
 
-#: files/go_to_file.py:52
+#: files/go_to_file.py:125
 msgid "Go To Last Moved"
 msgstr "Перейти к последнему перемещению"
 
-#: files/go_to_file.py:59
+#: files/go_to_file.py:132
 msgid "Go to closest file if exact match not found"
 msgstr "Перейти к ближайшему файлу, если точное совпадение не найдено"
 
-#: files/go_to_file.py:79
+#: files/go_to_file.py:155
 msgid "Invalid search string, please enter some text."
 msgstr "Неверная строка поиска, пожалуйста, введите текст."
 
-#: files/go_to_file.py:101
+#: files/go_to_file.py:177
 msgid "Supported files"
 msgstr "Поддерживаемые файлы"
 
-#: files/go_to_file.py:105
+#: files/go_to_file.py:181
 msgid "Image files"
 msgstr "Изображения файлы"
 
-#: files/go_to_file.py:108
+#: files/go_to_file.py:184
 msgid "Video files"
 msgstr "Видеофайлы"
 
-#: files/go_to_file.py:110
+#: files/go_to_file.py:186
 msgid "GIF files"
 msgstr "GIF Файлы"
 
-#: files/go_to_file.py:112
+#: files/go_to_file.py:188
 msgid "PDF files"
 msgstr "PDF файлы"
 
-#: files/go_to_file.py:114
+#: files/go_to_file.py:190
 msgid "SVG files"
 msgstr "SVG Файлы"
 
-#: files/go_to_file.py:116
+#: files/go_to_file.py:192
 msgid "HTML files"
 msgstr "HTML файлы"
 
-#: files/go_to_file.py:119
+#: files/go_to_file.py:195
 msgid "All files"
 msgstr "Все файлы"
 
-#: files/go_to_file.py:122
+#: files/go_to_file.py:198
 msgid "Select file to go to"
 msgstr "Выберите файл, в который нужно перейти"
 
-#: files/go_to_file.py:141
+#: files/go_to_file.py:217
 msgid "No last moved image found."
 msgstr "Последний перемещенный медиафайл не найден."
 
-#: files/go_to_file.py:170
+#: files/go_to_file.py:252
 msgid "Sort by for closest search:"
 msgstr "Сортировать по ближайшему поиску:"
+
+#: files/go_to_file.py:287
+msgid "Find Related Filenames"
+msgstr "Найти связанные имена файлов"
+
+#: files/go_to_file.py:292
+msgid ""
+"Enter a base ID manually or click 'Extract from filename' to auto-extract "
+"from the filename above."
+msgstr ""
+"Введите базовый идентификатор вручную или нажмите «Извлечь из имени файла», "
+"чтобы автоматически извлечь его из имени файла выше."
+
+#: files/go_to_file.py:301
+msgid "Base ID:"
+msgstr "Идентификатор базы:"
+
+#: files/go_to_file.py:313
+msgid "Extract from filename"
+msgstr "Выдержка из имени файла"
+
+#: files/go_to_file.py:321
+msgid "Target Directory:"
+msgstr "Целевой каталог:"
+
+#: files/go_to_file.py:336
+msgid "Current Media"
+msgstr "Текущие СМИ"
+
+#: files/go_to_file.py:339
+msgid "Find Related"
+msgstr "Найти похожие"
+
+#: files/go_to_file.py:363
+msgid "Select directory to search for related files"
+msgstr "Выберите каталог для поиска связанных файлов"
+
+#: files/go_to_file.py:374
+msgid "Loading current media and searching..."
+msgstr "Загрузка текущих медиафайлов и поиск..."
+
+#: files/go_to_file.py:386
+msgid ""
+"Current media filename loaded. Select a target directory to find related "
+"filenames."
+msgstr ""
+"Текущее имя загруженного медиафайла. Выберите целевой каталог, чтобы найти "
+"связанные имена файлов."
+
+#: files/go_to_file.py:388
+msgid "No active media file found in the current window."
+msgstr "В текущем окне не найдено ни одного активного медиафайла."
+
+#: files/go_to_file.py:390
+msgid "Error getting current media filename: {}"
+msgstr "Ошибка при получении текущего имени медиафайла: {}"
+
+#: files/go_to_file.py:443
+msgid "Please enter a filename first."
+msgstr "Сначала введите имя файла."
+
+#: files/go_to_file.py:449
+msgid "Base ID extracted: {}"
+msgstr "Извлеченный базовый ID: {}"
+
+#: files/go_to_file.py:451
+msgid "Could not extract base ID from filename. Please enter it manually."
+msgstr ""
+"Не удалось извлечь базовый идентификатор из имени файла. Введите его "
+"вручную."
+
+#: files/go_to_file.py:452
+msgid "Could not extract base ID. Please enter it manually."
+msgstr "Не удалось извлечь базовый идентификатор. Введите его вручную."
+
+#: files/go_to_file.py:460
+msgid "Please enter a base ID or extract it from a filename."
+msgstr "Введите базовый идентификатор или извлеките его из имени файла."
+
+#: files/go_to_file.py:464
+msgid "Please select a target directory to search in."
+msgstr "Выберите целевой каталог для поиска."
+
+#: files/go_to_file.py:468
+msgid "Target directory does not exist."
+msgstr "Целевой каталог не существует."
+
+#: files/go_to_file.py:484
+msgid "Found {} related filenames"
+msgstr "Найдено {} связанных имен файлов"
+
+#: files/go_to_file.py:487
+msgid "No related filenames found with base ID \"{0}\" in {1}"
+msgstr "Не найдено связанных имен файлов с базовым ID «{0}» в {1}"
+
+#: files/go_to_file.py:537
+msgid ""
+"The directory '{0}' contains many files ({1} files found so far). Searching "
+"may take a while. Do you want to proceed?"
+msgstr ""
+"В каталоге «{0}» содержится много файлов (на данный момент найдено {1} "
+"файлов). Поиск может занять некоторое время. Продолжить?"
+
+#: files/go_to_file.py:538
+msgid "Large Directory"
+msgstr "Большой каталог"
+
+#: files/go_to_file.py:547
+msgid "Search cancelled by user."
+msgstr "Поиск отменен пользователем."
+
+#: files/go_to_file.py:569
+msgid "Error searching directory: {}"
+msgstr "Ошибка при поиске каталога: {}"
+
+#: files/go_to_file.py:581
+msgid "Opening file: {}"
+msgstr "Открытие файла: {}"
 
 #: files/hotkey_actions_window.py:27
 msgid "Hotkey Actions"

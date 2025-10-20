@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-10-14 21:15-0400\n"
-"PO-Revision-Date: 2025-10-14 21:15-0400\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2025-10-20 10:57-0400\n"
+"PO-Revision-Date: 2025-10-20 10:57-0400\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: pt Team <<EMAIL>>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:108 app.py:1003 app.py:2240
+#: app.py:108 app.py:1007 app.py:2277
 msgid " Simple Image Compare "
 msgstr " Comparação simples de imagens "
 
@@ -24,202 +24,202 @@ msgstr "(Janela principal)"
 msgid "Theme switched to {0}."
 msgstr "O tema mudou para {0}."
 
-#: app.py:268 app.py:488 app.py:1032 compare/compare_wrapper.py:503
+#: app.py:269 app.py:490 app.py:1036 compare/compare_wrapper.py:503
 msgid "Set a directory to run comparison."
 msgstr "Definir um diretório para executar a comparação."
 
-#: app.py:275
+#: app.py:276
 msgid "Toggle theme"
 msgstr "Alternar o tema"
 
-#: app.py:276
+#: app.py:277
 msgid "Set directory"
 msgstr "Definir diretório"
 
-#: app.py:277
+#: app.py:278
 msgid "Add dirpath..."
 msgstr "Adicionar caminho de direção..."
 
-#: app.py:280
+#: app.py:281
 msgid "Set search file"
 msgstr "Definir arquivo de pesquisa"
 
-#: app.py:288
+#: app.py:289
 msgid "Search text (embedding mode)"
 msgstr "Texto da pesquisa (modo de inclusão)"
 
-#: app.py:299
+#: app.py:300
 msgid "Compare mode"
 msgstr "Modo de comparação"
 
-#: app.py:317
+#: app.py:318
 msgid "Compare faces"
 msgstr "Comparar rostos"
 
-#: app.py:321
+#: app.py:322
 msgid "Overwrite cache"
 msgstr "Substituir a cache"
 
-#: app.py:325
+#: app.py:326
 msgid "Store checkpoints"
 msgstr "Armazenar pontos de controlo"
 
-#: app.py:329
+#: app.py:330
 msgid "Max files to compare"
 msgstr "Max arquivos para comparar"
 
-#: app.py:335
+#: app.py:336
 msgid "Filter files by glob pattern"
 msgstr "Filtrar os arquivos pelo padrão glob"
 
-#: app.py:342
+#: app.py:343
 msgid "Browsing mode - Sort by"
 msgstr "Modo de navegação - Ordenar por"
 
-#: app.py:349
+#: app.py:350
 msgid "Recurse subdirectories"
 msgstr "Recursar subdiretórios"
 
-#: app.py:354
+#: app.py:355
 msgid "Image resize to full window"
 msgstr "Redimensionar a imagem para a janela inteira"
 
-#: app.py:358
+#: app.py:359
 msgid "Search only return closest"
 msgstr "Pesquisar apenas o mais próximo"
 
-#: app.py:365
+#: app.py:366
 msgid "Run image compare"
 msgstr "Executar a comparação de imagens"
 
-#: app.py:367
+#: app.py:368
 msgid "Find duplicates"
 msgstr "Procurar duplicatas"
 
-#: app.py:369 image/image_details.py:66
+#: app.py:370 image/image_details.py:66
 msgid "Image details"
 msgstr "Detalhes da imagem"
 
-#: app.py:380
+#: app.py:381
 msgid "Search current image"
 msgstr "Procurar a imagem actual"
 
-#: app.py:381 utils/help_and_config.py:79
+#: app.py:382 utils/help_and_config.py:79
 msgid "Open media location"
 msgstr "Abrir localização de mídia"
 
-#: app.py:382
+#: app.py:383
 msgid "Copy image path"
 msgstr "Copiar o caminho da imagem"
 
-#: app.py:383
+#: app.py:384
 msgid "---- DELETE ----"
 msgstr "---- DELETE ----"
 
-#: app.py:545
+#: app.py:547
 msgid "Confirm Quit"
 msgstr "Confirmar Sair"
 
-#: app.py:545
+#: app.py:547
 msgid "Would you like to quit the application?"
 msgstr "Gostaria de sair da aplicação?"
 
-#: app.py:675
+#: app.py:679
 msgid "Ended slideshows"
 msgstr "Apresentações de diapositivos terminadas"
 
-#: app.py:728 app.py:1925 app.py:1932 app.py:1936 app.py:1940 app.py:1946
-#: app.py:2066
+#: app.py:732 app.py:1962 app.py:1969 app.py:1973 app.py:1977 app.py:1983
+#: app.py:2103
 msgid "Warning"
 msgstr "Atenção"
 
-#: app.py:728
+#: app.py:732
 msgid "No files found in directory after refresh."
 msgstr "Não foram encontrados ficheiros no diretório após a atualização."
 
-#: app.py:766
+#: app.py:770
 msgid "Slideshow for new images started"
 msgstr "Iniciada a apresentação para novas imagens"
 
-#: app.py:768
+#: app.py:772
 msgid "Slideshow started"
 msgstr "Apresentação iniciada"
 
-#: app.py:771
+#: app.py:775
 msgid "Slideshows ended"
 msgstr "Apresentação terminada"
 
-#: app.py:784
+#: app.py:788
 msgid "Browsing mode set."
 msgstr "Modo de navegação definido."
 
-#: app.py:828 utils/constants.py:299
+#: app.py:832 utils/constants.py:299
 msgid "View Media Details"
 msgstr "Ver detalhes dos meios"
 
-#: app.py:829
+#: app.py:833
 msgid "Hide Media"
 msgstr "Ocultar mídia"
 
-#: app.py:830
+#: app.py:834
 msgid "Remove from Marks"
 msgstr "Remover das marcas"
 
-#: app.py:830
+#: app.py:834
 msgid "Add to Marks"
 msgstr "Adicionar às marcas"
 
-#: app.py:832
+#: app.py:836
 msgid "Remove from Favorites"
 msgstr "Remover dos Favoritos"
 
-#: app.py:832
+#: app.py:836
 msgid "Add to Favorites"
 msgstr "Adicionar aos Favoritos"
 
-#: app.py:835
+#: app.py:839
 msgid "Open in GIMP"
 msgstr "Abrir no GIMP"
 
-#: app.py:836 image/image_details.py:195 utils/constants.py:305
+#: app.py:840 image/image_details.py:195 utils/constants.py:305
 msgid "Run Image Generation"
 msgstr "Executar a Geração de Imagens"
 
-#: app.py:837
+#: app.py:841
 msgid "Show Source Image"
 msgstr "Mostrar imagem original"
 
-#: app.py:838
+#: app.py:842
 msgid "Find Related Images"
 msgstr "Encontrar imagens relacionadas"
 
-#: app.py:839
+#: app.py:843
 msgid "Set Marks from Downstream Related Images"
 msgstr "Definir marcas a partir de imagens relacionadas a jusante"
 
-#: app.py:841
+#: app.py:845
 msgid "Set Current Image as Search Image"
 msgstr "Definir imagem atual como imagem de pesquisa"
 
-#: app.py:842
+#: app.py:846
 msgid "Add Current Image to Negative Search"
 msgstr "Adicionar imagem atual à pesquisa negativa"
 
-#: app.py:843
+#: app.py:847
 msgid "Run Refacdir"
 msgstr "Executar RefacDir"
 
-#: app.py:861
+#: app.py:865
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr ""
 "(Abra esta imagem como parte de um diretório para ver os detalhes do "
 "índice)."
 
-#: app.py:894 app.py:1602
+#: app.py:898 app.py:1606
 msgid "Many Files"
 msgstr "Muitos arquivos"
 
-#: app.py:922
+#: app.py:926
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
@@ -230,120 +230,120 @@ msgstr ""
 " resultar num tempo de carregamento lento. Confirme se deseja carregar o "
 "diretório completo."
 
-#: app.py:923
+#: app.py:927
 msgid "Large Directory Detected: {0}"
 msgstr "Grande diretório detetado: {0}"
 
-#: app.py:953
+#: app.py:957
 msgid "No downstream related image(s) found in {0}"
 msgstr "Não foram encontradas imagens relacionadas com downstream em {0}"
 
-#: app.py:975
+#: app.py:979
 msgid "{0} file marks set"
 msgstr "{0} as marcas de ficheiro são definidas"
 
-#: app.py:981
+#: app.py:985
 msgid "Help and Config"
 msgstr "Ajuda e Configuração"
 
-#: app.py:1075
+#: app.py:1079
 msgid "Set Image Comparison Directory"
 msgstr "Configurar diretório de comparação de imagens"
 
-#: app.py:1112
+#: app.py:1116
 msgid "Counter limit must be an integer value."
 msgstr "O limite do contador deve ser um valor inteiro."
 
-#: app.py:1112 app.py:1128
+#: app.py:1116 app.py:1132
 msgid "Invalid Setting"
 msgstr "Configuração inválida"
 
-#: app.py:1128
+#: app.py:1132
 msgid "No image selected."
 msgstr "Nenhuma imagem selecionada."
 
-#: app.py:1167
+#: app.py:1171
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr ""
 "O modo de comparação deve ser definido para um modo de incorporação para "
 "pesquisar incorporações de texto"
 
-#: app.py:1171
+#: app.py:1175
 msgid "Select image file"
 msgstr "Selecionar arquivo de imagem"
 
-#: app.py:1200
+#: app.py:1204
 msgid "Somehow, the search file is invalid"
 msgstr "De alguma forma, o arquivo de pesquisa é inválido"
 
-#: app.py:1286 app.py:1311
+#: app.py:1290 app.py:1315
 msgid "Failed to get active image filepath"
 msgstr "Falha ao obter o caminho ativo da imagem"
 
-#: app.py:1396
+#: app.py:1400
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% completo"
 
-#: app.py:1402
+#: app.py:1406
 msgid "Confirm comparison"
 msgstr "Confirmar comparação"
 
-#: app.py:1403
+#: app.py:1407
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 "Se não tiver sido definido nenhum diretório de base, será utilizado o "
 "diretório de base atual de "
 
-#: app.py:1404
+#: app.py:1408
 msgid "Are you sure you want to proceed?"
 msgstr "Tens a certeza que queres continuar?"
 
-#: app.py:1427
+#: app.py:1431
 msgid "Error running compare"
 msgstr "Erro ao executar a comparação"
 
-#: app.py:1460
+#: app.py:1464
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "Eliminar o bloqueio após a apresentação \n"
 "transição impediu a adição de marca"
 
-#: app.py:1471
+#: app.py:1475
 msgid "Mark removed. Remaining: {0}"
 msgstr "Marca removida. Restante: {0}"
 
-#: app.py:1475
+#: app.py:1479
 msgid "Mark added. Total set: {0}"
 msgstr "Marca adicionada. Conjunto total: {0}"
 
-#: app.py:1492
+#: app.py:1496
 msgid "Marks added. Total set: {0}"
 msgstr "Marcas adicionadas. Conjunto total: {0}"
 
-#: app.py:1501
+#: app.py:1505
 msgid "First sorted mark"
 msgstr "Primeira marca ordenada"
 
-#: app.py:1508
+#: app.py:1512
 msgid "Only one marked file set."
 msgstr "Apenas um ficheiro marcado."
 
-#: app.py:1520
+#: app.py:1524
 msgid "Including marks: {0}"
 msgstr "Incluindo marcas: {0}"
 
-#: app.py:1528
+#: app.py:1532
 msgid "Move {0} Marked File(s)"
 msgstr "Mover {0} Ficheiro(s) marcado(s)"
 
-#: app.py:1566
+#: app.py:1570
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0} marcas foram definidas (>={1} esperado).\n"
 "Utilize Shift+M para definir uma marca."
 
-#: app.py:1602
+#: app.py:1606
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
@@ -351,52 +351,52 @@ msgstr ""
 "Tem a certeza de que pretende executar todas as prevalidações na diretoria "
 "{0} ? Isto pode demorar algum tempo."
 
-#: app.py:1617
+#: app.py:1621
 msgid "Prevalidations now running"
 msgstr "Prevalidações em execução"
 
-#: app.py:1617
+#: app.py:1621
 msgid "Prevalidations turned off"
 msgstr "Prevalidações desligadas"
 
-#: app.py:1699
+#: app.py:1736
 msgid "File not found"
 msgstr "Ficheiro não encontrado"
 
-#: app.py:1699
+#: app.py:1736
 msgid "No file was found for the search text: \"{0}\""
 msgstr "Não foi encontrado nenhum ficheiro para o texto de pesquisa: “{0}”"
 
-#: app.py:1710
+#: app.py:1747
 msgid "No image selected"
 msgstr "Nenhuma imagem selecionada"
 
-#: app.py:1710
+#: app.py:1747
 msgid "No image was selected for comparison"
 msgstr "Nenhuma imagem foi selecionada para comparação"
 
-#: app.py:1724
+#: app.py:1761
 msgid "No Text Search Presets Found"
 msgstr "Nenhuma Predefinição de Pesquisa de Texto Encontrada"
 
-#: app.py:1725
+#: app.py:1762
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 "Não foram encontradas predefinições de pesquisa de incorporação de texto. "
 "Defina-as no ficheiro config.json."
 
-#: app.py:1822
+#: app.py:1859
 msgid "Opening media file: {0}"
 msgstr "Abrindo ficheiro de mídia: {0}"
 
-#: app.py:1825
+#: app.py:1862
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr ""
 "Não foi possível abrir o ficheiro multimédia atual, impossível obter o "
 "caminho válido do ficheiro"
 
-#: app.py:1830
+#: app.py:1867
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
@@ -404,17 +404,17 @@ msgstr ""
 "A integração com o GIMP não está configurada. Defina ‘gimp_exe_loc’ em "
 "config.json."
 
-#: app.py:1830
+#: app.py:1867
 msgid "GIMP Integration Error"
 msgstr "Erro de integração do GIMP"
 
-#: app.py:1840
+#: app.py:1877
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 "Falha ao abrir o ficheiro atual no GIMP, não foi possível obter um caminho "
 "de ficheiro válido"
 
-#: app.py:1857
+#: app.py:1894
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -422,42 +422,42 @@ msgstr ""
 "Oculta a imagem atual.\n"
 "Para voltar a ocultar, prima Shift+B."
 
-#: app.py:1862
+#: app.py:1899
 msgid "Cleared all hidden images."
 msgstr "Limpar todas as imagens escondidas."
 
-#: app.py:1870
+#: app.py:1907
 msgid "DELETE_LOCK"
 msgstr ""
 "Eliminar o bloqueio após a apresentação\n"
 "transição impediu a eliminação"
 
-#: app.py:1888
+#: app.py:1925
 msgid "Invalid action, no files found to delete"
 msgstr "Ação inválida, não foram encontrados ficheiros para eliminar"
 
-#: app.py:1891
+#: app.py:1928
 msgid "Invalid action, search image not found"
 msgstr "Acção inválida, a imagem de pesquisa não foi encontrada"
 
-#: app.py:1906
+#: app.py:1943
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 "Falha ao remover o arquivo atual, não foi possível obter o caminho válido"
 
-#: app.py:1913
+#: app.py:1950
 msgid "Removing directory: {0}"
 msgstr "Removendo diretório: {0}"
 
-#: app.py:1915
+#: app.py:1952
 msgid "Removing file: {0}"
 msgstr "Removendo arquivo: {0}"
 
-#: app.py:1925 app.py:1946
+#: app.py:1962 app.py:1983
 msgid "Failed to delete item: {0}"
 msgstr "Falha ao eliminar o item: {0}"
 
-#: app.py:1929
+#: app.py:1966
 msgid ""
 "Failed to move directory to {0}. Double check the trash folder is set "
 "properly in config.json."
@@ -465,7 +465,7 @@ msgstr ""
 "Falha ao mover o diretório para {0}. Verifique se a pasta de lixo está "
 "configurada corretamente em config.json."
 
-#: app.py:1931
+#: app.py:1968
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
@@ -473,7 +473,7 @@ msgstr ""
 "Falha ao enviar o ficheiro para {0}. Verifique se a pasta de lixo está "
 "configurada corretamente em config.json."
 
-#: app.py:1937
+#: app.py:1974
 msgid ""
 "Failed to move directory to the trash. Either pip install send2trash or set "
 "a specific trash folder in config.json."
@@ -481,7 +481,7 @@ msgstr ""
 "Não foi possível mover o diretório para a lixeira. Instale o send2trash ou "
 "defina uma pasta de lixeira específica no config.json."
 
-#: app.py:1941
+#: app.py:1978
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -489,84 +489,84 @@ msgstr ""
 "Falha ao enviar o arquivo para a lixeira, então ele será excluído. Ou o pip "
 "instala o send2trash ou define uma pasta de lixo específica no config.json."
 
-#: app.py:1951
+#: app.py:1988
 msgid "Invalid directory"
 msgstr "Diretório inválido"
 
-#: app.py:1951
+#: app.py:1988
 msgid "No valid base directory to delete"
 msgstr "Não há diretório base válido para excluir"
 
-#: app.py:1962
+#: app.py:1999
 msgid "Cannot Delete Directory"
 msgstr "Não é possível eliminar o diretório"
 
-#: app.py:1966
+#: app.py:2003
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr ""
 "Tem a certeza de que deseja eliminar o diretório e todo o seu conteúdo?"
 
-#: app.py:1968
+#: app.py:2005
 msgid "Contents to be deleted:"
 msgstr "Conteúdo a ser eliminado:"
 
-#: app.py:1970
+#: app.py:2007
 msgid "Confirm Delete Directory"
 msgstr "Confirmar eliminação do diretório"
 
-#: app.py:2004
+#: app.py:2041
 msgid "Delete Directory Error"
 msgstr "Erro ao eliminar diretório"
 
-#: app.py:2006
+#: app.py:2043
 msgid "Directory {0} deleted."
 msgstr "Diretório {0} eliminado."
 
-#: app.py:2022
+#: app.py:2059
 msgid "Invalid target filepath for replacement: "
 msgstr "Caminho de ficheiro de destino inválido para substituição: "
 
-#: app.py:2026
+#: app.py:2063
 msgid "Moved search image to "
 msgstr "Mover a imagem de pesquisa para "
 
-#: app.py:2064
+#: app.py:2101
 msgid "Running image gen: "
 msgstr "Geração da imagem em execução: "
 
-#: app.py:2066
+#: app.py:2103
 msgid "Error running image generation:"
 msgstr "Erro ao executar a geração de imagens:"
 
-#: app.py:2074
+#: app.py:2111
 msgid "Running refacdir"
 msgstr "A executar o refacdir"
 
-#: app.py:2079 auth/app_startup_auth.py:141 auth/password_dialog.py:249
-#: extensions/gimp/gimp_wrapper.py:687 extensions/gimp/gimp_wrapper.py:716
+#: app.py:2116 auth/app_startup_auth.py:141 auth/password_dialog.py:249
+#: extensions/gimp/gimp_wrapper.py:689 extensions/gimp/gimp_wrapper.py:718
 #: files/pdf_creator.py:132 files/pdf_creator.py:136 files/pdf_creator.py:139
 msgid "Error"
 msgstr "Erro"
 
-#: app.py:2175
+#: app.py:2212
 msgid "GROUP_DETAILS"
 msgstr ""
 "Grupo {0} de {1}\n"
 "Tamanho: {2}"
 
-#: app.py:2179
+#: app.py:2216
 msgid "No image files found"
 msgstr "Nenhum ficheiro de imagem encontrado"
 
-#: app.py:2181
+#: app.py:2218
 msgid "1 image file found"
 msgstr "1 ficheiro de imagem encontrado"
 
-#: app.py:2182
+#: app.py:2219
 msgid "{0} image files found"
 msgstr "{0} ficheiros de imagem encontrados"
 
-#: app.py:2184
+#: app.py:2221
 msgid "(filtered)"
 msgstr "(filtrado)"
 
@@ -1208,20 +1208,20 @@ msgstr "Abrindo {0} no processo GIMP existente"
 msgid "Opening file in GIMP: {0}"
 msgstr "Abrindo o ficheiro no GIMP: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:422 extensions/gimp/gimp_wrapper.py:480
+#: extensions/gimp/gimp_wrapper.py:423 extensions/gimp/gimp_wrapper.py:482
 msgid "GIMP Error"
 msgstr "Erro do GIMP"
 
-#: extensions/gimp/gimp_wrapper.py:423
+#: extensions/gimp/gimp_wrapper.py:424
 msgid "Failed to open file in GIMP: {0}"
 msgstr "Falha ao abrir o ficheiro no GIMP: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:450
+#: extensions/gimp/gimp_wrapper.py:451
 msgid "Opening {0} in GIMP (using temporary directory for performance)"
 msgstr ""
 "Abrindo {0} no GIMP (usando diretório temporário para melhorar o desempenho)"
 
-#: extensions/gimp/gimp_wrapper.py:481
+#: extensions/gimp/gimp_wrapper.py:483
 msgid ""
 "Failed to open file in GIMP: {0}\n"
 "\n"
@@ -1231,43 +1231,43 @@ msgstr ""
 "\n"
 "Verifique se o GIMP está corretamente instalado e configurado."
 
-#: extensions/gimp/gimp_wrapper.py:499
+#: extensions/gimp/gimp_wrapper.py:501
 msgid "Setup Error"
 msgstr "Erro de configuração"
 
-#: extensions/gimp/gimp_wrapper.py:500
+#: extensions/gimp/gimp_wrapper.py:502
 msgid "Failed to set up temporary directory: {0}"
 msgstr "Falha ao configurar o diretório temporário: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:552
+#: extensions/gimp/gimp_wrapper.py:554
 msgid "File Processing Error"
 msgstr "Erro no processamento do ficheiro"
 
-#: extensions/gimp/gimp_wrapper.py:553
+#: extensions/gimp/gimp_wrapper.py:555
 msgid "Error processing files after GIMP completion: {0}"
 msgstr "Erro ao processar ficheiros após a conclusão do GIMP: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:683
+#: extensions/gimp/gimp_wrapper.py:685
 msgid "File updated: {0}"
 msgstr "Ficheiro atualizado: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:687
+#: extensions/gimp/gimp_wrapper.py:689
 msgid "Failed to update file: {0}"
 msgstr "Falha ao atualizar o ficheiro: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:710
+#: extensions/gimp/gimp_wrapper.py:712
 msgid "New file created: {0}"
 msgstr "Novo ficheiro criado: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:712
+#: extensions/gimp/gimp_wrapper.py:714
 msgid "{0} new files created"
 msgstr "{0} novos ficheiros criados"
 
-#: extensions/gimp/gimp_wrapper.py:716
+#: extensions/gimp/gimp_wrapper.py:718
 msgid "Failed to move new files: {0}"
 msgstr "Falha ao mover novos ficheiros: {0}"
 
-#: extensions/gimp/gimp_wrapper.py:740
+#: extensions/gimp/gimp_wrapper.py:742
 msgid ""
 "The following files already exist and will be overwritten:\n"
 "\n"
@@ -1281,11 +1281,11 @@ msgstr ""
 "\n"
 "Deseja continuar?"
 
-#: extensions/gimp/gimp_wrapper.py:743
+#: extensions/gimp/gimp_wrapper.py:745
 msgid "Confirm Overwrite"
 msgstr "Confirmar sobreposição"
 
-#: extensions/gimp/gimp_wrapper.py:750
+#: extensions/gimp/gimp_wrapper.py:752
 msgid "File overwrite cancelled"
 msgstr "Substituição do ficheiro cancelada"
 
@@ -1442,75 +1442,195 @@ msgstr "O texto de pesquisa fornecido a file_browser.find() era inválido."
 msgid "No files found"
 msgstr "Não foram encontrados ficheiros"
 
-#: files/go_to_file.py:29
+#: files/go_to_file.py:83 files/go_to_file.py:102
 msgid "Go To File"
 msgstr "Ir para o ficheiro"
 
-#: files/go_to_file.py:45
+#: files/go_to_file.py:118
 msgid "Go To"
 msgstr "Vá"
 
-#: files/go_to_file.py:48
+#: files/go_to_file.py:121 files/go_to_file.py:329
 msgid "Browse..."
 msgstr "Navegar..."
 
-#: files/go_to_file.py:52
+#: files/go_to_file.py:125
 msgid "Go To Last Moved"
 msgstr "Ir para Última mudança"
 
-#: files/go_to_file.py:59
+#: files/go_to_file.py:132
 msgid "Go to closest file if exact match not found"
 msgstr ""
 "Ir para o ficheiro mais próximo se não for encontrada uma correspondência "
 "exata"
 
-#: files/go_to_file.py:79
+#: files/go_to_file.py:155
 msgid "Invalid search string, please enter some text."
 msgstr "Cadeia de pesquisa inválida, por favor introduza algum texto."
 
-#: files/go_to_file.py:101
+#: files/go_to_file.py:177
 msgid "Supported files"
 msgstr "Ficheiros suportados"
 
-#: files/go_to_file.py:105
+#: files/go_to_file.py:181
 msgid "Image files"
 msgstr "Ficheiros de imagem"
 
-#: files/go_to_file.py:108
+#: files/go_to_file.py:184
 msgid "Video files"
 msgstr "Ficheiros de vídeo"
 
-#: files/go_to_file.py:110
+#: files/go_to_file.py:186
 msgid "GIF files"
 msgstr "Ficheiros GIF"
 
-#: files/go_to_file.py:112
+#: files/go_to_file.py:188
 msgid "PDF files"
 msgstr "Arquivos PDF"
 
-#: files/go_to_file.py:114
+#: files/go_to_file.py:190
 msgid "SVG files"
 msgstr "Arquivos SVG"
 
-#: files/go_to_file.py:116
+#: files/go_to_file.py:192
 msgid "HTML files"
 msgstr "Ficheiros HTML"
 
-#: files/go_to_file.py:119
+#: files/go_to_file.py:195
 msgid "All files"
 msgstr "Todos os arquivos"
 
-#: files/go_to_file.py:122
+#: files/go_to_file.py:198
 msgid "Select file to go to"
 msgstr "Selecione o ficheiro para o qual deseja ir"
 
-#: files/go_to_file.py:141
+#: files/go_to_file.py:217
 msgid "No last moved image found."
 msgstr "Não foi encontrado nenhum ficheiro multimédia movido recentemente."
 
-#: files/go_to_file.py:170
+#: files/go_to_file.py:252
 msgid "Sort by for closest search:"
 msgstr "Ordenar por para pesquisa mais próxima:"
+
+#: files/go_to_file.py:287
+msgid "Find Related Filenames"
+msgstr "Encontrar nomes de ficheiros relacionados"
+
+#: files/go_to_file.py:292
+msgid ""
+"Enter a base ID manually or click 'Extract from filename' to auto-extract "
+"from the filename above."
+msgstr ""
+"Introduza um ID base manualmente ou clique em «Extrair do nome do ficheiro» "
+"para extrair automaticamente do nome do ficheiro acima."
+
+#: files/go_to_file.py:301
+msgid "Base ID:"
+msgstr "ID base:"
+
+#: files/go_to_file.py:313
+msgid "Extract from filename"
+msgstr "Extrato do nome do ficheiro"
+
+#: files/go_to_file.py:321
+msgid "Target Directory:"
+msgstr "Diretório de destino:"
+
+#: files/go_to_file.py:336
+msgid "Current Media"
+msgstr "Mídia atual"
+
+#: files/go_to_file.py:339
+msgid "Find Related"
+msgstr "Encontrar relacionados"
+
+#: files/go_to_file.py:363
+msgid "Select directory to search for related files"
+msgstr "Selecione o diretório para procurar ficheiros relacionados"
+
+#: files/go_to_file.py:374
+msgid "Loading current media and searching..."
+msgstr "A carregar os meios atuais e a pesquisar..."
+
+#: files/go_to_file.py:386
+msgid ""
+"Current media filename loaded. Select a target directory to find related "
+"filenames."
+msgstr ""
+"Nome do ficheiro multimédia atual carregado. Selecione um diretório de "
+"destino para encontrar nomes de ficheiros relacionados."
+
+#: files/go_to_file.py:388
+msgid "No active media file found in the current window."
+msgstr "Não foi encontrado nenhum ficheiro multimédia ativo na janela atual."
+
+#: files/go_to_file.py:390
+msgid "Error getting current media filename: {}"
+msgstr "Erro ao obter o nome do ficheiro de mídia atual: {}"
+
+#: files/go_to_file.py:443
+msgid "Please enter a filename first."
+msgstr "Por favor, introduza primeiro um nome de ficheiro."
+
+#: files/go_to_file.py:449
+msgid "Base ID extracted: {}"
+msgstr "ID base extraída: {}"
+
+#: files/go_to_file.py:451
+msgid "Could not extract base ID from filename. Please enter it manually."
+msgstr ""
+"Não foi possível extrair o ID base do nome do ficheiro. Introduza-o "
+"manualmente."
+
+#: files/go_to_file.py:452
+msgid "Could not extract base ID. Please enter it manually."
+msgstr "Não foi possível extrair o ID base. Introduza-o manualmente."
+
+#: files/go_to_file.py:460
+msgid "Please enter a base ID or extract it from a filename."
+msgstr "Insira um ID base ou extraia-o de um nome de ficheiro."
+
+#: files/go_to_file.py:464
+msgid "Please select a target directory to search in."
+msgstr "Selecione um diretório de destino para pesquisar."
+
+#: files/go_to_file.py:468
+msgid "Target directory does not exist."
+msgstr "O diretório de destino não existe."
+
+#: files/go_to_file.py:484
+msgid "Found {} related filenames"
+msgstr "Encontrados {} nomes de ficheiros relacionados"
+
+#: files/go_to_file.py:487
+msgid "No related filenames found with base ID \"{0}\" in {1}"
+msgstr ""
+"Não foram encontrados nomes de ficheiros relacionados com o ID base “{0}” em"
+" {1}"
+
+#: files/go_to_file.py:537
+msgid ""
+"The directory '{0}' contains many files ({1} files found so far). Searching "
+"may take a while. Do you want to proceed?"
+msgstr ""
+"O diretório ‘{0}’ contém muitos ficheiros ({1} ficheiros encontrados até "
+"agora). A pesquisa pode demorar algum tempo. Deseja continuar?"
+
+#: files/go_to_file.py:538
+msgid "Large Directory"
+msgstr "Grande diretório"
+
+#: files/go_to_file.py:547
+msgid "Search cancelled by user."
+msgstr "Pesquisa cancelada pelo utilizador."
+
+#: files/go_to_file.py:569
+msgid "Error searching directory: {}"
+msgstr "Erro ao pesquisar o diretório: {}"
+
+#: files/go_to_file.py:581
+msgid "Opening file: {}"
+msgstr "Abrindo ficheiro: {}"
 
 #: files/hotkey_actions_window.py:27
 msgid "Hotkey Actions"
