@@ -5,6 +5,7 @@ import platform
 import warnings
 import tkinter as tk
 import time
+import psutil
 
 from tkinter import Canvas
 from tkinter.ttk import Frame, Scrollbar
@@ -28,6 +29,9 @@ from image.frame_cache import FrameCache
 from image.video_ui import VideoUI
 from utils.config import config
 from utils.utils import Utils
+from utils.logging_setup import get_logger
+
+logger = get_logger("media_frame")
 
 
 class ResizingCanvas(Canvas):
@@ -153,6 +157,29 @@ class MediaFrame(Frame):
         self.image_displayed = False
         self.mousewheel_bound = False
 
+    def check_memory_usage(self):
+        """Check if system memory usage is high and perform cleanup if needed"""
+        try:
+            available_ram_gb = Utils.calculate_available_ram()
+            memory_percent = psutil.virtual_memory().percent
+            
+            # Adaptive threshold based on available RAM
+            # If very little RAM available, be more aggressive with cleanup
+            if available_ram_gb < 1.0:  # Less than 1GB available
+                threshold = 70
+            elif available_ram_gb < 2.0:  # Less than 2GB available
+                threshold = 80
+            else:
+                threshold = 85
+                
+            if memory_percent > threshold:
+                logger.warning(f"High memory usage detected: {memory_percent}% (Available RAM: {available_ram_gb:.1f}GB)")
+                self.release_media()
+                return True
+        except Exception as e:
+            logger.warning(f"Error checking memory usage: {e}")
+        return False
+
     def set_background_color(self, background_color):
         self.canvas.config(bg=background_color)
 
@@ -199,6 +226,11 @@ class MediaFrame(Frame):
             self.vlc_media_player.set_xwindow(self.winfo_id()) # this line messes up windows
 
     def show_image(self, path):
+        # Check memory usage before loading new image
+        if self.check_memory_usage():
+            # If memory cleanup was performed, show a message to the user
+            logger.info("Memory cleanup performed before loading new image")
+        
         if (isinstance(self.__image, VideoUI)):
             self.video_stop()
         self.path = path
@@ -282,14 +314,33 @@ class MediaFrame(Frame):
             self.master.update()
 
     def release_media(self):
-        if self.__pyramid is not None:
-            for img in self.__pyramid:
-                img.close()
+        """Release all media resources to free memory"""
+        try:
+            # Release pyramid images
+            if self.__pyramid is not None:
+                for img in self.__pyramid:
+                    if img is not None:
+                        img.close()
+                self.__pyramid = None
+            
+            # Release main image
             if self.__image is not None:
-                if (isinstance(self.__image, VideoUI)):
+                if isinstance(self.__image, VideoUI):
                     self.video_stop()
                 else:
                     self.__image.close()
+                self.__image = None
+            
+            # Clear canvas and reset display state
+            if self.canvas is not None:
+                self.canvas.clear_image()
+                
+            # Force garbage collection
+            import gc
+            gc.collect()
+            
+        except Exception as e:
+            logger.warning(f"Error during media release: {e}")
 
     def smaller(self):
         """ Resize image proportionally and return smaller image """
@@ -359,13 +410,37 @@ class MediaFrame(Frame):
 
     def __show_image(self, center=False):
         if center:
-            imagetk = self.get_image_to_fit(self.path)
-            imageid = self.canvas.create_image_center(imagetk)
-            self.canvas.reset_sizes()
-            self.canvas.lower(imageid)  # set image into background
-            self.canvas.imagetk = imagetk  # keep an extra reference to prevent garbage-collection
-            self.image_displayed = True
-            return
+            try:
+                imagetk = self.get_image_to_fit(self.path)
+                imageid = self.canvas.create_image_center(imagetk)
+                self.canvas.reset_sizes()
+                self.canvas.lower(imageid)  # set image into background
+                self.canvas.imagetk = imagetk  # keep an extra reference to prevent garbage-collection
+                self.image_displayed = True
+                return
+            except MemoryError as e:
+                logger.error(f"Memory error loading image {self.path}: {e}")
+                # Try to recover by clearing everything and showing a placeholder
+                self.release_media()
+                
+                # Get available RAM for user feedback
+                available_ram_gb = Utils.calculate_available_ram()
+                memory_percent = psutil.virtual_memory().percent
+                
+                # Show a detailed error message
+                error_text = f"Memory Error\nAvailable RAM: {available_ram_gb:.1f}GB\nMemory Usage: {memory_percent:.1f}%\n\nImage too large for available memory.\nTry closing other applications."
+                self.canvas.create_text(
+                    self.canvas.get_center_coordinates(),
+                    text=error_text,
+                    fill="red",
+                    font=("Arial", 12),
+                    justify="center"
+                )
+                self.image_displayed = True
+                return
+            except Exception as e:
+                logger.error(f"Error loading image {self.path}: {e}")
+                raise e
         if not self.image_displayed:
             return
 
@@ -420,17 +495,79 @@ class MediaFrame(Frame):
         '''
         Get the object required to display the image in the UI.
         '''
-        img = Image.open(filename)
-#        print("TESTING")
-#        print(self.canvas.get_size())
-        size_float = self.canvas.get_size()
-        canvas_width = int(size_float[0])
-        canvas_height = int(size_float[1])
-        fit_dims = Utils.scale_dims((img.width, img.height), (canvas_width, canvas_height), maximize=self.fill_canvas)
-        img = img.resize(fit_dims)
-        photo = ImageTk.PhotoImage(img)
-        img.close()
-        return photo
+        try:
+            img = Image.open(filename)
+            size_float = self.canvas.get_size()
+            canvas_width = int(size_float[0])
+            canvas_height = int(size_float[1])
+            
+            # Calculate fit dimensions
+            fit_dims = Utils.scale_dims((img.width, img.height), (canvas_width, canvas_height), maximize=self.fill_canvas)
+            
+            # Adaptive memory optimization based on available RAM
+            available_ram_gb = Utils.calculate_available_ram()
+            
+            # Calculate maximum pixels based on available RAM
+            # Reserve some RAM for the system and other processes
+            if available_ram_gb < 1.0:  # Very low RAM
+                max_pixels = 500 * 1024  # 0.5 megapixels
+            elif available_ram_gb < 2.0:  # Low RAM
+                max_pixels = 1 * 1024 * 1024  # 1 megapixel
+            elif available_ram_gb < 4.0:  # Medium RAM
+                max_pixels = 2 * 1024 * 1024  # 2 megapixels
+            else:  # High RAM
+                max_pixels = 4 * 1024 * 1024  # 4 megapixels
+            
+            # Scale down if image is too large for available memory
+            if fit_dims[0] * fit_dims[1] > max_pixels:
+                scale_factor = (max_pixels / (fit_dims[0] * fit_dims[1])) ** 0.5
+                fit_dims = (int(fit_dims[0] * scale_factor), int(fit_dims[1] * scale_factor))
+                logger.info(f"Scaled image down due to memory constraints: {fit_dims}")
+            
+            # Convert to RGB if necessary to reduce memory usage
+            if img.mode in ('RGBA', 'LA'):
+                # Create white background for transparent images
+                background = Image.new('RGB', img.size, (255, 255, 255))
+                if img.mode == 'RGBA':
+                    background.paste(img, mask=img.split()[-1])
+                else:  # LA mode
+                    background.paste(img, mask=img.split()[-1])
+                img = background
+            elif img.mode not in ('RGB', 'L'):
+                img = img.convert('RGB')
+            
+            img = img.resize(fit_dims, Image.LANCZOS)
+            photo = ImageTk.PhotoImage(img)
+            img.close()
+            return photo
+            
+        except MemoryError as e:
+            # Fallback: try with much smaller dimensions
+            try:
+                logger.warning(f"Memory error loading image, trying fallback: {e}")
+                img = Image.open(filename)
+                
+                # Very conservative fallback dimensions based on available RAM
+                available_ram_gb = Utils.calculate_available_ram()
+                if available_ram_gb < 1.0:
+                    max_width, max_height = 400, 300
+                elif available_ram_gb < 2.0:
+                    max_width, max_height = 600, 450
+                else:
+                    max_width, max_height = 800, 600
+                
+                fallback_dims = (min(max_width, img.width), min(max_height, img.height))
+                img = img.resize(fallback_dims, Image.LANCZOS)
+                if img.mode not in ('RGB', 'L'):
+                    img = img.convert('RGB')
+                photo = ImageTk.PhotoImage(img)
+                img.close()
+                logger.info(f"Successfully loaded image with fallback dimensions: {fallback_dims}")
+                return photo
+            except Exception as fallback_e:
+                raise MemoryError(f"Failed to load image even with fallback: {fallback_e}")
+        except Exception as e:
+            raise e
 
     def __move_from(self, event):
         """ Remember previous coordinates for scrolling with the mouse """
