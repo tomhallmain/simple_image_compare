@@ -224,7 +224,7 @@ class TypeConfigurationWindow:
 
         res = app_actions.alert(_("Confirm Changes"), 
                                 _("This will clear all existing compares in open windows. Continue?"),
-                                kind="warning")
+                                kind="warning", master=cls.top_level)
         not_ok = res != messagebox.OK and res != True
         if not_ok:
             return

@@ -1,8 +1,8 @@
-from typing import Callable, Dict, Any
+from typing import Callable, Dict, Any, Optional
 
 class AppActions:
     REQUIRED_ACTIONS = {
-        "new_window", "get_window", "toast", "alert", "title_notify", "refresh",
+        "new_window", "get_window", "toast", "_alert", "title_notify", "refresh",
         "refocus", "set_mode", "get_active_media_filepath",
         "create_image", "show_next_media", "get_media_details",
         "run_image_generation", "set_marks_from_downstream_related_images",
@@ -13,16 +13,28 @@ class AppActions:
         "_set_toggled_view_matches", "refresh_all_compares",
     }
     
-    def __init__(self, actions: Dict[str, Callable[..., Any]]):
+    def __init__(self, actions: Dict[str, Callable[..., Any]], master: Optional[object] = None):
         missing = self.REQUIRED_ACTIONS - set(actions.keys())
         if missing:
             raise ValueError(f"Missing required actions: {missing}")
         self._actions = actions
+        self._master = master
     
     def __getattr__(self, name):
         if name in self._actions:
             return self._actions[name]
         raise AttributeError(f"Action '{name}' not found")
+    
+    def alert(self, title: str, message: str, kind: str = "info", severity: str = "normal", master: Optional[object] = None) -> None:
+        """
+        Override the alert method to automatically inject the master parameter.
+        If master is explicitly provided, use it; otherwise use the stored master.
+        """
+        # Use provided master or fall back to stored master
+        parent_window = master if master is not None else self._master
+        
+        # Call the original alert method with the determined parent window
+        return self._alert(title, message, kind=kind, severity=severity, master=parent_window)
 
     def image_details_window(self):
         return self._actions.get("_image_details_window")

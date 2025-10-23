@@ -295,7 +295,7 @@ class MarkedFiles():
         try:
             hotkey_actions_window = HotkeyActionsWindow(self.master, self.app_actions, self.set_permanent_mark_target, self.set_hotkey_action)
         except Exception as e:
-            self.app_actions.alert("Error opening hotkey actions window: " + str(e))
+            self.app_actions.alert("Error opening hotkey actions window: " + str(e), master=self.master)
 
     @require_password(
         ProtectedActions.SET_HOTKEY_ACTIONS,
@@ -765,7 +765,7 @@ class MarkedFiles():
         severity = "high" if len(MarkedFiles.file_marks) > 5 else "normal"
         res = self.app_actions.alert(_("Confirm Delete"),
                 _("Deleting %s marked files - Are you sure you want to proceed?").format(len(MarkedFiles.file_marks)),
-                kind="askokcancel", severity=severity)
+                kind="askokcancel", severity=severity, master=self.master)
         if res != messagebox.OK and res != True:
             return
 
@@ -786,7 +786,7 @@ class MarkedFiles():
             MarkedFiles.file_marks.extend(failed_to_delete)
             self.app_actions.alert(_("Delete Failed"),
                     _("Failed to delete %s files - check log for details.").format(len(failed_to_delete)),
-                    kind="warning")
+                    kind="warning", master=self.master)
         else:
             self.app_actions.toast(_("Deleted %s marked files.").format(len(removed_files)))
 

@@ -126,7 +126,7 @@ class App():
 
     @staticmethod
     def get_window(window_id: Optional[int] = None, base_dir: Optional[str] = None, img_path: Optional[str] = None, refocus: bool = False,
-                   disallow_if_compare_state: bool = False) -> Optional["App"]:
+                   disallow_if_compare_state: bool = False, new_image: bool = False) -> Optional["App"]:
         for window in App.open_windows:
             if window.window_id == window_id or \
                     (base_dir is not None and window.base_dir == base_dir) or \
@@ -138,6 +138,10 @@ class App():
                 if disallow_if_compare_state and window.mode != Mode.BROWSE:
                     logger.info(f"{App.get_window_name(window)} has compare state, not returning")
                     return None
+                if new_image and window.mode == Mode.BROWSE and (
+                        window.file_browser.get_sort_by() == SortBy.CREATION_TIME or
+                        window.file_browser.get_sort_by() == SortBy.MODIFY_TIME):
+                    window.direction = Direction.BACKWARD  # If this was forward, when the user moves the new image they will see the starting image.
                 return window
         return None  # raise Exception(f"No window found for window id {window_id} or base dir {base_dir}")
 
@@ -220,7 +224,7 @@ class App():
             "find_window_with_compare": App.find_window_with_compare,
             "toast": self.toast,
             "title_notify": self.title_notify,
-            "alert": self.alert,
+            "_alert": self.alert,
             "refresh": self.refresh,
             "refocus": self.refocus,
             "set_mode": self.set_mode,
@@ -245,7 +249,7 @@ class App():
             "_set_label_state": self._set_label_state,
             "_add_buttons_for_mode": self._add_buttons_for_mode,
         }
-        self.app_actions = AppActions(actions=app_actions)
+        self.app_actions = AppActions(actions=app_actions, master=self.master)
 
         # Set up notification manager callback
         notification_manager.set_app_actions(self.app_actions, self.window_id)
@@ -2119,23 +2123,26 @@ class App():
             title = _("Error")
         self.alert(title, error_text, kind=kind)
 
-    def alert(self, title: str, message: str, kind: str = "info", severity: str = "normal") -> None:
+    def alert(self, title: str, message: str, kind: str = "info", severity: str = "normal", master: Optional[object] = None) -> None:
         if kind not in ("error", "warning", "info", "askokcancel"):
             raise ValueError("Unsupported alert kind.")
 
         logger.warning(f"Alert - Title: \"{title}\" Message: {message}")
         
+        # Use provided master or fall back to self.master
+        parent_window = master if master is not None else self.master
+        
         # For dangerous operations with high severity, use custom colored dialog
         if severity == "high" and kind == "askokcancel":
             from lib.custom_dialogs import show_high_severity_dialog
-            return show_high_severity_dialog(self.master, title, message)
+            return show_high_severity_dialog(parent_window, title, message)
         
         # Use standard messagebox for normal cases
         if kind == "askokcancel":
             alert_method = getattr(messagebox, kind)
         else:
             alert_method = getattr(messagebox, f"show{kind}")
-        return alert_method(title, message)
+        return alert_method(title=title, message=message, parent=parent_window)
 
     def toast(self, message: str, time_in_seconds: int = config.toasts_persist_seconds) -> None:
         logger.info("Toast message: " + message.replace("\n", " "))

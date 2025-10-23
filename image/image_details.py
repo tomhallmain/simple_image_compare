@@ -362,6 +362,17 @@ class ImageDetails():
             app_actions.toast(_("No new image created"))
 
     def flip_image(self, top_bottom=False):
+        # Add confirmation dialog for vertical flip (top_bottom=True) as it's uncommon
+        if top_bottom:
+            result = self.app_actions.alert(
+                _("Confirm Vertical Flip"), 
+                _("Are you sure you want to flip this image vertically? This is an uncommon operation and may have been clicked by accident."),
+                kind="askokcancel",
+                master=self.master
+            )
+            if not result:
+                return  # User cancelled the operation
+        
         new_filepath = ImageOps.flip_image(self.image_path, top_bottom=top_bottom)
         self.close_windows()
         self.app_actions.refresh()
@@ -478,7 +489,7 @@ class ImageDetails():
         base_dir = os.path.dirname(image_path)
         if not skip_get_window_check:
             if app_actions.get_window(base_dir=base_dir, img_path=image_path, refocus=True,
-                                      disallow_if_compare_state=True) is not None:
+                                      disallow_if_compare_state=True, new_image=True) is not None:
                 return
         if ImageDetails.related_image_canvas is None:
             ImageDetails.set_related_image_canvas(master, image_path, app_actions)

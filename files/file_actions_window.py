@@ -563,7 +563,7 @@ class FileActionsWindow:
         if specific_image is not None:
             if not os.path.isfile(specific_image):
                 error_text = _("Image does not exist: ") + specific_image
-                self.app_actions.alert(_("File Action Error"), error_text)
+                self.app_actions.alert(_("File Action Error"), error_text, master=self.master)
                 raise Exception(error_text)
             if action.is_move_action():
                 original_directory = action.get_original_directory()
@@ -574,7 +574,7 @@ class FileActionsWindow:
         else:
             if not action.any_new_files_exist():
                 error_text = _("Images not found")
-                self.app_actions.alert(_("File Action Error"), error_text)
+                self.app_actions.alert(_("File Action Error"), error_text, master=self.master)
                 raise Exception(error_text)
             if action.is_move_action():
                 original_directory = action.get_original_directory()
