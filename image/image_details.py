@@ -54,7 +54,10 @@ class ImageDetails():
 
     @staticmethod
     def load_image_generation_mode():
-        ImageDetails.image_generation_mode = ImageGenerationType[app_info_cache.get_meta("image_generation_mode", default_val="CONTROL_NET")]
+        try:
+            ImageDetails.image_generation_mode = ImageGenerationType.get(app_info_cache.get_meta("image_generation_mode", default_val="CONTROL_NET"))
+        except Exception as e:
+            logger.error(f"Error loading image generation mode: {e}")
 
     @staticmethod
     def store_image_generation_mode():
@@ -186,7 +189,7 @@ class ImageDetails():
         self.label_image_generation = Label(self.frame)
         self.add_label(self.label_image_generation, _("Image Generation"))
         self.image_generation_mode_var = StringVar()
-        self.image_generation_mode_choice = OptionMenu(self.frame, self.image_generation_mode_var,
+        self.image_generation_mode_choice = OptionMenu(self.frame, self.image_generation_mode_var, ImageDetails.image_generation_mode.name,
                                                        *ImageGenerationType.members(), command=self.set_image_generation_mode)
         self.image_generation_mode_choice.grid(row=self.row_count1, column=1, sticky="W")
         self.row_count1 += 1

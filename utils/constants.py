@@ -171,6 +171,7 @@ class ImageGenerationType(Enum):
     CONTROL_NET = "control_net"
     IP_ADAPTER = "ip_adapter"
     RENOISER = "renoiser"
+    IMG2IMG = "img2img"
     LAST_SETTINGS = "last_settings"
     CANCEL = "cancel"
     REVERT_TO_SIMPLE_GEN = "revert_to_simple_gen"
@@ -181,13 +182,13 @@ class ImageGenerationType(Enum):
     @staticmethod
     def get(name):
         for key, value in ImageGenerationType.__members__.items():
-            if str(value) == name:
+            if value.name == name or value.value == name:
                 return value
         raise Exception(f"Not a valid prompt mode: {name}")
 
     @staticmethod
     def members():
-        return [str(value) for key, value in ImageGenerationType.__members__.items()]
+        return [value.name for key, value in ImageGenerationType.__members__.items()]
 
 
 class Direction(Enum):
