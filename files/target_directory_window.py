@@ -182,6 +182,7 @@ class TargetDirectoryWindow:
         initial_dir = self.initial_dir or (self.app_actions.get_base_dir() if hasattr(self, 'app_actions') and hasattr(self.app_actions, 'get_base_dir') else ".")
         
         target_dir = filedialog.askdirectory(
+            parent=self.app_actions.get_master(),
             title=_("Select directory to search for related files"),
             initialdir=initial_dir
         )

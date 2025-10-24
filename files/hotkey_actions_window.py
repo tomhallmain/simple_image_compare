@@ -1,6 +1,6 @@
 
 
-from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
+from tkinter import Frame, Label, LEFT, W
 from tkinter.ttk import Button
 
 from auth.password_utils import require_password

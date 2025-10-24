@@ -36,6 +36,9 @@ class AppActions:
         # Call the original alert method with the determined parent window
         return self._alert(title, message, kind=kind, severity=severity, master=parent_window)
 
+    def get_master(self):
+        return self._master
+
     def image_details_window(self):
         return self._actions.get("_image_details_window")
     

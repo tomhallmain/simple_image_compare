@@ -326,6 +326,7 @@ class MarkedFiles():
                     MarkedFiles.mark_target_dirs.remove(target_dir)
                 app_actions.toast(_("Invalid directory: %s").format(target_dir))
         target_dir = filedialog.askdirectory(
+                parent=app_actions.get_master(),
                 initialdir=starting_target, title=_("Select target directory for marked files"))
         #app_actions.store_info_cache() # save new target directory
         return target_dir, False
@@ -414,7 +415,7 @@ class MarkedFiles():
             MarkedFiles.is_performing_action = False
             logger.warning(f"Cancelled {action_part1} to {target_dir}")
             if len(MarkedFiles.previous_marks) > 0:
-                MarkedFiles.undo_move_marks(app_actions.get_base_dir(), app_actions)
+                MarkedFiles.undo_move_marks(app_actions.get_base_dir(), app_actions, parent=app_actions.master)
             return False, False
         if len(exceptions) < len(files_to_move):
             FileActionsWindow.update_history(action)
@@ -532,11 +533,12 @@ class MarkedFiles():
         is_moving_back = FileActionsWindow.action_history[0].action == Utils.move_file
         action_part1 = _("Moving back") if is_moving_back else _("Removing")
         action_part2 = _("Moved back") if is_moving_back else _("Removed")
-        target_dir, target_was_valid = MarkedFiles.get_target_directory(MarkedFiles.last_set_target_dir, None, app_actions.toast)
+        target_dir, target_was_valid = MarkedFiles.get_target_directory(MarkedFiles.last_set_target_dir, None, app_actions)
         if not target_was_valid:
             raise Exception(f"{action_part1} previously marked files failed, somehow previous target directory invalid:  {target_dir}")
         if base_dir is None:
             base_dir = filedialog.askdirectory(
+                parent=app_actions.get_master(),
                 initialdir=target_dir, title=_("Where should the marked files have gone?"))
         if base_dir is None or base_dir == "" or not os.path.isdir(base_dir):
             raise Exception("Failed to get valid base directory for undo move marked files.")
@@ -581,6 +583,7 @@ class MarkedFiles():
         add them as target directories, updating the window when complete.
         """
         parent_dir = filedialog.askdirectory(
+                parent=self.master,
                 initialdir=self.starting_target, title=_("Select parent directory for target directories"))
         if not os.path.isdir(parent_dir):
             raise Exception("Failed to set target directory to receive marked files.")

@@ -196,6 +196,7 @@ class GoToFile:
         file_types.append((_("All files"), "*.*"))
         
         selected_file = filedialog.askopenfilename(
+            parent=self.app_actions.get_master(),
             title=_("Select file to go to"),
             filetypes=file_types,
             initialdir=self.app_actions.get_base_dir() if hasattr(self.app_actions, 'get_base_dir') else "."

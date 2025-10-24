@@ -50,6 +50,7 @@ class PDFCreator:
             default_name = options.get('filename', combined_images) if options else combined_images
             
             output_path = filedialog.asksaveasfilename(
+                parent=app_actions.get_master(),
                 defaultextension=".pdf",
                 initialdir=default_dir,
                 initialfile=default_name,

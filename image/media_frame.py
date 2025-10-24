@@ -677,9 +677,12 @@ class MainWindow(Frame):
         self.master.update()
 
     def get_file(self):
-        return 'C:\\Users\\tehal\\ComfyUI\\output\\SOLID\\CUI_17009716554786131.png'
-#        return filedialog.askopenfile(
-#            initialdir=".", title="Set image comparison file").name
+        from tkinter import filedialog
+        return filedialog.askopenfilename(
+            parent=self.master,
+            initialdir=".",
+            title="Set image comparison file"
+        ).name
 
 
     def show_image(self):
@@ -687,12 +690,6 @@ class MainWindow(Frame):
         self.canvas.show_image(filepath)
 
 if __name__ == "__main__":
-    filename = 'C:\\Users\\tehal\\ComfyUI\\output\\SOLID\\CUI_17009715322666056.png'  # place path to your image here
-    #filename = 'd:/Data/yandex_z18_1-1.tif'  # huge TIFF file 1.4 GB
-    #filename = 'd:/Data/The_Garden_of_Earthly_Delights_by_Bosch_High_Resolution.jpg'
-    #filename = 'd:/Data/The_Garden_of_Earthly_Delights_by_Bosch_High_Resolution.tif'
-    #filename = 'd:/Data/heic1502a.tif'
-    #filename = 'd:/Data/land_shallow_topo_east.tif'
-    #filename = 'd:/Data/X1D5_B0002594.3FR'
+    filename = ''  # place path to your image here
     app = MainWindow(tk.Tk())
     app.mainloop()

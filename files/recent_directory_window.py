@@ -267,7 +267,7 @@ class RecentDirectoryWindow():
             set_dir_btn.bind("<Button-1>", set_dir_handler)
 
     @staticmethod
-    def get_directory(_dir, starting_target, toast_callback):
+    def get_directory(_dir, starting_target, toast_callback, parent=None):
         """
         If target dir given is not valid then ask user for a new one
         """
@@ -279,6 +279,7 @@ class RecentDirectoryWindow():
                     RecentDirectories.directories.remove(_dir)
                 toast_callback(_("Invalid directory: %s").format(_dir))
         _dir = filedialog.askdirectory(
+                parent=parent,
                 initialdir=starting_target, title=_("Set image comparison directory"))
         return _dir, False
 
@@ -291,7 +292,7 @@ class RecentDirectoryWindow():
         Also in this case, this function will call itself by calling set_directory(),
         just this time with the directory set.
         """
-        _dir, target_was_valid = RecentDirectoryWindow.get_directory(_dir, self.starting_target, self.app_actions.toast)
+        _dir, target_was_valid = RecentDirectoryWindow.get_directory(_dir, self.starting_target, self.app_actions.toast, parent=self.app_actions.get_master())
         if not os.path.isdir(_dir):
             self.close_windows()
             raise Exception("Failed to set target directory to receive marked files.")
@@ -327,7 +328,8 @@ class RecentDirectoryWindow():
         add them as directories, updating the window when complete.
         """
         parent_dir = filedialog.askdirectory(
-                initialdir=self.starting_target, title="Select parent directory for image comparison directories")
+                parent=self.master,
+                initialdir=self.starting_target, title=_("Select parent directory for target directories"))
         if not os.path.isdir(parent_dir):
             raise Exception("Failed to set directory.")
 

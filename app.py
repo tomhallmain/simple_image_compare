@@ -1025,6 +1025,7 @@ class App():
             self.base_dir = base_dir_from_dir_window  # assume this directory is valid
         elif (base_dir == "" or base_dir == "Add dirpath..." or self.base_dir == base_dir) and len(RecentDirectories.directories) == 0:
             base_dir = filedialog.askdirectory(
+                parent=self.master,
                 initialdir=self.get_base_dir(), title="Set image comparison directory")
             self.base_dir = Utils.get_valid_file(self.base_dir, base_dir)
             if self.base_dir is None:
@@ -1179,6 +1180,7 @@ class App():
 
         if image_path is not None and not os.path.isfile(image_path):
             image_path = filedialog.askopenfilename(
+                parent=self.master,
                 initialdir=self.get_search_dir(), title=_("Select image file"),
                 filetypes=[("Image files", "*.jpg *.jpeg *.png *.tiff *.gif")])
 
