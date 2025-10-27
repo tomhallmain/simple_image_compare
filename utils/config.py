@@ -209,7 +209,6 @@ class Config:
             except Exception:
                 raise AssertionError("Invalid sort type for sort_by config setting. Must be one of NAME, FULL_PATH, CREATION_TIME, TYPE")
 
-        self.debug = self.log_level and self.log_level.lower() == "debug"
         self.set_directories_to_search_for_related_images()
         self.check_image_edit_configuration()
         self.remove_example_h5_model_details()

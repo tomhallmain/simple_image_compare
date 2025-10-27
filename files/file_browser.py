@@ -5,7 +5,7 @@ from random import choice, randint, shuffle
 import re
 import threading
 from time import sleep
-from typing import List
+from typing import Dict, List, Optional
 
 from files.sortable_file import SortableFile
 from utils.config import config
@@ -19,9 +19,10 @@ logger = get_logger("file_browser")
 
 
 class FileBrowser:
-    have_confirmed_directories = []
+    have_confirmed_directories: List[str] = []
 
-    def __init__(self, directory=".", recursive=False, filter=None, sort_by=SortBy.NAME):
+    def __init__(self, directory: str = ".", recursive: bool = False,
+                 filter: Optional[str] = None, sort_by: SortBy = SortBy.NAME) -> None:
         self.directory = directory
         self.recursive = recursive
         self.filter = filter
@@ -36,46 +37,47 @@ class FileBrowser:
         self.checking_files = False
         self.use_file_paths_json = config.use_file_paths_json
 
-    def has_files(self):
+    def has_files(self) -> bool:
         return len(self._files) > 0
 
-    def has_file(self, _file):
+    def has_file(self, _file: str) -> bool:
         return _file in self.filepaths
 
-    def count(self):
+    def count(self) -> int:
         return len(self._files)
 
-    def is_slow_total_files(self, threshold=2000, use_sortable_files=False):
+    def is_slow_total_files(self, threshold: int = 2000, use_sortable_files: bool = False) -> bool:
         factor = 5 if Utils.is_external_drive(self.directory) else 1
         file_count = len(self._files) if use_sortable_files else len(self.filepaths)
         return factor * file_count > threshold
 
-    def has_confirmed_dir(self):
+    def has_confirmed_dir(self) -> bool:
         return self.directory in FileBrowser.have_confirmed_directories
 
-    def set_dir_confirmed(self):
+    def set_dir_confirmed(self) -> None:
         if not self.has_confirmed_dir():
             FileBrowser.have_confirmed_directories.append(self.directory)
 
-    def set_filter(self, filter):
+    def set_filter(self, filter: str) -> None:
         if config.debug:
             logger.debug(f"File browser set filter: {filter}")
         self.filter = filter
 
-    def set_recursive(self, recursive):
+    def set_recursive(self, recursive: bool) -> None:
         if config.debug:
             logger.debug(f"File browser set recursive: {recursive}")
         self.recursive = recursive
         self.refresh()
 
-    def is_recursive(self):
+    def is_recursive(self) -> bool:
         return self.recursive
 
-    def get_cursor(self):
+    def get_cursor(self) -> int:
         with self.cursor_lock:
             return self.file_cursor
 
-    def refresh(self, refresh_cursor=True, file_check=False, removed_files=[], direction=Direction.FORWARD):
+    def refresh(self, refresh_cursor: bool = True, file_check: bool = False,
+                removed_files: List[str] = [], direction: Direction = Direction.FORWARD) -> List[str]:
         last_files = self.get_files() if file_check else []
         if config.use_file_paths_json:
             self.update_json_for_removed_files(removed_files)
@@ -102,38 +104,38 @@ class FileBrowser:
                     self.file_cursor += direction.get_correction()
         return files
 
-    def update_cursor_to_new_images(self):
+    def update_cursor_to_new_images(self) -> bool:
         if len(self._new_files) == 0:
             return False
         with self.cursor_lock:
             self.file_cursor = self.filepaths.index(self._new_files[0]) - 1
         return True
 
-    def set_directory(self, directory):
+    def set_directory(self, directory: str) -> List[str]:
         self.directory = directory
         self.checking_files = True
         self._files_cache = {}
         logger.info(f"Setting base directory: {directory}")
         return self.refresh()
 
-    def get_sort_by(self):
+    def get_sort_by(self) -> SortBy:
         return self.sort_by
 
-    def set_sort_by(self, sort_by):
+    def set_sort_by(self, sort_by: SortBy) -> List[str]:
         self.sort_by = sort_by
         if self.sort_by == SortBy.RANDOMIZE:
             self.sort = Sort.RANDOM
         self.refresh()
         return self.get_files()
 
-    def set_sort(self, sort):
+    def set_sort(self, sort: Sort) -> List[str]:
         self.sort = sort
         if self.sort == SortBy.RELATED_IMAGE:
             for f, sf in self._files_cache.items():
                 sf.set_related_image_path()
         return self.get_files()
 
-    def current_file(self):
+    def current_file(self) -> Optional[str]:
         if self.has_files():
             try:
                 cursor = 0
@@ -147,7 +149,7 @@ class FileBrowser:
         else:
             return None
 
-    def previous_file(self):
+    def previous_file(self) -> str:
         files = self.get_files()
         if len(files) == 0:
             recursive_str = "" if self.recursive else _(" (try setting recursive to True)")
@@ -159,7 +161,7 @@ class FileBrowser:
                 self.file_cursor -= 1
             return files[self.file_cursor]
 
-    def next_file(self):
+    def next_file(self) -> str:
         files = self.get_files()
         if len(files) == 0:
             recursive_str = "" if self.recursive else _(" (try setting recursive to True)")
@@ -171,18 +173,21 @@ class FileBrowser:
                 self.file_cursor = 0
         return files[self.file_cursor]
 
-    def last_file(self):
+    def last_file(self) -> str:
         files = self.get_files()
+        if len(files) == 0:
+            recursive_str = "" if self.recursive else _(" (try setting recursive to True)")
+            raise Exception(_("No files found for current browsing settings.") + recursive_str)
         with self.cursor_lock:
             self.file_cursor = len(files) - 1
         return files[self.file_cursor]
 
-    def load_file_paths_json(self):
+    def load_file_paths_json(self) -> List[str]:
         logger.info(f"Loading external file paths from JSON: {config.file_paths_json_path}")
         with open(config.file_paths_json_path, "r") as f:
             return json.load(f)
 
-    def update_json_for_removed_files(self, removed_file_paths=[]):
+    def update_json_for_removed_files(self, removed_file_paths: List[str] = []) -> None:
         if len(removed_file_paths) == 0:
             return
 
@@ -198,18 +203,18 @@ class FileBrowser:
         files = self.get_files()
         return _("FILE_BROWSER_INDEX_DETAILS").format(self.file_cursor+1, len(files), self.sort_by.get_text(), self.sort.get_text())
 
-    def go_to_file(self, filepath):
+    def go_to_file(self, filepath: str) -> None:
         files = self.get_files()
         if filepath in files:
             self.file_cursor = files.index(filepath)
 
-    def random_file(self):
+    def random_file(self) -> str:
         files = self.get_files()
         random_file = choice(files)
         self.file_cursor = files.index(random_file)
         return random_file
 
-    def select_series(self, start_file, end_file):
+    def select_series(self, start_file: str, end_file: str) -> List[str]:
         files = self.get_files()
         selected = []
         if start_file in files and end_file in files:
@@ -221,7 +226,8 @@ class FileBrowser:
                 selected.extend(files[start_index:end_index+1])
         return selected
 
-    def find(self, search_text=None, retry_with_delay=0, exact_match=False, closest_sort_by=None):
+    def find(self, search_text: Optional[str] = None, retry_with_delay: int = 0,
+             exact_match: bool = False, closest_sort_by: Optional[SortBy] = None) -> Optional[str]:
         if not search_text or search_text.strip() == "":
             raise Exception(_("Search text provided to file_browser.find() was invalid."))
         files = self.get_files_with_retry(retry_with_delay)
@@ -237,7 +243,7 @@ class FileBrowser:
             if config.debug:
                 logger.debug(f"Index of {search_text}: {self.file_cursor}")
             return files[self.file_cursor]
-        if exact_match:
+        if exact_match and closest_sort_by is None:
             return None
         search_text = search_text.lower()
         # If that fails, match string to the start of file name
@@ -263,7 +269,7 @@ class FileBrowser:
         
         return None
 
-    def _find_closest_file_by_position(self, search_text, files, closest_sort_by):
+    def _find_closest_file_by_position(self, search_text: str, files: List[str], closest_sort_by: SortBy) -> Optional[str]:
         """
         Find the closest file to the search text based on positional distance in a sorted list.
         This finds files that would be positioned closest to the search text in the specified sort order.
@@ -271,7 +277,8 @@ class FileBrowser:
         if not files:
             return None
         
-        logger.debug(f"Finding closest file by position: {search_text}, closest sort by: {closest_sort_by}")
+        if config.debug:
+            logger.debug(f"Finding closest file by position: {search_text}, closest sort by: {closest_sort_by}")
         
         # Create a properly sorted list for the requested sort type
         sorted_files = self._get_sorted_files_for_sort_type(files, closest_sort_by)
@@ -297,15 +304,13 @@ class FileBrowser:
             return self._find_closest_by_random(search_text, sorted_files, files)
         else:
             # Unknown sort type, return first file
-            self.file_cursor = 0
-            if config.debug:
-                logger.debug(f"Unknown sort type {closest_sort_by}, returning first file")
-            return files[0]
+            return self._handle_find_closest_failure_message(sorted_files, files, "unknown sort type", f"sort type {closest_sort_by}")
 
-    def _get_sorted_files_for_sort_type(self, files, sort_by):
+    def _get_sorted_files_for_sort_type(self, files: List[str], sort_by: SortBy) -> List[SortableFile]:
         """
-        Create a properly sorted list of files for the specified sort type.
-        This ensures we're working with the correct sort order for closest file finding.
+        Create a properly sorted list of SortableFile objects for the specified sort type.
+        This ensures we're working with the correct sort order for closest file finding
+        and avoids re-creating SortableFile objects.
         """
         try:
             # Create a temporary file browser with the specified sorting
@@ -317,84 +322,100 @@ class FileBrowser:
             )
             temp_browser._files = self._files.copy()  # Use the same file cache
             temp_browser._get_sortable_files()
-            return temp_browser.get_files()
+            # Return SortableFile objects to avoid re-creating them in _find_closest methods
+            return temp_browser.get_sorted_files(temp_browser._files, return_sortable_files=True)
         except Exception as e:
             if config.debug:
                 logger.debug(f"Error creating sorted files for {sort_by}: {e}")
-            return files  # Fallback to original files
+            # Fallback: convert file paths to SortableFile objects
+            return [SortableFile(f) for f in files]
 
-    def _find_closest_by_name(self, search_text, sorted_files, original_files):
+    def _handle_find_closest_failure_message(self, sort_by_or_description: str, message: str) -> None:
+        """Unified method to return None when no closer match is found."""
+        if config.debug:
+            logger.debug(f"Closest file by {sort_by_or_description}: {message}, no match found")
+        return None
+
+    def _alphanumeric_key(self, text: str) -> List:
+        """Convert text to alphanumeric key for comparison, matching the logic in Utils.alphanumeric_sort."""
+        def convert(text): return int(text) if text.isdigit() else text
+        return [convert(c) for c in re.split('([0-9]+)', text.lower())]
+
+    def _find_closest_by_name(self, search_text: str, sorted_files: List[SortableFile], original_files: List[str]) -> Optional[str]:
         """
         Simple name-based closest file finder.
         Finds the file whose name would be closest alphabetically to the search text.
+        Uses alphanumeric comparison to match the sorting logic.
         """
-        search_text_lower = search_text.lower()
-        filenames = [os.path.basename(f).lower() for f in sorted_files]
+        search_text_key = self._alphanumeric_key(os.path.basename(search_text))
         
-        # Find the position where search_text would fit alphabetically
-        for i, filename in enumerate(filenames):
-            if filename >= search_text_lower:
-                closest_file = sorted_files[i]
+        # Find the position where search_text would fit alphabetically using alphanumeric comparison
+        for sortable_file in sorted_files:
+            filename_key = self._alphanumeric_key(sortable_file.basename)
+            if filename_key >= search_text_key:
+                closest_file = sortable_file.full_file_path
                 # Map back to original file index
                 self.file_cursor = original_files.index(closest_file)
                 if config.debug:
                     logger.debug(f"Closest file by name: position {self.file_cursor}")
                 return closest_file
         
-        # If search_text would go at the end, return the last file
-        closest_file = sorted_files[-1]
-        self.file_cursor = original_files.index(closest_file)
-        if config.debug:
-            logger.debug(f"Closest file by name: last file")
-        return closest_file
+        return self._handle_find_closest_failure_message("name", "no match")
 
-    def _find_closest_by_time(self, search_text, sorted_files, original_files, sort_by):
+    def _find_closest_by_time(self, search_text: str, sorted_files: List[SortableFile], original_files: List[str], sort_by: SortBy) -> Optional[str]:
         """Find closest file by creation or modification time."""
-        # For time-based sorting, find files with similar names and pick the most recent
-        similar_files = []
-        for i, filepath in enumerate(sorted_files):
-            filename = os.path.basename(filepath).lower()
-            if self._has_similarity(search_text.lower(), filename):
+        # Get the time value of the file if it exists
+        try:
+            search_sortable = SortableFile(search_text)
+            if sort_by == SortBy.CREATION_TIME:
+                target_time = search_sortable.ctime
+            else:  # MODIFY_TIME
+                target_time = search_sortable.mtime
+            
+            # Find the closest file by time
+            closest_file = None
+            closest_time_diff = float('inf')
+            for sortable_file in sorted_files:
                 try:
                     if sort_by == SortBy.CREATION_TIME:
-                        time_value = os.path.getctime(filepath)
+                        file_time = sortable_file.ctime
                     else:  # MODIFY_TIME
-                        time_value = os.path.getmtime(filepath)
-                    similar_files.append((i, time_value, filepath))
-                except OSError:
+                        file_time = sortable_file.mtime
+                    
+                    time_diff = abs((file_time - target_time).total_seconds())
+                    if time_diff < closest_time_diff:
+                        closest_time_diff = time_diff
+                        closest_file = sortable_file.full_file_path
+                except Exception:
                     continue
+            
+            if closest_file:
+                self.file_cursor = original_files.index(closest_file)
+                if config.debug:
+                    logger.debug(f"Closest file by time: position {self.file_cursor}")
+                return closest_file
+        except Exception as e:
+            if config.debug:
+                logger.debug(f"Error finding closest file by time: {e}")
+            pass  # Fall through to return first file
         
-        if similar_files:
-            # Return the most recent similar file
-            similar_files.sort(key=lambda x: x[1], reverse=True)
-            closest_file = similar_files[0][2]
-            self.file_cursor = original_files.index(closest_file)
-            if config.debug:
-                logger.debug(f"Closest file by time: position {self.file_cursor}")
-            return closest_file
-        else:
-            # No similar files, return first file
-            closest_file = sorted_files[0]
-            self.file_cursor = original_files.index(closest_file)
-            if config.debug:
-                logger.debug(f"Closest file by time: no similar files, returning first")
-            return closest_file
+        return self._handle_find_closest_failure_message(sort_by.get_text(), "non-numeric search")
 
-    def _find_closest_by_size(self, search_text, sorted_files, original_files):
+    def _find_closest_by_size(self, search_text: str, sorted_files: List[SortableFile], original_files: List[str]) -> Optional[str]:
         """Find closest file by size."""
         try:
             target_size = int(search_text)
             closest_file = None
             closest_size_diff = float('inf')
             
-            for i, filepath in enumerate(sorted_files):
+            for sortable_file in sorted_files:
                 try:
-                    file_size = os.path.getsize(filepath)
+                    file_size = sortable_file.size
                     size_diff = abs(file_size - target_size)
                     if size_diff < closest_size_diff:
                         closest_size_diff = size_diff
-                        closest_file = filepath
-                except OSError:
+                        closest_file = sortable_file.full_file_path
+                except Exception:
                     continue
             
             if closest_file:
@@ -406,45 +427,37 @@ class FileBrowser:
             pass  # Search text is not numeric
         
         # Fallback: return first file
-        closest_file = sorted_files[0]
-        self.file_cursor = original_files.index(closest_file)
-        if config.debug:
-            logger.debug(f"Closest file by size: non-numeric search, returning first")
-        return closest_file
+        return self._handle_find_closest_failure_message("size", "non-numeric search")
 
-    def _find_closest_by_type(self, search_text, sorted_files, original_files):
+    def _find_closest_by_type(self, search_text: str, sorted_files: List[SortableFile], original_files: List[str]) -> Optional[str]:
         """Find closest file by file type/extension."""
-        search_text_lower = search_text.lower()
+        _, search_ext = os.path.splitext(search_text)
+        search_text_lower = search_ext.lower()
         
         # Try to find files with matching extension
-        for i, filepath in enumerate(sorted_files):
-            filename = os.path.basename(filepath).lower()
-            if filename.endswith(search_text_lower) or search_text_lower in filename:
-                self.file_cursor = original_files.index(filepath)
+        for sortable_file in sorted_files:
+            if sortable_file.extension.lower() == search_text_lower:
+                closest_file = sortable_file.full_file_path
+                self.file_cursor = original_files.index(closest_file)
                 if config.debug:
                     logger.debug(f"Closest file by type: position {self.file_cursor}")
-                return filepath
+                return closest_file
         
         # Fallback: return first file
-        closest_file = sorted_files[0]
-        self.file_cursor = original_files.index(closest_file)
-        if config.debug:
-            logger.debug(f"Closest file by type: no match, returning first")
-        return closest_file
+        return self._handle_find_closest_failure_message("type", "no match")
 
-    def _find_closest_by_name_length(self, search_text, sorted_files, original_files):
+    def _find_closest_by_name_length(self, search_text: str, sorted_files: List[SortableFile], original_files: List[str]) -> Optional[str]:
         """Find closest file by name length."""
         try:
-            target_length = len(search_text)
+            target_length = len(os.path.basename(search_text))
             closest_file = None
             closest_length_diff = float('inf')
             
-            for i, filepath in enumerate(sorted_files):
-                filename = os.path.basename(filepath)
-                length_diff = abs(len(filename) - target_length)
+            for sortable_file in sorted_files:
+                length_diff = abs(sortable_file.name_length - target_length)
                 if length_diff < closest_length_diff:
                     closest_length_diff = length_diff
-                    closest_file = filepath
+                    closest_file = sortable_file.full_file_path
             
             if closest_file:
                 self.file_cursor = original_files.index(closest_file)
@@ -455,23 +468,18 @@ class FileBrowser:
             pass
         
         # Fallback: return first file
-        closest_file = sorted_files[0]
-        self.file_cursor = original_files.index(closest_file)
-        if config.debug:
-            logger.debug(f"Closest file by name length: error, returning first")
-        return closest_file
+        return self._handle_find_closest_failure_message("name length", "error")
 
-    def _find_closest_by_image_property(self, search_text, sorted_files, original_files, sort_by):
+    def _find_closest_by_image_property(self, search_text: str, sorted_files: List[SortableFile], original_files: List[str], sort_by: SortBy) -> Optional[str]:
         """Find closest file by image properties (pixels, height, width)."""
         try:
             target_value = int(search_text)
             closest_file = None
             closest_diff = float('inf')
             
-            for i, filepath in enumerate(sorted_files):
+            for sortable_file in sorted_files:
                 try:
                     # Get the appropriate image property
-                    sortable_file = SortableFile(filepath)
                     if sort_by == SortBy.IMAGE_PIXELS:
                         current_value = sortable_file.get_image_pixels()
                     elif sort_by == SortBy.IMAGE_HEIGHT:
@@ -483,7 +491,7 @@ class FileBrowser:
                         diff = abs(current_value - target_value)
                         if diff < closest_diff:
                             closest_diff = diff
-                            closest_file = filepath
+                            closest_file = sortable_file.full_file_path
                 except Exception:
                     continue
             
@@ -495,62 +503,46 @@ class FileBrowser:
         except ValueError:
             pass  # Search text is not numeric
         
-        # Fallback: return first file
-        closest_file = sorted_files[0]
-        self.file_cursor = original_files.index(closest_file)
-        if config.debug:
-            logger.debug(f"Closest file by {sort_by.get_text()}: non-numeric search, returning first")
-        return closest_file
+        return self._handle_find_closest_failure_message(sort_by.get_text(), "non-numeric search")
 
-    def _find_closest_by_related_image(self, search_text, sorted_files, original_files):
+    def _find_closest_by_related_image(self, search_text: str, sorted_files: List[SortableFile], original_files: List[str]) -> Optional[str]:
         """Find closest file by related image."""
-        # For related image sorting, find files with similar names
-        search_text_lower = search_text.lower()
+        # Get the related image path for the search text file
+        try:
+            sortable_file = SortableFile(search_text)
+            target_related_path = sortable_file.get_related_image_or_self()
+            target_key = self._alphanumeric_key(target_related_path)
+        except Exception:
+            return self._handle_find_closest_failure_message("related image", "error getting related image")
         
-        for i, filepath in enumerate(sorted_files):
-            filename = os.path.basename(filepath).lower()
-            if self._has_similarity(search_text_lower, filename):
-                self.file_cursor = original_files.index(filepath)
-                if config.debug:
-                    logger.debug(f"Closest file by related image: position {self.file_cursor}")
-                return filepath
+        # Find the closest file by comparing related image paths (or self) using alphanumeric comparison
+        for i, sortable_file in enumerate(sorted_files):
+            try:
+                file_related_path = sortable_file.get_related_image_or_self()
+                file_key = self._alphanumeric_key(file_related_path)
+                
+                if file_key >= target_key:
+                    closest_file = sortable_file.full_file_path
+                    self.file_cursor = original_files.index(closest_file)
+                    if config.debug:
+                        logger.debug(f"Closest file by related image: position {self.file_cursor}")
+                    return closest_file
+            except Exception:
+                continue # Skip files that can't be compared
         
-        # Fallback: return first file
-        closest_file = sorted_files[0]
-        self.file_cursor = original_files.index(closest_file)
-        if config.debug:
-            logger.debug(f"Closest file by related image: no match, returning first")
-        return closest_file
+        return self._handle_find_closest_failure_message("related image", "no match")
 
-    def _find_closest_by_random(self, search_text, sorted_files, original_files):
+    def _find_closest_by_random(self, search_text: str, sorted_files: List[SortableFile], original_files: List[str]) -> str:
         """Find closest file for random sorting."""
         # For random sorting, just return a random file
         random_index = randint(0, len(sorted_files) - 1)
-        closest_file = sorted_files[random_index]
+        closest_file = sorted_files[random_index].full_file_path
         self.file_cursor = original_files.index(closest_file)
         if config.debug:
             logger.debug(f"Closest file by random: position {self.file_cursor}")
         return closest_file
 
-    def _has_similarity(self, search_text, filename):
-        """Check if filename has some similarity to search text."""
-        # Check if search text is contained in filename
-        if search_text in filename:
-            return True
-        
-        # Check if any significant part of search text matches filename
-        if len(search_text) >= 3:
-            for i in range(len(filename) - len(search_text) + 1):
-                if filename[i:i+len(search_text)] == search_text:
-                    return True
-        
-        # Check if filename starts with search text
-        if filename.startswith(search_text):
-            return True
-            
-        return False
-
-    def page_down(self, half_length=False):
+    def page_down(self, half_length: bool = False) -> str:
         paging_length = self._get_paging_length(half_length=half_length)
         test_cursor = self.file_cursor + paging_length
         if test_cursor > len(self._files):
@@ -559,7 +551,7 @@ class FileBrowser:
             self.file_cursor = test_cursor - 1
         return self.next_file()
 
-    def page_up(self, half_length=False):
+    def page_up(self, half_length: bool = False) -> str:
         paging_length = self._get_paging_length(half_length=half_length)
         test_cursor = self.file_cursor - paging_length
         if test_cursor < 0:
@@ -568,7 +560,7 @@ class FileBrowser:
             self.file_cursor = test_cursor + 1
         return self.previous_file()
 
-    def _get_paging_length(self, half_length=False):
+    def _get_paging_length(self, half_length: bool = False) -> int:
         divisor = 20 if half_length else 10
         paging_length = int(len(self._files) / divisor)
         if paging_length > 200:
@@ -595,10 +587,10 @@ class FileBrowser:
 
     def get_files(self) -> List[str]:
         if self.filepaths is None or len(self.filepaths) == 0:
-            self.filepaths = self.get_sorted_filepaths(self._files)
+            self.filepaths = self.get_sorted_files(self._files)
         return self.filepaths
 
-    def get_files_with_retry(self, retry_with_delay=0):
+    def get_files_with_retry(self, retry_with_delay: int = 0) -> List[str]:
         files = self.get_files()
         if len(files) == 0 and retry_with_delay > 0:
             if retry_with_delay > 3:
@@ -608,7 +600,7 @@ class FileBrowser:
             return self.get_files_with_retry(retry_with_delay=retry_with_delay+1)
         return files
 
-    def get_sorted_filepaths(self, sortable_files):
+    def get_sorted_files(self, sortable_files: List[SortableFile], return_sortable_files: bool = False):
         if self.sort == Sort.RANDOM:
             sortable_files = list(sortable_files)
             shuffle(sortable_files)  # TODO technically should be caching the random sort state somehow
@@ -650,11 +642,15 @@ class FileBrowser:
             elif self.sort_by == SortBy.RELATED_IMAGE:
                 sortable_files.sort(key=lambda sf: sf.get_related_image_or_self(), reverse=reverse)
 
-        # After sorting, extract the file path only
-        filepaths = [sf.full_file_path for sf in sortable_files]
-        return filepaths
+        # Return either SortableFile objects or filepaths
+        if return_sortable_files:
+            return sortable_files
+        else:
+            # Extract the file path only
+            filepaths = [sf.full_file_path for sf in sortable_files]
+            return filepaths
 
-    def _gather_files(self, files=None):
+    def _gather_files(self, files: Optional[List[str]] = None) -> None:
         allowed_extensions = config.file_types
         if files is None:  # This is not the standard use case, only used in methods where we don't care about sorting
             self.filepaths.clear()
@@ -699,7 +695,7 @@ class FileBrowser:
                     except PermissionError:
                         logger.warning(f"Permission denied: {current_dir}")
 
-    def count_files_by_type_in_directory(self, recursive: bool = True) -> dict:
+    def count_files_by_type_in_directory(self, recursive: bool = True) -> Dict[str, int]:
         """
         Count ALL files by type in a specified directory, including unsupported file types.
         This is used for delete confirmation to show users exactly what they're deleting.

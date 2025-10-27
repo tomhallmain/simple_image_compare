@@ -209,7 +209,7 @@ class GoToFile:
             self.go_to_file()
 
     def go_to_last_moved(self, event=None):
-        """Set closest search, populate with basename of last moved image, and go."""
+        """Set closest search, populate with full path of last moved image, and go."""
         last_moved = MarkedFiles.last_moved_image
         if not last_moved:
             action = FileActionsWindow.get_history_action(start_index=0, exclude_auto=True)
@@ -222,8 +222,8 @@ class GoToFile:
         GoToFile.last_use_closest = True
         self.use_closest.set(True)
         self.toggle_closest_options()
-        # Populate with basename and go
-        self.search_text.set(os.path.basename(last_moved))
+        # Populate with full path (not just basename) so methods like _find_closest_by_time can access file properties
+        self.search_text.set(last_moved)
         self.master.update()
         self.go_to_file()
 

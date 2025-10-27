@@ -43,7 +43,7 @@ def get_readable_file_size(path):
 
 
 class ImageDetails():
-    related_image_canvas = None
+    temp_media_canvas = None
     related_image_saved_node_id = "LoadImage"
     downstream_related_image_index = 0
     downstream_related_images_cache = {}
@@ -491,24 +491,23 @@ class ImageDetails():
             if app_actions.get_window(base_dir=base_dir, img_path=image_path, refocus=True,
                                       disallow_if_compare_state=True, new_image=True) is not None:
                 return
-        if ImageDetails.related_image_canvas is None:
-            ImageDetails.set_related_image_canvas(master, image_path, app_actions)
+        if ImageDetails.temp_media_canvas is None:
+            ImageDetails.set_temp_media_canvas(master, image_path, app_actions)
         try:
-            ImageDetails.related_image_canvas.create_image(image_path)
-            logger.info(f"Related image: {image_path}")
+            ImageDetails.temp_media_canvas.create_image(image_path)
         except Exception as e:
             if "invalid command name" in str(e):
-                ImageDetails.set_related_image_canvas(master, image_path, app_actions)
-                ImageDetails.related_image_canvas.create_image(image_path)
+                ImageDetails.set_temp_media_canvas(master, image_path, app_actions)
+                ImageDetails.temp_media_canvas.create_image(image_path)
             else:
                 raise e
 
     @staticmethod
-    def set_related_image_canvas(master, related_image_path, app_actions):
-        with Image.open(related_image_path) as image:
+    def set_temp_media_canvas(master, media_path, app_actions):
+        with Image.open(media_path) as image:
             width = min(700, image.size[0])
             height = int(image.size[1] * width / image.size[0])
-        ImageDetails.related_image_canvas = TempImageCanvas(master, title=related_image_path,
+        ImageDetails.temp_media_canvas = TempImageCanvas(master, title=media_path,
                 dimensions=f"{width}x{height}", app_actions=app_actions)
 
     @staticmethod

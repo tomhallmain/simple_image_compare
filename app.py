@@ -1690,7 +1690,8 @@ class App():
         # First try to find the file in the current window
         if self.mode == Mode.BROWSE:
             self.file_browser.refresh()
-            logger.debug(f"Finding file in current window: {search_text}, closest sort by: {closest_sort_by}")
+            if config.debug:
+                logger.debug(f"Finding file in current window: {search_text}, closest sort by: {closest_sort_by}")
             image_path = self.file_browser.find(
                 search_text=search_text, retry_with_delay=retry_with_delay, exact_match=exact_match, closest_sort_by=closest_sort_by)
             # If file found in current window, display it
@@ -1708,7 +1709,7 @@ class App():
         # If file not found in current window, search in other open windows
         for window in App.open_windows:
             if window.window_id == self.window_id:
-                continue  # Skip current window
+                continue  # Skip current window, already checked it
             if window.mode == Mode.BROWSE:
                 window.file_browser.refresh()
                 found_path = window.file_browser.find(

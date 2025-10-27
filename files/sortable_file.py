@@ -4,6 +4,7 @@ import os
 from PIL import Image
 
 from image.frame_cache import FrameCache
+from image.image_data_extractor import image_data_extractor
 
 class SortableFile:
     def __init__(self, full_file_path):
