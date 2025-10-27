@@ -21,7 +21,7 @@ class Config:
         self.locale = Utils.get_default_user_language()
         self.foreground_color = None
         self.background_color = None
-        self.debug = True
+        self.debug = False
         self.log_level = "info"
         self.clip_model = "ViT-B/32"
         self.compare_mode = CompareMode.CLIP_EMBEDDING
@@ -139,6 +139,7 @@ class Config:
                             "xvlm_model_size",
                             "gimp_exe_loc")
             self.set_values(bool,
+                            "debug",
                             "image_browse_recursive",
                             "image_tagging_enabled",
                             "escape_backslash_filepaths",
