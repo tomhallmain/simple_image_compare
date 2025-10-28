@@ -32,7 +32,6 @@ import threading
 from enum import Enum
 from pathlib import Path
 from typing import Optional, List, Dict, Tuple, Callable
-from tkinter import messagebox
 import traceback
 
 from utils.config import config
@@ -743,7 +742,7 @@ class GimpWrapper:
             
             # Use the app's alert method for consistency
             result = self.app_actions.alert(_("Confirm Overwrite"), message, kind="askokcancel")
-            
+            from tkinter import messagebox
             if result == messagebox.OK or result == True:
                 # User confirmed, proceed with moving files
                 self._handle_new_files_no_conflict(temp_files)

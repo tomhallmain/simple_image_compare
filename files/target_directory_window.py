@@ -1,6 +1,6 @@
 import os
 
-from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
+from tkinter import Frame, Label, filedialog, LEFT, W
 from tkinter.ttk import Button
 
 from lib.multi_display import SmartToplevel

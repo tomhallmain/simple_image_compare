@@ -565,9 +565,8 @@ class GoToFile:
                     
                     # Check for large directory confirmation if needed
                     if needs_confirmation and file_count > threshold:
-                        from tkinter import messagebox
                         message = _("The directory '{0}' contains many files ({1} files found so far). Searching may take a while. Do you want to proceed?").format(target_dir, file_count)
-                        result = messagebox.askyesno(_("Large Directory"), message)
+                        result = self.app_actions.alert(_("Large Directory"), message, kind="askyesno")
                         
                         if result:
                             # User confirmed, add to confirmed directories (MRU)

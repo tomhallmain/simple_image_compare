@@ -1,4 +1,4 @@
-from tkinter import Frame, Label, BooleanVar, LEFT, W, messagebox
+from tkinter import Frame, Label, BooleanVar, LEFT, W
 from tkinter.ttk import Checkbutton, Button, Separator
 
 from lib.multi_display import SmartToplevel
@@ -225,6 +225,7 @@ class TypeConfigurationWindow:
         res = app_actions.alert(_("Confirm Changes"), 
                                 _("This will clear all existing compares in open windows. Continue?"),
                                 kind="warning", master=cls.top_level)
+        from tkinter import messagebox
         not_ok = res != messagebox.OK and res != True
         if not_ok:
             return

@@ -3,7 +3,7 @@ import re
 import sys
 from typing import Tuple, Optional, Callable
 
-from tkinter import Frame, Label, filedialog, messagebox, LEFT, W
+from tkinter import Frame, Label, filedialog, LEFT, W
 from tkinter.ttk import Button
 
 from compare.compare_embeddings_clip import CompareEmbeddingClip
@@ -769,6 +769,7 @@ class MarkedFiles():
         res = self.app_actions.alert(_("Confirm Delete"),
                 _("Deleting %s marked files - Are you sure you want to proceed?").format(len(MarkedFiles.file_marks)),
                 kind="askokcancel", severity=severity, master=self.master)
+        from tkinter import messagebox
         if res != messagebox.OK and res != True:
             return
 

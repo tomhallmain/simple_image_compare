@@ -2127,7 +2127,7 @@ class App():
         self.alert(title, error_text, kind=kind)
 
     def alert(self, title: str, message: str, kind: str = "info", severity: str = "normal", master: Optional[object] = None) -> None:
-        if kind not in ("error", "warning", "info", "askokcancel"):
+        if kind not in ("error", "warning", "info", "askokcancel", "askyesno", "askyesnocancel"):
             raise ValueError("Unsupported alert kind.")
 
         logger.warning(f"Alert - Title: \"{title}\" Message: {message}")
@@ -2141,7 +2141,7 @@ class App():
             return show_high_severity_dialog(parent_window, title, message)
         
         # Use standard messagebox for normal cases
-        if kind == "askokcancel":
+        if kind in ["askokcancel", "askyesno", "askyesnocancel"]:
             alert_method = getattr(messagebox, kind)
         else:
             alert_method = getattr(messagebox, f"show{kind}")

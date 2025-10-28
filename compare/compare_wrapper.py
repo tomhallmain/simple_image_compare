@@ -2,8 +2,6 @@ from copy import deepcopy
 import os
 import pprint
 
-from tkinter import messagebox
-
 from compare.compare_args import CompareArgs
 from compare.compare_colors import CompareColors
 from compare.compare_embeddings_align import CompareEmbeddingAlign
@@ -324,6 +322,7 @@ class CompareWrapper:
                 res = self._app_actions.alert(_("Confirm group run"),
                                  _("Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."),
                                  kind="askokcancel")
+                from tkinter import messagebox
                 if res != messagebox.OK and res != True:
                     return
             self._app_actions.set_mode(Mode.GROUP, do_update=False)
