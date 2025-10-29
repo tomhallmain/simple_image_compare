@@ -30,6 +30,14 @@ class HelpAndConfig():
         self.row_counter1 = 0
         col_0_width = 250
 
+        # Title for main hotkeys section
+        self.label_main_title = Label(self.frame)
+        self.label_main_title['text'] = _("Main Window Shortcuts")
+        self.label_main_title.grid(row=self.row_counter0, columnspan=2, pady=(0, 6))
+        self.label_main_title.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        self.row_counter0 += 1
+        self.row_counter1 += 1
+
         help_details = {
             _("Command"): _("Description"),
             "Ctrl+A": _("Search current image in new window"),
@@ -97,9 +105,59 @@ class HelpAndConfig():
             self.help_label_list.append(_label)
             self.help_label_list.append(label)
 
+        # visual divider between main hotkeys and image details section
+        self._divider_main_to_details = Label(self.frame)
+        self._divider_main_to_details['text'] = "\u2500" * 60  # horizontal line
+        self._divider_main_to_details.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        self._divider_main_to_details.grid(row=self.row_counter0, columnspan=2, pady=(10, 6))
+        self.row_counter0 += 1
+        self.row_counter1 += 1
+
+        # Image Details window specific shortcuts
+        self.label_details_title = Label(self.frame)
+        self.label_details_title['text'] = _("Image Details Shortcuts")
+        self.label_details_title.grid(row=self.row_counter0, columnspan=2, pady=(0, 6))
+        self.label_details_title.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        self.row_counter0 += 1
+        self.row_counter1 += 1
+
+        details_help = {
+            _("Command"): _("Description"),
+            "Shift+C": _("Crop Image (Smart Detect)"),
+            "Shift+L": _("Rotate Image Left"),
+            "Shift+R": _("Rotate Image Right"),
+            "Shift+E": _("Enhance Image"),
+            "Shift+A": _("Random Crop"),
+            "Shift+Q": _("Randomly Modify Image"),
+            "Shift+H": _("Flip Image Horizontally"),
+            "Shift+V": _("Flip Image Vertically"),
+            "Shift+X": _("Copy Without EXIF"),
+            "Shift+J": _("Convert to JPG"),
+            "Shift+D": _("Show Metadata"),
+            "Shift+R": _("Open Related Image"),
+            "Shift+I": _("Run Image Generation"),
+            "Shift+Y": _("Redo Prompt"),
+        }
+
+        for key, value in details_help.items():
+            _label = Label(self.frame)
+            label = Label(self.frame)
+            self.add_label(_label, key, wraplength=col_0_width)
+            self.add_label(label, value, column=1)
+            self.help_label_list.append(_label)
+            self.help_label_list.append(label)
+
+        # visual divider between image details and config section
+        self._divider_details_to_config = Label(self.frame)
+        self._divider_details_to_config['text'] = "\u2500" * 60  # horizontal line
+        self._divider_details_to_config.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        self._divider_details_to_config.grid(row=self.row_counter0, columnspan=2, pady=(10, 6))
+        self.row_counter0 += 1
+        self.row_counter1 += 1
+
         self.label_config_title = Label(self.frame)
         self.label_config_title['text'] = "Config Settings"
-        self.label_config_title.grid(row=self.row_counter0, columnspan=2)
+        self.label_config_title.grid(row=self.row_counter0, columnspan=2, pady=(0, 6))
         self.label_config_title.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
         self.row_counter0 += 1
         self.row_counter1 += 1

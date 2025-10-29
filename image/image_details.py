@@ -218,7 +218,20 @@ class ImageDetails():
             self.row_count1 += 1
 
         self.master.bind("<Escape>", self.close_windows)
-        self.master.bind("<Shift-C>", self.crop_image)
+        self.master.bind("<Shift-C>", self.crop_image)  # Crop Image
+        self.master.bind("<Shift-L>", lambda e: self.rotate_image(right=False))  # Rotate Left
+        self.master.bind("<Shift-R>", lambda e: self.rotate_image(right=True))   # Rotate Right
+        self.master.bind("<Shift-E>", lambda e: self.enhance_image())            # Enhance Image
+        self.master.bind("<Shift-A>", lambda e: self.random_crop())              # rAndom Crop
+        self.master.bind("<Shift-Q", lambda e: self.random_modification())      # Randomly Modify
+        self.master.bind("<Shift-H>", lambda e: self.flip_image())               # Flip Horizontal
+        self.master.bind("<Shift-V>", lambda e: self.flip_image(top_bottom=True))# Flip Vertical
+        self.master.bind("<Shift-X>", lambda e: self.copy_without_exif())        # Copy w/o EXIF
+        self.master.bind("<Shift-J>", lambda e: self.convert_to_jpg())           # Convert to JPG
+        self.master.bind("<Shift-D>", self.show_metadata)                        # Show Metadata (metaData)
+        self.master.bind("<Shift-R>", self.open_related_image)                   # Open Related Image
+        self.master.bind("<Shift-I>", self.run_image_generation)                 # Run image Generation
+        self.master.bind("<Shift-Y>", self.run_redo_prompt)                      # Redo prompt (like redo)
         self.master.protocol("WM_DELETE_WINDOW", self.close_windows)
         self.focus()
 
