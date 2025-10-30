@@ -223,7 +223,7 @@ class ImageDetails():
         self.master.bind("<Shift-R>", lambda e: self.rotate_image(right=True))   # Rotate Right
         self.master.bind("<Shift-E>", lambda e: self.enhance_image())            # Enhance Image
         self.master.bind("<Shift-A>", lambda e: self.random_crop())              # rAndom Crop
-        self.master.bind("<Shift-Q", lambda e: self.random_modification())      # Randomly Modify
+        self.master.bind("<Shift-Q>", lambda e: self.random_modification())      # Randomly Modify
         self.master.bind("<Shift-H>", lambda e: self.flip_image())               # Flip Horizontal
         self.master.bind("<Shift-V>", lambda e: self.flip_image(top_bottom=True))# Flip Vertical
         self.master.bind("<Shift-X>", lambda e: self.copy_without_exif())        # Copy w/o EXIF
