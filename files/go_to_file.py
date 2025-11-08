@@ -147,6 +147,13 @@ class GoToFile:
         self.setup_related_files_section()
 
         self.master.bind("<Escape>", self.close_windows)
+        # self.master.bind("<Control-g>", lambda e: self.go_to_file())         # Go To File
+        self.master.bind("<Control-b>", lambda e: self.pick_file())          # Browse File
+        self.master.bind("<Control-g>", lambda e: self.go_to_last_moved())   # Go To Last Moved
+        self.master.bind("<Control-c>", lambda e: self.get_current_media_filename())  # Current Media
+        self.master.bind("<Control-f>", lambda e: self.find_related_files()) # Find Related Files
+        self.master.bind("<Control-e>", lambda e: self.extract_and_set_base_id())  # Extract base ID
+        self.master.bind("<Control-d>", lambda e: self.browse_target_directory())  # Browse Directory
         self.frame.after(1, lambda: self.frame.focus_force())
         self.search_text_box.after(1, lambda: self.search_text_box.focus_force())
 

@@ -147,11 +147,55 @@ class HelpAndConfig():
             self.help_label_list.append(_label)
             self.help_label_list.append(label)
 
-        # visual divider between image details and config section
-        self._divider_details_to_config = Label(self.frame)
-        self._divider_details_to_config['text'] = "\u2500" * 60  # horizontal line
-        self._divider_details_to_config.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
-        self._divider_details_to_config.grid(row=self.row_counter0, columnspan=2, pady=(10, 6))
+        # Add explanatory label about Ctrl behavior
+        self.label_ctrl_explanation = Label(self.frame)
+        self.label_ctrl_explanation['text'] = _("Note: Using Ctrl instead of Shift marks the created file and opens the marks window without GUI.")
+        self.label_ctrl_explanation.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR, wraplength=600, justify=LEFT)
+        self.label_ctrl_explanation.grid(row=self.row_counter0, columnspan=2, pady=(10, 0), sticky=W, padx=10)
+        self.row_counter0 += 1
+        self.row_counter1 += 1
+        self.help_label_list.append(self.label_ctrl_explanation)
+
+        # visual divider between image details and go to file section
+        self._divider_details_to_gotofile = Label(self.frame)
+        self._divider_details_to_gotofile['text'] = "\u2500" * 60  # horizontal line
+        self._divider_details_to_gotofile.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        self._divider_details_to_gotofile.grid(row=self.row_counter0, columnspan=2, pady=(10, 6))
+        self.row_counter0 += 1
+        self.row_counter1 += 1
+
+        # Go To File window specific shortcuts
+        self.label_gotofile_title = Label(self.frame)
+        self.label_gotofile_title['text'] = _("Go To File Shortcuts")
+        self.label_gotofile_title.grid(row=self.row_counter0, columnspan=2, pady=(0, 6))
+        self.label_gotofile_title.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        self.row_counter0 += 1
+        self.row_counter1 += 1
+
+        gotofile_help = {
+            _("Command"): _("Description"),
+            "Ctrl+G": _("Go To File"),
+            "Ctrl+B": _("Browse File"),
+            "Ctrl+V": _("Go To Last Moved"),
+            "Ctrl+C": _("Current Media"),
+            "Ctrl+F": _("Find Related Files"),
+            "Ctrl+E": _("Extract Base ID"),
+            "Ctrl+D": _("Browse Directory"),
+        }
+
+        for key, value in gotofile_help.items():
+            _label = Label(self.frame)
+            label = Label(self.frame)
+            self.add_label(_label, key, wraplength=col_0_width)
+            self.add_label(label, value, column=1)
+            self.help_label_list.append(_label)
+            self.help_label_list.append(label)
+
+        # visual divider between go to file and config section
+        self._divider_gotofile_to_config = Label(self.frame)
+        self._divider_gotofile_to_config['text'] = "\u2500" * 60  # horizontal line
+        self._divider_gotofile_to_config.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        self._divider_gotofile_to_config.grid(row=self.row_counter0, columnspan=2, pady=(10, 6))
         self.row_counter0 += 1
         self.row_counter1 += 1
 

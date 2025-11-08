@@ -228,10 +228,23 @@ class ImageDetails():
         self.master.bind("<Shift-V>", lambda e: self.flip_image(top_bottom=True))# Flip Vertical
         self.master.bind("<Shift-X>", lambda e: self.copy_without_exif())        # Copy w/o EXIF
         self.master.bind("<Shift-J>", lambda e: self.convert_to_jpg())           # Convert to JPG
+        self.master.bind("<Shift-K>", lambda e: self.convert_to_jpg())           # Convert to JPG
         self.master.bind("<Shift-D>", self.show_metadata)                        # Show Metadata (metaData)
         self.master.bind("<Shift-R>", self.open_related_image)                   # Open Related Image
         self.master.bind("<Shift-I>", self.run_image_generation)                 # Run image Generation
         self.master.bind("<Shift-Y>", self.run_redo_prompt)                      # Redo prompt (like redo)
+        # Ctrl+key combinations mark the file and open marks window without GUI
+        self.master.bind("<Control-c>", lambda e: self._crop_image_and_mark())                # Crop Image and Mark
+        self.master.bind("<Control-l>", lambda e: self._rotate_image_and_mark(right=False))  # Rotate Left and Mark
+        self.master.bind("<Control-r>", lambda e: self._rotate_image_and_mark(right=True))   # Rotate Right and Mark
+        self.master.bind("<Control-e>", lambda e: self._enhance_image_and_mark())            # Enhance Image and Mark
+        self.master.bind("<Control-a>", lambda e: self._random_crop_and_mark())              # Random Crop and Mark
+        self.master.bind("<Control-q>", lambda e: self._random_modification_and_mark())      # Randomly Modify and Mark
+        self.master.bind("<Control-h>", lambda e: self._flip_image_and_mark())               # Flip Horizontal and Mark
+        self.master.bind("<Control-v>", lambda e: self._flip_image_and_mark(top_bottom=True))# Flip Vertical and Mark
+        self.master.bind("<Control-x>", lambda e: self._copy_without_exif_and_mark())        # Copy w/o EXIF and Mark
+        self.master.bind("<Control-j>", lambda e: self._convert_to_jpg_and_mark())           # Convert to JPG and Mark
+        self.master.bind("<Control-k>", lambda e: self._convert_to_jpg_and_mark())           # Convert to JPG and Mark
         self.master.protocol("WM_DELETE_WINDOW", self.close_windows)
         self.focus()
 
@@ -412,6 +425,91 @@ class ImageDetails():
             self.app_actions.toast(_("Converted image to JPG"))
             if os.path.exists(new_filepath):
                 ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
+        except Exception as e:
+            logger.error(f"Error converting image to JPG: {e}")
+            self.app_actions.toast(_("Error converting image to JPG"))
+
+    def _rotate_image_and_mark(self, right=False):
+        """Rotate image and mark it, opening the marks window without GUI."""
+        new_filepath = ImageOps.rotate_image(self.image_path, right)
+        self.close_windows()
+        self.app_actions.refresh()
+        rotation_text = _("Rotated image right") if right else _("Rotated image left")
+        self.app_actions.toast(rotation_text)
+        if os.path.exists(new_filepath):
+            self.app_actions.open_move_marks_window(filepath=new_filepath, open_gui=False)
+
+    def _crop_image_and_mark(self, event=None):
+        """Crop image and mark it, opening the marks window without GUI."""
+        saved_files = Cropper.smart_crop_multi_detect(self.image_path, "")
+        if len(saved_files) > 0:
+            self.close_windows()
+            self.app_actions.refresh()
+            self.app_actions.toast(_("Cropped image"))
+            if len(saved_files) > 0:
+                self.app_actions.open_move_marks_window(filepath=saved_files[0], open_gui=False)
+        else:
+            self.app_actions.toast(_("No crops found"))
+
+    def _enhance_image_and_mark(self):
+        """Enhance image and mark it, opening the marks window without GUI."""
+        new_filepath = ImageOps.enhance_image(self.image_path)
+        self.close_windows()
+        self.app_actions.refresh()
+        self.app_actions.toast(_("Enhanced image"))
+        if os.path.exists(new_filepath):
+            self.app_actions.open_move_marks_window(filepath=new_filepath, open_gui=False)
+
+    def _random_crop_and_mark(self):
+        """Random crop image and mark it, opening the marks window without GUI."""
+        new_filepath = ImageOps.random_crop_and_upscale(self.image_path)
+        self.close_windows()
+        self.app_actions.refresh()
+        self.app_actions.toast(_("Randomly cropped image"))
+        if os.path.exists(new_filepath):
+            self.app_actions.open_move_marks_window(filepath=new_filepath, open_gui=False)
+
+    def _random_modification_and_mark(self):
+        """Randomly modify image and mark it, opening the marks window without GUI."""
+        new_filepath = ImageOps.randomly_modify_image(self.image_path)
+        self.close_windows()
+        self.app_actions.refresh()
+        if os.path.exists(new_filepath):
+            self.app_actions.toast(_("Randomly modified image"))
+            self.app_actions.open_move_marks_window(filepath=new_filepath, open_gui=False)
+        else:
+            self.app_actions.toast(_("No new image created"))
+
+    def _flip_image_and_mark(self, top_bottom=False):
+        """Flip image and mark it, opening the marks window without GUI."""
+        new_filepath = ImageOps.flip_image(self.image_path, top_bottom=top_bottom)
+        self.close_windows()
+        self.app_actions.refresh()
+        self.app_actions.toast(_("Flipped image"))
+        if os.path.exists(new_filepath):
+            self.app_actions.open_move_marks_window(filepath=new_filepath, open_gui=False)
+
+    def _copy_without_exif_and_mark(self):
+        """Copy image without EXIF and mark it, opening the marks window without GUI."""
+        try:
+            new_filepath = image_data_extractor.copy_without_exif(self.image_path)
+            self.app_actions.refresh()
+            self.app_actions.toast(_("Copied image without EXIF data"))
+            if os.path.exists(new_filepath):
+                self.app_actions.open_move_marks_window(filepath=new_filepath, open_gui=False)
+        except Exception as e:
+            logger.error(f"Error copying image without EXIF: {e}")
+            self.app_actions.toast(_("Error copying image without EXIF"))
+
+    def _convert_to_jpg_and_mark(self):
+        """Convert image to JPG and mark it, opening the marks window without GUI."""
+        try:
+            new_filepath = ImageOps.convert_to_jpg(self.image_path)
+            self.close_windows()
+            self.app_actions.refresh()
+            self.app_actions.toast(_("Converted image to JPG"))
+            if os.path.exists(new_filepath):
+                self.app_actions.open_move_marks_window(filepath=new_filepath, open_gui=False)
         except Exception as e:
             logger.error(f"Error converting image to JPG: {e}")
             self.app_actions.toast(_("Error converting image to JPG"))

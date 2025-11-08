@@ -420,7 +420,7 @@ class App():
         self.master.bind("<MouseWheel>", lambda event: None if (event.state & 0x1) != 0 else (self.show_next_media() if event.delta > 0 else self.show_prev_media()))
         self.master.bind("<Button-2>", self.delete_image)
         self.master.bind("<Button-3>", self.show_context_menu)
-        self.master.bind("<Shift-M>", lambda e: self.check_focus(e, self.add_or_remove_mark_for_current_image))
+        self.master.bind("<Shift-M>", lambda e: self.check_focus(e, self.add_or_remove_mark))
         self.master.bind("<Shift-N>", lambda e: self.check_focus(e, self._add_all_marks_from_last_or_current_group))
         self.master.bind("<Shift-G>", lambda e: self.check_focus(e, self.go_to_mark))
         self.master.bind("<Shift-K>", lambda e: self.check_focus(e, lambda: ImageDetails.open_temp_image_canvas(self.master, MarkedFiles.last_moved_image, self.app_actions)))
@@ -839,7 +839,7 @@ class App():
         menu.add_command(label=_("View Media Details"), command=lambda: self.get_media_details(event))
         menu.add_command(label=_("Hide Media"), command=lambda: self.hide_current_media(event))
         menu.add_command(label=_("Remove from Marks") if current_media_in_marked_files else _("Add to Marks"),
-                         command=lambda: self.add_or_remove_mark_for_current_image(event))
+                         command=lambda: self.add_or_remove_mark(event))
         menu.add_command(label=_("Remove from Favorites") if current_media_in_favorites else _("Add to Favorites"),
                          command=lambda: favorite_command(self.get_base_dir(), image_path, self.toast))
         menu.add_separator()
@@ -1468,22 +1468,24 @@ class App():
     def _set_toggled_view_matches(self):
         self.is_toggled_view_matches = True
 
-    def add_or_remove_mark_for_current_image(self, event=None, show_toast: bool = True) -> None:
+    def add_or_remove_mark(self, event=None, show_toast: bool = True, filepath: Optional[str] = None) -> None:
+        if filepath is None:
+            filepath = self.img_path
         if self.delete_lock:
             warning = _("DELETE_LOCK_MARK_STOP")
             self.toast(warning)
             raise Exception(warning)
             # NOTE Have to raise exception to in some cases prevent downstream events from happening with no marks
         self._check_marks(min_mark_size=0)
-        if self.img_path in MarkedFiles.file_marks:
-            MarkedFiles.file_marks.remove(self.img_path)
+        if filepath in MarkedFiles.file_marks:
+            MarkedFiles.file_marks.remove(filepath)
             remaining_marks_count = len(MarkedFiles.file_marks)
             if MarkedFiles.mark_cursor >= remaining_marks_count:
                 MarkedFiles.mark_cursor = -1
             if show_toast:
                 self.toast(_("Mark removed. Remaining: {0}").format(remaining_marks_count))
         else:
-            MarkedFiles.file_marks.append(self.img_path)
+            MarkedFiles.file_marks.append(filepath)
             if show_toast:
                 self.toast(_("Mark added. Total set: {0}").format(len(MarkedFiles.file_marks)))
 
@@ -1527,15 +1529,22 @@ class App():
         self.master.clipboard_append(MarkedFiles.file_marks)
 
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
-    def open_move_marks_window(self, event=None, open_gui: bool = True, override_marks: list[str] = []) -> None:
+    def open_move_marks_window(self, event=None, open_gui: bool = True, override_marks: list[str] = [], filepath: Optional[str] = None) -> None:
         self._check_marks(min_mark_size=0)
+        if filepath:
+            if not os.path.exists(filepath):
+                self.alert(_("Invalid file path"), _("The file path {0} is invalid.").format(filepath), kind="error")
+                return
+            MarkedFiles.add_mark_if_not_present(filepath)
+        else:
+            filepath = self.get_active_media_filepath()
         if len(override_marks) > 0:
             logger.debug(_("Including marks: {0}").format(override_marks))
             MarkedFiles.file_marks.extend(override_marks)
-        current_image = self.get_active_media_filepath()
+        current_image = filepath
         single_image = False
         if len(MarkedFiles.file_marks) == 0:
-            self.add_or_remove_mark_for_current_image()
+            self.add_or_remove_mark(filepath=filepath)
             single_image = True
         top_level = SmartToplevel(persistent_parent=self.master, geometry=MarkedFiles.get_geometry(is_gui=open_gui))
         top_level.title(_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)))
@@ -1550,19 +1559,19 @@ class App():
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def run_previous_marks_action(self, event=None) -> None:
         if len(MarkedFiles.file_marks) == 0:
-            self.add_or_remove_mark_for_current_image(show_toast=False)
+            self.add_or_remove_mark(show_toast=False)
         MarkedFiles.run_previous_action(self.app_actions, self.get_active_media_filepath())
 
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def run_penultimate_marks_action(self, event=None) -> None:
         if len(MarkedFiles.file_marks) == 0:
-            self.add_or_remove_mark_for_current_image(show_toast=False)
+            self.add_or_remove_mark(show_toast=False)
         MarkedFiles.run_penultimate_action(self.app_actions, self.get_active_media_filepath())
 
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def run_permanent_marks_action(self, event=None) -> None:
         if len(MarkedFiles.file_marks) == 0:
-            self.add_or_remove_mark_for_current_image(show_toast=False)
+            self.add_or_remove_mark(show_toast=False)
         MarkedFiles.run_permanent_action(self.app_actions, self.get_active_media_filepath())
 
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
@@ -1570,7 +1579,7 @@ class App():
         assert event is not None
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
         if len(MarkedFiles.file_marks) == 0:
-            self.add_or_remove_mark_for_current_image(show_toast=False)
+            self.add_or_remove_mark(show_toast=False)
         number = int(event.keysym)
         MarkedFiles.run_hotkey_action(self.app_actions, self.get_active_media_filepath(), number, bool(shift_key_pressed))
 
