@@ -174,10 +174,9 @@ class HelpAndConfig():
 
         gotofile_help = {
             _("Command"): _("Description"),
-            "Ctrl+G": _("Go To File"),
+            "Ctrl+G": _("Go To Last Moved"),
             "Ctrl+B": _("Browse File"),
-            "Ctrl+V": _("Go To Last Moved"),
-            "Ctrl+C": _("Current Media"),
+            "Ctrl+R": _("Current Media"),
             "Ctrl+F": _("Find Related Files"),
             "Ctrl+E": _("Extract Base ID"),
             "Ctrl+D": _("Browse Directory"),

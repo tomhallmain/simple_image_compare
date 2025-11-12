@@ -1,5 +1,6 @@
 import os
 import re
+from enum import Enum
 from tkinter import Frame, StringVar, BooleanVar, LEFT, W, filedialog, Label, Listbox, Scrollbar
 from tkinter.ttk import Entry, Button, Checkbutton, OptionMenu, Progressbar
 
@@ -17,15 +18,24 @@ from utils.utils import Utils
 _ = I18N._
 
 
+class CharCategory(Enum):
+    """Character category types for base ID matching."""
+    ALPHA = "alpha"
+    DIGIT = "digit"
+    OTHER = "other"
+
+
 class GoToFile:
     top_level = None
     last_search_text = ""
     last_use_closest = False
     last_closest_sort_by = SortBy.NAME
     last_target_directory = Utils.get_pictures_dir()
+    last_base_id = ""  # Last base ID that was successfully searched
     confirmed_directories = []  # Most-recent-first list of confirmed directories for large operations
 
     TARGET_DIRECTORY_KEY = "go_to_file.target_directory"
+    BASE_ID_KEY = "go_to_file.base_id"
     CONFIRMED_DIRECTORIES_KEY = "go_to_file.confirmed_directories"
     MAX_CONFIRMED_DIRECTORIES = 20
     
@@ -34,6 +44,9 @@ class GoToFile:
         persisted_target_dir = app_info_cache.get_meta(GoToFile.TARGET_DIRECTORY_KEY)
         if persisted_target_dir and os.path.isdir(persisted_target_dir):
             GoToFile.last_target_directory = persisted_target_dir
+        persisted_base_id = app_info_cache.get_meta(GoToFile.BASE_ID_KEY)
+        if persisted_base_id:
+            GoToFile.last_base_id = persisted_base_id
         # Load, filter invalid, dedupe while preserving order, and cap size
         persisted_confirmed = app_info_cache.get_meta(GoToFile.CONFIRMED_DIRECTORIES_KEY, default_val=[])
         cleaned: list[str] = []
@@ -55,6 +68,7 @@ class GoToFile:
     @staticmethod
     def save_persisted_data():
         app_info_cache.set_meta(GoToFile.TARGET_DIRECTORY_KEY, GoToFile.last_target_directory)
+        app_info_cache.set_meta(GoToFile.BASE_ID_KEY, GoToFile.last_base_id)
         app_info_cache.set_meta(GoToFile.CONFIRMED_DIRECTORIES_KEY, GoToFile.confirmed_directories[:GoToFile.MAX_CONFIRMED_DIRECTORIES])
 
     @staticmethod
@@ -150,7 +164,7 @@ class GoToFile:
         # self.master.bind("<Control-g>", lambda e: self.go_to_file())         # Go To File
         self.master.bind("<Control-b>", lambda e: self.pick_file())          # Browse File
         self.master.bind("<Control-g>", lambda e: self.go_to_last_moved())   # Go To Last Moved
-        self.master.bind("<Control-c>", lambda e: self.get_current_media_filename())  # Current Media
+        self.master.bind("<Control-r>", lambda e: self.get_current_media_filename())  # Current Media
         self.master.bind("<Control-f>", lambda e: self.find_related_files()) # Find Related Files
         self.master.bind("<Control-e>", lambda e: self.extract_and_set_base_id())  # Extract base ID
         self.master.bind("<Control-d>", lambda e: self.browse_target_directory())  # Browse Directory
@@ -312,9 +326,9 @@ class GoToFile:
         base_id_label.grid(row=0, column=0, sticky=W, padx=(0, 10))
         
         self.base_id_var = StringVar()
-        # Initialize with empty string or extract from current search text
-        initial_base_id = ""
-        if hasattr(self, 'search_text') and self.search_text.get().strip():
+        # Initialize with last base ID that was searched, or extract from current search text if available
+        initial_base_id = GoToFile.last_base_id
+        if not initial_base_id and hasattr(self, 'search_text') and self.search_text.get().strip():
             initial_base_id = self.extract_base_id(self.search_text.get()) or ""
         self.base_id_var.set(initial_base_id)
         self.base_id_entry = Entry(base_id_frame, textvariable=self.base_id_var, width=25)
@@ -504,8 +518,9 @@ class GoToFile:
             self.app_actions.toast(_("Target directory does not exist."))
             return
         
-        # Save the target directory for next time
+        # Save the target directory and base ID for next time
         GoToFile.last_target_directory = target_dir
+        GoToFile.last_base_id = base_id
         GoToFile.save_persisted_data()
         
         # Add to recent directories for the target directory window
@@ -529,32 +544,99 @@ class GoToFile:
         """
         Extract base ID from filename using common delimiters.
         For example: "SDWebUI_17602175357792320_0_s.png" -> "SDWebUI_17602175357792320"
+        Preserves original delimiters when possible.
         """
         # Get only the basename (filename without directory path), remove the file extension
         basename = os.path.splitext(os.path.basename(filename))[0]
         
-        # Split by common delimiters (space, underscore, dash, dot)
-        parts = re.split(r'[_\s\-\.]+', basename)
+        # Split by common delimiters (space, underscore, dash, dot) while preserving delimiters
+        delimiter_pattern = r'([_\s\-\.]+)'
+        parts = re.split(delimiter_pattern, basename)
         
         if len(parts) == 0:
             return None
         
-        # If only one part, check if it's sufficiently long to be a base ID
+        # If only one part (no delimiters), check if it's sufficiently long to be a base ID
         if len(parts) == 1:
             single_part = parts[0]
             if len(single_part) >= 8 and any(c.isalnum() for c in single_part):
                 return single_part
             return None
         
-        # Try different combinations of parts to find the most likely base ID
-        # Start with first two parts, then try more combinations
-        for i in range(2, len(parts) + 1):
-            base_id = '_'.join(parts[:i])
-            # Check if this looks like a reasonable base ID (not too short, contains some alphanumeric content)
+        # Reconstruct base ID preserving original delimiters
+        # Strategy: Always include at least two parts (one delimiter) unless the first part
+        # is sufficiently long (>= 30 chars) and unique-looking
+        base_id = parts[0]
+        first_part_len = len(parts[0])
+        
+        # If first part is already quite long (>= 30 chars), it's likely a complete base ID
+        # Only return single part if it's long enough to be unique
+        if first_part_len >= 30:
+            return base_id
+        
+        # Always include at least the first delimiter + second part (two parts total)
+        # This ensures we have at least one delimiter in the base ID
+        if len(parts) < 3:  # Need at least: [part1, delimiter, part2, ...]
+            # Not enough parts, return what we have if valid
             if len(base_id) >= 3 and any(c.isalnum() for c in base_id):
                 return base_id
+            return None
+        
+        delimiter = parts[1]
+        second_part = parts[2]
+        
+        # If second part is empty (filename ends with delimiter) or <= 4 characters (likely a suffix), return just the first part if it's valid
+        if not second_part or len(second_part) <= 4:
+            if len(base_id) >= 3 and any(c.isalnum() for c in base_id):
+                return base_id
+            return None
+        
+        base_id = base_id + delimiter + second_part
+        
+        # Check if the first two parts are sufficient (long enough and unique enough)
+        # If they are, stop here. Only add more parts if the first two are too short.
+        base_id_len = len(base_id)
+        if base_id_len >= 10:  # First two parts are long enough, they should be unique
+            return base_id
+        
+        # First two parts are too short, continue adding parts until we have something reasonable
+        # But stop when we encounter suffixes (parts <= 4 characters) or empty strings
+        for i in range(3, len(parts), 2):  # Start from index 3 (after first two parts)
+            if i + 1 < len(parts):
+                delimiter = parts[i]
+                next_part = parts[i + 1]
+                
+                # Stop if next part is empty (filename ends with delimiter) or <= 4 characters (likely a suffix)
+                if not next_part or len(next_part) <= 4:
+                    break
+                
+                # Add this part to make the base ID longer/more unique
+                candidate = base_id + delimiter + next_part
+                if len(candidate) >= 3 and any(c.isalnum() for c in candidate):
+                    base_id = candidate
+                    # If we've reached a reasonable length (>= 10), we can stop
+                    if len(base_id) >= 10:
+                        break
+                else:
+                    break
+            else:
+                break
+        
+        # Final validation
+        if len(base_id) >= 3 and any(c.isalnum() for c in base_id):
+            return base_id
         
         return None
+
+    @staticmethod
+    def _get_char_category(char):
+        """Determine the category of a character: alpha, digit, or other."""
+        if char.isalpha():
+            return CharCategory.ALPHA
+        elif char.isdigit():
+            return CharCategory.DIGIT
+        else:
+            return CharCategory.OTHER
 
     def find_matching_files(self, target_dir, base_id, threshold=400000):
         """Find files in target directory that start with the base ID."""
@@ -563,6 +645,7 @@ class GoToFile:
         
         # Check if directory needs confirmation
         needs_confirmation = normalized_dir not in GoToFile.confirmed_directories
+        last_category = GoToFile._get_char_category(base_id[-1]) if base_id else CharCategory.OTHER
         
         try:
             file_count = 0
@@ -589,11 +672,25 @@ class GoToFile:
                     filename = os.path.basename(file_path)
                     filename_without_ext = os.path.splitext(filename)[0]
                     
-                    # Check if filename starts with base ID followed by a delimiter
-                    if filename_without_ext.startswith(base_id + '_') or filename_without_ext.startswith(base_id + ' '):
-                        matching_files.append(file_path)
-                    elif filename_without_ext == base_id:
-                        matching_files.append(file_path)
+                    # Check if filename starts with base ID followed by a delimiter or equals the base ID
+                    # Support all common delimiters: underscore, space, dash, dot
+                    # Also match if character category changes (e.g., letter to digit, digit to letter)
+                    if filename_without_ext.startswith(base_id):
+                        # Check if it's an exact match or followed by an allowed delimiter
+                        if len(filename_without_ext) == len(base_id):
+                            # Exact match
+                            matching_files.append(file_path)
+                        else:
+                            # Check if the next character is an allowed delimiter or if character category changes
+                            next_char = filename_without_ext[len(base_id)]
+                            
+                            # Check for delimiter match
+                            if next_char in ('_', ' ', '-', '.'):
+                                matching_files.append(file_path)
+                            # Check if character category changes between last char of base_id and next_char
+                            # If categories are different, it's a match
+                            elif last_category != GoToFile._get_char_category(next_char):
+                                matching_files.append(file_path)
             
             # If we completed the search without hitting the threshold, consider it confirmed (MRU)
             if needs_confirmation:
