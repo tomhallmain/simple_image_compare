@@ -174,7 +174,7 @@ class GoToFile:
     def go_to_file(self, event=None):
         search_text = self.search_text.get()
         if search_text.strip() == "":
-            self.app_actions.toast(_("Invalid search string, please enter some text."))
+            self.app_actions.warn(_("Invalid search string, please enter some text."))
             return
         GoToFile.last_search_text = search_text
         GoToFile.last_use_closest = self.use_closest.get()
@@ -434,9 +434,9 @@ class GoToFile:
                 else:
                     self.app_actions.toast(_("Current media filename loaded. Select a target directory to find related filenames."))
             else:
-                self.app_actions.toast(_("No active media file found in the current window."))
+                self.app_actions.warn(_("No active media file found in the current window."))
         except Exception as e:
-            self.app_actions.toast(_("Error getting current media filename: {}").format(str(e)))
+            self.app_actions.warn(_("Error getting current media filename: {}").format(str(e)))
         finally:
             self.stop_loading()
 
@@ -498,7 +498,7 @@ class GoToFile:
             self.base_id_var.set(base_id)
             self.update_status_label(_("Base ID extracted: {}").format(base_id), AppStyle.FG_COLOR)
         else:
-            self.app_actions.toast(_("Could not extract base ID from filename. Please enter it manually."))
+            self.app_actions.warn(_("Could not extract base ID from filename. Please enter it manually."))
             self.update_status_label(_("Could not extract base ID. Please enter it manually."), "orange")
 
     def find_related_files(self, event=None):
@@ -515,7 +515,7 @@ class GoToFile:
             return
             
         if not os.path.isdir(target_dir):
-            self.app_actions.toast(_("Target directory does not exist."))
+            self.app_actions.warn(_("Target directory does not exist."))
             return
         
         # Save the target directory and base ID for next time
@@ -701,7 +701,7 @@ class GoToFile:
             matching_files.sort(key=lambda x: os.path.basename(x).lower())
             
         except Exception as e:
-            self.app_actions.toast(_("Error searching directory: {}").format(str(e)))
+            self.app_actions.warn(_("Error searching directory: {}").format(str(e)))
         
         return matching_files
 

@@ -127,7 +127,7 @@ class PDFCreator:
                 pdf.save(output_path)
                 pdf.close()
                 mode = _("compressed") if options and not options.get('preserve_quality', True) else _("high quality")
-                app_actions.toast(_("Created {0} PDF with {1} pages").format(mode, successful_pages))
+                app_actions.success(_("Created {0} PDF with {1} pages").format(mode, successful_pages))
                 return True
             else:
                 app_actions.alert(_("Error"), _("No pages could be added to the PDF"), kind="error")

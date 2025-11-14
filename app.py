@@ -170,6 +170,8 @@ class App():
             AppStyle.FG_COLOR = config.foreground_color if config.foreground_color and config.foreground_color != "" else "white"
         AppStyle.IS_DEFAULT_THEME = (not AppStyle.IS_DEFAULT_THEME or to_theme
                                      == AppStyle.DARK_THEME) and to_theme != AppStyle.LIGHT_THEME
+        AppStyle.TOAST_COLOR_WARNING = config.toast_color_warning if config.toast_color_warning and config.toast_color_warning != "" else AppStyle.BG_COLOR
+        AppStyle.TOAST_COLOR_SUCCESS = config.toast_color_success if config.toast_color_success and config.toast_color_success != "" else AppStyle.BG_COLOR
         self.master.config(bg=AppStyle.BG_COLOR)
         self.sidebar.config(bg=AppStyle.BG_COLOR)
         self.media_canvas.set_background_color(AppStyle.BG_COLOR)
@@ -1473,7 +1475,7 @@ class App():
             filepath = self.img_path
         if self.delete_lock:
             warning = _("DELETE_LOCK_MARK_STOP")
-            self.toast(warning)
+            self.app_actions.warn(warning)
             raise Exception(warning)
             # NOTE Have to raise exception to in some cases prevent downstream events from happening with no marks
         self._check_marks(min_mark_size=0)
@@ -1586,7 +1588,7 @@ class App():
     def _check_marks(self, min_mark_size: int = 1) -> None:
         if len(MarkedFiles.file_marks) < min_mark_size:
             exception_text = _("NO_MARKS_SET").format(len(MarkedFiles.file_marks), min_mark_size)
-            self.toast(exception_text)
+            self.app_actions.warn(exception_text)
             raise Exception(exception_text)
 
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
@@ -1923,7 +1925,7 @@ class App():
         Delete the currently displayed image from the filesystem.
         '''
         if self.delete_lock:
-            self.toast(_("DELETE_LOCK"))
+            self.app_actions.warn(_("DELETE_LOCK"))
             return
         
         if self.mode == Mode.BROWSE:
@@ -1941,10 +1943,10 @@ class App():
         is_toggle_search_image = self.is_toggled_search_image()
 
         if len(self.compare_wrapper.files_matched) == 0 and not is_toggle_search_image:
-            self.toast(_("Invalid action, no files found to delete"))
+            self.app_actions.warn(_("Invalid action, no files found to delete"))
             return
         elif is_toggle_search_image and (self.compare_wrapper.search_image_full_path is None or self.compare_wrapper.search_image_full_path == ""):
-            self.toast(_("Invalid action, search image not found"))
+            self.app_actions.warn(_("Invalid action, search image not found"))
             return
 
         filepath = self.get_active_media_filepath()
@@ -2156,7 +2158,7 @@ class App():
             alert_method = getattr(messagebox, f"show{kind}")
         return alert_method(title=title, message=message, parent=parent_window)
 
-    def toast(self, message: str, time_in_seconds: int = config.toasts_persist_seconds) -> None:
+    def toast(self, message: str, time_in_seconds: int = config.toasts_persist_seconds, bg_color: Optional[str] = None) -> None:
         logger.info("Toast message: " + message.replace("\n", " "))
         if not config.show_toasts:
             return
@@ -2177,16 +2179,19 @@ class App():
         x = parent_x + parent_width - width
         y = parent_y
 
+        # Use provided bg_color or default to AppStyle.BG_COLOR
+        toast_bg_color = bg_color if bg_color is not None else AppStyle.BG_COLOR
+
         # Create the toast on the top level
         toast = SmartToplevel(persistent_parent=self.master, geometry=f'{width}x{height}+{int(x)}+{int(y)}', auto_position=False)
         self.container = Frame(toast)
-        self.container.config(bg=AppStyle.BG_COLOR)
+        self.container.config(bg=toast_bg_color)
         self.container.pack(fill=BOTH, expand=YES)
         label = Label(
             self.container,
             text=message.strip(),
             anchor=NW,
-            bg=AppStyle.BG_COLOR,
+            bg=toast_bg_color,
             fg=AppStyle.FG_COLOR,
             font=('Helvetica', 10)
         )

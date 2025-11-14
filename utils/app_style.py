@@ -4,6 +4,8 @@ class AppStyle:
     DARK_THEME = "dark"
     BG_COLOR = "#26242f"
     FG_COLOR = "white"
+    TOAST_COLOR_WARNING = "#8B4513"  # (dark orange/saddle brown)
+    TOAST_COLOR_SUCCESS = "#2d5016"  # (dark green)
     
     # Custom button style names
     HEADER_BUTTON_STYLE = "Header.TButton"

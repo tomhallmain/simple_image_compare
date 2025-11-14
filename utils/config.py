@@ -21,6 +21,8 @@ class Config:
         self.locale = Utils.get_default_user_language()
         self.foreground_color = None
         self.background_color = None
+        self.toast_color_warning = None
+        self.toast_color_success = None
         self.debug = False
         self.log_level = "info"
         self.clip_model = "ViT-B/32"
@@ -126,6 +128,8 @@ class Config:
             self.set_values(str,
                             "foreground_color",
                             "background_color",
+                            "toast_color_warning",
+                            "toast_color_success",
                             "locale",
                             "log_level",
                             "default_main_window_size",

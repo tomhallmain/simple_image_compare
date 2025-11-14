@@ -339,7 +339,7 @@ class ImageDetails():
         self.close_windows()
         self.app_actions.refresh()
         rotation_text = _("Rotated image right") if right else _("Rotated image left")
-        self.app_actions.toast(rotation_text)
+        self.app_actions.success(rotation_text)
         if os.path.exists(new_filepath):
             ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
 
@@ -349,7 +349,7 @@ class ImageDetails():
             self.close_windows()
             self.app_actions.refresh()
             # TODO actually go to the new file. In this case we don't want to replace the original because there may be errors in some cases.
-            self.app_actions.toast(_("Cropped image"))
+            self.app_actions.success(_("Cropped image"))
             if len(saved_files) > 0:
                 ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=saved_files[0], app_actions=self.app_actions)
         else:
@@ -360,7 +360,7 @@ class ImageDetails():
         self.close_windows()
         self.app_actions.refresh()
         # TODO actually go to the new file. In this case we don't want to replace the original because there may be errors in some cases.
-        self.app_actions.toast(_("Enhanced image"))
+        self.app_actions.success(_("Enhanced image"))
         if os.path.exists(new_filepath):
             ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
 
@@ -368,7 +368,7 @@ class ImageDetails():
         new_filepath = ImageOps.random_crop_and_upscale(self.image_path)
         self.close_windows()
         self.app_actions.refresh()
-        self.app_actions.toast(_("Randomly cropped image"))
+        self.app_actions.success(_("Randomly cropped image"))
         if os.path.exists(new_filepath):
             ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
 
@@ -380,7 +380,7 @@ class ImageDetails():
         new_filepath = ImageOps.randomly_modify_image(image_path)
         app_actions.refresh()
         if os.path.exists(new_filepath):
-            app_actions.toast(_("Randomly modified image"))
+            app_actions.success(_("Randomly modified image"))
             # Open the newly created image in temp canvas if master is provided
             if master is not None:
                 ImageDetails.open_temp_image_canvas(master=master, image_path=new_filepath, app_actions=app_actions)
@@ -402,7 +402,7 @@ class ImageDetails():
         new_filepath = ImageOps.flip_image(self.image_path, top_bottom=top_bottom)
         self.close_windows()
         self.app_actions.refresh()
-        self.app_actions.toast(_("Flipped image"))
+        self.app_actions.success(_("Flipped image"))
         if os.path.exists(new_filepath):
             ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
 
@@ -410,24 +410,24 @@ class ImageDetails():
         try:
             new_filepath = image_data_extractor.copy_without_exif(self.image_path)
             self.app_actions.refresh()
-            self.app_actions.toast(_("Copied image without EXIF data"))
+            self.app_actions.success(_("Copied image without EXIF data"))
             if os.path.exists(new_filepath):
                 ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
         except Exception as e:
             logger.error(f"Error copying image without EXIF: {e}")
-            self.app_actions.toast(_("Error copying image without EXIF"))
+            self.app_actions.warn(_("Error copying image without EXIF"))
 
     def convert_to_jpg(self):
         try:
             new_filepath = ImageOps.convert_to_jpg(self.image_path)
             self.close_windows()
             self.app_actions.refresh()
-            self.app_actions.toast(_("Converted image to JPG"))
+            self.app_actions.success(_("Converted image to JPG"))
             if os.path.exists(new_filepath):
                 ImageDetails.open_temp_image_canvas(master=self.parent_master, image_path=new_filepath, app_actions=self.app_actions)
         except Exception as e:
             logger.error(f"Error converting image to JPG: {e}")
-            self.app_actions.toast(_("Error converting image to JPG"))
+            self.app_actions.warn(_("Error converting image to JPG"))
 
     def _rotate_image_and_mark(self, right=False):
         """Rotate image and mark it, opening the marks window without GUI."""
@@ -435,7 +435,7 @@ class ImageDetails():
         self.close_windows()
         self.app_actions.refresh()
         rotation_text = _("Rotated image right") if right else _("Rotated image left")
-        self.app_actions.toast(rotation_text)
+        self.app_actions.success(rotation_text)
         if os.path.exists(new_filepath):
             self.app_actions.open_move_marks_window(filepath=new_filepath, open_gui=False)
 
@@ -465,7 +465,7 @@ class ImageDetails():
         new_filepath = ImageOps.random_crop_and_upscale(self.image_path)
         self.close_windows()
         self.app_actions.refresh()
-        self.app_actions.toast(_("Randomly cropped image"))
+        self.app_actions.success(_("Randomly cropped image"))
         if os.path.exists(new_filepath):
             self.app_actions.open_move_marks_window(filepath=new_filepath, open_gui=False)
 
@@ -485,7 +485,7 @@ class ImageDetails():
         new_filepath = ImageOps.flip_image(self.image_path, top_bottom=top_bottom)
         self.close_windows()
         self.app_actions.refresh()
-        self.app_actions.toast(_("Flipped image"))
+        self.app_actions.success(_("Flipped image"))
         if os.path.exists(new_filepath):
             self.app_actions.open_move_marks_window(filepath=new_filepath, open_gui=False)
 
@@ -494,12 +494,12 @@ class ImageDetails():
         try:
             new_filepath = image_data_extractor.copy_without_exif(self.image_path)
             self.app_actions.refresh()
-            self.app_actions.toast(_("Copied image without EXIF data"))
+            self.app_actions.success(_("Copied image without EXIF data"))
             if os.path.exists(new_filepath):
                 self.app_actions.open_move_marks_window(filepath=new_filepath, open_gui=False)
         except Exception as e:
             logger.error(f"Error copying image without EXIF: {e}")
-            self.app_actions.toast(_("Error copying image without EXIF"))
+            self.app_actions.warn(_("Error copying image without EXIF"))
 
     def _convert_to_jpg_and_mark(self):
         """Convert image to JPG and mark it, opening the marks window without GUI."""
@@ -507,12 +507,12 @@ class ImageDetails():
             new_filepath = ImageOps.convert_to_jpg(self.image_path)
             self.close_windows()
             self.app_actions.refresh()
-            self.app_actions.toast(_("Converted image to JPG"))
+            self.app_actions.success(_("Converted image to JPG"))
             if os.path.exists(new_filepath):
                 self.app_actions.open_move_marks_window(filepath=new_filepath, open_gui=False)
         except Exception as e:
             logger.error(f"Error converting image to JPG: {e}")
-            self.app_actions.toast(_("Error converting image to JPG"))
+            self.app_actions.warn(_("Error converting image to JPG"))
 
     def show_metadata(self, event=None):
         metadata_text = image_data_extractor.get_raw_metadata_text(self.image_path)
@@ -718,7 +718,7 @@ class ImageDetails():
                 self.tags[i] = self.tags[i].strip()
         image_data_extractor.set_tags(self.image_path, self.tags)
         logger.info("Updated tags for " + self.image_path)
-        self.app_actions.toast(_("Updated tags for %s").format(self.image_path))
+        self.app_actions.success(_("Updated tags for %s").format(self.image_path))
 
     def close_windows(self, event=None):
         self.app_actions.set_image_details_window(None)

@@ -708,9 +708,9 @@ class GimpWrapper:
             # Show toast notification
             file_count = len(temp_files)
             if file_count == 1:
-                self.app_actions.toast(_("New file created: {0}").format(os.path.basename(temp_files[0])))
+                self.app_actions.success(_("New file created: {0}").format(os.path.basename(temp_files[0])))
             else:
-                self.app_actions.toast(_("{0} new files created").format(file_count))
+                self.app_actions.success(_("{0} new files created").format(file_count))
                 
         except Exception as e:
             logger.error(f"Error moving new files: {e}")

@@ -324,7 +324,7 @@ class MarkedFiles():
             else:
                 if target_dir in MarkedFiles.mark_target_dirs:
                     MarkedFiles.mark_target_dirs.remove(target_dir)
-                app_actions.toast(_("Invalid directory: %s").format(target_dir))
+                app_actions.warn(_("Invalid directory: %s").format(target_dir))
         target_dir = filedialog.askdirectory(
                 parent=app_actions.get_master(),
                 initialdir=starting_target, title=_("Select target directory for marked files"))
@@ -455,7 +455,7 @@ class MarkedFiles():
                                     app_actions.delete(marked_file)
                                     if marked_file in MarkedFiles.file_marks:
                                         MarkedFiles.file_marks.remove(marked_file)
-                                    app_actions.toast(_("Removed marked file from source: {0}").format(marked_file))
+                                    app_actions.warn(_("Removed marked file from source: {0}").format(marked_file))
                                 except Exception as e:
                                     error_text = f"Failed to remove marked file from source: {marked_file} - {e}"
                                     logger.warning(error_text)
@@ -508,7 +508,7 @@ class MarkedFiles():
                     warning += "\n" + _("INFO: Target files with different EXIF data replaced.")
                 if names_are_short:
                     warning += "\n" + _("WARNING: Short filenames.")
-                app_actions.toast(warning)
+                app_actions.warn(warning)
         MarkedFiles.is_performing_action = False
         if len(MarkedFiles.previous_marks) > 0:
             MarkedFiles.last_set_target_dir = target_dir
@@ -792,7 +792,7 @@ class MarkedFiles():
                     _("Failed to delete %s files - check log for details.").format(len(failed_to_delete)),
                     kind="warning", master=self.master)
         else:
-            self.app_actions.toast(_("Deleted %s marked files.").format(len(removed_files)))
+            self.app_actions.warn(_("Deleted %s marked files.").format(len(removed_files)))
 
         # In the BROWSE case, the file removal should be recognized by the file browser
         ## TODO it will not be handled in case of using file JSON. need to handle this case separately.
@@ -874,7 +874,7 @@ class MarkedFiles():
                 warning += "\n" + _("WARNING: All files are either identical or have matching content.")
             if names_are_short:
                 warning += "\n" + _("WARNING: Short filenames.")
-            app_actions.toast(warning)
+            app_actions.warn(warning)
 #            MarkedFiles.last_set_target_dir = target_dir
         else:
             app_actions.toast(_("No existing filenames found."))

@@ -1,5 +1,7 @@
 from typing import Callable, Dict, Any, Optional
 
+from utils.app_style import AppStyle
+
 class AppActions:
     REQUIRED_ACTIONS = {
         "new_window", "get_window", "toast", "_alert", "title_notify", "refresh",
@@ -35,6 +37,34 @@ class AppActions:
         
         # Call the original alert method with the determined parent window
         return self._alert(title, message, kind=kind, severity=severity, master=parent_window)
+
+    def warn(self, message: str, time_in_seconds: int = None) -> None:
+        """
+        Show a warning toast with the warning background color.
+        This is a convenience method for displaying warning messages.
+        """
+        # Import here to avoid circular dependency
+        from utils.config import config
+        
+        if time_in_seconds is None:
+            time_in_seconds = config.toasts_persist_seconds
+        
+        # Call toast with the warning background color
+        return self.toast(message, time_in_seconds=time_in_seconds, bg_color=AppStyle.TOAST_COLOR_WARNING)
+
+    def success(self, message: str, time_in_seconds: int = None) -> None:
+        """
+        Show a success toast with the success background color.
+        This is a convenience method for displaying success messages.
+        """
+        # Import here to avoid circular dependency
+        from utils.config import config
+        
+        if time_in_seconds is None:
+            time_in_seconds = config.toasts_persist_seconds
+        
+        # Call toast with the success background color
+        return self.toast(message, time_in_seconds=time_in_seconds, bg_color=AppStyle.TOAST_COLOR_SUCCESS)
 
     def get_master(self):
         return self._master
