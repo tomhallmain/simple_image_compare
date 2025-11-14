@@ -196,6 +196,10 @@ class MarkedFiles():
         self.move_btn_list = []
         self.copy_btn_list = []
         self.label_list = []
+        
+        # Keystroke buffering to handle rapid input during window initialization
+        self.keystroke_buffer = []
+        self.widgets_ready = False
 
         if self.is_gui:
             self.frame = Frame(self.master)
@@ -253,6 +257,9 @@ class MarkedFiles():
         self.master.bind("<Control-h>", self.open_hotkey_actions_window)
         self.master.bind("<Prior>", self.page_up)
         self.master.bind("<Next>", self.page_down)
+        
+        # Mark widgets as ready and process any buffered keystrokes
+        self.master.after_idle(self._mark_widgets_ready_and_process_buffer)
 
 
     def add_target_dir_widgets(self):
@@ -623,9 +630,36 @@ class MarkedFiles():
         self.filtered_target_dirs = self.filtered_target_dirs[paging_len:] + self.filtered_target_dirs[:paging_len]
         self._refresh_widgets()
 
+    def _mark_widgets_ready_and_process_buffer(self):
+        """
+        Mark widgets as ready and process any buffered keystrokes.
+        """
+        self.widgets_ready = True
+        # Process buffered keystrokes in order
+        for buffered_event in self.keystroke_buffer:
+            self._process_filter_keystroke(buffered_event)
+        self.keystroke_buffer.clear()
+        # If there's a buffered Return key, process it after filter keystrokes are applied
+        if hasattr(self, '_buffered_return_event'):
+            # Use after_idle to ensure filter processing is complete
+            self.master.after_idle(lambda: self.do_action(self._buffered_return_event))
+            delattr(self, '_buffered_return_event')
+
     def filter_targets(self, event):
         """
         Rebuild the filtered target directories list based on the filter string and update the UI.
+        Buffers keystrokes if widgets are not ready yet.
+        """
+        # Buffer keystrokes if widgets aren't ready yet
+        if not self.widgets_ready:
+            self.keystroke_buffer.append(event)
+            return
+        
+        self._process_filter_keystroke(event)
+
+    def _process_filter_keystroke(self, event):
+        """
+        Process a single filter keystroke event.
         """
         modifier_key_pressed = (event.state & 0x1) != 0 or (event.state & 0x4) != 0 # Do not filter if modifier key is down
         if modifier_key_pressed:
@@ -700,6 +734,11 @@ class MarkedFiles():
 
         TODO: handle case of multiple filtered directories better, instead of just selecting the first
         """
+        # Buffer Return key if widgets aren't ready yet - process filter keystrokes first
+        if not self.widgets_ready:
+            self._buffered_return_event = event
+            return
+        
         shift_key_pressed, control_key_pressed, alt_key_pressed = Utils.modifier_key_pressed(
             event, keys_to_check=[ModifierKey.SHIFT, ModifierKey.CTRL, ModifierKey.ALT])
         move_func = Utils.copy_file if shift_key_pressed else Utils.move_file
