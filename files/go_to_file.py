@@ -554,14 +554,14 @@ class GoToFile:
         parts = re.split(delimiter_pattern, basename)
         
         if len(parts) == 0:
-            return None
+            return basename
         
         # If only one part (no delimiters), check if it's sufficiently long to be a base ID
         if len(parts) == 1:
             single_part = parts[0]
             if len(single_part) >= 8 and any(c.isalnum() for c in single_part):
                 return single_part
-            return None
+            return basename
         
         # Reconstruct base ID preserving original delimiters
         # Strategy: Always include at least two parts (one delimiter) unless the first part
@@ -580,7 +580,7 @@ class GoToFile:
             # Not enough parts, return what we have if valid
             if len(base_id) >= 3 and any(c.isalnum() for c in base_id):
                 return base_id
-            return None
+            return basename
         
         delimiter = parts[1]
         second_part = parts[2]
@@ -589,7 +589,7 @@ class GoToFile:
         if not second_part or len(second_part) <= 4:
             if len(base_id) >= 3 and any(c.isalnum() for c in base_id):
                 return base_id
-            return None
+            return basename
         
         base_id = base_id + delimiter + second_part
         
@@ -626,7 +626,7 @@ class GoToFile:
         if len(base_id) >= 3 and any(c.isalnum() for c in base_id):
             return base_id
         
-        return None
+        return basename
 
     @staticmethod
     def _get_char_category(char):
