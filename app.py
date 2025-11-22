@@ -260,8 +260,8 @@ class App():
         self.search_dir = Utils.get_user_dir()
 
         self.compare_wrapper = CompareWrapper(master, config.compare_mode, self.app_actions)
-        self.sd_runner_client = SDRunnerClient()
-        self.refacdir_client = RefacDirClient()
+        self.sd_runner_client: SDRunnerClient = SDRunnerClient()
+        self.refacdir_client: RefacDirClient = RefacDirClient()
 
         # Sidebar
         self.sidebar = Sidebar(self.master)
@@ -847,6 +847,7 @@ class App():
         menu.add_separator()
         menu.add_command(label=_("Open in GIMP"), command=lambda: self.open_image_in_gimp(event))
         menu.add_command(label=_("Run Image Generation"), command=lambda: self.trigger_image_generation(event))
+        menu.add_command(label=_("Run Image Generation on Directory"), command=lambda: self.run_image_generation_on_directory(event))
         menu.add_command(label=_("Show Source Image"), command=lambda: self.show_related_image(event))
         menu.add_command(label=_("Find Related Images"), command=lambda: self.find_related_images_in_open_window(event))
         menu.add_command(label=_("Set Marks from Downstream Related Images"), command=lambda: self.set_marks_from_downstream_related_images(event))
@@ -2105,17 +2106,23 @@ class App():
         shift_key_pressed = event and Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
         ImageDetails.run_image_generation_static(self.app_actions, modify_call=bool(shift_key_pressed))
 
+    def _get_image_path(self) -> Optional[str]:
+        if self.delete_lock:
+            image_path = self.prev_img_path
+        else:
+            image_path = self.get_active_media_filepath()
+        if not image_path:
+            self.handle_error(_("Failed to get active media filepath"), title=_("Warning"))
+        return image_path
+
     @require_password(ProtectedActions.RUN_IMAGE_GENERATION)
     def run_image_generation(self, event=None, _type: Optional[str] = None, image_path: Optional[str] = None, modify_call: bool = False) -> None:
-        _type = ImageDetails.get_image_specific_generation_mode() if _type is None else _type
+        image_path = self._get_image_path() if image_path is None else image_path
         if image_path is None:
-            if self.delete_lock:
-                image_path = self.prev_img_path
-            else:
-                image_path = self.get_active_media_filepath()
+            return
+        _type = ImageDetails.get_image_specific_generation_mode() if _type is None else _type
 
-        def do_run_image_generation(self, _type: str, image_path: str, modify_call: bool) -> None:
-            self.sd_runner_client.start()
+        def do_run_image_generation(self: 'App', _type: str, image_path: str, modify_call: bool) -> None:
             try:
                 self.sd_runner_client.run(_type, image_path, append=modify_call)
                 ImageDetails.previous_image_generation_image = image_path
@@ -2125,9 +2132,25 @@ class App():
 
         start_thread(do_run_image_generation, use_asyncio=False, args=[self, _type, image_path, modify_call])
 
+    @require_password(ProtectedActions.RUN_IMAGE_GENERATION)
+    def run_image_generation_on_directory(self, event=None, _type: Optional[str] = None, image_path: Optional[str] = None) -> None:
+        image_path = self._get_image_path() if image_path is None else image_path
+        if image_path is None:
+            return
+        directory_path = os.path.dirname(image_path)
+        _type = ImageDetails.get_image_specific_generation_mode() if _type is None else _type
+        
+        def do_run_image_generation_on_directory(self: 'App', _type: str, directory_path: str) -> None:
+            try:
+                self.sd_runner_client.run_on_directory(_type, directory_path)
+                self.toast(_("Running image gen on directory: ") + str(_type))
+            except Exception as e:
+                self.handle_error(_("Error running image generation:") + "\n" + str(e), title=_("Warning"))
+        
+        start_thread(do_run_image_generation_on_directory, use_asyncio=False, args=[self, _type, directory_path])
+
     @require_password(ProtectedActions.RUN_REFACDIR)
     def run_refacdir(self, event=None) -> None:
-        self.refacdir_client.start()
         self.refacdir_client.run(self.img_path)
         self.toast(_("Running refacdir"))
 

@@ -63,6 +63,7 @@ class SDRunnerClient:
     def run(self, _type, base_image, append=False):
         if not isinstance(_type, ImageGenerationType):
             raise TypeError(f'{_type} is not a valid ImageGenerationType')
+        self.start()
         self.validate_image_for_type(_type, base_image)
         self.validate_connection()
         try:
@@ -80,6 +81,32 @@ class SDRunnerClient:
                 self.close()
             except Exception as e2:
                pass
+            raise Exception(f'Failed to start run on SD Runner: {e}')
+
+    def run_on_directory(self, _type, directory_path, append=False):
+        """
+        Run image generation on a directory path, skipping image validation.
+        """
+        if not isinstance(_type, ImageGenerationType):
+            raise TypeError(f'{_type} is not a valid ImageGenerationType')
+        self.start()
+        try:
+            # Skip image validation as requested - directly send command
+            self.validate_connection()
+            command = {'command': 'run', 'type': _type.value,
+                      'args': {'image': directory_path, 'append': append}}
+            resp = self.send(command)
+            if "error" in resp:
+                self.close()
+                raise Exception(f'SD Runner failed to start run {_type} on directory {directory_path}\n{resp["error"]}: {resp["data"]}')
+            logger.info(f"SD Runner started run {_type} on directory {directory_path}")
+            self.close()
+            return resp['data'] if "data" in resp else None
+        except Exception as e:
+            try:
+                self.close()
+            except Exception:
+                pass
             raise Exception(f'Failed to start run on SD Runner: {e}')
 
     def stop(self):

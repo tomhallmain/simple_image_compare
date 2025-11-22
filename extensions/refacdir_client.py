@@ -50,6 +50,7 @@ class RefacDirClient:
             raise Exception(f'Failed to connect to RefacDir: {e}')
 
     def run(self, base_image):
+        self.start()
         self.validate_connection()
         try:
             command  = {'command': 'run', 'args': [base_image]}
