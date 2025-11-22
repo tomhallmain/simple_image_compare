@@ -14,6 +14,7 @@ from files.pdf_creator import PDFCreator
 from files.pdf_options_window import PDFOptionsWindow
 from image.image_data_extractor import image_data_extractor
 from image.image_ops import ImageOps
+from lib.multi_display import SmartToplevel
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
@@ -42,6 +43,7 @@ class MarkedFiles():
     last_moved_image = None
     last_set_target_dir = None
     file_browser = None # a file browser for test_is_in_directory
+    _current_window = None  # Track the current window instance
 
     # For file operations that take a while because they involve many files, pressing Ctrl+Z while they are
     # running should not attempt to undo the action before the currently running one.
@@ -173,7 +175,48 @@ class MarkedFiles():
             return 1
         return 0
 
+    @staticmethod
+    def show_window(master, is_gui, single_image, current_image, app_mode, app_actions, base_dir="."):
+        """
+        Show the marked files window. If a window is already open, focus it instead of creating a new one.
+        Returns the window instance.
+        """
+        # Check if a window already exists and is still valid
+        if MarkedFiles._current_window is not None:
+            try:
+                # Check if the window still exists
+                if MarkedFiles._current_window.master.winfo_exists():
+                    # Window exists, update title in case marks changed, set full opacity, then focus it
+                    MarkedFiles._current_window.master.title(_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)))
+                    MarkedFiles._current_window.master.attributes('-alpha', 1.0)  # Set full opacity
+                    MarkedFiles._current_window.master.lift()
+                    MarkedFiles._current_window.master.focus_force()
+                    return MarkedFiles._current_window
+            except:
+                # Window was destroyed, clear the reference
+                MarkedFiles._current_window = None
+        
+        # No existing window, create a new one
+        top_level = SmartToplevel(persistent_parent=master, geometry=MarkedFiles.get_geometry(is_gui=is_gui))
+        top_level.title(_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)))
+        if not is_gui:
+            top_level.attributes('-alpha', 0.3)
+        
+        window_instance = MarkedFiles(top_level, is_gui, single_image, current_image, app_mode, app_actions, base_dir)
+        MarkedFiles._current_window = window_instance
+        return window_instance
+
     def __init__(self, master, is_gui, single_image, current_image, app_mode, app_actions, base_dir="."):
+        # If there's already a window instance, don't create a new one
+        # (This should be prevented by show_window, but adding as a safeguard)
+        if MarkedFiles._current_window is not None:
+            try:
+                if MarkedFiles._current_window.master.winfo_exists():
+                    # Existing window found, this shouldn't happen if show_window is used correctly
+                    logger.warning("Attempted to create MarkedFiles window when one already exists")
+            except:
+                MarkedFiles._current_window = None
+        
         self.is_gui = is_gui
         self.single_image = single_image
         self.current_image = current_image
@@ -949,6 +992,9 @@ class MarkedFiles():
             self.app_actions.toast(_("No downstream related images found"))
 
     def close_windows(self, event=None):
+        # Clear the instance reference before destroying
+        if MarkedFiles._current_window is self:
+            MarkedFiles._current_window = None
         self.master.destroy()
         if self.single_image is not None and len(MarkedFiles.file_marks) == 1:
             # This implies the user has opened the marks window directly from the current image

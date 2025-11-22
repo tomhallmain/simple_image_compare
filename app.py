@@ -1549,13 +1549,9 @@ class App():
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark(filepath=filepath)
             single_image = True
-        top_level = SmartToplevel(persistent_parent=self.master, geometry=MarkedFiles.get_geometry(is_gui=open_gui))
-        top_level.title(_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)))
-        if not open_gui:
-            top_level.attributes('-alpha', 0.3)
         try:
-            marked_file_mover = MarkedFiles(top_level, open_gui, single_image, current_image, self.mode,
-                                            self.app_actions, base_dir=self.get_base_dir())
+            MarkedFiles.show_window(self.master, open_gui, single_image, current_image, self.mode,
+                                   self.app_actions, base_dir=self.get_base_dir())
         except Exception as e:
             self.handle_error(str(e), title="Marked Files Window Error")
 
