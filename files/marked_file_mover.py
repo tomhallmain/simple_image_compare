@@ -27,12 +27,6 @@ from auth.password_utils import require_password
 _ = I18N._
 logger = get_logger("marked_file_mover")
 
-# TODO check hash of files in new directory instead of just filename, or even use a new compare instance to check for duplicates
-# TODO preserve dictionary of all moved / copied files in a session along with their target directories.
-# TODO enable the main app to access this dictionary as groups and remove files if needed
-# TODO give statistics on how many files were moved / copied.
-
-
 
 
 class MarkedFiles():

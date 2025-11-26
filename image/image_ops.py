@@ -1,6 +1,7 @@
 import os
 import random
 import sys
+import time
 
 import cv2
 import numpy as np
@@ -21,6 +22,18 @@ class ImageOps:
     
     # Class-level cache for GEGL validation
     _gegl_validation_cache = None
+    
+    # Texture tile cache: {(texture_type, bg_color_key): (tile_texture, timestamp, use_count)}
+    # Uses fixed-size tiles that can be tiled across any dimensions
+    # bg_color_key is None for default colors, or the RGB tuple for custom colors
+    _texture_tile_cache = {}
+    _texture_tile_size = 512  # Fixed tile size for caching
+    _texture_cache_max_age = 300  # Cache for 5 minutes
+    _texture_cache_max_uses = 50  # Regenerate after 50 uses
+    
+    # Cache of previously used random colors to increase cache hit probability
+    _used_random_colors = []
+    _max_cached_colors = 50  # Maximum number of random colors to cache
 
     @staticmethod
     def new_filepath(image_path: str, new_filename: str = "", append_part: str | None = None) -> str:
@@ -84,25 +97,117 @@ class ImageOps:
             return (0, 0, 0) if random.random() > 0.5 else (255, 255, 255)
 
     @staticmethod
-    def generate_noise_texture(width, height, texture_type="perlin"):
-        """Generate various types of random textures for background filling."""
+    def generate_noise_texture(width, height, texture_type="perlin", background_color=None, use_random_color=False):
+        """
+        Generate various types of random textures for background filling.
+        Uses tiling-based caching: generates a fixed-size tile once and tiles it across the required dimensions.
+        Tiles are cached separately for each background color to maximize reuse.
+        
+        Args:
+            width: Width of the texture
+            height: Height of the texture
+            texture_type: Type of texture ("perlin", "gaussian", "gradient", "cellular")
+            background_color: RGB tuple for background color. If None, uses default based on texture type.
+            use_random_color: If True, generates a random background color instead of using default.
+        """
+        # Generate random color if requested, with 40% chance to reuse a cached color
+        if use_random_color:
+            if ImageOps._used_random_colors and random.random() < 0.4:
+                # 40% chance to reuse a previously used color
+                background_color = random.choice(ImageOps._used_random_colors)
+            else:
+                # 60% chance to generate a new random color
+                background_color = ImageOps.get_random_color()
+                # Add to cache (remove oldest if cache is full)
+                ImageOps._used_random_colors.append(background_color)
+                if len(ImageOps._used_random_colors) > ImageOps._max_cached_colors:
+                    ImageOps._used_random_colors.pop(0)
+        
+        current_time = time.time()
+        
+        # Get or generate a cached tile for this texture type and background color
+        tile = ImageOps._get_cached_texture_tile(texture_type, background_color, current_time)
+        
+        # Tile the cached texture across the required dimensions
+        texture = ImageOps._tile_texture(tile, width, height)
+        
+        return texture
+    
+    @staticmethod
+    def _get_cached_texture_tile(texture_type, background_color, current_time):
+        """Get a cached texture tile, generating a new one if needed."""
+        # Create cache key: use None for default colors, or the RGB tuple for custom colors
+        cache_key = (texture_type, background_color)
+        
+        # Check if we have a cached tile for this texture type and background color
+        if cache_key in ImageOps._texture_tile_cache:
+            cached_tile, timestamp, use_count = ImageOps._texture_tile_cache[cache_key]
+            age = current_time - timestamp
+            
+            # Use cached tile if it's still fresh and hasn't been used too many times
+            if age < ImageOps._texture_cache_max_age and use_count < ImageOps._texture_cache_max_uses:
+                ImageOps._texture_tile_cache[cache_key] = (cached_tile, timestamp, use_count + 1)
+                return cached_tile.copy()
+            else:
+                # Cache expired or overused, remove it
+                del ImageOps._texture_tile_cache[cache_key]
+        
+        # Generate new tile with the specified background color (None = use defaults in generation functions)
+        tile_size = ImageOps._texture_tile_size
         if texture_type == "perlin":
-            return ImageOps._generate_perlin_noise(width, height)
+            tile = ImageOps._generate_perlin_noise(tile_size, tile_size, background_color)
         elif texture_type == "gaussian":
-            return ImageOps._generate_gaussian_noise(width, height)
+            tile = ImageOps._generate_gaussian_noise(tile_size, tile_size, background_color)
         elif texture_type == "gradient":
-            return ImageOps._generate_gradient_texture(width, height)
+            tile = ImageOps._generate_gradient_texture(tile_size, tile_size, background_color)
         elif texture_type == "cellular":
-            return ImageOps._generate_cellular_texture(width, height)
+            tile = ImageOps._generate_cellular_texture(tile_size, tile_size, background_color)
         else:
             # Default to solid color if unknown type
-            return ImageOps._generate_solid_color(width, height)
+            tile = ImageOps._generate_solid_color(tile_size, tile_size)
+        
+        # Cache the new tile
+        ImageOps._texture_tile_cache[cache_key] = (tile.copy(), current_time, 1)
+        return tile
+    
+    @staticmethod
+    def _tile_texture(tile, width, height):
+        """Tile a texture tile across the specified dimensions."""
+        tile_h, tile_w = tile.shape[:2]
+        
+        # Calculate how many tiles we need in each direction
+        tiles_x = (width + tile_w - 1) // tile_w  # Ceiling division
+        tiles_y = (height + tile_h - 1) // tile_h  # Ceiling division
+        
+        # Create tiled texture
+        tiled = np.tile(tile, (tiles_y, tiles_x, 1))
+        
+        # Crop to exact dimensions if needed
+        if tiled.shape[0] > height or tiled.shape[1] > width:
+            tiled = tiled[:height, :width]
+        
+        return tiled
 
     @staticmethod
-    def _generate_perlin_noise(width, height):
+    def _apply_background_color(texture, background_color):
+        """Apply a background color to a texture, blending with existing colors."""
+        if background_color is None:
+            return texture
+        bg = np.array(background_color, dtype=np.uint8)
+        # Blend background with texture (70% texture, 30% background)
+        for i in range(3):
+            texture[:, :, i] = (texture[:, :, i] * 0.7 + bg[i] * 0.3).astype(np.uint8)
+        return texture
+
+    @staticmethod
+    def _generate_perlin_noise(width, height, background_color=None):
         """Generate Perlin-like noise texture using OpenCV."""
+        # Default to light gray background for perlin (more visible than black)
+        if background_color is None:
+            background_color = (180, 180, 180)
+        
         # Create multiple octaves of noise
-        texture = np.zeros((height, width, 3), dtype=np.uint8)
+        texture = np.full((height, width, 3), background_color, dtype=np.uint8)
         
         for octave in range(3):
             scale = 2 ** octave
@@ -113,16 +218,22 @@ class ImageOps:
         return texture
 
     @staticmethod
-    def _generate_gaussian_noise(width, height):
+    def _generate_gaussian_noise(width, height, background_color=None):
         """Generate Gaussian noise texture."""
-        # Generate noise with controlled variance
-        noise = np.random.normal(128, 50, (height, width, 3))
+        # Default to light gray background for gaussian (more visible than black)
+        if background_color is None:
+            background_color = (180, 180, 180)
+        
+        # Generate noise with controlled variance around the background color
+        bg_array = np.array(background_color, dtype=np.float32)
+        noise = np.random.normal(bg_array, 50, (height, width, 3))
         noise = np.clip(noise, 0, 255).astype(np.uint8)
         return noise
 
     @staticmethod
-    def _generate_gradient_texture(width, height):
+    def _generate_gradient_texture(width, height, background_color=None):
         """Generate radial or linear gradient texture."""
+        # Gradient textures don't need a specific background color as they fill the whole space
         texture = np.zeros((height, width, 3), dtype=np.uint8)
         
         if random.random() > 0.5:
@@ -146,11 +257,10 @@ class ImageOps:
             elif direction == 'vertical':
                 gradient = np.linspace(0, 255, height)
                 gradient = np.tile(gradient, (width, 1)).T
-            else:  # diagonal
-                gradient = np.zeros((height, width))
-                for i in range(height):
-                    for j in range(width):
-                        gradient[i, j] = ((i + j) / (height + width)) * 255
+            else:  # diagonal - optimized to avoid nested loops
+                # Use vectorized operations instead of nested loops
+                i, j = np.ogrid[:height, :width]
+                gradient = ((i + j) / (height + width)) * 255
             
             # Apply random color tinting
             color = ImageOps.get_random_color()
@@ -160,24 +270,37 @@ class ImageOps:
         return texture
 
     @staticmethod
-    def _generate_cellular_texture(width, height):
-        """Generate cellular/Voronoi-like texture."""
+    def _generate_cellular_texture(width, height, background_color=None):
+        """Generate cellular/Voronoi-like texture using optimized vectorized operations."""
+        # Default to black background for cellular (pattern is more prominent)
+        if background_color is None:
+            background_color = (0, 0, 0)
+        
         # Create random points
         num_points = random.randint(5, 15)
         points = np.random.rand(num_points, 2) * [width, height]
         
-        # Create distance map
+        # Create distance map using vectorized operations (much faster than nested loops)
         y, x = np.ogrid[:height, :width]
-        texture = np.zeros((height, width, 3), dtype=np.uint8)
+        texture = np.full((height, width, 3), background_color, dtype=np.uint8)
         
-        for i in range(height):
-            for j in range(width):
-                distances = np.sqrt((points[:, 0] - j)**2 + (points[:, 1] - i)**2)
-                min_dist = np.min(distances)
-                # Normalize and apply color
-                intensity = int((min_dist / max(width, height)) * 255)
-                color = ImageOps.get_random_color()
-                texture[i, j] = [int(c * intensity / 255) for c in color]
+        # Vectorized distance calculation - calculate distances from all points to all pixels at once
+        # This is much faster than nested loops
+        min_distances = np.full((height, width), np.inf)
+        for point_idx in range(num_points):
+            px, py = points[point_idx]
+            # Calculate distance from this point to all pixels using vectorized operations
+            distances = np.sqrt((x - px)**2 + (y - py)**2)
+            min_distances = np.minimum(min_distances, distances)
+        
+        # Normalize and apply color
+        max_dist = max(width, height)
+        intensity = (min_distances / max_dist * 255).astype(np.uint8)
+        color = ImageOps.get_random_color()
+        
+        # Blend cellular pattern with background
+        for i in range(3):
+            texture[:, :, i] = (background_color[i] * 0.3 + color[i] * intensity / 255 * 0.7).astype(np.uint8)
         
         return texture
 
@@ -205,7 +328,7 @@ class ImageOps:
         if use_texture:
             # Create a background texture
             texture_type = ImageOps.get_random_texture_type()
-            background_texture = ImageOps.generate_noise_texture(w, h, texture_type)
+            background_texture = ImageOps.generate_noise_texture(w, h, texture_type, use_random_color=True)
             
             # Perform rotation with transparent border (we'll handle the background ourselves)
             M = cv2.getRotationMatrix2D(center, angle, scale)
