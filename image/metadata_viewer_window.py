@@ -22,27 +22,44 @@ class MetadataViewerWindow:
         MetadataViewerWindow.set_title(image_path)
         self.master = MetadataViewerWindow.top_level
         self.app_actions = app_actions
+        self.metadata_text = metadata_text
 
         self.has_closed = False
         self.frame = ScrollFrame(self.master, bg_color=AppStyle.BG_COLOR)
         self.frame.pack(side="top", fill="both", expand=True)
 
+        self._copy_btn = None
+        self.add_btn("_copy_btn", _("Copy Metadata"), self.copy_metadata_to_clipboard, row=0, column=0)
+
         self._label_info = Label(self.frame.viewPort)
-        self.add_label(self._label_info, _("Raw Image Metadata"), row=0, wraplength=MetadataViewerWindow.COL_0_WIDTH)
+        self.add_label(self._label_info, _("Raw Image Metadata"), row=1, wraplength=MetadataViewerWindow.COL_0_WIDTH)
 
         self._metadata_label = Label(self.frame.viewPort)
-        self.add_label(self._metadata_label, metadata_text, row=1)
+        self.add_label(self._metadata_label, metadata_text, row=2)
 
         # self.master.bind("<Key>", self.filter_targets)
         # self.master.bind("<Return>", self.do_action)
         self.master.bind("<Escape>", self.close_windows)
+        self.master.bind("<Control-c>", lambda e: self.copy_metadata_to_clipboard())
         self.master.protocol("WM_DELETE_WINDOW", self.close_windows)
         self.frame.after(1, lambda: self.frame.focus_force())
 
     def update_metadata(self, metadata_text, image_path):
+        self.metadata_text = metadata_text
         self._metadata_label["text"] = metadata_text
         MetadataViewerWindow.set_title(image_path)
         self.master.update()
+
+    def copy_metadata_to_clipboard(self):
+        """Copy the raw metadata text to the clipboard."""
+        try:
+            self.master.clipboard_clear()
+            self.master.clipboard_append(self.metadata_text)
+            if self.app_actions:
+                self.app_actions.success(_("Copied metadata to clipboard"))
+        except Exception as e:
+            if self.app_actions:
+                self.app_actions.warn(_("Error copying metadata to clipboard: ") + str(e))
 
     @staticmethod
     def set_title(image_path):

@@ -418,6 +418,39 @@ class Utils:
             return None
 
     @staticmethod
+    def parse_json_strings_in_dict(data_dict, keys_to_check=None):
+        """
+        Convert JSON string values in a dictionary to JSON objects.
+        
+        Args:
+            data_dict: Dictionary that may contain JSON strings as values
+            keys_to_check: Optional list of keys to check. If None, checks all string values.
+            
+        Returns:
+            A copy of the dictionary with JSON strings parsed into objects.
+        """
+        import json
+        
+        # Create a copy to avoid modifying the original
+        processed_dict = data_dict.copy()
+        
+        # Determine which keys to check
+        if keys_to_check is None:
+            # Check all string values in the dict
+            keys_to_check = [k for k, v in processed_dict.items() if isinstance(v, str)]
+        
+        # Convert string values to JSON objects if they're valid JSON
+        for key in keys_to_check:
+            if key in processed_dict and isinstance(processed_dict[key], str):
+                try:
+                    processed_dict[key] = json.loads(processed_dict[key])
+                except json.JSONDecodeError:
+                    # If parsing fails, keep the original string
+                    pass
+        
+        return processed_dict
+
+    @staticmethod
     def split(string, delimiter=","):
         # Split the string by the delimiter and clean any delimiter escapes present in the string
         parts = []

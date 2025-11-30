@@ -1,14 +1,15 @@
 from enum import Enum
 import json
 import os
+import pprint
 import re
 import sys
 
 from PIL import Image
-import pprint
 
 from utils.config import config
 from utils.logging_setup import get_logger
+from utils.utils import Utils
 
 logger = get_logger("image_data_extractor")
 
@@ -90,7 +91,22 @@ class ImageDataExtractor:
             info = img.info
         if not isinstance(info, dict):
             return None
-        return pprint.pformat(info)
+        try:
+            # Convert string prompts/workflows to JSON objects for better readability
+            # Only do this for ComfyUI metadata
+            processed_info = info.copy()
+            if ImageDataExtractor.COMFYUI_PROMPT_KEY in info:
+                processed_info = Utils.parse_json_strings_in_dict(
+                    processed_info, 
+                    keys_to_check=[ImageDataExtractor.COMFYUI_PROMPT_KEY, 'workflow']
+                )
+            # Convert to JSON format for better readability and validity
+            return json.dumps(processed_info, indent=2, ensure_ascii=False)
+        except (TypeError, ValueError) as e:
+            # Fallback to string representation if JSON serialization fails
+            # (e.g., if info contains non-serializable types)
+            logger.warning(f"Could not serialize metadata to JSON: {e}")
+            return str(info)
 
     def extract_prompt(self, image_path):
         with Image.open(image_path) as img:
@@ -99,7 +115,20 @@ class ImageDataExtractor:
             if ImageDataExtractor.A1111_PARAMS_KEY in info:
                 return self._build_a1111_prompt_info_object(info[ImageDataExtractor.A1111_PARAMS_KEY]), SoftwareType.A1111
             if ImageDataExtractor.COMFYUI_PROMPT_KEY in info:
-                prompt = json.loads(info[ImageDataExtractor.COMFYUI_PROMPT_KEY])
+                prompt_value = info[ImageDataExtractor.COMFYUI_PROMPT_KEY]
+                # Handle both string (newer ComfyUI) and dict (legacy) formats
+                if isinstance(prompt_value, str):
+                    try:
+                        prompt = json.loads(prompt_value)
+                    except json.JSONDecodeError as e:
+                        logger.warning(f"Failed to parse ComfyUI prompt JSON: {e}")
+                        return None, None
+                elif isinstance(prompt_value, dict):
+                    # Legacy format where prompt is already a dict
+                    prompt = prompt_value
+                else:
+                    logger.warning(f"Unexpected prompt type: {type(prompt_value)}")
+                    return None, None
                 return prompt, SoftwareType.COMFYUI
             else:
                 # logger.debug(info.keys())
@@ -155,6 +184,7 @@ class ImageDataExtractor:
         negative = None
         prompt_dicts = {}
         node_inputs = {}
+        has_found_discriminator = False
         prompt, software_type = self.extract_prompt(image_path)
 
         if software_type == SoftwareType.COMFYUI:
@@ -165,7 +195,13 @@ class ImageDataExtractor:
                         prompt_dicts[k] = v[ImageDataExtractor.INPUTS]["text"]
                     elif v[ImageDataExtractor.CLASS_TYPE] == "ImpactWildcardProcessor":
                         positive = v[ImageDataExtractor.INPUTS]["populated_text"]
-                    elif v[ImageDataExtractor.CLASS_TYPE] == "KSampler":
+                    elif (ImageDataExtractor.POSITIVE in v[ImageDataExtractor.INPUTS] and 
+                           ImageDataExtractor.NEGATIVE in v[ImageDataExtractor.INPUTS]):
+                        # logger.debug(f"Found KSampler variant or other node with positive/negative inputs: {v[ImageDataExtractor.CLASS_TYPE]}")
+                        if has_found_discriminator and v[ImageDataExtractor.CLASS_TYPE].startswith("KSampler"):
+                            continue # The KSampler node is probably downstream of the first discriminator node in this case.
+                        has_found_discriminator = True
+                        # Handle KSampler variants (like KSamplerSelect) or other nodes (like CFGGuider) that have positive/negative inputs
                         node_inputs[ImageDataExtractor.POSITIVE] = v[ImageDataExtractor.INPUTS][ImageDataExtractor.POSITIVE][0]
                         node_inputs[ImageDataExtractor.NEGATIVE] = v[ImageDataExtractor.INPUTS][ImageDataExtractor.NEGATIVE][0]
 
@@ -305,10 +341,20 @@ class ImageDataExtractor:
         return ImageDataReader(image_path)
 
     def get_image_prompts_and_models(self, image_path):
+        positive = None
+        negative = None
         if has_imported_sd_prompt_reader:
             positive, negative = self.extract_with_sd_prompt_reader(image_path)
         else:
             positive, negative = self.extract(image_path)
+        
+        # Fallback to custom extract if results are empty
+        if positive is None or (isinstance(positive, str) and positive.strip() == ""):
+            try:
+                positive, negative = self.extract(image_path)
+            except Exception as e:
+                logger.debug(f"Custom extract also failed: {e}")
+        
         if positive is None or positive.strip() == "":
             positive = "(Unable to parse image prompt information for this file.)"
         if negative is None or negative.strip() == "":
