@@ -246,11 +246,21 @@ class ImageDataExtractor:
             for k, v in prompt.items():
                 if ImageDataExtractor.CLASS_TYPE in v and ImageDataExtractor.INPUTS in v:
                     # logger.debug(v[ImageDataExtractor.CLASS_TYPE])
+                    # Checkpoint detection: matches CheckpointLoaderSimple, CheckpointLoader, CheckpointLoaderAdvanced, etc.
+                    # Also checks for ckpt_name input field to ensure it's actually a checkpoint loader node
                     if "Checkpoint" in v[ImageDataExtractor.CLASS_TYPE] and "ckpt_name" in v[ImageDataExtractor.INPUTS]:
                         ckpt_name = v[ImageDataExtractor.INPUTS]["ckpt_name"]
                         if "." in ckpt_name:
                             ckpt_name = ckpt_name[:ckpt_name.rfind(".")]
                         models.append(ckpt_name)
+                    # TODO: Support other model types (CLIPLoader with clip_name, VAELoader with vae_name, 
+                    # ControlNetLoader/ControlNetLoaderAdvanced with control_net_name) when needed
+                    elif v[ImageDataExtractor.CLASS_TYPE] == "UNETLoader" and "unet_name" in v[ImageDataExtractor.INPUTS]:
+                        unet_name = v[ImageDataExtractor.INPUTS]["unet_name"]
+                        if "." in unet_name:
+                            unet_name = unet_name[:unet_name.rfind(".")]
+                        models.append(unet_name)
+                    # Lora detection: matches LoraLoader, LoraLoaderModelOnly, etc.
                     elif "Lora" in v[ImageDataExtractor.CLASS_TYPE] and "lora_name" in v[ImageDataExtractor.INPUTS]:
                         strength_model = 0
                         strength_clip = 0
@@ -345,8 +355,6 @@ class ImageDataExtractor:
         negative = None
         if has_imported_sd_prompt_reader:
             positive, negative = self.extract_with_sd_prompt_reader(image_path)
-        else:
-            positive, negative = self.extract(image_path)
         
         # Fallback to custom extract if results are empty
         if positive is None or (isinstance(positive, str) and positive.strip() == ""):
