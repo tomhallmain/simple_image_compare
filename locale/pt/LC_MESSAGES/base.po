@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2025-11-21 19:00-0500\n"
-"PO-Revision-Date: 2025-11-21 19:00-0500\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2025-12-03 23:42-0500\n"
+"PO-Revision-Date: 2025-12-03 23:42-0500\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: pt Team <<EMAIL>>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:109 app.py:1017 app.py:2327
+#: app.py:109 app.py:1017 app.py:2325
 msgid " Simple Image Compare "
 msgstr " Comparação simples de imagens "
 
@@ -128,8 +128,8 @@ msgstr "Gostaria de sair da aplicação?"
 msgid "Ended slideshows"
 msgstr "Apresentações de diapositivos terminadas"
 
-#: app.py:741 app.py:1984 app.py:1991 app.py:1995 app.py:1999 app.py:2005
-#: app.py:2115 app.py:2131 app.py:2148
+#: app.py:741 app.py:1982 app.py:1989 app.py:1993 app.py:1997 app.py:2003
+#: app.py:2113 app.py:2129 app.py:2146
 msgid "Warning"
 msgstr "Atenção"
 
@@ -220,7 +220,7 @@ msgstr ""
 "(Abra esta imagem como parte de um diretório para ver os detalhes do "
 "índice)."
 
-#: app.py:908 app.py:1627
+#: app.py:908 app.py:1623
 msgid "Many Files"
 msgstr "Muitos arquivos"
 
@@ -346,17 +346,17 @@ msgstr "O caminho do ficheiro {0} é inválido."
 msgid "Including marks: {0}"
 msgstr "Incluindo marcas: {0}"
 
-#: app.py:1553
+#: files/marked_file_mover.py:187 files/marked_file_mover.py:198
 msgid "Move {0} Marked File(s)"
 msgstr "Mover {0} Ficheiro(s) marcado(s)"
 
-#: app.py:1591
+#: app.py:1587
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0} marcas foram definidas (>={1} esperado).\n"
 "Utilize Shift+M para definir uma marca."
 
-#: app.py:1627
+#: app.py:1623
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
@@ -364,52 +364,52 @@ msgstr ""
 "Tem a certeza de que pretende executar todas as prevalidações na diretoria "
 "{0} ? Isto pode demorar algum tempo."
 
-#: app.py:1642
+#: app.py:1638
 msgid "Prevalidations now running"
 msgstr "Prevalidações em execução"
 
-#: app.py:1642
+#: app.py:1638
 msgid "Prevalidations turned off"
 msgstr "Prevalidações desligadas"
 
-#: app.py:1758
+#: app.py:1754
 msgid "File not found"
 msgstr "Ficheiro não encontrado"
 
-#: app.py:1758
+#: app.py:1754
 msgid "No file was found for the search text: \"{0}\""
 msgstr "Não foi encontrado nenhum ficheiro para o texto de pesquisa: “{0}”"
 
-#: app.py:1769
+#: app.py:1765
 msgid "No image selected"
 msgstr "Nenhuma imagem selecionada"
 
-#: app.py:1769
+#: app.py:1765
 msgid "No image was selected for comparison"
 msgstr "Nenhuma imagem foi selecionada para comparação"
 
-#: app.py:1783
+#: app.py:1779
 msgid "No Text Search Presets Found"
 msgstr "Nenhuma Predefinição de Pesquisa de Texto Encontrada"
 
-#: app.py:1784
+#: app.py:1780
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 "Não foram encontradas predefinições de pesquisa de incorporação de texto. "
 "Defina-as no ficheiro config.json."
 
-#: app.py:1881
+#: app.py:1877
 msgid "Opening media file: {0}"
 msgstr "Abrindo ficheiro de mídia: {0}"
 
-#: app.py:1884
+#: app.py:1880
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr ""
 "Não foi possível abrir o ficheiro multimédia atual, impossível obter o "
 "caminho válido do ficheiro"
 
-#: app.py:1889
+#: app.py:1885
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
@@ -417,17 +417,17 @@ msgstr ""
 "A integração com o GIMP não está configurada. Defina ‘gimp_exe_loc’ em "
 "config.json."
 
-#: app.py:1889
+#: app.py:1885
 msgid "GIMP Integration Error"
 msgstr "Erro de integração do GIMP"
 
-#: app.py:1899
+#: app.py:1897
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 "Falha ao abrir o ficheiro atual no GIMP, não foi possível obter um caminho "
 "de ficheiro válido"
 
-#: app.py:1916
+#: app.py:1914
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -435,42 +435,42 @@ msgstr ""
 "Oculta a imagem atual.\n"
 "Para voltar a ocultar, prima Shift+B."
 
-#: app.py:1921
+#: app.py:1919
 msgid "Cleared all hidden images."
 msgstr "Limpar todas as imagens escondidas."
 
-#: app.py:1929
+#: app.py:1927
 msgid "DELETE_LOCK"
 msgstr ""
 "Eliminar o bloqueio após a apresentação\n"
 "transição impediu a eliminação"
 
-#: app.py:1947
+#: app.py:1945
 msgid "Invalid action, no files found to delete"
 msgstr "Ação inválida, não foram encontrados ficheiros para eliminar"
 
-#: app.py:1950
+#: app.py:1948
 msgid "Invalid action, search image not found"
 msgstr "Acção inválida, a imagem de pesquisa não foi encontrada"
 
-#: app.py:1965
+#: app.py:1963
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 "Falha ao remover o arquivo atual, não foi possível obter o caminho válido"
 
-#: app.py:1972
+#: app.py:1970
 msgid "Removing directory: {0}"
 msgstr "Removendo diretório: {0}"
 
-#: app.py:1974
+#: app.py:1972
 msgid "Removing file: {0}"
 msgstr "Removendo arquivo: {0}"
 
-#: app.py:1984 app.py:2005
+#: app.py:1982 app.py:2003
 msgid "Failed to delete item: {0}"
 msgstr "Falha ao eliminar o item: {0}"
 
-#: app.py:1988
+#: app.py:1986
 msgid ""
 "Failed to move directory to {0}. Double check the trash folder is set "
 "properly in config.json."
@@ -478,7 +478,7 @@ msgstr ""
 "Falha ao mover o diretório para {0}. Verifique se a pasta de lixo está "
 "configurada corretamente em config.json."
 
-#: app.py:1990
+#: app.py:1988
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
@@ -486,7 +486,7 @@ msgstr ""
 "Falha ao enviar o ficheiro para {0}. Verifique se a pasta de lixo está "
 "configurada corretamente em config.json."
 
-#: app.py:1996
+#: app.py:1994
 msgid ""
 "Failed to move directory to the trash. Either pip install send2trash or set "
 "a specific trash folder in config.json."
@@ -494,7 +494,7 @@ msgstr ""
 "Não foi possível mover o diretório para a lixeira. Instale o send2trash ou "
 "defina uma pasta de lixeira específica no config.json."
 
-#: app.py:2000
+#: app.py:1998
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -502,96 +502,92 @@ msgstr ""
 "Falha ao enviar o arquivo para a lixeira, então ele será excluído. Ou o pip "
 "instala o send2trash ou define uma pasta de lixo específica no config.json."
 
-#: app.py:2010
+#: app.py:2008
 msgid "Invalid directory"
 msgstr "Diretório inválido"
 
-#: app.py:2010
+#: app.py:2008
 msgid "No valid base directory to delete"
 msgstr "Não há diretório base válido para excluir"
 
-#: app.py:2021
+#: app.py:2019
 msgid "Cannot Delete Directory"
 msgstr "Não é possível eliminar o diretório"
 
-#: app.py:2025
+#: app.py:2023
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr ""
 "Tem a certeza de que deseja eliminar o diretório e todo o seu conteúdo?"
 
-#: app.py:2027
+#: app.py:2025
 msgid "Contents to be deleted:"
 msgstr "Conteúdo a ser eliminado:"
 
-#: app.py:2029
+#: app.py:2027
 msgid "Confirm Delete Directory"
 msgstr "Confirmar eliminação do diretório"
 
-#: app.py:2063
+#: app.py:2061
 msgid "Delete Directory Error"
 msgstr "Erro ao eliminar diretório"
 
-#: app.py:2065
+#: app.py:2063
 msgid "Directory {0} deleted."
 msgstr "Diretório {0} eliminado."
 
-#: app.py:2081
+#: app.py:2079
 msgid "Invalid target filepath for replacement: "
 msgstr "Caminho de ficheiro de destino inválido para substituição: "
 
-#: app.py:2085
+#: app.py:2083
 msgid "Moved search image to "
 msgstr "Mover a imagem de pesquisa para "
 
-#: app.py:2129
-msgid "Running image gen: "
-msgstr "Geração da imagem em execução: "
-
-#: app.py:2131
-msgid "Error running image generation:"
-msgstr "Erro ao executar a geração de imagens:"
-
-#: app.py:2115
+#: app.py:2113
 msgid "Failed to get active media filepath"
 msgstr "Falha ao obter o caminho do ficheiro de mídia ativo"
 
-#: app.py:2146
+#: app.py:2127
+msgid "Running image gen: "
+msgstr "Geração da imagem em execução: "
+
+#: app.py:2129 app.py:2146
+msgid "Error running image generation:"
+msgstr "Erro ao executar a geração de imagens:"
+
+#: app.py:2144
 msgid "Running image gen on directory: "
 msgstr "Executando a geração de imagens no diretório: "
 
-#: app.py:2148
-msgid "Error running image generation on directory:"
-msgstr ""
-
-#: app.py:2155
+#: app.py:2153
 msgid "Running refacdir"
 msgstr "A executar o refacdir"
 
-#: app.py:2160 auth/app_startup_auth.py:141 auth/password_dialog.py:249
+#: app.py:2158 auth/app_startup_auth.py:141 auth/password_dialog.py:249
 #: extensions/gimp/gimp_wrapper.py:688 extensions/gimp/gimp_wrapper.py:717
 #: files/pdf_creator.py:133 files/pdf_creator.py:137 files/pdf_creator.py:140
 msgid "Error"
 msgstr "Erro"
 
-#: app.py:2262
+#: app.py:2260
 msgid "GROUP_DETAILS"
 msgstr ""
 "Grupo {0} de {1}\n"
 "Tamanho: {2}"
 
-#: app.py:2266
+#: app.py:2264
 msgid "No image files found"
 msgstr "Nenhum ficheiro de imagem encontrado"
 
-#: app.py:2268
+#: app.py:2266
 msgid "1 image file found"
 msgstr "1 ficheiro de imagem encontrado"
 
-#: app.py:2269
+#: app.py:2267
 msgid "{0} image files found"
 msgstr "{0} ficheiros de imagem encontrados"
 
-#: app.py:2271
+#: app.py:2269
 msgid "(filtered)"
 msgstr "(filtrado)"
 
@@ -1210,7 +1206,7 @@ msgstr "Apagar"
 msgid "Move down"
 msgstr "Mover para baixo"
 
-#: extensions/sd_runner_client.py:61
+#: extensions/sd_runner_client.py:67
 msgid "Image does not contain a prompt to redo!"
 msgstr "A imagem não contém um prompt para refazer!"
 
@@ -1389,11 +1385,11 @@ msgstr "Apenas hoje"
 msgid "Target Directory"
 msgstr "Diretório de destino"
 
-#: files/file_actions_window.py:366 files/marked_file_mover.py:1040
+#: files/file_actions_window.py:366 files/marked_file_mover.py:1146
 msgid "Moved"
 msgstr "Movido"
 
-#: files/file_actions_window.py:372 files/marked_file_mover.py:1040
+#: files/file_actions_window.py:372 files/marked_file_mover.py:1146
 msgid "Copied"
 msgstr "Copiado"
 
@@ -1413,12 +1409,12 @@ msgstr " ({0} ficheiros)"
 msgid "(auto)"
 msgstr "(auto)"
 
-#: files/file_actions_window.py:486 files/marked_file_mover.py:282
+#: files/file_actions_window.py:486 files/marked_file_mover.py:322
 #: image/prevalidation_action.py:30
 msgid "Move"
 msgstr "Mover"
 
-#: files/file_actions_window.py:486 files/marked_file_mover.py:289
+#: files/file_actions_window.py:486 files/marked_file_mover.py:329
 #: image/prevalidation_action.py:32
 msgid "Copy"
 msgstr "Copiar"
@@ -1672,59 +1668,59 @@ msgstr "Pasta de destino"
 msgid "(unset)"
 msgstr "(desactivado)"
 
-#: files/marked_file_mover.py:97 files/marked_file_mover.py:1002
+#: files/marked_file_mover.py:96 files/marked_file_mover.py:1039
 msgid "Marks cleared."
 msgstr "Marcas limpas."
 
-#: files/marked_file_mover.py:104
+#: files/marked_file_mover.py:103
 msgid "Set current marks from previous."
 msgstr "Define as marcas atuais das anteriores."
 
-#: files/marked_file_mover.py:104
+#: files/marked_file_mover.py:103
 msgid "Total set: {0}"
 msgstr "Total definido: {0}"
 
-#: files/marked_file_mover.py:131
+#: files/marked_file_mover.py:130
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "Não é possível definir um objetivo de marca permanente!\n"
 "Definir com Ctrl+T na janela Marcas."
 
-#: files/marked_file_mover.py:143
+#: files/marked_file_mover.py:142
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "Nenhuma ação de atalho definida para {0}.\n"
 "Definir com {1} na janela Marca."
 
-#: files/marked_file_mover.py:227 files/recent_directory_window.py:230
+#: files/marked_file_mover.py:267 files/recent_directory_window.py:230
 msgid "Set a new target directory"
 msgstr "Definir um novo directório- alvo"
 
-#: files/marked_file_mover.py:229
+#: files/marked_file_mover.py:269
 msgid "MOVE"
 msgstr "MOVER"
 
-#: files/marked_file_mover.py:233
+#: files/marked_file_mover.py:273
 msgid "COPY"
 msgstr "CÓPIA"
 
-#: files/marked_file_mover.py:235
+#: files/marked_file_mover.py:275
 msgid "DELETE"
 msgstr "APAGAR"
 
-#: files/marked_file_mover.py:237 files/recent_directory_window.py:234
+#: files/marked_file_mover.py:277 files/recent_directory_window.py:234
 msgid "Add directories from parent"
 msgstr "Adicionar diretórios a partir do pai"
 
-#: files/marked_file_mover.py:240 files/recent_directory_window.py:236
+#: files/marked_file_mover.py:280 files/recent_directory_window.py:236
 msgid "Clear targets"
 msgstr "Alvos claros"
 
-#: files/marked_file_mover.py:242 files/pdf_options_window.py:80
+#: files/marked_file_mover.py:282 files/pdf_options_window.py:80
 msgid "Create PDF"
 msgstr "Criar PDF"
 
-#: files/marked_file_mover.py:309
+#: files/marked_file_mover.py:349
 msgid ""
 "WARNING: This action sets hotkey actions that will be used for future file "
 "operations. You may have accidentally triggered this shortcut due to a "
@@ -1734,158 +1730,158 @@ msgstr ""
 "operações futuras com ficheiros. Pode ter acionado acidentalmente este "
 "atalho devido a uma tecla Control presa. Confirme se deseja continuar."
 
-#: files/marked_file_mover.py:315 files/marked_file_mover.py:321
+#: files/marked_file_mover.py:355 files/marked_file_mover.py:361
 msgid "Recording next mark target and action."
 msgstr "Registar o próximo alvo de marcação e a ação."
 
-#: files/marked_file_mover.py:334 files/recent_directory_window.py:280
+#: files/marked_file_mover.py:374 files/recent_directory_window.py:280
 msgid "Invalid directory: %s"
 msgstr "Pasta inválida: {0}"
 
-#: files/marked_file_mover.py:337
+#: files/marked_file_mover.py:377
 msgid "Select target directory for marked files"
 msgstr "Seleccione o directório de destino dos ficheiros marcados"
 
-#: files/marked_file_mover.py:392
+#: files/marked_file_mover.py:432
 msgid "Moving"
 msgstr "Mover"
 
-#: files/marked_file_mover.py:392
+#: files/marked_file_mover.py:432
 msgid "Copying"
 msgstr "Copiar"
 
-#: files/marked_file_mover.py:432
+#: files/marked_file_mover.py:472
 msgid "Moved {0} files to {1}"
 msgstr ""
 "Movidos {0} ficheiros para\n"
 "{1}"
 
-#: files/marked_file_mover.py:434
+#: files/marked_file_mover.py:474
 msgid "Copied {0} files to {1}"
 msgstr ""
 "Copiou {0} ficheiros para\n"
 "{1}"
 
-#: files/marked_file_mover.py:465
+#: files/marked_file_mover.py:1116
 msgid "Removed marked file from source: {0}"
 msgstr "Arquivo marcado removido da fonte: {0}"
 
-#: files/marked_file_mover.py:511
+#: files/marked_file_mover.py:545
 msgid "Existing filenames match!"
 msgstr "Os nomes de ficheiros existentes correspondem!"
 
-#: files/marked_file_mover.py:513
+#: files/marked_file_mover.py:547
 msgid "WARNING: Exact file match."
 msgstr "AVISO: O arquivo exato corresponde."
 
-#: files/marked_file_mover.py:515
+#: files/marked_file_mover.py:549
 msgid "INFO: Target files with different EXIF data replaced."
 msgstr "INFO: Ficheiros de destino com dados EXIF diferentes substituídos."
 
-#: files/marked_file_mover.py:517 files/marked_file_mover.py:915
+#: files/marked_file_mover.py:551 files/marked_file_mover.py:949
 msgid "WARNING: Short filenames."
 msgstr "AVISO: Nomes de arquivos curtos."
 
-#: files/marked_file_mover.py:541
+#: files/marked_file_mover.py:575
 msgid "Moving back"
 msgstr "Recuar"
 
-#: files/marked_file_mover.py:541
+#: files/marked_file_mover.py:575
 msgid "Removing"
 msgstr "Remoção"
 
-#: files/marked_file_mover.py:542
+#: files/marked_file_mover.py:576
 msgid "Moved back"
 msgstr "Recuado"
 
-#: files/marked_file_mover.py:542
+#: files/marked_file_mover.py:576
 msgid "Removed"
 msgstr "Removido"
 
-#: files/marked_file_mover.py:549
+#: files/marked_file_mover.py:583
 msgid "Where should the marked files have gone?"
 msgstr "Para onde deveriam ter ido os ficheiros marcados?"
 
-#: files/marked_file_mover.py:574
+#: files/marked_file_mover.py:608
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "Regressou {0} ficheiros de \n"
 "{1}"
 
-#: files/marked_file_mover.py:576
+#: files/marked_file_mover.py:610
 msgid "Removed {0} files from {1}"
 msgstr ""
 "Removidos {0} ficheiros de\n"
 "{1}"
 
-#: files/marked_file_mover.py:594 files/recent_directory_window.py:332
+#: files/marked_file_mover.py:628 files/recent_directory_window.py:332
 msgid "Select parent directory for target directories"
 msgstr "Selecionar o diretório principal para os diretórios de destino"
 
-#: files/marked_file_mover.py:786
+#: files/marked_file_mover.py:820
 msgid "Sorted directories by embedding comparison."
 msgstr "Diretórios ordenados por comparação de incorporação."
 
-#: files/marked_file_mover.py:808
+#: files/marked_file_mover.py:842
 msgid "Confirm Delete"
 msgstr "Confirmar Apagar"
 
-#: files/marked_file_mover.py:809
+#: files/marked_file_mover.py:843
 msgid "Deleting %s marked files - Are you sure you want to proceed?"
 msgstr ""
 "Eliminar {0} ficheiros marcados - Tem a certeza de que pretende continuar?"
 
-#: files/marked_file_mover.py:830
+#: files/marked_file_mover.py:864
 msgid "Delete Failed"
 msgstr "Falha na eliminação"
 
-#: files/marked_file_mover.py:831
+#: files/marked_file_mover.py:865
 msgid "Failed to delete %s files - check log for details."
 msgstr ""
 "Falha ao eliminar {0} ficheiros - verifique o registo para obter detalhes."
 
-#: files/marked_file_mover.py:834
+#: files/marked_file_mover.py:868
 msgid "Deleted %s marked files."
 msgstr "Eliminou {0} ficheiros marcados."
 
-#: files/marked_file_mover.py:905
+#: files/marked_file_mover.py:939
 msgid "Existing filenames found!"
 msgstr "Nomes de ficheiros existentes encontrados!"
 
-#: files/marked_file_mover.py:907
+#: files/marked_file_mover.py:941
 msgid "WARNING: All file hashes match."
 msgstr "AVISO: Todos os hashes de ficheiros coincidem."
 
-#: files/marked_file_mover.py:909
+#: files/marked_file_mover.py:943
 msgid "WARNING: %s of %s file hashes match."
 msgstr "AVISO: {0} de {1} hashes de ficheiro coincidem."
 
-#: files/marked_file_mover.py:911
+#: files/marked_file_mover.py:945
 msgid "INFO: %s files have identical content but different EXIF data."
 msgstr "INFO: %s ficheiros têm conteúdo idêntico, mas dados EXIF diferentes."
 
-#: files/marked_file_mover.py:913
+#: files/marked_file_mover.py:947
 msgid "WARNING: All files are either identical or have matching content."
 msgstr ""
 "AVISO: Todos os ficheiros são idênticos ou têm conteúdo correspondente."
 
-#: files/marked_file_mover.py:919
+#: files/marked_file_mover.py:953
 msgid "No existing filenames found."
 msgstr "Não foram encontrados nomes de ficheiros existentes."
 
-#: files/marked_file_mover.py:947
+#: files/marked_file_mover.py:981
 msgid "Found %s downstream related images"
 msgstr "Encontrou {0} imagens relacionadas com a jusante"
 
-#: files/marked_file_mover.py:949
+#: files/marked_file_mover.py:983
 msgid "No downstream related images found"
 msgstr "Não foram encontradas imagens relacionadas com o downstream"
 
-#: files/marked_file_mover.py:960
+#: files/marked_file_mover.py:997
 msgid "Cleared marked file"
 msgstr "Limpar arquivo marcado"
 
-#: files/marked_file_mover.py:1004
+#: files/marked_file_mover.py:1041
 msgid "Removed {0} marks"
 msgstr "Remoção de {0} marcas"
 
@@ -2267,11 +2263,11 @@ msgstr "Não foram encontradas imagens relacionadas com o downstream em"
 msgid "Updated tags for %s"
 msgstr "Etiquetas actualizadas para {0}"
 
-#: image/metadata_viewer_window.py:31
+#: image/metadata_viewer_window.py:35
 msgid "Raw Image Metadata"
 msgstr "Metadados brutos da imagem"
 
-#: image/metadata_viewer_window.py:49
+#: image/metadata_viewer_window.py:66
 msgid "Metadata Viewer"
 msgstr "Visualizador de metadados"
 
@@ -2848,3 +2844,39 @@ msgstr "Escape as barras invertidas nos caminhos dos ficheiros"
 #: utils/notification_manager.py:26
 msgid " etc."
 msgstr " etc."
+
+#: files/marked_file_mover.py:1084
+msgid ""
+"WARNING: You just copied this file to this directory, and now you're trying to move it here.\n"
+"\n"
+"This would delete the original file. If this was a mistake, please cancel this operation.\n"
+"\n"
+"File: {0}\n"
+"Target: {1}\n"
+"\n"
+"Do you want to continue and delete the source file?"
+msgstr ""
+"AVISO: Acabou de copiar este ficheiro para este diretório e agora está a tentar movê-lo para aqui.\n"
+"\n"
+"Isso excluiria o ficheiro original. Se isso foi um erro, cancele esta operação.\n"
+"\n"
+"Ficheiro: {0}\n"
+"Destino: {1}\n"
+"\n"
+"Deseja continuar e excluir o ficheiro de origem?"
+
+#: files/marked_file_mover.py:1091
+msgid "Potential Mistake Detected"
+msgstr "Possível erro detetado"
+
+#: image/metadata_viewer_window.py:32
+msgid "Copy Metadata"
+msgstr "Copiar metadados"
+
+#: image/metadata_viewer_window.py:59
+msgid "Copied metadata to clipboard"
+msgstr "Metadados copiados para a área de transferência"
+
+#: image/metadata_viewer_window.py:62
+msgid "Error copying metadata to clipboard: "
+msgstr "Erro ao copiar metadados para a área de transferência: "

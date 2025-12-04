@@ -1891,6 +1891,8 @@ class App():
         if filepath is not None:
             from extensions.gimp.gimp_wrapper import open_image_in_gimp_wrapper
             open_image_in_gimp_wrapper(filepath, config.gimp_exe_loc, self.file_browser.is_slow_total_files, self.app_actions)
+            # Mark that GIMP was opened for the delete source file check
+            MarkedFiles.gimp_opened_in_last_action = True
         else:
             self.handle_error(_("Failed to open current file in GIMP, unable to get valid filepath"))
 

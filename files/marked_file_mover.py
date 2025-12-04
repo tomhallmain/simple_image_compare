@@ -47,6 +47,9 @@ class MarkedFiles():
     # Unable to undo a delete action.
     delete_lock = False
 
+    # Track if GIMP was opened in the last action (for delete source file check)
+    gimp_opened_in_last_action = False
+
     MAX_HEIGHT = 900
     N_TARGET_DIRS_CUTOFF = 30
     COL_0_WIDTH = 600
@@ -493,17 +496,11 @@ class MarkedFiles():
                             matching_files = True
                             logger.info(f"File hashes match: {marked_file} <> {target_filepath}")
                             if is_moving and marked_file != target_filepath:
-                                # The other effect of this operation would have been to remove the
-                                # file from source, so try to do that
-                                try:
-                                    app_actions.delete(marked_file)
-                                    if marked_file in MarkedFiles.file_marks:
-                                        MarkedFiles.file_marks.remove(marked_file)
-                                    app_actions.warn(_("Removed marked file from source: {0}").format(marked_file))
-                                except Exception as e:
-                                    error_text = f"Failed to remove marked file from source: {marked_file} - {e}"
-                                    logger.warning(error_text)
-                                    app_actions.title_notify(error_text)
+                                # Check if we should delete the source file (or warn instead if mistake detected)
+                                if MarkedFiles._check_delete_source_file(marked_file, target_dir, target_filepath, app_actions):
+                                    # The other effect of this operation would have been to remove the
+                                    # file from source, so try to do that
+                                    MarkedFiles._auto_delete_source_file(marked_file, app_actions)
                         elif ImageOps.compare_image_content_without_exif(marked_file, target_filepath):
                             # Hash comparison failed, but check if image content is identical
                             # (different EXIF data but same visual content)
@@ -1052,6 +1049,75 @@ class MarkedFiles():
             PDFCreator.create_pdf_from_files(MarkedFiles.file_marks, self.app_actions, output_path, options)
             
         PDFOptionsWindow.show(self.master, self.app_actions, pdf_callback)
+
+    @staticmethod
+    def _check_delete_source_file(marked_file: str, target_dir: str, target_filepath: str, app_actions) -> bool:
+        """
+        Check if we should delete the source file after a move operation.
+        If the previous action was a COPY to the same directory with the same file,
+        this indicates the user likely made a mistake, so we ask for confirmation.
+        
+        Returns:
+            True if we should delete the source file, False if we should not delete.
+        """
+        # If GIMP was opened in the last action, skip the check (no copy operation occurred)
+        if MarkedFiles.gimp_opened_in_last_action:
+            MarkedFiles.gimp_opened_in_last_action = False
+            return True
+        
+        should_check = False
+        
+        if len(FileActionsWindow.action_history) == 0:
+            MarkedFiles.gimp_opened_in_last_action = False
+            return True
+        
+        previous_action = FileActionsWindow.action_history[0]
+        if previous_action.target == target_dir:
+            # Check if the same file was involved in the previous action
+            if (marked_file in previous_action.original_marks or 
+                target_filepath in previous_action.new_files):
+                should_check = True
+        
+        if should_check:
+            # User likely made a mistake - ask if they want to continue with deletion
+            warning_message = _(
+                "WARNING: You just copied this file to this directory, and now you're trying to move it here.\n\n"
+                "This would delete the original file. If this was a mistake, please cancel this operation.\n\n"
+                "File: {0}\n"
+                "Target: {1}\n\n"
+                "Do you want to continue and delete the source file?"
+            ).format(os.path.basename(marked_file), target_dir)
+            from tkinter import messagebox
+            res = app_actions.alert(_("Potential Mistake Detected"), warning_message, kind="askokcancel")
+            if res == messagebox.OK or res == True:
+                # User chose to continue with deletion
+                logger.warning(f"User confirmed deletion after copy-then-move detection for {marked_file}")
+                MarkedFiles.gimp_opened_in_last_action = False
+                return True
+            else:
+                # User cancelled - don't delete
+                logger.warning(f"User cancelled deletion after copy-then-move detection for {marked_file}")
+                MarkedFiles.gimp_opened_in_last_action = False
+                return False
+        
+        MarkedFiles.gimp_opened_in_last_action = False
+        return True
+
+    @staticmethod
+    def _auto_delete_source_file(marked_file: str, app_actions):
+        """
+        Auto-delete the source file after a move operation when the target file already exists.
+        This simulates what would have happened if the move had succeeded.
+        """
+        try:
+            app_actions.delete(marked_file)
+            if marked_file in MarkedFiles.file_marks:
+                MarkedFiles.file_marks.remove(marked_file)
+            app_actions.warn(_("Removed marked file from source: {0}").format(marked_file))
+        except Exception as e:
+            error_text = f"Failed to remove marked file from source: {marked_file} - {e}"
+            logger.warning(error_text)
+            app_actions.title_notify(error_text)
 
     @staticmethod
     def _process_single_file_operation(marked_file: str, target_dir: str, move_func: Callable, 
