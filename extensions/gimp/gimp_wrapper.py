@@ -659,7 +659,8 @@ class GimpWrapper:
     
     def _handle_original_unchanged(self) -> None:
         """Handle case where original file was unchanged."""
-        logger.info("Original file unchanged - no modifications detected")
+        message = _("Original file unchanged - no modifications detected")
+        self.app_actions.warn(message)
         # Files will be cleaned up in _cleanup_temp_directory()
     
     def _handle_original_modified(self, temp_files: List[str]) -> None:

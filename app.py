@@ -16,7 +16,8 @@ from auth.password_admin_window import PasswordAdminWindow
 from auth.password_utils import require_password, check_session_expired
 from compare.base_compare import CompareCancelled
 from compare.compare_args import CompareArgs
-from compare.compare_wrapper import CompareWrapper
+from compare.compare_manager import CompareManager
+from compare.compare_settings_window import CompareSettingsWindow
 from compare.prevalidations_window import PrevalidationsWindow
 from extensions.refacdir_client import RefacDirClient
 from extensions.sd_runner_client import SDRunnerClient
@@ -259,7 +260,10 @@ class App():
         self.base_dir = Utils.get_user_dir() if base_dir is None else base_dir
         self.search_dir = Utils.get_user_dir()
 
-        self.compare_wrapper = CompareWrapper(master, config.compare_mode, self.app_actions)
+        self.compare_manager = CompareManager(master, self.app_actions)
+        self.compare_manager.set_primary_mode(config.compare_mode)
+        # For backward compatibility, expose compare_wrapper as alias
+        self.compare_wrapper = self.compare_manager
         self.sd_runner_client: SDRunnerClient = SDRunnerClient()
         self.refacdir_client: RefacDirClient = RefacDirClient()
 
@@ -303,35 +307,9 @@ class App():
         self.search_text_negative_box.bind("<Return>", self.set_search_for_text)
         self.apply_to_grid(self.search_text_negative_box, sticky=W)
 
-        self.label_compare_mode = Label(self.sidebar)
-        self.add_label(self.label_compare_mode, _("Compare mode"))
-        self.compare_mode_var = StringVar()
-        self.compare_mode_choice = OptionMenu(self.sidebar, self.compare_mode_var, self.compare_wrapper.compare_mode.get_text(),
-                                              *CompareMode.members(), command=self.set_compare_mode)
-        self.apply_to_grid(self.compare_mode_choice, sticky=W)
-
-        self.label_compare_threshold = Label(self.sidebar)
-        self.add_label(self.label_compare_threshold, self.compare_wrapper.compare_mode.threshold_str())
-        self.compare_threshold = StringVar()
-        if self.compare_wrapper.compare_mode == CompareMode.COLOR_MATCHING:
-            default_val = config.color_diff_threshold
-        else:
-            default_val = config.embedding_similarity_threshold
-        self.compare_threshold_choice = OptionMenu(self.sidebar, self.compare_threshold,
-                                                   str(default_val), *self.compare_wrapper.compare_mode.threshold_vals())
-        self.apply_to_grid(self.compare_threshold_choice, sticky=W)
-
-        self.compare_faces = BooleanVar(value=False)
-        self.compare_faces_choice = Checkbutton(self.sidebar, text=_('Compare faces'), variable=self.compare_faces)
-        self.apply_to_grid(self.compare_faces_choice, sticky=W)
-
-        self.overwrite = BooleanVar(value=False)
-        self.overwrite_choice = Checkbutton(self.sidebar, text=_('Overwrite cache'), variable=self.overwrite)
-        self.apply_to_grid(self.overwrite_choice, sticky=W)
-
-        self.store_checkpoints = BooleanVar(value=config.store_checkpoints)
-        self.store_checkpoints_choice = Checkbutton(self.sidebar, text=_('Store checkpoints'), variable=self.store_checkpoints)
-        self.apply_to_grid(self.store_checkpoints_choice, sticky=W)
+        # Compare settings button (settings moved to CompareSettingsWindow)
+        self.compare_settings_btn = None
+        self.add_button("compare_settings_btn", _("Compare Settings..."), self.open_compare_settings_window)
 
         self.label_counter_limit = Label(self.sidebar)
         self.add_label(self.label_counter_limit, _("Max files to compare"))
@@ -369,6 +347,7 @@ class App():
 
         ################################ Run context-aware UI elements
         self.progress_bar = None
+        self.compare_settings_btn = None
         self.run_compare_btn = None
         self.add_button("run_compare_btn", _("Run image compare"), self.run_compare)
         self.find_duplicates_btn = None
@@ -432,7 +411,7 @@ class App():
         self.master.bind("<Shift-I>", lambda e: self.check_focus(e, lambda: ImageDetails.run_image_generation_static(self.app_actions)))
         self.master.bind("<Shift-Q>", lambda e: self.check_focus(e, lambda: ImageDetails.randomly_modify_image(self.get_active_media_filepath(), self.app_actions, self.master)))
         self.master.bind("<Shift-L>", lambda e: self.check_focus(e, self.toggle_prevalidations))
-        self.master.bind("<Shift-E>", lambda e: self.check_focus(e, lambda: ImageDetails.copy_prompt_no_break_static(self.get_active_media_filepath(), self.master, self.app_actions)))
+        self.master.bind("<Shift-E>", lambda e: self.check_focus(e, self.copy_prompt))
         self.master.bind("<Control-Return>", lambda event: ImageDetails.run_image_generation_static(self.app_actions, event=event))
         self.master.bind("<Shift-C>", lambda e: self.check_focus(e, lambda: MarkedFiles.clear_file_marks(self.toast)))
         self.master.bind("<Control-Tab>", self.cycle_windows)
@@ -444,7 +423,7 @@ class App():
         self.master.bind("<Control-g>", self.open_go_to_file_window)
         self.master.bind("<Control-i>", self.open_go_to_file_with_current_media)
         self.master.bind("<Control-h>", self.toggle_sidebar)
-        self.master.bind("<Control-C>", self.copy_marks_list)
+        self.master.bind("<Control-C>", lambda e: self.check_focus(e, self.copy_marks_list))
         self.master.bind("<Control-f>", self.open_favorites_window)
         self.master.bind("<Control-n>", self.open_file_actions_window)
         self.master.bind("<Control-m>", self.open_move_marks_window)
@@ -455,10 +434,11 @@ class App():
         self.master.bind("<Control-t>", self.run_permanent_marks_action)
         self.master.bind("<Control-d>", lambda event: MarkedFiles.set_current_marks_from_previous(self.toast))
         self.master.bind("<Control-z>", self.revert_last_marks_change)
-        self.master.bind("<Control-x>", lambda event: MarkedFiles.undo_move_marks(None, self.app_actions))
+        self.master.bind("<Control-x>", lambda e: self.check_focus(e, lambda: MarkedFiles.undo_move_marks(None, self.app_actions)))
         self.master.bind("<Control-s>", self.next_text_embedding_preset)
         self.master.bind("<Control-b>", self.return_to_browsing_mode)
-        self.master.bind("<Control-v>", self.open_type_configuration_window)
+        self.master.bind("<Control-v>", lambda e: self.check_focus(e, self.open_type_configuration_window))
+        self.master.bind("<Control-Shift-c>", lambda e: self.check_focus(e, self.open_compare_settings_window))
         self.master.bind("<Home>", self.home)
         self.master.bind("<End>", lambda event: self.home(last_file=True))
         self.master.bind("<Prior>", self.page_up)
@@ -604,7 +584,7 @@ class App():
                 app_info_cache.set(base_dir, "image_cursor", os.path.basename(self.img_path))
             app_info_cache.set(base_dir, "recursive", self.file_browser.is_recursive())
             app_info_cache.set(base_dir, "sort_by", self.file_browser.get_sort_by().get_text())
-            app_info_cache.set(base_dir, "compare_mode", CompareMode.get(self.compare_mode_var.get()).get_text())
+            app_info_cache.set(base_dir, "compare_mode", self.compare_wrapper.compare_mode.get_text())
         if store_window_state:
             secondary_base_dirs = []
             for _app in App.open_windows:
@@ -664,24 +644,10 @@ class App():
             self.show_next_media()
 
     def set_compare_mode(self, event=None) -> None:
-        try:
-            mode = CompareMode.get(self.compare_mode_var.get())
-        except Exception as e:
-            logger.error(f"Compare mode not set: {e}")
-            return
-        self.compare_wrapper.compare_mode = mode
-        self.label_compare_threshold["text"] = self.compare_wrapper.compare_mode.threshold_str()
-        if self.compare_wrapper.compare_mode == CompareMode.COLOR_MATCHING:
-            default_val = config.color_diff_threshold
-        else:
-            default_val = config.embedding_similarity_threshold
-        self.compare_threshold.set(str(default_val))
-        self.destroy_grid_element("compare_threshold_choice", decrement_row_counter=False)
-        self.compare_threshold_choice = OptionMenu(self.sidebar, self.compare_threshold,
-                                                   str(default_val), *self.compare_wrapper.compare_mode.threshold_vals())
-        self.apply_to_grid(self.compare_threshold_choice, sticky=W, specific_row=13)
+        """Compare mode is now set via CompareSettingsWindow. This method is kept for backward compatibility."""
+        # Mode setting is now handled in CompareSettingsWindow
+        # This method may still be called from old code, so we'll just update the cache
         self.store_info_cache()
-        self.master.update()
 
     def set_file_filter(self, event=None) -> None:
         if self.slideshow_config.end_slideshows():
@@ -900,6 +866,10 @@ class App():
                 self.handle_error(str(e), title="Image Details Error")
 
     @require_password(ProtectedActions.VIEW_MEDIA_DETAILS)
+    def copy_prompt(self, event=None) -> None:
+        ImageDetails.copy_prompt_no_break_static(self.get_active_media_filepath(), self.master, self.app_actions)
+
+    @require_password(ProtectedActions.VIEW_MEDIA_DETAILS)
     def show_related_image(self, event=None) -> None:
         ImageDetails.show_related_image(master=self.master, image_path=self.img_path, app_actions=self.app_actions)
 
@@ -1064,7 +1034,6 @@ class App():
         try:
             if compare_mode != self.compare_wrapper.compare_mode.get_text():
                 self.compare_wrapper.compare_mode = CompareMode.get(compare_mode)
-                self.compare_mode_var.set(compare_mode)
         except Exception as e:
             logger.error(f"Error setting stored compare mode: {e}")
         try:
@@ -1128,8 +1097,17 @@ class App():
             raise AssertionError("Counter limit must be an integer value.")
 
     def get_compare_threshold(self) -> int | float:
-        compare_threshold_str = self.compare_threshold.get().strip()
-        return int(compare_threshold_str) if self.compare_wrapper.compare_mode == CompareMode.COLOR_MATCHING else float(compare_threshold_str)
+        """Get compare threshold from CompareManager, with fallback to config defaults."""
+        threshold = self.compare_manager.get_threshold()
+        if threshold is not None:
+            return threshold
+        
+        # Fallback to config defaults
+        primary_mode = self.compare_manager.compare_mode
+        if primary_mode == CompareMode.COLOR_MATCHING:
+            return config.color_diff_threshold
+        else:
+            return config.embedding_similarity_threshold
 
     def get_inclusion_pattern(self) -> str | None:
         inclusion_pattern = self.inclusion_pattern.get().strip()
@@ -1178,7 +1156,7 @@ class App():
             args.negative_search_file_path = None
 
         if args.search_text is not None or args.search_text_negative is not None:
-            self.compare_wrapper.validate_compare_mode(CompareMode.embedding_modes(), _(
+            self.compare_wrapper.validate_compare_mode(CompareMode.text_search_modes(), _(
                 "Compare mode must be set to an embedding mode to search text embeddings"))
 
         if image_path is not None and not os.path.isfile(image_path):
@@ -1454,12 +1432,21 @@ class App():
         args.base_dir = self.get_base_dir()
         args.mode = self.mode
         args.recursive = self.file_browser.recursive
-        args.counter_limit = self.get_counter_limit()
-        args.compare_faces = self.compare_faces.get()
-        args.overwrite = self.overwrite.get()
-        args.threshold = self.get_compare_threshold()
+        
+        # Apply all compare settings from CompareManager (with fallbacks)
+        self.compare_manager.apply_settings_to_args(args)
+        
+        # Backward compatibility: if counter_limit not set in manager, check sidebar entry
+        if args.counter_limit == config.file_counter_limit:
+            try:
+                sidebar_counter_limit = self.get_counter_limit()
+                if sidebar_counter_limit is not None:
+                    args.counter_limit = sidebar_counter_limit
+            except (AssertionError, Exception):
+                pass  # Use config default if sidebar entry is invalid
+        
+        # Apply settings that are still managed in App (not yet migrated)
         args.inclusion_pattern = self.get_inclusion_pattern()
-        args.store_checkpoints = self.store_checkpoints.get()
         args.include_videos = config.enable_videos
         args.include_gifs = config.enable_gifs
         args.include_pdfs = config.enable_pdfs
@@ -1640,6 +1627,10 @@ class App():
     @require_password(ProtectedActions.CONFIGURE_MEDIA_TYPES)
     def open_type_configuration_window(self, event=None) -> None:
         TypeConfigurationWindow.show(master=self.master, app_actions=self.app_actions)
+
+    def open_compare_settings_window(self, event=None) -> None:
+        """Open the compare settings window for configuring comparison modes and filters."""
+        CompareSettingsWindow.show(parent=self.master, compare_manager=self.compare_manager)
 
     def open_favorites_window(self, event=None) -> None:
         try:
@@ -1860,7 +1851,7 @@ class App():
 
     def get_active_media_filepath(self) -> Optional[str]:
         if self.media_canvas.canvas.imagetk is None:
-            return None
+            return None # TODO FIX - this is returning if current image is a video
         if self.mode == Mode.BROWSE:
             return self.file_browser.current_file()
         if self.is_toggled_search_image():
@@ -1905,6 +1896,7 @@ class App():
                 filepath = filepath.replace("\\", "\\\\")
         self.master.clipboard_clear()
         self.master.clipboard_append(filepath)
+        self.toast(_("Copied filepath to clipboard"))
 
     def hide_current_media(self, event=None, image_path: Optional[str] = None) -> None:
         filepath = self.get_active_media_filepath() if image_path is None else image_path
@@ -2044,11 +2036,8 @@ class App():
                 except Exception as e:
                     logger.error(f"Error closing window for deleted directory: {e}")
 
-        try:
-            # Remove marks associated with this base directory if any
-            MarkedFiles.remove_marks_for_base_dir(base_dir, self.app_actions)
-        except Exception:
-            pass
+        # Remove marks associated with this base directory if any
+        MarkedFiles.remove_marks_for_base_dir(base_dir, self.app_actions)
 
         try:
             # Clear all cache entries related to this directory

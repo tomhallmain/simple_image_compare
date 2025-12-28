@@ -12,6 +12,8 @@ from compare.compare_embeddings_xvlm import CompareEmbeddingXVLM
 from compare.compare_embeddings_laion import CompareEmbeddingLaion
 from compare.compare_prompts import ComparePrompts
 from compare.compare_prompts_exact import ComparePromptsExact
+from compare.compare_size import CompareSize
+from compare.compare_models import CompareModels
 from compare.prevalidations_window import PrevalidationAction, PrevalidationsWindow
 from files.marked_file_mover import MarkedFiles
 from image.frame_cache import FrameCache
@@ -357,6 +359,10 @@ class CompareWrapper:
             self._compare = ComparePrompts(args)
         elif self.compare_mode == CompareMode.PROMPTS_EXACT:
             self._compare = ComparePromptsExact(args)
+        elif self.compare_mode == CompareMode.SIZE:
+            self._compare = CompareSize(args)
+        elif self.compare_mode == CompareMode.MODELS:
+            self._compare = CompareModels(args)
         else:
             raise Exception(f"Unhandled compare mode: {self.compare_mode}")
 

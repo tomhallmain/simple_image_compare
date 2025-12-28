@@ -71,6 +71,7 @@ class ImageDetails():
         # Set the size while preserving the position set by SmartToplevel
         self.master.set_geometry_preserving_position("700x600")
         self.image_path = FrameCache.get_image_path(media_path)
+        self.prompt_extraction_failed = True
         self.app_actions = app_actions
         self.frame = Frame(self.master)
         self.frame.grid(column=0, row=0)
@@ -117,7 +118,8 @@ class ImageDetails():
         else:
             self.is_image = True
             image_mode, image_dims = self._get_image_info()
-            positive, negative, models, loras = image_data_extractor.get_image_prompts_and_models(self.image_path)
+            positive, negative, models, loras, prompt_extraction_failed = image_data_extractor.get_image_prompts_and_models(self.image_path)
+            self.prompt_extraction_failed = prompt_extraction_failed
             related_image_text = self.get_related_image_text()
 
         mod_time, file_size = self._get_file_info()
@@ -134,6 +136,7 @@ class ImageDetails():
         self.add_label(self.label_size, file_size, column=1)
         self.add_label(self._label_mtime, _("Modification Time"), wraplength=col_0_width)
         self.add_label(self.label_mtime, mod_time, column=1)
+        # TODO - warning text color if prompt not found
         self.add_label(self._label_positive, _("Positive"), wraplength=col_0_width)
         self.add_label(self.label_positive, positive, column=1)
         self.add_label(self._label_negative, _("Negative"), wraplength=col_0_width)
@@ -221,8 +224,9 @@ class ImageDetails():
         self.master.bind("<Shift-C>", self.crop_image)  # Crop Image
         self.master.bind("<Shift-L>", lambda e: self.rotate_image(right=False))  # Rotate Left
         self.master.bind("<Shift-R>", lambda e: self.rotate_image(right=True))   # Rotate Right
-        self.master.bind("<Shift-E>", lambda e: self.enhance_image())            # Enhance Image
-        self.master.bind("<Shift-A>", lambda e: self.random_crop())              # rAndom Crop
+        self.master.bind("<Shift-E>", lambda e: self.copy_prompt_no_break())     # Copy Prompt
+        self.master.bind("<Shift-B>", lambda e: self.enhance_image())            # Enhance Image
+        self.master.bind("<Shift-A>", lambda e: self.random_crop())              # Random Crop
         self.master.bind("<Shift-Q>", lambda e: self.random_modification())      # Randomly Modify
         self.master.bind("<Shift-H>", lambda e: self.flip_image())               # Flip Horizontal
         self.master.bind("<Shift-V>", lambda e: self.flip_image(top_bottom=True))# Flip Vertical
@@ -268,7 +272,7 @@ class ImageDetails():
         self.is_image = not any([self.image_path.lower().endswith(ext) for ext in config.video_types])
         if self.is_image:
             image_mode, image_dims = self._get_image_info()
-            positive, negative, models, loras = image_data_extractor.get_image_prompts_and_models(self.image_path)
+            positive, negative, models, loras, prompt_extraction_failed = image_data_extractor.get_image_prompts_and_models(self.image_path)
             related_image_text = self.get_related_image_text()
         else:
             image_mode = ""
@@ -301,28 +305,29 @@ class ImageDetails():
 
     def copy_prompt(self):
         positive = self.label_positive["text"]
-        self.master.clipboard_clear()
-        self.master.clipboard_append(positive)
-        self.app_actions.toast(_("Copied prompt"))
+        ImageDetails._copy_prompt_static(positive, self.master, self.app_actions, self.prompt_extraction_failed)
 
     def copy_prompt_no_break(self):
         positive = self.label_positive["text"]
-        if "BREAK" in positive:
-            positive = positive[positive.index("BREAK")+6:]
-        positive = ImageDetails.remove_emphases(positive)
-        self.master.clipboard_clear()
-        self.master.clipboard_append(positive)
-        self.app_actions.toast(_("Copied prompt without BREAK"))
+        ImageDetails._copy_prompt_static(positive, self.master, self.app_actions, self.prompt_extraction_failed, remove_emphases=True)
 
     @staticmethod
     def copy_prompt_no_break_static(image_path, master, app_actions):
-        positive, negative, models, loras = image_data_extractor.get_image_prompts_and_models(image_path)
-        if "BREAK" in positive:
-            positive  = positive[positive.index("BREAK")+6:]
-        positive = ImageDetails.remove_emphases(positive)
-        master.clipboard_clear()
-        master.clipboard_append(positive)
-        app_actions.toast(_("Copied prompt without BREAK"))
+        positive, negative, models, loras, prompt_extraction_failed = image_data_extractor.get_image_prompts_and_models(image_path)
+        ImageDetails._copy_prompt_static(positive, master, app_actions, prompt_extraction_failed, remove_emphases=True)
+
+    @staticmethod
+    def _copy_prompt_static(positive, master, app_actions, prompt_extraction_failed, remove_emphases=False):
+        if prompt_extraction_failed or positive is None or positive.strip() == "":
+            app_actions.warn(_("No prompt found"))
+        else:
+            if remove_emphases:
+                if "BREAK" in positive:
+                    positive  = positive[positive.index("BREAK")+6:]
+                positive = ImageDetails.remove_emphases(positive)
+            master.clipboard_clear()
+            master.clipboard_append(positive)
+            app_actions.toast(_("Copied prompt without BREAK"))
 
     @staticmethod
     def remove_emphases(prompt):

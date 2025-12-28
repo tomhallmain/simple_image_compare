@@ -17,6 +17,8 @@ class CompareData:
     EMBEDDINGS_LAION_DATA = "image_embeddings_laion.pkl"
     PROMPTS_DATA = "image_prompts.pkl"
     PROMPTS_EXACT_DATA = "image_prompts_exact.pkl"
+    SIZE_DATA = "image_sizes.pkl"
+    MODELS_DATA = "image_models.pkl"
     THUMB_COLORS_DATA = "image_thumb_colors.pkl"
     TOP_COLORS_DATA = "image_top_colors.pkl"
     FACES_DATA = "image_faces.pkl"
@@ -56,12 +58,18 @@ class CompareData:
             elif mode == CompareMode.PROMPTS:
                 self._file_data_filepath = os.path.join(
                     base_dir, CompareData.PROMPTS_DATA)
-            elif mode == CompareMode.PROMPTS_EXACT:
-                self._file_data_filepath = os.path.join(
-                    base_dir, CompareData.PROMPTS_EXACT_DATA)
             else:
                 self._file_data_filepath = os.path.join(
                     base_dir, CompareData.EMBEDDINGS_DATA)
+        elif mode == CompareMode.PROMPTS_EXACT:
+            self._file_data_filepath = os.path.join(
+                base_dir, CompareData.PROMPTS_EXACT_DATA)
+        elif mode == CompareMode.SIZE:
+            self._file_data_filepath = os.path.join(
+                base_dir, CompareData.SIZE_DATA)
+        elif mode == CompareMode.MODELS:
+            self._file_data_filepath = os.path.join(
+                base_dir, CompareData.MODELS_DATA)
         else:
             raise Exception("Invalid mode")
 

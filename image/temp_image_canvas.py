@@ -164,6 +164,7 @@ class TempImageCanvas:
                 filepath = filepath.replace("\\", "\\\\")
         self.master.clipboard_clear()
         self.master.clipboard_append(filepath)
+        self.app_actions.toast(_("Copied filepath to clipboard"))
 
     def copy_file_to_base_dir(self, event=None):
         if self.image_path is None or not os.path.isfile(self.image_path):

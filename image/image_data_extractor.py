@@ -27,6 +27,7 @@ except Exception as e:
 class SoftwareType(Enum):
     COMFYUI = "comfyui"
     A1111 = "a1111"
+    OTHER = "other"
 
 
 class ImageDataExtractor:
@@ -121,8 +122,8 @@ class ImageDataExtractor:
                     try:
                         prompt = json.loads(prompt_value)
                     except json.JSONDecodeError as e:
-                        logger.warning(f"Failed to parse ComfyUI prompt JSON: {e}")
-                        return None, None
+                        # logger.warning(f"Failed to parse ComfyUI prompt JSON: {e}")
+                        return str(prompt_value), SoftwareType.OTHER
                 elif isinstance(prompt_value, dict):
                     # Legacy format where prompt is already a dict
                     prompt = prompt_value
@@ -187,6 +188,8 @@ class ImageDataExtractor:
         has_found_discriminator = False
         prompt, software_type = self.extract_prompt(image_path)
 
+        if software_type == SoftwareType.OTHER:
+            return prompt, None
         if software_type == SoftwareType.COMFYUI:
             for k, v in prompt.items():
                 if ImageDataExtractor.CLASS_TYPE in v and ImageDataExtractor.INPUTS in v:
@@ -362,12 +365,21 @@ class ImageDataExtractor:
                 positive, negative = self.extract(image_path)
             except Exception as e:
                 logger.debug(f"Custom extract also failed: {e}")
-        
-        if positive is None or positive.strip() == "":
-            positive = "(Unable to parse image prompt information for this file.)"
-        if negative is None or negative.strip() == "":
-            negative = ""
 
+        positive_extraction_failed = False
+        negative_extraction_failed = False
+
+        if positive is None or (isinstance(positive, str) and positive.strip() == ""):
+            positive = "(Unable to parse image prompt information for this file.)"
+            positive_extraction_failed = True
+        if negative is None or (isinstance(negative, str) and negative.strip() == ""):
+            negative = ""
+            negative_extraction_failed = True
+
+        if config.debug and positive is not None and not isinstance(positive, str):
+            logger.debug(f"Positive prompt was of unexpected type: {type(positive)}")
+
+        prompt_extraction_failed = positive_extraction_failed and negative_extraction_failed
         models = []
         loras = []
         try:
@@ -377,7 +389,7 @@ class ImageDataExtractor:
         except Exception as e:
             pass
 
-        return positive, negative, models, loras
+        return positive, negative, models, loras, prompt_extraction_failed
 
     def get_related_image_path(self, image_path, node_id="LoadImage"):
         use_class_type = True

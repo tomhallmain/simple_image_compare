@@ -500,7 +500,7 @@ class MarkedFiles():
                                 if MarkedFiles._check_delete_source_file(marked_file, target_dir, target_filepath, app_actions):
                                     # The other effect of this operation would have been to remove the
                                     # file from source, so try to do that
-                                    MarkedFiles._auto_delete_source_file(marked_file, app_actions)
+                                    MarkedFiles._auto_delete_source_file(marked_file, current_image, app_actions)
                         elif ImageOps.compare_image_content_without_exif(marked_file, target_filepath):
                             # Hash comparison failed, but check if image content is identical
                             # (different EXIF data but same visual content)
@@ -1104,12 +1104,14 @@ class MarkedFiles():
         return True
 
     @staticmethod
-    def _auto_delete_source_file(marked_file: str, app_actions):
+    def _auto_delete_source_file(marked_file: str, current_image: Optional[str] = None, app_actions=None):
         """
         Auto-delete the source file after a move operation when the target file already exists.
         This simulates what would have happened if the move had succeeded.
         """
         try:
+            if current_image is not None and current_image == marked_file:
+                app_actions.release_media_canvas()
             app_actions.delete(marked_file)
             if marked_file in MarkedFiles.file_marks:
                 MarkedFiles.file_marks.remove(marked_file)

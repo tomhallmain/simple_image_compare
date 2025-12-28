@@ -242,8 +242,8 @@ class ComparePromptsExact(BaseCompare):
                 positive_prompt, negative_prompt = extract_prompts_from_image(f)
                 if positive_prompt is None and negative_prompt is None:
                     # Skip files with no prompt data - this is normal for many images
-                    if self.verbose:
-                        logger.debug(f"No prompt data found in {f}, skipping")
+                    # if self.verbose:
+                        # logger.debug(f"No prompt data found in {f}, skipping")
                     continue
                 prompts = (positive_prompt, negative_prompt)
                 self.compare_data.file_data_dict[f] = prompts
