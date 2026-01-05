@@ -265,7 +265,6 @@ class App():
         self.search_dir = Utils.get_user_dir()
 
         self.compare_manager = CompareManager(master, self.app_actions)
-        self.compare_manager.set_primary_mode(config.compare_mode)
         self.sd_runner_client: SDRunnerClient = SDRunnerClient()
         self.refacdir_client: RefacDirClient = RefacDirClient()
 
@@ -604,7 +603,7 @@ class App():
                 app_info_cache.set(base_dir, "image_cursor", os.path.basename(self.img_path))
             app_info_cache.set(base_dir, "recursive", self.file_browser.is_recursive())
             app_info_cache.set(base_dir, "sort_by", self.file_browser.get_sort_by().get_text())
-            app_info_cache.set(base_dir, "compare_mode", self.compare_manager.compare_mode.get_text())
+            app_info_cache.set(base_dir, "compare_mode", self.compare_manager.get_primary_mode_name())
         if store_window_state:
             secondary_base_dirs = []
             for _app in App.open_windows:
@@ -1052,13 +1051,18 @@ class App():
         # Update settings to those last set for this directory, if found
         recursive = app_info_cache.get(self.base_dir, "recursive", default_val=False)
         sort_by = app_info_cache.get(self.base_dir, "sort_by", default_val=self.sort_by.get())
-        compare_mode = app_info_cache.get(self.base_dir, "compare_mode", default_val=self.compare_manager.compare_mode.get_text())
+        compare_mode = app_info_cache.get(self.base_dir, "compare_mode", default_val=self.compare_manager.get_primary_mode_name())
         if recursive != self.image_browse_recurse_var.get():
             self.image_browse_recurse_var.set(recursive)
             self.file_browser.set_recursive(recursive)
         try:
-            if compare_mode != self.compare_manager.compare_mode.get_text():
-                self.compare_manager.compare_mode = CompareMode.get(compare_mode)
+            if compare_mode and compare_mode != self.compare_manager.get_primary_mode_name():
+                # Handle case where compare_mode might already be a CompareMode enum (from old cache)
+                if isinstance(compare_mode, CompareMode):
+                    self.compare_manager.compare_mode = compare_mode
+                else:
+                    # compare_mode is a string, convert it using CompareMode.get()
+                    self.compare_manager.compare_mode = CompareMode.get(compare_mode)
         except Exception as e:
             logger.error(f"Error setting stored compare mode: {e}")
         try:

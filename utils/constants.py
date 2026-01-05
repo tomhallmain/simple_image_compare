@@ -76,12 +76,12 @@ class CompareMode(Enum):
     @staticmethod
     def get(name):
         for key, value in CompareMode.__members__.items():
-            if value.get_text() == name or value.value == name:
+            if value.get_text() == name or value.name == name or value.value == name:
                 return value
         raise Exception(f"Not a valid compare mode: {name}")
 
     @staticmethod
-    def members():
+    def get_translated_names():
         return [value.get_text() for key, value in CompareMode.__members__.items()]
 
     def threshold_str(self):
@@ -100,10 +100,15 @@ class CompareMode(Enum):
             return [str(i) for i in list(range(31))]
         if self.is_embedding():
             return [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.925, 0.95, 0.98, 0.99]
+        elif self == CompareMode.PROMPTS_EXACT:
+            # PROMPTS_EXACT uses similarity thresholds similar to embedding modes
+            return [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.925, 0.95, 0.98, 0.99]
         elif self == CompareMode.SIZE:
             return [str(i) for i in list(range(0, 201, 10))]  # 0-200 pixel tolerance
         elif self == CompareMode.MODELS:
             return [0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99]
+        # Default fallback for any unhandled modes
+        return [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.925, 0.95, 0.98, 0.99]
 
     def is_embedding(self):
         return (self != CompareMode.COLOR_MATCHING and 

@@ -36,7 +36,7 @@ class CompareSettingsWindow:
         self.window = SmartToplevel(
             persistent_parent=parent,
             title=_("Compare Settings"),
-            geometry="600x700"
+            geometry="1000x700"
         )
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.window.bind("<Escape>", lambda e: self.on_closing())
@@ -45,6 +45,7 @@ class CompareSettingsWindow:
         self.frame = Frame(self.window, bg=AppStyle.BG_COLOR)
         self.frame.pack(fill='both', expand=True, padx=20, pady=20)
         self.frame.columnconfigure(0, weight=1)
+        self.frame.columnconfigure(1, weight=1)
         
         # Title
         title_label = Label(
@@ -54,7 +55,7 @@ class CompareSettingsWindow:
             bg=AppStyle.BG_COLOR,
             fg=AppStyle.FG_COLOR
         )
-        title_label.grid(row=0, column=0, sticky=W, pady=(0, 20))
+        title_label.grid(row=0, column=0, columnspan=2, sticky=W, pady=(0, 20))
         
         row = 1
         
@@ -147,31 +148,35 @@ class CompareSettingsWindow:
         
         row += 1
         
-        # Separator
-        sep2 = Separator(self.frame, orient='horizontal')
-        sep2.grid(row=row, column=0, sticky='ew', pady=10)
-        row += 1
+        # Track row for column 1 (right column) - start aligned with Comparison Modes
+        row_col1 = 1
         
-        # Compare Settings section
+        # Compare Settings section (Column 1) - wrap in frame to match left column structure
+        settings_frame = Frame(self.frame, bg=AppStyle.BG_COLOR)
+        settings_frame.grid(row=row_col1, column=1, sticky='new', pady=(0, 10), padx=(20, 0))
+        settings_frame.columnconfigure(0, weight=1)
+        
         settings_title = Label(
-            self.frame,
+            settings_frame,
             text=_("Compare Settings"),
             font=('Helvetica', 11, 'bold'),
             bg=AppStyle.BG_COLOR,
             fg=AppStyle.FG_COLOR
         )
-        settings_title.grid(row=row, column=0, sticky=W, pady=(0, 10))
-        row += 1
+        settings_title.grid(row=0, column=0, sticky=W, pady=(0, 10))
+        
+        # Start tracking rows within settings_frame (starting at row 1, after title)
+        row_col1_inner = 1
         
         # Get current values from compare_manager's primary wrapper args
         current_args = compare_manager.get_args()
         primary_mode = compare_manager.compare_mode
         
         # Threshold setting
-        self.threshold_frame = Frame(self.frame, bg=AppStyle.BG_COLOR)
-        self.threshold_frame.grid(row=row, column=0, sticky='ew', pady=(0, 10))
+        self.threshold_frame = Frame(settings_frame, bg=AppStyle.BG_COLOR)
+        self.threshold_frame.grid(row=row_col1_inner, column=0, sticky='ew', pady=(0, 10))
         self.threshold_frame.columnconfigure(1, weight=1)
-        row += 1
+        row_col1_inner += 1
         
         threshold_label = Label(
             self.threshold_frame,
@@ -191,8 +196,14 @@ class CompareSettingsWindow:
         else:
             self.threshold_var.set(str(config.embedding_similarity_threshold))
         
+        # Initialize threshold_menu to None before creating it
+        self.threshold_menu = None
+        
         # Create threshold menu
         threshold_vals = primary_mode.threshold_vals() if primary_mode else CompareMode.CLIP_EMBEDDING.threshold_vals()
+        if threshold_vals is None:
+            # Fallback to embedding threshold values if mode doesn't return values
+            threshold_vals = CompareMode.CLIP_EMBEDDING.threshold_vals()
         self.threshold_menu = OptionMenu(
             self.threshold_frame,
             self.threshold_var,
@@ -202,10 +213,10 @@ class CompareSettingsWindow:
         self.threshold_menu.grid(row=0, column=1, sticky=W)
         
         # Counter limit setting
-        self.counter_limit_frame = Frame(self.frame, bg=AppStyle.BG_COLOR)
-        self.counter_limit_frame.grid(row=row, column=0, sticky='ew', pady=(0, 10))
+        self.counter_limit_frame = Frame(settings_frame, bg=AppStyle.BG_COLOR)
+        self.counter_limit_frame.grid(row=row_col1_inner, column=0, sticky='ew', pady=(0, 10))
         self.counter_limit_frame.columnconfigure(1, weight=1)
-        row += 1
+        row_col1_inner += 1
         
         counter_limit_label = Label(
             self.counter_limit_frame,
@@ -232,64 +243,67 @@ class CompareSettingsWindow:
         # Compare faces checkbox
         self.compare_faces_var = BooleanVar(value=current_args.compare_faces if hasattr(current_args, 'compare_faces') else False)
         compare_faces_check = Checkbutton(
-            self.frame,
+            settings_frame,
             text=_('Compare faces'),
             variable=self.compare_faces_var
         )
-        compare_faces_check.grid(row=row, column=0, sticky=W, pady=2)
-        row += 1
+        compare_faces_check.grid(row=row_col1_inner, column=0, sticky=W, pady=2)
+        row_col1_inner += 1
         
         # Overwrite cache checkbox
         self.overwrite_var = BooleanVar(value=current_args.overwrite if hasattr(current_args, 'overwrite') else False)
         overwrite_check = Checkbutton(
-            self.frame,
+            settings_frame,
             text=_('Overwrite cache'),
             variable=self.overwrite_var
         )
-        overwrite_check.grid(row=row, column=0, sticky=W, pady=2)
-        row += 1
+        overwrite_check.grid(row=row_col1_inner, column=0, sticky=W, pady=2)
+        row_col1_inner += 1
         
         # Store checkpoints checkbox
         self.store_checkpoints_var = BooleanVar(value=current_args.store_checkpoints if hasattr(current_args, 'store_checkpoints') else config.store_checkpoints)
         store_checkpoints_check = Checkbutton(
-            self.frame,
+            settings_frame,
             text=_('Store checkpoints'),
             variable=self.store_checkpoints_var
         )
-        store_checkpoints_check.grid(row=row, column=0, sticky=W, pady=2)
-        row += 1
+        store_checkpoints_check.grid(row=row_col1_inner, column=0, sticky=W, pady=2)
+        row_col1_inner += 1
         
         # Search only return closest checkbox
         self.search_only_return_closest_var = BooleanVar(value=config.search_only_return_closest)
         search_only_return_closest_check = Checkbutton(
-            self.frame,
+            settings_frame,
             text=_('Search only return closest'),
             variable=self.search_only_return_closest_var
         )
-        search_only_return_closest_check.grid(row=row, column=0, sticky=W, pady=2)
-        row += 1
+        search_only_return_closest_check.grid(row=row_col1_inner, column=0, sticky=W, pady=2)
+        row_col1_inner += 1
         
-        # Separator
+        # Separator for Filters section - place after settings_frame content
+        # Find where the left column's separator is to align
         sep_filter = Separator(self.frame, orient='horizontal')
-        sep_filter.grid(row=row, column=0, sticky='ew', pady=10)
-        row += 1
+        sep_filter.grid(row=row, column=1, sticky='ew', pady=10, padx=(20, 0))
         
-        # Filtering section
+        # Filtering section (Column 1) - wrap in frame to match structure
+        # Place it right after the separator, before the bottom separator
+        filter_frame = Frame(self.frame, bg=AppStyle.BG_COLOR)
+        filter_frame.grid(row=row+1, column=1, sticky='new', pady=(0, 10), padx=(20, 0))
+        filter_frame.columnconfigure(0, weight=1)
+        
         filter_title = Label(
-            self.frame,
+            filter_frame,
             text=_("Filters (Applied Before Comparison)"),
             font=('Helvetica', 11, 'bold'),
             bg=AppStyle.BG_COLOR,
             fg=AppStyle.FG_COLOR
         )
-        filter_title.grid(row=row, column=0, sticky=W, pady=(0, 10))
-        row += 1
+        filter_title.grid(row=0, column=0, sticky=W, pady=(0, 10))
         
         # Size filter
-        size_filter_frame = Frame(self.frame, bg=AppStyle.BG_COLOR)
-        size_filter_frame.grid(row=row, column=0, sticky='ew', pady=(0, 10))
+        size_filter_frame = Frame(filter_frame, bg=AppStyle.BG_COLOR)
+        size_filter_frame.grid(row=1, column=0, sticky='ew', pady=(0, 10))
         size_filter_frame.columnconfigure(1, weight=1)
-        row += 1
         
         size_filter_label = Label(
             size_filter_frame,
@@ -310,10 +324,9 @@ class CompareSettingsWindow:
         size_note.grid(row=0, column=1, sticky=W)
         
         # Model filter
-        model_filter_frame = Frame(self.frame, bg=AppStyle.BG_COLOR)
-        model_filter_frame.grid(row=row, column=0, sticky='ew', pady=(0, 10))
+        model_filter_frame = Frame(filter_frame, bg=AppStyle.BG_COLOR)
+        model_filter_frame.grid(row=2, column=0, sticky='ew', pady=(0, 10))
         model_filter_frame.columnconfigure(1, weight=1)
-        row += 1
         
         model_filter_label = Label(
             model_filter_frame,
@@ -333,16 +346,19 @@ class CompareSettingsWindow:
         )
         model_note.grid(row=0, column=1, sticky=W)
         
-        row += 1
+        # Bottom separator - place after Filters section
+        # Filters section is at row+1, and contains title + 2 filter items
+        # Place separator at row+4 to give enough space for Filters content
+        bottom_sep_row = row + 4
         
         # Separator
         sep3 = Separator(self.frame, orient='horizontal')
-        sep3.grid(row=row, column=0, sticky='ew', pady=10)
-        row += 1
+        sep3.grid(row=bottom_sep_row, column=0, columnspan=2, sticky='ew', pady=10)
+        row = bottom_sep_row + 1
         
         # Buttons
         button_frame = Frame(self.frame, bg=AppStyle.BG_COLOR)
-        button_frame.grid(row=row, column=0, sticky='ew', pady=(10, 0))
+        button_frame.grid(row=row, column=0, columnspan=2, sticky='ew', pady=(10, 0))
         row += 1
         
         self.apply_btn = Button(
@@ -375,6 +391,10 @@ class CompareSettingsWindow:
         # Get threshold values for this mode
         threshold_vals = mode.threshold_vals()
         
+        # Fallback to embedding threshold values if mode doesn't return values
+        if threshold_vals is None:
+            threshold_vals = CompareMode.CLIP_EMBEDDING.threshold_vals()
+        
         # Find threshold frame by searching for the label
         threshold_frame = None
         for widget in self.frame.winfo_children():
@@ -389,7 +409,7 @@ class CompareSettingsWindow:
         if self.threshold_frame:
             # Update threshold value if current value not in new list
             current_val = self.threshold_var.get()
-            if current_val not in threshold_vals:
+            if threshold_vals and current_val not in threshold_vals:
                 # Set to default for this mode
                 if mode == CompareMode.COLOR_MATCHING:
                     default_val = config.color_diff_threshold
@@ -398,13 +418,14 @@ class CompareSettingsWindow:
                 self.threshold_var.set(str(default_val))
             
             # Create new menu
-            self.threshold_menu = OptionMenu(
-                self.threshold_frame,
-                self.threshold_var,
-                self.threshold_var.get(),
-                *threshold_vals
-            )
-            self.threshold_menu.grid(row=0, column=1, sticky=W)
+            if threshold_vals:
+                self.threshold_menu = OptionMenu(
+                    self.threshold_frame,
+                    self.threshold_var,
+                    self.threshold_var.get(),
+                    *threshold_vals
+                )
+                self.threshold_menu.grid(row=0, column=1, sticky=W)
     
     def _on_mode_toggled(self, mode: CompareMode):
         """Handle mode checkbox toggle."""

@@ -24,7 +24,7 @@ The UI can be used as a media file browser. The following features are available
     <li>Quicker and smoother transitions between images</li>
     <li>Faster load time for directories with many images in some cases</li>
     <li>Faster load times when switching between sort types</li>
-    <li>Go to file by string search</li>
+    <li>Go to file by string search or by index (1-based)</li>
     <li>Mark groups of files to enable quick transitions and comparisons</li>
     <li>Mark favorite media and access them quickly via the Favorites window</li>
     <li>Move, copy, and delete marked file groups without overwriting system clipboard</li>
@@ -50,6 +50,10 @@ Note that depending on your configuration videos, GIFs, PDFs, SVGs and HTMLs may
 ### Favorites Window
 
 You can mark any media file (image, video, etc.) as a favorite and access all favorites quickly using the Favorites window (Ctrl+F). This is especially useful when working with directories containing many files, as it allows you to keep persistent preferred items easily accessible for future searches and actions.
+
+### Directory Notes
+
+The Directory Notes feature allows you to maintain persistent notes and marked files for individual directories. You can add notes to specific files, mark files for later reference, and export or import your notes and marked files as text or JSON files. This is separate from the runtime marked files used for moving files, making it useful for long-term organization and documentation of your media collections.
 
 ## Prevalidation Rules
 

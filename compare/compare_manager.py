@@ -129,7 +129,19 @@ class CompareManager:
         self._ensure_wrapper(compare_mode)
         self._is_composite_mode = len(self._mode_configs) > 1
         logger.info(f"Primary compare mode set to: {compare_mode.name} (composite mode: {self._is_composite_mode})")
+
+    def get_primary_mode_text(self) -> Optional[str]:
+        """Get the primary comparison mode."""
+        if self._primary_mode:
+            return self._primary_mode.get_text()
+        return None
     
+    def get_primary_mode_name(self) -> Optional[str]:
+        """Get the primary comparison mode name (locale-independent)."""
+        if self._primary_mode:
+            return self._primary_mode.name
+        return None
+
     def add_mode_instance(self, compare_mode: CompareMode, weight: float = 1.0, 
                           threshold: Optional[float] = None, 
                           search_text: Optional[str] = None,
