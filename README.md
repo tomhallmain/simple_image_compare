@@ -57,7 +57,7 @@ The tool includes a flexible prevalidation system that can automatically process
 
 - Automatically skipping, hiding, or deleting unwanted media
 - Moving or copying media to specific directories based on content
-- Filtering media using CLIP embeddings, H5 image classifiers, prompt string detection
+- Filtering media using CLIP embeddings, H5 image classifiers, PyTorch image classifiers, prompt string detection
 - Setting up rules that apply to specific directories
 
 Prevalidation rules can be configured with:
@@ -67,6 +67,7 @@ Prevalidation rules can be configured with:
 - Different actions (skip, hide, notify, move, copy, delete, add mark)
 - Directory-specific rules
 - H5 model-based classification rules
+- PyTorch model-based classification rules (supports .pth, .pt, .safetensors, and .bin formats)
 
 This feature is particularly useful for maintaining clean media collections and automating local content filtering, but it can be disabled at any time if desired. You can find an example H5 classifier that is known to work [here](https://github.com/FurkanGozukara/nsfw_model).
 
@@ -120,11 +121,13 @@ If a search image is set simultaneously with search text, its embedding will be 
 
 `enable_prevalidations` enables the prevalidation system. When enabled, prevalidation rules will be applied to media before they are shown.
 
-`image_classifier_h5_models` defines a list of H5 models that can be used for prevalidation rules. Each model should specify:
+`image_classifier_h5_models` defines a list of image classifier models (H5 or PyTorch) that can be used for prevalidation rules. Each model should specify:
 - `model_name`: A unique name for the model
-- `model_location`: Path to the .h5 model file
+- `model_location`: Path to the model file (.h5 for TensorFlow/Keras, or .pth/.pt/.safetensors/.bin for PyTorch)
 - `model_categories`: List of categories the model can classify
-- `use_hub_keras_layers`: Whether to use Keras hub layers
+- `backend`: "auto" (detected from file extension), "hdf5"/"tensorflow" for H5 models, or "pytorch" for PyTorch models
+- `use_hub_keras_layers`: Whether to use Keras hub layers (H5 models only)
+- Additional PyTorch-specific parameters: `model_architecture`, `weights_only`, `device`, `input_shape`, etc.
 
 If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) then opening image details for an image with a stable diffusion prompt will give prompt information found in the image.
 

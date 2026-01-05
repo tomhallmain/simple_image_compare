@@ -29,7 +29,7 @@ def get_image_data_extractor():
 def extract_prompts_from_image(image_path):
     try:
         extractor = get_image_data_extractor()
-        positive, negative = extractor.extract_with_sd_prompt_reader(image_path)
+        positive, negative = extractor.extract_prompts_all_strategies(image_path)
         if positive is not None:
             return positive, negative
         return None, None

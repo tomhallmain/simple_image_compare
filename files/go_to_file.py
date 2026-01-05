@@ -29,6 +29,7 @@ class GoToFile:
     top_level = None
     last_search_text = ""
     last_use_closest = False
+    last_use_index = False
     last_closest_sort_by = SortBy.NAME
     last_target_directory = Utils.get_pictures_dir()
     last_base_id = ""  # Last base ID that was successfully searched
@@ -150,6 +151,16 @@ class GoToFile:
         )
         self.closest_checkbox.grid(row=3, column=0, sticky=W, pady=(5, 0))
         
+        # Add index navigation checkbox
+        self.use_index = BooleanVar()
+        self.use_index.set(GoToFile.last_use_index)
+        self.index_checkbox = Checkbutton(
+            self.frame,
+            text=_("Go to file by index (1-based)"),
+            variable=self.use_index
+        )
+        self.index_checkbox.grid(row=4, column=0, sticky=W, pady=(5, 0))
+        
         # Add SortBy selector for closest file search
         self.closest_sort_by = StringVar()
         self.closest_sort_by.set(GoToFile.last_closest_sort_by.get_text())
@@ -172,14 +183,28 @@ class GoToFile:
         self.search_text_box.after(1, lambda: self.search_text_box.focus_force())
 
     def go_to_file(self, event=None):
-        search_text = self.search_text.get()
-        if search_text.strip() == "":
+        search_text = self.search_text.get().strip()
+        if search_text == "":
             self.app_actions.warn(_("Invalid search string, please enter some text."))
             return
+        
         GoToFile.last_search_text = search_text
         GoToFile.last_use_closest = self.use_closest.get()
+        GoToFile.last_use_index = self.use_index.get()
         GoToFile.last_closest_sort_by = SortBy.get(self.closest_sort_by.get())
         
+        # Check if index navigation is enabled
+        if self.use_index.get():
+            try:
+                index = int(search_text)
+                if self.app_actions.go_to_file_by_index(index):
+                    self.close_windows()
+                return
+            except ValueError:
+                self.app_actions.warn(_("Index navigation enabled but input is not a valid number."))
+                return
+        
+        # Normal file search
         # Pass closest_sort_by only if the checkbox is checked
         closest_sort_by = GoToFile.last_closest_sort_by if GoToFile.last_use_closest else None
         self.app_actions.go_to_file(
@@ -290,7 +315,7 @@ class GoToFile:
         """Show/hide the SortBy selector based on closest file checkbox state."""
         if hasattr(self, 'sort_by_frame'):
             if self.use_closest.get():
-                self.sort_by_frame.grid(row=4, column=0, sticky=W, pady=(10, 0))
+                self.sort_by_frame.grid(row=5, column=0, sticky=W, pady=(10, 0))
             else:
                 self.sort_by_frame.grid_remove()
 

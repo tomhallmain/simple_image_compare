@@ -208,6 +208,28 @@ class FileBrowser:
         if filepath in files:
             self.file_cursor = files.index(filepath)
 
+    def go_to_index(self, index: int) -> Optional[str]:
+        """
+        Go to file at the specified index (1-based).
+        Returns the file path if successful, None if index is invalid.
+        """
+        files = self.get_files()
+        if len(files) == 0:
+            raise Exception(_("No files found for current browsing settings."))
+        
+        # Convert 1-based index to 0-based
+        if index < 1:
+            raise ValueError(_("Index must be 1 or greater."))
+        
+        zero_based_index = index - 1
+        if zero_based_index >= len(files):
+            raise ValueError(_("Index {0} is out of range. There are {1} files.").format(index, len(files)))
+        
+        with self.cursor_lock:
+            self.file_cursor = zero_based_index
+        
+        return files[self.file_cursor]
+
     def random_file(self) -> str:
         files = self.get_files()
         random_file = choice(files)

@@ -6,8 +6,8 @@ import time
 import traceback
 from typing import Any, Callable, Optional
 
-from tkinter import Frame, Toplevel, Menu, PhotoImage, Label, Checkbutton, BooleanVar, StringVar, filedialog, font, messagebox
-from tkinter import BOTH, END, N, NW, YES, HORIZONTAL, W
+from tkinter import Frame, Toplevel, Menu, PhotoImage, Label, Text, Checkbutton, BooleanVar, StringVar, filedialog, font, messagebox
+from tkinter import BOTH, END, N, NW, YES, HORIZONTAL, W, LEFT
 import tkinter.font as fnt
 from tkinter.ttk import Button, Entry, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
@@ -21,6 +21,8 @@ from compare.compare_settings_window import CompareSettingsWindow
 from compare.prevalidations_window import PrevalidationsWindow
 from extensions.refacdir_client import RefacDirClient
 from extensions.sd_runner_client import SDRunnerClient
+from files.directory_notes import DirectoryNotes
+from files.directory_notes_window import DirectoryNotesWindow
 from files.favorites_window import FavoritesWindow
 from files.file_actions_window import FileActionsWindow
 from files.file_browser import FileBrowser, SortBy
@@ -149,7 +151,7 @@ class App():
     @staticmethod
     def find_window_with_compare(default_window: Optional["App"] = None) -> Optional["App"]:
         for _app in App.open_windows:
-            if _app.compare_wrapper.has_compare():
+            if _app.compare_manager.has_compare():
                 return _app
         return default_window
 
@@ -215,6 +217,7 @@ class App():
         self.direction = Direction.FORWARD
         self.has_added_buttons_for_mode = {Mode.BROWSE: False, Mode.GROUP: False, Mode.SEARCH: False, Mode.DUPLICATES: False}
         self.go_to_file_window = None
+        self.directory_notes_window = None
 
         Style().configure(".", font=('Helvetica', config.font_size))
 
@@ -239,6 +242,7 @@ class App():
             "run_image_generation": self.run_image_generation,
             "set_marks_from_downstream_related_images": self.set_marks_from_downstream_related_images,
             "go_to_file": self.go_to_file,
+            "go_to_file_by_index": self.go_to_file_by_index,
             "set_base_dir": self.set_base_dir,
             "get_base_dir": self.get_base_dir,
             "delete": self._handle_delete,
@@ -262,8 +266,6 @@ class App():
 
         self.compare_manager = CompareManager(master, self.app_actions)
         self.compare_manager.set_primary_mode(config.compare_mode)
-        # For backward compatibility, expose compare_wrapper as alias
-        self.compare_wrapper = self.compare_manager
         self.sd_runner_client: SDRunnerClient = SDRunnerClient()
         self.refacdir_client: RefacDirClient = RefacDirClient()
 
@@ -288,34 +290,6 @@ class App():
         self.add_button("set_base_dir_btn", _("Set directory"), self.set_base_dir)
         self.set_base_dir_box = self.new_entry(text=_("Add dirpath..."))
         self.apply_to_grid(self.set_base_dir_box, sticky=W)
-
-        self.add_button("set_search_btn", _("Set search file"), self.set_search_for_image)
-        self.search_image = StringVar()
-        self.search_img_path_box = self.new_entry(self.search_image)
-        if do_search and image_path is not None:
-            self.search_img_path_box.insert(0, image_path)
-        self.search_img_path_box.bind("<Return>", self.set_search_for_image)
-        self.apply_to_grid(self.search_img_path_box, sticky=W)
-
-        self.add_button("search_text_btn", _("Search text (embedding mode)"), self.set_search_for_text)
-        self.search_text = StringVar()
-        self.search_text_box = self.new_entry(self.search_text)
-        self.search_text_box.bind("<Return>", self.set_search_for_text)
-        self.apply_to_grid(self.search_text_box, sticky=W)
-        self.search_text_negative = StringVar()
-        self.search_text_negative_box = self.new_entry(self.search_text_negative)
-        self.search_text_negative_box.bind("<Return>", self.set_search_for_text)
-        self.apply_to_grid(self.search_text_negative_box, sticky=W)
-
-        # Compare settings button (settings moved to CompareSettingsWindow)
-        self.compare_settings_btn = None
-        self.add_button("compare_settings_btn", _("Compare Settings..."), self.open_compare_settings_window)
-
-        self.label_counter_limit = Label(self.sidebar)
-        self.add_label(self.label_counter_limit, _("Max files to compare"))
-        self.set_counter_limit = self.new_entry()
-        self.set_counter_limit.insert(0, str(config.file_counter_limit))
-        self.apply_to_grid(self.set_counter_limit, sticky=W)
 
         self.label_inclusion_pattern = Label(self.sidebar)
         self.add_label(self.label_inclusion_pattern, _("Filter files by glob pattern"))
@@ -342,12 +316,51 @@ class App():
 
         search_return_closest_var = BooleanVar(value=config.search_only_return_closest)
         self.search_return_closest_choice = Checkbutton(self.sidebar, text=_('Search only return closest'),
-                                                        variable=search_return_closest_var, command=self.compare_wrapper.toggle_search_only_return_closest)
+                                                        variable=search_return_closest_var, command=self.compare_manager.toggle_search_only_return_closest)
         self.apply_to_grid(self.search_return_closest_choice, sticky=W)
+
+        # Search UI
+        self.add_button("set_search_btn", _("Set search file"), self.set_search_for_image)
+        # Add tooltip to image search button
+        from lib.tooltip import create_tooltip
+        create_tooltip(getattr(self, "set_search_btn"), 
+                      _("Set an image file to search for similar images.\nUses embedding similarity to find visually similar images."))
+        
+        self.search_image = StringVar()
+        self.search_img_path_box = self.new_entry(self.search_image)
+        if do_search and image_path is not None:
+            self.search_img_path_box.insert(0, image_path)
+        self.search_img_path_box.bind("<Return>", self.set_search_for_image)
+        self.apply_to_grid(self.search_img_path_box, sticky=W)
+
+        self.add_button("search_text_btn", _("Search text (embedding mode)"), self.set_search_for_text)
+        # Add tooltip to search text button
+        from lib.tooltip import create_tooltip
+        create_tooltip(getattr(self, "search_text_btn"), 
+                      _("Positive text: Find images similar to this text.\nNegative text: Exclude images similar to this text.\nBoth use embedding similarity matching."))
+        
+        # Positive text label and entry
+        self.label_search_text_positive = Label(self.sidebar)
+        self.add_label(self.label_search_text_positive, _("Positive text:"), pady=(5, 0))
+        self.search_text = StringVar()
+        self.search_text_box = self.new_entry(self.search_text)
+        self.search_text_box.bind("<Return>", self.set_search_for_text)
+        self.apply_to_grid(self.search_text_box, sticky=W)
+        
+        # Negative text label and entry
+        self.label_search_text_negative = Label(self.sidebar)
+        self.add_label(self.label_search_text_negative, _("Negative text:"), pady=(5, 0))
+        self.search_text_negative = StringVar()
+        self.search_text_negative_box = self.new_entry(self.search_text_negative)
+        self.search_text_negative_box.bind("<Return>", self.set_search_for_text)
+        self.apply_to_grid(self.search_text_negative_box, sticky=W)
+
+        # Compare settings button (detailed settings in CompareSettingsWindow)
+        self.compare_settings_btn = None
+        self.add_button("compare_settings_btn", _("Compare Settings"), self.open_compare_settings_window)
 
         ################################ Run context-aware UI elements
         self.progress_bar = None
-        self.compare_settings_btn = None
         self.run_compare_btn = None
         self.add_button("run_compare_btn", _("Run image compare"), self.run_compare)
         self.find_duplicates_btn = None
@@ -364,9 +377,15 @@ class App():
         self.delete_image_btn = None
         self.open_media_location_btn = None
         self.copy_image_path_btn = None
+        self.copy_image_basename_btn = None
         self.add_button("search_current_image_btn", _("Search current image"), self.set_current_image_run_search)
+        # Add tooltip to search current image button
+        from lib.tooltip import create_tooltip
+        create_tooltip(getattr(self, "search_current_image_btn"), 
+                      _("Search for images similar to the currently displayed image.\nUses embedding similarity matching."))
         self.add_button("open_media_location_btn", _("Open media location"), self.open_media_location)
         self.add_button("copy_image_path_btn", _("Copy image path"), self.copy_media_path)
+        self.add_button("copy_image_basename_btn", _("Copy media basename"), self.copy_media_basename)
         self.add_button("delete_image_btn", _("---- DELETE ----"), self.delete_image)
 
         # Image panel and state management
@@ -380,8 +399,8 @@ class App():
         self.master.bind('<Left>', lambda e: self.check_focus(e, self.show_prev_media))
         self.master.bind('<Right>', lambda e: self.check_focus(e, self.show_next_media))
         self.master.bind('<Shift-BackSpace>', lambda e: self.check_focus(e, self.go_to_previous_image))
-        self.master.bind('<Shift-Left>', lambda event: self.compare_wrapper.show_prev_group(file_browser=(self.file_browser if self.mode == Mode.BROWSE else None)))
-        self.master.bind('<Shift-Right>', lambda event: self.compare_wrapper.show_next_group(file_browser=(self.file_browser if self.mode == Mode.BROWSE else None)))
+        self.master.bind('<Shift-Left>', lambda event: self.compare_manager.show_prev_group(file_browser=(self.file_browser if self.mode == Mode.BROWSE else None)))
+        self.master.bind('<Shift-Right>', lambda event: self.compare_manager.show_next_group(file_browser=(self.file_browser if self.mode == Mode.BROWSE else None)))
         self.master.bind('<Shift-O>', lambda e: self.check_focus(e, self.open_media_location))
         self.master.bind('<Shift-P>', lambda e: self.check_focus(e, self.open_image_in_gimp))
         self.master.bind('<Shift-Delete>', lambda e: self.check_focus(e, self.delete_image))
@@ -427,6 +446,7 @@ class App():
         self.master.bind("<Control-f>", self.open_favorites_window)
         self.master.bind("<Control-n>", self.open_file_actions_window)
         self.master.bind("<Control-m>", self.open_move_marks_window)
+        self.master.bind("<Control-Shift-n>", self.open_directory_notes_window)
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
         self.master.bind("<Control-j>", self.open_prevalidations_window)
         self.master.bind("<Control-r>", self.run_previous_marks_action)
@@ -511,8 +531,8 @@ class App():
         if self.is_secondary():
             # Attempt to cancel any running compare for this window
             try:
-                if self.compare_wrapper.has_compare():
-                    self.compare_wrapper.cancel()
+                if self.compare_manager.has_compare():
+                    self.compare_manager.cancel()
             except Exception as e:
                 logger.error(f"Error signalling compare cancellation: {e}")
             MarkedFiles.remove_marks_for_base_dir(self.base_dir, self.app_actions)
@@ -584,7 +604,7 @@ class App():
                 app_info_cache.set(base_dir, "image_cursor", os.path.basename(self.img_path))
             app_info_cache.set(base_dir, "recursive", self.file_browser.is_recursive())
             app_info_cache.set(base_dir, "sort_by", self.file_browser.get_sort_by().get_text())
-            app_info_cache.set(base_dir, "compare_mode", self.compare_wrapper.compare_mode.get_text())
+            app_info_cache.set(base_dir, "compare_mode", self.compare_manager.compare_mode.get_text())
         if store_window_state:
             secondary_base_dirs = []
             for _app in App.open_windows:
@@ -664,7 +684,7 @@ class App():
             self.show_next_media()
 
     def refresh_compare(self) -> None:
-        self.compare_wrapper.clear_compare()
+        self.compare_manager.clear_compare()
         self.return_to_browsing_mode(suppress_toast=True)
 
     def refocus(self, event=None) -> None:
@@ -684,8 +704,8 @@ class App():
                 self._set_label_state()
             else:
                 self._handle_remove_files_from_groups(removed_files)
-            if self.compare_wrapper.has_compare():
-                self.compare_wrapper.compare().remove_from_groups(removed_files)
+            if self.compare_manager.has_compare():
+                self.compare_manager.compare().remove_from_groups(removed_files)
         if self.file_browser.has_files():
             if self.mode != Mode.BROWSE:
                 return
@@ -803,6 +823,7 @@ class App():
         menu.add_separator()
         current_media_in_marked_files = image_path in MarkedFiles.file_marks
         current_media_in_favorites = image_path in FavoritesWindow.get_favorites(self.get_base_dir())
+        current_media_in_directory_notes_marked = DirectoryNotes.is_marked_file(self.get_base_dir(), image_path)
         favorite_command = FavoritesWindow.add_favorite if not current_media_in_favorites else FavoritesWindow.remove_favorite
         menu.add_command(label=_("View Media Details"), command=lambda: self.get_media_details(event))
         menu.add_command(label=_("Hide Media"), command=lambda: self.hide_current_media(event))
@@ -810,6 +831,10 @@ class App():
                          command=lambda: self.add_or_remove_mark(event))
         menu.add_command(label=_("Remove from Favorites") if current_media_in_favorites else _("Add to Favorites"),
                          command=lambda: favorite_command(self.get_base_dir(), image_path, self.toast))
+        menu.add_separator()
+        menu.add_command(label=_("Remove from Directory Notes") if current_media_in_directory_notes_marked else _("Add to Directory Notes"),
+                         command=lambda: self.toggle_directory_note_mark(event))
+        menu.add_command(label=_("Edit File Note"), command=lambda: self.edit_file_note(event))
         menu.add_separator()
         menu.add_command(label=_("Open in GIMP"), command=lambda: self.open_image_in_gimp(event))
         menu.add_command(label=_("Run Image Generation"), command=lambda: self.trigger_image_generation(event))
@@ -842,11 +867,11 @@ class App():
         elif self.mode == Mode.BROWSE:
             index_text = self.file_browser.get_index_details()
         else:
-            _index = self.compare_wrapper.match_index + 1
-            len_files_matched = len(self.compare_wrapper.files_matched)
+            _index = self.compare_manager.match_index + 1
+            len_files_matched = len(self.compare_manager.files_matched)
             if self.mode == Mode.GROUP:
-                len_file_groups = len(self.compare_wrapper.file_groups)
-                group_index = self.compare_wrapper.current_group_index + 1
+                len_file_groups = len(self.compare_manager.file_groups)
+                group_index = self.compare_manager.current_group_index + 1
                 index_text = f"{_index} of {len_files_matched} (Group {group_index} of {len_file_groups})"
             elif self.mode == Mode.SEARCH and self.is_toggled_view_matches:
                 index_text = f"{_index} of {len_files_matched} ({self.file_browser.get_index_details()})"
@@ -1016,8 +1041,8 @@ class App():
             self.set_base_dir_box.insert(0, "Add dirpath...")
             self._set_label_state(_("Set a directory to run comparison."))
             return
-        if self.compare_wrapper.has_compare() and self.base_dir != self.compare_wrapper.compare().base_dir:
-            self.compare_wrapper._compare = None
+        if self.compare_manager.has_compare() and self.base_dir != self.compare_manager.compare().base_dir:
+            self.compare_manager.clear_compare()
             self._set_label_state(group_number=None, size=0)
             self._remove_all_mode_buttons()
 #        logger.debug(f"Setting base dir to {self.base_dir} on window ID {self.window_id} in self.set_base_dir")
@@ -1027,13 +1052,13 @@ class App():
         # Update settings to those last set for this directory, if found
         recursive = app_info_cache.get(self.base_dir, "recursive", default_val=False)
         sort_by = app_info_cache.get(self.base_dir, "sort_by", default_val=self.sort_by.get())
-        compare_mode = app_info_cache.get(self.base_dir, "compare_mode", default_val=self.compare_wrapper.compare_mode.get_text())
+        compare_mode = app_info_cache.get(self.base_dir, "compare_mode", default_val=self.compare_manager.compare_mode.get_text())
         if recursive != self.image_browse_recurse_var.get():
             self.image_browse_recurse_var.set(recursive)
             self.file_browser.set_recursive(recursive)
         try:
-            if compare_mode != self.compare_wrapper.compare_mode.get_text():
-                self.compare_wrapper.compare_mode = CompareMode.get(compare_mode)
+            if compare_mode != self.compare_manager.compare_mode.get_text():
+                self.compare_manager.compare_mode = CompareMode.get(compare_mode)
         except Exception as e:
             logger.error(f"Error setting stored compare mode: {e}")
         try:
@@ -1042,7 +1067,7 @@ class App():
                 self.file_browser.set_sort_by(SortBy.get(sort_by))
         except Exception as e:
             logger.error(f"Error setting stored sort by: {e}")
-        if not self.compare_wrapper.has_compare():
+        if not self.compare_manager.has_compare():
             self.set_mode(Mode.BROWSE)
             previous_file = app_info_cache.get(self.base_dir, "image_cursor")
             if previous_file and previous_file != "":
@@ -1078,7 +1103,7 @@ class App():
         '''
         image_path = self.search_image.get().strip()
         if image_path is None or image_path == "":
-            self.compare_wrapper.search_image_full_path = None
+            self.compare_manager.search_image_full_path = None
             return None
         search_file = Utils.get_valid_file(self.get_base_dir(), image_path)
         if search_file is None:
@@ -1087,14 +1112,6 @@ class App():
                 self.handle_error("Search file is not a valid file for base dir.", title="Invalid search file")
                 raise AssertionError("Search file is not a valid file.")
         return search_file
-
-    def get_counter_limit(self) -> int | None:
-        counter_limit_str = self.set_counter_limit.get().strip()
-        try:
-            return None if counter_limit_str == "" else int(counter_limit_str)
-        except Exception:
-            self.handle_error(_("Counter limit must be an integer value."), title=_("Invalid Setting"))
-            raise AssertionError("Counter limit must be an integer value.")
 
     def get_compare_threshold(self) -> int | float:
         """Get compare threshold from CompareManager, with fallback to config defaults."""
@@ -1156,7 +1173,7 @@ class App():
             args.negative_search_file_path = None
 
         if args.search_text is not None or args.search_text_negative is not None:
-            self.compare_wrapper.validate_compare_mode(CompareMode.text_search_modes(), _(
+            self.compare_manager.validate_compare_mode(CompareMode.text_search_modes(), _(
                 "Compare mode must be set to an embedding mode to search text embeddings"))
 
         if image_path is not None and not os.path.isfile(image_path):
@@ -1170,7 +1187,7 @@ class App():
                 self.search_image.set(os.path.basename(image_path))
             self.search_dir = os.path.dirname(image_path)
             args.search_file_path = image_path
-            self.compare_wrapper.search_image_full_path = image_path
+            self.compare_manager.search_image_full_path = image_path
             self.show_searched_image()
 
         if args.not_searching():
@@ -1185,12 +1202,12 @@ class App():
 
     def show_searched_image(self) -> None:
         if config.debug:
-            logger.debug(f"Search image full path: {self.compare_wrapper.search_image_full_path}")
-        if self.compare_wrapper.search_image_full_path is not None and self.compare_wrapper.search_image_full_path.strip() != "":
-            if os.path.isfile(self.compare_wrapper.search_image_full_path):
-                self.create_image(self.compare_wrapper.search_image_full_path, extra_text="(search image)")
+            logger.debug(f"Search image full path: {self.compare_manager.search_image_full_path}")
+        if self.compare_manager.search_image_full_path is not None and self.compare_manager.search_image_full_path.strip() != "":
+            if os.path.isfile(self.compare_manager.search_image_full_path):
+                self.create_image(self.compare_manager.search_image_full_path, extra_text="(search image)")
             else:
-                logger.warning(self.compare_wrapper.search_image_full_path)
+                logger.warning(self.compare_manager.search_image_full_path)
                 self.handle_error(_("Somehow, the search file is invalid"))
 
     def show_prev_media(self, event=None, show_alert=True) -> bool:
@@ -1204,7 +1221,7 @@ class App():
             previous_file = self.file_browser.previous_file()
             if self.img_path == previous_file:
                 return True  # NOTE self.refresh() is calling this method in this case
-            while self.compare_wrapper.skip_image(previous_file) and previous_file != start_file:
+            while self.compare_manager.skip_image(previous_file) and previous_file != start_file:
                 previous_file = self.file_browser.previous_file()
             self.master.update()
             try:
@@ -1213,7 +1230,7 @@ class App():
             except Exception as e:
                 self.handle_error(str(e), title="Exception")
                 return False
-        return self.compare_wrapper.show_prev_media(show_alert=show_alert)
+        return self.compare_manager.show_prev_media(show_alert=show_alert)
 
     def show_next_media(self, event=None, show_alert: bool = True) -> bool:
         '''
@@ -1226,7 +1243,7 @@ class App():
             next_file = self.file_browser.next_file()
             if self.img_path == next_file:
                 return True  # NOTE self.refresh() is calling this method in this case
-            while self.compare_wrapper.skip_image(next_file) and next_file != start_file:
+            while self.compare_manager.skip_image(next_file) and next_file != start_file:
                 next_file = self.file_browser.next_file()
             self.master.update()
             try:
@@ -1236,7 +1253,7 @@ class App():
                 traceback.print_exc()
                 self.handle_error(str(e), title="Exception")
                 return False
-        return self.compare_wrapper.show_next_media(show_alert=show_alert)
+        return self.compare_manager.show_next_media(show_alert=show_alert)
 
     def last_chosen_direction_func(self) -> None:
         """
@@ -1268,7 +1285,7 @@ class App():
             if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.ALT]):
                 random_image = self.file_browser.random_file()
                 counter = 0
-                while random_image in self.compare_wrapper.hidden_images and counter < 50:
+                while random_image in self.compare_manager.hidden_images and counter < 50:
                     random_image = self.file_browser.random_file()
                     counter += 1
                 if os.path.isfile(random_image):
@@ -1305,7 +1322,7 @@ class App():
             self.handle_error(_("Failed to get active image filepath"))
 
     def negative_image_search(self, filepath: str) -> None:
-        args = self.compare_wrapper.get_args()
+        args = self.compare_manager.get_args()
         args.negative_search_file_path = filepath
         self.search_text_negative_box.delete(0, "end")
         self.search_text_negative_box.insert(0, filepath)
@@ -1346,7 +1363,7 @@ class App():
         if self.is_toggled_view_matches:
             self.show_searched_image()
         else:
-            self.create_image(self.compare_wrapper.current_match())
+            self.create_image(self.compare_manager.current_match())
 
         self.is_toggled_view_matches = not self.is_toggled_view_matches
 
@@ -1364,8 +1381,8 @@ class App():
     def _add_buttons_for_mode(self) -> None:
         if not self.has_added_buttons_for_mode[self.mode]:
             if self.mode == Mode.SEARCH:
-                if self.compare_wrapper.search_image_full_path != None \
-                        and self.compare_wrapper.search_image_full_path.strip() != "" \
+                if self.compare_manager.search_image_full_path != None \
+                        and self.compare_manager.search_image_full_path.strip() != "" \
                         and self.toggle_image_view_btn is None:
                     self.add_button("toggle_image_view_btn", "Toggle image view", self.toggle_image_view)
                     self.add_button("replace_current_image_btn", "Replace with search image",
@@ -1373,8 +1390,8 @@ class App():
 #                if not self.has_added_buttons_for_mode[Mode.GROUP]:
 #                    self.add_all_mode_buttons()
             elif self.mode == Mode.GROUP:
-                self.add_button("prev_group_btn", "Previous group", self.compare_wrapper.show_prev_group)
-                self.add_button("next_group_btn", "Next group", self.compare_wrapper.show_next_group)
+                self.add_button("prev_group_btn", "Previous group", self.compare_manager.show_prev_group)
+                self.add_button("next_group_btn", "Next group", self.compare_manager.show_next_group)
 #                if not self.has_added_buttons_for_mode[Mode.SEARCH]:
 #                    self.add_all_mode_buttons()
             elif self.mode == Mode.DUPLICATES:
@@ -1436,15 +1453,6 @@ class App():
         # Apply all compare settings from CompareManager (with fallbacks)
         self.compare_manager.apply_settings_to_args(args)
         
-        # Backward compatibility: if counter_limit not set in manager, check sidebar entry
-        if args.counter_limit == config.file_counter_limit:
-            try:
-                sidebar_counter_limit = self.get_counter_limit()
-                if sidebar_counter_limit is not None:
-                    args.counter_limit = sidebar_counter_limit
-            except (AssertionError, Exception):
-                pass  # Use config default if sidebar entry is invalid
-        
         # Apply settings that are still managed in App (not yet migrated)
         args.inclusion_pattern = self.get_inclusion_pattern()
         args.include_videos = config.enable_videos
@@ -1453,7 +1461,7 @@ class App():
         args.use_matrix_comparison = False # TODO enable UI option for this
         args.listener = ProgressListener(update_func=self.display_progress)
         args.app_actions = self.app_actions
-        self.compare_wrapper.run(args)
+        self.compare_manager.run(args)
 
     def _set_toggled_view_matches(self):
         self.is_toggled_view_matches = True
@@ -1488,9 +1496,9 @@ class App():
         else:
             if Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.ALT]):
                 # Select all file matches
-                files = list(self.compare_wrapper.files_matched)
+                files = list(self.compare_manager.files_matched)
             else:
-                files = self.compare_wrapper.select_series(start_file=MarkedFiles.file_marks[-1], end_file=self.img_path)
+                files = self.compare_manager.select_series(start_file=MarkedFiles.file_marks[-1], end_file=self.img_path)
         for _file in files:
             if _file not in MarkedFiles.file_marks:
                 MarkedFiles.file_marks.append(_file)
@@ -1638,6 +1646,116 @@ class App():
         except Exception as e:
             self.handle_error(str(e), title="Favorites Window Error")
 
+    def open_directory_notes_window(self, event=None) -> None:
+        """Open the directory notes window for the current base directory."""
+        try:
+            base_dir = self.get_base_dir()
+            if not base_dir:
+                self.toast(_("Please set a base directory first"))
+                return
+            
+            # Check if window already exists and is still valid
+            if self.directory_notes_window is not None and hasattr(self.directory_notes_window, 'master'):
+                try:
+                    if self.directory_notes_window.master.winfo_exists():
+                        # Window exists, just focus it
+                        self.directory_notes_window.master.lift()
+                        self.directory_notes_window.master.focus_force()
+                        return
+                except:
+                    # Window was destroyed, clear the reference
+                    self.directory_notes_window = None
+            
+            # Create new window
+            self.directory_notes_window = DirectoryNotesWindow(self.master, self.app_actions, base_dir)
+        except Exception as e:
+            self.handle_error(str(e), title="Directory Notes Window Error")
+
+    def toggle_directory_note_mark(self, event=None) -> None:
+        """Toggle a file's marked status in directory notes."""
+        image_path = self.get_active_media_filepath()
+        if not image_path:
+            return
+        
+        base_dir = self.get_base_dir()
+        if DirectoryNotes.is_marked_file(base_dir, image_path):
+            DirectoryNotes.remove_marked_file(base_dir, image_path)
+            self.toast(_("Removed from directory notes: {0}").format(os.path.basename(image_path)))
+        else:
+            DirectoryNotes.add_marked_file(base_dir, image_path)
+            self.toast(_("Added to directory notes: {0}").format(os.path.basename(image_path)))
+        
+        # Refresh window if open
+        if self.directory_notes_window is not None and hasattr(self.directory_notes_window, 'master'):
+            try:
+                if self.directory_notes_window.master.winfo_exists():
+                    self.directory_notes_window._refresh_widgets()
+            except:
+                pass
+
+    def edit_file_note(self, event=None) -> None:
+        """Open a dialog to edit the note for the current file."""
+        image_path = self.get_active_media_filepath()
+        if not image_path:
+            return
+        
+        base_dir = self.get_base_dir()
+        current_note = DirectoryNotes.get_file_note(base_dir, image_path) or ""
+        
+        # Create edit dialog
+        from tkinter import Toplevel
+        
+        dialog = Toplevel(self.master)
+        dialog.title(_("Edit Note - {0}").format(os.path.basename(image_path)))
+        dialog.geometry("600x400")
+        dialog.configure(bg=AppStyle.BG_COLOR)
+        
+        # File path label
+        path_label = Label(dialog, text=image_path, wraplength=580, justify=LEFT,
+                          bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
+        path_label.pack(pady=10, padx=10, anchor=W)
+        
+        # Note text area
+        note_text = Text(dialog, wrap="word", height=15, width=70)
+        note_text.insert("1.0", current_note)
+        note_text.pack(pady=10, padx=10, fill="both", expand=True)
+        note_text.config(bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR,
+                        insertbackground=AppStyle.FG_COLOR)
+        note_text.focus_set()
+        
+        # Buttons frame
+        btn_frame = Frame(dialog)
+        btn_frame.pack(pady=10)
+        
+        def save_note():
+            new_note = note_text.get("1.0", END).strip()
+            DirectoryNotes.set_file_note(base_dir, image_path, new_note)
+            self.toast(_("Note saved for: {0}").format(os.path.basename(image_path)))
+            dialog.destroy()
+            # Refresh window if open
+            if self.directory_notes_window is not None and hasattr(self.directory_notes_window, 'master'):
+                try:
+                    if self.directory_notes_window.master.winfo_exists():
+                        self.directory_notes_window._refresh_widgets()
+                except:
+                    pass
+        
+        def cancel():
+            dialog.destroy()
+        
+        save_btn = Button(btn_frame, text=_("Save"), command=save_note)
+        save_btn.pack(side=LEFT, padx=5)
+        
+        cancel_btn = Button(btn_frame, text=_("Cancel"), command=cancel)
+        cancel_btn.pack(side=LEFT, padx=5)
+        
+        # Bind Enter to save (Ctrl+Enter)
+        def on_ctrl_enter(event):
+            save_note()
+        
+        note_text.bind("<Control-Return>", on_ctrl_enter)
+        dialog.bind("<Escape>", lambda e: cancel())
+
     def open_go_to_file_window(self, event=None) -> None:
         try:
             # Check if window already exists and is still valid
@@ -1699,10 +1817,10 @@ class App():
                 self.master.update()
                 return True
         else:
-            image_path, group_indexes = self.compare_wrapper.find_file_after_comparison(search_text, exact_match=exact_match)
+            image_path, group_indexes = self.compare_manager.find_file_after_comparison(search_text, exact_match=exact_match)
             if group_indexes:
-                self.compare_wrapper.current_group_index = group_indexes[0]
-                self.compare_wrapper.set_current_group(start_match_index=group_indexes[1])
+                self.compare_manager.current_group_index = group_indexes[0]
+                self.compare_manager.set_current_group(start_match_index=group_indexes[1])
                 return True
         
         # If file not found in current window, search in other open windows
@@ -1721,10 +1839,10 @@ class App():
                     return True
             else:
                 # Handle compare mode in other windows
-                found_path, group_indexes = window.compare_wrapper.find_file_after_comparison(search_text, exact_match=exact_match)
+                found_path, group_indexes = window.compare_manager.find_file_after_comparison(search_text, exact_match=exact_match)
                 if found_path and group_indexes:
-                    window.compare_wrapper.current_group_index = group_indexes[0]
-                    window.compare_wrapper.set_current_group(start_match_index=group_indexes[1])
+                    window.compare_manager.current_group_index = group_indexes[0]
+                    window.compare_manager.set_current_group(start_match_index=group_indexes[1])
                     window.media_canvas.focus()
                     return True
                 # If not found in comparison results, search the full directory
@@ -1743,6 +1861,31 @@ class App():
 
         # File not found anywhere
         self.alert(_("File not found"), _("No file was found for the search text: \"{0}\"").format(search_text))
+        return False
+
+    def go_to_file_by_index(self, index: int) -> bool:
+        """
+        Go to file at the specified index (1-based) in the current window's file browser.
+        Returns True if successful, False otherwise.
+        """
+        if self.mode != Mode.BROWSE:
+            self.alert(_("Index navigation not available"), _("Index navigation is only available in BROWSE mode."))
+            return False
+        
+        try:
+            self.file_browser.refresh()
+            file_path = self.file_browser.go_to_index(index)
+            if file_path:
+                self.create_image(file_path)
+                self.master.update()
+                return True
+        except ValueError as e:
+            self.alert(_("Invalid index"), str(e))
+            return False
+        except Exception as e:
+            self.handle_error(str(e), title="Go To Index Error")
+            return False
+        
         return False
 
     def go_to_previous_image(self, event=None) -> None:
@@ -1804,7 +1947,7 @@ class App():
                 raise Exception("No active image file.")
             if last_file:
                 last_image = self.file_browser.last_file()
-                while self.compare_wrapper.skip_image(last_image) and last_image != current_file:
+                while self.compare_manager.skip_image(last_image) and last_image != current_file:
                     last_image = self.file_browser.previous_file()
                 self.create_image(last_image)
                 if len(MarkedFiles.file_marks) == 1 and self.file_browser.has_file(MarkedFiles.file_marks[0]):
@@ -1815,23 +1958,23 @@ class App():
                 return
             else:
                 first_image = self.file_browser.next_file()
-                while self.compare_wrapper.skip_image(first_image) and first_image != current_file:
+                while self.compare_manager.skip_image(first_image) and first_image != current_file:
                     first_image = self.file_browser.next_file()
                 self.create_image(first_image)
             self.master.update()
-        elif self.compare_wrapper.has_compare():
+        elif self.compare_manager.has_compare():
             self.direction = Direction.FORWARD
             # TODO map last_file logic for compare case
-            self.compare_wrapper.current_group_index = 0
-            self.compare_wrapper.match_index = 0
-            self.compare_wrapper.set_current_group()
+            self.compare_manager.current_group_index = 0
+            self.compare_manager.match_index = 0
+            self.compare_manager.set_current_group()
 
     def page_up(self, event=None) -> None:
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
         current_image = self.get_active_media_filepath()
-        prev_file = self.file_browser.page_up(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_up(half_length=shift_key_pressed)
-        while self.compare_wrapper.skip_image(prev_file) and prev_file != current_image:
-            prev_file = self.file_browser.previous_file() if self.mode == Mode.BROWSE else self.compare_wrapper._get_prev_image()
+        prev_file = self.file_browser.page_up(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_manager.page_up(half_length=shift_key_pressed)
+        while self.compare_manager.skip_image(prev_file) and prev_file != current_image:
+            prev_file = self.file_browser.previous_file() if self.mode == Mode.BROWSE else self.compare_manager._get_prev_image()
         self.create_image(prev_file)
         self.master.update()
         self.direction = Direction.BACKWARD
@@ -1839,9 +1982,9 @@ class App():
     def page_down(self, event=None) -> None:
         shift_key_pressed = Utils.modifier_key_pressed(event, keys_to_check=[ModifierKey.SHIFT])
         current_image = self.get_active_media_filepath()
-        next_file = self.file_browser.page_down(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_wrapper.page_down(half_length=shift_key_pressed)
-        while self.compare_wrapper.skip_image(next_file) and next_file != current_image:
-            next_file = self.file_browser.next_file() if self.mode == Mode.BROWSE else self.compare_wrapper._get_next_image()
+        next_file = self.file_browser.page_down(half_length=shift_key_pressed) if self.mode == Mode.BROWSE else self.compare_manager.page_down(half_length=shift_key_pressed)
+        while self.compare_manager.skip_image(next_file) and next_file != current_image:
+            next_file = self.file_browser.next_file() if self.mode == Mode.BROWSE else self.compare_manager._get_next_image()
         self.create_image(next_file)
         self.master.update()
         self.direction = Direction.FORWARD
@@ -1855,9 +1998,9 @@ class App():
         if self.mode == Mode.BROWSE:
             return self.file_browser.current_file()
         if self.is_toggled_search_image():
-            filepath = self.compare_wrapper.search_image_full_path
+            filepath = self.compare_manager.search_image_full_path
         else:
-            filepath = self.compare_wrapper.current_match()
+            filepath = self.compare_manager.current_match()
         return Utils.get_valid_file(self.get_base_dir(), filepath)
 
     def open_media_location(self, event=None) -> None:
@@ -1898,16 +2041,24 @@ class App():
         self.master.clipboard_append(filepath)
         self.toast(_("Copied filepath to clipboard"))
 
+    def copy_media_basename(self, filepath: Optional[str] = None) -> None:
+        if filepath is None:
+            filepath = self.get_active_media_filepath()
+        basename = os.path.basename(filepath)
+        self.master.clipboard_clear()
+        self.master.clipboard_append(basename)
+        self.toast(_("Copied filename to clipboard"))
+
     def hide_current_media(self, event=None, image_path: Optional[str] = None) -> None:
         filepath = self.get_active_media_filepath() if image_path is None else image_path
-        if filepath not in self.compare_wrapper.hidden_images:
-            self.compare_wrapper.hidden_images.append(filepath)
+        if filepath not in self.compare_manager.hidden_images:
+            self.compare_manager.hidden_images.append(filepath)
         if image_path is None:
             self.toast(_("Hid current image.\nTo unhide, press Shift+B."))
         self.show_next_media()
 
     def clear_hidden_images(self, event=None) -> None:
-        self.compare_wrapper.hidden_images.clear()
+        self.compare_manager.hidden_images.clear()
         self.toast(_("Cleared all hidden images."))
 
     @require_password(ProtectedActions.DELETE_MEDIA)
@@ -1933,10 +2084,10 @@ class App():
 
         is_toggle_search_image = self.is_toggled_search_image()
 
-        if len(self.compare_wrapper.files_matched) == 0 and not is_toggle_search_image:
+        if len(self.compare_manager.files_matched) == 0 and not is_toggle_search_image:
             self.app_actions.warn(_("Invalid action, no files found to delete"))
             return
-        elif is_toggle_search_image and (self.compare_wrapper.search_image_full_path is None or self.compare_wrapper.search_image_full_path == ""):
+        elif is_toggle_search_image and (self.compare_manager.search_image_full_path is None or self.compare_manager.search_image_full_path == ""):
             self.app_actions.warn(_("Invalid action, search image not found"))
             return
 
@@ -1944,13 +2095,13 @@ class App():
 
         if filepath is not None:
             MarkedFiles.handle_file_removal(filepath)
-            if filepath == self.compare_wrapper.search_image_full_path:
-                self.compare_wrapper.search_image_full_path = None
+            if filepath == self.compare_manager.search_image_full_path:
+                self.compare_manager.search_image_full_path = None
             self.media_canvas.release_media()
             self._handle_delete(filepath)
-            if self.compare_wrapper._compare:
-                self.compare_wrapper.compare().remove_from_groups([filepath])
-            self.compare_wrapper._update_groups_for_removed_file(self.mode, self.compare_wrapper.current_group_index, self.compare_wrapper.match_index, show_next_media=self.direction)
+            if self.compare_manager.has_compare():
+                self.compare_manager.compare().remove_from_groups([filepath])
+            self.compare_manager._update_groups_for_removed_file(self.mode, self.compare_manager.current_group_index, self.compare_manager.match_index, show_next_media=self.direction)
         else:
             self.handle_error(_("Failed to delete current file, unable to get valid filepath"))
 
@@ -2057,18 +2208,18 @@ class App():
         search image.
         '''
         if (self.mode != Mode.SEARCH
-                or len(self.compare_wrapper.files_matched) == 0
-                or not os.path.exists(str(self.compare_wrapper.search_image_full_path))):
+                or len(self.compare_manager.files_matched) == 0
+                or not os.path.exists(str(self.compare_manager.search_image_full_path))):
             return
 
-        _filepath = self.compare_wrapper.current_match()
+        _filepath = self.compare_manager.current_match()
         filepath = Utils.get_valid_file(self.get_base_dir(), _filepath)
 
         if filepath is None:
             self.handle_error(_("Invalid target filepath for replacement: ") + _filepath)
             return
 
-        os.rename(str(self.compare_wrapper.search_image_full_path), filepath)
+        os.rename(str(self.compare_manager.search_image_full_path), filepath)
         self.toast(_("Moved search image to ") + filepath)
 
     def _handle_remove_files_from_groups(self, files: list[str]) -> None:
@@ -2076,15 +2227,15 @@ class App():
         Remove the files from the groups.
         '''
         # NOTE cannot use get_active_media_filepath here because file should have been removed by this point.
-        current_image = self.compare_wrapper.current_match()
+        current_image = self.compare_manager.current_match()
         for filepath in files:
-            if filepath == self.compare_wrapper.search_image_full_path:
-                self.compare_wrapper.search_image_full_path = None
+            if filepath == self.compare_manager.search_image_full_path:
+                self.compare_manager.search_image_full_path = None
             show_next_media = self.direction if current_image == filepath else None
-            file_group_map = self.compare_wrapper._get_file_group_map(self.mode)
+            file_group_map = self.compare_manager._get_file_group_map(self.mode)
             try:
                 group_indexes = file_group_map[filepath]
-                self.compare_wrapper._update_groups_for_removed_file(self.mode,
+                self.compare_manager._update_groups_for_removed_file(self.mode,
                     group_indexes[0], group_indexes[1], set_group=False, show_next_media=show_next_media)
             except KeyError:
                 pass  # The group may have been removed before update_groups_for_removed_file was called on the last file in it
@@ -2244,7 +2395,7 @@ class App():
             if group_number is None:
                 self.label_state["text"] = ""
             else:
-                args = (group_number + 1, len(self.compare_wrapper.file_groups), size)
+                args = (group_number + 1, len(self.compare_manager.file_groups), size)
                 self.label_state["text"] = Utils._wrap_text_to_fit_length(
                     _("GROUP_DETAILS").format(*args), 30)
         else:  # Set based on file count

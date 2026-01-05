@@ -228,11 +228,6 @@ class ImageDataExtractor:
                 else:
                     positive = image_data.positive
                     negative = image_data.negative
-                if not positive or positive.strip() == "":
-                    try:
-                        positive, negative = self.extract(image_path)
-                    except Exception as e:
-                        pass
         except Exception as e:
             # logger.warning(e)
             pass
@@ -353,7 +348,7 @@ class ImageDataExtractor:
             raise Exception("Stable diffusion prompt reader failed to import. Please check log and config.json file.")
         return ImageDataReader(image_path)
 
-    def get_image_prompts_and_models(self, image_path):
+    def extract_prompts_all_strategies(self, image_path):
         positive = None
         negative = None
         if has_imported_sd_prompt_reader:
@@ -365,6 +360,11 @@ class ImageDataExtractor:
                 positive, negative = self.extract(image_path)
             except Exception as e:
                 logger.debug(f"Custom extract also failed: {e}")
+
+        return positive, negative
+
+    def get_image_prompts_and_models(self, image_path):
+        positive, negative = self.extract_prompts_all_strategies(image_path)
 
         positive_extraction_failed = False
         negative_extraction_failed = False

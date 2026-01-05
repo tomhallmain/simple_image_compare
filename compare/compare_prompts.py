@@ -34,7 +34,7 @@ def extract_prompts_from_image(image_path):
     """
     try:
         extractor = get_image_data_extractor()
-        positive, negative = extractor.extract_with_sd_prompt_reader(image_path)
+        positive, negative = extractor.extract_prompts_all_strategies(image_path)
         if positive is not None:
             return positive, negative
         return None, None
@@ -49,7 +49,7 @@ def prompt_embedding_from_image(image_path):
     """
     try:
         extractor = get_image_data_extractor()
-        positive_prompt, negative_prompt = extractor.extract_with_sd_prompt_reader(image_path)
+        positive_prompt, negative_prompt = extractor.extract_prompts_all_strategies(image_path)
         if positive_prompt is None and negative_prompt is None:
             return np.zeros(768)
 

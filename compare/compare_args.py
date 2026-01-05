@@ -53,6 +53,6 @@ class CompareArgs:
     def clone(self):
         clone = CompareArgs()
         for k, v in self.__dict__.items():
-            if not k == "listener":
+            if k not in ("listener", "app_actions"):
                 clone.__dict__[k] = deepcopy(v)
         return clone

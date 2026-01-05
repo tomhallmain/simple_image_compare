@@ -73,7 +73,9 @@ class CompareSettingsWindow:
         )
         mode_title.grid(row=0, column=0, sticky=W, pady=(0, 10))
         
-        # Mode selection checkboxes
+        # Mode instance management
+        # For now, show checkboxes for modes (backward compatibility)
+        # TODO: Replace with instance list UI that allows multiple instances per mode
         self.mode_vars: Dict[CompareMode, BooleanVar] = {}
         self.mode_checkboxes: Dict[CompareMode, Checkbutton] = {}
         
@@ -92,6 +94,14 @@ class CompareSettingsWindow:
             )
             check.grid(row=i+1, column=0, sticky=W, pady=2)
             self.mode_checkboxes[mode] = check
+        
+        # Add button to add instance of selected mode
+        self.add_instance_btn = Button(
+            mode_frame,
+            text=_("Add Instance"),
+            command=self._on_add_instance
+        )
+        self.add_instance_btn.grid(row=len(CompareMode)+1, column=0, sticky=W, pady=5)
         
         row += 1
         
@@ -165,7 +175,7 @@ class CompareSettingsWindow:
         
         threshold_label = Label(
             self.threshold_frame,
-            text=_("Threshold:"),
+            text=_("Threshold"),
             bg=AppStyle.BG_COLOR,
             fg=AppStyle.FG_COLOR
         )
@@ -199,7 +209,7 @@ class CompareSettingsWindow:
         
         counter_limit_label = Label(
             self.counter_limit_frame,
-            text=_("Max files to compare:"),
+            text=_("Max files to compare"),
             bg=AppStyle.BG_COLOR,
             fg=AppStyle.FG_COLOR
         )
@@ -435,36 +445,31 @@ class CompareSettingsWindow:
         
         # Only show weights for WEIGHTED mode
         if self.compare_manager.get_combination_logic() == CombinationLogic.WEIGHTED:
-            active_modes = self.compare_manager.get_active_modes()
+            mode_instances = self.compare_manager.get_mode_instances()
             
             weight_label = Label(
                 self.weight_frame,
-                text=_("Mode Weights:"),
+                text=_("Instance Weights:"),
                 bg=AppStyle.BG_COLOR,
                 fg=AppStyle.FG_COLOR
             )
             weight_label.grid(row=0, column=0, sticky=W, pady=(0, 5))
             
-            for i, mode in enumerate(active_modes):
-                mode_label = Label(
+            for i, config in enumerate(mode_instances):
+                if not config.enabled:
+                    continue
+                
+                instance_label = Label(
                     self.weight_frame,
-                    text=f"{mode.get_text()}:",
+                    text=f"{config.instance_id} ({config.compare_mode.get_text()}):",
                     bg=AppStyle.BG_COLOR,
                     fg=AppStyle.FG_COLOR
                 )
-                mode_label.grid(row=i+1, column=0, sticky=W, padx=(20, 10), pady=2)
+                instance_label.grid(row=i+1, column=0, sticky=W, padx=(20, 10), pady=2)
                 
-                # Get current weight from mode config
-                # Access the internal config to get current weight
-                # Note: This accesses private members, but it's acceptable for UI
-                weight = 1.0  # Default
-                if hasattr(self.compare_manager, '_mode_configs'):
-                    mode_configs = self.compare_manager._mode_configs
-                    if mode in mode_configs:
-                        weight = mode_configs[mode].weight
-                
+                weight = config.weight
                 weight_var = StringVar(value=str(weight))
-                self.weight_vars[mode] = weight_var
+                self.weight_vars[config.instance_id] = weight_var
                 
                 weight_entry = Entry(
                     self.weight_frame,
@@ -472,19 +477,25 @@ class CompareSettingsWindow:
                     width=10
                 )
                 weight_entry.grid(row=i+1, column=1, sticky=W, pady=2)
-                self.weight_entries[mode] = weight_entry
+                self.weight_entries[config.instance_id] = weight_entry
+    
+    def _on_add_instance(self):
+        """Add a new instance of a mode."""
+        # TODO: Show dialog to select mode and configure instance
+        # For now, just log that this feature needs UI implementation
+        logger.info("Add instance feature - UI implementation needed")
     
     def _on_apply(self):
         """Apply settings and close window."""
         # Update weights if in weighted mode
         if self.compare_manager.get_combination_logic() == CombinationLogic.WEIGHTED:
-            for mode, weight_var in self.weight_vars.items():
+            for instance_id, weight_var in self.weight_vars.items():
                 try:
                     weight = float(weight_var.get())
-                    self.compare_manager.set_mode_weight(mode, weight)
-                    logger.debug(f"Setting weight for {mode} to {weight}")
+                    self.compare_manager.set_mode_weight(instance_id, weight)
+                    logger.debug(f"Setting weight for instance {instance_id} to {weight}")
                 except ValueError:
-                    logger.warning(f"Invalid weight for {mode}: {weight_var.get()}")
+                    logger.warning(f"Invalid weight for instance {instance_id}: {weight_var.get()}")
         
         # Update compare settings
         primary_mode = self.compare_manager.compare_mode

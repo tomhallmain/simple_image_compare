@@ -204,7 +204,7 @@ class Prevalidation:
     def _check_prompt_validation(self, image_path):
         """Check if image prompts match the positive or negative criteria."""
         try:
-            positive_prompt, negative_prompt = image_data_extractor.extract_with_sd_prompt_reader(image_path)
+            positive_prompt, negative_prompt = image_data_extractor.extract_prompts_all_strategies(image_path)
 
             # Skip if no prompts found (None indicates failure to extract prompts)
             if positive_prompt is None:
