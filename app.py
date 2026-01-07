@@ -17,6 +17,7 @@ from auth.password_utils import require_password, check_session_expired
 from compare.base_compare import CompareCancelled
 from compare.compare_args import CompareArgs
 from compare.compare_manager import CompareManager
+from compare.classifier_actions_window import ClassifierActionsWindow
 from compare.compare_settings_window import CompareSettingsWindow
 from compare.prevalidations_window import PrevalidationsWindow
 from extensions.refacdir_client import RefacDirClient
@@ -354,6 +355,10 @@ class App():
         self.search_text_negative_box.bind("<Return>", self.set_search_for_text)
         self.apply_to_grid(self.search_text_negative_box, sticky=W)
 
+        # Classifier actions button
+        self.classifier_actions_btn = None
+        self.add_button("classifier_actions_btn", _("Classifier Actions"), self.open_classifier_actions_window)
+        
         # Compare settings button (detailed settings in CompareSettingsWindow)
         self.compare_settings_btn = None
         self.add_button("compare_settings_btn", _("Compare Settings"), self.open_compare_settings_window)
@@ -564,6 +569,7 @@ class App():
             FileActionsWindow.load_action_history()
             ImageDetails.load_image_generation_mode()
             PrevalidationsWindow.set_prevalidations()
+            ClassifierActionsWindow.set_classifier_actions()
             FavoritesWindow.load_favorites()
             GoToFile.load_persisted_data()
             TargetDirectoryWindow.load_recent_directories()
@@ -623,6 +629,7 @@ class App():
         FileActionsWindow.store_action_history()
         ImageDetails.store_image_generation_mode()
         PrevalidationsWindow.store_prevalidations()
+        ClassifierActionsWindow.store_classifier_actions()
         FavoritesWindow.store_favorites()
         GoToFile.save_persisted_data()
         TargetDirectoryWindow.save_recent_directories()
@@ -1616,6 +1623,12 @@ class App():
             except Exception as e:
                 self.handle_error(str(e), title="Prevalidations Window Error")
 
+    def open_classifier_actions_window(self, event=None) -> None:
+        try:
+            classifier_actions_window = ClassifierActionsWindow(self.master, self.app_actions)
+        except Exception as e:
+            self.handle_error(str(e), title="Classifier Actions Window Error")
+
     @require_password(ProtectedActions.RUN_PREVALIDATIONS)
     def run_prevalidations_for_base_dir(self, event=None) -> None:
         if self.file_browser.is_slow_total_files(threshold=100, use_sortable_files=True):
@@ -1624,7 +1637,7 @@ class App():
                 logger.info("User canceled prevalidations task")
                 return
         logger.warning("Running prevalidations for " + self.get_base_dir())
-        PrevalidationsWindow.prevalidated_cache.clear()
+        PrevalidationsWindow.clear_prevalidated_cache()
         for image_path in self.file_browser.get_files():
             try:
                 prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self.get_base_dir, self.hide_current_media, self.title_notify, MarkedFiles.add_mark_if_not_present)

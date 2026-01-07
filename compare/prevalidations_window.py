@@ -1,4 +1,3 @@
-from enum import Enum
 import os
 from typing import Optional
 
@@ -6,879 +5,21 @@ from tkinter import Frame, Label, Scale, Checkbutton, BooleanVar, StringVar, LEF
 import tkinter.font as fnt
 from tkinter.ttk import Entry, Button, Combobox
 
-from compare.compare_embeddings_clip import CompareEmbeddingClip
-from files.file_actions_window import FileActionsWindow
+from compare.classification_actions_manager import Prevalidation, ClassificationActionsManager
+from compare.directory_profile import DirectoryProfile, DirectoryProfileWindow
+from compare.lookahead import Lookahead, LookaheadWindow
+from image.classifier_action_type import ClassifierActionType
 from image.image_classifier_manager import image_classifier_manager
-from image.image_data_extractor import image_data_extractor
-from image.image_ops import ImageOps
-from image.prevalidation_action import PrevalidationAction
 from lib.multiselect_dropdown import MultiSelectDropdown
 from lib.multi_display import SmartToplevel
 from utils.app_style import AppStyle
-from utils.app_info_cache import app_info_cache
 from utils.config import config
-from utils.constants import ActionType
 from utils.logging_setup import get_logger
 from utils.translations import I18N
-from utils.utils import Utils
 
 _ = I18N._
 logger = get_logger("prevalidations_window")
 
-
-class DirectoryProfile:
-    """Represents a profile that groups multiple directories together."""
-    
-    def __init__(self, name="", directories=None):
-        self.name = name  # Unique name to identify this profile
-        self.directories = directories if directories is not None else []  # List of directory paths
-    
-    def to_dict(self):
-        """Serialize to dictionary for caching."""
-        return {
-            "name": self.name,
-            "directories": self.directories,
-        }
-    
-    @staticmethod
-    def from_dict(d):
-        """Deserialize from dictionary."""
-        return DirectoryProfile(
-            name=d.get("name", ""),
-            directories=d.get("directories", [])
-        )
-
-
-class PrevalidationLookahead:
-    """Represents a lookahead check for a prevalidation."""
-    
-    def __init__(self, name="", name_or_text="", threshold=0.23, is_prevalidation_name=False):
-        self.name = name  # Unique name to identify this lookahead
-        self.name_or_text = name_or_text
-        self.threshold = threshold
-        self.is_prevalidation_name = is_prevalidation_name
-        self.run_result = None  # Cached result for the current prevalidate call (None = not run yet, True = triggered, False = not triggered)
-
-    def validate(self):
-        if self.name is None or self.name.strip() == "":
-            return False
-        if self.name_or_text is None or self.name_or_text.strip() == "":
-            return False
-        if self.is_prevalidation_name:
-            try:
-                PrevalidationsWindow.get_prevalidation_by_name(self.name_or_text)
-                return True
-            except Exception:
-                return False
-        return True
-    
-    def to_dict(self):
-        """Serialize to dictionary for caching."""
-        return {
-            "name": self.name,
-            "name_or_text": self.name_or_text,
-            "threshold": self.threshold,
-            "is_prevalidation_name": self.is_prevalidation_name,
-        }
-    
-    @staticmethod
-    def from_dict(d):
-        """Deserialize from dictionary."""
-        name = d.get("name", "")
-        name_or_text = d.get("name_or_text", "")
-        threshold = d.get("threshold", 0.23)
-        is_prevalidation_name = d.get("is_prevalidation_name", False)
-        
-        return PrevalidationLookahead(
-            name=name,
-            name_or_text=name_or_text,
-            threshold=threshold,
-            is_prevalidation_name=is_prevalidation_name
-        )
-
-
-class Prevalidation:
-    NO_POSITIVES_STR = _("(no positives set)")
-    NO_NEGATIVES_STR = _("(no negatives set)")
-
-    def __init__(self, name=_("New Prevalidation"), positives=[], negatives=[], threshold=0.23,
-                 action=PrevalidationAction.NOTIFY, action_modifier="", run_on_folder=None, is_active=True,
-                 image_classifier_name="", image_classifier_selected_categories=[], 
-                 use_embedding=True, use_image_classifier=False, use_prompts=False, use_blacklist=False,
-                 lookahead_names=[], profile_name=None):
-        self.name = name
-        self.positives = positives
-        self.negatives = negatives
-        self.threshold = threshold
-        self.action = action if isinstance(action, Enum) else PrevalidationAction[action]
-        self.action_modifier = action_modifier
-        self.profile_name = profile_name  # Name of DirectoryProfile to use (None = global)
-        self.profile = None  # Cached DirectoryProfile instance (set after loading, or temporary for backward compatibility)
-        self.is_active = is_active
-        # Note: run_on_folder parameter is kept for backward compatibility in from_dict but not stored as instance variable
-        self.image_classifier_name = image_classifier_name
-        self.image_classifier = None
-        self.image_classifier_categories = []
-        self.image_classifier_selected_categories = image_classifier_selected_categories
-        self.use_embedding = use_embedding
-        self.use_image_classifier = use_image_classifier
-        self.use_prompts = use_prompts
-        self.use_blacklist = use_blacklist
-        self.lookahead_names = lookahead_names if lookahead_names else []  # List of lookahead names (strings)
-
-    def update_profile_instance(self, profile_name=None, directory_path=None):
-        """
-        Update the cached profile instance based on profile_name.
-        
-        Args:
-            profile_name: Optional profile name to set. If provided, updates self.profile_name first,
-                         then updates the cached profile instance. If None, uses existing self.profile_name.
-            auto_create: If True and profile doesn't exist, create it (for backward compatibility).
-            directory_path: Directory path to use when creating profile (required if auto_create=True).
-        """
-        if profile_name is not None:
-            self.profile_name = profile_name
-        
-        if self.profile_name:
-            # Check if profile exists
-            self.profile = PrevalidationsWindow.get_profile_by_name(self.profile_name)
-            
-            if self.profile is None:
-                if directory_path:
-                    # Create DirectoryProfile for backward compatibility
-                    if not os.path.isdir(directory_path):
-                        logger.warning(f"Invalid directory in run_on_folder for prevalidation '{self.name}': {directory_path}. Skipping profile creation.")
-                        self.profile = None
-                        self.profile_name = None
-                        return
-                    
-                    # Use the directory path as the name to ensure uniqueness
-                    temp_profile = DirectoryProfile(name=self.profile_name, directories=[directory_path])
-                    # Add to profiles list so it can be reused by other prevalidations
-                    PrevalidationsWindow.profiles.append(temp_profile)
-                    logger.info(f"Created temporary DirectoryProfile for backward compatibility: name='{self.profile_name}', prevalidation='{self.name}'")
-                    self.profile = temp_profile
-                else:
-                    # Profile not found and not creating
-                    logger.warning(f"Profile {self.profile_name} not found for prevalidation {self.name}")
-                    self.profile = None
-        else:
-            self.profile = None
-
-    def set_positives(self, text):
-        self.positives = [x.strip() for x in Utils.split(text, ",") if len(x) > 0]
-
-    def set_negatives(self, text):
-        self.negatives = [x.strip() for x in Utils.split(text, ",") if len(x) > 0]
-
-    def get_positives_str(self):
-        if len(self.positives) > 0:
-            out = ""
-            for i in range(len(self.positives)):
-                out += self.positives[i].replace(",", "\\,") + ", " if i < len(self.positives)-1 else self.positives[i]
-            return out
-        else:
-            return Prevalidation.NO_POSITIVES_STR
-
-    def set_image_classifier(self, classifier_name):
-        self.image_classifier_name = classifier_name
-        self.image_classifier = image_classifier_manager.get_classifier(classifier_name)
-        self.image_classifier_categories = []
-        if self.image_classifier is not None:
-            self.image_classifier_categories.extend(list(self.image_classifier.model_categories))
-
-    def _ensure_image_classifier_loaded(self, notify_callback):
-        """Lazy load the image classifier if it hasn't been loaded yet."""
-        if self.image_classifier is None and self.image_classifier_name:
-            try:
-                if notify_callback is not None:
-                    notify_callback(_("Loading image classifier <{0}> ...").format(self.image_classifier_name))
-                self.set_image_classifier(self.image_classifier_name)
-            except Exception as e:
-                logger.error(f"Error loading image classifier <{self.image_classifier_name}>!")
-
-    def is_selected_category_unset(self):
-        # TODO - this may be incorrect, would make more sense to be the opposite logic, need to check
-        return len(self.image_classifier_selected_categories) > 0
-
-    def _check_prompt_validation(self, image_path):
-        """Check if image prompts match the positive or negative criteria."""
-        try:
-            positive_prompt, negative_prompt = image_data_extractor.extract_prompts_all_strategies(image_path)
-
-            # Skip if no prompts found (None indicates failure to extract prompts)
-            if positive_prompt is None:
-                return False
-            
-            # Check positive prompts
-            positive_match = True
-            if self.positives:
-                positive_match = any(pos.lower() in positive_prompt.lower() for pos in self.positives)
-            
-            # Check negative prompts
-            negative_match = True
-            if self.negatives:
-                negative_match = any(neg.lower() in negative_prompt.lower() for neg in self.negatives)
-            
-            return positive_match or negative_match
-            
-        except Exception as e:
-            logger.error(f"Error checking prompt validation for {image_path}: {e}")
-            return False
-
-    def _check_lookaheads(self, image_path):
-        """Check if any lookahead prevalidations are triggered. Returns True if any lookahead passes."""
-        if not self.lookahead_names:
-            return False
-        
-        for lookahead_name in self.lookahead_names:
-            # Look up the lookahead from the shared list
-            lookahead = PrevalidationsWindow.get_lookahead_by_name(lookahead_name)
-            if lookahead is None:
-                continue
-            
-            # Check if this lookahead has already been evaluated in this prevalidate call
-            if lookahead.run_result is not None:
-                # Use cached result
-                if lookahead.run_result:
-                    logger.info(f"Lookahead {lookahead_name} triggered for prevalidation {self.name} (cached)")
-                    return True
-                continue
-            
-            name_or_text = lookahead.name_or_text
-            threshold = lookahead.threshold
-            
-            # Check if it's a prevalidation name or custom text
-            if lookahead.is_prevalidation_name:
-                # It's a prevalidation name - get the referenced prevalidation
-                try:
-                    lookahead_prevalidation = PrevalidationsWindow.get_prevalidation_by_name(name_or_text)
-                    # Use the lookahead prevalidation's positives/negatives
-                    positives = lookahead_prevalidation.positives
-                    negatives = lookahead_prevalidation.negatives
-                    # Skip if the referenced prevalidation has no positives or negatives
-                    if not positives and not negatives:
-                        lookahead.run_result = False  # Cache the result
-                        continue
-                except Exception:
-                    # Prevalidation not found, skip this lookahead
-                    lookahead.run_result = False  # Cache the result
-                    continue
-            else:
-                # It's custom text, treat as a positive
-                positives = [name_or_text]
-                negatives = []
-            
-            # Check if this lookahead passes
-            result = CompareEmbeddingClip.multi_text_compare(image_path, positives, negatives, threshold)
-            lookahead.run_result = result  # Cache the result
-            
-            if result:
-                logger.info(f"Lookahead {lookahead_name} triggered for prevalidation {self.name}")
-                return True
-        
-        return False
-
-    def run_on_image_path(self, image_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[PrevalidationAction]:
-        # Lazy load the image classifier if needed
-        self._ensure_image_classifier_loaded(notify_callback)
-        
-        # Check lookaheads first - if any pass, skip this prevalidation
-        if self._check_lookaheads(image_path):
-            return None
-        
-        # Check each enabled validation type with short-circuit OR logic
-        if self.use_embedding:
-            if CompareEmbeddingClip.multi_text_compare(image_path, self.positives, self.negatives, self.threshold):
-                return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
-        
-        if self.use_image_classifier:
-            if self.image_classifier is not None:
-                if self.image_classifier.test_image_for_categories(image_path, self.image_classifier_selected_categories):
-                    return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
-            else:
-                logger.error(f"Image classifier {self.image_classifier_name} not found for prevalidation {self.name}")
-        
-        if self.use_prompts:
-            if self._check_prompt_validation(image_path):
-                return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
-        
-        # No validation type passed
-        return None
-
-    def run_action(self, image_path, hide_callback, notify_callback, add_mark_callback=None):
-        base_message = self.name + _(" detected")
-        if self.action == PrevalidationAction.SKIP:
-            notify_callback("\n" + base_message + _(" - skipped"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
-        elif self.action == PrevalidationAction.HIDE:
-            hide_callback(image_path)
-            notify_callback("\n" + base_message + _(" - hidden"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
-        elif self.action == PrevalidationAction.NOTIFY:
-            notify_callback("\n" + base_message, base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
-        elif self.action == PrevalidationAction.ADD_MARK:
-            add_mark_callback(image_path)
-            notify_callback("\n" + base_message + _(" - marked"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
-        elif self.action == PrevalidationAction.MOVE or self.action == PrevalidationAction.COPY:
-            if self.action_modifier is not None and len(self.action_modifier) > 0:
-                if not os.path.exists(self.action_modifier):
-                    raise Exception("Invalid move target directory for prevalidation " + self.name + ": " + self.action_modifier)
-                if os.path.normpath(os.path.dirname(image_path)) != os.path.normpath(self.action_modifier):
-                    action_modifier_name = Utils.get_relative_dirpath(self.action_modifier, levels=2)
-                    action_type = ActionType.MOVE_FILE if self.action == PrevalidationAction.MOVE else ActionType.COPY_FILE
-                    specific_message = _("Moving file: ") + os.path.basename(image_path) + " -> " + action_modifier_name
-                    notify_callback("\n" + specific_message, base_message=base_message,
-                                    action_type=action_type, is_manual=False)
-                    try:
-                        FileActionsWindow.add_file_action(
-                            Utils.move_file if self.action == PrevalidationAction.MOVE else Utils.copy_file,
-                            image_path, self.action_modifier
-                        )
-                    except Exception as e:
-                        if (self.action == PrevalidationAction.MOVE and
-                            "File already exists:" in str(e) and
-                            os.path.exists(image_path)):
-                            target_path = os.path.join(self.action_modifier, os.path.basename(image_path))
-                            if Utils.calculate_hash(image_path) == Utils.calculate_hash(target_path):
-                                # The file already exists in target, so we need to remove it from the source
-                                # NOTE: this is a hack to avoid an error that sometimes happens where a file gets stranded
-                                # possibly due to the sd-runner application re-saving it after the move, but it could 
-                                # technically happen for other more valid reasons. Ideally need to identify why this error
-                                # occurs and fix it.
-                                try:
-                                    with Utils.file_operation_lock:
-                                        os.remove(image_path)
-                                        logger.info("Removed file from source: " + image_path)
-                                except Exception as e:
-                                    logger.error("Error removing file from source: " + image_path + ": " + str(e))
-                            elif ImageOps.compare_image_content_without_exif(image_path, target_path):
-                                # Hash comparison failed, but image content is identical
-                                # (different EXIF data but same visual content)
-                                logger.info(f"File hashes differ but image content matches: {image_path} <> {target_path}")
-                                logger.info("Replacing target file with source file (source has more EXIF data)")
-                                try:
-                                    # Replace target with source file (source has more information)
-                                    FileActionsWindow.add_file_action(
-                                        Utils.move_file if self.action == PrevalidationAction.MOVE else Utils.copy_file,
-                                        image_path, self.action_modifier, auto=True, overwrite_existing=True
-                                    )
-                                    logger.info("Replaced target file with source: " + image_path)
-                                except Exception as e:
-                                    logger.error("Error replacing target file with source: " + image_path + ": " + str(e))
-                            else:
-                                logger.error(e)
-                        else:
-                            logger.error(e)
-            else:
-                raise Exception("Target directory not defined on prevalidation "  + self.name)
-        elif self.action == PrevalidationAction.DELETE:
-            notify_callback("\n" + _("Deleting file: ") + os.path.basename(image_path), base_message=base_message,
-                            action_type=ActionType.REMOVE_FILE, is_manual=False)
-            try:
-                with Utils.file_operation_lock:
-                    os.remove(image_path)
-                    logger.info("Deleted file at " + image_path)
-            except Exception as e:
-                logger.error("Error deleting file at " + image_path + ": " + str(e))
-        return self.action
-
-    def get_negatives_str(self):
-        if len(self.negatives) > 0:
-            out = ""
-            for i in range(len(self.negatives)):
-                out += self.negatives[i].replace(",", "\\,") + ", " if i < len(self.negatives)-1 else self.negatives[i]
-            return out
-        else:
-            return Prevalidation.NO_NEGATIVES_STR
-
-    def validate(self):
-        if self.name is None or len(self.name) == 0:
-            raise Exception('Prevalidation name is None or empty')
-        
-        # Check if at least one validation type is enabled
-        if not (self.use_embedding or self.use_image_classifier or self.use_prompts or self.use_blacklist):
-            raise Exception("At least one validation type (embedding, image classifier, prompts, or prompts blacklist) must be enabled.")
-        
-        # Check if positives/negatives are set when needed
-        if (self.use_embedding or self.use_prompts) and (self.positives is None or len(self.positives) == 0) and \
-                (self.negatives is None or len(self.negatives) == 0):
-            raise Exception("At least one of positive or negative texts must be set when using embedding or prompt validation.")
-        
-        # Validate image classifier settings if enabled
-        if self.use_image_classifier:
-            if self.image_classifier is not None and any([category not in self.image_classifier_categories for category in self.image_classifier_selected_categories]):
-                raise Exception(f"One or more selected categories {self.image_classifier_selected_categories} were not found in the image classifier's category options")
-            if self.image_classifier_name is not None and self.image_classifier_name.strip() != "" and self.image_classifier is None:
-                raise Exception(f"The image classifier \"{self.image_classifier_name}\" was not found in the available image classifiers")
-        
-        if self.is_move_action() and not os.path.isdir(self.action_modifier):
-            raise Exception('Action modifier must be a valid directory')
-
-    def validate_dirs(self):
-        errors = []
-        if self.action_modifier and self.action_modifier != "" and not os.path.isdir(self.action_modifier):
-            errors.append(_("Action modifier is not a valid directory: ") + self.action_modifier)
-        if self.profile is not None:
-            for directory in self.profile.directories:
-                if not os.path.isdir(directory):
-                    errors.append(_("Profile directory is not a valid directory: ") + directory)
-        if len(errors) > 0:
-            logger.error(_("Invalid prevalidation {0}, may cause errors or be unable to run!").format(self.name))
-            for error in errors:
-                logger.warning(error)
-
-    def is_move_action(self):
-        return self.action == PrevalidationAction.MOVE or self.action == PrevalidationAction.COPY
-
-    def move_index(self, idx, direction_count=1):
-        """Move a prevalidation in the list by the specified number of positions.
-        
-        Args:
-            idx: Current index of the prevalidation to move
-            direction_count: Positive to move down (higher index), negative to move up (lower index)
-        """
-        prevalidations = PrevalidationsWindow.prevalidations
-        list_len = len(prevalidations)
-        if list_len <= 1:
-            return  # Nothing to move
-        
-        # Calculate target index with wrapping
-        target_idx = (idx + direction_count) % list_len
-        if target_idx < 0:
-            target_idx += list_len
-        
-        # If target is the same as current, no move needed
-        if target_idx == idx:
-            return
-        
-        # Simple approach: remove the item and insert it at the target position
-        move_item = prevalidations.pop(idx)
-        prevalidations.insert(target_idx, move_item)
-
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "positives": self.positives,
-            "negatives": self.negatives,
-            "threshold": self.threshold,
-            "action": self.action.value,
-            "action_modifier": self.action_modifier,
-            "profile_name": self.profile_name,
-            "is_active": self.is_active,
-            "image_classifier_name": self.image_classifier_name,
-            "image_classifier_selected_categories": self.image_classifier_selected_categories,
-            "use_embedding": self.use_embedding,
-            "use_image_classifier": self.use_image_classifier,
-            "use_prompts": self.use_prompts,
-            "use_blacklist": self.use_blacklist,
-            "lookahead_names": self.lookahead_names,
-            }
-
-    @staticmethod
-    def from_dict(d):
-        # Handle backward compatibility - detect original type based on data presence
-        if 'use_embedding' not in d:
-            # If image_classifier_name is set, it was an image classifier prevalidation
-            if 'image_classifier_name' in d and d['image_classifier_name'] and d['image_classifier_name'].strip():
-                d['use_embedding'] = False
-                d['use_image_classifier'] = True
-            else:
-                # Otherwise it was an embedding prevalidation
-                d['use_embedding'] = True
-                d['use_image_classifier'] = False
-        if 'use_image_classifier' not in d:
-            d['use_image_classifier'] = False
-        if 'use_prompts' not in d:
-            d['use_prompts'] = False
-        if 'use_blacklist' not in d:
-            d['use_blacklist'] = False
-        if 'lookahead_names' not in d:
-            d['lookahead_names'] = []
-        if 'profile_name' not in d:
-            d['profile_name'] = None
-        
-        # Handle backward compatibility: if run_on_folder exists but no profile_name, create temporary profile
-        run_on_folder = d.get('run_on_folder')
-        if run_on_folder and not d.get('profile_name'):
-            pv = Prevalidation(**d)
-            # Use update_profile_instance to handle profile lookup/creation
-            pv.update_profile_instance(profile_name=run_on_folder, directory_path=run_on_folder)
-            return pv
-        
-        return Prevalidation(**d)
-
-    def __str__(self) -> str:
-        out = self.name
-        validation_types = []
-        if self.use_embedding:
-            validation_types.append(_("embedding"))
-        if self.use_image_classifier and self.image_classifier_name and self.image_classifier_name.strip():
-            validation_types.append(_("classifier {0}").format(self.image_classifier_name))
-        if self.use_prompts:
-            validation_types.append(_("prompts"))
-        
-        if validation_types:
-            # Build the description parts
-            description_parts = []
-            
-            # Add categories if image classifier is enabled and has categories
-            if self.use_image_classifier and self.image_classifier_selected_categories:
-                description_parts.append(_("categories: {0}").format(", ".join(self.image_classifier_selected_categories)))
-            
-            # Add positives/negatives if any are set
-            if self.positives or self.negatives:
-                description_parts.append(_("{0} positives, {1} negatives").format(len(self.positives), len(self.negatives)))
-            
-            # Combine all parts
-            if description_parts:
-                out += _(" using {0} ({1})").format(", ".join(validation_types), "; ".join(description_parts))
-            else:
-                out += _(" using {0}").format(", ".join(validation_types))
-        else:
-            out += _(" ({0} positives, {1} negatives)").format(len(self.positives), len(self.negatives))
-
-        if self.lookahead_names:
-            out += " <" + _("lookaheads: {0}").format(", ".join(self.lookahead_names)) + ">"
-        
-        return out
-
-class DirectoryProfileWindow():
-    top_level = None
-    COL_0_WIDTH = 600
-
-    def __init__(self, master, app_actions, refresh_callback, profile=None, dimensions="600x500"):
-        DirectoryProfileWindow.top_level = SmartToplevel(persistent_parent=master, geometry=dimensions)
-        self.master = DirectoryProfileWindow.top_level
-        self.app_actions = app_actions
-        self.refresh_callback = refresh_callback
-        self.profile = profile if profile is not None else DirectoryProfile()
-        self.is_edit = profile is not None
-        self.original_name = self.profile.name if self.is_edit else None
-        DirectoryProfileWindow.top_level.title(_("Edit Profile") if self.is_edit else _("Create Profile"))
-
-        self.frame = Frame(self.master)
-        self.frame.grid(column=0, row=0)
-        self.frame.columnconfigure(0, weight=9)
-        self.frame.columnconfigure(1, weight=1)
-        self.frame.config(bg=AppStyle.BG_COLOR)
-
-        row = 0
-        
-        # Profile name
-        self.label_name = Label(self.frame)
-        self.add_label(self.label_name, _("Profile Name"), row=row, wraplength=DirectoryProfileWindow.COL_0_WIDTH)
-        self.profile_name_var = StringVar(self.master, value=self.profile.name)
-        self.profile_name_entry = Entry(self.frame, textvariable=self.profile_name_var, width=50, 
-                                        font=fnt.Font(size=config.font_size))
-        self.profile_name_entry.grid(row=row, column=1, sticky=W)
-
-        row += 1
-        
-        # Directories listbox with scrollbar
-        self.label_directories = Label(self.frame)
-        self.add_label(self.label_directories, _("Directories"), row=row, wraplength=DirectoryProfileWindow.COL_0_WIDTH)
-        
-        directories_frame = Frame(self.frame, bg=AppStyle.BG_COLOR)
-        directories_frame.grid(row=row, column=1, sticky=W+E)
-        
-        listbox_frame = Frame(directories_frame, bg=AppStyle.BG_COLOR)
-        listbox_frame.pack(side=LEFT, fill=BOTH, expand=True)
-        
-        scrollbar = Scrollbar(listbox_frame)
-        scrollbar.pack(side=RIGHT, fill="y")
-        
-        self.directories_listbox = Listbox(listbox_frame, height=6, width=50, yscrollcommand=scrollbar.set,
-                                           font=fnt.Font(size=config.font_size), bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
-        self.directories_listbox.pack(side=LEFT, fill=BOTH, expand=True)
-        scrollbar.config(command=self.directories_listbox.yview)
-        
-        # Buttons for directories
-        dir_buttons_frame = Frame(directories_frame, bg=AppStyle.BG_COLOR)
-        dir_buttons_frame.pack(side=LEFT, padx=(5, 0))
-        
-        self.add_dir_btn = Button(dir_buttons_frame, text=_("Add"), command=self.add_directory)
-        self.add_dir_btn.pack(side=TOP, pady=2)
-        
-        self.remove_dir_btn = Button(dir_buttons_frame, text=_("Remove"), command=self.remove_directory)
-        self.remove_dir_btn.pack(side=TOP, pady=2)
-        
-        # Initialize directories listbox
-        self.refresh_directories_listbox()
-
-        row += 1
-        self.done_btn = None
-        self.add_btn("done_btn", _("Done"), self.finalize_profile, row=row, column=0)
-
-        self.master.update()
-
-    def refresh_directories_listbox(self):
-        """Refresh the directories listbox."""
-        if hasattr(self, 'directories_listbox'):
-            self.directories_listbox.delete(0, "end")
-            for directory in self.profile.directories:
-                self.directories_listbox.insert("end", directory)
-
-    def add_directory(self):
-        """Add a directory to the profile."""
-        # Simple text entry dialog - could be enhanced with file browser
-        from tkinter import simpledialog
-        directory = simpledialog.askstring(_("Add Directory"), _("Enter directory path:"))
-        if directory and directory.strip():
-            directory = directory.strip()
-            if os.path.isdir(directory):
-                if directory not in self.profile.directories:
-                    self.profile.directories.append(directory)
-                    self.refresh_directories_listbox()
-                else:
-                    logger.warning(f"Directory {directory} already in profile")
-            else:
-                logger.error(f"Invalid directory: {directory}")
-
-    def remove_directory(self):
-        """Remove the selected directory from the profile."""
-        selection = self.directories_listbox.curselection()
-        if not selection:
-            return
-        idx = selection[0]
-        if idx < len(self.profile.directories):
-            del self.profile.directories[idx]
-            self.refresh_directories_listbox()
-
-    def finalize_profile(self, event=None):
-        profile_name = self.profile_name_var.get().strip()
-        
-        if not profile_name:
-            logger.error("Profile name is required")
-            return
-        
-        # Check if profile name already exists (for new profiles)
-        if not self.is_edit:
-            if PrevalidationsWindow.get_profile_by_name(profile_name) is not None:
-                logger.error(f"Profile with name {profile_name} already exists")
-                return
-        else:
-            # For editing, check if name changed and conflicts
-            if profile_name != self.original_name:
-                if PrevalidationsWindow.get_profile_by_name(profile_name) is not None:
-                    logger.error(f"Profile with name {profile_name} already exists")
-                    return
-        
-        self.profile.name = profile_name
-        
-        if not self.is_edit:
-            PrevalidationsWindow.profiles.append(self.profile)
-        else:
-            # Find and update the existing profile
-            for idx, prof in enumerate(PrevalidationsWindow.profiles):
-                if prof.name == self.original_name:
-                    PrevalidationsWindow.profiles[idx] = self.profile
-                    break
-            
-            # Update references if name changed
-            if self.original_name != profile_name:
-                for pv in PrevalidationsWindow.prevalidations:
-                    if pv.profile_name == self.original_name:
-                        pv.profile_name = profile_name
-        
-        self.close_windows()
-        self.refresh_callback()
-
-    def close_windows(self, event=None):
-        self.master.destroy()
-
-    def add_label(self, label_ref, text, row=0, column=0, wraplength=500):
-        label_ref['text'] = text
-        label_ref.grid(column=column, row=row, sticky=W)
-        label_ref.config(wraplength=wraplength, justify=LEFT, bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR, font=fnt.Font(size=config.font_size))
-
-    def add_btn(self, button_ref_name, text, command, row=0, column=0):
-        if getattr(self, button_ref_name, None) is None:
-            button = Button(master=self.frame, text=text, command=command)
-            setattr(self, button_ref_name, button)
-            button # for some reason this is necessary to maintain the reference?
-            button.grid(row=row, column=column)
-
-
-class PrevalidationLookaheadWindow():
-    top_level = None
-    COL_0_WIDTH = 600
-
-    def __init__(self, master, app_actions, refresh_callback, lookahead=None, dimensions="500x450"):
-        PrevalidationLookaheadWindow.top_level = SmartToplevel(persistent_parent=master, geometry=dimensions)
-        self.master = PrevalidationLookaheadWindow.top_level
-        self.app_actions = app_actions
-        self.refresh_callback = refresh_callback
-        self.lookahead = lookahead if lookahead is not None else PrevalidationLookahead()
-        self.is_edit = lookahead is not None
-        self.original_name = self.lookahead.name if self.is_edit else None
-        PrevalidationLookaheadWindow.top_level.title(_("Edit Lookahead") if self.is_edit else _("Create Lookahead"))
-
-        self.frame = Frame(self.master)
-        self.frame.grid(column=0, row=0)
-        self.frame.columnconfigure(0, weight=9)
-        self.frame.columnconfigure(1, weight=1)
-        self.frame.config(bg=AppStyle.BG_COLOR)
-
-        row = 0
-        
-        # Lookahead name
-        self.label_name = Label(self.frame)
-        self.add_label(self.label_name, _("Lookahead Name"), row=row, wraplength=PrevalidationLookaheadWindow.COL_0_WIDTH)
-        self.lookahead_name_var = StringVar(self.master, value=self.lookahead.name)
-        self.lookahead_name_entry = Entry(self.frame, textvariable=self.lookahead_name_var, width=50, 
-                                          font=fnt.Font(size=config.font_size))
-        self.lookahead_name_entry.grid(row=row, column=1, sticky=W)
-
-        row += 1
-        
-        # Checkbox to toggle between prevalidation name and custom text
-        self.is_prevalidation_name_var = BooleanVar(value=self.lookahead.is_prevalidation_name)
-        self.is_prevalidation_name_checkbox = Checkbutton(self.frame, 
-                                                          text=_("Reference existing prevalidation name"), 
-                                                          variable=self.is_prevalidation_name_var,
-                                                          command=self.update_ui_for_type,
-                                                          bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR,
-                                                          activebackground=AppStyle.BG_COLOR,
-                                                          activeforeground=AppStyle.FG_COLOR,
-                                                          font=fnt.Font(size=config.font_size))
-        self.is_prevalidation_name_checkbox.grid(row=row, column=1, sticky=W, pady=5)
-
-        row += 1
-        
-        # Label for name_or_text field
-        self.label_name_or_text = Label(self.frame)
-        self.add_label(self.label_name_or_text, _("Prevalidation Name or Custom Text"), 
-                      row=row, wraplength=PrevalidationLookaheadWindow.COL_0_WIDTH)
-        
-        # Frame to hold either combobox or entry
-        self.name_or_text_frame = Frame(self.frame, bg=AppStyle.BG_COLOR)
-        self.name_or_text_frame.grid(row=row, column=1, sticky=W+E)
-        
-        # Get list of existing prevalidation names
-        self.existing_names = [pv.name for pv in PrevalidationsWindow.prevalidations]
-        
-        self.name_or_text_var = StringVar(self.master, value=self.lookahead.name_or_text)
-        
-        # Create both widgets but only show one based on checkbox
-        self.name_or_text_combobox = Combobox(self.name_or_text_frame, textvariable=self.name_or_text_var, 
-                                             values=self.existing_names, width=47,
-                                             font=fnt.Font(size=config.font_size))
-        self.name_or_text_combobox.config(background=AppStyle.BG_COLOR, foreground=AppStyle.FG_COLOR)
-        
-        self.name_or_text_entry = Entry(self.name_or_text_frame, textvariable=self.name_or_text_var, width=50,
-                                        font=fnt.Font(size=config.font_size))
-        
-        # Initialize UI based on current type
-        self.update_ui_for_type()
-
-        row += 1
-        
-        # Threshold slider
-        self.label_threshold = Label(self.frame)
-        self.add_label(self.label_threshold, _("Threshold"), row=row, wraplength=PrevalidationLookaheadWindow.COL_0_WIDTH)
-        self.threshold_slider = Scale(self.frame, from_=0, to=100, orient=HORIZONTAL, command=self.set_threshold)
-        self.threshold_slider.set(float(self.lookahead.threshold) * 100)
-        self.threshold_slider.grid(row=row, column=1, sticky=W)
-
-        row += 1
-        self.done_btn = None
-        self.add_btn("done_btn", _("Done"), self.finalize_lookahead, row=row, column=0)
-
-        self.master.update()
-
-    def update_ui_for_type(self):
-        """Update UI to show either combobox or entry based on checkbox state."""
-        is_prevalidation = self.is_prevalidation_name_var.get()
-        
-        # Clear the frame
-        for widget in self.name_or_text_frame.winfo_children():
-            widget.destroy()
-        
-        if is_prevalidation:
-            # Show combobox for selecting prevalidation name
-            self.name_or_text_combobox = Combobox(self.name_or_text_frame, textvariable=self.name_or_text_var, 
-                                                 values=self.existing_names, width=47,
-                                                 font=fnt.Font(size=config.font_size))
-            self.name_or_text_combobox.pack(fill=BOTH, expand=True)
-            self.name_or_text_combobox.config(background=AppStyle.BG_COLOR, foreground=AppStyle.FG_COLOR)
-        else:
-            # Show entry for custom text
-            self.name_or_text_entry = Entry(self.name_or_text_frame, textvariable=self.name_or_text_var, width=50,
-                                            font=fnt.Font(size=config.font_size))
-            self.name_or_text_entry.pack(fill=BOTH, expand=True)
-
-    def set_threshold(self, event=None):
-        self.lookahead.threshold = float(self.threshold_slider.get()) / 100
-
-    def finalize_lookahead(self, event=None):
-        lookahead_name = self.lookahead_name_var.get().strip()
-        name_or_text = self.name_or_text_var.get().strip()
-        
-        if not lookahead_name:
-            logger.error("Lookahead name is required")
-            return
-        if not name_or_text:
-            logger.error("Prevalidation name or custom text is required")
-            return
-        
-        # Check if lookahead name already exists (for new lookaheads)
-        if not self.is_edit:
-            if PrevalidationsWindow.get_lookahead_by_name(lookahead_name) is not None:
-                logger.error(f"Lookahead with name {lookahead_name} already exists")
-                return
-        else:
-            # For editing, check if name changed and conflicts
-            old_lookahead = self.lookahead
-            if lookahead_name != old_lookahead.name:
-                if PrevalidationsWindow.get_lookahead_by_name(lookahead_name) is not None:
-                    logger.error(f"Lookahead with name {lookahead_name} already exists")
-                    return
-        
-        threshold = self.lookahead.threshold
-        is_prevalidation_name = self.is_prevalidation_name_var.get()
-        
-        # If it's a prevalidation name, verify it exists
-        if is_prevalidation_name and name_or_text not in self.existing_names:
-            logger.warning(f"Prevalidation '{name_or_text}' not found, treating as custom text")
-            is_prevalidation_name = False
-        
-        self.lookahead.name = lookahead_name
-        self.lookahead.name_or_text = name_or_text
-        self.lookahead.threshold = threshold
-        self.lookahead.is_prevalidation_name = is_prevalidation_name
-        
-        if not self.is_edit:
-            PrevalidationsWindow.lookaheads.append(self.lookahead)
-        else:
-            # Find and update the existing lookahead by matching the original name
-            for idx, lh in enumerate(PrevalidationsWindow.lookaheads):
-                if lh.name == self.original_name:
-                    PrevalidationsWindow.lookaheads[idx] = self.lookahead
-                    break
-            
-            # Update references if name changed
-            if self.original_name != lookahead_name:
-                for pv in PrevalidationsWindow.prevalidations:
-                    if self.original_name in pv.lookahead_names:
-                        idx_ref = pv.lookahead_names.index(self.original_name)
-                        pv.lookahead_names[idx_ref] = lookahead_name
-        
-        self.close_windows()
-        self.refresh_callback()
-
-    def close_windows(self, event=None):
-        self.master.destroy()
-
-    def add_label(self, label_ref, text, row=0, column=0, wraplength=500):
-        label_ref['text'] = text
-        label_ref.grid(column=column, row=row, sticky=W)
-        label_ref.config(wraplength=wraplength, justify=LEFT, bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR, font=fnt.Font(size=config.font_size))
-
-    def add_btn(self, button_ref_name, text, command, row=0, column=0):
-        if getattr(self, button_ref_name, None) is None:
-            button = Button(master=self.frame, text=text, command=command)
-            setattr(self, button_ref_name, button)
-            button # for some reason this is necessary to maintain the reference?
-            button.grid(row=row, column=column)
 
 
 class PrevalidationModifyWindow():
@@ -959,7 +100,7 @@ class PrevalidationModifyWindow():
         self.label_action = Label(self.frame)
         self.add_label(self.label_action, _("Action"), row=row, column=0)
         self.action_var = StringVar(self.master, value=self.prevalidation.action.get_translation())
-        action_options = [k.get_translation() for k in PrevalidationAction]
+        action_options = [k.get_translation() for k in ClassifierActionType]
         self.action_choice = Combobox(self.frame, textvariable=self.action_var, values=action_options)
         self.action_choice.current(action_options.index(self.prevalidation.action.get_translation()))
         self.action_choice.bind("<<ComboboxSelected>>", self.set_action)
@@ -1002,7 +143,7 @@ class PrevalidationModifyWindow():
         self.add_label(self.label_lookaheads, _("Lookaheads (select from shared list)"), row=row, wraplength=PrevalidationModifyWindow.COL_0_WIDTH)
         
         # Multi-select dropdown for lookaheads
-        lookahead_options = [lookahead.name for lookahead in PrevalidationsWindow.lookaheads]
+        lookahead_options = [lookahead.name for lookahead in Lookahead.lookaheads]
         self.lookaheads_multiselect = MultiSelectDropdown(self.frame, lookahead_options[:],
                                                           row=row, column=1, sticky=W,
                                                           select_text=_("Select Lookaheads..."),
@@ -1016,7 +157,7 @@ class PrevalidationModifyWindow():
         
         # Profile dropdown - include "(Global)" option for no profile
         profile_options = [""]  # Empty string = Global
-        profile_options.extend([profile.name for profile in PrevalidationsWindow.profiles])
+        profile_options.extend([profile.name for profile in DirectoryProfile.directory_profiles])
         
         current_profile_name = self.prevalidation.profile_name if self.prevalidation.profile_name else ""
         self.profile_var = StringVar(self.master, value=current_profile_name)
@@ -1093,7 +234,7 @@ class PrevalidationModifyWindow():
             self.label_negatives.grid_remove()
 
     def set_action(self, event=None):
-        self.prevalidation.action = PrevalidationAction.get_action(self.action_var.get())
+        self.prevalidation.action = ClassifierActionType.get_action(self.action_var.get())
 
     def set_action_modifier(self):
         self.prevalidation.action_modifier = self.action_modifier_var.get()
@@ -1127,7 +268,7 @@ class PrevalidationModifyWindow():
         """Refresh the profile dropdown options."""
         if hasattr(self, 'profile_choice'):
             profile_options = [""]  # Empty string = Global
-            profile_options.extend([profile.name for profile in PrevalidationsWindow.profiles])
+            profile_options.extend([profile.name for profile in DirectoryProfile.directory_profiles])
             
             current_value = self.profile_var.get()
             self.profile_choice['values'] = profile_options
@@ -1141,7 +282,7 @@ class PrevalidationModifyWindow():
     
     def refresh_lookahead_options(self):
         """Refresh the lookahead multiselect dropdown options."""
-        lookahead_options = [lookahead.name for lookahead in PrevalidationsWindow.lookaheads]
+        lookahead_options = [lookahead.name for lookahead in Lookahead.lookaheads]
         self.lookaheads_multiselect.set_options_and_selection(
             lookahead_options[:], 
             self.prevalidation.lookahead_names[:]
@@ -1181,15 +322,10 @@ class PrevalidationModifyWindow():
 
 
 class PrevalidationsWindow():
-    prevalidated_cache: dict[str, PrevalidationAction] = {}
-    directories_to_exclude: list[str] = []
     top_level = None
     prevalidation_modify_window: Optional[PrevalidationModifyWindow] = None
-    lookahead_window: Optional[PrevalidationLookaheadWindow] = None
+    lookahead_window: Optional[LookaheadWindow] = None
     profile_window: Optional[DirectoryProfileWindow] = None
-    prevalidations: list[Prevalidation] = []
-    lookaheads: list[PrevalidationLookahead] = []  # Shared lookaheads that can be referenced by multiple prevalidations
-    profiles: list[DirectoryProfile] = []  # Shared directory profiles that can be referenced by multiple prevalidations
 
     MAX_PRESETS = 50
 
@@ -1198,95 +334,17 @@ class PrevalidationsWindow():
     COL_0_WIDTH = 600
 
     @staticmethod
-    def prevalidate(image_path, get_base_dir_func, hide_callback, notify_callback, add_mark_callback) -> Optional[PrevalidationAction]:
-        # Reset lookahead cache for this prevalidate call
-        for lookahead in PrevalidationsWindow.lookaheads:
-            lookahead.run_result = None
-        
-        base_dir = get_base_dir_func()
-        if len(PrevalidationsWindow.directories_to_exclude) > 0 and base_dir in PrevalidationsWindow.directories_to_exclude:
-            return None
-        if image_path not in PrevalidationsWindow.prevalidated_cache:
-            prevalidation_action = None
-            for prevalidation in PrevalidationsWindow.prevalidations:
-                if prevalidation.is_active:
-                    if prevalidation.is_move_action() and prevalidation.action_modifier == base_dir:
-                        continue
-                    # Check if prevalidation should run on this directory
-                    if prevalidation.profile is not None and base_dir not in prevalidation.profile.directories:
-                        continue
-                    prevalidation_action = prevalidation.run_on_image_path(image_path, hide_callback, notify_callback, add_mark_callback)
-                    if prevalidation_action is not None:
-                        break
-            if prevalidation_action is None or prevalidation_action.is_cache_type():
-                PrevalidationsWindow.prevalidated_cache[image_path] = prevalidation_action
-        else:
-            prevalidation_action = PrevalidationsWindow.prevalidated_cache[image_path]
-        return prevalidation_action
-
-    @staticmethod
     def set_prevalidations():
-        # Load lookaheads first
-        for lookahead_dict in list(app_info_cache.get_meta("recent_lookaheads", default_val=[])):
-            lookahead = PrevalidationLookahead.from_dict(lookahead_dict)
-            PrevalidationsWindow.lookaheads.append(lookahead)
-        
-        # Load profiles
-        for profile_dict in list(app_info_cache.get_meta("recent_profiles", default_val=[])):
-            profile = DirectoryProfile.from_dict(profile_dict)
-            PrevalidationsWindow.profiles.append(profile)
-        
-        # Then load prevalidations
-        for prevalidation_dict in list(app_info_cache.get_meta("recent_prevalidations", default_val=[])):
-            prevalidation: Prevalidation = Prevalidation.from_dict(prevalidation_dict)
-            prevalidation.update_profile_instance()
-            prevalidation.validate_dirs()
-            PrevalidationsWindow.prevalidations.append(prevalidation)
-            if prevalidation.is_move_action():
-                PrevalidationsWindow.directories_to_exclude.append(prevalidation.action_modifier)
+        # Load prevalidations using ClassificationActionsManager
+        ClassificationActionsManager.load_prevalidations()
 
     @staticmethod
     def store_prevalidations():
-        # Store lookaheads
-        lookahead_dicts = []
-        for lookahead in PrevalidationsWindow.lookaheads:
-            lookahead_dicts.append(lookahead.to_dict())
-        app_info_cache.set_meta("recent_lookaheads", lookahead_dicts)
-        
-        # Store profiles
-        profile_dicts = []
-        for profile in PrevalidationsWindow.profiles:
-            profile_dicts.append(profile.to_dict())
-        app_info_cache.set_meta("recent_profiles", profile_dicts)
-        
-        # Store prevalidations
-        prevalidation_dicts = []
-        for prevalidation in PrevalidationsWindow.prevalidations:
-            prevalidation_dicts.append(prevalidation.to_dict())
-        app_info_cache.set_meta("recent_prevalidations", prevalidation_dicts)
+        ClassificationActionsManager.store_prevalidations()
 
     @staticmethod
-    def get_prevalidation_by_name(name):
-        for prevalidation in PrevalidationsWindow.prevalidations:
-            if name == prevalidation.name:
-                return prevalidation
-        raise Exception(_("No prevalidation found with name: {0}. Set it on the Prevalidations Window.").format(name))
-    
-    @staticmethod
-    def get_lookahead_by_name(name):
-        """Get a lookahead by name. Returns None if not found."""
-        for lookahead in PrevalidationsWindow.lookaheads:
-            if name == lookahead.name:
-                return lookahead
-        return None
-    
-    @staticmethod
-    def get_profile_by_name(name):
-        """Get a profile by name. Returns None if not found."""
-        for profile in PrevalidationsWindow.profiles:
-            if name == profile.name:
-                return profile
-        return None
+    def clear_prevalidated_cache():
+        ClassificationActionsManager.prevalidated_cache.clear()
 
     @staticmethod
     def get_geometry(is_gui=True):
@@ -1299,7 +357,7 @@ class PrevalidationsWindow():
         self.master = PrevalidationsWindow.top_level
         self.app_actions = app_actions
         self.filter_text = ""
-        self.filtered_prevalidations = PrevalidationsWindow.prevalidations[:]
+        self.filtered_prevalidations = ClassificationActionsManager.prevalidations[:]
         self.label_list = []
         self.label_list2 = []
         self.is_active_var_list = []
@@ -1399,7 +457,7 @@ class PrevalidationsWindow():
         """Refresh the lookaheads listbox with current lookaheads."""
         if hasattr(self, 'lookaheads_listbox'):
             self.lookaheads_listbox.delete(0, "end")
-            for lookahead in PrevalidationsWindow.lookaheads:
+            for lookahead in Lookahead.lookaheads:
                 display_text = f"{lookahead.name} ({lookahead.name_or_text}, threshold: {lookahead.threshold:.2f})"
                 self.lookaheads_listbox.insert("end", display_text)
     
@@ -1407,7 +465,7 @@ class PrevalidationsWindow():
         """Open dialog to add a new lookahead."""
         if PrevalidationsWindow.lookahead_window is not None:
             PrevalidationsWindow.lookahead_window.master.destroy()
-        PrevalidationsWindow.lookahead_window = PrevalidationLookaheadWindow(
+        PrevalidationsWindow.lookahead_window = LookaheadWindow(
             self.master, self.app_actions, self.refresh_lookaheads_listbox)
     
     def edit_lookahead(self):
@@ -1416,12 +474,12 @@ class PrevalidationsWindow():
         if not selection:
             return
         idx = selection[0]
-        if idx < len(PrevalidationsWindow.lookaheads):
+        if idx < len(Lookahead.lookaheads):
             if PrevalidationsWindow.lookahead_window is not None:
                 PrevalidationsWindow.lookahead_window.master.destroy()
-            PrevalidationsWindow.lookahead_window = PrevalidationLookaheadWindow(
+            PrevalidationsWindow.lookahead_window = LookaheadWindow(
                 self.master, self.app_actions, self.refresh_lookaheads_listbox, 
-                PrevalidationsWindow.lookaheads[idx])
+                Lookahead.lookaheads[idx])
     
     def remove_lookahead(self):
         """Remove the selected lookahead."""
@@ -1429,13 +487,13 @@ class PrevalidationsWindow():
         if not selection:
             return
         idx = selection[0]
-        if idx < len(PrevalidationsWindow.lookaheads):
-            lookahead = PrevalidationsWindow.lookaheads[idx]
+        if idx < len(Lookahead.lookaheads):
+            lookahead = Lookahead.lookaheads[idx]
             # Check if any prevalidation is using this lookahead
-            used_by = [pv.name for pv in PrevalidationsWindow.prevalidations if lookahead.name in pv.lookahead_names]
+            used_by = [pv.name for pv in ClassificationActionsManager.prevalidations if lookahead.name in pv.lookahead_names]
             if used_by:
                 logger.warning(f"Lookahead {lookahead.name} is used by prevalidations: {', '.join(used_by)}")
-            del PrevalidationsWindow.lookaheads[idx]
+            del Lookahead.lookaheads[idx]
             self.refresh_lookaheads_listbox()
             # Refresh modify window if open
             if PrevalidationsWindow.prevalidation_modify_window:
@@ -1488,7 +546,7 @@ class PrevalidationsWindow():
         """Refresh the profiles listbox with current profiles."""
         if hasattr(self, 'profiles_listbox'):
             self.profiles_listbox.delete(0, "end")
-            for profile in PrevalidationsWindow.profiles:
+            for profile in DirectoryProfile.directory_profiles:
                 dir_count = len(profile.directories)
                 dir_or_dirs = 'directory' if dir_count == 1 else 'directories'
                 display_text = f"{profile.name} ({dir_count} {dir_or_dirs})"
@@ -1511,12 +569,12 @@ class PrevalidationsWindow():
         if not selection:
             return
         idx = selection[0]
-        if idx < len(PrevalidationsWindow.profiles):
+        if idx < len(DirectoryProfile.directory_profiles):
             if PrevalidationsWindow.profile_window is not None:
                 PrevalidationsWindow.profile_window.master.destroy()
             PrevalidationsWindow.profile_window = DirectoryProfileWindow(
                 self.master, self.app_actions, self.refresh_profiles_listbox, 
-                PrevalidationsWindow.profiles[idx])
+                DirectoryProfile.directory_profiles[idx])
     
     def remove_profile(self):
         """Remove the selected profile."""
@@ -1524,13 +582,10 @@ class PrevalidationsWindow():
         if not selection:
             return
         idx = selection[0]
-        if idx < len(PrevalidationsWindow.profiles):
-            profile = PrevalidationsWindow.profiles[idx]
-            # Check if any prevalidation is using this profile
-            used_by = [pv.name for pv in PrevalidationsWindow.prevalidations if pv.profile_name == profile.name]
-            if used_by:
-                logger.warning(f"Profile {profile.name} is used by prevalidations: {', '.join(used_by)}")
-            del PrevalidationsWindow.profiles[idx]
+        if idx < len(DirectoryProfile.directory_profiles):
+            profile = DirectoryProfile.directory_profiles[idx]
+            # Use ClassificationActionsManager to remove profile (checks usage and logs warnings)
+            DirectoryProfile.remove_profile(profile.name)
             self.refresh_profiles_listbox()
             # Refresh modify window if open
             if PrevalidationsWindow.prevalidation_modify_window:
@@ -1628,23 +683,23 @@ class PrevalidationsWindow():
 
     def refresh_prevalidations(self, prevalidation):
         # Check if this is a new prevalidation, if so, insert it at the start
-        if prevalidation not in PrevalidationsWindow.prevalidations:
-            PrevalidationsWindow.prevalidations.insert(0, prevalidation)
-        self.filtered_prevalidations = PrevalidationsWindow.prevalidations[:]
-        PrevalidationsWindow.prevalidated_cache.clear()
+        if prevalidation not in ClassificationActionsManager.prevalidations:
+            ClassificationActionsManager.prevalidations.insert(0, prevalidation)
+        self.filtered_prevalidations = ClassificationActionsManager.prevalidations[:]
+        ClassificationActionsManager.prevalidated_cache.clear()
         # TODO only clear the actions that have been tested by the changed prevalidation.
         # Note that this includes the actions that have been tested by the prevalidations after the one changed
         # as well as any cached "None" values as this implies all prevalidations were tested for those images.
         # Perhaps better said, the actions that have not been tested by the prevalidation that was changed can be preserved.
-        PrevalidationsWindow.directories_to_exclude.clear()
-        for prevalidation in PrevalidationsWindow.prevalidations:
+        ClassificationActionsManager.directories_to_exclude.clear()
+        for prevalidation in ClassificationActionsManager.prevalidations:
             if prevalidation.is_move_action():
-                PrevalidationsWindow.directories_to_exclude.append(prevalidation.action_modifier)
+                ClassificationActionsManager.directories_to_exclude.append(prevalidation.action_modifier)
         self.refresh()
 
     def delete_prevalidation(self, event=None, prevalidation=None):
-        if prevalidation is not None and prevalidation in PrevalidationsWindow.prevalidations:
-            PrevalidationsWindow.prevalidations.remove(prevalidation)
+        if prevalidation is not None and prevalidation in ClassificationActionsManager.prevalidations:
+            ClassificationActionsManager.prevalidations.remove(prevalidation)
         self.refresh()
 
     def filter_prevalidations(self, event):
@@ -1679,11 +734,11 @@ class PrevalidationsWindow():
             logger.info("Filter unset")
             # Restore the list of target directories to the full list
             self.filtered_prevalidations.clear()
-            self.filtered_prevalidations = PrevalidationsWindow.prevalidations[:]
+            self.filtered_prevalidations = ClassificationActionsManager.prevalidations[:]
         else:
             temp = []
             return # TODO
-            for prevalidation in PrevalidationsWindow.prevalidations:
+            for prevalidation in ClassificationActionsManager.prevalidations:
                 if prevalidation not in temp:
                     if prevalidation and (f" {self.filter_text}" in prevalidation.lower() or f"_{self.filter_text}" in prevalidation.lower()):
                         temp.append(prevalidation)
@@ -1728,7 +783,7 @@ class PrevalidationsWindow():
 
     def clear_recent_prevalidations(self, event=None):
         self.clear_widget_lists()
-        PrevalidationsWindow.prevalidations.clear()
+        ClassificationActionsManager.prevalidations.clear()
         self.filtered_prevalidations.clear()
         self.add_prevalidation_widgets()
         self.master.update()
@@ -1762,7 +817,7 @@ class PrevalidationsWindow():
         self.move_down_btn_list = []
 
     def refresh(self, refresh_list=True):
-        self.filtered_prevalidations = PrevalidationsWindow.prevalidations[:]
+        self.filtered_prevalidations = ClassificationActionsManager.prevalidations[:]
         self.clear_widget_lists()
         self.add_prevalidation_widgets()
         # Re-add lookahead section after prevalidations
