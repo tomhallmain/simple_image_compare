@@ -5,7 +5,7 @@ from tkinter import Frame, Label, Scale, Checkbutton, BooleanVar, StringVar, LEF
 import tkinter.font as fnt
 from tkinter.ttk import Entry, Button, Combobox
 
-from compare.classification_actions_manager import Prevalidation, ClassificationActionsManager
+from compare.classification_actions_manager import Prevalidation, ClassifierActionsManager
 from compare.directory_profile import DirectoryProfile, DirectoryProfileWindow
 from compare.lookahead import Lookahead, LookaheadWindow
 from image.classifier_action_type import ClassifierActionType
@@ -335,16 +335,15 @@ class PrevalidationsWindow():
 
     @staticmethod
     def set_prevalidations():
-        # Load prevalidations using ClassificationActionsManager
-        ClassificationActionsManager.load_prevalidations()
+        ClassifierActionsManager.load_prevalidations()
 
     @staticmethod
     def store_prevalidations():
-        ClassificationActionsManager.store_prevalidations()
+        ClassifierActionsManager.store_prevalidations()
 
     @staticmethod
     def clear_prevalidated_cache():
-        ClassificationActionsManager.prevalidated_cache.clear()
+        ClassifierActionsManager.prevalidated_cache.clear()
 
     @staticmethod
     def get_geometry(is_gui=True):
@@ -357,7 +356,7 @@ class PrevalidationsWindow():
         self.master = PrevalidationsWindow.top_level
         self.app_actions = app_actions
         self.filter_text = ""
-        self.filtered_prevalidations = ClassificationActionsManager.prevalidations[:]
+        self.filtered_prevalidations = ClassifierActionsManager.prevalidations[:]
         self.label_list = []
         self.label_list2 = []
         self.is_active_var_list = []
@@ -490,7 +489,7 @@ class PrevalidationsWindow():
         if idx < len(Lookahead.lookaheads):
             lookahead = Lookahead.lookaheads[idx]
             # Check if any prevalidation is using this lookahead
-            used_by = [pv.name for pv in ClassificationActionsManager.prevalidations if lookahead.name in pv.lookahead_names]
+            used_by = [pv.name for pv in ClassifierActionsManager.prevalidations if lookahead.name in pv.lookahead_names]
             if used_by:
                 logger.warning(f"Lookahead {lookahead.name} is used by prevalidations: {', '.join(used_by)}")
             del Lookahead.lookaheads[idx]
@@ -584,7 +583,7 @@ class PrevalidationsWindow():
         idx = selection[0]
         if idx < len(DirectoryProfile.directory_profiles):
             profile = DirectoryProfile.directory_profiles[idx]
-            # Use ClassificationActionsManager to remove profile (checks usage and logs warnings)
+            # Use ClassifierActionsManager to remove profile (checks usage and logs warnings)
             DirectoryProfile.remove_profile(profile.name)
             self.refresh_profiles_listbox()
             # Refresh modify window if open
@@ -683,23 +682,23 @@ class PrevalidationsWindow():
 
     def refresh_prevalidations(self, prevalidation):
         # Check if this is a new prevalidation, if so, insert it at the start
-        if prevalidation not in ClassificationActionsManager.prevalidations:
-            ClassificationActionsManager.prevalidations.insert(0, prevalidation)
-        self.filtered_prevalidations = ClassificationActionsManager.prevalidations[:]
-        ClassificationActionsManager.prevalidated_cache.clear()
+        if prevalidation not in ClassifierActionsManager.prevalidations:
+            ClassifierActionsManager.prevalidations.insert(0, prevalidation)
+        self.filtered_prevalidations = ClassifierActionsManager.prevalidations[:]
+        ClassifierActionsManager.prevalidated_cache.clear()
         # TODO only clear the actions that have been tested by the changed prevalidation.
         # Note that this includes the actions that have been tested by the prevalidations after the one changed
         # as well as any cached "None" values as this implies all prevalidations were tested for those images.
         # Perhaps better said, the actions that have not been tested by the prevalidation that was changed can be preserved.
-        ClassificationActionsManager.directories_to_exclude.clear()
-        for prevalidation in ClassificationActionsManager.prevalidations:
+        ClassifierActionsManager.directories_to_exclude.clear()
+        for prevalidation in ClassifierActionsManager.prevalidations:
             if prevalidation.is_move_action():
-                ClassificationActionsManager.directories_to_exclude.append(prevalidation.action_modifier)
+                ClassifierActionsManager.directories_to_exclude.append(prevalidation.action_modifier)
         self.refresh()
 
     def delete_prevalidation(self, event=None, prevalidation=None):
-        if prevalidation is not None and prevalidation in ClassificationActionsManager.prevalidations:
-            ClassificationActionsManager.prevalidations.remove(prevalidation)
+        if prevalidation is not None and prevalidation in ClassifierActionsManager.prevalidations:
+            ClassifierActionsManager.prevalidations.remove(prevalidation)
         self.refresh()
 
     def filter_prevalidations(self, event):
@@ -734,11 +733,11 @@ class PrevalidationsWindow():
             logger.info("Filter unset")
             # Restore the list of target directories to the full list
             self.filtered_prevalidations.clear()
-            self.filtered_prevalidations = ClassificationActionsManager.prevalidations[:]
+            self.filtered_prevalidations = ClassifierActionsManager.prevalidations[:]
         else:
             temp = []
             return # TODO
-            for prevalidation in ClassificationActionsManager.prevalidations:
+            for prevalidation in ClassifierActionsManager.prevalidations:
                 if prevalidation not in temp:
                     if prevalidation and (f" {self.filter_text}" in prevalidation.lower() or f"_{self.filter_text}" in prevalidation.lower()):
                         temp.append(prevalidation)
@@ -783,7 +782,7 @@ class PrevalidationsWindow():
 
     def clear_recent_prevalidations(self, event=None):
         self.clear_widget_lists()
-        ClassificationActionsManager.prevalidations.clear()
+        ClassifierActionsManager.prevalidations.clear()
         self.filtered_prevalidations.clear()
         self.add_prevalidation_widgets()
         self.master.update()
@@ -817,7 +816,7 @@ class PrevalidationsWindow():
         self.move_down_btn_list = []
 
     def refresh(self, refresh_list=True):
-        self.filtered_prevalidations = ClassificationActionsManager.prevalidations[:]
+        self.filtered_prevalidations = ClassifierActionsManager.prevalidations[:]
         self.clear_widget_lists()
         self.add_prevalidation_widgets()
         # Re-add lookahead section after prevalidations

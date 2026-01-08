@@ -205,6 +205,32 @@ class ClassifierAction:
         except Exception as e:
             logger.error(f"Error checking prototype validation for {image_path}: {e}")
             return False
+    
+    def _run_with_batch_prototype_validation(self, directory_paths: list[str], hide_callback, notify_callback, add_mark_callback=None):
+        """
+        Run classifier action with batch prototype validation for efficiency.
+        
+        Delegates batch processing to EmbeddingPrototype, then runs actions on matching images.
+        """
+        if not self.use_prototype or self._cached_prototype is None:
+            return
+        
+        # Use EmbeddingPrototype to batch validate images from directories
+        matching_paths = EmbeddingPrototype.batch_validate_with_prototypes(
+            directories=directory_paths,
+            positive_prototype=self._cached_prototype,
+            threshold=self.threshold,
+            negative_prototype=self._cached_negative_prototype,
+            negative_lambda=self.negative_prototype_lambda,
+            notify_callback=notify_callback
+        )
+        
+        # Run actions on matching images
+        for image_path in matching_paths:
+            try:
+                self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
+            except Exception as e:
+                logger.error(f"Error running action on {image_path}: {e}")
 
     def run(self, directory_paths: list[str], hide_callback, notify_callback, add_mark_callback=None, profile_name_or_path: Optional[str] = None):
         """Run the classifier action on the given directory paths.
@@ -226,31 +252,16 @@ class ClassifierAction:
         elif directory_paths:
             # If no profile name provided, use the first directory path
             self._last_used_profile = directory_paths[0]
-        
-        # Get all image files from the directories using the same method as the rest of the codebase
-        from compare.base_compare import gather_files
-        image_files = []
-        for directory in directory_paths:
-            if not os.path.isdir(directory):
-                logger.warning(f"Directory {directory} does not exist, skipping")
-                continue
-            
-            # Use gather_files to get image files (respects config.image_types)
-            files = gather_files(base_dir=directory, exts=config.image_types, recursive=True, 
-                                include_videos=False, include_gifs=True, include_pdfs=False)
-            image_files.extend(files)
-        
-        logger.info(f"Running classifier action {self.name} on {len(image_files)} images")
+
+        logger.info(f"Running classifier action {self.name} on {len(directory_paths)} directories")
         
         # Pre-load image classifier and prototype before processing images
         self.ensure_image_classifier_loaded(notify_callback)
         self.ensure_prototype_loaded(notify_callback)
         
-        for image_path in image_files:
-            try:
-                self.run_on_image_path(image_path, hide_callback, notify_callback, add_mark_callback)
-            except Exception as e:
-                logger.error(f"Error running classifier action on {image_path}: {e}")
+        # Use batch prototype validation when prototype validation is enabled
+        if self.use_prototype:
+            self._run_with_batch_prototype_validation(directory_paths, hide_callback, notify_callback, add_mark_callback)
 
     def run_on_image_path(self, image_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
         # Note: Image classifier and prototype should be loaded before calling this method
@@ -416,7 +427,7 @@ class ClassifierAction:
             idx: Current index of the classifier action to move
             direction_count: Positive to move down (higher index), negative to move up (lower index)
         """
-        classifier_actions = ClassificationActionsManager.classifier_actions
+        classifier_actions = ClassifierActionsManager.classifier_actions
         ClassifierAction.do_move_index(idx, classifier_actions, direction_count)
     
     @staticmethod
@@ -540,7 +551,8 @@ class Prevalidation(ClassifierAction):
                  action=ClassifierActionType.NOTIFY, action_modifier="", run_on_folder=None, is_active=True,
                  image_classifier_name="", image_classifier_selected_categories=[], 
                  use_embedding=True, use_image_classifier=False, use_prompts=False, use_blacklist=False,
-                 lookahead_names=[], profile_name=None):
+                 lookahead_names=[], profile_name=None, use_prototype=False, prototype_directory="", 
+                 negative_prototype_directory="", negative_prototype_lambda=0.5, _last_used_profile=None):
         # Pass is_active to parent ClassifierAction
         super().__init__(name, positives, negatives, threshold, action, action_modifier, 
                         image_classifier_name, image_classifier_selected_categories,
@@ -626,7 +638,7 @@ class Prevalidation(ClassifierAction):
             # Check if it's a prevalidation name or custom text
             if lookahead.is_prevalidation_name:
                 # It's a prevalidation name - get the referenced prevalidation
-                lookahead_prevalidation = ClassificationActionsManager.get_prevalidation_by_name(name_or_text)
+                lookahead_prevalidation = ClassifierActionsManager.get_prevalidation_by_name(name_or_text)
                 if lookahead_prevalidation is None:
                     # Prevalidation not found, skip this lookahead
                     lookahead.run_result = False  # Cache the result
@@ -700,7 +712,7 @@ class Prevalidation(ClassifierAction):
             idx: Current index of the prevalidation to move
             direction_count: Positive to move down (higher index), negative to move up (lower index)
         """
-        prevalidations = ClassificationActionsManager.prevalidations
+        prevalidations = ClassifierActionsManager.prevalidations
         ClassifierAction.do_move_index(idx, prevalidations, direction_count)
 
     def to_dict(self):
@@ -784,7 +796,7 @@ class Prevalidation(ClassifierAction):
 
 
 
-class ClassificationActionsManager:
+class ClassifierActionsManager:
     """Manages prevalidations, classifier actions, and directory profiles."""
     
     # Lists managed by this module
@@ -800,11 +812,11 @@ class ClassificationActionsManager:
             lookahead.run_result = None
         
         base_dir = get_base_dir_func()
-        if len(ClassificationActionsManager.directories_to_exclude) > 0 and base_dir in ClassificationActionsManager.directories_to_exclude:
+        if len(ClassifierActionsManager.directories_to_exclude) > 0 and base_dir in ClassifierActionsManager.directories_to_exclude:
             return None
-        if image_path not in ClassificationActionsManager.prevalidated_cache:
+        if image_path not in ClassifierActionsManager.prevalidated_cache:
             prevalidation_action = None
-            for prevalidation in ClassificationActionsManager.prevalidations:
+            for prevalidation in ClassifierActionsManager.prevalidations:
                 if prevalidation.is_active:
                     if prevalidation.is_move_action() and prevalidation.action_modifier == base_dir:
                         continue
@@ -815,9 +827,9 @@ class ClassificationActionsManager:
                     if prevalidation_action is not None:
                         break
             if prevalidation_action is None or prevalidation_action.is_cache_type():
-                ClassificationActionsManager.prevalidated_cache[image_path] = prevalidation_action
+                ClassifierActionsManager.prevalidated_cache[image_path] = prevalidation_action
         else:
-            prevalidation_action = ClassificationActionsManager.prevalidated_cache[image_path]
+            prevalidation_action = ClassifierActionsManager.prevalidated_cache[image_path]
         return prevalidation_action
     
     @staticmethod
@@ -832,13 +844,13 @@ class ClassificationActionsManager:
         """
         # Check prevalidations list directly
         prevalidation_names = [
-            pv.name for pv in ClassificationActionsManager.prevalidations 
+            pv.name for pv in ClassifierActionsManager.prevalidations 
             if pv.profile_name == profile_name
         ]
         
         # Check classifier actions for last used profile matching profile name
         classifier_action_names = [
-            ca.name for ca in ClassificationActionsManager.classifier_actions
+            ca.name for ca in ClassifierActionsManager.classifier_actions
             if ca._last_used_profile and ca._last_used_profile == profile_name
         ]
         
@@ -857,7 +869,7 @@ class ClassificationActionsManager:
             - can_remove: True if profile can be removed
             - warnings: List of warning messages
         """
-        usage = ClassificationActionsManager.get_profile_usage(profile_name)
+        usage = ClassifierActionsManager.get_profile_usage(profile_name)
         warnings = []
         
         if usage['prevalidations']:
@@ -886,7 +898,7 @@ class ClassificationActionsManager:
             return False
         
         # Check if it can be removed
-        can_remove, warnings = ClassificationActionsManager.can_remove_profile(profile_name)
+        can_remove, warnings = ClassifierActionsManager.can_remove_profile(profile_name)
         
         if warnings:
             logger.warning(f"Profile {profile_name} is used by: {', '.join(warnings)}")
@@ -902,7 +914,7 @@ class ClassificationActionsManager:
     @staticmethod
     def get_prevalidation_by_name(name: str) -> 'Prevalidation':
         """Get a prevalidation by name. Returns None if not found."""
-        for prevalidation in ClassificationActionsManager.prevalidations:
+        for prevalidation in ClassifierActionsManager.prevalidations:
             if name == prevalidation.name:
                 return prevalidation
         return None
@@ -910,7 +922,7 @@ class ClassificationActionsManager:
     @staticmethod
     def get_classifier_action_by_name(name: str) -> 'ClassifierAction':
         """Get a classifier action by name. Returns None if not found."""
-        for classifier_action in ClassificationActionsManager.classifier_actions:
+        for classifier_action in ClassifierActionsManager.classifier_actions:
             if name == classifier_action.name:
                 return classifier_action
         return None
@@ -940,12 +952,12 @@ class ClassificationActionsManager:
             prevalidation: Prevalidation = Prevalidation.from_dict(prevalidation_dict)
             prevalidation.update_profile_instance()
             prevalidation.validate_dirs()
-            if prevalidation not in ClassificationActionsManager.prevalidations:
-                ClassificationActionsManager.prevalidations.append(prevalidation)
+            if prevalidation not in ClassifierActionsManager.prevalidations:
+                ClassifierActionsManager.prevalidations.append(prevalidation)
 
                 # Build directories_to_exclude from loaded prevalidations
-                if prevalidation.is_move_action() and prevalidation.action_modifier not in ClassificationActionsManager.directories_to_exclude:
-                    ClassificationActionsManager.directories_to_exclude.append(prevalidation.action_modifier)
+                if prevalidation.is_move_action() and prevalidation.action_modifier not in ClassifierActionsManager.directories_to_exclude:
+                    ClassifierActionsManager.directories_to_exclude.append(prevalidation.action_modifier)
 
     @staticmethod
     def store_prevalidations():
@@ -963,7 +975,7 @@ class ClassificationActionsManager:
         app_info_cache.set_meta("recent_profiles", profile_dicts)
 
         prevalidation_dicts = []
-        for prevalidation in ClassificationActionsManager.prevalidations:
+        for prevalidation in ClassifierActionsManager.prevalidations:
             prevalidation_dicts.append(prevalidation.to_dict())
         app_info_cache.set_meta("recent_prevalidations", prevalidation_dicts)
     
@@ -973,14 +985,14 @@ class ClassificationActionsManager:
         for classifier_action_dict in list(app_info_cache.get_meta("recent_classifier_actions", default_val=[])):
             classifier_action: ClassifierAction = ClassifierAction.from_dict(classifier_action_dict)
             classifier_action.validate_dirs()
-            if classifier_action not in ClassificationActionsManager.classifier_actions:
-                ClassificationActionsManager.classifier_actions.append(classifier_action)
+            if classifier_action not in ClassifierActionsManager.classifier_actions:
+                ClassifierActionsManager.classifier_actions.append(classifier_action)
     
     @staticmethod
     def store_classifier_actions():
         """Store classifier actions to cache."""
         classifier_action_dicts = []
-        for classifier_action in ClassificationActionsManager.classifier_actions:
+        for classifier_action in ClassifierActionsManager.classifier_actions:
             classifier_action_dicts.append(classifier_action.to_dict())
         app_info_cache.set_meta("recent_classifier_actions", classifier_action_dicts)
 

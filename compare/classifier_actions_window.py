@@ -6,7 +6,7 @@ from tkinter import Frame, Label, Scale, Checkbutton, BooleanVar, StringVar, LEF
 import tkinter.font as fnt
 from tkinter.ttk import Entry, Button, Combobox
 
-from compare.classification_actions_manager import ClassifierAction, ClassificationActionsManager
+from compare.classification_actions_manager import ClassifierAction, ClassifierActionsManager
 from compare.directory_profile import DirectoryProfile
 from compare.embedding_prototype import EmbeddingPrototype
 from image.classifier_action_type import ClassifierActionType
@@ -418,13 +418,15 @@ class ClassifierActionModifyWindow():
 class ClassifierActionsWindow():
     top_level = None
     classifier_action_modify_window: Optional[ClassifierActionModifyWindow] = None
-    # classifier_actions list is now managed by ClassificationActionsManager
+    # classifier_actions list is now managed by ClassifierActionsManager
 
     MAX_HEIGHT = 900
     COL_0_WIDTH = 600
 
     @staticmethod
-    def run_classifier_action(classifier_action: ClassifierAction, directory_paths: list[str], hide_callback, notify_callback, add_mark_callback=None, profile_name_or_path: Optional[str] = None):
+    def run_classifier_action(classifier_action: ClassifierAction, directory_paths: list[str],
+                              hide_callback, notify_callback, add_mark_callback=None,
+                              profile_name_or_path: Optional[str] = None):
         """
         Run a classifier action on all images in the specified directories.
         
@@ -440,11 +442,11 @@ class ClassifierActionsWindow():
 
     @staticmethod
     def set_classifier_actions():
-        ClassificationActionsManager.load_classifier_actions()
+        ClassifierActionsManager.load_classifier_actions()
 
     @staticmethod
     def store_classifier_actions():
-        ClassificationActionsManager.store_classifier_actions()
+        ClassifierActionsManager.store_classifier_actions()
 
     @staticmethod
     def get_geometry(is_gui=True):
@@ -457,7 +459,7 @@ class ClassifierActionsWindow():
         self.master = ClassifierActionsWindow.top_level
         self.app_actions = app_actions
         self.filter_text = ""
-        self.filtered_classifier_actions = ClassificationActionsManager.classifier_actions[:]
+        self.filtered_classifier_actions = ClassifierActionsManager.classifier_actions[:]
         self.label_list = []
         self.label_list2 = []
         self.set_classifier_action_btn_list = []
@@ -563,7 +565,7 @@ class ClassifierActionsWindow():
             self.run_classifier_action_btn_list.append(run_classifier_action_btn)
             run_classifier_action_btn.grid(row=row, column=base_col+5)
             def run_classifier_action_handler(event, self=self, classifier_action=classifier_action):
-                return self.run_classifier_action(event, classifier_action)
+                return self.run_classifier_action_event(event, classifier_action)
             run_classifier_action_btn.bind("<Button-1>", run_classifier_action_handler)
 
             move_down_btn = Button(self.frame, text=_("Move down"))
@@ -582,17 +584,17 @@ class ClassifierActionsWindow():
 
     def refresh_classifier_actions(self, classifier_action):
         # Check if this is a new classifier action, if so, insert it at the start
-        if classifier_action not in ClassificationActionsManager.classifier_actions:
-            ClassificationActionsManager.classifier_actions.insert(0, classifier_action)
-        self.filtered_classifier_actions = ClassificationActionsManager.classifier_actions[:]
+        if classifier_action not in ClassifierActionsManager.classifier_actions:
+            ClassifierActionsManager.classifier_actions.insert(0, classifier_action)
+        self.filtered_classifier_actions = ClassifierActionsManager.classifier_actions[:]
         self.refresh()
 
     def delete_classifier_action(self, event=None, classifier_action=None):
-        if classifier_action is not None and classifier_action in ClassificationActionsManager.classifier_actions:
-            ClassificationActionsManager.classifier_actions.remove(classifier_action)
+        if classifier_action is not None and classifier_action in ClassifierActionsManager.classifier_actions:
+            ClassifierActionsManager.classifier_actions.remove(classifier_action)
         self.refresh()
 
-    def run_classifier_action(self, event=None, classifier_action=None):
+    def run_classifier_action_event(self, event=None, classifier_action=None):
         """Run the specified classifier action on the selected profile directories."""
         if classifier_action is None:
             return
@@ -638,7 +640,7 @@ class ClassifierActionsWindow():
 
     def clear_recent_classifier_actions(self, event=None):
         self.clear_widget_lists()
-        ClassificationActionsManager.classifier_actions.clear()
+        ClassifierActionsManager.classifier_actions.clear()
         self.filtered_classifier_actions.clear()
         self.add_classifier_action_widgets()
         self.master.update()
@@ -681,7 +683,7 @@ class ClassifierActionsWindow():
                 self.profile_choice.config(state="disabled")
                 self.selected_profile_var.set("")
         
-        self.filtered_classifier_actions = ClassificationActionsManager.classifier_actions[:]
+        self.filtered_classifier_actions = ClassifierActionsManager.classifier_actions[:]
         self.clear_widget_lists()
         self.add_classifier_action_widgets()
         self.master.update()

@@ -4,12 +4,17 @@ from typing import Optional, List
 import numpy as np
 
 from compare.base_compare import gather_files
+from compare.compare_data import CompareData
 from compare.model import image_embeddings_clip
 from utils.app_info_cache import app_info_cache
 from utils.config import config
+from utils.constants import CompareMode
 from utils.logging_setup import get_logger
 
 logger = get_logger("embedding_prototype")
+
+# Cache of CompareData instances per directory
+_directory_caches: dict[str, CompareData] = {}
 
 
 class EmbeddingPrototype:
@@ -110,9 +115,22 @@ class EmbeddingPrototype:
         embeddings = []
         failed_count = 0
         
+        # Get cache for this directory
+        cache = EmbeddingPrototype._get_cache_for_directory(directory_path)
+        
         for i, image_path in enumerate(image_files):
             try:
-                embedding = image_embeddings_clip(image_path)
+                # Use relative path from directory as key (as CompareData expects)
+                rel_path = os.path.relpath(image_path, directory_path)
+                
+                if rel_path in cache.file_data_dict:
+                    embedding = cache.file_data_dict[rel_path]
+                else:
+                    # Compute embedding if not cached
+                    embedding = image_embeddings_clip(image_path)
+                    cache.file_data_dict[rel_path] = embedding
+                    cache.has_new_file_data = True
+                
                 embeddings.append(embedding)
                 
                 if notify_callback and (i + 1) % 10 == 0:
@@ -140,6 +158,10 @@ class EmbeddingPrototype:
         norm = np.linalg.norm(mean_embedding)
         if norm > 0:
             mean_embedding = mean_embedding / norm
+        
+        # Save embedding cache if new data was added
+        if cache.has_new_file_data:
+            cache.save_data(overwrite=False, verbose=False)
         
         # Cache the result
         EmbeddingPrototype._cache_prototype(file_list_id, image_files, mean_embedding)
@@ -232,9 +254,203 @@ class EmbeddingPrototype:
         return cached_data.get("file_list")
     
     @staticmethod
+    def compute_embeddings_batch_with_dirs(image_paths_with_dirs: List[tuple[str, str]], notify_callback=None) -> tuple[np.ndarray, List[str]]:
+        """
+        Compute embeddings for multiple images in batch, using CompareData cache per directory.
+        
+        Args:
+            image_paths_with_dirs: List of (image_path, base_directory) tuples
+            notify_callback: Optional callback for progress notifications
+            
+        Returns:
+            Tuple of (embeddings_array, valid_image_paths) where:
+            - embeddings_array: Numpy array of shape (n_valid_images, embedding_dim)
+            - valid_image_paths: List of image paths that successfully had embeddings computed
+        """
+        from compare.model import image_embeddings_clip
+        embeddings = []
+        valid_image_paths = []
+        directories_with_new_data = set()
+        previous_directory = None
+        cache = None
+        
+        for i, (image_path, base_directory) in enumerate(image_paths_with_dirs):
+            try:
+                # Get cache for the base directory
+                if base_directory != previous_directory:
+                    if cache is not None:
+                        cache.save_data()
+                        cache.has_new_file_data = False
+                    cache = EmbeddingPrototype._get_cache_for_directory(base_directory)
+                previous_directory = base_directory
+                
+                # # Construct full path if image_path is relative
+                # if not os.path.isabs(image_path):
+                #     full_path = os.path.join(base_directory, image_path)
+                # else:
+                full_path = image_path
+                
+                if full_path in cache.file_data_dict:
+                    embedding = cache.file_data_dict[full_path]
+                else:
+                    # Compute embedding if not cached
+                    embedding = image_embeddings_clip(full_path)
+                    cache.file_data_dict[full_path] = embedding
+                    # Add to files_found if not already present (needed for save_data validation)
+                    if full_path not in cache.files_found:
+                        cache.files_found.append(full_path)
+                    cache.has_new_file_data = True
+                    directories_with_new_data.add(base_directory)
+                
+                embeddings.append(embedding)
+                valid_image_paths.append(full_path)
+                
+                if notify_callback and (i + 1) % 100 == 0:
+                    notify_callback(_("Computed embeddings for {0}/{1} images...").format(i + 1, len(image_paths_with_dirs)))
+            except Exception as e:
+                logger.error(f"Error calculating embedding for {image_path}: {e}")
+                continue
+        
+        # Save caches for directories with new data
+        for directory in directories_with_new_data:
+            abs_dir = os.path.abspath(directory)
+            if abs_dir in _directory_caches:
+                _directory_caches[abs_dir].save_data(overwrite=False, verbose=False)
+        
+        if not embeddings:
+            return np.array([]), []
+        
+        return np.array(embeddings), valid_image_paths
+    
+    @staticmethod
+    def compare_embeddings_with_prototype(embeddings_array: np.ndarray, prototype: np.ndarray) -> np.ndarray:
+        """
+        Compare a batch of embeddings with a prototype using vectorized cosine similarity.
+        
+        Args:
+            embeddings_array: Numpy array of shape (n_images, embedding_dim) containing embeddings
+            prototype: Prototype embedding vector of shape (embedding_dim,)
+            
+        Returns:
+            Numpy array of cosine similarity scores (0-1, higher is more similar) of shape (n_images,)
+        """
+        if len(embeddings_array) == 0:
+            return np.array([])
+        
+        # Use vectorized dot product: embeddings_array @ prototype computes dot product for each row
+        # Embeddings are already normalized, so dot product is cosine similarity
+        similarities = np.dot(embeddings_array, prototype)
+        return similarities
+    
+    @staticmethod
+    def _get_cache_for_directory(directory: str) -> CompareData:
+        """Get or create a CompareData instance for a directory."""
+        abs_dir = os.path.abspath(directory)
+        if abs_dir not in _directory_caches:
+            _directory_caches[abs_dir] = CompareData(base_dir=abs_dir, mode=CompareMode.CLIP_EMBEDDING)
+            _directory_caches[abs_dir].load_data(overwrite=False)
+        return _directory_caches[abs_dir]
+    
+    @staticmethod
+    def batch_validate_with_prototypes(
+        directories: List[str],
+        positive_prototype: np.ndarray,
+        threshold: float,
+        negative_prototype: Optional[np.ndarray] = None,
+        negative_lambda: float = 0.5,
+        notify_callback=None
+    ) -> List[str]:
+        """
+        Validate images in directories against prototype(s) using vectorized operations.
+        
+        Gathers images from the provided directories, computes embeddings (using cache),
+        then uses vectorized operations to compare with prototypes, returning only
+        the image paths that meet the threshold.
+        
+        Uses formula: Final Score = sim(query, positive_proto) - λ * sim(query, negative_proto)
+        If negative prototype is not set, uses only positive similarity.
+        
+        Args:
+            directories: List of directory paths to process images from
+            positive_prototype: Positive prototype embedding vector
+            threshold: Similarity threshold (0-1)
+            negative_prototype: Optional negative prototype embedding vector
+            negative_lambda: Weight for negative prototype (λ)
+            notify_callback: Optional callback for progress notifications
+            
+        Returns:
+            List of image paths that meet the threshold
+        """
+        if not directories:
+            return []
+        
+        if notify_callback:
+            notify_callback(_("Gathering image files from directories..."))
+        
+        # Gather all image files from directories, tracking which directory each came from
+        image_exts = config.image_types[:]
+        image_paths_with_dirs = []  # List of (image_path, base_directory) tuples
+        for directory in directories:
+            if not os.path.isdir(directory):
+                logger.warning(f"Directory does not exist: {directory}")
+                continue
+            
+            abs_directory = os.path.abspath(directory)
+            files = gather_files(
+                base_dir=abs_directory,
+                exts=image_exts,
+                recursive=True,
+                include_videos=False,
+                include_gifs=True,
+                include_pdfs=False
+            )
+            # Track which directory these files came from (gather_files returns absolute paths)
+            for file_path in files:
+                image_paths_with_dirs.append((file_path, abs_directory))
+        
+        if not image_paths_with_dirs:
+            return []
+        
+        if notify_callback:
+            notify_callback(_("Computing embeddings for batch prototype validation..."))
+        
+        # Compute embeddings for all images in batch (using per-directory caches)
+        embeddings_array, valid_image_paths = EmbeddingPrototype.compute_embeddings_batch_with_dirs(image_paths_with_dirs, notify_callback)
+        
+        if len(embeddings_array) == 0:
+            logger.warning("No valid embeddings computed for batch prototype validation")
+            return []
+        
+        # Vectorized comparison with positive prototype
+        positive_similarities = EmbeddingPrototype.compare_embeddings_with_prototype(
+            embeddings_array, positive_prototype
+        )
+        
+        # Vectorized comparison with negative prototype if set
+        if negative_prototype is not None:
+            negative_similarities = EmbeddingPrototype.compare_embeddings_with_prototype(
+                embeddings_array, negative_prototype
+            )
+            # Calculate final scores: positive - λ * negative
+            final_scores = positive_similarities - negative_lambda * negative_similarities
+        else:
+            final_scores = positive_similarities
+        
+        # Find images that meet the threshold using vectorized comparison
+        threshold_mask = final_scores >= threshold
+        
+        # Return only the image paths that meet the threshold
+        matching_paths = [valid_image_paths[i] for i in range(len(valid_image_paths)) if threshold_mask[i]]
+        
+        return matching_paths
+    
+    @staticmethod
     def compare_with_prototype(image_path: str, prototype: np.ndarray) -> float:
         """
         Compare an image with a prototype embedding using cosine similarity.
+        
+        This is a convenience method for single-image comparison. For batch processing,
+        use compute_embeddings_batch() followed by compare_embeddings_with_prototype().
         
         Args:
             image_path: Path to image to compare
@@ -244,7 +460,25 @@ class EmbeddingPrototype:
             Cosine similarity score (0-1, higher is more similar)
         """
         try:
-            image_embedding = image_embeddings_clip(image_path)
+            # Get the directory for this image and its cache
+            image_dir = os.path.dirname(image_path)
+            cache = EmbeddingPrototype._get_cache_for_directory(image_dir)
+            
+            # Use relative path from directory as key (as CompareData expects)
+            rel_path = os.path.relpath(image_path, image_dir)
+            
+            if rel_path in cache.file_data_dict:
+                image_embedding = cache.file_data_dict[rel_path]
+            else:
+                # Compute embedding if not cached
+                image_embedding = image_embeddings_clip(image_path)
+                cache.file_data_dict[rel_path] = image_embedding
+                # Add to files_found if not already present (needed for save_data validation)
+                if rel_path not in cache.files_found:
+                    cache.files_found.append(rel_path)
+                cache.has_new_file_data = True
+                cache.save_data(overwrite=False, verbose=False)
+            
             image_embedding_array = np.array(image_embedding)
             
             # Calculate cosine similarity

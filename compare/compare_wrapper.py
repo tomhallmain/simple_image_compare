@@ -14,7 +14,7 @@ from compare.compare_prompts import ComparePrompts
 from compare.compare_prompts_exact import ComparePromptsExact
 from compare.compare_size import CompareSize
 from compare.compare_models import CompareModels
-from compare.classification_actions_manager import ClassifierActionType, ClassificationActionsManager
+from compare.classification_actions_manager import ClassifierActionType, ClassifierActionsManager
 from files.marked_file_mover import MarkedFiles
 from image.frame_cache import FrameCache
 from utils.config import config
@@ -150,7 +150,7 @@ class CompareWrapper:
         if config.enable_prevalidations:
             prevalidation_action = None
             try:
-                prevalidation_action = ClassificationActionsManager.prevalidate(
+                prevalidation_action = ClassifierActionsManager.prevalidate(
                     image_path,
                     self._app_actions.get_base_dir,
                     self._app_actions.hide_current_media,
@@ -162,7 +162,7 @@ class CompareWrapper:
                 actual_image_path = FrameCache.get_image_path(image_path)
                 if actual_image_path == image_path:
                     raise e
-                prevalidation_action = ClassificationActionsManager.prevalidate(
+                prevalidation_action = ClassifierActionsManager.prevalidate(
                     actual_image_path,
                     self._app_actions.get_base_dir,
                     self._app_actions.hide_current_media,

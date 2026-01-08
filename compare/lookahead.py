@@ -45,8 +45,8 @@ class Lookahead:
         if self.name_or_text is None or self.name_or_text.strip() == "":
             return False
         if self.is_prevalidation_name:
-            from compare.classification_actions_manager import ClassificationActionsManager
-            prevalidation = ClassificationActionsManager.get_prevalidation_by_name(self.name_or_text)
+            from compare.classification_actions_manager import ClassifierActionsManager
+            prevalidation = ClassifierActionsManager.get_prevalidation_by_name(self.name_or_text)
             return prevalidation is not None
         return True
     
@@ -139,8 +139,8 @@ class LookaheadWindow():
         self.name_or_text_frame.grid(row=row, column=1, sticky=W+E)
         
         # Get list of existing prevalidation names
-        from compare.classification_actions_manager import ClassificationActionsManager
-        self.existing_names = [pv.name for pv in ClassificationActionsManager.prevalidations]
+        from compare.classification_actions_manager import ClassifierActionsManager
+        self.existing_names = [pv.name for pv in ClassifierActionsManager.prevalidations]
         
         self.name_or_text_var = StringVar(self.master, value=self.lookahead.name_or_text)
         
@@ -243,8 +243,8 @@ class LookaheadWindow():
             
             # Update references if name changed
             if self.original_name != lookahead_name:
-                from compare.classification_actions_manager import ClassificationActionsManager
-                for pv in ClassificationActionsManager.prevalidations:
+                from compare.classification_actions_manager import ClassifierActionsManager
+                for pv in ClassifierActionsManager.prevalidations:
                     if self.original_name in pv.lookahead_names:
                         idx_ref = pv.lookahead_names.index(self.original_name)
                         pv.lookahead_names[idx_ref] = lookahead_name
