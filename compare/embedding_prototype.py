@@ -120,15 +120,15 @@ class EmbeddingPrototype:
         
         for i, image_path in enumerate(image_files):
             try:
-                # Use relative path from directory as key (as CompareData expects)
-                rel_path = os.path.relpath(image_path, directory_path)
-                
-                if rel_path in cache.file_data_dict:
-                    embedding = cache.file_data_dict[rel_path]
+                if image_path in cache.file_data_dict:
+                    embedding = cache.file_data_dict[image_path]
                 else:
                     # Compute embedding if not cached
                     embedding = image_embeddings_clip(image_path)
-                    cache.file_data_dict[rel_path] = embedding
+                    cache.file_data_dict[image_path] = embedding
+                    # Add to files_found if not already present (needed for save_data validation)
+                    if image_path not in cache.files_found:
+                        cache.files_found.append(image_path)
                     cache.has_new_file_data = True
                 
                 embeddings.append(embedding)
@@ -159,8 +159,8 @@ class EmbeddingPrototype:
         if norm > 0:
             mean_embedding = mean_embedding / norm
         
-        # Save embedding cache if new data was added
-        if cache.has_new_file_data:
+        # Save embedding cache if new data was added and we have files
+        if cache.has_new_file_data and len(cache.files_found) > 0:
             cache.save_data(overwrite=False, verbose=False)
         
         # Cache the result
@@ -279,8 +279,11 @@ class EmbeddingPrototype:
                 # Get cache for the base directory
                 if base_directory != previous_directory:
                     if cache is not None:
-                        cache.save_data()
+                        cache.save_data(overwrite=False, verbose=False)
                         cache.has_new_file_data = False
+                        # Ensure file_data_dict is loaded (it may be None after save_data)
+                        if cache.file_data_dict is None:
+                            cache.load_data(overwrite=False)
                     cache = EmbeddingPrototype._get_cache_for_directory(base_directory)
                 previous_directory = base_directory
                 
@@ -305,7 +308,7 @@ class EmbeddingPrototype:
                 embeddings.append(embedding)
                 valid_image_paths.append(full_path)
                 
-                if notify_callback and (i + 1) % 100 == 0:
+                if notify_callback and (i + 1) % 1000 == 0:
                     notify_callback(_("Computed embeddings for {0}/{1} images...").format(i + 1, len(image_paths_with_dirs)))
             except Exception as e:
                 logger.error(f"Error calculating embedding for {image_path}: {e}")
@@ -349,6 +352,11 @@ class EmbeddingPrototype:
         if abs_dir not in _directory_caches:
             _directory_caches[abs_dir] = CompareData(base_dir=abs_dir, mode=CompareMode.CLIP_EMBEDDING)
             _directory_caches[abs_dir].load_data(overwrite=False)
+        else:
+            # Reload data if it was cleared after saving (file_data_dict is None)
+            cache = _directory_caches[abs_dir]
+            if cache.file_data_dict is None:
+                cache.load_data(overwrite=False)
         return _directory_caches[abs_dir]
     
     @staticmethod
@@ -441,7 +449,22 @@ class EmbeddingPrototype:
         
         # Return only the image paths that meet the threshold
         matching_paths = [valid_image_paths[i] for i in range(len(valid_image_paths)) if threshold_mask[i]]
-        
+
+        if notify_callback:
+            notify_callback(_("Found {0} images that meet the threshold...").format(len(matching_paths)))
+        logger.info(f"Found {len(matching_paths)} images that meet the threshold")
+        if len(matching_paths) == 0:
+            # Log top 5 similarity scores for debugging
+            # Create list of (score, path) tuples
+            score_path_pairs = [(final_scores[i], valid_image_paths[i]) for i in range(len(valid_image_paths))]
+            # Sort by score descending
+            score_path_pairs.sort(key=lambda x: x[0], reverse=True)
+            # Log top 5
+            top_5 = score_path_pairs[:5]
+            logger.info(f"No images met the threshold of {threshold:.4f}. Top 5 similarity scores:")
+            for score, path in top_5:
+                logger.info(f"  {score:.4f}: {path}")
+
         return matching_paths
     
     @staticmethod
