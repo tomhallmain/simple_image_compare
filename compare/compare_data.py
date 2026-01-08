@@ -1,5 +1,6 @@
 import os
 import pickle
+import sys
 
 from utils.constants import CompareMode
 from utils.logging_setup import get_logger
@@ -118,3 +119,33 @@ class CompareData:
         elif verbose:
             logger.info("Data from " + str(self.n_files_found)
                   + " files compiled for comparison.")
+    
+    def estimate_memory_size(self) -> int:
+        """
+        Estimate the memory size of this CompareData instance in bytes.
+        
+        Returns:
+            Estimated memory size in bytes
+        """
+        total_size = sys.getsizeof(self)
+        # Size of base_dir string
+        total_size += sys.getsizeof(self.base_dir)
+        # Size of files_found list
+        if self.files_found is not None:
+            total_size += sys.getsizeof(self.files_found)
+            for file_path in self.files_found:
+                total_size += sys.getsizeof(file_path)
+        # Size of file_data_dict (dictionary of embeddings)
+        if self.file_data_dict is not None:
+            total_size += sys.getsizeof(self.file_data_dict)
+            # Estimate size of embeddings (each embedding is a list of floats)
+            # CLIP embeddings are typically 512 floats = ~2KB per embedding
+            for rel_path, embedding in self.file_data_dict.items():
+                total_size += sys.getsizeof(rel_path)  # Path string
+                total_size += sys.getsizeof(embedding)  # List of floats
+                if isinstance(embedding, list):
+                    total_size += len(embedding) * sys.getsizeof(0.0)  # Float size
+        # Size of file_faces_dict (if present)
+        if self.file_faces_dict is not None:
+            total_size += sys.getsizeof(self.file_faces_dict)
+        return total_size

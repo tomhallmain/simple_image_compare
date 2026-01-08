@@ -5,7 +5,7 @@ from tkinter import Frame, Label, Scale, Checkbutton, BooleanVar, StringVar, LEF
 import tkinter.font as fnt
 from tkinter.ttk import Entry, Button, Combobox
 
-from compare.classification_actions_manager import Prevalidation, ClassifierActionsManager
+from compare.classifier_actions_manager import Prevalidation, ClassifierActionsManager
 from compare.directory_profile import DirectoryProfile, DirectoryProfileWindow
 from compare.lookahead import Lookahead, LookaheadWindow
 from image.classifier_action_type import ClassifierActionType
@@ -105,8 +105,7 @@ class PrevalidationModifyWindow():
         self.action_choice.current(action_options.index(self.prevalidation.action.get_translation()))
         self.action_choice.bind("<<ComboboxSelected>>", self.set_action)
         self.action_choice.grid(row=row, column=1, sticky=W)
-        # Style the combobox
-        self.action_choice.config(background=AppStyle.BG_COLOR, foreground=AppStyle.FG_COLOR)
+        AppStyle.setup_combobox_style(self.action_choice)
 
         row += 1
         self.label_action_modifier = Label(self.frame)
@@ -125,7 +124,7 @@ class PrevalidationModifyWindow():
         self.image_classifier_name_choice.current(name_options.index(self.prevalidation.image_classifier_name))
         self.image_classifier_name_choice.bind("<<ComboboxSelected>>", self.set_image_classifier)
         self.image_classifier_name_choice.grid(row=row, column=1, sticky=W)
-        self.image_classifier_name_choice.config(background=AppStyle.BG_COLOR, foreground=AppStyle.FG_COLOR)
+        AppStyle.setup_combobox_style(self.image_classifier_name_choice)
 
         row += 1
         self.label_selected_category = Label(self.frame)
@@ -170,7 +169,7 @@ class PrevalidationModifyWindow():
             self.profile_choice.current(0)  # Default to Global
         self.profile_choice.bind("<<ComboboxSelected>>", self.set_profile_name)
         self.profile_choice.grid(row=row, column=1, sticky=W)
-        self.profile_choice.config(background=AppStyle.BG_COLOR, foreground=AppStyle.FG_COLOR)
+        AppStyle.setup_combobox_style(self.profile_choice)
         
         row += 1
         self.add_prevalidation_btn = None
@@ -433,6 +432,8 @@ class PrevalidationsWindow():
                                           font=fnt.Font(size=config.font_size), bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
         self.lookaheads_listbox.pack(side=LEFT, fill=BOTH, expand=True)
         scrollbar.config(command=self.lookaheads_listbox.yview)
+        # Bind double-click to edit lookahead
+        self.lookaheads_listbox.bind("<Double-Button-1>", lambda event: self.edit_lookahead())
         
         # Buttons frame
         buttons_frame = Frame(self.lookahead_frame, bg=AppStyle.BG_COLOR)
@@ -522,6 +523,8 @@ class PrevalidationsWindow():
                                         font=fnt.Font(size=config.font_size), bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
         self.profiles_listbox.pack(side=LEFT, fill=BOTH, expand=True)
         scrollbar.config(command=self.profiles_listbox.yview)
+        # Bind double-click to edit profile
+        self.profiles_listbox.bind("<Double-Button-1>", lambda event: self.edit_profile())
         
         # Buttons frame
         buttons_frame = Frame(self.profile_frame, bg=AppStyle.BG_COLOR)

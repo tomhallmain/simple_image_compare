@@ -1,4 +1,5 @@
 import os
+import sys
 import hashlib
 from typing import Optional, List
 import numpy as np
@@ -15,6 +16,9 @@ logger = get_logger("embedding_prototype")
 
 # Cache of CompareData instances per directory
 _directory_caches: dict[str, CompareData] = {}
+# Maximum memory size (in bytes) for directory caches before removing old ones
+# Default: 500 MB (500 * 1024 * 1024 bytes)
+MAX_DIRECTORY_CACHE_MEMORY_BYTES = 500 * 1024 * 1024
 
 
 class EmbeddingPrototype:
@@ -161,7 +165,11 @@ class EmbeddingPrototype:
         
         # Save embedding cache if new data was added and we have files
         if cache.has_new_file_data and len(cache.files_found) > 0:
-            cache.save_data(overwrite=False, verbose=False)
+            try:
+                cache.save_data(overwrite=False, verbose=False)
+            except Exception as e:
+                logger.warning(f"Error saving cache for {directory_path}: {e}")
+            EmbeddingPrototype._remove_cache_from_memory(directory_path)
         
         # Cache the result
         EmbeddingPrototype._cache_prototype(file_list_id, image_files, mean_embedding)
@@ -279,11 +287,13 @@ class EmbeddingPrototype:
                 # Get cache for the base directory
                 if base_directory != previous_directory:
                     if cache is not None:
-                        cache.save_data(overwrite=False, verbose=False)
+                        # Save cache and remove from memory to allow garbage collection
+                        try:
+                            cache.save_data(overwrite=False, verbose=False)
+                        except Exception as e:
+                            logger.warning(f"Error saving cache for {previous_directory}: {e}")
                         cache.has_new_file_data = False
-                        # Ensure file_data_dict is loaded (it may be None after save_data)
-                        if cache.file_data_dict is None:
-                            cache.load_data(overwrite=False)
+                        EmbeddingPrototype._remove_cache_from_memory(previous_directory)
                     cache = EmbeddingPrototype._get_cache_for_directory(base_directory)
                 previous_directory = base_directory
                 
@@ -314,11 +324,16 @@ class EmbeddingPrototype:
                 logger.error(f"Error calculating embedding for {image_path}: {e}")
                 continue
         
-        # Save caches for directories with new data
+        # Save caches for directories with new data and remove from memory
         for directory in directories_with_new_data:
             abs_dir = os.path.abspath(directory)
             if abs_dir in _directory_caches:
-                _directory_caches[abs_dir].save_data(overwrite=False, verbose=False)
+                cache = _directory_caches[abs_dir]
+                try:
+                    cache.save_data(overwrite=False, verbose=False)
+                except Exception as e:
+                    logger.warning(f"Error saving cache for {directory}: {e}")
+                EmbeddingPrototype._remove_cache_from_memory(directory)
         
         if not embeddings:
             return np.array([]), []
@@ -360,13 +375,50 @@ class EmbeddingPrototype:
         return _directory_caches[abs_dir]
     
     @staticmethod
+    def _estimate_cache_memory_size() -> int:
+        """
+        Estimate the total memory size of all directory caches in bytes.
+        
+        Returns:
+            Estimated memory size in bytes
+        """
+        total_size = sys.getsizeof(_directory_caches)
+        for abs_dir, cache in _directory_caches.items():
+            # Size of the key (directory path string)
+            total_size += sys.getsizeof(abs_dir)
+            # Size of the cache object itself (delegates to CompareData.estimate_memory_size)
+            total_size += cache.estimate_memory_size()
+        return total_size
+    
+    @staticmethod
+    def _remove_cache_from_memory(directory: str):
+        """
+        Remove a cache from memory after saving (data is persisted to disk).
+        Only removes if the cache map has exceeded MAX_DIRECTORY_CACHE_MEMORY_BYTES to preserve
+        in-memory caches for smaller runs that don't require batching.
+        """
+        abs_dir = os.path.abspath(directory)
+        if abs_dir in _directory_caches:
+            # Calculate current memory usage
+            current_memory = EmbeddingPrototype._estimate_cache_memory_size()
+            
+            # Only remove if we've exceeded the maximum memory threshold
+            if current_memory > MAX_DIRECTORY_CACHE_MEMORY_BYTES:
+                del _directory_caches[abs_dir]
+                new_memory = EmbeddingPrototype._estimate_cache_memory_size()
+                logger.debug(f"Removed cache for {directory} from memory (memory: {current_memory / (1024*1024):.1f}MB -> {new_memory / (1024*1024):.1f}MB)")
+            else:
+                logger.debug(f"Keeping cache for {directory} in memory (memory: {current_memory / (1024*1024):.1f}MB <= {MAX_DIRECTORY_CACHE_MEMORY_BYTES / (1024*1024):.1f}MB)")
+    
+    @staticmethod
     def batch_validate_with_prototypes(
         directories: List[str],
         positive_prototype: np.ndarray,
         threshold: float,
         negative_prototype: Optional[np.ndarray] = None,
         negative_lambda: float = 0.5,
-        notify_callback=None
+        notify_callback=None,
+        max_images_per_batch: Optional[int] = None
     ) -> List[str]:
         """
         Validate images in directories against prototype(s) using vectorized operations.
@@ -378,6 +430,8 @@ class EmbeddingPrototype:
         Uses formula: Final Score = sim(query, positive_proto) - λ * sim(query, negative_proto)
         If negative prototype is not set, uses only positive similarity.
         
+        Processes images in batches if max_images_per_batch is specified to limit memory usage.
+        
         Args:
             directories: List of directory paths to process images from
             positive_prototype: Positive prototype embedding vector
@@ -385,6 +439,7 @@ class EmbeddingPrototype:
             negative_prototype: Optional negative prototype embedding vector
             negative_lambda: Weight for negative prototype (λ)
             notify_callback: Optional callback for progress notifications
+            max_images_per_batch: Optional maximum number of images to process per batch (default: None, no batching)
             
         Returns:
             List of image paths that meet the threshold
@@ -419,53 +474,81 @@ class EmbeddingPrototype:
         if not image_paths_with_dirs:
             return []
         
-        if notify_callback:
-            notify_callback(_("Computing embeddings for batch prototype validation..."))
+        # Process images in batches if max_images_per_batch is specified
+        all_matching_paths = []
+        total_images = len(image_paths_with_dirs)
         
-        # Compute embeddings for all images in batch (using per-directory caches)
-        embeddings_array, valid_image_paths = EmbeddingPrototype.compute_embeddings_batch_with_dirs(image_paths_with_dirs, notify_callback)
-        
-        if len(embeddings_array) == 0:
-            logger.warning("No valid embeddings computed for batch prototype validation")
-            return []
-        
-        # Vectorized comparison with positive prototype
-        positive_similarities = EmbeddingPrototype.compare_embeddings_with_prototype(
-            embeddings_array, positive_prototype
-        )
-        
-        # Vectorized comparison with negative prototype if set
-        if negative_prototype is not None:
-            negative_similarities = EmbeddingPrototype.compare_embeddings_with_prototype(
-                embeddings_array, negative_prototype
-            )
-            # Calculate final scores: positive - λ * negative
-            final_scores = positive_similarities - negative_lambda * negative_similarities
+        # Determine batch size and number of batches
+        if max_images_per_batch is not None and total_images > max_images_per_batch:
+            batch_size = max_images_per_batch
+            num_batches = (total_images + max_images_per_batch - 1) // max_images_per_batch
+            if notify_callback:
+                notify_callback(_("Processing {0} images in {1} batches of up to {2} images...").format(total_images, num_batches, max_images_per_batch))
+            logger.info(f"Processing {total_images} images in {num_batches} batches of up to {max_images_per_batch} images")
         else:
-            final_scores = positive_similarities
+            # Process all images in a single batch
+            batch_size = total_images
+            num_batches = 1
+            if notify_callback:
+                notify_callback(_("Computing embeddings for batch prototype validation..."))
         
-        # Find images that meet the threshold using vectorized comparison
-        threshold_mask = final_scores >= threshold
-        
-        # Return only the image paths that meet the threshold
-        matching_paths = [valid_image_paths[i] for i in range(len(valid_image_paths)) if threshold_mask[i]]
+        # Process each batch
+        for batch_idx in range(num_batches):
+            start_idx = batch_idx * batch_size
+            end_idx = min(start_idx + batch_size, total_images)
+            batch_paths = image_paths_with_dirs[start_idx:end_idx]
+            
+            if num_batches > 1 and notify_callback:
+                notify_callback(_("Processing batch {0}/{1} ({2} images)...").format(batch_idx + 1, num_batches, len(batch_paths)))
+            
+            # Compute embeddings for this batch
+            embeddings_array, valid_image_paths = EmbeddingPrototype.compute_embeddings_batch_with_dirs(batch_paths, notify_callback)
+            
+            if len(embeddings_array) == 0:
+                if batch_idx == 0:
+                    logger.warning("No valid embeddings computed for batch prototype validation")
+                    return []
+                continue
+            
+            # Vectorized comparison with positive prototype
+            positive_similarities = EmbeddingPrototype.compare_embeddings_with_prototype(
+                embeddings_array, positive_prototype
+            )
+            
+            # Vectorized comparison with negative prototype if set
+            if negative_prototype is not None:
+                negative_similarities = EmbeddingPrototype.compare_embeddings_with_prototype(
+                    embeddings_array, negative_prototype
+                )
+                # Calculate final scores: positive - λ * negative
+                final_scores = positive_similarities - negative_lambda * negative_similarities
+            else:
+                final_scores = positive_similarities
+            
+            # Find images that meet the threshold using vectorized comparison
+            threshold_mask = final_scores >= threshold
+            
+            # Add matching paths from this batch
+            batch_matching_paths = [valid_image_paths[i] for i in range(len(valid_image_paths)) if threshold_mask[i]]
+            all_matching_paths.extend(batch_matching_paths)
+            
+            # Log top 5 similarity scores for debugging (only for single batch case when no matches found)
+            if num_batches == 1 and len(all_matching_paths) == 0:
+                # Create list of (score, path) tuples
+                score_path_pairs = [(final_scores[i], valid_image_paths[i]) for i in range(len(valid_image_paths))]
+                # Sort by score descending
+                score_path_pairs.sort(key=lambda x: x[0], reverse=True)
+                # Log top 5
+                top_5 = score_path_pairs[:5]
+                logger.info(f"No images met the threshold of {threshold:.4f}. Top 5 similarity scores:")
+                for score, path in top_5:
+                    logger.info(f"  {score:.4f}: {path}")
 
         if notify_callback:
-            notify_callback(_("Found {0} images that meet the threshold...").format(len(matching_paths)))
-        logger.info(f"Found {len(matching_paths)} images that meet the threshold")
-        if len(matching_paths) == 0:
-            # Log top 5 similarity scores for debugging
-            # Create list of (score, path) tuples
-            score_path_pairs = [(final_scores[i], valid_image_paths[i]) for i in range(len(valid_image_paths))]
-            # Sort by score descending
-            score_path_pairs.sort(key=lambda x: x[0], reverse=True)
-            # Log top 5
-            top_5 = score_path_pairs[:5]
-            logger.info(f"No images met the threshold of {threshold:.4f}. Top 5 similarity scores:")
-            for score, path in top_5:
-                logger.info(f"  {score:.4f}: {path}")
+            notify_callback(_("Found {0} images that meet the threshold...").format(len(all_matching_paths)))
+        logger.info(f"Found {len(all_matching_paths)} images that meet the threshold")
 
-        return matching_paths
+        return all_matching_paths
     
     @staticmethod
     def compare_with_prototype(image_path: str, prototype: np.ndarray) -> float:

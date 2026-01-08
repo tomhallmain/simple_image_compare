@@ -6,7 +6,7 @@ from tkinter import Frame, Label, Scale, Checkbutton, BooleanVar, StringVar, LEF
 import tkinter.font as fnt
 from tkinter.ttk import Entry, Button, Combobox
 
-from compare.classification_actions_manager import ClassifierAction, ClassifierActionsManager
+from compare.classifier_actions_manager import ClassifierAction, ClassifierActionsManager
 from compare.directory_profile import DirectoryProfile
 from compare.embedding_prototype import EmbeddingPrototype
 from image.classifier_action_type import ClassifierActionType
@@ -113,8 +113,7 @@ class ClassifierActionModifyWindow():
         self.action_choice.current(action_options.index(self.classifier_action.action.get_translation()))
         self.action_choice.bind("<<ComboboxSelected>>", self.set_action)
         self.action_choice.grid(row=row, column=1, sticky=W)
-        # Style the combobox
-        self.action_choice.config(background=AppStyle.BG_COLOR, foreground=AppStyle.FG_COLOR)
+        AppStyle.setup_combobox_style(self.action_choice)
 
         row += 1
         self.label_action_modifier = Label(self.frame)
@@ -133,7 +132,7 @@ class ClassifierActionModifyWindow():
         self.image_classifier_name_choice.current(name_options.index(self.classifier_action.image_classifier_name))
         self.image_classifier_name_choice.bind("<<ComboboxSelected>>", self.set_image_classifier)
         self.image_classifier_name_choice.grid(row=row, column=1, sticky=W)
-        self.image_classifier_name_choice.config(background=AppStyle.BG_COLOR, foreground=AppStyle.FG_COLOR)
+        AppStyle.setup_combobox_style(self.image_classifier_name_choice)
 
         row += 1
         self.label_selected_category = Label(self.frame)
@@ -422,6 +421,7 @@ class ClassifierActionsWindow():
 
     MAX_HEIGHT = 900
     COL_0_WIDTH = 600
+    BATCH_VALIDATION_MAX_IMAGES = 40000  # Maximum number of images to process in batch prototype validation
 
     @staticmethod
     def run_classifier_action(classifier_action: ClassifierAction, directory_paths: list[str],
@@ -438,7 +438,7 @@ class ClassifierActionsWindow():
             add_mark_callback: Optional callback for marking images
             profile_name_or_path: Optional profile name or directory path to store as last used
         """
-        classifier_action.run(directory_paths, hide_callback, notify_callback, add_mark_callback, profile_name_or_path)
+        classifier_action.run(directory_paths, hide_callback, notify_callback, add_mark_callback, profile_name_or_path, ClassifierActionsWindow.BATCH_VALIDATION_MAX_IMAGES)
 
     @staticmethod
     def set_classifier_actions():
@@ -462,6 +462,8 @@ class ClassifierActionsWindow():
         self.filtered_classifier_actions = ClassifierActionsManager.classifier_actions[:]
         self.label_list = []
         self.label_list2 = []
+        self.is_active_list = []
+        self.is_active_var_list = []
         self.set_classifier_action_btn_list = []
         self.modify_classifier_action_btn_list = []
         self.delete_classifier_action_btn_list = []
@@ -506,7 +508,7 @@ class ClassifierActionsWindow():
         else:
             self.profile_choice.config(state="disabled")
         self.profile_choice.grid(row=row, column=1, sticky=W, padx=2, pady=5)
-        self.profile_choice.config(background=AppStyle.BG_COLOR, foreground=AppStyle.FG_COLOR)
+        AppStyle.setup_combobox_style(self.profile_choice)
 
         self.add_classifier_action_widgets()
 
@@ -543,9 +545,14 @@ class ClassifierActionsWindow():
             self.label_list2.append(label_action)
             self.add_label(label_action, classifier_action.action.get_translation(), row=row, column=base_col + 1)
             
-            active_text = _("Yes") if classifier_action.is_active else _("No")
-            label_active = Label(self.frame)
-            self.add_label(label_active, active_text, row=row, column=base_col + 2)
+            is_active_var = BooleanVar(value=classifier_action.is_active)
+            def set_is_active_handler(classifier_action=classifier_action, var=is_active_var):
+                classifier_action.is_active = var.get()
+                logger.info(f"Set {classifier_action} to active: {classifier_action.is_active}")
+            is_active_box = Checkbutton(self.frame, variable=is_active_var, font=fnt.Font(size=config.font_size), command=set_is_active_handler)
+            is_active_box.grid(row=row, column=base_col + 2, sticky=(W))
+            self.is_active_list.append(is_active_box)
+            self.is_active_var_list.append(is_active_var)
 
             modify_classifier_action_btn = Button(self.frame, text=_("Modify"))
             self.modify_classifier_action_btn_list.append(modify_classifier_action_btn)
@@ -612,10 +619,29 @@ class ClassifierActionsWindow():
         
         # Confirm with user
         from tkinter import messagebox
-        directory_list = "\n".join([f"  - {d}" for d in selected_profile.directories])
+        from collections import defaultdict
+        
+        directories = selected_profile.directories
+        if len(directories) > 10:
+            # Group directories by parent directory
+            parent_counts = defaultdict(int)
+            for directory in directories:
+                parent_dir = os.path.dirname(directory)
+                parent_counts[parent_dir] += 1
+            
+            # Format parent directory counts
+            directory_list = "\n".join([f"{parent} - {count} " + _("directories") for parent, count in sorted(parent_counts.items())])
+        else:
+            # List all directories individually
+            directory_list = "\n".join([f"  - {d}" for d in directories])
+        
+        # Separate translatable message from directory list
+        message = _("Run classifier action '{0}' on the following directories?").format(classifier_action.name)
+        full_message = f"{message}\n\n{directory_list}"
+        
         res = messagebox.askokcancel(
             _("Run Classifier Action"),
-            _("Run classifier action '{0}' on the following directories?\n\n{1}").format(classifier_action.name, directory_list)
+            full_message
         )
         
         if res:
@@ -650,6 +676,8 @@ class ClassifierActionsWindow():
             label.destroy()
         for label in self.label_list2:
             label.destroy()
+        for chkbtn in self.is_active_list:
+            chkbtn.destroy()
         for btn in self.modify_classifier_action_btn_list:
             btn.destroy()
         for btn in self.delete_classifier_action_btn_list:
@@ -661,6 +689,8 @@ class ClassifierActionsWindow():
         # Note: Don't destroy classifier_actions_title, label_profile, or profile_choice as they're persistent UI elements
         self.label_list = []
         self.label_list2 = []
+        self.is_active_list = []
+        self.is_active_var_list = []
         self.modify_classifier_action_btn_list = []
         self.delete_classifier_action_btn_list = []
         self.run_classifier_action_btn_list = []

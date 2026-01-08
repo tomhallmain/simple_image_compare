@@ -175,8 +175,17 @@ class DirectoryProfileWindow():
         self.add_dir_btn = Button(dir_buttons_frame, text=_("Add"), command=self.add_directory)
         self.add_dir_btn.pack(side=TOP, pady=2)
         
+        self.edit_dir_btn = Button(dir_buttons_frame, text=_("Edit"), command=self.edit_directory)
+        self.edit_dir_btn.pack(side=TOP, pady=2)
+        
         self.remove_dir_btn = Button(dir_buttons_frame, text=_("Remove"), command=self.remove_directory)
         self.remove_dir_btn.pack(side=TOP, pady=2)
+        
+        self.add_subdirs_btn = Button(dir_buttons_frame, text=_("Add dirs from subdirs"), command=self.add_subdirectories)
+        self.add_subdirs_btn.pack(side=TOP, pady=2)
+        
+        self.clear_all_btn = Button(dir_buttons_frame, text=_("Clear all"), command=self.clear_all_directories)
+        self.clear_all_btn.pack(side=TOP, pady=2)
         
         # Initialize directories listbox
         self.refresh_directories_listbox()
@@ -194,12 +203,38 @@ class DirectoryProfileWindow():
             for directory in self.profile.directories:
                 self.directories_listbox.insert("end", directory)
 
+    def _browse_directory(self, title=_("Select directory"), initialdir=None):
+        """
+        Internal method to open a directory browser dialog.
+        
+        Args:
+            title: Title for the dialog
+            initialdir: Initial directory to show in the dialog (defaults to current directory or last selected)
+            
+        Returns:
+            Selected directory path, or None if cancelled
+        """
+        from tkinter import filedialog
+        
+        if initialdir is None:
+            # Try to use the last directory in the profile, or current directory
+            if self.profile.directories:
+                initialdir = self.profile.directories[-1]
+            else:
+                initialdir = "."
+        
+        directory = filedialog.askdirectory(
+            parent=self.master,
+            title=title,
+            initialdir=initialdir if os.path.isdir(initialdir) else "."
+        )
+        
+        return directory if directory and directory.strip() else None
+    
     def add_directory(self):
         """Add a directory to the profile."""
-        # Simple text entry dialog - could be enhanced with file browser
-        from tkinter import simpledialog
-        directory = simpledialog.askstring(_("Add Directory"), _("Enter directory path:"))
-        if directory and directory.strip():
+        directory = self._browse_directory(_("Add Directory"))
+        if directory:
             directory = directory.strip()
             if os.path.isdir(directory):
                 if directory not in self.profile.directories:
@@ -210,6 +245,35 @@ class DirectoryProfileWindow():
             else:
                 logger.error(f"Invalid directory: {directory}")
 
+    def edit_directory(self):
+        """Edit the selected directory path."""
+        selection = self.directories_listbox.curselection()
+        if not selection:
+            logger.warning("No directory selected for editing")
+            return
+        idx = selection[0]
+        if idx >= len(self.profile.directories):
+            return
+        
+        current_dir = self.profile.directories[idx]
+        
+        # Use file dialog to select a new directory
+        new_directory = self._browse_directory(_("Edit Directory"), initialdir=current_dir)
+        
+        if new_directory:
+            new_directory = new_directory.strip()
+            if os.path.isdir(new_directory):
+                # Check if the new directory is already in the list (excluding the current one)
+                if new_directory in self.profile.directories and self.profile.directories.index(new_directory) != idx:
+                    logger.warning(f"Directory {new_directory} already in profile")
+                else:
+                    self.profile.directories[idx] = new_directory
+                    self.refresh_directories_listbox()
+                    # Keep the same item selected
+                    self.directories_listbox.selection_set(idx)
+            else:
+                logger.error(f"Invalid directory: {new_directory}")
+
     def remove_directory(self):
         """Remove the selected directory from the profile."""
         selection = self.directories_listbox.curselection()
@@ -219,6 +283,44 @@ class DirectoryProfileWindow():
         if idx < len(self.profile.directories):
             del self.profile.directories[idx]
             self.refresh_directories_listbox()
+    
+    def clear_all_directories(self):
+        """Remove all directories from the profile."""
+        self.profile.directories.clear()
+        self.refresh_directories_listbox()
+        logger.info("Cleared all directories from profile")
+    
+    def add_subdirectories(self):
+        """Add all immediate subdirectories of a user-selected directory."""
+        parent_dir = self._browse_directory(_("Select directory to add subdirectories from"))
+        if not parent_dir:
+            return
+        
+        parent_dir = parent_dir.strip()
+        if not os.path.isdir(parent_dir):
+            logger.error(f"Invalid directory: {parent_dir}")
+            return
+        
+        # Get all immediate subdirectories
+        subdirs_added = 0
+        try:
+            for item in os.listdir(parent_dir):
+                subdir_path = os.path.join(parent_dir, item)
+                if os.path.isdir(subdir_path):
+                    # Add if not already in the list
+                    if subdir_path not in self.profile.directories:
+                        self.profile.directories.append(subdir_path)
+                        subdirs_added += 1
+                    else:
+                        logger.debug(f"Subdirectory {subdir_path} already in profile")
+            
+            if subdirs_added > 0:
+                self.refresh_directories_listbox()
+                logger.info(f"Added {subdirs_added} subdirectories from {parent_dir}")
+            else:
+                logger.info(f"No new subdirectories found in {parent_dir}")
+        except Exception as e:
+            logger.error(f"Error reading subdirectories from {parent_dir}: {e}")
 
     def finalize_profile(self, event=None):
         profile_name = self.profile_name_var.get().strip()

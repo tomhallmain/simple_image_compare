@@ -1623,6 +1623,7 @@ class App():
             except Exception as e:
                 self.handle_error(str(e), title="Prevalidations Window Error")
 
+    @require_password(ProtectedActions.EDIT_PREVALIDATIONS, ProtectedActions.RUN_PREVALIDATIONS)
     def open_classifier_actions_window(self, event=None) -> None:
         try:
             classifier_actions_window = ClassifierActionsWindow(self.master, self.app_actions)

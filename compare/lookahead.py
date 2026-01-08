@@ -45,7 +45,7 @@ class Lookahead:
         if self.name_or_text is None or self.name_or_text.strip() == "":
             return False
         if self.is_prevalidation_name:
-            from compare.classification_actions_manager import ClassifierActionsManager
+            from compare.classifier_actions_manager import ClassifierActionsManager
             prevalidation = ClassifierActionsManager.get_prevalidation_by_name(self.name_or_text)
             return prevalidation is not None
         return True
@@ -139,7 +139,7 @@ class LookaheadWindow():
         self.name_or_text_frame.grid(row=row, column=1, sticky=W+E)
         
         # Get list of existing prevalidation names
-        from compare.classification_actions_manager import ClassifierActionsManager
+        from compare.classifier_actions_manager import ClassifierActionsManager
         self.existing_names = [pv.name for pv in ClassifierActionsManager.prevalidations]
         
         self.name_or_text_var = StringVar(self.master, value=self.lookahead.name_or_text)
@@ -185,7 +185,7 @@ class LookaheadWindow():
                                                  values=self.existing_names, width=47,
                                                  font=fnt.Font(size=config.font_size))
             self.name_or_text_combobox.pack(fill=BOTH, expand=True)
-            self.name_or_text_combobox.config(background=AppStyle.BG_COLOR, foreground=AppStyle.FG_COLOR)
+            AppStyle.setup_combobox_style(self.name_or_text_combobox)
         else:
             # Show entry for custom text
             self.name_or_text_entry = Entry(self.name_or_text_frame, textvariable=self.name_or_text_var, width=50,
@@ -243,7 +243,7 @@ class LookaheadWindow():
             
             # Update references if name changed
             if self.original_name != lookahead_name:
-                from compare.classification_actions_manager import ClassifierActionsManager
+                from compare.classifier_actions_manager import ClassifierActionsManager
                 for pv in ClassifierActionsManager.prevalidations:
                     if self.original_name in pv.lookahead_names:
                         idx_ref = pv.lookahead_names.index(self.original_name)

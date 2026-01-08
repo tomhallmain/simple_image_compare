@@ -22,3 +22,22 @@ class AppStyle:
                               foreground=AppStyle.FG_COLOR,
                               borderwidth=2,
                               focuscolor=AppStyle.BG_COLOR)
+    
+    @staticmethod
+    def setup_combobox_style(combobox, style_instance=None):
+        """
+        Setup combobox style for the application and apply it to the given combobox.
+        
+        Args:
+            combobox: The ttk.Combobox widget to style
+            style_instance: Optional ttk.Style instance. If None, creates a new one.
+        """
+        from tkinter.ttk import Style
+        if style_instance is None:
+            style_instance = Style()
+        style_instance.configure("TCombobox", 
+                                fieldbackground=AppStyle.BG_COLOR, 
+                                foreground=AppStyle.FG_COLOR, 
+                                background=AppStyle.BG_COLOR)
+        combobox.configure(style="TCombobox")
+        return style_instance

@@ -9,6 +9,7 @@ This module centralizes the management of:
 
 from enum import Enum
 import os
+import threading
 from typing import List, Optional
 
 from compare.compare_embeddings_clip import CompareEmbeddingClip
@@ -24,6 +25,7 @@ from utils.app_info_cache import app_info_cache
 from utils.config import config
 from utils.constants import ActionType
 from utils.logging_setup import get_logger
+from utils.running_tasks_registry import start_thread
 from utils.translations import I18N
 from utils.utils import Utils
 
@@ -31,7 +33,7 @@ from utils.utils import Utils
 
 _ = I18N._
 
-logger = get_logger("classification_actions_manager")
+logger = get_logger("classifier_actions_manager")
 
 
 
@@ -206,33 +208,50 @@ class ClassifierAction:
             logger.error(f"Error checking prototype validation for {image_path}: {e}")
             return False
     
-    def _run_with_batch_prototype_validation(self, directory_paths: list[str], hide_callback, notify_callback, add_mark_callback=None):
+    def _run_with_batch_prototype_validation(self, directory_paths: list[str], hide_callback, notify_callback, add_mark_callback=None, max_images_per_batch: Optional[int] = None):
         """
         Run classifier action with batch prototype validation for efficiency.
         
         Delegates batch processing to EmbeddingPrototype, then runs actions on matching images.
+        Runs the entire process (batch validation + action execution) in a separate thread.
+        
+        Args:
+            directory_paths: List of directory paths to process
+            hide_callback: Callback for hiding images
+            notify_callback: Callback for notifications
+            add_mark_callback: Optional callback for marking images
+            max_images_per_batch: Optional maximum number of images to process per batch
         """
         if not self.use_prototype or self._cached_prototype is None:
             return
         
-        # Use EmbeddingPrototype to batch validate images from directories
-        matching_paths = EmbeddingPrototype.batch_validate_with_prototypes(
-            directories=directory_paths,
-            positive_prototype=self._cached_prototype,
-            threshold=self.threshold,
-            negative_prototype=self._cached_negative_prototype,
-            negative_lambda=self.negative_prototype_lambda,
-            notify_callback=notify_callback
-        )
-        
-        # Run actions on matching images
-        for image_path in matching_paths:
+        def batch_validation_worker():
+            """Worker function to run batch validation and actions in a separate thread."""
             try:
-                self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
+                # Use EmbeddingPrototype to batch validate images from directories
+                matching_paths = EmbeddingPrototype.batch_validate_with_prototypes(
+                    directories=directory_paths,
+                    positive_prototype=self._cached_prototype,
+                    threshold=self.threshold,
+                    negative_prototype=self._cached_negative_prototype,
+                    negative_lambda=self.negative_prototype_lambda,
+                    notify_callback=notify_callback,
+                    max_images_per_batch=max_images_per_batch
+                )
+                
+                # Run actions on matching images
+                for image_path in matching_paths:
+                    try:
+                        self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
+                    except Exception as e:
+                        logger.error(f"Error running action on {image_path}: {e}")
             except Exception as e:
-                logger.error(f"Error running action on {image_path}: {e}")
+                logger.error(f"Error in batch prototype validation: {e}")
+        
+        # Start batch validation and action execution in a separate thread
+        start_thread(batch_validation_worker, use_asyncio=False)
 
-    def run(self, directory_paths: list[str], hide_callback, notify_callback, add_mark_callback=None, profile_name_or_path: Optional[str] = None):
+    def run(self, directory_paths: list[str], hide_callback, notify_callback, add_mark_callback=None, profile_name_or_path: Optional[str] = None, max_images_per_batch: Optional[int] = None):
         """Run the classifier action on the given directory paths.
         
         Args:
@@ -241,6 +260,7 @@ class ClassifierAction:
             notify_callback: Callback for notifications
             add_mark_callback: Optional callback for marking images
             profile_name_or_path: Optional profile name or directory path to store as last used
+            max_images_per_batch: Optional maximum number of images to process per batch
         """
         if not self.is_active:
             logger.info(f"Classifier action {self.name} is disabled, skipping")
@@ -261,7 +281,7 @@ class ClassifierAction:
         
         # Use batch prototype validation when prototype validation is enabled
         if self.use_prototype:
-            self._run_with_batch_prototype_validation(directory_paths, hide_callback, notify_callback, add_mark_callback)
+            self._run_with_batch_prototype_validation(directory_paths, hide_callback, notify_callback, add_mark_callback, max_images_per_batch)
 
     def run_on_image_path(self, image_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
         # Note: Image classifier and prototype should be loaded before calling this method

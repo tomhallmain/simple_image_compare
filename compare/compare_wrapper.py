@@ -14,7 +14,7 @@ from compare.compare_prompts import ComparePrompts
 from compare.compare_prompts_exact import ComparePromptsExact
 from compare.compare_size import CompareSize
 from compare.compare_models import CompareModels
-from compare.classification_actions_manager import ClassifierActionType, ClassifierActionsManager
+from compare.classifier_actions_manager import ClassifierActionType, ClassifierActionsManager
 from files.marked_file_mover import MarkedFiles
 from image.frame_cache import FrameCache
 from utils.config import config
