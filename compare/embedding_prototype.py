@@ -1,6 +1,7 @@
 import os
 import sys
 import hashlib
+import time
 from typing import Optional, List
 import numpy as np
 
@@ -16,6 +17,8 @@ logger = get_logger("embedding_prototype")
 
 # Cache of CompareData instances per directory
 _directory_caches: dict[str, CompareData] = {}
+# Track last access time for each cache (for LRU eviction)
+_cache_access_times: dict[str, float] = {}
 # Maximum memory size (in bytes) for directory caches before removing old ones
 # Default: 500 MB (500 * 1024 * 1024 bytes)
 MAX_DIRECTORY_CACHE_MEMORY_BYTES = 500 * 1024 * 1024
@@ -364,14 +367,19 @@ class EmbeddingPrototype:
     def _get_cache_for_directory(directory: str) -> CompareData:
         """Get or create a CompareData instance for a directory."""
         abs_dir = os.path.abspath(directory)
+        current_time = time.time()
+        
         if abs_dir not in _directory_caches:
             _directory_caches[abs_dir] = CompareData(base_dir=abs_dir, mode=CompareMode.CLIP_EMBEDDING)
             _directory_caches[abs_dir].load_data(overwrite=False)
+            _cache_access_times[abs_dir] = current_time
         else:
             # Reload data if it was cleared after saving (file_data_dict is None)
             cache = _directory_caches[abs_dir]
             if cache.file_data_dict is None:
                 cache.load_data(overwrite=False)
+            # Update access time for LRU tracking
+            _cache_access_times[abs_dir] = current_time
         return _directory_caches[abs_dir]
     
     @staticmethod
@@ -391,24 +399,61 @@ class EmbeddingPrototype:
         return total_size
     
     @staticmethod
+    def _evict_caches_if_needed():
+        """
+        Evict caches using LRU (Least Recently Used) strategy when memory exceeds threshold.
+        Removes the least recently accessed caches until memory is below the threshold.
+        """
+        current_memory = EmbeddingPrototype._estimate_cache_memory_size()
+        
+        if current_memory <= MAX_DIRECTORY_CACHE_MEMORY_BYTES:
+            return
+        
+        # Sort caches by access time (oldest first) for LRU eviction
+        # Create list of (abs_dir, access_time, cache_size) tuples
+        cache_info = []
+        for abs_dir, cache in _directory_caches.items():
+            access_time = _cache_access_times.get(abs_dir, 0.0)
+            cache_size = cache.estimate_memory_size()
+            cache_info.append((abs_dir, access_time, cache_size))
+        
+        # Sort by access time (oldest first)
+        cache_info.sort(key=lambda x: x[1])
+        
+        # Evict oldest caches until memory is below threshold
+        evicted_count = 0
+        for abs_dir, _, _ in cache_info:
+            if current_memory <= MAX_DIRECTORY_CACHE_MEMORY_BYTES:
+                break
+            
+            # Remove cache and its access time
+            if abs_dir in _directory_caches:
+                del _directory_caches[abs_dir]
+                if abs_dir in _cache_access_times:
+                    del _cache_access_times[abs_dir]
+                evicted_count += 1
+                current_memory = EmbeddingPrototype._estimate_cache_memory_size()
+        
+        if evicted_count > 0:
+            logger.debug(f"Evicted {evicted_count} LRU cache(s) (memory: {current_memory / (1024*1024):.1f}MB <= {MAX_DIRECTORY_CACHE_MEMORY_BYTES / (1024*1024):.1f}MB)")
+    
+    @staticmethod
     def _remove_cache_from_memory(directory: str):
         """
-        Remove a cache from memory after saving (data is persisted to disk).
-        Only removes if the cache map has exceeded MAX_DIRECTORY_CACHE_MEMORY_BYTES to preserve
-        in-memory caches for smaller runs that don't require batching.
+        Mark a cache as saved and trigger eviction if memory exceeds threshold.
+        Uses LRU strategy to evict least recently used caches.
         """
         abs_dir = os.path.abspath(directory)
         if abs_dir in _directory_caches:
-            # Calculate current memory usage
-            current_memory = EmbeddingPrototype._estimate_cache_memory_size()
+            # Check if we need to evict caches (including this one if it's LRU)
+            EmbeddingPrototype._evict_caches_if_needed()
             
-            # Only remove if we've exceeded the maximum memory threshold
-            if current_memory > MAX_DIRECTORY_CACHE_MEMORY_BYTES:
-                del _directory_caches[abs_dir]
-                new_memory = EmbeddingPrototype._estimate_cache_memory_size()
-                logger.debug(f"Removed cache for {directory} from memory (memory: {current_memory / (1024*1024):.1f}MB -> {new_memory / (1024*1024):.1f}MB)")
-            else:
+            # Log current state
+            current_memory = EmbeddingPrototype._estimate_cache_memory_size()
+            if abs_dir in _directory_caches:
                 logger.debug(f"Keeping cache for {directory} in memory (memory: {current_memory / (1024*1024):.1f}MB <= {MAX_DIRECTORY_CACHE_MEMORY_BYTES / (1024*1024):.1f}MB)")
+            else:
+                logger.debug(f"Cache for {directory} was evicted by LRU strategy (memory: {current_memory / (1024*1024):.1f}MB <= {MAX_DIRECTORY_CACHE_MEMORY_BYTES / (1024*1024):.1f}MB)")
     
     @staticmethod
     def batch_validate_with_prototypes(
