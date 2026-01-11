@@ -462,8 +462,6 @@ class PyTorchImageClassifier(BaseImageClassifier):
             raise ValueError("Model not loaded")
         
         try:
-            import torch
-            
             with Image.open(image_path) as img:
                 img = img.convert('RGB')
                 tensor = self.transform(img)
@@ -487,7 +485,7 @@ class PyTorchImageClassifier(BaseImageClassifier):
                 if not torch.all(output >= 0) or not torch.all(output <= 1):
                     output = torch.nn.functional.softmax(output, dim=1)
                 out = output.cpu().numpy()
-                print(out)
+                # print(out)
                 return out
         except Exception as e:
             raise ValueError(f"Prediction failed: {str(e)}")

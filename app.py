@@ -17,9 +17,9 @@ from auth.password_utils import require_password, check_session_expired
 from compare.base_compare import CompareCancelled
 from compare.compare_args import CompareArgs
 from compare.compare_manager import CompareManager
-from compare.classifier_actions_window import ClassifierActionsWindow
+from compare.classifier_management_window import ClassifierManagementWindow
 from compare.compare_settings_window import CompareSettingsWindow
-from compare.prevalidations_window import PrevalidationsWindow
+from compare.prevalidations_window import PrevalidationsTab
 from extensions.refacdir_client import RefacDirClient
 from extensions.sd_runner_client import SDRunnerClient
 from files.directory_notes import DirectoryNotes
@@ -568,8 +568,8 @@ class App():
             RecentDirectories.load_recent_directories()
             FileActionsWindow.load_action_history()
             ImageDetails.load_image_generation_mode()
-            PrevalidationsWindow.set_prevalidations()
-            ClassifierActionsWindow.set_classifier_actions()
+            ClassifierManagementWindow.set_prevalidations()
+            ClassifierManagementWindow.set_classifier_actions()
             FavoritesWindow.load_favorites()
             GoToFile.load_persisted_data()
             TargetDirectoryWindow.load_recent_directories()
@@ -628,8 +628,8 @@ class App():
         MarkedFiles.store_target_dirs()
         FileActionsWindow.store_action_history()
         ImageDetails.store_image_generation_mode()
-        PrevalidationsWindow.store_prevalidations()
-        ClassifierActionsWindow.store_classifier_actions()
+        ClassifierManagementWindow.store_prevalidations()
+        ClassifierManagementWindow.store_classifier_actions()
         FavoritesWindow.store_favorites()
         GoToFile.save_persisted_data()
         TargetDirectoryWindow.save_recent_directories()
@@ -1619,14 +1619,16 @@ class App():
     def open_prevalidations_window(self, event=None) -> None:
         if config.enable_prevalidations:
             try:
-                prevalidation_window = PrevalidationsWindow(self.master, self.app_actions)
+                management_window = ClassifierManagementWindow(self.master, self.app_actions)
+                management_window.notebook.select(1) # Select prevalidations tab (index 1)
             except Exception as e:
                 self.handle_error(str(e), title="Prevalidations Window Error")
 
     @require_password(ProtectedActions.EDIT_PREVALIDATIONS, ProtectedActions.RUN_PREVALIDATIONS)
     def open_classifier_actions_window(self, event=None) -> None:
         try:
-            classifier_actions_window = ClassifierActionsWindow(self.master, self.app_actions)
+            management_window = ClassifierManagementWindow(self.master, self.app_actions)
+            management_window.notebook.select(0) # Select classifier actions tab (index 0)
         except Exception as e:
             self.handle_error(str(e), title="Classifier Actions Window Error")
 
@@ -1638,10 +1640,10 @@ class App():
                 logger.info("User canceled prevalidations task")
                 return
         logger.warning("Running prevalidations for " + self.get_base_dir())
-        PrevalidationsWindow.clear_prevalidated_cache()
+        PrevalidationsTab.clear_prevalidated_cache()
         for image_path in self.file_browser.get_files():
             try:
-                prevalidation_action = PrevalidationsWindow.prevalidate(image_path, self.get_base_dir, self.hide_current_media, self.title_notify, MarkedFiles.add_mark_if_not_present)
+                prevalidation_action = PrevalidationsTab.prevalidate(image_path, self.get_base_dir, self.hide_current_media, self.title_notify, MarkedFiles.add_mark_if_not_present)
             except Exception as e:
                 logger.error(e)
 

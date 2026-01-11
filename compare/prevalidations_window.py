@@ -1,17 +1,14 @@
-import os
 from typing import Optional
 
-from tkinter import Frame, Label, Scale, Checkbutton, BooleanVar, StringVar, LEFT, W, HORIZONTAL, Scrollbar, Listbox, BOTH, RIGHT, TOP, E
+from tkinter import Frame, Label, Checkbutton, BooleanVar, StringVar, LEFT, W, Scrollbar, Listbox, BOTH, RIGHT, TOP, E
 import tkinter.font as fnt
-from tkinter.ttk import Entry, Button, Combobox
+from tkinter.ttk import Button, Combobox
 
 from compare.classifier_actions_manager import Prevalidation, ClassifierActionsManager
+from compare.classifier_management_window import ClassifierActionModifyWindow
 from compare.directory_profile import DirectoryProfile, DirectoryProfileWindow
 from compare.lookahead import Lookahead, LookaheadWindow
-from image.classifier_action_type import ClassifierActionType
-from image.image_classifier_manager import image_classifier_manager
 from lib.multiselect_dropdown import MultiSelectDropdown
-from lib.multi_display import SmartToplevel
 from utils.app_style import AppStyle
 from utils.config import config
 from utils.logging_setup import get_logger
@@ -21,147 +18,59 @@ _ = I18N._
 logger = get_logger("prevalidations_window")
 
 
-
-class PrevalidationModifyWindow():
+class PrevalidationModifyWindow(ClassifierActionModifyWindow):
     top_level = None
-    COL_0_WIDTH = 600
 
     def __init__(self, master, app_actions, refresh_callback, prevalidation, dimensions="600x600"):
-        PrevalidationModifyWindow.top_level = SmartToplevel(persistent_parent=master, geometry=dimensions)
-        self.master = PrevalidationModifyWindow.top_level
-        self.app_actions = app_actions
-        self.refresh_callback = refresh_callback
-        self.prevalidation = prevalidation if prevalidation is not None else Prevalidation()
-        PrevalidationModifyWindow.top_level.title(_("Modify Prevalidation") + f": {self.prevalidation.name}")
+        prevalidation = prevalidation if prevalidation is not None else Prevalidation()
+        super().__init__(
+            master, app_actions, refresh_callback, prevalidation,
+            _("Modify Prevalidation"), _("Prevalidation Name"),
+            _("New Prevalidation"), dimensions
+        )
+        PrevalidationModifyWindow.top_level = self.top_level
 
-        # Ensure image classifier is loaded for UI display
-        self.prevalidation._ensure_image_classifier_loaded(app_actions.title_notify if app_actions is not None else None)
-
-        self.frame = Frame(self.master)
-        self.frame.grid(column=0, row=0)
-        self.frame.columnconfigure(0, weight=9)
-        self.frame.columnconfigure(1, weight=1)
-        self.frame.config(bg=AppStyle.BG_COLOR)
-
-        row = 0
-        self._label_info = Label(self.frame)
-        self.add_label(self._label_info, _("Prevalidation Name"), row=row, wraplength=PrevalidationModifyWindow.COL_0_WIDTH)
-        self.new_prevalidation_name = StringVar(self.master, value=_("New Prevalidation") if prevalidation is None else prevalidation.name)
-        self.new_prevalidation_name_entry = Entry(self.frame, textvariable=self.new_prevalidation_name, width=50, font=fnt.Font(size=config.font_size))
-        self.new_prevalidation_name_entry.grid(row=row, column=1, sticky=W)
-
+    def add_specific_fields(self, row):
+        """Add prevalidation-specific fields (lookaheads and profile)."""
         row += 1
-        self.label_positives = Label(self.frame)
-        self.add_label(self.label_positives, _("Positives"), row=row, wraplength=PrevalidationModifyWindow.COL_0_WIDTH)
-        self.positives_var = StringVar(self.master, value=self.prevalidation.get_positives_str())
-        self.positives_entry = Entry(self.frame, textvariable=self.positives_var, width=50, font=fnt.Font(size=config.font_size))
-        self.positives_entry.grid(row=row, column=1, sticky=W)
-
-        row += 1
-        self.label_negatives = Label(self.frame)
-        self.add_label(self.label_negatives, _("Negatives"), row=row, wraplength=PrevalidationModifyWindow.COL_0_WIDTH)
-        self.negatives_var = StringVar(self.master, value=self.prevalidation.get_negatives_str())
-        self.negatives_entry = Entry(self.frame, textvariable=self.negatives_var, width=50, font=fnt.Font(size=config.font_size))
-        self.negatives_entry.grid(row=row, column=1, sticky=W)
-
-        row += 1
-        # Validation type checkboxes
-        self.label_validation_types = Label(self.frame)
-        self.add_label(self.label_validation_types, _("Validation Types"), row=row, wraplength=PrevalidationModifyWindow.COL_0_WIDTH)
-        
-        self.use_embedding_var = BooleanVar(value=self.prevalidation.use_embedding)
-        self.use_embedding_checkbox = Checkbutton(self.frame, text=_("Use Embedding"), variable=self.use_embedding_var, 
-                                                command=self.update_ui_for_validation_types,
-                                                bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
-        self.use_embedding_checkbox.grid(row=row, column=1, sticky=W)
-        
-        row += 1
-        self.use_image_classifier_var = BooleanVar(value=self.prevalidation.use_image_classifier)
-        self.use_image_classifier_checkbox = Checkbutton(self.frame, text=_("Use Image Classifier"), variable=self.use_image_classifier_var,
-                                                        command=self.update_ui_for_validation_types,
-                                                        bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
-        self.use_image_classifier_checkbox.grid(row=row, column=1, sticky=W)
-        
-        row += 1
-        self.use_prompts_var = BooleanVar(value=self.prevalidation.use_prompts)
-        self.use_prompts_checkbox = Checkbutton(self.frame, text=_("Use Prompts"), variable=self.use_prompts_var,
-                                               command=self.update_ui_for_validation_types,
-                                               bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
-        self.use_prompts_checkbox.grid(row=row, column=1, sticky=W)
-
-        row += 1
-        self.label_threshold = Label(self.frame)
-        self.add_label(self.label_threshold, _("Threshold"), row=row, wraplength=PrevalidationModifyWindow.COL_0_WIDTH)
-        self.threshold_slider = Scale(self.frame, from_=0, to=100, orient=HORIZONTAL, command=self.set_threshold)
-        self.threshold_slider.set(float(self.prevalidation.threshold) * 100)
-        self.threshold_slider.grid(row=row, column=1, sticky=W)
-
-        row += 1
-        self.label_action = Label(self.frame)
-        self.add_label(self.label_action, _("Action"), row=row, column=0)
-        self.action_var = StringVar(self.master, value=self.prevalidation.action.get_translation())
-        action_options = [k.get_translation() for k in ClassifierActionType]
-        self.action_choice = Combobox(self.frame, textvariable=self.action_var, values=action_options)
-        self.action_choice.current(action_options.index(self.prevalidation.action.get_translation()))
-        self.action_choice.bind("<<ComboboxSelected>>", self.set_action)
-        self.action_choice.grid(row=row, column=1, sticky=W)
-        AppStyle.setup_combobox_style(self.action_choice)
-
-        row += 1
-        self.label_action_modifier = Label(self.frame)
-        self.add_label(self.label_action_modifier, _("Action Modifier"), row=row, column=0)
-        self.action_modifier_var = StringVar(self.master, value=self.prevalidation.action_modifier)
-        self.action_modifier_entry = Entry(self.frame, textvariable=self.action_modifier_var, width=50, font=fnt.Font(size=config.font_size))
-        self.action_modifier_entry.grid(row=row, column=1, sticky=W)
-
-        row += 1
-        self.label_image_classifier_name = Label(self.frame)
-        self.add_label(self.label_image_classifier_name, _("Image Classifier Name"), row=row, column=0)
-        self.image_classifier_name_var = StringVar(self.master, value=self.prevalidation.image_classifier_name)
-        name_options = [""]
-        name_options.extend(image_classifier_manager.get_model_names())
-        self.image_classifier_name_choice = Combobox(self.frame, textvariable=self.image_classifier_name_var, values=name_options)
-        self.image_classifier_name_choice.current(name_options.index(self.prevalidation.image_classifier_name))
-        self.image_classifier_name_choice.bind("<<ComboboxSelected>>", self.set_image_classifier)
-        self.image_classifier_name_choice.grid(row=row, column=1, sticky=W)
-        AppStyle.setup_combobox_style(self.image_classifier_name_choice)
-
-        row += 1
-        self.label_selected_category = Label(self.frame)
-        self.add_label(self.label_selected_category, _("Image Classifier Selected Category"), row=row, column=0)
-        self.selected_category_choice_row = row
-        self.image_classifier_selected_categories = MultiSelectDropdown(self.frame, self.prevalidation.image_classifier_categories[:],
-                                                                        row=self.selected_category_choice_row, sticky=W,
-                                                                        select_text=_("Select Categories..."),
-                                                                        selected=self.prevalidation.image_classifier_selected_categories[:],
-                                                                        command=self.set_image_classifier_selected_categories)
-
-        row += 1
-        # Prevalidation Lookaheads section - just select which lookaheads to use
+        # Prevalidation Lookaheads section
         self.label_lookaheads = Label(self.frame)
-        self.add_label(self.label_lookaheads, _("Lookaheads (select from shared list)"), row=row, wraplength=PrevalidationModifyWindow.COL_0_WIDTH)
+        self.add_label(
+            self.label_lookaheads,
+            _("Lookaheads (select from shared list)"),
+            row=row, wraplength=self.COL_0_WIDTH
+        )
         
         # Multi-select dropdown for lookaheads
         lookahead_options = [lookahead.name for lookahead in Lookahead.lookaheads]
-        self.lookaheads_multiselect = MultiSelectDropdown(self.frame, lookahead_options[:],
-                                                          row=row, column=1, sticky=W,
-                                                          select_text=_("Select Lookaheads..."),
-                                                          selected=self.prevalidation.lookahead_names[:],
-                                                          command=self.set_lookahead_names)
+        self.lookaheads_multiselect = MultiSelectDropdown(
+            self.frame, lookahead_options[:],
+            row=row, column=1, sticky=W,
+            select_text=_("Select Lookaheads..."),
+            selected=self.classifier_action.lookahead_names[:],
+            command=self.set_lookahead_names
+        )
         
         row += 1
         # Profile selection
         self.label_profile = Label(self.frame)
-        self.add_label(self.label_profile, _("Directory Profile"), row=row, wraplength=PrevalidationModifyWindow.COL_0_WIDTH)
+        self.add_label(
+            self.label_profile,
+            _("Directory Profile"),
+            row=row, wraplength=self.COL_0_WIDTH
+        )
         
         # Profile dropdown - include "(Global)" option for no profile
         profile_options = [""]  # Empty string = Global
         profile_options.extend([profile.name for profile in DirectoryProfile.directory_profiles])
         
-        current_profile_name = self.prevalidation.profile_name if self.prevalidation.profile_name else ""
+        current_profile_name = self.classifier_action.profile_name if self.classifier_action.profile_name else ""
         self.profile_var = StringVar(self.master, value=current_profile_name)
-        self.profile_choice = Combobox(self.frame, textvariable=self.profile_var, values=profile_options, width=47,
-                                       font=fnt.Font(size=config.font_size))
+        self.profile_choice = Combobox(
+            self.frame, textvariable=self.profile_var,
+            values=profile_options, width=47,
+            font=fnt.Font(size=config.font_size)
+        )
         # Set current selection
         if current_profile_name in profile_options:
             self.profile_choice.current(profile_options.index(current_profile_name))
@@ -171,97 +80,18 @@ class PrevalidationModifyWindow():
         self.profile_choice.grid(row=row, column=1, sticky=W)
         AppStyle.setup_combobox_style(self.profile_choice)
         
-        row += 1
-        self.add_prevalidation_btn = None
-        self.add_btn("add_prevalidation_btn", _("Done"), self.finalize_prevalidation, row=row, column=0)
-
-        # Initialize UI based on current validation types
-        self.update_ui_for_validation_types()
-
-        self.master.update()
-
-    def set_name(self):
-        name = self.new_prevalidation_name.get().strip()
-        self.prevalidation.name = name
-
-    def set_positives(self):
-        text = self.positives_entry.get().strip()
-        if text != Prevalidation.NO_POSITIVES_STR:
-            self.prevalidation.set_positives(text)
-
-    def set_negatives(self):
-        text = self.negatives_entry.get().strip()
-        if text != Prevalidation.NO_NEGATIVES_STR:
-            self.prevalidation.set_negatives(text)
-
-    def set_threshold(self, event=None):
-        self.prevalidation.threshold = float(self.threshold_slider.get()) / 100
-
-    def set_validation_types(self):
-        self.prevalidation.use_embedding = self.use_embedding_var.get()
-        self.prevalidation.use_image_classifier = self.use_image_classifier_var.get()
-        self.prevalidation.use_prompts = self.use_prompts_var.get()
-
-    def update_ui_for_validation_types(self):
-        """Update UI elements based on the selected validation types."""
-        use_embedding = self.use_embedding_var.get()
-        use_image_classifier = self.use_image_classifier_var.get()
-        use_prompts = self.use_prompts_var.get()
-        
-        # Show/hide image classifier fields
-        if use_image_classifier:
-            self.image_classifier_name_choice.grid()
-            self.label_image_classifier_name.grid()
-            self.image_classifier_selected_categories.button.grid()
-            self.label_selected_category.grid()
-        else:
-            self.image_classifier_name_choice.grid_remove()
-            self.label_image_classifier_name.grid_remove()
-            self.image_classifier_selected_categories.button.grid_remove()
-            self.label_selected_category.grid_remove()
-        
-        # Show/hide positive/negative fields based on type
-        if use_embedding or use_prompts:
-            self.positives_entry.grid()
-            self.label_positives.grid()
-            self.negatives_entry.grid()
-            self.label_negatives.grid()
-        else:
-            self.positives_entry.grid_remove()
-            self.label_positives.grid_remove()
-            self.negatives_entry.grid_remove()
-            self.label_negatives.grid_remove()
-
-    def set_action(self, event=None):
-        self.prevalidation.action = ClassifierActionType.get_action(self.action_var.get())
-
-    def set_action_modifier(self):
-        self.prevalidation.action_modifier = self.action_modifier_var.get()
-
-    def set_image_classifier(self, event=None):
-        self.prevalidation.set_image_classifier(self.image_classifier_name_var.get())
-        set_category_value = self.prevalidation.image_classifier_categories[0] \
-                if self.prevalidation.is_selected_category_unset() else self.prevalidation.image_classifier_selected_categories
-        self.image_classifier_selected_categories.set_options_and_selection(
-                self.prevalidation.image_classifier_categories[:], set_category_value[:])
-        # self.image_classifier_selected_category_choice = OptionMenu(self.frame, self.image_classifier_selected_category_var,
-        #                                                             *self.prevalidation.image_classifier_categories[:],
-        #                                                             command=self.set_image_classifier_selected_category)
-        self.master.update()
-
-    def set_image_classifier_selected_categories(self, event=None):
-        self.prevalidation.image_classifier_selected_categories = list(self.image_classifier_selected_categories.get_selected())
+        return row
 
     def set_lookahead_names(self, event=None):
         """Set the selected lookahead names for this prevalidation."""
-        self.prevalidation.lookahead_names = list(self.lookaheads_multiselect.get_selected())
+        self.classifier_action.lookahead_names = list(self.lookaheads_multiselect.get_selected())
     
     def set_profile_name(self, event=None):
         """Set the profile name for this prevalidation."""
         selected_profile_name = self.profile_var.get().strip()
         # Empty string means Global (no profile)
         profile_name = selected_profile_name if selected_profile_name else None
-        self.prevalidation.update_profile_instance(profile_name=profile_name)
+        self.classifier_action.update_profile_instance(profile_name=profile_name)
     
     def refresh_profile_options(self):
         """Refresh the profile dropdown options."""
@@ -284,44 +114,21 @@ class PrevalidationModifyWindow():
         lookahead_options = [lookahead.name for lookahead in Lookahead.lookaheads]
         self.lookaheads_multiselect.set_options_and_selection(
             lookahead_options[:], 
-            self.prevalidation.lookahead_names[:]
+            self.classifier_action.lookahead_names[:]
         )
     
-    def finalize_prevalidation(self, event=None):
-        self.set_name()
-        self.set_positives()
-        self.set_negatives()
-        self.set_threshold()
-        self.set_validation_types()
-        self.set_action()
-        self.set_action_modifier()
-        # self.set_image_classifier()
-        self.set_image_classifier_selected_categories()
-        self.set_lookahead_names()  # Save lookahead selections
-        self.set_profile_name()  # Save profile selection
-        self.prevalidation.validate()
-        self.close_windows()
-        self.refresh_callback(self.prevalidation)
-
-    def close_windows(self, event=None):
-        self.master.destroy()
-
-    def add_label(self, label_ref, text, row=0, column=0, wraplength=500):
-        label_ref['text'] = text
-        label_ref.grid(column=column, row=row, sticky=W)
-        label_ref.config(wraplength=wraplength, justify=LEFT, bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR, font=fnt.Font(size=config.font_size))
-
-    def add_btn(self, button_ref_name, text, command, row=0, column=0):
-        if getattr(self, button_ref_name) is None:
-            button = Button(master=self.frame, text=text, command=command)
-            setattr(self, button_ref_name, button)
-            button # for some reason this is necessary to maintain the reference?
-            button.grid(row=row, column=column)
+    def finalize_specific(self):
+        """Add prevalidation-specific finalization."""
+        self.set_lookahead_names()
+        self.set_profile_name()
 
 
 
-class PrevalidationsWindow():
-    top_level = None
+class PrevalidationsTab:
+    """
+    Tab content class for managing prevalidations.
+    Can be used either standalone (as PrevalidationsWindow) or as a tab in a notebook.
+    """
     prevalidation_modify_window: Optional[PrevalidationModifyWindow] = None
     lookahead_window: Optional[LookaheadWindow] = None
     profile_window: Optional[DirectoryProfileWindow] = None
@@ -333,26 +140,50 @@ class PrevalidationsWindow():
     COL_0_WIDTH = 600
 
     @staticmethod
-    def set_prevalidations():
-        ClassifierActionsManager.load_prevalidations()
-
-    @staticmethod
-    def store_prevalidations():
-        ClassifierActionsManager.store_prevalidations()
+    def _is_modify_window_valid() -> bool:
+        """Check if the prevalidation modify window still exists and is valid."""
+        if PrevalidationsTab.prevalidation_modify_window is None:
+            return False
+        try:
+            return (hasattr(PrevalidationsTab.prevalidation_modify_window, 'top_level') and
+                    PrevalidationsTab.prevalidation_modify_window.top_level is not None and
+                    PrevalidationsTab.prevalidation_modify_window.top_level.winfo_exists())
+        except Exception:
+            # Window was destroyed, clear the reference
+            PrevalidationsTab.prevalidation_modify_window = None
+            return False
 
     @staticmethod
     def clear_prevalidated_cache():
         ClassifierActionsManager.prevalidated_cache.clear()
 
     @staticmethod
-    def get_geometry(is_gui=True):
-        width = 1200
-        height = 600
-        return f"{width}x{height}"
+    def prevalidate(image_path, get_base_dir_func, hide_callback, notify_callback, add_mark_callback):
+        """
+        Prevalidate an image using active prevalidations.
+        
+        Args:
+            image_path: Path to the image to prevalidate
+            get_base_dir_func: Function to get the base directory
+            hide_callback: Callback for hiding images
+            notify_callback: Callback for notifications
+            add_mark_callback: Callback for marking images
+            
+        Returns:
+            Optional[ClassifierActionType]: The action type if prevalidation matched, None otherwise
+        """
+        return ClassifierActionsManager.prevalidate(
+            image_path, get_base_dir_func, hide_callback, notify_callback, add_mark_callback
+        )
 
-    def __init__(self, master, app_actions):
-        PrevalidationsWindow.top_level = SmartToplevel(persistent_parent=master, title=_("Prevalidations"), geometry=PrevalidationsWindow.get_geometry())
-        self.master = PrevalidationsWindow.top_level
+    def __init__(self, parent_frame, app_actions):
+        """
+        Initialize the prevalidations tab.
+        
+        Args:
+            parent_frame: Parent frame (can be a Toplevel or a Frame in a notebook)
+            app_actions: Application actions object
+        """
         self.app_actions = app_actions
         self.filter_text = ""
         self.filtered_prevalidations = ClassifierActionsManager.prevalidations[:]
@@ -365,8 +196,10 @@ class PrevalidationsWindow():
         self.delete_prevalidation_btn_list = []
         self.move_down_btn_list = []
 
-        self.frame = Frame(self.master)
-        self.frame.grid(column=0, row=0)
+        # Use parent_frame directly (works for both standalone and tab usage)
+        self.frame = parent_frame
+        self.master = parent_frame.winfo_toplevel()  # Get the top-level window for StringVar
+        
         self.frame.columnconfigure(0, weight=9)
         self.frame.columnconfigure(1, weight=1)
         self.frame.columnconfigure(2, weight=1)
@@ -393,20 +226,17 @@ class PrevalidationsWindow():
 
         # Add enable prevalidations checkbox (row 5)
         self.label_enable_prevalidations = Label(self.frame)
-        self.enable_prevalidations = BooleanVar(value=config.enable_prevalidations)
+        self.enable_prevalidations = BooleanVar(self.master, value=config.enable_prevalidations)
         self.checkbox_enable_prevalidations = Checkbutton(self.frame, variable=self.enable_prevalidations, 
                                                         command=self.toggle_prevalidations)
-        self.add_label(self.label_enable_prevalidations, _("Enable Prevalidations"), row=5, wraplength=PrevalidationsWindow.COL_0_WIDTH)
+        self.add_label(self.label_enable_prevalidations, _("Enable Prevalidations"), row=5, wraplength=PrevalidationsTab.COL_0_WIDTH)
         self.checkbox_enable_prevalidations.grid(row=5, column=1, sticky=W)
 
         self.add_prevalidation_widgets()
 
-        # self.master.bind("<Key>", self.filter_prevalidations)
-        # self.master.bind("<Return>", self.do_action)
-        self.master.bind("<Escape>", self.close_windows)
-        self.master.protocol("WM_DELETE_WINDOW", self.close_windows)
-        self.master.update()
-        self.frame.after(1, lambda: self.frame.focus_force())
+        self.frame.update()
+
+
 
     def add_lookahead_management_section(self):
         """Add a section for managing lookaheads."""
@@ -463,9 +293,9 @@ class PrevalidationsWindow():
     
     def add_lookahead(self):
         """Open dialog to add a new lookahead."""
-        if PrevalidationsWindow.lookahead_window is not None:
-            PrevalidationsWindow.lookahead_window.master.destroy()
-        PrevalidationsWindow.lookahead_window = LookaheadWindow(
+        if PrevalidationsTab.lookahead_window is not None:
+            PrevalidationsTab.lookahead_window.master.destroy()
+        PrevalidationsTab.lookahead_window = LookaheadWindow(
             self.master, self.app_actions, self.refresh_lookaheads_listbox)
     
     def edit_lookahead(self):
@@ -475,9 +305,9 @@ class PrevalidationsWindow():
             return
         idx = selection[0]
         if idx < len(Lookahead.lookaheads):
-            if PrevalidationsWindow.lookahead_window is not None:
-                PrevalidationsWindow.lookahead_window.master.destroy()
-            PrevalidationsWindow.lookahead_window = LookaheadWindow(
+            if PrevalidationsTab.lookahead_window is not None:
+                PrevalidationsTab.lookahead_window.master.destroy()
+            PrevalidationsTab.lookahead_window = LookaheadWindow(
                 self.master, self.app_actions, self.refresh_lookaheads_listbox, 
                 Lookahead.lookaheads[idx])
     
@@ -496,8 +326,12 @@ class PrevalidationsWindow():
             del Lookahead.lookaheads[idx]
             self.refresh_lookaheads_listbox()
             # Refresh modify window if open
-            if PrevalidationsWindow.prevalidation_modify_window:
-                PrevalidationsWindow.prevalidation_modify_window.refresh_lookahead_options()
+            if PrevalidationsTab._is_modify_window_valid():
+                try:
+                    PrevalidationsTab.prevalidation_modify_window.refresh_lookahead_options()
+                except Exception:
+                    # Window was destroyed during refresh, clear the reference
+                    PrevalidationsTab.prevalidation_modify_window = None
     
     def add_profile_management_section(self):
         """Add a section for managing directory profiles."""
@@ -554,15 +388,19 @@ class PrevalidationsWindow():
                 display_text = f"{profile.name} ({dir_count} {dir_or_dirs})"
                 self.profiles_listbox.insert("end", display_text)
         
-        # Refresh profile options in modify window if open
-        if PrevalidationsWindow.prevalidation_modify_window:
-            PrevalidationsWindow.prevalidation_modify_window.refresh_profile_options()
+        # Refresh profile options in modify window if open and still exists
+        if PrevalidationsTab._is_modify_window_valid():
+            try:
+                PrevalidationsTab.prevalidation_modify_window.refresh_profile_options()
+            except Exception:
+                # Window was destroyed during refresh, clear the reference
+                PrevalidationsTab.prevalidation_modify_window = None
     
     def add_profile(self):
         """Open dialog to add a new profile."""
-        if PrevalidationsWindow.profile_window is not None:
-            PrevalidationsWindow.profile_window.master.destroy()
-        PrevalidationsWindow.profile_window = DirectoryProfileWindow(
+        if PrevalidationsTab.profile_window is not None:
+            PrevalidationsTab.profile_window.master.destroy()
+        PrevalidationsTab.profile_window = DirectoryProfileWindow(
             self.master, self.app_actions, self.refresh_profiles_listbox)
     
     def edit_profile(self):
@@ -572,9 +410,9 @@ class PrevalidationsWindow():
             return
         idx = selection[0]
         if idx < len(DirectoryProfile.directory_profiles):
-            if PrevalidationsWindow.profile_window is not None:
-                PrevalidationsWindow.profile_window.master.destroy()
-            PrevalidationsWindow.profile_window = DirectoryProfileWindow(
+            if PrevalidationsTab.profile_window is not None:
+                PrevalidationsTab.profile_window.master.destroy()
+            PrevalidationsTab.profile_window = DirectoryProfileWindow(
                 self.master, self.app_actions, self.refresh_profiles_listbox, 
                 DirectoryProfile.directory_profiles[idx])
     
@@ -590,8 +428,12 @@ class PrevalidationsWindow():
             DirectoryProfile.remove_profile(profile.name)
             self.refresh_profiles_listbox()
             # Refresh modify window if open
-            if PrevalidationsWindow.prevalidation_modify_window:
-                PrevalidationsWindow.prevalidation_modify_window.refresh_profile_options()
+            if PrevalidationsTab._is_modify_window_valid():
+                try:
+                    PrevalidationsTab.prevalidation_modify_window.refresh_profile_options()
+                except Exception:
+                    # Window was destroyed during refresh, clear the reference
+                    PrevalidationsTab.prevalidation_modify_window = None
     
     def add_prevalidation_widgets(self):
         # Start at row 6: after lookaheads (0-1), profiles (2-3), prevalidations title (4), enable checkbox (5)
@@ -618,7 +460,7 @@ class PrevalidationsWindow():
             row = 7 + i  # Start data rows at row 7 (after header at row 6)
             label_name = Label(self.frame)
             self.label_list.append(label_name)
-            self.add_label(label_name, str(prevalidation), row=row, column=base_col, wraplength=PrevalidationsWindow.COL_0_WIDTH)
+            self.add_label(label_name, str(prevalidation), row=row, column=base_col, wraplength=PrevalidationsTab.COL_0_WIDTH)
 
             label_action = Label(self.frame)
             self.label_list2.append(label_action)
@@ -678,9 +520,9 @@ class PrevalidationsWindow():
             move_down_btn.bind("<Button-1>", move_down_handler)
 
     def open_prevalidation_modify_window(self, event=None, prevalidation=None):
-        if PrevalidationsWindow.prevalidation_modify_window is not None:
-            PrevalidationsWindow.prevalidation_modify_window.master.destroy()
-        PrevalidationsWindow.prevalidation_modify_window = PrevalidationModifyWindow(
+        if PrevalidationsTab.prevalidation_modify_window is not None:
+            PrevalidationsTab.prevalidation_modify_window.master.destroy()
+        PrevalidationsTab.prevalidation_modify_window = PrevalidationModifyWindow(
             self.master, self.app_actions, self.refresh_prevalidations, prevalidation)
 
     def refresh_prevalidations(self, prevalidation):
@@ -702,6 +544,8 @@ class PrevalidationsWindow():
     def delete_prevalidation(self, event=None, prevalidation=None):
         if prevalidation is not None and prevalidation in ClassifierActionsManager.prevalidations:
             ClassifierActionsManager.prevalidations.remove(prevalidation)
+            # Remove from initialized set if present
+            ClassifierActionsManager._initialized_prevalidations.discard(prevalidation)
         self.refresh()
 
     def filter_prevalidations(self, event):
@@ -767,18 +611,23 @@ class PrevalidationsWindow():
 #        shift_key_pressed = (event.state & 0x1) != 0
         control_key_pressed = (event.state & 0x4) != 0
         alt_key_pressed = (event.state & 0x20000) != 0
+        # Note: This method appears to be incomplete/dead code
+        # The referenced methods (get_history_prevalidation, last_set_prevalidation, set_prevalidation) don't exist
+        # Keeping the structure but commenting out broken references
         if alt_key_pressed:
-            penultimate_prevalidation = PrevalidationsWindow.get_history_prevalidation(start_index=1)
-            if penultimate_prevalidation is not None and os.path.isdir(penultimate_prevalidation):
-                self.set_prevalidation(prevalidation=penultimate_prevalidation)
+            # penultimate_prevalidation = PrevalidationsTab.get_history_prevalidation(start_index=1)
+            # if penultimate_prevalidation is not None and os.path.isdir(penultimate_prevalidation):
+            #     self.set_prevalidation(prevalidation=penultimate_prevalidation)
+            pass
         elif len(self.filtered_prevalidations) == 0 or control_key_pressed:
             self.open_prevalidation_modify_window()
         else:
             if len(self.filtered_prevalidations) == 1 or self.filter_text.strip() != "":
                 prevalidation = self.filtered_prevalidations[0]
-            else:
-                prevalidation = PrevalidationsWindow.last_set_prevalidation
-            self.set_prevalidation(prevalidation=prevalidation)
+                # self.set_prevalidation(prevalidation=prevalidation)
+            # else:
+            #     prevalidation = PrevalidationsTab.last_set_prevalidation
+            #     self.set_prevalidation(prevalidation=prevalidation)
 
     def toggle_prevalidations(self):
         config.enable_prevalidations = self.enable_prevalidations.get()

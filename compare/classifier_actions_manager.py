@@ -145,7 +145,59 @@ class ClassifierAction:
         except Exception as e:
             logger.error(f"Error checking prompt validation for {image_path}: {e}")
             return False
-    
+
+    def _check_lookaheads(self, image_path):
+        """Check if any lookahead prevalidations are triggered. Returns True if any lookahead passes."""
+        if not self.lookahead_names:
+            return False
+        
+        for lookahead_name in self.lookahead_names:
+            # Look up the lookahead from the shared list
+            lookahead = Lookahead.get_lookahead_by_name(lookahead_name)
+            if lookahead is None:
+                continue
+            
+            # Check if this lookahead has already been evaluated in this prevalidate call
+            if lookahead.run_result is not None:
+                # Use cached result
+                if lookahead.run_result:
+                    logger.info(f"Lookahead {lookahead_name} triggered for prevalidation {self.name} (cached)")
+                    return True
+                continue
+            
+            name_or_text = lookahead.name_or_text
+            threshold = lookahead.threshold
+            
+            # Check if it's a prevalidation name or custom text
+            if lookahead.is_prevalidation_name:
+                # It's a prevalidation name - get the referenced prevalidation
+                lookahead_prevalidation = ClassifierActionsManager.get_prevalidation_by_name(name_or_text)
+                if lookahead_prevalidation is None:
+                    # Prevalidation not found, skip this lookahead
+                    lookahead.run_result = False  # Cache the result
+                    continue
+                # Use the lookahead prevalidation's positives/negatives
+                positives = lookahead_prevalidation.positives
+                negatives = lookahead_prevalidation.negatives
+                # Skip if the referenced prevalidation has no positives or negatives
+                if not positives and not negatives:
+                    lookahead.run_result = False  # Cache the result
+                    continue
+            else:
+                # It's custom text, treat as a positive
+                positives = [name_or_text]
+                negatives = []
+            
+            # Check if this lookahead passes
+            result = CompareEmbeddingClip.multi_text_compare(image_path, positives, negatives, threshold)
+            lookahead.run_result = result  # Cache the result
+            
+            if result:
+                # logger.info(f"Lookahead {lookahead_name} triggered for prevalidation {self.name}")
+                return True
+        
+        return False
+
     def ensure_prototype_loaded(self, notify_callback, force_recalculate=False):
         """Lazy load the prototype embeddings if needed."""
         if not self.use_prototype or not self.prototype_directory:
@@ -193,16 +245,23 @@ class ClassifierAction:
             return False
         
         try:
-            # Calculate similarity to positive prototype
-            positive_similarity = EmbeddingPrototype.compare_with_prototype(image_path, self._cached_prototype)
-            
-            # If negative prototype is set, subtract weighted negative similarity
+            # Use ClassifierAction name as session_cache_key for efficient result caching
+            # Calculate similarity to positive prototype (prototype_type=0)
+            positive_similarity = EmbeddingPrototype.compare_with_prototype(
+                image_path, self._cached_prototype, session_cache_key=self.name
+            )
+            # print(self.name + " Positive similarity: ", positive_similarity)
+            # If negative prototype is set, subtract weighted negative similarity (prototype_type=1)
             if self._cached_negative_prototype is not None:
-                negative_similarity = EmbeddingPrototype.compare_with_prototype(image_path, self._cached_negative_prototype)
+                negative_similarity = EmbeddingPrototype.compare_with_prototype(
+                    image_path, self._cached_negative_prototype, session_cache_key=self.name, negative_prototype=1
+                )
+                # print(self.name + " Negative similarity: ", negative_similarity)
                 final_score = positive_similarity - self.negative_prototype_lambda * negative_similarity
+                # print(self.name + " Final score: ", final_score)
             else:
                 final_score = positive_similarity
-            
+                print(self.name + " Final score: ", final_score)
             return final_score >= self.threshold
         except Exception as e:
             logger.error(f"Error checking prototype validation for {image_path}: {e}")
@@ -287,7 +346,15 @@ class ClassifierAction:
         # Note: Image classifier and prototype should be loaded before calling this method
         # (see ClassifierActionsWindow.run_classifier_action for pre-loading)
         
-        # Check each enabled validation type with short-circuit OR logic
+        # Check each enabled validation type with short-circuit OR logic        
+        if self.use_prototype:
+            if self._check_prototype_validation(image_path):
+                return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
+
+        # Check lookaheads first - if any pass, skip this prevalidation
+        if self._check_lookaheads(image_path):
+            return None
+
         if self.use_embedding:
             if CompareEmbeddingClip.multi_text_compare(image_path, self.positives, self.negatives, self.threshold):
                 return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
@@ -301,10 +368,6 @@ class ClassifierAction:
         
         if self.use_prompts:
             if self._check_prompt_validation(image_path):
-                return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
-        
-        if self.use_prototype:
-            if self._check_prototype_validation(image_path):
                 return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
         
         # No validation type passed
@@ -573,13 +636,13 @@ class Prevalidation(ClassifierAction):
                  use_embedding=True, use_image_classifier=False, use_prompts=False, use_blacklist=False,
                  lookahead_names=[], profile_name=None, use_prototype=False, prototype_directory="", 
                  negative_prototype_directory="", negative_prototype_lambda=0.5, _last_used_profile=None):
-        # Pass is_active to parent ClassifierAction
+        # Pass all parameters including prototype settings to parent ClassifierAction
         super().__init__(name, positives, negatives, threshold, action, action_modifier, 
                         image_classifier_name, image_classifier_selected_categories,
                         use_embedding, use_image_classifier, use_prompts, use_blacklist,
-                        is_active, use_prototype=False, prototype_directory="",
-                        negative_prototype_directory="", negative_prototype_lambda=0.5,
-                        _last_used_profile=None, lookahead_names=lookahead_names)
+                        is_active, use_prototype, prototype_directory,
+                        negative_prototype_directory, negative_prototype_lambda,
+                        _last_used_profile, lookahead_names=lookahead_names)
         self.profile_name = profile_name  # Name of DirectoryProfile to use (None = global)
         self.profile = None  # Cached DirectoryProfile instance (set after loading, or temporary for backward compatibility)
         # Note: run_on_folder parameter is kept for backward compatibility in from_dict but not stored as instance variable
@@ -633,89 +696,15 @@ class Prevalidation(ClassifierAction):
         else:
             self.profile = None
 
-    def _check_lookaheads(self, image_path):
-        """Check if any lookahead prevalidations are triggered. Returns True if any lookahead passes."""
-        if not self.lookahead_names:
-            return False
-        
-        for lookahead_name in self.lookahead_names:
-            # Look up the lookahead from the shared list
-            lookahead = Lookahead.get_lookahead_by_name(lookahead_name)
-            if lookahead is None:
-                continue
-            
-            # Check if this lookahead has already been evaluated in this prevalidate call
-            if lookahead.run_result is not None:
-                # Use cached result
-                if lookahead.run_result:
-                    logger.info(f"Lookahead {lookahead_name} triggered for prevalidation {self.name} (cached)")
-                    return True
-                continue
-            
-            name_or_text = lookahead.name_or_text
-            threshold = lookahead.threshold
-            
-            # Check if it's a prevalidation name or custom text
-            if lookahead.is_prevalidation_name:
-                # It's a prevalidation name - get the referenced prevalidation
-                lookahead_prevalidation = ClassifierActionsManager.get_prevalidation_by_name(name_or_text)
-                if lookahead_prevalidation is None:
-                    # Prevalidation not found, skip this lookahead
-                    lookahead.run_result = False  # Cache the result
-                    continue
-                # Use the lookahead prevalidation's positives/negatives
-                positives = lookahead_prevalidation.positives
-                negatives = lookahead_prevalidation.negatives
-                # Skip if the referenced prevalidation has no positives or negatives
-                if not positives and not negatives:
-                    lookahead.run_result = False  # Cache the result
-                    continue
-            else:
-                # It's custom text, treat as a positive
-                positives = [name_or_text]
-                negatives = []
-            
-            # Check if this lookahead passes
-            result = CompareEmbeddingClip.multi_text_compare(image_path, positives, negatives, threshold)
-            lookahead.run_result = result  # Cache the result
-            
-            if result:
-                logger.info(f"Lookahead {lookahead_name} triggered for prevalidation {self.name}")
-                return True
-        
-        return False
-
     def run_on_image_path(self, image_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
         # Lazy load the image classifier if needed
         super().ensure_image_classifier_loaded(notify_callback)
-        
-        # Check lookaheads first - if any pass, skip this prevalidation
-        if self._check_lookaheads(image_path):
-            return None
-        
-        # Check each enabled validation type with short-circuit OR logic
-        if self.use_embedding:
-            if CompareEmbeddingClip.multi_text_compare(image_path, self.positives, self.negatives, self.threshold):
-                return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
-        
-        if self.use_image_classifier:
-            if self.image_classifier is not None:
-                if self.image_classifier.test_image_for_categories(image_path, self.image_classifier_selected_categories):
-                    return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
-            else:
-                logger.error(f"Image classifier {self.image_classifier_name} not found for prevalidation {self.name}")
-        
-        if self.use_prompts:
-            if super()._check_prompt_validation(image_path):
-                return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
-        
-        # No validation type passed
-        return None
+        return super().run_on_image_path(image_path, hide_callback, notify_callback, add_mark_callback)
 
     def validate_dirs(self):
+        super().validate_dirs()
+        # Add prevalidation-specific profile directory validation
         errors = []
-        if self.action_modifier and self.action_modifier != "" and not os.path.isdir(self.action_modifier):
-            errors.append(_("Action modifier is not a valid directory: ") + self.action_modifier)
         if self.profile is not None:
             for directory in self.profile.directories:
                 if not os.path.isdir(directory):
@@ -740,6 +729,8 @@ class Prevalidation(ClassifierAction):
         d.update({
             "profile_name": self.profile_name,
             # is_active is already in parent's dict, no need to duplicate
+            # Prototype properties (use_prototype, prototype_directory, negative_prototype_directory, 
+            # negative_prototype_lambda) are already in parent's dict, no need to duplicate
             "lookahead_names": self.lookahead_names,
         })
         return d
@@ -762,6 +753,14 @@ class Prevalidation(ClassifierAction):
             d['use_prompts'] = False
         if 'use_blacklist' not in d:
             d['use_blacklist'] = False
+        if 'use_prototype' not in d:
+            d['use_prototype'] = False
+        if 'prototype_directory' not in d:
+            d['prototype_directory'] = ""
+        if 'negative_prototype_directory' not in d:
+            d['negative_prototype_directory'] = ""
+        if 'negative_prototype_lambda' not in d:
+            d['negative_prototype_lambda'] = 0.5
         if 'lookahead_names' not in d:
             d['lookahead_names'] = []
         if 'profile_name' not in d:
@@ -780,35 +779,9 @@ class Prevalidation(ClassifierAction):
         return Prevalidation(**d)
 
     def __str__(self) -> str:
-        out = self.name
-        validation_types = []
-        if self.use_embedding:
-            validation_types.append(_("embedding"))
-        if self.use_image_classifier and self.image_classifier_name and self.image_classifier_name.strip():
-            validation_types.append(_("classifier {0}").format(self.image_classifier_name))
-        if self.use_prompts:
-            validation_types.append(_("prompts"))
+        # Use parent's __str__ implementation and append lookahead info
+        out = super().__str__()
         
-        if validation_types:
-            # Build the description parts
-            description_parts = []
-            
-            # Add categories if image classifier is enabled and has categories
-            if self.use_image_classifier and self.image_classifier_selected_categories:
-                description_parts.append(_("categories: {0}").format(", ".join(self.image_classifier_selected_categories)))
-            
-            # Add positives/negatives if any are set
-            if self.positives or self.negatives:
-                description_parts.append(_("{0} positives, {1} negatives").format(len(self.positives), len(self.negatives)))
-            
-            # Combine all parts
-            if description_parts:
-                out += _(" using {0} ({1})").format(", ".join(validation_types), "; ".join(description_parts))
-            else:
-                out += _(" using {0}").format(", ".join(validation_types))
-        else:
-            out += _(" ({0} positives, {1} negatives)").format(len(self.positives), len(self.negatives))
-
         if self.lookahead_names:
             out += " <" + _("lookaheads: {0}").format(", ".join(self.lookahead_names)) + ">"
         
@@ -824,9 +797,30 @@ class ClassifierActionsManager:
     classifier_actions: List['ClassifierAction'] = []
     prevalidated_cache: dict[str, ClassifierActionType] = {}
     directories_to_exclude: list[str] = []
+    _prevalidations_initialized: bool = False
 
     @staticmethod
+    def _prevalidations_post_init():
+        """Lazy initialization of prevalidations - called just before first use."""
+        if ClassifierActionsManager._prevalidations_initialized:
+            return
+        temp_prevalidations = ClassifierActionsManager.prevalidations[:]
+        for prevalidation in temp_prevalidations:
+            try:
+                prevalidation.update_profile_instance()
+                prevalidation.validate_dirs()
+                prevalidation.ensure_prototype_loaded(None)
+            except Exception as e:
+                logger.error(f"Error initializing prevalidation {prevalidation.name}: {e}")
+                # ClassifierActionsManager.prevalidations.remove(prevalidation)
+        ClassifierActionsManager._prevalidations_initialized = True
+    
+    @staticmethod
     def prevalidate(image_path, get_base_dir_func, hide_callback, notify_callback, add_mark_callback) -> Optional[ClassifierActionType]:
+        # Lazy initialization - ensure prevalidations are initialized before first use
+        if not ClassifierActionsManager._prevalidations_initialized:
+            ClassifierActionsManager._prevalidations_post_init()
+        
         # Reset lookahead cache for this prevalidate call
         for lookahead in Lookahead.lookaheads:
             lookahead.run_result = None
@@ -970,8 +964,8 @@ class ClassifierActionsManager:
 
         for prevalidation_dict in list(app_info_cache.get_meta("recent_prevalidations", default_val=[])):
             prevalidation: Prevalidation = Prevalidation.from_dict(prevalidation_dict)
-            prevalidation.update_profile_instance()
-            prevalidation.validate_dirs()
+            # Post-init methods (update_profile_instance, validate_dirs, ensure_prototype_loaded)
+            # are now called lazily in _ensure_prevalidations_initialized() just before first use
             if prevalidation not in ClassifierActionsManager.prevalidations:
                 ClassifierActionsManager.prevalidations.append(prevalidation)
 

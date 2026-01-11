@@ -1,6 +1,6 @@
 # Simple Image Compare Tool
 
-Simple image comparison tool that detects color and face similarities using CLIP embeddings (default) and color matching (separate optional mode). The tool now supports multiple embedding models:
+Simple media comparison tool that detects color and face similarities using CLIP embeddings (default) and color matching (separate optional mode). The tool now supports multiple embedding models:
 
 - CLIP (default): 512D embeddings, high zero-shot performance
 - SigLIP: 768D or 1024D embeddings, excellent retrieval performance
@@ -21,8 +21,8 @@ The UI can be used as a media file browser. The following features are available
     <li>Auto-refresh directory files</li>
     <li>Slideshow (customizable)</li>
     <li>Optionally play and compare video files and other media - typically will use the first image found for the comparison.</li>
-    <li>Quicker and smoother transitions between images</li>
-    <li>Faster load time for directories with many images in some cases</li>
+    <li>Quicker and smoother transitions between media files</li>
+    <li>Faster load time for directories with many media files in some cases</li>
     <li>Faster load times when switching between sort types</li>
     <li>Go to file by string search or by index (1-based)</li>
     <li>Mark groups of files to enable quick transitions and comparisons</li>
@@ -30,7 +30,7 @@ The UI can be used as a media file browser. The following features are available
     <li>Move, copy, and delete marked file groups without overwriting system clipboard</li>
     <li>Revert and modify historical file action changes</li>
     <li>Quickly find directories via recent directory picker window</li>
-    <li>Stores session info about seen directories (useful for directories with many images)</li>
+    <li>Stores session info about seen directories (useful for directories with many media files)</li>
     <li>Can be set up to run on user-defined list of files in place of a directory</li>
     <li>Extension with <a href="https://github.com/tomhallmain/sd-runner" target="_blank">sd-runner</a> for image generation</li>
     <li>Extension with <a href="https://github.com/tomhallmain/refacdir" target="_blank">refacdir</a> for file operations</li>
@@ -55,41 +55,43 @@ You can mark any media file (image, video, etc.) as a favorite and access all fa
 
 The Directory Notes feature allows you to maintain persistent notes and marked files for individual directories. You can add notes to specific files, mark files for later reference, and export or import your notes and marked files as text or JSON files. This is separate from the runtime marked files used for moving files, making it useful for long-term organization and documentation of your media collections.
 
-## Prevalidation Rules
+## Prevalidation Rules and Classifier Actions
 
-The tool includes a flexible prevalidation system that can automatically process media before they're shown to the user. This is useful for:
+The tool includes a flexible prevalidation system that can automatically process media before they're shown to the user, as well as classifier actions that can be run ad-hoc on selected directories. Both are managed through a unified window. This is useful for:
 
 - Automatically skipping, hiding, or deleting unwanted media
 - Moving or copying media to specific directories based on content
-- Filtering media using CLIP embeddings, H5 image classifiers, PyTorch image classifiers, prompt string detection
+- Filtering media using CLIP embeddings, embedding prototypes, H5 image classifiers, PyTorch image classifiers, prompt string detection
 - Setting up rules that apply to specific directories
+- Running one-off classification actions on selected directories
 
-Prevalidation rules can be configured with:
+Prevalidation rules and classifier actions can be configured with:
 - Multiple validation types enabled simultaneously (OR logic - any type can trigger the action)
 - Positive and negative text prompts shared across embedding and prompt validation
+- **Embedding prototypes**: Create prototype embeddings from directories of sample images, then compare images against these prototypes. Supports both positive and negative prototypes with configurable weighting (lambda) for fine-tuning similarity matching
 - Custom thresholds for embedding-based matching
 - Different actions (skip, hide, notify, move, copy, delete, add mark)
 - Directory-specific rules
 - H5 model-based classification rules
 - PyTorch model-based classification rules (supports .pth, .pt, .safetensors, and .bin formats)
 
-This feature is particularly useful for maintaining clean media collections and automating local content filtering, but it can be disabled at any time if desired. You can find an example H5 classifier that is known to work [here](https://github.com/FurkanGozukara/nsfw_model).
+Prevalidations automatically run on media as you browse, while classifier actions can be executed manually on selected media directories when needed. This feature is particularly useful for maintaining clean media collections and automating local content filtering, but it can be disabled at any time if desired. You can find an example H5 classifier that is known to work [here](https://github.com/FurkanGozukara/nsfw_model).
 
 ## Usage
 
 Clone this repository and ensure Python 3 and the required packages are installed from requirements.txt.
 
-Run `app.py` to start the UI, or provide the location of the directory containing images for comparison to `compare_embeddings.py` or `compare.py` at runtime.
+Run `app.py` to start the UI, or provide the location of the directory containing media files for comparison to `compare_embeddings.py` or `compare.py` at runtime.
 
 <details>
 <summary>Expand Details</summary>
-Useful for detecting duplicates or finding associations between large unstructured sets of image files. File management controls are available after the image analysis has completed.
+Useful for detecting duplicates or finding associations between large unstructured sets of media files. File management controls are available after the analysis has completed.
 
-Individual images can be passed to search against the full image data set by passing flag `--search` with the path of the search file, or setting a search file in the UI before running comparison.
+Individual media files can be passed to search against the full data set by passing flag `--search` with the path of the search file, or setting a search file in the UI before running comparison.
 
-The color matching compare mode is faster than embedding comparison but less robust. In the group comparison case, since every image must be compared to every other image the time complexity is $\mathcal{O}(n^2)$. To remedy this issue for large image sets, set the `store_checkpoints` config setting to enable process caching to close and pick up where you left off previously, but ensure no files are added or removed from the comparison directory before restarting a compare.
+The color matching compare mode is faster than embedding comparison but less robust. In the group comparison case, since every image must be compared to every other image the time complexity is $\mathcal{O}(n^2)$. To remedy this issue for large media sets, set the `store_checkpoints` config setting to enable process caching to close and pick up where you left off previously, but ensure no files are added or removed from the comparison directory before restarting a compare job.
 
-When using embedding compare modes, you can search your images by text - both positive and negative. Commas will break the texts to search into multiple parts, to be combined in a final set of results. If there is a good embedding signal for the search texts it will likely return the images you are looking for. It will take a while to load the first time as embeddings need to be generated. If a list of preset text searches is defined in your config JSON, you can cycle between them with the dedicated shortcut found below.
+When using embedding compare modes, you can search your image-based media files by text - both positive and negative. Commas will break the texts to search into multiple parts, to be combined in a final set of results. If there is a good embedding signal for the search texts it will likely return the media files you are looking for. It will take a while to load the first time as embeddings need to be generated. If a list of preset text searches is defined in your config JSON, you can cycle between them with the dedicated shortcut found below.
 
 If a search image is set simultaneously with search text, its embedding will be factored into the search at a weight equal to a single search text part.
 </details>
@@ -119,9 +121,9 @@ If a search image is set simultaneously with search text, its embedding will be 
 
 `slideshow_interval_seconds` defines the interval between slideshow transitions.
 
-`sort_by` defines the default image browsing sort setting upon starting the application.
+`sort_by` defines the default media browsing sort setting upon starting the application.
 
-`trash_folder` defines the target folder for image deletion. If not set, deletion will send the image to your system's default trash folder.
+`trash_folder` defines the target folder for media deletion. If not set, deletion will send the file to your system's default trash folder.
 
 `enable_prevalidations` enables the prevalidation system. When enabled, prevalidation rules will be applied to media before they are shown.
 
@@ -148,7 +150,7 @@ If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [
 
 While the UI elements support normal usage in most cases, there are many bindings that enable extended functionality, mostly to minimize UI content unrelated to image viewers.
 
-Press Shift+H to open up a help window with all key bindings. A directory with images must be set before most of the bindings will have any effect. The group bindings are only functional in GROUP mode after a comparison has been run.
+Press Shift+H to open up a help window with all key bindings. A directory with media files must be set before most of the bindings will have any effect. The group bindings are only functional in GROUP mode after a comparison has been run.
 
 ### Move Marks Window
 

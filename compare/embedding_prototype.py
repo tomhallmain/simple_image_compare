@@ -19,6 +19,12 @@ logger = get_logger("embedding_prototype")
 _directory_caches: dict[str, CompareData] = {}
 # Track last access time for each cache (for LRU eviction)
 _cache_access_times: dict[str, float] = {}
+# Per-session cache of comparison results (similarity scores) for efficient prevalidation
+# Separate caches for positive and negative prototypes to reduce nesting and improve lookup speed
+# Structure: session_cache_key -> image_path -> similarity_score
+# This allows reusing comparison results when the same image is checked multiple times
+_session_comparison_caches_positive: dict[str, dict[str, float]] = {}
+_session_comparison_caches_negative: dict[str, dict[str, float]] = {}
 # Maximum memory size (in bytes) for directory caches before removing old ones
 # Default: 500 MB (500 * 1024 * 1024 bytes)
 MAX_DIRECTORY_CACHE_MEMORY_BYTES = 500 * 1024 * 1024
@@ -596,7 +602,7 @@ class EmbeddingPrototype:
         return all_matching_paths
     
     @staticmethod
-    def compare_with_prototype(image_path: str, prototype: np.ndarray) -> float:
+    def compare_with_prototype(image_path: str, prototype: np.ndarray, session_cache_key: Optional[str] = None, negative_prototype: int = 0) -> float:
         """
         Compare an image with a prototype embedding using cosine similarity.
         
@@ -606,36 +612,47 @@ class EmbeddingPrototype:
         Args:
             image_path: Path to image to compare
             prototype: Prototype embedding vector
+            session_cache_key: Optional session cache key for efficient result caching
+                             (e.g., ClassifierAction name for prevalidations)
+                             If provided, comparison results will be cached for reuse
+            negative_prototype: 0 for positive prototype, 1 for negative prototype (default: 0)
             
         Returns:
             Cosine similarity score (0-1, higher is more similar)
         """
         try:
-            # Get the directory for this image and its cache
-            image_dir = os.path.dirname(image_path)
-            cache = EmbeddingPrototype._get_cache_for_directory(image_dir)
+            # Check session cache first if session_cache_key is provided
+            if session_cache_key is None:
+                raise ValueError("session_cache_key is required")
             
-            # Use relative path from directory as key (as CompareData expects)
-            rel_path = os.path.relpath(image_path, image_dir)
-            
-            if rel_path in cache.file_data_dict:
-                image_embedding = cache.file_data_dict[rel_path]
+            # Select the appropriate cache based on prototype type
+            if negative_prototype == 0:
+                cache_dict = _session_comparison_caches_positive
             else:
-                # Compute embedding if not cached
-                image_embedding = image_embeddings_clip(image_path)
-                cache.file_data_dict[rel_path] = image_embedding
-                # Add to files_found if not already present (needed for save_data validation)
-                if rel_path not in cache.files_found:
-                    cache.files_found.append(rel_path)
-                cache.has_new_file_data = True
-                cache.save_data(overwrite=False, verbose=False)
+                cache_dict = _session_comparison_caches_negative
             
+            # Check cache and return early if found
+            if session_cache_key in cache_dict:
+                type_cache = cache_dict[session_cache_key]
+                if image_path in type_cache:
+                    # Return cached result
+                    return type_cache[image_path]
+            
+            # Compute embedding directly (separate from batched comparison workflow)
+            image_embedding = image_embeddings_clip(image_path)
             image_embedding_array = np.array(image_embedding)
             
             # Calculate cosine similarity
             dot_product = np.dot(image_embedding_array, prototype)
             # Embeddings are already normalized, so dot product is cosine similarity
-            return float(dot_product)
+            similarity_score = float(dot_product)
+            
+            # Cache the result
+            if session_cache_key not in cache_dict:
+                cache_dict[session_cache_key] = {}
+            cache_dict[session_cache_key][image_path] = similarity_score
+            
+            return similarity_score
         except Exception as e:
             logger.error(f"Error comparing image {image_path} with prototype: {e}")
             return 0.0
@@ -660,6 +677,34 @@ class EmbeddingPrototype:
             # Clear all prototypes
             EmbeddingPrototype._set_prototypes_dict({})
             logger.info("Cleared all prototype caches")
+    
+    @staticmethod
+    def clear_session_cache(session_cache_key: Optional[str] = None):
+        """
+        Clear session comparison result caches. If session_cache_key is provided, only clear that one.
+        Otherwise, clear all session caches.
+        
+        This is useful when a session (e.g., a prevalidation run) is complete and
+        you want to free up memory or ensure fresh results for the next session.
+        
+        Args:
+            session_cache_key: Optional specific session cache key to clear
+        """
+        if session_cache_key:
+            cleared = False
+            if session_cache_key in _session_comparison_caches_positive:
+                del _session_comparison_caches_positive[session_cache_key]
+                cleared = True
+            if session_cache_key in _session_comparison_caches_negative:
+                del _session_comparison_caches_negative[session_cache_key]
+                cleared = True
+            if cleared:
+                logger.debug(f"Cleared session comparison caches for key: {session_cache_key}")
+        else:
+            # Clear all session caches
+            _session_comparison_caches_positive.clear()
+            _session_comparison_caches_negative.clear()
+            logger.debug("Cleared all session comparison caches")
 
 
 # Import translation function
