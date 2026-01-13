@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2026-01-13 14:16-0500\n"
-"PO-Revision-Date: 2026-01-13 14:16-0500\n"
+"POT-Creation-Date: 2026-01-13 17:45-0500\n"
+"PO-Revision-Date: 2026-01-13 17:45-0500\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
 "Language: ko\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:113 app.py:1019 app.py:2486
+#: app.py:113 app.py:1020 app.py:2500
 msgid " Simple Image Compare "
 msgstr " 간단한 이미지 비교 "
 
@@ -24,7 +24,7 @@ msgstr "(주 창)"
 msgid "Theme switched to {0}."
 msgstr "테마는 {0}에 전환."
 
-#: app.py:282 app.py:502 app.py:1049 compare/compare_wrapper.py:508
+#: app.py:282 app.py:502 app.py:1050 compare/compare_wrapper.py:508
 msgid "Set a directory to run comparison."
 msgstr "비교를 실행하려면 디렉토리를 설정합니다."
 
@@ -69,6 +69,8 @@ msgid ""
 "Set an image file to search for similar images.\n"
 "Uses embedding similarity to find visually similar images."
 msgstr ""
+"이미지 파일을 설정하여 유사한 이미지를 검색합니다.\n"
+"임베딩 유사성을 사용하여 시각적으로 유사한 이미지를 찾습니다."
 
 #: app.py:336
 msgid "Search text (embedding mode)"
@@ -80,25 +82,28 @@ msgid ""
 "Negative text: Exclude images similar to this text.\n"
 "Both use embedding similarity matching."
 msgstr ""
+"긍정 텍스트: 이 텍스트와 유사한 이미지를 찾습니다.\n"
+"부정 텍스트: 이 텍스트와 유사한 이미지를 제외합니다.\n"
+"둘 다 임베딩 유사도 매칭을 사용합니다."
 
 #: app.py:344
 msgid "Positive text:"
-msgstr ""
+msgstr "긍정적인 텍스트:"
 
 #: app.py:352
 msgid "Negative text:"
-msgstr ""
+msgstr "부정적인 텍스트:"
 
 #: app.py:360 compare/classifier_actions_window.py:105
 #: compare/classifier_management_window.py:591
 msgid "Classifier Actions"
-msgstr ""
+msgstr "분류기 동작"
 
 #: app.py:364 compare/compare_settings_window.py:38
 #: compare/compare_settings_window.py:53
 #: compare/compare_settings_window.py:161
 msgid "Compare Settings"
-msgstr ""
+msgstr "비교 설정"
 
 #: app.py:369
 msgid "Run image compare"
@@ -121,6 +126,8 @@ msgid ""
 "Search for images similar to the currently displayed image.\n"
 "Uses embedding similarity matching."
 msgstr ""
+"현재 표시된 이미지와 유사한 이미지를 검색합니다.\n"
+"임베딩 유사도 매칭을 사용합니다."
 
 #: app.py:390 utils/help_and_config.py:87
 msgid "Open media location"
@@ -132,7 +139,7 @@ msgstr "본문 바로가기"
 
 #: app.py:392
 msgid "Copy media basename"
-msgstr ""
+msgstr "미디어 기본 이름을 복사하십시오"
 
 #: app.py:393
 msgid "---- DELETE ----"
@@ -146,117 +153,117 @@ msgstr "자주 묻는 질문"
 msgid "Would you like to quit the application?"
 msgstr "응용 프로그램을 종료하시겠습니까?"
 
-#: app.py:681
+#: app.py:682
 msgid "Ended slideshows"
 msgstr "슬라이드 쇼 종료"
 
-#: app.py:734 app.py:2146 app.py:2153 app.py:2157 app.py:2161 app.py:2167
-#: app.py:2274 app.py:2290 app.py:2307
+#: app.py:735 app.py:2160 app.py:2167 app.py:2171 app.py:2175 app.py:2181
+#: app.py:2288 app.py:2304 app.py:2321
 msgid "Warning"
 msgstr "경고"
 
-#: app.py:734
+#: app.py:735
 msgid "No files found in directory after refresh."
 msgstr "새로 고침 후 디렉토리에 파일을 찾을 수 없습니다."
 
-#: app.py:772
+#: app.py:773
 msgid "Slideshow for new images started"
 msgstr "새 이미지 슬라이드쇼 시작"
 
-#: app.py:774
+#: app.py:775
 msgid "Slideshow started"
 msgstr "슬라이드쇼 시작"
 
-#: app.py:777
+#: app.py:778
 msgid "Slideshows ended"
 msgstr "슬라이드 쇼 종료"
 
-#: app.py:790
+#: app.py:791
 msgid "Browsing mode set."
 msgstr "검색 모드 설정."
 
-#: app.py:835 utils/constants.py:327
+#: app.py:836 utils/constants.py:331
 msgid "View Media Details"
 msgstr "미디어 세부 정보 보기"
 
-#: app.py:836
+#: app.py:837
 msgid "Hide Media"
 msgstr "미디어 숨기기"
 
-#: app.py:837
+#: app.py:838
 msgid "Remove from Marks"
 msgstr "마크에서 제거"
 
-#: app.py:837
+#: app.py:838
 msgid "Add to Marks"
 msgstr "마크에 추가하기"
 
-#: app.py:839
+#: app.py:840
 msgid "Remove from Favorites"
 msgstr "즐겨찾기에서 제거"
 
-#: app.py:839
+#: app.py:840
 msgid "Add to Favorites"
 msgstr "즐겨찾기에 추가"
 
-#: app.py:842
+#: app.py:843
 msgid "Remove from Directory Notes"
-msgstr ""
+msgstr "디렉토리의 메모에서 제거"
 
-#: app.py:842
+#: app.py:843
 msgid "Add to Directory Notes"
-msgstr ""
+msgstr "디렉토리의 메모에 추가"
 
-#: app.py:844
+#: app.py:845
 msgid "Edit File Note"
-msgstr ""
+msgstr "파일 노트 편집"
 
-#: app.py:846
+#: app.py:847
 msgid "Open in GIMP"
 msgstr "GIMP에서 열기"
 
-#: app.py:847 image/image_details.py:201 utils/constants.py:333
+#: app.py:848 image/image_details.py:201 utils/constants.py:337
 #: utils/help_and_config.py:138
 msgid "Run Image Generation"
 msgstr "이미지 생성"
 
-#: app.py:848
+#: app.py:849
 msgid "Run Image Generation on Directory"
 msgstr "디렉터리에서 이미지 생성 실행"
 
-#: app.py:849
+#: app.py:850
 msgid "Show Source Image"
 msgstr "원본 이미지 표시"
 
-#: app.py:850
+#: app.py:851
 msgid "Find Related Images"
 msgstr "관련 이미지 찾기"
 
-#: app.py:851
+#: app.py:852
 msgid "Set Marks from Downstream Related Images"
 msgstr "하류 관련 이미지에서 표시 설정"
 
-#: app.py:853
+#: app.py:854
 msgid "Set Current Image as Search Image"
 msgstr "현재 이미지를 검색 이미지로 설정"
 
-#: app.py:854
+#: app.py:855
 msgid "Add Current Image to Negative Search"
 msgstr "현재 이미지를 음수 검색에 추가하기"
 
-#: app.py:855
+#: app.py:856
 msgid "Run Refacdir"
 msgstr "RefacDir 실행"
 
-#: app.py:873
+#: app.py:874
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(인덱스 세부 정보를 보려면 이 이미지를 디렉토리의 일부로 엽니다.)"
 
-#: app.py:910 app.py:1639
+#: app.py:911 app.py:1653
 msgid "Many Files"
 msgstr "많은 파일"
 
-#: app.py:938
+#: app.py:939
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
@@ -265,154 +272,154 @@ msgstr ""
 "외부 저장 장치에 파일 수가 많은 디렉토리 또는 중간 규모의 파일 수를 가진 디렉토리가 감지되었습니다. 이 경우 로드 시간이 느려질 수 "
 "있습니다. 전체 디렉토리를 로드하시겠습니까?"
 
-#: app.py:939
+#: app.py:940
 msgid "Large Directory Detected: {0}"
 msgstr "대용량 디렉토리 감지: {0}"
 
-#: app.py:969
+#: app.py:970
 msgid "No downstream related image(s) found in {0}"
 msgstr "{0} 에서 다운스트림 관련 이미지를 찾을 수 없습니다."
 
-#: app.py:991
+#: app.py:992
 msgid "{0} file marks set"
 msgstr "{0} 파일 표시 세트"
 
-#: app.py:997
+#: app.py:998
 msgid "Help and Config"
 msgstr "도움말 및 불만"
 
-#: app.py:1096
+#: app.py:1110
 msgid "Set Image Comparison Directory"
 msgstr "이미지 비교 디렉토리 설정"
 
-#: app.py:1150
+#: app.py:1164
 msgid "No image selected."
 msgstr "선택된 이미지 없음."
 
-#: app.py:1150
+#: app.py:1164
 msgid "Invalid Setting"
 msgstr "잘못된 설정"
 
-#: app.py:1189
+#: app.py:1203
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "텍스트 임베딩을 검색하려면 비교 모드를 임베딩 모드로 설정해야 합니다."
 
-#: app.py:1194
+#: app.py:1208
 msgid "Select image file"
 msgstr "이미지 파일 선택"
 
-#: app.py:1223
+#: app.py:1237
 msgid "Somehow, the search file is invalid"
 msgstr "Somehow, 검색 파일이 잘못되었습니다."
 
-#: app.py:1309 app.py:1334
+#: app.py:1323 app.py:1348
 msgid "Failed to get active image filepath"
 msgstr "Active image filepath를 얻는 실패"
 
-#: app.py:1419
+#: app.py:1433
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% 완료"
 
-#: app.py:1425
+#: app.py:1439
 msgid "Confirm comparison"
 msgstr "자주 묻는 질문"
 
-#: app.py:1426
+#: app.py:1440
 msgid "No base directory has been set, will use current base directory of "
 msgstr "기본 디렉터리가 설정되지 않은 경우 현재 기본 디렉터리를 사용합니다: "
 
-#: app.py:1427
+#: app.py:1441
 msgid "Are you sure you want to proceed?"
 msgstr "진행하시겠습니까?"
 
-#: app.py:1450
+#: app.py:1464
 msgid "Error running compare"
 msgstr "오류 실행 비교"
 
-#: app.py:1485
+#: app.py:1499
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "슬라이드쇼 후 잠금 삭제\n"
 "전환으로 마크 추가 방지"
 
-#: app.py:1496
+#: app.py:1510
 msgid "Mark removed. Remaining: {0}"
 msgstr "마크가 제거되었습니다. 남아있음: {0}"
 
-#: app.py:1500
+#: app.py:1514
 msgid "Mark added. Total set: {0}"
 msgstr "마크가 추가되었습니다. 총 집합입니다: {0}"
 
-#: app.py:1517
+#: app.py:1531
 msgid "Marks added. Total set: {0}"
 msgstr "마크가 추가되었습니다. 총 집합입니다: {0}"
 
-#: app.py:1526
+#: app.py:1540
 msgid "First sorted mark"
 msgstr "첫 번째 정렬 마크"
 
-#: app.py:1533
+#: app.py:1547
 msgid "Only one marked file set."
 msgstr "1개의 표시된 파일 세트만."
 
-#: app.py:1546
+#: app.py:1560
 msgid "Invalid file path"
 msgstr "잘못된 파일 경로"
 
-#: app.py:1546
+#: app.py:1560
 msgid "The file path {0} is invalid."
 msgstr "파일 경로 {0}이(가) 잘못되었습니다."
 
-#: app.py:1552
+#: app.py:1566
 msgid "Including marks: {0}"
 msgstr "마크 포함: {0}"
 
-#: app.py:1594
+#: app.py:1608
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0} 마크가 설정되었습니다(>={1} 예상).\n"
 "Shift+M을 사용하여 마크를 설정합니다."
 
-#: app.py:1639
+#: app.py:1653
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "디렉터리 {0}에서 모든 사전 유효성 검사를 실행하시겠습니까? 시간이 걸릴 수 있습니다."
 
-#: app.py:1654
+#: app.py:1668
 msgid "Prevalidations now running"
 msgstr "지금 실행"
 
-#: app.py:1654
+#: app.py:1668
 msgid "Prevalidations turned off"
 msgstr "사전 검증"
 
-#: app.py:1675
+#: app.py:1689
 msgid "Please set a base directory first"
-msgstr ""
+msgstr "먼저 기본 디렉터리를 설정해 주세요"
 
-#: app.py:1704
+#: app.py:1718
 msgid "Removed from directory notes: {0}"
-msgstr ""
+msgstr "디렉토리의 메모에서 제거됨: {0}"
 
-#: app.py:1707
+#: app.py:1721
 msgid "Added to directory notes: {0}"
-msgstr ""
+msgstr "디렉토리의 메모에 추가됨: {0}"
 
-#: app.py:1730 files/directory_notes_window.py:242
+#: app.py:1744 files/directory_notes_window.py:242
 msgid "Edit Note - {0}"
-msgstr ""
+msgstr "편집 노트 - {0}"
 
-#: app.py:1754 files/directory_notes_window.py:266
+#: app.py:1768 files/directory_notes_window.py:266
 msgid "Note saved for: {0}"
-msgstr ""
+msgstr "{0}을 위한 메모 저장됨"
 
-#: app.py:1767 files/directory_notes_window.py:273
+#: app.py:1781 files/directory_notes_window.py:273
 msgid "Save"
-msgstr ""
+msgstr "저장"
 
-#: app.py:1770 auth/app_startup_auth.py:127 auth/password_admin_window.py:462
+#: app.py:1784 auth/app_startup_auth.py:127 auth/password_admin_window.py:462
 #: auth/password_dialog.py:152 auth/password_dialog.py:221
 #: auth/password_dialog.py:238 compare/compare_settings_window.py:373
 #: files/directory_notes_window.py:276 files/pdf_options_window.py:77
@@ -421,74 +428,74 @@ msgstr ""
 msgid "Cancel"
 msgstr "취소"
 
-#: app.py:1884
+#: app.py:1898
 msgid "File not found"
 msgstr "찾을 수 없음"
 
-#: app.py:1884
+#: app.py:1898
 msgid "No file was found for the search text: \"{0}\""
 msgstr "검색 텍스트에 대한 파일을 찾을 수 없습니다: \"{0}”"
 
-#: app.py:1893
+#: app.py:1907
 msgid "Index navigation not available"
-msgstr ""
+msgstr "인덱스 탐색이 불가능합니다"
 
-#: app.py:1893
+#: app.py:1907
 msgid "Index navigation is only available in BROWSE mode."
-msgstr ""
+msgstr "인덱스 탐색은 탐색 모드에서만 사용할 수 있습니다."
 
-#: app.py:1904
+#: app.py:1918
 msgid "Invalid index"
-msgstr ""
+msgstr "잘못된 인덱스"
 
-#: app.py:1920
+#: app.py:1934
 msgid "No image selected"
 msgstr "선택 없음"
 
-#: app.py:1920
+#: app.py:1934
 msgid "No image was selected for comparison"
 msgstr "이미지는 비교를 위해 선정되었습니다"
 
-#: app.py:1934
+#: app.py:1948
 msgid "No Text Search Presets Found"
 msgstr "텍스트 검색 사전 설정을 찾을 수 없음"
 
-#: app.py:1935
+#: app.py:1949
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "텍스트 임베딩 검색 사전 설정을 찾을 수 없습니다. config.json 파일에서 설정하세요."
 
-#: app.py:2032
+#: app.py:2046
 msgid "Opening media file: {0}"
 msgstr "미디어 파일 열기: {0}"
 
-#: app.py:2035
+#: app.py:2049
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr "현재 미디어 파일을 열 수 없습니다. 유효한 파일 경로를 얻을 수 없습니다."
 
-#: app.py:2040
+#: app.py:2054
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
 msgstr "GIMP 통합이 구성되지 않았습니다. config.json 파일에서 'gimp_exe_loc'을 설정해 주세요."
 
-#: app.py:2040
+#: app.py:2054
 msgid "GIMP Integration Error"
 msgstr "GIMP 통합 오류"
 
-#: app.py:2052
+#: app.py:2066
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "김프에서 현재 파일을 열지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:2063 image/temp_image_canvas.py:167
+#: app.py:2077 image/temp_image_canvas.py:167
 msgid "Copied filepath to clipboard"
-msgstr ""
+msgstr "파일 경로를 클립보드에 복사했습니다"
 
-#: app.py:2071
+#: app.py:2085
 msgid "Copied filename to clipboard"
-msgstr ""
+msgstr "파일 이름을 클립보드에 복사했습니다"
 
-#: app.py:2078
+#: app.py:2092
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -496,41 +503,41 @@ msgstr ""
 "현재 이미지를 숨겼습니다.\n"
 "숨기기를 해제하려면 Shift+B를 누릅니다."
 
-#: app.py:2083
+#: app.py:2097
 msgid "Cleared all hidden images."
 msgstr "숨겨진 이미지를 모두 지웠습니다."
 
-#: app.py:2091
+#: app.py:2105
 msgid "DELETE_LOCK"
 msgstr ""
 "슬라이드쇼 후 잠금 삭제\n"
 "전환 후 삭제 방지"
 
-#: app.py:2109
+#: app.py:2123
 msgid "Invalid action, no files found to delete"
 msgstr "잘못된 작업, 삭제할 파일을 찾을 수 없음"
 
-#: app.py:2112
+#: app.py:2126
 msgid "Invalid action, search image not found"
 msgstr "잘못된 작업, 검색 이미지를 찾을 수 없음"
 
-#: app.py:2127
+#: app.py:2141
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "현재 파일을 삭제하지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:2134
+#: app.py:2148
 msgid "Removing directory: {0}"
 msgstr "디렉토리 제거: {0}"
 
-#: app.py:2136
+#: app.py:2150
 msgid "Removing file: {0}"
 msgstr "파일을 제거 중입니다: {0}"
 
-#: app.py:2146 app.py:2167
+#: app.py:2160 app.py:2181
 msgid "Failed to delete item: {0}"
 msgstr "항목을 삭제하지 못했습니다: {0}"
 
-#: app.py:2150
+#: app.py:2164
 msgid ""
 "Failed to move directory to {0}. Double check the trash folder is set "
 "properly in config.json."
@@ -538,7 +545,7 @@ msgstr ""
 "{0}로 디렉토리를 이동하는 데 실패했습니다. config.json 파일에서 휴지통 폴더가 제대로 설정되어 있는지 다시 한 번 "
 "확인하세요."
 
-#: app.py:2152
+#: app.py:2166
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
@@ -546,7 +553,7 @@ msgstr ""
 "{0}로 파일을 전송하는 데 실패했습니다. config.json 파일에서 휴지통 폴더가 제대로 설정되어 있는지 다시 한 번 확인해 "
 "주세요."
 
-#: app.py:2158
+#: app.py:2172
 msgid ""
 "Failed to move directory to the trash. Either pip install send2trash or set "
 "a specific trash folder in config.json."
@@ -554,7 +561,7 @@ msgstr ""
 "디렉토리를 휴지통으로 이동하는 데 실패했습니다. pip install send2trash를 실행하거나 config.json에서 특정 "
 "휴지통 폴더를 설정하세요."
 
-#: app.py:2162
+#: app.py:2176
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -562,91 +569,91 @@ msgstr ""
 "파일을 휴지통으로 보내지 못했으므로 삭제됩니다. pip에서 send2trash를 설치하거나 config.json에서 특정 휴지통 폴더를 "
 "설정하세요."
 
-#: app.py:2172
+#: app.py:2186
 msgid "Invalid directory"
 msgstr "무효한 디렉토리"
 
-#: app.py:2172
+#: app.py:2186
 msgid "No valid base directory to delete"
 msgstr "삭제할 유효한 기본 디렉토리가 없습니다."
 
-#: app.py:2183
+#: app.py:2197
 msgid "Cannot Delete Directory"
 msgstr "디렉토리를 삭제할 수 없습니다."
 
-#: app.py:2187
+#: app.py:2201
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "이 디렉토리와 모든 내용을 삭제하시겠습니까?"
 
-#: app.py:2189
+#: app.py:2203
 msgid "Contents to be deleted:"
 msgstr "삭제할 내용:"
 
-#: app.py:2191
+#: app.py:2205
 msgid "Confirm Delete Directory"
 msgstr "디렉토리 삭제 확인"
 
-#: app.py:2222
+#: app.py:2236
 msgid "Delete Directory Error"
 msgstr "디렉토리 삭제 오류"
 
-#: app.py:2224
+#: app.py:2238
 msgid "Directory {0} deleted."
 msgstr "디렉토리 {0}이 삭제되었습니다."
 
-#: app.py:2240
+#: app.py:2254
 msgid "Invalid target filepath for replacement: "
 msgstr "교체할 대상 파일 경로가 잘못되었습니다: "
 
-#: app.py:2244
+#: app.py:2258
 msgid "Moved search image to "
 msgstr "로 검색 이미지를 이동했습니다: "
 
-#: app.py:2274
+#: app.py:2288
 msgid "Failed to get active media filepath"
 msgstr "활성 미디어 파일 경로를 가져오는 데 실패했습니다"
 
-#: app.py:2288
+#: app.py:2302
 msgid "Running image gen: "
 msgstr "이미지 생성 실행 : "
 
-#: app.py:2290 app.py:2307
+#: app.py:2304 app.py:2321
 msgid "Error running image generation:"
 msgstr "이미지 생성 실행 중 오류 발생:"
 
-#: app.py:2305
+#: app.py:2319
 msgid "Running image gen on directory: "
 msgstr "디렉터리에 이미지 생성 실행 중: "
 
-#: app.py:2314
+#: app.py:2328
 msgid "Running refacdir"
 msgstr "refacdir 실행"
 
-#: app.py:2319 auth/app_startup_auth.py:141 auth/password_dialog.py:249
+#: app.py:2333 auth/app_startup_auth.py:141 auth/password_dialog.py:249
 #: extensions/gimp/gimp_wrapper.py:689 extensions/gimp/gimp_wrapper.py:718
 #: files/pdf_creator.py:133 files/pdf_creator.py:137 files/pdf_creator.py:140
 msgid "Error"
 msgstr "계정 정보"
 
-#: app.py:2421
+#: app.py:2435
 msgid "GROUP_DETAILS"
 msgstr ""
 "그룹 {0} 중 {1}\n"
 "크기: {2}"
 
-#: app.py:2425
+#: app.py:2439
 msgid "No image files found"
 msgstr "이미지 파일 없음"
 
-#: app.py:2427
+#: app.py:2441
 msgid "1 image file found"
 msgstr "1 이미지 파일"
 
-#: app.py:2428
+#: app.py:2442
 msgid "{0} image files found"
 msgstr "{0} 이미지 파일 찾았습니다"
 
-#: app.py:2430
+#: app.py:2444
 msgid "(filtered)"
 msgstr "(필터)"
 
@@ -941,7 +948,7 @@ msgstr "(네거티브 설정 없음)"
 #: compare/classifier_actions_manager.py:46
 #: compare/classifier_management_window.py:61
 msgid "New Classifier Action"
-msgstr ""
+msgstr "새로운 분류기 조치"
 
 #: compare/classifier_actions_manager.py:115
 msgid "Loading image classifier <{0}> ..."
@@ -949,11 +956,11 @@ msgstr "이미지 분류기 <{0}> 로드 중 ..."
 
 #: compare/classifier_actions_manager.py:210
 msgid "Loading embedding prototype from {0}..."
-msgstr ""
+msgstr "{0}에서 임베딩 프로토타입을 불러오는 중..."
 
 #: compare/classifier_actions_manager.py:226
 msgid "Loading negative embedding prototype from {0}..."
-msgstr ""
+msgstr "{0}에서 음수 임베딩 프로토타입을 불러오는 중..."
 
 #: compare/classifier_actions_manager.py:377
 msgid " detected"
@@ -985,7 +992,7 @@ msgstr "작업 수정자가 유효한 디렉터리가 아닙니다 : "
 
 #: compare/classifier_actions_manager.py:499
 msgid "Invalid classifier action {0}, may cause errors or be unable to run!"
-msgstr ""
+msgstr "잘못된 분류기 작업 {0}, 오류가 발생하거나 실행되지 않을 수 있습니다!"
 
 #: compare/classifier_actions_manager.py:597
 msgid "embedding"
@@ -1001,7 +1008,7 @@ msgstr "프롬프트"
 
 #: compare/classifier_actions_manager.py:603
 msgid "prototype"
-msgstr ""
+msgstr "프로토타입"
 
 #: compare/classifier_actions_manager.py:611
 msgid "categories: {0}"
@@ -1025,7 +1032,7 @@ msgstr " ({0} 포지티브, {1} 네거티브)"
 
 #: compare/classifier_actions_manager.py:626
 msgid "disabled"
-msgstr ""
+msgstr "비활성화됨"
 
 #: compare/classifier_actions_manager.py:633
 #: compare/classifier_management_window.py:57
@@ -1035,7 +1042,7 @@ msgstr "새로운 유효성"
 
 #: compare/classifier_actions_manager.py:711
 msgid "Profile directory is not a valid directory: "
-msgstr ""
+msgstr "프로필 디렉터리가 유효한 디렉터리가 아닙니다: "
 
 #: compare/classifier_actions_manager.py:713
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
@@ -1043,32 +1050,32 @@ msgstr "유효성 검사 {0}이(가) 잘못되어 오류가 발생하거나 실�
 
 #: compare/classifier_actions_manager.py:786
 msgid "lookaheads: {0}"
-msgstr ""
+msgstr "앞을 내다보기: {0}"
 
 #: compare/classifier_actions_window.py:111
 msgid "Add Classifier Action"
-msgstr ""
+msgstr "분류기 작업 추가"
 
 #: compare/classifier_actions_window.py:113
 msgid "Clear Classifier Actions"
-msgstr ""
+msgstr "분류기 작업 지우기"
 
 #: compare/classifier_actions_window.py:115
 msgid "Run All"
-msgstr ""
+msgstr "모두 실행"
 
 #: compare/classifier_actions_window.py:119
 msgid "Run on Profile:"
-msgstr ""
+msgstr "프로필 실행:"
 
 #: compare/classifier_actions_window.py:154
 #: compare/prevalidations_window.py:454
 msgid "Active"
-msgstr ""
+msgstr "활성"
 
 #: compare/classifier_actions_window.py:158
-#: compare/prevalidations_window.py:445 utils/constants.py:129
-#: utils/constants.py:144
+#: compare/prevalidations_window.py:445 utils/constants.py:133
+#: utils/constants.py:148
 msgid "Name"
 msgstr "이름 *"
 
@@ -1080,7 +1087,7 @@ msgstr "액션"
 
 #: compare/classifier_actions_window.py:183
 msgid "Run"
-msgstr ""
+msgstr "실행"
 
 #: compare/classifier_actions_window.py:212
 #: compare/prevalidations_window.py:500 files/file_actions_window.py:497
@@ -1100,28 +1107,29 @@ msgstr "맨 위로"
 
 #: compare/classifier_actions_window.py:288
 #: compare/classifier_actions_window.py:354
+#: compare/prevalidations_window.py:387
 msgid "directories"
-msgstr ""
+msgstr "디렉터리"
 
 #: compare/classifier_actions_window.py:294
 msgid "Run classifier action '{0}' on the following directories?"
-msgstr ""
+msgstr "다음 디렉터리에서 분류기 작업 '{0}'을 실행하시겠습니까?"
 
 #: compare/classifier_actions_window.py:298
 msgid "Run Classifier Action"
-msgstr ""
+msgstr "분류기 작업 실행"
 
 #: compare/classifier_actions_window.py:338
 msgid "No active classifier actions to run"
-msgstr ""
+msgstr "실행할 활성 분류기 작업이 없습니다"
 
 #: compare/classifier_actions_window.py:362
 msgid "Run {0} active classifier action(s) on the following directories?"
-msgstr ""
+msgstr "다음 디렉터리에서 {0}개의 활성 분류기 작업을 실행하시겠습니까?"
 
 #: compare/classifier_actions_window.py:366
 msgid "Run All Classifier Actions"
-msgstr ""
+msgstr "모든 분류기 작업 실행"
 
 #: compare/classifier_management_window.py:55
 #: compare/prevalidations_window.py:28
@@ -1135,11 +1143,11 @@ msgstr "유효성 검사 이름"
 
 #: compare/classifier_management_window.py:59
 msgid "Modify Classifier Action"
-msgstr ""
+msgstr "분류기 작업 수정"
 
 #: compare/classifier_management_window.py:60
 msgid "Classifier Action Name"
-msgstr ""
+msgstr "분류기 작업명"
 
 #: compare/classifier_management_window.py:98
 msgid "Positives"
@@ -1167,7 +1175,7 @@ msgstr "프롬프트 사용"
 
 #: compare/classifier_management_window.py:140
 msgid "Use Embedding Prototype"
-msgstr ""
+msgstr "임베딩 프로토타입 사용"
 
 #: compare/classifier_management_window.py:149
 #: compare/compare_settings_window.py:183 compare/lookahead.py:163
@@ -1192,11 +1200,11 @@ msgstr "카테고리 선택..."
 
 #: compare/classifier_management_window.py:209
 msgid "Should Run"
-msgstr ""
+msgstr "실행해야 함"
 
 #: compare/classifier_management_window.py:212
 msgid "Enable this classifier action"
-msgstr ""
+msgstr "이 분류기 동작을 활성화하십시오"
 
 #: compare/classifier_management_window.py:221
 #: compare/directory_profile.py:195 compare/lookahead.py:170
@@ -1205,7 +1213,7 @@ msgstr "완료"
 
 #: compare/classifier_management_window.py:236
 msgid "Prototype Directory"
-msgstr ""
+msgstr "프로토타입 디렉터리"
 
 #: compare/classifier_management_window.py:251
 #: compare/classifier_management_window.py:289 files/go_to_file.py:137
@@ -1215,31 +1223,31 @@ msgstr "찾아보기..."
 
 #: compare/classifier_management_window.py:259
 msgid "Force Recalculate Prototype"
-msgstr ""
+msgstr "프로토타입 강제 재계산"
 
 #: compare/classifier_management_window.py:269
 msgid "Negative Prototype Directory (Optional)"
-msgstr ""
+msgstr "부정 프로토타입 디렉터리 (선택 사항)"
 
 #: compare/classifier_management_window.py:299
 msgid "Negative Prototype Weight (λ)"
-msgstr ""
+msgstr "부정적 원형의 무게 (λ)"
 
 #: compare/classifier_management_window.py:462
 msgid "Select Prototype Directory"
-msgstr ""
+msgstr "프로토타입용 디렉터리 선택"
 
 #: compare/classifier_management_window.py:473
 msgid "Select Negative Prototype Directory"
-msgstr ""
+msgstr "네거티브 프로토타입용 디렉터리 선택"
 
 #: compare/classifier_management_window.py:534
 msgid "Prototypes recalculated successfully"
-msgstr ""
+msgstr "프로토타입이 성공적으로 재계산되었습니다"
 
 #: compare/classifier_management_window.py:565
 msgid "Classifier Management"
-msgstr ""
+msgstr "분류기 관리"
 
 #: compare/classifier_management_window.py:592
 #: compare/prevalidations_window.py:217
@@ -1249,19 +1257,19 @@ msgstr "법적고지"
 #: compare/classifier_management_window.py:611
 msgid ""
 "Prevalidations are disabled. Enable them in the Prevalidations tab settings."
-msgstr ""
+msgstr "사전 유효성 검사가 비활성화되었습니다. 사전 유효성 검사 탭 설정에서 활성화하십시오."
 
 #: compare/compare_settings_window.py:70
 msgid "Comparison Modes"
-msgstr ""
+msgstr "비교 모드"
 
 #: compare/compare_settings_window.py:102
 msgid "Add Instance"
-msgstr ""
+msgstr "인스턴스 추가"
 
 #: compare/compare_settings_window.py:122
 msgid "Combination Logic:"
-msgstr ""
+msgstr "조합 논리:"
 
 #: compare/compare_settings_window.py:223
 msgid "Max files to compare"
@@ -1281,35 +1289,35 @@ msgstr "매장 찾기"
 
 #: compare/compare_settings_window.py:296
 msgid "Filters (Applied Before Comparison)"
-msgstr ""
+msgstr "필터 (비교 전에 적용됨)"
 
 #: compare/compare_settings_window.py:310
 msgid "Size Filter:"
-msgstr ""
+msgstr "크기 필터:"
 
 #: compare/compare_settings_window.py:319
 msgid "(Size filtering UI to be implemented)"
-msgstr ""
+msgstr "(사이즈 필터링 UI 구현 예정)"
 
 #: compare/compare_settings_window.py:333
 msgid "Model Filter:"
-msgstr ""
+msgstr "모델 필터:"
 
 #: compare/compare_settings_window.py:342
 msgid "(Model filtering UI to be implemented)"
-msgstr ""
+msgstr "(모델 필터링 UI 구현 예정)"
 
 #: compare/compare_settings_window.py:366
 msgid "Apply"
-msgstr ""
+msgstr "신청"
 
 #: compare/compare_settings_window.py:403
 msgid "Threshold:"
-msgstr ""
+msgstr "임계값:"
 
 #: compare/compare_settings_window.py:473
 msgid "Instance Weights:"
-msgstr ""
+msgstr "인스턴스 가중치:"
 
 #: compare/compare_wrapper.py:77 compare/compare_wrapper.py:80
 msgid "Invalid mode"
@@ -1422,127 +1430,127 @@ msgstr "이 디렉터리 및 현재 필터 설정에 더 이상 이미지 그룹
 
 #: compare/directory_profile.py:133 compare/prevalidations_window.py:370
 msgid "Edit Profile"
-msgstr ""
+msgstr "디렉터리 프로필 편집"
 
 #: compare/directory_profile.py:133
 msgid "Create Profile"
-msgstr ""
+msgstr "디렉터리 프로필 생성"
 
 #: compare/directory_profile.py:145
 msgid "Profile Name"
-msgstr ""
+msgstr "디렉터리 프로필 이름"
 
 #: compare/directory_profile.py:155
 msgid "Directories"
-msgstr ""
+msgstr "디렉토리"
 
 #: compare/directory_profile.py:175
 msgid "Add"
-msgstr ""
+msgstr "추가"
 
 #: compare/directory_profile.py:178
 msgid "Edit"
-msgstr ""
+msgstr "편집"
 
 #: compare/directory_profile.py:181 files/directory_notes_window.py:137
 msgid "Remove"
-msgstr ""
+msgstr "제거"
 
 #: compare/directory_profile.py:184
 msgid "Add dirs from subdirs"
-msgstr ""
+msgstr "하위 디렉터리에서 디렉터리 추가"
 
 #: compare/directory_profile.py:187
 msgid "Clear all"
-msgstr ""
+msgstr "모두 지우기"
 
 #: compare/directory_profile.py:206
 msgid "Select directory"
-msgstr ""
+msgstr "디렉터리 선택"
 
 #: compare/directory_profile.py:236
 msgid "Add Directory"
-msgstr ""
+msgstr "디렉터리 추가"
 
 #: compare/directory_profile.py:261
 msgid "Edit Directory"
-msgstr ""
+msgstr "디렉터리 편집"
 
 #: compare/directory_profile.py:295
 msgid "Select directory to add subdirectories from"
-msgstr ""
+msgstr "하위 디렉터리를 추가할 디렉터리를 선택하세요"
 
 #: compare/embedding_prototype.py:92
 msgid "Gathering image files from directory..."
-msgstr ""
+msgstr "디렉터리에서 이미지 파일 수집 중..."
 
 #: compare/embedding_prototype.py:126
 msgid "Calculating embeddings for {0} images..."
-msgstr ""
+msgstr "{0}개의 이미지에 대한 임베딩 계산 중..."
 
 #: compare/embedding_prototype.py:150
 msgid "Processed {0}/{1} images..."
-msgstr ""
+msgstr "{0}/{1}개의 이미지를 처리했습니다..."
 
 #: compare/embedding_prototype.py:165
 msgid "Calculating average embedding..."
-msgstr ""
+msgstr "평균 임베딩 계산 중..."
 
 #: compare/embedding_prototype.py:331
 msgid "Computed embeddings for {0}/{1} images..."
-msgstr ""
+msgstr "{0}/{1} 이미지에 대한 계산된 임베딩..."
 
 #: compare/embedding_prototype.py:502
 msgid "Gathering image files from directories..."
-msgstr ""
+msgstr "디렉터리에서 이미지 파일을 수집 중..."
 
 #: compare/embedding_prototype.py:537
 msgid "Processing {0} images in {1} batches of up to {2} images..."
-msgstr ""
+msgstr "{0}개의 이미지를 {1}개의 배치로 나누어 처리 중입니다. 각 배치당 최대 {2}개의 이미지까지 처리됩니다..."
 
 #: compare/embedding_prototype.py:544
 msgid "Computing embeddings for batch prototype validation..."
-msgstr ""
+msgstr "배치 프로토타입 검증을 위한 임베딩 계산..."
 
 #: compare/embedding_prototype.py:553
 msgid "Processing batch {0}/{1} ({2} images)..."
-msgstr ""
+msgstr "배치 {0}/{1} 처리 중 ({2} 이미지)..."
 
 #: compare/embedding_prototype.py:599
 msgid "Found {0} images that meet the threshold..."
-msgstr ""
+msgstr "임계값을 충족하는 {0}개의 이미지를 찾았습니다..."
 
 #: compare/lookahead.py:98 compare/prevalidations_window.py:275
 msgid "Edit Lookahead"
-msgstr ""
+msgstr "앞으로 보기 편집"
 
 #: compare/lookahead.py:98
 msgid "Create Lookahead"
-msgstr ""
+msgstr "룩어헤드 생성"
 
 #: compare/lookahead.py:110
 msgid "Lookahead Name"
-msgstr ""
+msgstr "룩어헤드 이름"
 
 #: compare/lookahead.py:121
 msgid "Reference existing prevalidation name"
-msgstr ""
+msgstr "기존 사전 검증된 이름 참조"
 
 #: compare/lookahead.py:134
 msgid "Prevalidation Name or Custom Text"
-msgstr ""
+msgstr "사전 검증 이름 또는 사용자 정의 텍스트"
 
 #: compare/prevalidations_window.py:40
 msgid "Lookaheads (select from shared list)"
-msgstr ""
+msgstr "룩어헤드 (공유 목록에서 선택)"
 
 #: compare/prevalidations_window.py:49
 msgid "Select Lookaheads..."
-msgstr ""
+msgstr "선행 검색 선택..."
 
 #: compare/prevalidations_window.py:59
 msgid "Directory Profile"
-msgstr ""
+msgstr "디렉토리 프로필"
 
 #: compare/prevalidations_window.py:223
 msgid "Add prevalidation"
@@ -1558,35 +1566,35 @@ msgstr "사전 유효성 검사 사용"
 
 #: compare/prevalidations_window.py:245
 msgid "Lookaheads"
-msgstr ""
+msgstr "선행 검사"
 
 #: compare/prevalidations_window.py:272
 msgid "Add Lookahead"
-msgstr ""
+msgstr "앞을 내다보기 추가"
 
 #: compare/prevalidations_window.py:278
 msgid "Remove Lookahead"
-msgstr ""
+msgstr "앞을 내다보기 제거"
 
 #: compare/prevalidations_window.py:340
 msgid "Directory Profiles"
-msgstr ""
+msgstr "디렉토리 프로필"
 
 #: compare/prevalidations_window.py:367
 msgid "Add Profile"
-msgstr ""
+msgstr "프로필 추가"
 
 #: compare/prevalidations_window.py:373
 msgid "Remove Profile"
-msgstr ""
+msgstr "프로필 삭제"
 
 #: compare/prevalidations_window.py:451
 msgid "Profile"
-msgstr ""
+msgstr "디렉토리 프로필"
 
 #: compare/prevalidations_window.py:476
 msgid "(Global)"
-msgstr ""
+msgstr "(글로벌)"
 
 #: compare/prevalidations_window.py:492 files/hotkey_actions_window.py:96
 msgid "Set"
@@ -1656,7 +1664,7 @@ msgstr "GIMP 완료 후 파일 처리 오류: {0}"
 
 #: extensions/gimp/gimp_wrapper.py:662
 msgid "Original file unchanged - no modifications detected"
-msgstr ""
+msgstr "원본 파일 변경 없음 - 수정 사항 감지되지 않음"
 
 #: extensions/gimp/gimp_wrapper.py:685
 msgid "File updated: {0}"
@@ -1702,43 +1710,43 @@ msgstr "파일 덮어쓰기 취소됨"
 
 #: files/directory_notes_window.py:38
 msgid "Directory Notes - {0}"
-msgstr ""
+msgstr "디렉토리 노트 - {0}"
 
 #: files/directory_notes_window.py:57
 msgid "Directory: {0}"
-msgstr ""
+msgstr "디렉터리: {0}"
 
 #: files/directory_notes_window.py:66
 msgid "Export to Text File"
-msgstr ""
+msgstr "텍스트 파일로 내보내기"
 
 #: files/directory_notes_window.py:70
 msgid "Import from Text File"
-msgstr ""
+msgstr "텍스트 파일에서 가져오기"
 
 #: files/directory_notes_window.py:73
 msgid "Import from JSON File"
-msgstr ""
+msgstr "JSON 파일에서 가져오기"
 
 #: files/directory_notes_window.py:85
 msgid "MARKED FILES"
-msgstr ""
+msgstr "표시된 파일"
 
 #: files/directory_notes_window.py:95
 msgid "(No marked files)"
-msgstr ""
+msgstr "(표시된 파일 없음)"
 
 #: files/directory_notes_window.py:105
 msgid "FILE NOTES"
-msgstr ""
+msgstr "파일 노트"
 
 #: files/directory_notes_window.py:115
 msgid "(No file notes)"
-msgstr ""
+msgstr "(파일 노트 없음)"
 
 #: files/directory_notes_window.py:142
 msgid "Removed marked file: {0}"
-msgstr ""
+msgstr "표시된 파일 제거됨: {0}"
 
 #: files/directory_notes_window.py:148 files/directory_notes_window.py:217
 #: files/favorites_window.py:142
@@ -1747,47 +1755,47 @@ msgstr "개방형 미디어"
 
 #: files/directory_notes_window.py:157 files/directory_notes_window.py:226
 msgid "Opened file: {0}"
-msgstr ""
+msgstr "파일을 열었습니다: {0}"
 
 #: files/directory_notes_window.py:162 files/directory_notes_window.py:231
 msgid "Opened file in new window: {0}"
-msgstr ""
+msgstr "새 창에서 파일 열기: {0}"
 
 #: files/directory_notes_window.py:197
 msgid "Edit Note"
-msgstr ""
+msgstr "메모 편집"
 
 #: files/directory_notes_window.py:206
 msgid "Remove Note"
-msgstr ""
+msgstr "메모를 제거하세요"
 
 #: files/directory_notes_window.py:211
 msgid "Removed note for: {0}"
-msgstr ""
+msgstr "다음 항목에 대한 메모를 삭제했습니다: {0}"
 
 #: files/directory_notes_window.py:320
 msgid "Export Directory Notes"
-msgstr ""
+msgstr "수출 디렉토리의 메모"
 
 #: files/directory_notes_window.py:328
 msgid "Exported notes to: {0}"
-msgstr ""
+msgstr "수출된 노트: {0}"
 
 #: files/directory_notes_window.py:331
 msgid "Export Error"
-msgstr ""
+msgstr "수출된 오류"
 
 #: files/directory_notes_window.py:331
 msgid "Failed to export notes: {0}"
-msgstr ""
+msgstr "노트 내보내기에 실패했습니다: {0}"
 
 #: files/directory_notes_window.py:338
 msgid "Import Marked Files from Text File"
-msgstr ""
+msgstr "텍스트 파일에서 표시된 파일 가져오기"
 
 #: files/directory_notes_window.py:339
 msgid "Text files"
-msgstr ""
+msgstr "텍스트 파일"
 
 #: files/directory_notes_window.py:339 files/directory_notes_window.py:377
 #: files/go_to_file.py:242
@@ -1796,19 +1804,19 @@ msgstr "모든 파일"
 
 #: files/directory_notes_window.py:348
 msgid "Import Options"
-msgstr ""
+msgstr "가져오기 옵션"
 
 #: files/directory_notes_window.py:349
 msgid "Search recursively in subdirectories for matching filenames?"
-msgstr ""
+msgstr "하위 디렉터리에서 일치하는 파일명을 재귀적으로 검색할까요?"
 
 #: files/directory_notes_window.py:356 files/directory_notes_window.py:388
 msgid "Imported {0} files."
-msgstr ""
+msgstr "{0} 파일을 가져왔습니다."
 
 #: files/directory_notes_window.py:358
 msgid "{0} filenames not found:"
-msgstr ""
+msgstr "{0} 파일 이름을 찾을 수 없습니다:"
 
 #: files/directory_notes_window.py:363 files/directory_notes_window.py:395
 #: files/file_actions_window.py:429
@@ -1817,35 +1825,35 @@ msgstr "... 및 {0}개 더"
 
 #: files/directory_notes_window.py:365 files/directory_notes_window.py:397
 msgid "Import Complete"
-msgstr ""
+msgstr "수입 완료"
 
 #: files/directory_notes_window.py:366 files/directory_notes_window.py:398
 msgid "Imported {0} marked files"
-msgstr ""
+msgstr "{0}개 표시된 파일 가져옴"
 
 #: files/directory_notes_window.py:369 files/directory_notes_window.py:401
 msgid "Import Error"
-msgstr ""
+msgstr "가져오기 오류"
 
 #: files/directory_notes_window.py:369
 msgid "Failed to import from text file: {0}"
-msgstr ""
+msgstr "텍스트 파일에서 가져오기 실패: {0}"
 
 #: files/directory_notes_window.py:376
 msgid "Import Marked Files from JSON File"
-msgstr ""
+msgstr "JSON 파일에서 표시된 파일 가져오기"
 
 #: files/directory_notes_window.py:377
 msgid "JSON files"
-msgstr ""
+msgstr "JSON 파일"
 
 #: files/directory_notes_window.py:390
 msgid "{0} invalid or missing file paths:"
-msgstr ""
+msgstr "{0}개의 잘못되었거나 누락된 파일 경로:"
 
 #: files/directory_notes_window.py:401
 msgid "Failed to import from JSON file: {0}"
-msgstr ""
+msgstr "JSON 파일에서 가져오기 실패: {0}"
 
 #: files/favorites_window.py:51
 msgid "Added favorite: "
@@ -1987,11 +1995,11 @@ msgstr "디렉터리에 있는 파일 {1}개 중 {0}개, {2}별로 정렬{3}"
 
 #: files/file_browser.py:222
 msgid "Index must be 1 or greater."
-msgstr ""
+msgstr "인덱스는 1 이상이어야 합니다."
 
 #: files/file_browser.py:226
 msgid "Index {0} is out of range. There are {1} files."
-msgstr ""
+msgstr "인덱스 {0}이 범위를 벗어났습니다. 파일이 {1}개 있습니다."
 
 #: files/file_browser.py:254
 msgid "Search text provided to file_browser.find() was invalid."
@@ -2019,7 +2027,7 @@ msgstr "정확한 일치 항목이 발견되지 않을 경우 가장 가까운 �
 
 #: files/go_to_file.py:159
 msgid "Go to file by index (1-based)"
-msgstr ""
+msgstr "인덱스(1부터 시작)로 파일 이동"
 
 #: files/go_to_file.py:188
 msgid "Invalid search string, please enter some text."
@@ -2027,7 +2035,7 @@ msgstr "잘못된 검색 문자열입니다. 텍스트를 입력하세요."
 
 #: files/go_to_file.py:204
 msgid "Index navigation enabled but input is not a valid number."
-msgstr ""
+msgstr "인덱스 탐색이 활성화되었으나 입력값이 유효한 숫자가 아닙니다."
 
 #: files/go_to_file.py:224
 msgid "Supported files"
@@ -2558,7 +2566,7 @@ msgstr "HTML 지원은 pyppeteer 패키지를 요구합니다"
 msgid "Media Type Configuration"
 msgstr "Media Type 구성"
 
-#: files/type_configuration_window.py:112 utils/constants.py:336
+#: files/type_configuration_window.py:112 utils/constants.py:340
 msgid "Configure Media Types"
 msgstr "미디어 유형 구성"
 
@@ -2619,7 +2627,7 @@ msgid "Dimensions"
 msgstr "크기 (mm)"
 
 #: image/image_details.py:135 utils/constants.py:45 utils/constants.py:68
-#: utils/constants.py:134 utils/constants.py:154
+#: utils/constants.py:138 utils/constants.py:158
 msgid "Size"
 msgstr "크기 (mm)"
 
@@ -2725,7 +2733,7 @@ msgstr "업데이트"
 
 #: image/image_details.py:322
 msgid "No prompt found"
-msgstr ""
+msgstr "프롬프트를 찾을 수 없습니다"
 
 #: image/image_details.py:330
 msgid "Copied prompt without BREAK"
@@ -2733,19 +2741,19 @@ msgstr "BREAK없이 복사 된 프롬프트"
 
 #: image/image_details.py:351
 msgid "No files found in current directory"
-msgstr ""
+msgstr "현재 디렉터리에서 파일을 찾을 수 없습니다"
 
 #: image/image_details.py:356
 msgid "No files available"
-msgstr ""
+msgstr "사용 가능한 파일이 없습니다"
 
 #: image/image_details.py:382
 msgid "Copied prompt from {0}"
-msgstr ""
+msgstr "{0}에서 복사한 프롬프트"
 
 #: image/image_details.py:389
 msgid "No files with prompts found in current directory"
-msgstr ""
+msgstr "현재 디렉터리에서 프롬프트가 포함된 파일을 찾을 수 없습니다"
 
 #: image/image_details.py:395 image/image_details.py:491
 msgid "Rotated image right"
@@ -2917,187 +2925,187 @@ msgstr "프롬프트"
 msgid "Prompts (Exact Match)"
 msgstr "프롬프트 (정확한 일치)"
 
-#: utils/constants.py:89
+#: utils/constants.py:93
 msgid "Color diff threshold"
 msgstr "색깔 diff 문턱"
 
-#: utils/constants.py:91
+#: utils/constants.py:95
 msgid "Embedding similarity threshold"
 msgstr "관련 문헌"
 
-#: utils/constants.py:93
+#: utils/constants.py:97
 msgid "Size tolerance"
-msgstr ""
+msgstr "치수 공차"
 
-#: utils/constants.py:95
+#: utils/constants.py:99
 msgid "Model similarity threshold"
-msgstr ""
+msgstr "모델 유사성 임계값"
 
-#: utils/constants.py:130 utils/constants.py:146
+#: utils/constants.py:134 utils/constants.py:150
 msgid "Full Path"
 msgstr "전체 경로"
 
-#: utils/constants.py:131 utils/constants.py:148
+#: utils/constants.py:135 utils/constants.py:152
 msgid "Creation Time"
 msgstr "창조 시간"
 
-#: utils/constants.py:132 utils/constants.py:150
+#: utils/constants.py:136 utils/constants.py:154
 msgid "Modify Time"
 msgstr "수정 시간"
 
-#: utils/constants.py:133 utils/constants.py:152
+#: utils/constants.py:137 utils/constants.py:156
 msgid "Type"
 msgstr "제품정보"
 
-#: utils/constants.py:135 utils/constants.py:156
+#: utils/constants.py:139 utils/constants.py:160
 msgid "Name Length"
 msgstr "이름 길이"
 
-#: utils/constants.py:136 utils/constants.py:158
+#: utils/constants.py:140 utils/constants.py:162
 msgid "Related Image"
 msgstr "관련 이미지"
 
-#: utils/constants.py:137 utils/constants.py:160
+#: utils/constants.py:141 utils/constants.py:164
 msgid "Random"
 msgstr "한국어"
 
-#: utils/constants.py:138 utils/constants.py:162
+#: utils/constants.py:142 utils/constants.py:166
 msgid "Image Pixels"
 msgstr "이미지 화소"
 
-#: utils/constants.py:139 utils/constants.py:164
+#: utils/constants.py:143 utils/constants.py:168
 msgid "Image Height"
 msgstr "이미지 높이"
 
-#: utils/constants.py:140 utils/constants.py:166
+#: utils/constants.py:144 utils/constants.py:170
 msgid "Image Width"
 msgstr "이미지 폭"
 
-#: utils/constants.py:185
+#: utils/constants.py:189
 msgid "ascending"
 msgstr "이름 *"
 
-#: utils/constants.py:186
+#: utils/constants.py:190
 msgid "descending"
 msgstr "뚱 베어"
 
-#: utils/constants.py:187
+#: utils/constants.py:191
 msgid "random"
 msgstr "한국어"
 
-#: utils/constants.py:241
+#: utils/constants.py:245
 msgid "Image"
 msgstr "이름 *"
 
-#: utils/constants.py:243
+#: utils/constants.py:247
 msgid "GIF"
 msgstr "무료 배송"
 
-#: utils/constants.py:245
+#: utils/constants.py:249
 msgid "Video"
 msgstr "비디오"
 
-#: utils/constants.py:247
+#: utils/constants.py:251
 msgid "PDF"
 msgstr "PDF 파일"
 
-#: utils/constants.py:249
+#: utils/constants.py:253
 msgid "SVG"
 msgstr "SVG"
 
-#: utils/constants.py:251
+#: utils/constants.py:255
 msgid "HTML"
 msgstr "HTML"
 
-#: utils/constants.py:271
+#: utils/constants.py:275
 msgid "Moved files"
 msgstr "파일 이동"
 
-#: utils/constants.py:273
+#: utils/constants.py:277
 msgid "Copied files"
 msgstr "Copied 파일"
 
-#: utils/constants.py:275
+#: utils/constants.py:279
 msgid "Removed files"
 msgstr "제거된 파일"
 
-#: utils/constants.py:277
+#: utils/constants.py:281
 msgid "Marked files"
 msgstr "표시된 파일"
 
-#: utils/constants.py:279
+#: utils/constants.py:283
 msgid "Unmarked files"
 msgstr "미표시된 파일들"
 
-#: utils/constants.py:281
+#: utils/constants.py:285
 msgid "Searched files"
 msgstr "관련 파일"
 
-#: utils/constants.py:283
+#: utils/constants.py:287
 msgid "Compared files"
 msgstr "관련 파일"
 
-#: utils/constants.py:285
+#: utils/constants.py:289
 msgid "Generated images"
 msgstr "생성된 이미지"
 
-#: utils/constants.py:287
+#: utils/constants.py:291
 msgid "Changed directory"
 msgstr "관련 링크"
 
-#: utils/constants.py:289
+#: utils/constants.py:293
 msgid "System"
 msgstr "시스템"
 
-#: utils/constants.py:323
+#: utils/constants.py:327
 msgid "Start Application"
 msgstr "소프트웨어 시작"
 
-#: utils/constants.py:324
+#: utils/constants.py:328
 msgid "Run Compares"
 msgstr "비교 실행"
 
-#: utils/constants.py:325
+#: utils/constants.py:329
 msgid "Run Search"
 msgstr "검색 실행"
 
-#: utils/constants.py:326
+#: utils/constants.py:330
 msgid "Run Search Preset"
 msgstr "검색 사전 설정 실행"
 
-#: utils/constants.py:328
+#: utils/constants.py:332
 msgid "View Recent Directories"
 msgstr "최근 디렉터리 보기"
 
-#: utils/constants.py:329
+#: utils/constants.py:333
 msgid "View File Actions"
 msgstr "파일 작업 보기"
 
-#: utils/constants.py:330
+#: utils/constants.py:334
 msgid "Run File Actions"
 msgstr "파일 작업 실행"
 
-#: utils/constants.py:331
+#: utils/constants.py:335
 msgid "Edit Prevalidations"
 msgstr "유효성 검사 편집"
 
-#: utils/constants.py:332
+#: utils/constants.py:336
 msgid "Run Prevalidations"
 msgstr "사전 유효성 검사 실행"
 
-#: utils/constants.py:334
+#: utils/constants.py:338
 msgid "Run RefacDir"
 msgstr "RefacDir 실행"
 
-#: utils/constants.py:335
+#: utils/constants.py:339
 msgid "Delete Media"
 msgstr "미디어 삭제"
 
-#: utils/constants.py:337
+#: utils/constants.py:341
 msgid "Set Hotkey Actions"
 msgstr "핫키 동작 설정"
 
-#: utils/constants.py:338
+#: utils/constants.py:342
 msgid "Access Password Administration"
 msgstr "액세스 비밀번호 관리"
 
@@ -3410,3 +3418,11 @@ msgstr "파일 경로의 백슬래시 이스케이프"
 #: utils/notification_manager.py:26
 msgid " etc."
 msgstr " 등"
+
+#: compare/prevalidations_window.py:291
+msgid "{name} ({name_or_text}, threshold: {threshold:.2f})"
+msgstr "{name} ({name_or_text}, 임계값: {threshold:.2f})"
+
+#: compare/prevalidations_window.py:387
+msgid "directory"
+msgstr "디렉터리"

@@ -288,7 +288,7 @@ class PrevalidationsTab:
         if hasattr(self, 'lookaheads_listbox'):
             self.lookaheads_listbox.delete(0, "end")
             for lookahead in Lookahead.lookaheads:
-                display_text = f"{lookahead.name} ({lookahead.name_or_text}, threshold: {lookahead.threshold:.2f})"
+                display_text = _("{name} ({name_or_text}, threshold: {threshold:.2f})").format(name=lookahead.name, name_or_text=lookahead.name_or_text, threshold=lookahead.threshold)
                 self.lookaheads_listbox.insert("end", display_text)
     
     def add_lookahead(self):
@@ -384,7 +384,7 @@ class PrevalidationsTab:
             self.profiles_listbox.delete(0, "end")
             for profile in DirectoryProfile.directory_profiles:
                 dir_count = len(profile.directories)
-                dir_or_dirs = 'directory' if dir_count == 1 else 'directories'
+                dir_or_dirs = _('directory') if dir_count == 1 else _('directories')
                 display_text = f"{profile.name} ({dir_count} {dir_or_dirs})"
                 self.profiles_listbox.insert("end", display_text)
         

@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2026-01-13 14:16-0500\n"
-"PO-Revision-Date: 2026-01-13 14:16-0500\n"
+"POT-Creation-Date: 2026-01-13 17:45-0500\n"
+"PO-Revision-Date: 2026-01-13 17:45-0500\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:113 app.py:1019 app.py:2486
+#: app.py:113 app.py:1020 app.py:2500
 msgid " Simple Image Compare "
 msgstr " 简单图像比较 "
 
@@ -24,7 +24,7 @@ msgstr "（主窗口）"
 msgid "Theme switched to {0}."
 msgstr "主题切换到{0} 。"
 
-#: app.py:282 app.py:502 app.py:1049 compare/compare_wrapper.py:508
+#: app.py:282 app.py:502 app.py:1050 compare/compare_wrapper.py:508
 msgid "Set a directory to run comparison."
 msgstr "设置目录以运行比较 。"
 
@@ -69,6 +69,8 @@ msgid ""
 "Set an image file to search for similar images.\n"
 "Uses embedding similarity to find visually similar images."
 msgstr ""
+"设置图像文件以搜索相似图像。\n"
+"使用嵌入相似性来查找视觉上相似的图像。"
 
 #: app.py:336
 msgid "Search text (embedding mode)"
@@ -80,25 +82,28 @@ msgid ""
 "Negative text: Exclude images similar to this text.\n"
 "Both use embedding similarity matching."
 msgstr ""
+"正向文本：查找与该文本相似的图像。\n"
+"负向文本：排除与该文本相似的图像。\n"
+"两者均采用嵌入式相似度匹配。"
 
 #: app.py:344
 msgid "Positive text:"
-msgstr ""
+msgstr "积极文本："
 
 #: app.py:352
 msgid "Negative text:"
-msgstr ""
+msgstr "负面文本："
 
 #: app.py:360 compare/classifier_actions_window.py:105
 #: compare/classifier_management_window.py:591
 msgid "Classifier Actions"
-msgstr ""
+msgstr "分类器操作"
 
 #: app.py:364 compare/compare_settings_window.py:38
 #: compare/compare_settings_window.py:53
 #: compare/compare_settings_window.py:161
 msgid "Compare Settings"
-msgstr ""
+msgstr "比较设置"
 
 #: app.py:369
 msgid "Run image compare"
@@ -121,6 +126,8 @@ msgid ""
 "Search for images similar to the currently displayed image.\n"
 "Uses embedding similarity matching."
 msgstr ""
+"搜索与当前显示图像相似的图片。\n"
+"采用嵌入式相似度匹配技术。"
 
 #: app.py:390 utils/help_and_config.py:87
 msgid "Open media location"
@@ -132,7 +139,7 @@ msgstr "复制图像路径"
 
 #: app.py:392
 msgid "Copy media basename"
-msgstr ""
+msgstr "复制文件的基名"
 
 #: app.py:393
 msgid "---- DELETE ----"
@@ -146,271 +153,271 @@ msgstr "确认退出"
 msgid "Would you like to quit the application?"
 msgstr "您想要退出申请吗 ?"
 
-#: app.py:681
+#: app.py:682
 msgid "Ended slideshows"
 msgstr "结束幻灯片放映"
 
-#: app.py:734 app.py:2146 app.py:2153 app.py:2157 app.py:2161 app.py:2167
-#: app.py:2274 app.py:2290 app.py:2307
+#: app.py:735 app.py:2160 app.py:2167 app.py:2171 app.py:2175 app.py:2181
+#: app.py:2288 app.py:2304 app.py:2321
 msgid "Warning"
 msgstr "警告"
 
-#: app.py:734
+#: app.py:735
 msgid "No files found in directory after refresh."
 msgstr "刷新后在目录中未发现文件。"
 
-#: app.py:772
+#: app.py:773
 msgid "Slideshow for new images started"
 msgstr "开始播放新图像的幻灯片"
 
-#: app.py:774
+#: app.py:775
 msgid "Slideshow started"
 msgstr "幻灯片播放开始"
 
-#: app.py:777
+#: app.py:778
 msgid "Slideshows ended"
 msgstr "幻灯片放映结束"
 
-#: app.py:790
+#: app.py:791
 msgid "Browsing mode set."
 msgstr "浏览模式设置 。"
 
-#: app.py:835 utils/constants.py:327
+#: app.py:836 utils/constants.py:331
 msgid "View Media Details"
 msgstr "查看媒体详情"
 
-#: app.py:836
+#: app.py:837
 msgid "Hide Media"
 msgstr "隐藏媒体"
 
-#: app.py:837
+#: app.py:838
 msgid "Remove from Marks"
 msgstr "从标记中移除"
 
-#: app.py:837
+#: app.py:838
 msgid "Add to Marks"
 msgstr "添加到标记"
 
-#: app.py:839
+#: app.py:840
 msgid "Remove from Favorites"
 msgstr "从收藏夹中移除"
 
-#: app.py:839
+#: app.py:840
 msgid "Add to Favorites"
 msgstr "添加到收藏夹"
 
-#: app.py:842
+#: app.py:843
 msgid "Remove from Directory Notes"
-msgstr ""
+msgstr "从目录注释中删除"
 
-#: app.py:842
+#: app.py:843
 msgid "Add to Directory Notes"
-msgstr ""
+msgstr "添加到目录的注释中"
 
-#: app.py:844
+#: app.py:845
 msgid "Edit File Note"
-msgstr ""
+msgstr "编辑文件注释"
 
-#: app.py:846
+#: app.py:847
 msgid "Open in GIMP"
 msgstr "在GIMP中打开"
 
-#: app.py:847 image/image_details.py:201 utils/constants.py:333
+#: app.py:848 image/image_details.py:201 utils/constants.py:337
 #: utils/help_and_config.py:138
 msgid "Run Image Generation"
 msgstr "运行图像生成"
 
-#: app.py:848
+#: app.py:849
 msgid "Run Image Generation on Directory"
 msgstr "在目录上运行图像生成"
 
-#: app.py:849
+#: app.py:850
 msgid "Show Source Image"
 msgstr "显示源图像"
 
-#: app.py:850
+#: app.py:851
 msgid "Find Related Images"
 msgstr "查找相关图片"
 
-#: app.py:851
+#: app.py:852
 msgid "Set Marks from Downstream Related Images"
 msgstr "从下游相关图像中设置标记"
 
-#: app.py:853
+#: app.py:854
 msgid "Set Current Image as Search Image"
 msgstr "将当前图像设置为搜索图像"
 
-#: app.py:854
+#: app.py:855
 msgid "Add Current Image to Negative Search"
 msgstr "将当前图像添加到负片搜索中"
 
-#: app.py:855
+#: app.py:856
 msgid "Run Refacdir"
 msgstr "运行 RefacDir"
 
-#: app.py:873
+#: app.py:874
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(将此图片作为目录的一部分打开，可查看索引详情）。"
 
-#: app.py:910 app.py:1639
+#: app.py:911 app.py:1653
 msgid "Many Files"
 msgstr "许多文件"
 
-#: app.py:938
+#: app.py:939
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
 " load time. Please confirm you want to load the full directory."
 msgstr "检测到外部存储设备中存在包含大量文件的目录或包含一定数量文件的目录，这可能导致加载速度变慢。请确认您是否要加载整个目录。"
 
-#: app.py:939
+#: app.py:940
 msgid "Large Directory Detected: {0}"
 msgstr "检测到大型目录：{0}"
 
-#: app.py:969
+#: app.py:970
 msgid "No downstream related image(s) found in {0}"
 msgstr "在 {0} 中未发现与下游相关的图像"
 
-#: app.py:991
+#: app.py:992
 msgid "{0} file marks set"
 msgstr "{0} 文件标记设定"
 
-#: app.py:997
+#: app.py:998
 msgid "Help and Config"
 msgstr "帮助和配置"
 
-#: app.py:1096
+#: app.py:1110
 msgid "Set Image Comparison Directory"
 msgstr "设置图像比较目录"
 
-#: app.py:1150
+#: app.py:1164
 msgid "No image selected."
 msgstr "未选择图像 。"
 
-#: app.py:1150
+#: app.py:1164
 msgid "Invalid Setting"
 msgstr "无效设置"
 
-#: app.py:1189
+#: app.py:1203
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "比较模式必须设置为嵌入模式，才能搜索文本嵌入内容"
 
-#: app.py:1194
+#: app.py:1208
 msgid "Select image file"
 msgstr "选择图像文件"
 
-#: app.py:1223
+#: app.py:1237
 msgid "Somehow, the search file is invalid"
 msgstr "不知何故, 搜索文件无效"
 
-#: app.py:1309 app.py:1334
+#: app.py:1323 app.py:1348
 msgid "Failed to get active image filepath"
 msgstr "获取活动图像文件路径失败"
 
-#: app.py:1419
+#: app.py:1433
 msgid "{0}: {1}% complete"
 msgstr "{0} : {1} 完成"
 
-#: app.py:1425
+#: app.py:1439
 msgid "Confirm comparison"
 msgstr "确认比较"
 
-#: app.py:1426
+#: app.py:1440
 msgid "No base directory has been set, will use current base directory of "
 msgstr "未设置基本目录，将使用当前基本目录： "
 
-#: app.py:1427
+#: app.py:1441
 msgid "Are you sure you want to proceed?"
 msgstr "你确定要继续吗?"
 
-#: app.py:1450
+#: app.py:1464
 msgid "Error running compare"
 msgstr "运行比较出错"
 
-#: app.py:1485
+#: app.py:1499
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡时无法添加标记"
 
-#: app.py:1496
+#: app.py:1510
 msgid "Mark removed. Remaining: {0}"
 msgstr "标记已去除。剩余 {0}"
 
-#: app.py:1500
+#: app.py:1514
 msgid "Mark added. Total set: {0}"
 msgstr "马克补充道。全套 {0}"
 
-#: app.py:1517
+#: app.py:1531
 msgid "Marks added. Total set: {0}"
 msgstr "标记已添加。总分 {0}"
 
-#: app.py:1526
+#: app.py:1540
 msgid "First sorted mark"
 msgstr "第一个排序标记"
 
-#: app.py:1533
+#: app.py:1547
 msgid "Only one marked file set."
 msgstr "只有一个标记的文件集 。"
 
-#: app.py:1546
+#: app.py:1560
 msgid "Invalid file path"
 msgstr "无效的文件路径"
 
-#: app.py:1546
+#: app.py:1560
 msgid "The file path {0} is invalid."
 msgstr "文件路径 {0} 无效。"
 
-#: app.py:1552
+#: app.py:1566
 msgid "Including marks: {0}"
 msgstr "包括标记：{0}"
 
-#: app.py:1594
+#: app.py:1608
 msgid "NO_MARKS_SET"
 msgstr ""
 "已设置 {0} 标记(预计 >={1})。\n"
 "使用 Shift+M 设置标记。"
 
-#: app.py:1639
+#: app.py:1653
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "您确定要在目录{0}上运行所有预验证吗？这可能需要一些时间。"
 
-#: app.py:1654
+#: app.py:1668
 msgid "Prevalidations now running"
 msgstr "前缀正在运行"
 
-#: app.py:1654
+#: app.py:1668
 msgid "Prevalidations turned off"
 msgstr "关闭前缀"
 
-#: app.py:1675
+#: app.py:1689
 msgid "Please set a base directory first"
-msgstr ""
+msgstr "请先设置一个基础目录"
 
-#: app.py:1704
+#: app.py:1718
 msgid "Removed from directory notes: {0}"
-msgstr ""
+msgstr "从目录注释中移除：{0}"
 
-#: app.py:1707
+#: app.py:1721
 msgid "Added to directory notes: {0}"
-msgstr ""
+msgstr "添加到目录的注释中：{0}"
 
-#: app.py:1730 files/directory_notes_window.py:242
+#: app.py:1744 files/directory_notes_window.py:242
 msgid "Edit Note - {0}"
-msgstr ""
+msgstr "编辑注释 - {0}"
 
-#: app.py:1754 files/directory_notes_window.py:266
+#: app.py:1768 files/directory_notes_window.py:266
 msgid "Note saved for: {0}"
-msgstr ""
+msgstr "笔记已保存至：{0}"
 
-#: app.py:1767 files/directory_notes_window.py:273
+#: app.py:1781 files/directory_notes_window.py:273
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
-#: app.py:1770 auth/app_startup_auth.py:127 auth/password_admin_window.py:462
+#: app.py:1784 auth/app_startup_auth.py:127 auth/password_admin_window.py:462
 #: auth/password_dialog.py:152 auth/password_dialog.py:221
 #: auth/password_dialog.py:238 compare/compare_settings_window.py:373
 #: files/directory_notes_window.py:276 files/pdf_options_window.py:77
@@ -419,74 +426,74 @@ msgstr ""
 msgid "Cancel"
 msgstr "取消"
 
-#: app.py:1884
+#: app.py:1898
 msgid "File not found"
 msgstr "未找到文件"
 
-#: app.py:1884
+#: app.py:1898
 msgid "No file was found for the search text: \"{0}\""
 msgstr "没有找到搜索文本的文件 \"{0}”"
 
-#: app.py:1893
+#: app.py:1907
 msgid "Index navigation not available"
-msgstr ""
+msgstr "索引导航不可用"
 
-#: app.py:1893
+#: app.py:1907
 msgid "Index navigation is only available in BROWSE mode."
-msgstr ""
+msgstr "索引导航仅在浏览模式下可用。"
 
-#: app.py:1904
+#: app.py:1918
 msgid "Invalid index"
-msgstr ""
+msgstr "无效索引"
 
-#: app.py:1920
+#: app.py:1934
 msgid "No image selected"
 msgstr "未选择图像"
 
-#: app.py:1920
+#: app.py:1934
 msgid "No image was selected for comparison"
 msgstr "没有选择图像进行比较"
 
-#: app.py:1934
+#: app.py:1948
 msgid "No Text Search Presets Found"
 msgstr "未找到文本搜索预设"
 
-#: app.py:1935
+#: app.py:1949
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "未找到文本嵌入搜索预设。请在 config.json 文件中进行设置。"
 
-#: app.py:2032
+#: app.py:2046
 msgid "Opening media file: {0}"
 msgstr "打开媒体文件：{0}"
 
-#: app.py:2035
+#: app.py:2049
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr "无法打开当前媒体文件，无法获取有效的文件路径。"
 
-#: app.py:2040
+#: app.py:2054
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
 msgstr "GIMP 集成未配置。请在 config.json 中设置 ‘gimp_exe_loc’。"
 
-#: app.py:2040
+#: app.py:2054
 msgid "GIMP Integration Error"
 msgstr "GIMP 集成错误"
 
-#: app.py:2052
+#: app.py:2066
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "在 GIMP 中打开当前文件失败，无法获取有效的文件路径"
 
-#: app.py:2063 image/temp_image_canvas.py:167
+#: app.py:2077 image/temp_image_canvas.py:167
 msgid "Copied filepath to clipboard"
-msgstr ""
+msgstr "已将文件路径复制到剪贴板"
 
-#: app.py:2071
+#: app.py:2085
 msgid "Copied filename to clipboard"
-msgstr ""
+msgstr "文件名已复制到剪贴板"
 
-#: app.py:2078
+#: app.py:2092
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -494,151 +501,151 @@ msgstr ""
 "隐藏当前图像。\n"
 "要取消隐藏，请按 Shift+B。"
 
-#: app.py:2083
+#: app.py:2097
 msgid "Cleared all hidden images."
 msgstr "清除所有隐藏图像"
 
-#: app.py:2091
+#: app.py:2105
 msgid "DELETE_LOCK"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡阻止删除"
 
-#: app.py:2109
+#: app.py:2123
 msgid "Invalid action, no files found to delete"
 msgstr "无效操作，未找到要删除的文件"
 
-#: app.py:2112
+#: app.py:2126
 msgid "Invalid action, search image not found"
 msgstr "无效操作，未找到搜索图像"
 
-#: app.py:2127
+#: app.py:2141
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "删除当前文件失败，无法获取有效的文件路径"
 
-#: app.py:2134
+#: app.py:2148
 msgid "Removing directory: {0}"
 msgstr "删除目录：{0}"
 
-#: app.py:2136
+#: app.py:2150
 msgid "Removing file: {0}"
 msgstr "删除文件： {0}"
 
-#: app.py:2146 app.py:2167
+#: app.py:2160 app.py:2181
 msgid "Failed to delete item: {0}"
 msgstr "无法删除项目：{0}"
 
-#: app.py:2150
+#: app.py:2164
 msgid ""
 "Failed to move directory to {0}. Double check the trash folder is set "
 "properly in config.json."
 msgstr "无法将目录移动到 {0}。请确认 config.json 文件中垃圾桶文件夹的设置是否正确。"
 
-#: app.py:2152
+#: app.py:2166
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
 msgstr "无法将文件发送至 {0}。请确认 config.json 文件中垃圾箱文件夹的设置是否正确。"
 
-#: app.py:2158
+#: app.py:2172
 msgid ""
 "Failed to move directory to the trash. Either pip install send2trash or set "
 "a specific trash folder in config.json."
 msgstr ""
 "无法将目录移动到回收站。请通过 pip install send2trash 安装该工具，或在 config.json 文件中设置特定的回收站文件夹。"
 
-#: app.py:2162
+#: app.py:2176
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "发送文件到垃圾箱失败，因此文件将被删除。要么用 pip 安装 send2trash，要么在 config.json 中设置特定的垃圾文件夹。"
 
-#: app.py:2172
+#: app.py:2186
 msgid "Invalid directory"
 msgstr "无效目录"
 
-#: app.py:2172
+#: app.py:2186
 msgid "No valid base directory to delete"
 msgstr "没有有效的基目录可供删除。"
 
-#: app.py:2183
+#: app.py:2197
 msgid "Cannot Delete Directory"
 msgstr "无法删除目录"
 
-#: app.py:2187
+#: app.py:2201
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "您确定要删除该目录及其所有内容吗？"
 
-#: app.py:2189
+#: app.py:2203
 msgid "Contents to be deleted:"
 msgstr "需删除的内容："
 
-#: app.py:2191
+#: app.py:2205
 msgid "Confirm Delete Directory"
 msgstr "确认删除目录"
 
-#: app.py:2222
+#: app.py:2236
 msgid "Delete Directory Error"
 msgstr "删除目录错误"
 
-#: app.py:2224
+#: app.py:2238
 msgid "Directory {0} deleted."
 msgstr "目录 {0} 已删除。"
 
-#: app.py:2240
+#: app.py:2254
 msgid "Invalid target filepath for replacement: "
 msgstr "替换的目标文件路径无效： "
 
-#: app.py:2244
+#: app.py:2258
 msgid "Moved search image to "
 msgstr "将搜索图像移至 ： "
 
-#: app.py:2274
+#: app.py:2288
 msgid "Failed to get active media filepath"
 msgstr "获取活动媒体文件路径失败"
 
-#: app.py:2288
+#: app.py:2302
 msgid "Running image gen: "
 msgstr "运行图像基因 ： "
 
-#: app.py:2290 app.py:2307
+#: app.py:2304 app.py:2321
 msgid "Error running image generation:"
 msgstr "生成图像时出错："
 
-#: app.py:2305
+#: app.py:2319
 msgid "Running image gen on directory: "
 msgstr "在目录上运行图像生成器： "
 
-#: app.py:2314
+#: app.py:2328
 msgid "Running refacdir"
 msgstr "正在运行 reacdir"
 
-#: app.py:2319 auth/app_startup_auth.py:141 auth/password_dialog.py:249
+#: app.py:2333 auth/app_startup_auth.py:141 auth/password_dialog.py:249
 #: extensions/gimp/gimp_wrapper.py:689 extensions/gimp/gimp_wrapper.py:718
 #: files/pdf_creator.py:133 files/pdf_creator.py:137 files/pdf_creator.py:140
 msgid "Error"
 msgstr "错误"
 
-#: app.py:2421
+#: app.py:2435
 msgid "GROUP_DETAILS"
 msgstr ""
 "第 {0} 组 {1}\n"
 "大小： {2}"
 
-#: app.py:2425
+#: app.py:2439
 msgid "No image files found"
 msgstr "未找到图像文件"
 
-#: app.py:2427
+#: app.py:2441
 msgid "1 image file found"
 msgstr "找到一个图像文件"
 
-#: app.py:2428
+#: app.py:2442
 msgid "{0} image files found"
 msgstr "找到 {0} 图像文件"
 
-#: app.py:2430
+#: app.py:2444
 msgid "(filtered)"
 msgstr "(过滤)"
 
@@ -933,7 +940,7 @@ msgstr "(没有底片）"
 #: compare/classifier_actions_manager.py:46
 #: compare/classifier_management_window.py:61
 msgid "New Classifier Action"
-msgstr ""
+msgstr "新分类器操作"
 
 #: compare/classifier_actions_manager.py:115
 msgid "Loading image classifier <{0}> ..."
@@ -941,11 +948,11 @@ msgstr "加载图像分类器 <{0}> ..."
 
 #: compare/classifier_actions_manager.py:210
 msgid "Loading embedding prototype from {0}..."
-msgstr ""
+msgstr "正在从 {0} 加载嵌入原型..."
 
 #: compare/classifier_actions_manager.py:226
 msgid "Loading negative embedding prototype from {0}..."
-msgstr ""
+msgstr "正在从 {0} 加载负向嵌入原型..."
 
 #: compare/classifier_actions_manager.py:377
 msgid " detected"
@@ -977,7 +984,7 @@ msgstr "修改动作不是一个有效的目录 : "
 
 #: compare/classifier_actions_manager.py:499
 msgid "Invalid classifier action {0}, may cause errors or be unable to run!"
-msgstr ""
+msgstr "无效分类器操作 {0}，可能导致错误或无法运行！"
 
 #: compare/classifier_actions_manager.py:597
 msgid "embedding"
@@ -993,7 +1000,7 @@ msgstr "提示"
 
 #: compare/classifier_actions_manager.py:603
 msgid "prototype"
-msgstr ""
+msgstr "原型"
 
 #: compare/classifier_actions_manager.py:611
 msgid "categories: {0}"
@@ -1017,7 +1024,7 @@ msgstr " ({0}阳性，{1}阴性)"
 
 #: compare/classifier_actions_manager.py:626
 msgid "disabled"
-msgstr ""
+msgstr "停用"
 
 #: compare/classifier_actions_manager.py:633
 #: compare/classifier_management_window.py:57
@@ -1027,7 +1034,7 @@ msgstr "新建前缀"
 
 #: compare/classifier_actions_manager.py:711
 msgid "Profile directory is not a valid directory: "
-msgstr ""
+msgstr "配置文件目录不是有效的目录： "
 
 #: compare/classifier_actions_manager.py:713
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
@@ -1035,32 +1042,32 @@ msgstr "无效的预先验证{0}, 可能导致错误或无法运行 !"
 
 #: compare/classifier_actions_manager.py:786
 msgid "lookaheads: {0}"
-msgstr ""
+msgstr "向前查找：{0}"
 
 #: compare/classifier_actions_window.py:111
 msgid "Add Classifier Action"
-msgstr ""
+msgstr "添加分类器操作"
 
 #: compare/classifier_actions_window.py:113
 msgid "Clear Classifier Actions"
-msgstr ""
+msgstr "清除分类器操作"
 
 #: compare/classifier_actions_window.py:115
 msgid "Run All"
-msgstr ""
+msgstr "运行全部"
 
 #: compare/classifier_actions_window.py:119
 msgid "Run on Profile:"
-msgstr ""
+msgstr "在配置文件上运行："
 
 #: compare/classifier_actions_window.py:154
 #: compare/prevalidations_window.py:454
 msgid "Active"
-msgstr ""
+msgstr "活动"
 
 #: compare/classifier_actions_window.py:158
-#: compare/prevalidations_window.py:445 utils/constants.py:129
-#: utils/constants.py:144
+#: compare/prevalidations_window.py:445 utils/constants.py:133
+#: utils/constants.py:148
 msgid "Name"
 msgstr "名称"
 
@@ -1072,7 +1079,7 @@ msgstr "行动"
 
 #: compare/classifier_actions_window.py:183
 msgid "Run"
-msgstr ""
+msgstr "运行"
 
 #: compare/classifier_actions_window.py:212
 #: compare/prevalidations_window.py:500 files/file_actions_window.py:497
@@ -1092,28 +1099,29 @@ msgstr "向下移动"
 
 #: compare/classifier_actions_window.py:288
 #: compare/classifier_actions_window.py:354
+#: compare/prevalidations_window.py:387
 msgid "directories"
-msgstr ""
+msgstr "目录"
 
 #: compare/classifier_actions_window.py:294
 msgid "Run classifier action '{0}' on the following directories?"
-msgstr ""
+msgstr "是否在以下目录上运行分类器操作 ‘{0}’？"
 
 #: compare/classifier_actions_window.py:298
 msgid "Run Classifier Action"
-msgstr ""
+msgstr "运行分类器操作"
 
 #: compare/classifier_actions_window.py:338
 msgid "No active classifier actions to run"
-msgstr ""
+msgstr "没有可运行的活动分类器操作"
 
 #: compare/classifier_actions_window.py:362
 msgid "Run {0} active classifier action(s) on the following directories?"
-msgstr ""
+msgstr "在以下目录上运行 {0} 个活动分类器操作？"
 
 #: compare/classifier_actions_window.py:366
 msgid "Run All Classifier Actions"
-msgstr ""
+msgstr "运行所有分类器操作"
 
 #: compare/classifier_management_window.py:55
 #: compare/prevalidations_window.py:28
@@ -1127,11 +1135,11 @@ msgstr "预验证名称"
 
 #: compare/classifier_management_window.py:59
 msgid "Modify Classifier Action"
-msgstr ""
+msgstr "修改分类器操作"
 
 #: compare/classifier_management_window.py:60
 msgid "Classifier Action Name"
-msgstr ""
+msgstr "分类器名称 操作"
 
 #: compare/classifier_management_window.py:98
 msgid "Positives"
@@ -1159,7 +1167,7 @@ msgstr "使用提示"
 
 #: compare/classifier_management_window.py:140
 msgid "Use Embedding Prototype"
-msgstr ""
+msgstr "使用嵌入原型"
 
 #: compare/classifier_management_window.py:149
 #: compare/compare_settings_window.py:183 compare/lookahead.py:163
@@ -1184,11 +1192,11 @@ msgstr "选择类别..."
 
 #: compare/classifier_management_window.py:209
 msgid "Should Run"
-msgstr ""
+msgstr "应运行"
 
 #: compare/classifier_management_window.py:212
 msgid "Enable this classifier action"
-msgstr ""
+msgstr "启用此分类器操作"
 
 #: compare/classifier_management_window.py:221
 #: compare/directory_profile.py:195 compare/lookahead.py:170
@@ -1197,7 +1205,7 @@ msgstr "已完成"
 
 #: compare/classifier_management_window.py:236
 msgid "Prototype Directory"
-msgstr ""
+msgstr "原型目录"
 
 #: compare/classifier_management_window.py:251
 #: compare/classifier_management_window.py:289 files/go_to_file.py:137
@@ -1207,31 +1215,31 @@ msgstr "浏览..."
 
 #: compare/classifier_management_window.py:259
 msgid "Force Recalculate Prototype"
-msgstr ""
+msgstr "强制重新计算原型"
 
 #: compare/classifier_management_window.py:269
 msgid "Negative Prototype Directory (Optional)"
-msgstr ""
+msgstr "负原型目录（可选）"
 
 #: compare/classifier_management_window.py:299
 msgid "Negative Prototype Weight (λ)"
-msgstr ""
+msgstr "负原型的权重（λ）"
 
 #: compare/classifier_management_window.py:462
 msgid "Select Prototype Directory"
-msgstr ""
+msgstr "选择原型目录"
 
 #: compare/classifier_management_window.py:473
 msgid "Select Negative Prototype Directory"
-msgstr ""
+msgstr "选择负原型目录"
 
 #: compare/classifier_management_window.py:534
 msgid "Prototypes recalculated successfully"
-msgstr ""
+msgstr "原型机重新计算成功"
 
 #: compare/classifier_management_window.py:565
 msgid "Classifier Management"
-msgstr ""
+msgstr "分类器管理"
 
 #: compare/classifier_management_window.py:592
 #: compare/prevalidations_window.py:217
@@ -1241,19 +1249,19 @@ msgstr "前言"
 #: compare/classifier_management_window.py:611
 msgid ""
 "Prevalidations are disabled. Enable them in the Prevalidations tab settings."
-msgstr ""
+msgstr "预验证功能已禁用。请在“预验证”选项卡设置中启用该功能。"
 
 #: compare/compare_settings_window.py:70
 msgid "Comparison Modes"
-msgstr ""
+msgstr "比较模式"
 
 #: compare/compare_settings_window.py:102
 msgid "Add Instance"
-msgstr ""
+msgstr "添加实例"
 
 #: compare/compare_settings_window.py:122
 msgid "Combination Logic:"
-msgstr ""
+msgstr "组合逻辑："
 
 #: compare/compare_settings_window.py:223
 msgid "Max files to compare"
@@ -1273,35 +1281,35 @@ msgstr "储存检查站"
 
 #: compare/compare_settings_window.py:296
 msgid "Filters (Applied Before Comparison)"
-msgstr ""
+msgstr "过滤器（比较前应用）"
 
 #: compare/compare_settings_window.py:310
 msgid "Size Filter:"
-msgstr ""
+msgstr "尺寸筛选器："
 
 #: compare/compare_settings_window.py:319
 msgid "(Size filtering UI to be implemented)"
-msgstr ""
+msgstr "(大小筛选界面待实现)"
 
 #: compare/compare_settings_window.py:333
 msgid "Model Filter:"
-msgstr ""
+msgstr "模型过滤器："
 
 #: compare/compare_settings_window.py:342
 msgid "(Model filtering UI to be implemented)"
-msgstr ""
+msgstr "(模型过滤界面待实现)"
 
 #: compare/compare_settings_window.py:366
 msgid "Apply"
-msgstr ""
+msgstr "申请"
 
 #: compare/compare_settings_window.py:403
 msgid "Threshold:"
-msgstr ""
+msgstr "阈值："
 
 #: compare/compare_settings_window.py:473
 msgid "Instance Weights:"
-msgstr ""
+msgstr "实例权重："
 
 #: compare/compare_wrapper.py:77 compare/compare_wrapper.py:80
 msgid "Invalid mode"
@@ -1412,127 +1420,127 @@ msgstr "此目录和当前过滤器设置已没有剩余的图像组。"
 
 #: compare/directory_profile.py:133 compare/prevalidations_window.py:370
 msgid "Edit Profile"
-msgstr ""
+msgstr "编辑目录配置文件"
 
 #: compare/directory_profile.py:133
 msgid "Create Profile"
-msgstr ""
+msgstr "创建目录配置文件"
 
 #: compare/directory_profile.py:145
 msgid "Profile Name"
-msgstr ""
+msgstr "目录配置文件名称"
 
 #: compare/directory_profile.py:155
 msgid "Directories"
-msgstr ""
+msgstr "目录"
 
 #: compare/directory_profile.py:175
 msgid "Add"
-msgstr ""
+msgstr "添加"
 
 #: compare/directory_profile.py:178
 msgid "Edit"
-msgstr ""
+msgstr "编辑"
 
 #: compare/directory_profile.py:181 files/directory_notes_window.py:137
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #: compare/directory_profile.py:184
 msgid "Add dirs from subdirs"
-msgstr ""
+msgstr "从子目录添加目录"
 
 #: compare/directory_profile.py:187
 msgid "Clear all"
-msgstr ""
+msgstr "清除所有"
 
 #: compare/directory_profile.py:206
 msgid "Select directory"
-msgstr ""
+msgstr "选择目录"
 
 #: compare/directory_profile.py:236
 msgid "Add Directory"
-msgstr ""
+msgstr "添加目录"
 
 #: compare/directory_profile.py:261
 msgid "Edit Directory"
-msgstr ""
+msgstr "编辑目录"
 
 #: compare/directory_profile.py:295
 msgid "Select directory to add subdirectories from"
-msgstr ""
+msgstr "选择要添加子目录的目录"
 
 #: compare/embedding_prototype.py:92
 msgid "Gathering image files from directory..."
-msgstr ""
+msgstr "正在从目录中收集图像文件..."
 
 #: compare/embedding_prototype.py:126
 msgid "Calculating embeddings for {0} images..."
-msgstr ""
+msgstr "正在为 {0} 张图像计算嵌入向量..."
 
 #: compare/embedding_prototype.py:150
 msgid "Processed {0}/{1} images..."
-msgstr ""
+msgstr "已处理 {0}/{1} 张图像..."
 
 #: compare/embedding_prototype.py:165
 msgid "Calculating average embedding..."
-msgstr ""
+msgstr "计算平均嵌入值..."
 
 #: compare/embedding_prototype.py:331
 msgid "Computed embeddings for {0}/{1} images..."
-msgstr ""
+msgstr "{0}/{1}图像的计算嵌入..."
 
 #: compare/embedding_prototype.py:502
 msgid "Gathering image files from directories..."
-msgstr ""
+msgstr "正在从目录中收集图像文件..."
 
 #: compare/embedding_prototype.py:537
 msgid "Processing {0} images in {1} batches of up to {2} images..."
-msgstr ""
+msgstr "正在处理 {0} 张图片，分为 {1} 批次，每批最多 {2} 张图片..."
 
 #: compare/embedding_prototype.py:544
 msgid "Computing embeddings for batch prototype validation..."
-msgstr ""
+msgstr "计算批量原型验证的嵌入向量..."
 
 #: compare/embedding_prototype.py:553
 msgid "Processing batch {0}/{1} ({2} images)..."
-msgstr ""
+msgstr "正在处理批次 {0}/{1}（包含 {2} 张图像）..."
 
 #: compare/embedding_prototype.py:599
 msgid "Found {0} images that meet the threshold..."
-msgstr ""
+msgstr "找到符合阈值的 {0} 张图片..."
 
 #: compare/lookahead.py:98 compare/prevalidations_window.py:275
 msgid "Edit Lookahead"
-msgstr ""
+msgstr "编辑前瞻"
 
 #: compare/lookahead.py:98
 msgid "Create Lookahead"
-msgstr ""
+msgstr "创建前瞻"
 
 #: compare/lookahead.py:110
 msgid "Lookahead Name"
-msgstr ""
+msgstr "前瞻名称"
 
 #: compare/lookahead.py:121
 msgid "Reference existing prevalidation name"
-msgstr ""
+msgstr "引用现有预验证名称"
 
 #: compare/lookahead.py:134
 msgid "Prevalidation Name or Custom Text"
-msgstr ""
+msgstr "预验证名称或自定义文本"
 
 #: compare/prevalidations_window.py:40
 msgid "Lookaheads (select from shared list)"
-msgstr ""
+msgstr "前瞻（从共享列表中选择）"
 
 #: compare/prevalidations_window.py:49
 msgid "Select Lookaheads..."
-msgstr ""
+msgstr "选择向前查找..."
 
 #: compare/prevalidations_window.py:59
 msgid "Directory Profile"
-msgstr ""
+msgstr "目录简介"
 
 #: compare/prevalidations_window.py:223
 msgid "Add prevalidation"
@@ -1548,35 +1556,35 @@ msgstr "启用预先批准"
 
 #: compare/prevalidations_window.py:245
 msgid "Lookaheads"
-msgstr ""
+msgstr "前瞻"
 
 #: compare/prevalidations_window.py:272
 msgid "Add Lookahead"
-msgstr ""
+msgstr "添加前瞻"
 
 #: compare/prevalidations_window.py:278
 msgid "Remove Lookahead"
-msgstr ""
+msgstr "移除前瞻"
 
 #: compare/prevalidations_window.py:340
 msgid "Directory Profiles"
-msgstr ""
+msgstr "目录简介"
 
 #: compare/prevalidations_window.py:367
 msgid "Add Profile"
-msgstr ""
+msgstr "添加目录配置文件"
 
 #: compare/prevalidations_window.py:373
 msgid "Remove Profile"
-msgstr ""
+msgstr "删除目录配置文件"
 
 #: compare/prevalidations_window.py:451
 msgid "Profile"
-msgstr ""
+msgstr "目录简介"
 
 #: compare/prevalidations_window.py:476
 msgid "(Global)"
-msgstr ""
+msgstr "(全球)"
 
 #: compare/prevalidations_window.py:492 files/hotkey_actions_window.py:96
 msgid "Set"
@@ -1646,7 +1654,7 @@ msgstr "处理GIMP完成后的文件时出错：{0}"
 
 #: extensions/gimp/gimp_wrapper.py:662
 msgid "Original file unchanged - no modifications detected"
-msgstr ""
+msgstr "原始文件未更改 - 未检测到任何修改"
 
 #: extensions/gimp/gimp_wrapper.py:685
 msgid "File updated: {0}"
@@ -1692,43 +1700,43 @@ msgstr "文件覆盖已取消"
 
 #: files/directory_notes_window.py:38
 msgid "Directory Notes - {0}"
-msgstr ""
+msgstr "目录注释 - {0}"
 
 #: files/directory_notes_window.py:57
 msgid "Directory: {0}"
-msgstr ""
+msgstr "目录：{0}"
 
 #: files/directory_notes_window.py:66
 msgid "Export to Text File"
-msgstr ""
+msgstr "导出为文本文件"
 
 #: files/directory_notes_window.py:70
 msgid "Import from Text File"
-msgstr ""
+msgstr "从文本文件导入"
 
 #: files/directory_notes_window.py:73
 msgid "Import from JSON File"
-msgstr ""
+msgstr "从JSON文件导入"
 
 #: files/directory_notes_window.py:85
 msgid "MARKED FILES"
-msgstr ""
+msgstr "标记文件"
 
 #: files/directory_notes_window.py:95
 msgid "(No marked files)"
-msgstr ""
+msgstr "（无标记文件）"
 
 #: files/directory_notes_window.py:105
 msgid "FILE NOTES"
-msgstr ""
+msgstr "文件备注"
 
 #: files/directory_notes_window.py:115
 msgid "(No file notes)"
-msgstr ""
+msgstr "（无文件注释）"
 
 #: files/directory_notes_window.py:142
 msgid "Removed marked file: {0}"
-msgstr ""
+msgstr "已删除标记文件：{0}"
 
 #: files/directory_notes_window.py:148 files/directory_notes_window.py:217
 #: files/favorites_window.py:142
@@ -1737,47 +1745,47 @@ msgstr "打开"
 
 #: files/directory_notes_window.py:157 files/directory_notes_window.py:226
 msgid "Opened file: {0}"
-msgstr ""
+msgstr "打开了文件：{0}"
 
 #: files/directory_notes_window.py:162 files/directory_notes_window.py:231
 msgid "Opened file in new window: {0}"
-msgstr ""
+msgstr "在新窗口中打开文件：{0}"
 
 #: files/directory_notes_window.py:197
 msgid "Edit Note"
-msgstr ""
+msgstr "编辑笔记"
 
 #: files/directory_notes_window.py:206
 msgid "Remove Note"
-msgstr ""
+msgstr "删除笔记"
 
 #: files/directory_notes_window.py:211
 msgid "Removed note for: {0}"
-msgstr ""
+msgstr "已删除针对 {0} 的注释"
 
 #: files/directory_notes_window.py:320
 msgid "Export Directory Notes"
-msgstr ""
+msgstr "导出目录的注释"
 
 #: files/directory_notes_window.py:328
 msgid "Exported notes to: {0}"
-msgstr ""
+msgstr "导出笔记至：{0}"
 
 #: files/directory_notes_window.py:331
 msgid "Export Error"
-msgstr ""
+msgstr "导出错误"
 
 #: files/directory_notes_window.py:331
 msgid "Failed to export notes: {0}"
-msgstr ""
+msgstr "导出笔记失败：{0}"
 
 #: files/directory_notes_window.py:338
 msgid "Import Marked Files from Text File"
-msgstr ""
+msgstr "从文本文件导入标记文件"
 
 #: files/directory_notes_window.py:339
 msgid "Text files"
-msgstr ""
+msgstr "文本文件"
 
 #: files/directory_notes_window.py:339 files/directory_notes_window.py:377
 #: files/go_to_file.py:242
@@ -1786,19 +1794,19 @@ msgstr "所有文件"
 
 #: files/directory_notes_window.py:348
 msgid "Import Options"
-msgstr ""
+msgstr "导入选项"
 
 #: files/directory_notes_window.py:349
 msgid "Search recursively in subdirectories for matching filenames?"
-msgstr ""
+msgstr "递归搜索子目录中匹配的文件名？"
 
 #: files/directory_notes_window.py:356 files/directory_notes_window.py:388
 msgid "Imported {0} files."
-msgstr ""
+msgstr "导入 {0} 个文件。"
 
 #: files/directory_notes_window.py:358
 msgid "{0} filenames not found:"
-msgstr ""
+msgstr "{0} 未找到文件名："
 
 #: files/directory_notes_window.py:363 files/directory_notes_window.py:395
 #: files/file_actions_window.py:429
@@ -1807,35 +1815,35 @@ msgstr "... 以及 {0} 项更多内容"
 
 #: files/directory_notes_window.py:365 files/directory_notes_window.py:397
 msgid "Import Complete"
-msgstr ""
+msgstr "导入完成"
 
 #: files/directory_notes_window.py:366 files/directory_notes_window.py:398
 msgid "Imported {0} marked files"
-msgstr ""
+msgstr "导入标记为{0}的文件"
 
 #: files/directory_notes_window.py:369 files/directory_notes_window.py:401
 msgid "Import Error"
-msgstr ""
+msgstr "导入错误"
 
 #: files/directory_notes_window.py:369
 msgid "Failed to import from text file: {0}"
-msgstr ""
+msgstr "从文本文件导入失败：{0}"
 
 #: files/directory_notes_window.py:376
 msgid "Import Marked Files from JSON File"
-msgstr ""
+msgstr "从JSON文件导入标记文件"
 
 #: files/directory_notes_window.py:377
 msgid "JSON files"
-msgstr ""
+msgstr "JSON文件"
 
 #: files/directory_notes_window.py:390
 msgid "{0} invalid or missing file paths:"
-msgstr ""
+msgstr "{0}个无效或缺失的文件路径："
 
 #: files/directory_notes_window.py:401
 msgid "Failed to import from JSON file: {0}"
-msgstr ""
+msgstr "从 JSON 文件导入失败：{0}"
 
 #: files/favorites_window.py:51
 msgid "Added favorite: "
@@ -1977,11 +1985,11 @@ msgstr "目录中 {1} 个文件中的 {0} 个，按{2}{3}排序"
 
 #: files/file_browser.py:222
 msgid "Index must be 1 or greater."
-msgstr ""
+msgstr "索引必须大于等于1。"
 
 #: files/file_browser.py:226
 msgid "Index {0} is out of range. There are {1} files."
-msgstr ""
+msgstr "索引 {0} 超出范围。共有 {1} 个文件。"
 
 #: files/file_browser.py:254
 msgid "Search text provided to file_browser.find() was invalid."
@@ -2009,7 +2017,7 @@ msgstr "若未找到完全匹配项，则转至最近的文件"
 
 #: files/go_to_file.py:159
 msgid "Go to file by index (1-based)"
-msgstr ""
+msgstr "按索引（基于1）定位文件"
 
 #: files/go_to_file.py:188
 msgid "Invalid search string, please enter some text."
@@ -2017,7 +2025,7 @@ msgstr "搜索字符串无效，请输入一些文本。"
 
 #: files/go_to_file.py:204
 msgid "Index navigation enabled but input is not a valid number."
-msgstr ""
+msgstr "索引导航已启用，但输入的数字无效。"
 
 #: files/go_to_file.py:224
 msgid "Supported files"
@@ -2544,7 +2552,7 @@ msgstr "HTML 支持需要 pyppeter 软件包"
 msgid "Media Type Configuration"
 msgstr "媒体类型配置"
 
-#: files/type_configuration_window.py:112 utils/constants.py:336
+#: files/type_configuration_window.py:112 utils/constants.py:340
 msgid "Configure Media Types"
 msgstr "配置媒体类型"
 
@@ -2604,7 +2612,7 @@ msgid "Dimensions"
 msgstr "尺寸"
 
 #: image/image_details.py:135 utils/constants.py:45 utils/constants.py:68
-#: utils/constants.py:134 utils/constants.py:154
+#: utils/constants.py:138 utils/constants.py:158
 msgid "Size"
 msgstr "大小"
 
@@ -2710,7 +2718,7 @@ msgstr "更新标记"
 
 #: image/image_details.py:322
 msgid "No prompt found"
-msgstr ""
+msgstr "未找到提示"
 
 #: image/image_details.py:330
 msgid "Copied prompt without BREAK"
@@ -2718,19 +2726,19 @@ msgstr "复制的快速无阻"
 
 #: image/image_details.py:351
 msgid "No files found in current directory"
-msgstr ""
+msgstr "当前目录中未找到任何文件"
 
 #: image/image_details.py:356
 msgid "No files available"
-msgstr ""
+msgstr "没有可用文件"
 
 #: image/image_details.py:382
 msgid "Copied prompt from {0}"
-msgstr ""
+msgstr "提示内容复制自{0}"
 
 #: image/image_details.py:389
 msgid "No files with prompts found in current directory"
-msgstr ""
+msgstr "当前目录中未找到带提示的文件"
 
 #: image/image_details.py:395 image/image_details.py:491
 msgid "Rotated image right"
@@ -2902,187 +2910,187 @@ msgstr "提示"
 msgid "Prompts (Exact Match)"
 msgstr "提示词（精确匹配）"
 
-#: utils/constants.py:89
+#: utils/constants.py:93
 msgid "Color diff threshold"
 msgstr "颜色 diff 阈值"
 
-#: utils/constants.py:91
+#: utils/constants.py:95
 msgid "Embedding similarity threshold"
 msgstr "嵌入类似阈值"
 
-#: utils/constants.py:93
+#: utils/constants.py:97
 msgid "Size tolerance"
-msgstr ""
+msgstr "尺寸公差"
 
-#: utils/constants.py:95
+#: utils/constants.py:99
 msgid "Model similarity threshold"
-msgstr ""
+msgstr "모델 유사성 임계값"
 
-#: utils/constants.py:130 utils/constants.py:146
+#: utils/constants.py:134 utils/constants.py:150
 msgid "Full Path"
 msgstr "完整路径"
 
-#: utils/constants.py:131 utils/constants.py:148
+#: utils/constants.py:135 utils/constants.py:152
 msgid "Creation Time"
 msgstr "创建时间"
 
-#: utils/constants.py:132 utils/constants.py:150
+#: utils/constants.py:136 utils/constants.py:154
 msgid "Modify Time"
 msgstr "修改时间"
 
-#: utils/constants.py:133 utils/constants.py:152
+#: utils/constants.py:137 utils/constants.py:156
 msgid "Type"
 msgstr "类型"
 
-#: utils/constants.py:135 utils/constants.py:156
+#: utils/constants.py:139 utils/constants.py:160
 msgid "Name Length"
 msgstr "名称长度"
 
-#: utils/constants.py:136 utils/constants.py:158
+#: utils/constants.py:140 utils/constants.py:162
 msgid "Related Image"
 msgstr "相关图像"
 
-#: utils/constants.py:137 utils/constants.py:160
+#: utils/constants.py:141 utils/constants.py:164
 msgid "Random"
 msgstr "随机"
 
-#: utils/constants.py:138 utils/constants.py:162
+#: utils/constants.py:142 utils/constants.py:166
 msgid "Image Pixels"
 msgstr "图像像素"
 
-#: utils/constants.py:139 utils/constants.py:164
+#: utils/constants.py:143 utils/constants.py:168
 msgid "Image Height"
 msgstr "图像高度"
 
-#: utils/constants.py:140 utils/constants.py:166
+#: utils/constants.py:144 utils/constants.py:170
 msgid "Image Width"
 msgstr "图像宽度"
 
-#: utils/constants.py:185
+#: utils/constants.py:189
 msgid "ascending"
 msgstr "升职"
 
-#: utils/constants.py:186
+#: utils/constants.py:190
 msgid "descending"
 msgstr "下降"
 
-#: utils/constants.py:187
+#: utils/constants.py:191
 msgid "random"
 msgstr "随机"
 
-#: utils/constants.py:241
+#: utils/constants.py:245
 msgid "Image"
 msgstr "图像"
 
-#: utils/constants.py:243
+#: utils/constants.py:247
 msgid "GIF"
 msgstr "全球投资框架"
 
-#: utils/constants.py:245
+#: utils/constants.py:249
 msgid "Video"
 msgstr "视频"
 
-#: utils/constants.py:247
+#: utils/constants.py:251
 msgid "PDF"
 msgstr "专题报告"
 
-#: utils/constants.py:249
+#: utils/constants.py:253
 msgid "SVG"
 msgstr "SVG"
 
-#: utils/constants.py:251
+#: utils/constants.py:255
 msgid "HTML"
 msgstr "HTML"
 
-#: utils/constants.py:271
+#: utils/constants.py:275
 msgid "Moved files"
 msgstr "已移动文件"
 
-#: utils/constants.py:273
+#: utils/constants.py:277
 msgid "Copied files"
 msgstr "复制文件"
 
-#: utils/constants.py:275
+#: utils/constants.py:279
 msgid "Removed files"
 msgstr "删除的文件"
 
-#: utils/constants.py:277
+#: utils/constants.py:281
 msgid "Marked files"
 msgstr "标记文件"
 
-#: utils/constants.py:279
+#: utils/constants.py:283
 msgid "Unmarked files"
 msgstr "未标记的文件"
 
-#: utils/constants.py:281
+#: utils/constants.py:285
 msgid "Searched files"
 msgstr "已搜索文件"
 
-#: utils/constants.py:283
+#: utils/constants.py:287
 msgid "Compared files"
 msgstr "比较文件"
 
-#: utils/constants.py:285
+#: utils/constants.py:289
 msgid "Generated images"
 msgstr "生成图像"
 
-#: utils/constants.py:287
+#: utils/constants.py:291
 msgid "Changed directory"
 msgstr "更改目录"
 
-#: utils/constants.py:289
+#: utils/constants.py:293
 msgid "System"
 msgstr "系统"
 
-#: utils/constants.py:323
+#: utils/constants.py:327
 msgid "Start Application"
 msgstr "启动软件应用程序"
 
-#: utils/constants.py:324
+#: utils/constants.py:328
 msgid "Run Compares"
 msgstr "运行比较"
 
-#: utils/constants.py:325
+#: utils/constants.py:329
 msgid "Run Search"
 msgstr "运行搜索"
 
-#: utils/constants.py:326
+#: utils/constants.py:330
 msgid "Run Search Preset"
 msgstr "运行搜索预置"
 
-#: utils/constants.py:328
+#: utils/constants.py:332
 msgid "View Recent Directories"
 msgstr "查看最新目录"
 
-#: utils/constants.py:329
+#: utils/constants.py:333
 msgid "View File Actions"
 msgstr "查看文件操作"
 
-#: utils/constants.py:330
+#: utils/constants.py:334
 msgid "Run File Actions"
 msgstr "运行文件操作"
 
-#: utils/constants.py:331
+#: utils/constants.py:335
 msgid "Edit Prevalidations"
 msgstr "编辑批准书"
 
-#: utils/constants.py:332
+#: utils/constants.py:336
 msgid "Run Prevalidations"
 msgstr "运行审批"
 
-#: utils/constants.py:334
+#: utils/constants.py:338
 msgid "Run RefacDir"
 msgstr "运行 RefacDir"
 
-#: utils/constants.py:335
+#: utils/constants.py:339
 msgid "Delete Media"
 msgstr "删除媒体"
 
-#: utils/constants.py:337
+#: utils/constants.py:341
 msgid "Set Hotkey Actions"
 msgstr "设置热键操作"
 
-#: utils/constants.py:338
+#: utils/constants.py:342
 msgid "Access Password Administration"
 msgstr "访问密码管理"
 
@@ -3395,3 +3403,11 @@ msgstr "逃离文件路径中的反斜线"
 #: utils/notification_manager.py:26
 msgid " etc."
 msgstr " 等等"
+
+#: compare/prevalidations_window.py:291
+msgid "{name} ({name_or_text}, threshold: {threshold:.2f})"
+msgstr "{name}（{name_or_text}，阈值：{threshold:.2f}）"
+
+#: compare/prevalidations_window.py:387
+msgid "directory"
+msgstr "目录"
