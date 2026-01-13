@@ -19,7 +19,7 @@ from compare.compare_args import CompareArgs
 from compare.compare_manager import CompareManager
 from compare.classifier_management_window import ClassifierManagementWindow
 from compare.compare_settings_window import CompareSettingsWindow
-from compare.prevalidations_window import PrevalidationsTab
+from compare.prevalidations_tab import PrevalidationsTab
 from extensions.refacdir_client import RefacDirClient
 from extensions.sd_runner_client import SDRunnerClient
 from files.directory_notes import DirectoryNotes

@@ -22,7 +22,6 @@ from image.image_classifier_manager import image_classifier_manager
 from image.image_data_extractor import image_data_extractor
 from image.image_ops import ImageOps
 from utils.app_info_cache import app_info_cache
-from utils.config import config
 from utils.constants import ActionType
 from utils.logging_setup import get_logger
 from utils.running_tasks_registry import start_thread

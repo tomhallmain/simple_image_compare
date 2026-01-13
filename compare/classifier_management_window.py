@@ -6,7 +6,6 @@ classifier actions and prevalidations management.
 """
 
 import os
-from typing import Optional
 from tkinter import Frame, Label, Scale, Checkbutton, BooleanVar, StringVar, LEFT, W, HORIZONTAL, BOTH, E
 from tkinter.ttk import Notebook, Entry, Button, Combobox
 import tkinter.font as fnt
@@ -592,8 +591,8 @@ class ClassifierManagementWindow:
         self.notebook.add(self.prevalidations_frame, text=_("Prevalidations"))
 
         # Create tab content classes (import here to avoid circular import)
-        from compare.classifier_actions_window import ClassifierActionsTab
-        from compare.prevalidations_window import PrevalidationsTab
+        from compare.classifier_actions_tab import ClassifierActionsTab
+        from compare.prevalidations_tab import PrevalidationsTab
         
         self.classifier_actions_tab = ClassifierActionsTab(
             self.classifier_actions_frame, app_actions

@@ -1,25 +1,20 @@
-from enum import Enum
 import os
 from typing import Optional
 
-from tkinter import Frame, Label, Scale, Checkbutton, BooleanVar, StringVar, LEFT, W, HORIZONTAL, Scrollbar, Listbox, BOTH, RIGHT, TOP, E
+from tkinter import Frame, Label, Checkbutton, BooleanVar, StringVar, LEFT, W, E
 import tkinter.font as fnt
-from tkinter.ttk import Entry, Button, Combobox
+from tkinter.ttk import Button, Combobox
 
 from compare.classifier_actions_manager import ClassifierAction, ClassifierActionsManager
 from compare.classifier_management_window import ClassifierActionModifyWindow
 from compare.directory_profile import DirectoryProfile
-from image.classifier_action_type import ClassifierActionType
-from image.image_classifier_manager import image_classifier_manager
-from lib.multiselect_dropdown import MultiSelectDropdown
-from lib.multi_display import SmartToplevel
 from utils.app_style import AppStyle
 from utils.config import config
 from utils.logging_setup import get_logger
 from utils.translations import I18N
 
 _ = I18N._
-logger = get_logger("classifier_actions_window")
+logger = get_logger("classifier_actions_tab")
 
 
 class ClassifierActionsTab:

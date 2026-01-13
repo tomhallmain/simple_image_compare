@@ -15,7 +15,7 @@ from utils.logging_setup import get_logger
 from utils.translations import I18N
 
 _ = I18N._
-logger = get_logger("prevalidations_window")
+logger = get_logger("prevalidations_tab")
 
 
 class PrevalidationModifyWindow(ClassifierActionModifyWindow):
