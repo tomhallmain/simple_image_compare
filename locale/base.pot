@@ -1,14 +1,14 @@
 # Translations template for APPLICATION.
-# Copyright (C) 2026 AUTHOR NAME <author@example.com>
+# Copyright (C) 2026 THOMAS HALL <tomhall.main@gmail.com>
 # This file is distributed under the same license as the APPLICATION project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: APPLICATION 1.0\n"
-"Report-Msgid-Bugs-To: Translator Name <translator@example.com>\n"
-"POT-Creation-Date: 2026-01-10 21:25-0500\n"
-"PO-Revision-Date: 2026-01-10 21:25-0500\n"
+"Report-Msgid-Bugs-To: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2026-01-13 12:57-0500\n"
+"PO-Revision-Date: 2026-01-13 12:57-0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:113 app.py:1018 app.py:2485
+#: app.py:113 app.py:1019 app.py:2486
 msgid " Simple Image Compare "
 msgstr ""
 
@@ -28,7 +28,7 @@ msgstr ""
 msgid "Theme switched to {0}."
 msgstr ""
 
-#: app.py:282 app.py:501 app.py:1048 compare/compare_wrapper.py:508
+#: app.py:282 app.py:502 app.py:1049 compare/compare_wrapper.py:508
 msgid "Set a directory to run comparison."
 msgstr ""
 
@@ -93,7 +93,7 @@ msgstr ""
 msgid "Negative text:"
 msgstr ""
 
-#: app.py:360 compare/classifier_actions_window.py:103 compare/classifier_management_window.py:591
+#: app.py:360 compare/classifier_actions_window.py:105 compare/classifier_management_window.py:591
 msgid "Classifier Actions"
 msgstr ""
 
@@ -140,477 +140,477 @@ msgstr ""
 msgid "---- DELETE ----"
 msgstr ""
 
-#: app.py:558
+#: app.py:559
 msgid "Confirm Quit"
 msgstr ""
 
-#: app.py:558
+#: app.py:559
 msgid "Would you like to quit the application?"
 msgstr ""
 
-#: app.py:680
+#: app.py:681
 msgid "Ended slideshows"
 msgstr ""
 
-#: app.py:733 app.py:2145 app.py:2152 app.py:2156 app.py:2160 app.py:2166 app.py:2273 app.py:2289 app.py:2306
+#: app.py:734 app.py:2146 app.py:2153 app.py:2157 app.py:2161 app.py:2167 app.py:2274 app.py:2290 app.py:2307
 msgid "Warning"
 msgstr ""
 
-#: app.py:733
+#: app.py:734
 msgid "No files found in directory after refresh."
 msgstr ""
 
-#: app.py:771
+#: app.py:772
 msgid "Slideshow for new images started"
 msgstr ""
 
-#: app.py:773
+#: app.py:774
 msgid "Slideshow started"
 msgstr ""
 
-#: app.py:776
+#: app.py:777
 msgid "Slideshows ended"
 msgstr ""
 
-#: app.py:789
+#: app.py:790
 msgid "Browsing mode set."
 msgstr ""
 
-#: app.py:834 utils/constants.py:327
+#: app.py:835 utils/constants.py:327
 msgid "View Media Details"
 msgstr ""
 
-#: app.py:835
+#: app.py:836
 msgid "Hide Media"
 msgstr ""
 
-#: app.py:836
+#: app.py:837
 msgid "Remove from Marks"
 msgstr ""
 
-#: app.py:836
+#: app.py:837
 msgid "Add to Marks"
 msgstr ""
 
-#: app.py:838
+#: app.py:839
 msgid "Remove from Favorites"
 msgstr ""
 
-#: app.py:838
+#: app.py:839
 msgid "Add to Favorites"
 msgstr ""
 
-#: app.py:841
+#: app.py:842
 msgid "Remove from Directory Notes"
 msgstr ""
 
-#: app.py:841
+#: app.py:842
 msgid "Add to Directory Notes"
 msgstr ""
 
-#: app.py:843
+#: app.py:844
 msgid "Edit File Note"
 msgstr ""
 
-#: app.py:845
+#: app.py:846
 msgid "Open in GIMP"
 msgstr ""
 
-#: app.py:846 image/image_details.py:201 utils/constants.py:333 utils/help_and_config.py:138
+#: app.py:847 image/image_details.py:201 utils/constants.py:333 utils/help_and_config.py:138
 msgid "Run Image Generation"
 msgstr ""
 
-#: app.py:847
+#: app.py:848
 msgid "Run Image Generation on Directory"
 msgstr ""
 
-#: app.py:848
+#: app.py:849
 msgid "Show Source Image"
 msgstr ""
 
-#: app.py:849
+#: app.py:850
 msgid "Find Related Images"
 msgstr ""
 
-#: app.py:850
+#: app.py:851
 msgid "Set Marks from Downstream Related Images"
 msgstr ""
 
-#: app.py:852
+#: app.py:853
 msgid "Set Current Image as Search Image"
 msgstr ""
 
-#: app.py:853
+#: app.py:854
 msgid "Add Current Image to Negative Search"
 msgstr ""
 
-#: app.py:854
+#: app.py:855
 msgid "Run Refacdir"
 msgstr ""
 
-#: app.py:872
+#: app.py:873
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr ""
 
-#: app.py:909 app.py:1638
+#: app.py:910 app.py:1639
 msgid "Many Files"
 msgstr ""
 
-#: app.py:937
+#: app.py:938
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized number of files on external storage was "
 "detected, which may result in a slow load time. Please confirm you want to load the full directory."
 msgstr ""
 
-#: app.py:938
+#: app.py:939
 msgid "Large Directory Detected: {0}"
 msgstr ""
 
-#: app.py:968
+#: app.py:969
 msgid "No downstream related image(s) found in {0}"
 msgstr ""
 
-#: app.py:990
+#: app.py:991
 msgid "{0} file marks set"
 msgstr ""
 
-#: app.py:996
+#: app.py:997
 msgid "Help and Config"
 msgstr ""
 
-#: app.py:1095
+#: app.py:1096
 msgid "Set Image Comparison Directory"
 msgstr ""
 
-#: app.py:1149
+#: app.py:1150
 msgid "No image selected."
 msgstr ""
 
-#: app.py:1149
+#: app.py:1150
 msgid "Invalid Setting"
 msgstr ""
 
-#: app.py:1188
+#: app.py:1189
 msgid "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr ""
 
-#: app.py:1193
+#: app.py:1194
 msgid "Select image file"
 msgstr ""
 
-#: app.py:1222
+#: app.py:1223
 msgid "Somehow, the search file is invalid"
 msgstr ""
 
-#: app.py:1308 app.py:1333
+#: app.py:1309 app.py:1334
 msgid "Failed to get active image filepath"
 msgstr ""
 
-#: app.py:1418
+#: app.py:1419
 msgid "{0}: {1}% complete"
 msgstr ""
 
-#: app.py:1424
+#: app.py:1425
 msgid "Confirm comparison"
 msgstr ""
 
-#: app.py:1425
+#: app.py:1426
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 
-#: app.py:1426
+#: app.py:1427
 msgid "Are you sure you want to proceed?"
 msgstr ""
 
-#: app.py:1449
+#: app.py:1450
 msgid "Error running compare"
 msgstr ""
 
-#: app.py:1484
+#: app.py:1485
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 
-#: app.py:1495
+#: app.py:1496
 msgid "Mark removed. Remaining: {0}"
 msgstr ""
 
-#: app.py:1499
+#: app.py:1500
 msgid "Mark added. Total set: {0}"
 msgstr ""
 
-#: app.py:1516
+#: app.py:1517
 msgid "Marks added. Total set: {0}"
 msgstr ""
 
-#: app.py:1525
+#: app.py:1526
 msgid "First sorted mark"
 msgstr ""
 
-#: app.py:1532
+#: app.py:1533
 msgid "Only one marked file set."
 msgstr ""
 
-#: app.py:1545
+#: app.py:1546
 msgid "Invalid file path"
 msgstr ""
 
-#: app.py:1545
+#: app.py:1546
 msgid "The file path {0} is invalid."
 msgstr ""
 
-#: app.py:1551
+#: app.py:1552
 msgid "Including marks: {0}"
 msgstr ""
 
-#: app.py:1593
+#: app.py:1594
 msgid "NO_MARKS_SET"
 msgstr ""
 
-#: app.py:1638
+#: app.py:1639
 msgid "Are you sure you want to run all prevalidations on directory {0} ? This may take a while."
 msgstr ""
 
-#: app.py:1653
+#: app.py:1654
 msgid "Prevalidations now running"
 msgstr ""
 
-#: app.py:1653
+#: app.py:1654
 msgid "Prevalidations turned off"
 msgstr ""
 
-#: app.py:1674
+#: app.py:1675
 msgid "Please set a base directory first"
 msgstr ""
 
-#: app.py:1703
+#: app.py:1704
 msgid "Removed from directory notes: {0}"
 msgstr ""
 
-#: app.py:1706
+#: app.py:1707
 msgid "Added to directory notes: {0}"
 msgstr ""
 
-#: app.py:1729 files/directory_notes_window.py:242
+#: app.py:1730 files/directory_notes_window.py:242
 msgid "Edit Note - {0}"
 msgstr ""
 
-#: app.py:1753 files/directory_notes_window.py:266
+#: app.py:1754 files/directory_notes_window.py:266
 msgid "Note saved for: {0}"
 msgstr ""
 
-#: app.py:1766 files/directory_notes_window.py:273
+#: app.py:1767 files/directory_notes_window.py:273
 msgid "Save"
 msgstr ""
 
-#: app.py:1769 auth/app_startup_auth.py:127 auth/password_admin_window.py:462 auth/password_dialog.py:152
+#: app.py:1770 auth/app_startup_auth.py:127 auth/password_admin_window.py:462 auth/password_dialog.py:152
 #: auth/password_dialog.py:221 auth/password_dialog.py:238 compare/compare_settings_window.py:373
 #: files/directory_notes_window.py:276 files/pdf_options_window.py:77 files/target_directory_window.py:176
 #: files/type_configuration_window.py:178 lib/custom_dialogs.py:75
 msgid "Cancel"
 msgstr ""
 
-#: app.py:1883
+#: app.py:1884
 msgid "File not found"
 msgstr ""
 
-#: app.py:1883
+#: app.py:1884
 msgid "No file was found for the search text: \"{0}\""
 msgstr ""
 
-#: app.py:1892
+#: app.py:1893
 msgid "Index navigation not available"
 msgstr ""
 
-#: app.py:1892
+#: app.py:1893
 msgid "Index navigation is only available in BROWSE mode."
 msgstr ""
 
-#: app.py:1903
+#: app.py:1904
 msgid "Invalid index"
 msgstr ""
 
-#: app.py:1919
+#: app.py:1920
 msgid "No image selected"
 msgstr ""
 
-#: app.py:1919
+#: app.py:1920
 msgid "No image was selected for comparison"
 msgstr ""
 
-#: app.py:1933
+#: app.py:1934
 msgid "No Text Search Presets Found"
 msgstr ""
 
-#: app.py:1934
+#: app.py:1935
 msgid "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 
-#: app.py:2031
+#: app.py:2032
 msgid "Opening media file: {0}"
 msgstr ""
 
-#: app.py:2034
+#: app.py:2035
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr ""
 
-#: app.py:2039
+#: app.py:2040
 msgid "GIMP integration is not configured. Please set 'gimp_exe_loc' in config.json."
 msgstr ""
 
-#: app.py:2039
+#: app.py:2040
 msgid "GIMP Integration Error"
 msgstr ""
 
-#: app.py:2051
+#: app.py:2052
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 
-#: app.py:2062 image/temp_image_canvas.py:167
+#: app.py:2063 image/temp_image_canvas.py:167
 msgid "Copied filepath to clipboard"
 msgstr ""
 
-#: app.py:2070
+#: app.py:2071
 msgid "Copied filename to clipboard"
 msgstr ""
 
-#: app.py:2077
+#: app.py:2078
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
 msgstr ""
 
-#: app.py:2082
+#: app.py:2083
 msgid "Cleared all hidden images."
 msgstr ""
 
-#: app.py:2090
+#: app.py:2091
 msgid "DELETE_LOCK"
 msgstr ""
 
-#: app.py:2108
+#: app.py:2109
 msgid "Invalid action, no files found to delete"
 msgstr ""
 
-#: app.py:2111
+#: app.py:2112
 msgid "Invalid action, search image not found"
 msgstr ""
 
-#: app.py:2126
+#: app.py:2127
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 
-#: app.py:2133
+#: app.py:2134
 msgid "Removing directory: {0}"
 msgstr ""
 
-#: app.py:2135
+#: app.py:2136
 msgid "Removing file: {0}"
 msgstr ""
 
-#: app.py:2145 app.py:2166
+#: app.py:2146 app.py:2167
 msgid "Failed to delete item: {0}"
 msgstr ""
 
-#: app.py:2149
+#: app.py:2150
 msgid "Failed to move directory to {0}. Double check the trash folder is set properly in config.json."
 msgstr ""
 
-#: app.py:2151
+#: app.py:2152
 msgid "Failed to send file to {0}. Double check the trash folder is set properly in config.json."
 msgstr ""
 
-#: app.py:2157
+#: app.py:2158
 msgid "Failed to move directory to the trash. Either pip install send2trash or set a specific trash folder in config.json."
 msgstr ""
 
-#: app.py:2161
+#: app.py:2162
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder"
 " in config.json."
 msgstr ""
 
-#: app.py:2171
+#: app.py:2172
 msgid "Invalid directory"
 msgstr ""
 
-#: app.py:2171
+#: app.py:2172
 msgid "No valid base directory to delete"
 msgstr ""
 
-#: app.py:2182
+#: app.py:2183
 msgid "Cannot Delete Directory"
 msgstr ""
 
-#: app.py:2186
+#: app.py:2187
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr ""
 
-#: app.py:2188
+#: app.py:2189
 msgid "Contents to be deleted:"
 msgstr ""
 
-#: app.py:2190
+#: app.py:2191
 msgid "Confirm Delete Directory"
 msgstr ""
 
-#: app.py:2221
+#: app.py:2222
 msgid "Delete Directory Error"
 msgstr ""
 
-#: app.py:2223
+#: app.py:2224
 msgid "Directory {0} deleted."
 msgstr ""
 
-#: app.py:2239
+#: app.py:2240
 msgid "Invalid target filepath for replacement: "
 msgstr ""
 
-#: app.py:2243
+#: app.py:2244
 msgid "Moved search image to "
 msgstr ""
 
-#: app.py:2273
+#: app.py:2274
 msgid "Failed to get active media filepath"
 msgstr ""
 
-#: app.py:2287
+#: app.py:2288
 msgid "Running image gen: "
 msgstr ""
 
-#: app.py:2289 app.py:2306
+#: app.py:2290 app.py:2307
 msgid "Error running image generation:"
 msgstr ""
 
-#: app.py:2304
+#: app.py:2305
 msgid "Running image gen on directory: "
 msgstr ""
 
-#: app.py:2313
+#: app.py:2314
 msgid "Running refacdir"
 msgstr ""
 
-#: app.py:2318 auth/app_startup_auth.py:141 auth/password_dialog.py:249 extensions/gimp/gimp_wrapper.py:689
+#: app.py:2319 auth/app_startup_auth.py:141 auth/password_dialog.py:249 extensions/gimp/gimp_wrapper.py:689
 #: extensions/gimp/gimp_wrapper.py:718 files/pdf_creator.py:133 files/pdf_creator.py:137 files/pdf_creator.py:140
 msgid "Error"
 msgstr ""
 
-#: app.py:2420
+#: app.py:2421
 msgid "GROUP_DETAILS"
 msgstr ""
 
-#: app.py:2424
+#: app.py:2425
 msgid "No image files found"
 msgstr ""
 
-#: app.py:2426
+#: app.py:2427
 msgid "1 image file found"
 msgstr ""
 
-#: app.py:2427
+#: app.py:2428
 msgid "{0} image files found"
 msgstr ""
 
-#: app.py:2429
+#: app.py:2430
 msgid "(filtered)"
 msgstr ""
 
@@ -995,59 +995,75 @@ msgstr ""
 msgid "lookaheads: {0}"
 msgstr ""
 
-#: compare/classifier_actions_window.py:109
+#: compare/classifier_actions_window.py:111
 msgid "Add Classifier Action"
 msgstr ""
 
-#: compare/classifier_actions_window.py:111
+#: compare/classifier_actions_window.py:113
 msgid "Clear Classifier Actions"
 msgstr ""
 
 #: compare/classifier_actions_window.py:115
+msgid "Run All"
+msgstr ""
+
+#: compare/classifier_actions_window.py:119
 msgid "Run on Profile:"
 msgstr ""
 
-#: compare/classifier_actions_window.py:144 compare/prevalidations_window.py:445 utils/constants.py:129
+#: compare/classifier_actions_window.py:154 compare/prevalidations_window.py:454
+msgid "Active"
+msgstr ""
+
+#: compare/classifier_actions_window.py:158 compare/prevalidations_window.py:445 utils/constants.py:129
 #: utils/constants.py:144
 msgid "Name"
 msgstr ""
 
-#: compare/classifier_actions_window.py:147 compare/classifier_management_window.py:157
+#: compare/classifier_actions_window.py:162 compare/classifier_management_window.py:157
 #: compare/prevalidations_window.py:448
 msgid "Action"
 msgstr ""
 
-#: compare/classifier_actions_window.py:150 compare/prevalidations_window.py:454
-msgid "Active"
+#: compare/classifier_actions_window.py:183
+msgid "Run"
 msgstr ""
 
-#: compare/classifier_actions_window.py:174 compare/prevalidations_window.py:500 files/file_actions_window.py:497
+#: compare/classifier_actions_window.py:212 compare/prevalidations_window.py:500 files/file_actions_window.py:497
 #: files/file_actions_window.py:548
 msgid "Modify"
 msgstr ""
 
-#: compare/classifier_actions_window.py:181 compare/prevalidations_window.py:507 image/classifier_action_type.py:34
+#: compare/classifier_actions_window.py:220 compare/prevalidations_window.py:507 image/classifier_action_type.py:34
 msgid "Delete"
 msgstr ""
 
-#: compare/classifier_actions_window.py:188
-msgid "Run"
-msgstr ""
-
-#: compare/classifier_actions_window.py:195 compare/prevalidations_window.py:514
+#: compare/classifier_actions_window.py:228 compare/prevalidations_window.py:514
 msgid "Move down"
 msgstr ""
 
-#: compare/classifier_actions_window.py:255
+#: compare/classifier_actions_window.py:288 compare/classifier_actions_window.py:354
 msgid "directories"
 msgstr ""
 
-#: compare/classifier_actions_window.py:261
+#: compare/classifier_actions_window.py:294
 msgid "Run classifier action '{0}' on the following directories?"
 msgstr ""
 
-#: compare/classifier_actions_window.py:265
+#: compare/classifier_actions_window.py:298
 msgid "Run Classifier Action"
+msgstr ""
+
+#: compare/classifier_actions_window.py:338
+msgid "No active classifier actions to run"
+msgstr ""
+
+#: compare/classifier_actions_window.py:362
+msgid "Run {0} active classifier action(s) on the following directories?"
+msgstr ""
+
+#: compare/classifier_actions_window.py:366
+msgid "Run All Classifier Actions"
 msgstr ""
 
 #: compare/classifier_management_window.py:55 compare/prevalidations_window.py:28
@@ -2590,93 +2606,109 @@ msgstr ""
 msgid "Copied prompt without BREAK"
 msgstr ""
 
-#: image/image_details.py:346 image/image_details.py:442
+#: image/image_details.py:351
+msgid "No files found in current directory"
+msgstr ""
+
+#: image/image_details.py:356
+msgid "No files available"
+msgstr ""
+
+#: image/image_details.py:382
+msgid "Copied prompt from {0}"
+msgstr ""
+
+#: image/image_details.py:389
+msgid "No files with prompts found in current directory"
+msgstr ""
+
+#: image/image_details.py:395 image/image_details.py:491
 msgid "Rotated image right"
 msgstr ""
 
-#: image/image_details.py:346 image/image_details.py:442
+#: image/image_details.py:395 image/image_details.py:491
 msgid "Rotated image left"
 msgstr ""
 
-#: image/image_details.py:357 image/image_details.py:453
+#: image/image_details.py:406 image/image_details.py:502
 msgid "Cropped image"
 msgstr ""
 
-#: image/image_details.py:361 image/image_details.py:457
+#: image/image_details.py:410 image/image_details.py:506
 msgid "No crops found"
 msgstr ""
 
-#: image/image_details.py:368 image/image_details.py:464
+#: image/image_details.py:417 image/image_details.py:513
 msgid "Enhanced image"
 msgstr ""
 
-#: image/image_details.py:376 image/image_details.py:473
+#: image/image_details.py:425 image/image_details.py:522
 msgid "Randomly cropped image"
 msgstr ""
 
-#: image/image_details.py:388 image/image_details.py:483
+#: image/image_details.py:437 image/image_details.py:532
 msgid "Randomly modified image"
 msgstr ""
 
-#: image/image_details.py:393 image/image_details.py:486
+#: image/image_details.py:442 image/image_details.py:535
 msgid "No new image created"
 msgstr ""
 
-#: image/image_details.py:399
+#: image/image_details.py:448
 msgid "Confirm Vertical Flip"
 msgstr ""
 
-#: image/image_details.py:400
+#: image/image_details.py:449
 msgid ""
 "Are you sure you want to flip this image vertically? This is an uncommon operation and may have been clicked by "
 "accident."
 msgstr ""
 
-#: image/image_details.py:410 image/image_details.py:493
+#: image/image_details.py:459 image/image_details.py:542
 msgid "Flipped image"
 msgstr ""
 
-#: image/image_details.py:418 image/image_details.py:502
+#: image/image_details.py:467 image/image_details.py:551
 msgid "Copied image without EXIF data"
 msgstr ""
 
-#: image/image_details.py:423 image/image_details.py:507
+#: image/image_details.py:472 image/image_details.py:556
 msgid "Error copying image without EXIF"
 msgstr ""
 
-#: image/image_details.py:430 image/image_details.py:515
+#: image/image_details.py:479 image/image_details.py:564
 msgid "Converted image to JPG"
 msgstr ""
 
-#: image/image_details.py:435 image/image_details.py:520
+#: image/image_details.py:484 image/image_details.py:569
 msgid "Error converting image to JPG"
 msgstr ""
 
-#: image/image_details.py:525
+#: image/image_details.py:574
 msgid "No metadata found"
 msgstr ""
 
-#: image/image_details.py:539 image/image_details.py:597
+#: image/image_details.py:588 image/image_details.py:646
 msgid " (Exact Match Not Found)"
 msgstr ""
 
-#: image/image_details.py:541 image/image_details.py:594
+#: image/image_details.py:590 image/image_details.py:643
 msgid "(No related image found)"
 msgstr ""
 
-#: image/image_details.py:657 image/image_details.py:664
+#: image/image_details.py:706 image/image_details.py:713
 msgid "%s downstream image(s) found."
 msgstr ""
 
-#: image/image_details.py:660
+#: image/image_details.py:709
 msgid "%s (cached) downstream image(s) found."
 msgstr ""
 
-#: image/image_details.py:666
+#: image/image_details.py:715
 msgid "No downstream related images found in"
 msgstr ""
 
-#: image/image_details.py:726
+#: image/image_details.py:775
 msgid "Updated tags for %s"
 msgstr ""
 
