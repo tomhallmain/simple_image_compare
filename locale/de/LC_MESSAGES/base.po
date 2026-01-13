@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2026-01-05 16:53-0500\n"
-"PO-Revision-Date: 2026-01-05 16:53-0500\n"
+"POT-Creation-Date: 2026-01-13 14:16-0500\n"
+"PO-Revision-Date: 2026-01-13 14:16-0500\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: de Team <<EMAIL>>\n"
 "Language: de\n"
@@ -12,59 +12,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:112 app.py:1011 app.py:2469
+#: app.py:113 app.py:1019 app.py:2486
 msgid " Simple Image Compare "
 msgstr " Einfacher Bildvergleich "
 
-#: app.py:127
+#: app.py:128
 msgid "(Main Window)"
 msgstr "(Hauptfenster)"
 
-#: app.py:190
+#: app.py:191
 msgid "Theme switched to {0}."
 msgstr "Thema auf {0} umgestellt."
 
-#: app.py:281 app.py:496 app.py:1041 compare/compare_wrapper.py:508
+#: app.py:282 app.py:502 app.py:1049 compare/compare_wrapper.py:508
 msgid "Set a directory to run comparison."
 msgstr "Legen Sie ein Verzeichnis für den Vergleich fest."
 
-#: app.py:288
+#: app.py:289
 msgid "Toggle theme"
 msgstr "Thema umschalten"
 
-#: app.py:289
+#: app.py:290
 msgid "Set directory"
 msgstr "Verzeichnis einstellen"
 
-#: app.py:290
+#: app.py:291
 msgid "Add dirpath..."
 msgstr "Dirpfad hinzufügen..."
 
-#: app.py:294
+#: app.py:295
 msgid "Filter files by glob pattern"
 msgstr "Dateien nach glob-Muster filtern"
 
-#: app.py:301
+#: app.py:302
 msgid "Browsing mode - Sort by"
 msgstr "Browsing-Modus - Sortieren"
 
-#: app.py:308
+#: app.py:309
 msgid "Recurse subdirectories"
 msgstr "Unterverzeichnisse rekursieren"
 
-#: app.py:313
+#: app.py:314
 msgid "Image resize to full window"
 msgstr "Bildgröße auf ganzes Fenster ändern"
 
-#: app.py:317 compare/compare_settings_window.py:277
+#: app.py:318 compare/compare_settings_window.py:277
 msgid "Search only return closest"
 msgstr "Suche liefert nur die nächstgelegenen"
 
-#: app.py:322
+#: app.py:323
 msgid "Set search file"
 msgstr "Suchdatei einstellen"
 
-#: app.py:326
+#: app.py:327
 msgid ""
 "Set an image file to search for similar images.\n"
 "Uses embedding similarity to find visually similar images."
@@ -72,11 +72,11 @@ msgstr ""
 "Legen Sie eine Bilddatei fest, um nach ähnlichen Bildern zu suchen.\n"
 "Verwendet die Einbettungsähnlichkeit, um visuell ähnliche Bilder zu finden."
 
-#: app.py:335
+#: app.py:336
 msgid "Search text (embedding mode)"
 msgstr "Suchtext (Einbettungsmodus)"
 
-#: app.py:339
+#: app.py:340
 msgid ""
 "Positive text: Find images similar to this text.\n"
 "Negative text: Exclude images similar to this text.\n"
@@ -86,37 +86,42 @@ msgstr ""
 "Negativer Text: Schließe Bilder aus, die diesem Text ähnlich sind.\n"
 "Beide verwenden eingebettete Ähnlichkeitsabgleiche."
 
-#: app.py:343
+#: app.py:344
 msgid "Positive text:"
 msgstr "Positiver Text:"
 
-#: app.py:351
+#: app.py:352
 msgid "Negative text:"
 msgstr "Negativer Text:"
 
-#: app.py:359 compare/compare_settings_window.py:38
+#: app.py:360 compare/classifier_actions_window.py:105
+#: compare/classifier_management_window.py:591
+msgid "Classifier Actions"
+msgstr "Klassifizierer-Aktionen"
+
+#: app.py:364 compare/compare_settings_window.py:38
 #: compare/compare_settings_window.py:53
 #: compare/compare_settings_window.py:161
 msgid "Compare Settings"
 msgstr "Einstellungen für Vergleiche"
 
-#: app.py:364
+#: app.py:369
 msgid "Run image compare"
 msgstr "Bildvergleich durchführen"
 
-#: app.py:366
+#: app.py:371
 msgid "Find duplicates"
 msgstr "Duplikate finden"
 
-#: app.py:368 image/image_details.py:69
+#: app.py:373 image/image_details.py:69
 msgid "Image details"
 msgstr "Bild-Details"
 
-#: app.py:380
+#: app.py:385
 msgid "Search current image"
 msgstr "Aktuelles Bild suchen"
 
-#: app.py:384
+#: app.py:389
 msgid ""
 "Search for images similar to the currently displayed image.\n"
 "Uses embedding similarity matching."
@@ -124,143 +129,143 @@ msgstr ""
 "Suche nach Bildern, die dem aktuell angezeigten Bild ähnlich sind.\n"
 "Verwendet Einbettungsähnlichkeitsabgleich."
 
-#: app.py:385 utils/help_and_config.py:87
+#: app.py:390 utils/help_and_config.py:87
 msgid "Open media location"
 msgstr "Medienstandort öffnen"
 
-#: app.py:386
+#: app.py:391
 msgid "Copy image path"
 msgstr "Bildpfad kopieren"
 
-#: app.py:387
+#: app.py:392
 msgid "Copy media basename"
 msgstr "Medien-Basenamen kopieren"
 
-#: app.py:388
+#: app.py:393
 msgid "---- DELETE ----"
 msgstr "---- LÖSCHEN ----"
 
-#: app.py:553
+#: app.py:559
 msgid "Confirm Quit"
 msgstr "Beenden bestätigen"
 
-#: app.py:553
+#: app.py:559
 msgid "Would you like to quit the application?"
 msgstr "Möchten Sie die Anwendung beenden?"
 
-#: app.py:673
+#: app.py:681
 msgid "Ended slideshows"
 msgstr "Beendete Diashows"
 
-#: app.py:726 app.py:2129 app.py:2136 app.py:2140 app.py:2144 app.py:2150
-#: app.py:2257 app.py:2273 app.py:2290
+#: app.py:734 app.py:2146 app.py:2153 app.py:2157 app.py:2161 app.py:2167
+#: app.py:2274 app.py:2290 app.py:2307
 msgid "Warning"
 msgstr "Warnung"
 
-#: app.py:726
+#: app.py:734
 msgid "No files found in directory after refresh."
 msgstr "Keine Dateien im Verzeichnis nach Aktualisierung gefunden."
 
-#: app.py:764
+#: app.py:772
 msgid "Slideshow for new images started"
 msgstr "Diashow für neue Bilder gestartet"
 
-#: app.py:766
+#: app.py:774
 msgid "Slideshow started"
 msgstr "Diashow gestartet"
 
-#: app.py:769
+#: app.py:777
 msgid "Slideshows ended"
 msgstr "Diashows beendet"
 
-#: app.py:782
+#: app.py:790
 msgid "Browsing mode set."
 msgstr "Browsing-Modus eingestellt."
 
-#: app.py:827 utils/constants.py:327
+#: app.py:835 utils/constants.py:327
 msgid "View Media Details"
 msgstr "Mediendetails anzeigen"
 
-#: app.py:828
+#: app.py:836
 msgid "Hide Media"
 msgstr "Medien ausblenden"
 
-#: app.py:829
+#: app.py:837
 msgid "Remove from Marks"
 msgstr "Aus den Markierungen entfernen"
 
-#: app.py:829
+#: app.py:837
 msgid "Add to Marks"
 msgstr "Zu den Markierungen hinzufügen"
 
-#: app.py:831
+#: app.py:839
 msgid "Remove from Favorites"
 msgstr "Aus Favoriten entfernen"
 
-#: app.py:831
+#: app.py:839
 msgid "Add to Favorites"
 msgstr "Zu Favoriten hinzufügen"
 
-#: app.py:834
+#: app.py:842
 msgid "Remove from Directory Notes"
 msgstr "Aus Verzeichnisnotizen entfernen"
 
-#: app.py:834
+#: app.py:842
 msgid "Add to Directory Notes"
 msgstr "Zu Verzeichnisnotizen hinzufügen"
 
-#: app.py:836
+#: app.py:844
 msgid "Edit File Note"
 msgstr "Dateinotiz bearbeiten"
 
-#: app.py:838
+#: app.py:846
 msgid "Open in GIMP"
 msgstr "In GIMP öffnen"
 
-#: app.py:839 image/image_details.py:201 utils/constants.py:333
+#: app.py:847 image/image_details.py:201 utils/constants.py:333
 #: utils/help_and_config.py:138
 msgid "Run Image Generation"
 msgstr "Bilderzeugung ausführen"
 
-#: app.py:840
+#: app.py:848
 msgid "Run Image Generation on Directory"
 msgstr "Bildgenerierung im Verzeichnis ausführen"
 
-#: app.py:841
+#: app.py:849
 msgid "Show Source Image"
 msgstr "Quellbild anzeigen"
 
-#: app.py:842
+#: app.py:850
 msgid "Find Related Images"
 msgstr "Ähnliche Bilder finden"
 
-#: app.py:843
+#: app.py:851
 msgid "Set Marks from Downstream Related Images"
 msgstr "Markierungen aus nachgelagerten verwandten Bildern setzen"
 
-#: app.py:845
+#: app.py:853
 msgid "Set Current Image as Search Image"
 msgstr "Aktuelles Bild als Suchbild festlegen"
 
-#: app.py:846
+#: app.py:854
 msgid "Add Current Image to Negative Search"
 msgstr "Aktuelles Bild zur Negativsuche hinzufügen"
 
-#: app.py:847
+#: app.py:855
 msgid "Run Refacdir"
 msgstr "RefacDir ausführen"
 
-#: app.py:865
+#: app.py:873
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr ""
 "(Öffnen Sie dieses Bild als Teil eines Verzeichnisses, um Indexdetails zu "
 "sehen)."
 
-#: app.py:902 app.py:1622
+#: app.py:910 app.py:1639
 msgid "Many Files"
 msgstr "Viele Dateien"
 
-#: app.py:930
+#: app.py:938
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
@@ -271,120 +276,120 @@ msgstr ""
 "Speichermedium erkannt, was zu einer langsamen Ladezeit führen kann. Bitte "
 "bestätigen Sie, dass Sie das gesamte Verzeichnis laden möchten."
 
-#: app.py:931
+#: app.py:939
 msgid "Large Directory Detected: {0}"
 msgstr "Großes Verzeichnis erkannt: {0}"
 
-#: app.py:961
+#: app.py:969
 msgid "No downstream related image(s) found in {0}"
 msgstr "Keine stromabwärts gerichtete(n) Bilder im {0} gefunden"
 
-#: app.py:983
+#: app.py:991
 msgid "{0} file marks set"
 msgstr "{0} Dateimarken sind gesetzt"
 
-#: app.py:989
+#: app.py:997
 msgid "Help and Config"
 msgstr "Hilfe und Konfig"
 
-#: app.py:1088
+#: app.py:1096
 msgid "Set Image Comparison Directory"
 msgstr "Bildvergleichsverzeichnis festlegen"
 
-#: app.py:1142
+#: app.py:1150
 msgid "No image selected."
 msgstr "Kein Bild ausgewählt."
 
-#: app.py:1142
+#: app.py:1150
 msgid "Invalid Setting"
 msgstr "Ungültige Einstellung"
 
-#: app.py:1181
+#: app.py:1189
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr ""
 "Der Vergleichsmodus muss auf einen Einbettungsmodus gesetzt werden, um "
 "Texteinbettung zu suchen"
 
-#: app.py:1186
+#: app.py:1194
 msgid "Select image file"
 msgstr "Bilddatei auswählen"
 
-#: app.py:1215
+#: app.py:1223
 msgid "Somehow, the search file is invalid"
 msgstr "Irgendwie ist die Suchdatei ungültig"
 
-#: app.py:1301 app.py:1326
+#: app.py:1309 app.py:1334
 msgid "Failed to get active image filepath"
 msgstr "Dateipfad des aktiven Bildes konnte nicht ermittelt werden"
 
-#: app.py:1411
+#: app.py:1419
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1} % abgeschlossen"
 
-#: app.py:1417
+#: app.py:1425
 msgid "Confirm comparison"
 msgstr "Vergleich bestätigen"
 
-#: app.py:1418
+#: app.py:1426
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 "Es wurde kein Basisverzeichnis festgelegt, es wird das aktuelle "
 "Basisverzeichnis von "
 
-#: app.py:1419
+#: app.py:1427
 msgid "Are you sure you want to proceed?"
 msgstr "Sind Sie sicher, dass Sie fortfahren wollen?"
 
-#: app.py:1442
+#: app.py:1450
 msgid "Error running compare"
 msgstr "Fehler beim Ausführen des Vergleichs"
 
-#: app.py:1477
+#: app.py:1485
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "Sperre nach Diashow-Übergang löschen\n"
 "verhinderte das Hinzufügen einer Markierung"
 
-#: app.py:1488
+#: app.py:1496
 msgid "Mark removed. Remaining: {0}"
 msgstr "Markierung entfernt. Verbleibend: {0}"
 
-#: app.py:1492
+#: app.py:1500
 msgid "Mark added. Total set: {0}"
 msgstr "Mark hinzugefügt. Gesamtmenge: {0}"
 
-#: app.py:1509
+#: app.py:1517
 msgid "Marks added. Total set: {0}"
 msgstr "Markierungen hinzugefügt. Gesamtmenge: {0}"
 
-#: app.py:1518
+#: app.py:1526
 msgid "First sorted mark"
 msgstr "Erste sortierte Marke"
 
-#: app.py:1525
+#: app.py:1533
 msgid "Only one marked file set."
 msgstr "Es wird nur eine markierte Datei gesetzt"
 
-#: app.py:1538
+#: app.py:1546
 msgid "Invalid file path"
 msgstr "Ungültiger Dateipfad"
 
-#: app.py:1538
+#: app.py:1546
 msgid "The file path {0} is invalid."
 msgstr "Der Dateipfad {0} ist ungültig."
 
-#: app.py:1544
+#: app.py:1552
 msgid "Including marks: {0}"
 msgstr "Einschließlich Markierungen: {0}"
 
-#: app.py:1586
+#: app.py:1594
 msgid "NO_MARKS_SET"
 msgstr ""
 "Es wurden {0} Markierungen gesetzt (>={1} erwartet).\n"
 "Verwenden Sie Shift+M, um eine Markierung zu setzen."
 
-#: app.py:1622
+#: app.py:1639
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
@@ -392,39 +397,39 @@ msgstr ""
 "Sind Sie sicher, dass Sie alle Prävalidierungen im Verzeichnis {0} "
 "durchführen wollen? Das kann eine Weile dauern."
 
-#: app.py:1637
+#: app.py:1654
 msgid "Prevalidations now running"
 msgstr "Prävalidierungen laufen jetzt"
 
-#: app.py:1637
+#: app.py:1654
 msgid "Prevalidations turned off"
 msgstr "Prävalidierungen ausgeschaltet"
 
-#: app.py:1658
+#: app.py:1675
 msgid "Please set a base directory first"
 msgstr "Bitte legen Sie zuerst ein Basisverzeichnis fest"
 
-#: app.py:1687
+#: app.py:1704
 msgid "Removed from directory notes: {0}"
 msgstr "Aus Verzeichnisnotizen entfernt: {0}"
 
-#: app.py:1690
+#: app.py:1707
 msgid "Added to directory notes: {0}"
 msgstr "Zu den Verzeichnisnotizen hinzugefügt: {0}"
 
-#: app.py:1713 files/directory_notes_window.py:242
+#: app.py:1730 files/directory_notes_window.py:242
 msgid "Edit Note - {0}"
 msgstr "Bearbeiten Hinweis - {0}"
 
-#: app.py:1737 files/directory_notes_window.py:266
+#: app.py:1754 files/directory_notes_window.py:266
 msgid "Note saved for: {0}"
 msgstr "Notiz gespeichert für: {0}"
 
-#: app.py:1750 files/directory_notes_window.py:273
+#: app.py:1767 files/directory_notes_window.py:273
 msgid "Save"
 msgstr "Speichern"
 
-#: app.py:1753 auth/app_startup_auth.py:127 auth/password_admin_window.py:462
+#: app.py:1770 auth/app_startup_auth.py:127 auth/password_admin_window.py:462
 #: auth/password_dialog.py:152 auth/password_dialog.py:221
 #: auth/password_dialog.py:238 compare/compare_settings_window.py:373
 #: files/directory_notes_window.py:276 files/pdf_options_window.py:77
@@ -433,56 +438,56 @@ msgstr "Speichern"
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: app.py:1867
+#: app.py:1884
 msgid "File not found"
 msgstr "Datei nicht gefunden"
 
-#: app.py:1867
+#: app.py:1884
 msgid "No file was found for the search text: \"{0}\""
 msgstr "Es wurde keine Datei für den Suchtext gefunden: \"{0}\""
 
-#: app.py:1876
+#: app.py:1893
 msgid "Index navigation not available"
 msgstr "Indexnavigation nicht verfügbar"
 
-#: app.py:1876
+#: app.py:1893
 msgid "Index navigation is only available in BROWSE mode."
 msgstr "Die Indexnavigation ist nur im Browse-Modus verfügbar."
 
-#: app.py:1887
+#: app.py:1904
 msgid "Invalid index"
 msgstr "Ungültiger Index"
 
-#: app.py:1903
+#: app.py:1920
 msgid "No image selected"
 msgstr "Kein Bild ausgewählt"
 
-#: app.py:1903
+#: app.py:1920
 msgid "No image was selected for comparison"
 msgstr "Es wurde kein Bild zum Vergleich ausgewählt"
 
-#: app.py:1917
+#: app.py:1934
 msgid "No Text Search Presets Found"
 msgstr "Keine Textsuchvoreinstellungen gefunden"
 
-#: app.py:1918
+#: app.py:1935
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 "Keine Suchvorgaben für die Texteinbettung gefunden. Legen Sie sie in der "
 "Datei config.json fest."
 
-#: app.py:2015
+#: app.py:2032
 msgid "Opening media file: {0}"
 msgstr "Öffnen der Mediendatei: {0}"
 
-#: app.py:2018
+#: app.py:2035
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr ""
 "Die aktuelle Mediendatei konnte nicht geöffnet werden, es konnte kein "
 "gültiger Dateipfad abgerufen werden"
 
-#: app.py:2023
+#: app.py:2040
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
@@ -490,25 +495,25 @@ msgstr ""
 "Die GIMP-Integrierung ist nicht konfiguriert. Bitte legen Sie „gimp_exe_loc”"
 " in der Datei „config.json” fest."
 
-#: app.py:2023
+#: app.py:2040
 msgid "GIMP Integration Error"
 msgstr "GIMP-Integrierungsfehler"
 
-#: app.py:2035
+#: app.py:2052
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 "Die aktuelle Datei konnte in GIMP nicht geöffnet werden, da kein gültiger "
 "Dateipfad ermittelt werden konnte"
 
-#: app.py:2046 image/temp_image_canvas.py:167
+#: app.py:2063 image/temp_image_canvas.py:167
 msgid "Copied filepath to clipboard"
 msgstr "Dateipfad in die Zwischenablage kopiert"
 
-#: app.py:2054
+#: app.py:2071
 msgid "Copied filename to clipboard"
 msgstr "Dateiname in die Zwischenablage kopiert"
 
-#: app.py:2061
+#: app.py:2078
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -516,43 +521,43 @@ msgstr ""
 "Aktuelles Bild ausblenden.\n"
 "Um die Ausblendung aufzuheben, drücken Sie Shift+B."
 
-#: app.py:2066
+#: app.py:2083
 msgid "Cleared all hidden images."
 msgstr "Alle versteckten Bilder wurden gelöscht."
 
-#: app.py:2074
+#: app.py:2091
 msgid "DELETE_LOCK"
 msgstr ""
 "Löschsperre nach Diashow-Übergang\n"
 "verhinderte Löschung"
 
-#: app.py:2092
+#: app.py:2109
 msgid "Invalid action, no files found to delete"
 msgstr "Ungültige Aktion, keine Dateien zum Löschen gefunden"
 
-#: app.py:2095
+#: app.py:2112
 msgid "Invalid action, search image not found"
 msgstr "Ungültige Aktion, Suchbild nicht gefunden"
 
-#: app.py:2110
+#: app.py:2127
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 "Aktuelle Datei konnte nicht gelöscht werden, da kein gültiger Dateipfad "
 "ermittelt werden konnte"
 
-#: app.py:2117
+#: app.py:2134
 msgid "Removing directory: {0}"
 msgstr "Verzeichnis entfernen: {0}"
 
-#: app.py:2119
+#: app.py:2136
 msgid "Removing file: {0}"
 msgstr "Die Datei wird entfernt: {0}"
 
-#: app.py:2129 app.py:2150
+#: app.py:2146 app.py:2167
 msgid "Failed to delete item: {0}"
 msgstr "Das Element konnte nicht gelöscht werden: {0}"
 
-#: app.py:2133
+#: app.py:2150
 msgid ""
 "Failed to move directory to {0}. Double check the trash folder is set "
 "properly in config.json."
@@ -561,7 +566,7 @@ msgstr ""
 "Sie, ob der Papierkorbordner in der Datei config.json richtig eingestellt "
 "ist."
 
-#: app.py:2135
+#: app.py:2152
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
@@ -569,7 +574,7 @@ msgstr ""
 "Das Senden der Datei an {0} ist fehlgeschlagen. Überprüfen Sie, ob der "
 "Papierkorbordner in der Datei config.json richtig eingestellt ist."
 
-#: app.py:2141
+#: app.py:2158
 msgid ""
 "Failed to move directory to the trash. Either pip install send2trash or set "
 "a specific trash folder in config.json."
@@ -578,7 +583,7 @@ msgstr ""
 "Installieren Sie entweder pip install send2trash oder legen Sie einen "
 "bestimmten Papierkorb-Ordner in config.json fest."
 
-#: app.py:2145
+#: app.py:2162
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -587,92 +592,92 @@ msgstr ""
 "gelöscht. Entweder pip installiert send2trash oder setzt einen bestimmten "
 "Papierkorbordner in config.json."
 
-#: app.py:2155
+#: app.py:2172
 msgid "Invalid directory"
 msgstr "Ungültiges Verzeichnis"
 
-#: app.py:2155
+#: app.py:2172
 msgid "No valid base directory to delete"
 msgstr "Kein gültiges Basisverzeichnis zum Löschen"
 
-#: app.py:2166
+#: app.py:2183
 msgid "Cannot Delete Directory"
 msgstr "Verzeichnis kann nicht gelöscht werden"
 
-#: app.py:2170
+#: app.py:2187
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr ""
 "Sind Sie sicher, dass Sie das Verzeichnis und alle Inhalte löschen möchten?"
 
-#: app.py:2172
+#: app.py:2189
 msgid "Contents to be deleted:"
 msgstr "Zu löschende Inhalte:"
 
-#: app.py:2174
+#: app.py:2191
 msgid "Confirm Delete Directory"
 msgstr "Löschen des Verzeichnisses bestätigen"
 
-#: app.py:2205
+#: app.py:2222
 msgid "Delete Directory Error"
 msgstr "Verzeichnislöschungsfehler"
 
-#: app.py:2207
+#: app.py:2224
 msgid "Directory {0} deleted."
 msgstr "Verzeichnis {0} gelöscht."
 
-#: app.py:2223
+#: app.py:2240
 msgid "Invalid target filepath for replacement: "
 msgstr "Ungültiger Zieldateipfad für Ersetzung: "
 
-#: app.py:2227
+#: app.py:2244
 msgid "Moved search image to "
 msgstr "Suchbild verschoben nach "
 
-#: app.py:2257
+#: app.py:2274
 msgid "Failed to get active media filepath"
 msgstr "Aktiven Medienpfad konnte nicht abgerufen werden"
 
-#: app.py:2271
+#: app.py:2288
 msgid "Running image gen: "
 msgstr "Laufende Bilderzeugung: "
 
-#: app.py:2273 app.py:2290
+#: app.py:2290 app.py:2307
 msgid "Error running image generation:"
 msgstr "Fehler bei der Bilderzeugung:"
 
-#: app.py:2288
+#: app.py:2305
 msgid "Running image gen on directory: "
 msgstr "Bildgenerierung im Verzeichnis ausführen: "
 
-#: app.py:2297
+#: app.py:2314
 msgid "Running refacdir"
 msgstr "Ausführen der refacdir-App"
 
-#: app.py:2302 auth/app_startup_auth.py:141 auth/password_dialog.py:249
+#: app.py:2319 auth/app_startup_auth.py:141 auth/password_dialog.py:249
 #: extensions/gimp/gimp_wrapper.py:689 extensions/gimp/gimp_wrapper.py:718
 #: files/pdf_creator.py:133 files/pdf_creator.py:137 files/pdf_creator.py:140
 msgid "Error"
 msgstr "Fehler"
 
-#: app.py:2404
+#: app.py:2421
 msgid "GROUP_DETAILS"
 msgstr ""
 "Gruppe {0} von {1}\n"
 "Größe: {2}"
 
-#: app.py:2408
+#: app.py:2425
 msgid "No image files found"
 msgstr "Keine Bilddateien gefunden"
 
-#: app.py:2410
+#: app.py:2427
 msgid "1 image file found"
 msgstr "1 Bilddatei gefunden"
 
-#: app.py:2411
+#: app.py:2428
 msgid "{0} image files found"
 msgstr "{0} Bilddateien gefunden"
 
-#: app.py:2413
+#: app.py:2430
 msgid "(filtered)"
 msgstr "(gefiltert)"
 
@@ -969,6 +974,336 @@ msgstr ""
 msgid "Restarting Comparison"
 msgstr "Neustart-Vergleich"
 
+#: compare/classifier_actions_manager.py:43
+msgid "(no positives set)"
+msgstr "(es werden keine Positiven gesetzt)"
+
+#: compare/classifier_actions_manager.py:44
+msgid "(no negatives set)"
+msgstr "(es werden keine Negative gesetzt)"
+
+#: compare/classifier_actions_manager.py:46
+#: compare/classifier_management_window.py:61
+msgid "New Classifier Action"
+msgstr "Neue Klassifizierungsaktion"
+
+#: compare/classifier_actions_manager.py:115
+msgid "Loading image classifier <{0}> ..."
+msgstr "Laden des Bildklassifizierers <{0}> ..."
+
+#: compare/classifier_actions_manager.py:210
+msgid "Loading embedding prototype from {0}..."
+msgstr "Laden des Einbettungsprototyps aus {0}..."
+
+#: compare/classifier_actions_manager.py:226
+msgid "Loading negative embedding prototype from {0}..."
+msgstr "Laden des negativen Einbettungsprototyps aus {0}..."
+
+#: compare/classifier_actions_manager.py:377
+msgid " detected"
+msgstr " entdeckt"
+
+#: compare/classifier_actions_manager.py:379
+msgid " - skipped"
+msgstr " - übersprungen"
+
+#: compare/classifier_actions_manager.py:382
+msgid " - hidden"
+msgstr " - versteckt"
+
+#: compare/classifier_actions_manager.py:387
+msgid " - marked"
+msgstr " - markiert"
+
+#: compare/classifier_actions_manager.py:395
+msgid "Moving file: "
+msgstr "Bewegliche Datei: "
+
+#: compare/classifier_actions_manager.py:441
+msgid "Deleting file: "
+msgstr "Löschung der Datei: "
+
+#: compare/classifier_actions_manager.py:497
+msgid "Action modifier is not a valid directory: "
+msgstr "Aktionsmodifikator ist kein gültiges Verzeichnis: "
+
+#: compare/classifier_actions_manager.py:499
+msgid "Invalid classifier action {0}, may cause errors or be unable to run!"
+msgstr ""
+"Ungültige Klassifizierungsaktion {0}, kann zu Fehlern führen oder nicht "
+"ausgeführt werden können!"
+
+#: compare/classifier_actions_manager.py:597
+msgid "embedding"
+msgstr "Einbettung"
+
+#: compare/classifier_actions_manager.py:599
+msgid "classifier {0}"
+msgstr "Klassifikator {0}"
+
+#: compare/classifier_actions_manager.py:601
+msgid "prompts"
+msgstr "Eingabeaufforderungen"
+
+#: compare/classifier_actions_manager.py:603
+msgid "prototype"
+msgstr "Prototyp"
+
+#: compare/classifier_actions_manager.py:611
+msgid "categories: {0}"
+msgstr "Kategorien: {0}"
+
+#: compare/classifier_actions_manager.py:615
+msgid "{0} positives, {1} negatives"
+msgstr "{0} Positiv, {1} Negativ"
+
+#: compare/classifier_actions_manager.py:619
+msgid " using {0} ({1})"
+msgstr " mit {0} ({1})"
+
+#: compare/classifier_actions_manager.py:621
+msgid " using {0}"
+msgstr " mit {0}"
+
+#: compare/classifier_actions_manager.py:623
+msgid " ({0} positives, {1} negatives)"
+msgstr " ({0} Positiv, {1} Negativ)"
+
+#: compare/classifier_actions_manager.py:626
+msgid "disabled"
+msgstr "deaktiviert"
+
+#: compare/classifier_actions_manager.py:633
+#: compare/classifier_management_window.py:57
+#: compare/prevalidations_window.py:29
+msgid "New Prevalidation"
+msgstr "Neue Prävalidierung"
+
+#: compare/classifier_actions_manager.py:711
+msgid "Profile directory is not a valid directory: "
+msgstr "Das Profilverzeichnis ist kein gültiges Verzeichnis: "
+
+#: compare/classifier_actions_manager.py:713
+msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
+msgstr ""
+"Invalide Vorvalidierung {0}, kann Fehler verursachen oder nicht laufen "
+"können!"
+
+#: compare/classifier_actions_manager.py:786
+msgid "lookaheads: {0}"
+msgstr "Vorausschauen: {0}"
+
+#: compare/classifier_actions_window.py:111
+msgid "Add Classifier Action"
+msgstr "Klassifizierungsaktion hinzufügen"
+
+#: compare/classifier_actions_window.py:113
+msgid "Clear Classifier Actions"
+msgstr "Klassifizierungsaktionen löschen"
+
+#: compare/classifier_actions_window.py:115
+msgid "Run All"
+msgstr "Alle ausführen"
+
+#: compare/classifier_actions_window.py:119
+msgid "Run on Profile:"
+msgstr "Auf Profil ausführen:"
+
+#: compare/classifier_actions_window.py:154
+#: compare/prevalidations_window.py:454
+msgid "Active"
+msgstr "Aktiv"
+
+#: compare/classifier_actions_window.py:158
+#: compare/prevalidations_window.py:445 utils/constants.py:129
+#: utils/constants.py:144
+msgid "Name"
+msgstr "Name"
+
+#: compare/classifier_actions_window.py:162
+#: compare/classifier_management_window.py:157
+#: compare/prevalidations_window.py:448
+msgid "Action"
+msgstr "Aktion"
+
+#: compare/classifier_actions_window.py:183
+msgid "Run"
+msgstr "Ausführen"
+
+#: compare/classifier_actions_window.py:212
+#: compare/prevalidations_window.py:500 files/file_actions_window.py:497
+#: files/file_actions_window.py:548
+msgid "Modify"
+msgstr "Ändern"
+
+#: compare/classifier_actions_window.py:220
+#: compare/prevalidations_window.py:507 image/classifier_action_type.py:34
+msgid "Delete"
+msgstr "Löschen"
+
+#: compare/classifier_actions_window.py:228
+#: compare/prevalidations_window.py:514
+msgid "Move down"
+msgstr "Nach unten gehen"
+
+#: compare/classifier_actions_window.py:288
+#: compare/classifier_actions_window.py:354
+msgid "directories"
+msgstr "Verzeichnisse"
+
+#: compare/classifier_actions_window.py:294
+msgid "Run classifier action '{0}' on the following directories?"
+msgstr ""
+"Die Klassifizierungsaktion „{0}“ für die folgenden Verzeichnisse ausführen?"
+
+#: compare/classifier_actions_window.py:298
+msgid "Run Classifier Action"
+msgstr "Klassifizierungsaktion ausführen"
+
+#: compare/classifier_actions_window.py:338
+msgid "No active classifier actions to run"
+msgstr "Keine aktiven Klassifizierungsaktionen auszuführen"
+
+#: compare/classifier_actions_window.py:362
+msgid "Run {0} active classifier action(s) on the following directories?"
+msgstr ""
+"{0} aktive Klassifizierungsaktion(en) für die folgenden Verzeichnisse "
+"ausführen?"
+
+#: compare/classifier_actions_window.py:366
+msgid "Run All Classifier Actions"
+msgstr "Alle Klassifizierungsaktionen ausführen"
+
+#: compare/classifier_management_window.py:55
+#: compare/prevalidations_window.py:28
+msgid "Modify Prevalidation"
+msgstr "Ändern der Prävalidierung"
+
+#: compare/classifier_management_window.py:56
+#: compare/prevalidations_window.py:28
+msgid "Prevalidation Name"
+msgstr "Prävalidierung Name"
+
+#: compare/classifier_management_window.py:59
+msgid "Modify Classifier Action"
+msgstr "Klassifizierungsaktion ändern"
+
+#: compare/classifier_management_window.py:60
+msgid "Classifier Action Name"
+msgstr "Name der Klassifizierungsaktion"
+
+#: compare/classifier_management_window.py:98
+msgid "Positives"
+msgstr "Positiv"
+
+#: compare/classifier_management_window.py:106
+msgid "Negatives"
+msgstr "Negativ"
+
+#: compare/classifier_management_window.py:114
+msgid "Validation Types"
+msgstr "Validierungstypen"
+
+#: compare/classifier_management_window.py:117
+msgid "Use Embedding"
+msgstr "Einbettung verwenden"
+
+#: compare/classifier_management_window.py:124
+msgid "Use Image Classifier"
+msgstr "Bildklassifikator verwenden"
+
+#: compare/classifier_management_window.py:131
+msgid "Use Prompts"
+msgstr "Eingabeaufforderungen verwenden"
+
+#: compare/classifier_management_window.py:140
+msgid "Use Embedding Prototype"
+msgstr "Einbettungsprototyp verwenden"
+
+#: compare/classifier_management_window.py:149
+#: compare/compare_settings_window.py:183 compare/lookahead.py:163
+msgid "Threshold"
+msgstr "Schwellenwert"
+
+#: compare/classifier_management_window.py:169
+msgid "Action Modifier"
+msgstr "Aktionsmodifikator"
+
+#: compare/classifier_management_window.py:177
+msgid "Image Classifier Name"
+msgstr "Bildklassifikator Name"
+
+#: compare/classifier_management_window.py:190
+msgid "Image Classifier Selected Category"
+msgstr "Bildklassifikator Ausgewählte Kategorie"
+
+#: compare/classifier_management_window.py:195
+msgid "Select Categories..."
+msgstr "Kategorien auswählen..."
+
+#: compare/classifier_management_window.py:209
+msgid "Should Run"
+msgstr "Sollte laufen"
+
+#: compare/classifier_management_window.py:212
+msgid "Enable this classifier action"
+msgstr "Diese Klassifizierungsaktion aktivieren"
+
+#: compare/classifier_management_window.py:221
+#: compare/directory_profile.py:195 compare/lookahead.py:170
+msgid "Done"
+msgstr "Fertig"
+
+#: compare/classifier_management_window.py:236
+msgid "Prototype Directory"
+msgstr "Verzeichnis für Prototyp"
+
+#: compare/classifier_management_window.py:251
+#: compare/classifier_management_window.py:289 files/go_to_file.py:137
+#: files/go_to_file.py:378
+msgid "Browse..."
+msgstr "Durchsuchen..."
+
+#: compare/classifier_management_window.py:259
+msgid "Force Recalculate Prototype"
+msgstr "Neuberechnung des Prototyps erzwingen"
+
+#: compare/classifier_management_window.py:269
+msgid "Negative Prototype Directory (Optional)"
+msgstr "Verzeichnis für negativen Prototyp (optional)"
+
+#: compare/classifier_management_window.py:299
+msgid "Negative Prototype Weight (λ)"
+msgstr "Gewicht des negativen Prototyps (λ)"
+
+#: compare/classifier_management_window.py:462
+msgid "Select Prototype Directory"
+msgstr "Verzeichnis für Prototyp auswählen"
+
+#: compare/classifier_management_window.py:473
+msgid "Select Negative Prototype Directory"
+msgstr "Verzeichnis für negativen Prototyp auswählen"
+
+#: compare/classifier_management_window.py:534
+msgid "Prototypes recalculated successfully"
+msgstr "Prototypen erfolgreich neu berechnet"
+
+#: compare/classifier_management_window.py:565
+msgid "Classifier Management"
+msgstr "Klassifikatorverwaltung"
+
+#: compare/classifier_management_window.py:592
+#: compare/prevalidations_window.py:217
+msgid "Prevalidations"
+msgstr "Prävalidierungen"
+
+#: compare/classifier_management_window.py:611
+msgid ""
+"Prevalidations are disabled. Enable them in the Prevalidations tab settings."
+msgstr ""
+"Vorabvalidierungen sind deaktiviert. Aktivieren Sie sie in den Einstellungen"
+" auf der Registerkarte „Vorabvalidierungen“."
+
 #: compare/compare_settings_window.py:70
 msgid "Comparison Modes"
 msgstr "Vergleichsmodi"
@@ -980,11 +1315,6 @@ msgstr "Instanz hinzufügen"
 #: compare/compare_settings_window.py:122
 msgid "Combination Logic:"
 msgstr "Kombinationslogik:"
-
-#: compare/compare_settings_window.py:183 compare/prevalidations_window.py:777
-#: compare/prevalidations_window.py:953
-msgid "Threshold"
-msgstr "Schwellenwert"
 
 #: compare/compare_settings_window.py:223
 msgid "Max files to compare"
@@ -1157,297 +1487,178 @@ msgstr ""
 "Für dieses Verzeichnis und die aktuellen Filtereinstellungen sind keine "
 "Bildgruppen mehr vorhanden."
 
-#: compare/prevalidations_window.py:101
-msgid "(no positives set)"
-msgstr "(es werden keine Positiven gesetzt)"
-
-#: compare/prevalidations_window.py:102
-msgid "(no negatives set)"
-msgstr "(es werden keine Negative gesetzt)"
-
-#: compare/prevalidations_window.py:104 compare/prevalidations_window.py:908
-msgid "New Prevalidation"
-msgstr "Neue Prävalidierung"
-
-#: compare/prevalidations_window.py:195
-msgid "Loading image classifier <{0}> ..."
-msgstr "Laden des Bildklassifizierers <{0}> ..."
-
-#: compare/prevalidations_window.py:310
-msgid " detected"
-msgstr " entdeckt"
-
-#: compare/prevalidations_window.py:312
-msgid " - skipped"
-msgstr " - übersprungen"
-
-#: compare/prevalidations_window.py:315
-msgid " - hidden"
-msgstr " - versteckt"
-
-#: compare/prevalidations_window.py:320
-msgid " - marked"
-msgstr " - markiert"
-
-#: compare/prevalidations_window.py:328
-msgid "Moving file: "
-msgstr "Bewegliche Datei: "
-
-#: compare/prevalidations_window.py:374
-msgid "Deleting file: "
-msgstr "Löschung der Datei: "
-
-#: compare/prevalidations_window.py:419
-msgid "Action modifier is not a valid directory: "
-msgstr "Aktionsmodifikator ist kein gültiges Verzeichnis: "
-
-#: compare/prevalidations_window.py:423
-msgid "Profile directory is not a valid directory: "
-msgstr "Das Profilverzeichnis ist kein gültiges Verzeichnis: "
-
-#: compare/prevalidations_window.py:425
-msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
-msgstr ""
-"Invalide Vorvalidierung {0}, kann Fehler verursachen oder nicht laufen "
-"können!"
-
-#: compare/prevalidations_window.py:513
-msgid "embedding"
-msgstr "Einbettung"
-
-#: compare/prevalidations_window.py:515
-msgid "classifier {0}"
-msgstr "Klassifikator {0}"
-
-#: compare/prevalidations_window.py:517
-msgid "prompts"
-msgstr "Eingabeaufforderungen"
-
-#: compare/prevalidations_window.py:525
-msgid "categories: {0}"
-msgstr "Kategorien: {0}"
-
-#: compare/prevalidations_window.py:529
-msgid "{0} positives, {1} negatives"
-msgstr "{0} Positiv, {1} Negativ"
-
-#: compare/prevalidations_window.py:533
-msgid " using {0} ({1})"
-msgstr " mit {0} ({1})"
-
-#: compare/prevalidations_window.py:535
-msgid " using {0}"
-msgstr " mit {0}"
-
-#: compare/prevalidations_window.py:537
-msgid " ({0} positives, {1} negatives)"
-msgstr " ({0} Positiv, {1} Negativ)"
-
-#: compare/prevalidations_window.py:540
-msgid "lookaheads: {0}"
-msgstr "Vorausschauen: {0}"
-
-#: compare/prevalidations_window.py:556 compare/prevalidations_window.py:1476
+#: compare/directory_profile.py:133 compare/prevalidations_window.py:370
 msgid "Edit Profile"
 msgstr "Profil bearbeiten"
 
-#: compare/prevalidations_window.py:556
+#: compare/directory_profile.py:133
 msgid "Create Profile"
 msgstr "Profil erstellen"
 
-#: compare/prevalidations_window.py:568
+#: compare/directory_profile.py:145
 msgid "Profile Name"
 msgstr "Profilname"
 
-#: compare/prevalidations_window.py:578
+#: compare/directory_profile.py:155
 msgid "Directories"
 msgstr "Verzeichnisse"
 
-#: compare/prevalidations_window.py:598
+#: compare/directory_profile.py:175
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: compare/prevalidations_window.py:601 files/directory_notes_window.py:137
+#: compare/directory_profile.py:178
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: compare/directory_profile.py:181 files/directory_notes_window.py:137
 msgid "Remove"
 msgstr "Entfernen"
 
-#: compare/prevalidations_window.py:609 compare/prevalidations_window.py:784
-#: compare/prevalidations_window.py:1036
-msgid "Done"
-msgstr "Fertig"
+#: compare/directory_profile.py:184
+msgid "Add dirs from subdirs"
+msgstr "Verzeichnisse aus Unterverzeichnissen hinzufügen"
 
-#: compare/prevalidations_window.py:624
+#: compare/directory_profile.py:187
+msgid "Clear all"
+msgstr "Alle löschen"
+
+#: compare/directory_profile.py:206
+msgid "Select directory"
+msgstr "Verzeichnis auswählen"
+
+#: compare/directory_profile.py:236
 msgid "Add Directory"
 msgstr "Verzeichnis hinzufügen"
 
-#: compare/prevalidations_window.py:624
-msgid "Enter directory path:"
-msgstr "Verzeichnispfad eingeben:"
+#: compare/directory_profile.py:261
+msgid "Edit Directory"
+msgstr "Verzeichnis bearbeiten"
 
-#: compare/prevalidations_window.py:713 compare/prevalidations_window.py:1387
+#: compare/directory_profile.py:295
+msgid "Select directory to add subdirectories from"
+msgstr "Verzeichnis auswählen, um Unterverzeichnisse hinzuzufügen"
+
+#: compare/embedding_prototype.py:92
+msgid "Gathering image files from directory..."
+msgstr "Bilddateien aus Verzeichnis sammeln..."
+
+#: compare/embedding_prototype.py:126
+msgid "Calculating embeddings for {0} images..."
+msgstr "Einbettungen für {0} Bilder werden berechnet..."
+
+#: compare/embedding_prototype.py:150
+msgid "Processed {0}/{1} images..."
+msgstr "{0}/{1} Bilder verarbeitet..."
+
+#: compare/embedding_prototype.py:165
+msgid "Calculating average embedding..."
+msgstr "Berechnung der durchschnittlichen Einbettung..."
+
+#: compare/embedding_prototype.py:331
+msgid "Computed embeddings for {0}/{1} images..."
+msgstr "Berechnete Einbettungen für {0}/{1} Bilder..."
+
+#: compare/embedding_prototype.py:502
+msgid "Gathering image files from directories..."
+msgstr "Bilddateien aus Verzeichnissen sammeln..."
+
+#: compare/embedding_prototype.py:537
+msgid "Processing {0} images in {1} batches of up to {2} images..."
+msgstr "Verarbeitung von {0} Bildern in {1} Stapeln mit bis zu {2} Bildern..."
+
+#: compare/embedding_prototype.py:544
+msgid "Computing embeddings for batch prototype validation..."
+msgstr ""
+"Berechnung von Einbettungen für die Validierung von Batch-Prototypen..."
+
+#: compare/embedding_prototype.py:553
+msgid "Processing batch {0}/{1} ({2} images)..."
+msgstr "Verarbeitung von Stapel {0}/{1} ({2} Bilder)..."
+
+#: compare/embedding_prototype.py:599
+msgid "Found {0} images that meet the threshold..."
+msgstr "Es wurden {0} Bilder gefunden, die den Schwellenwert erfüllen..."
+
+#: compare/lookahead.py:98 compare/prevalidations_window.py:275
 msgid "Edit Lookahead"
 msgstr "Vorschau bearbeiten"
 
-#: compare/prevalidations_window.py:713
+#: compare/lookahead.py:98
 msgid "Create Lookahead"
 msgstr "Vorschau erstellen"
 
-#: compare/prevalidations_window.py:725
+#: compare/lookahead.py:110
 msgid "Lookahead Name"
 msgstr "Name der Vorausschau"
 
-#: compare/prevalidations_window.py:736
+#: compare/lookahead.py:121
 msgid "Reference existing prevalidation name"
 msgstr "Bezugnahme auf bestehenden Vorvalidierungsnamen"
 
-#: compare/prevalidations_window.py:749
+#: compare/lookahead.py:134
 msgid "Prevalidation Name or Custom Text"
 msgstr "Name der Vorabvalidierung oder benutzerdefinierter Text"
 
-#: compare/prevalidations_window.py:894
-msgid "Modify Prevalidation"
-msgstr "Ändern der Prävalidierung"
-
-#: compare/prevalidations_window.py:907
-msgid "Prevalidation Name"
-msgstr "Prävalidierung Name"
-
-#: compare/prevalidations_window.py:914
-msgid "Positives"
-msgstr "Positiv"
-
-#: compare/prevalidations_window.py:921
-msgid "Negatives"
-msgstr "Negativ"
-
-#: compare/prevalidations_window.py:929
-msgid "Validation Types"
-msgstr "Validierungstypen"
-
-#: compare/prevalidations_window.py:932
-msgid "Use Embedding"
-msgstr "Einbettung verwenden"
-
-#: compare/prevalidations_window.py:939
-msgid "Use Image Classifier"
-msgstr "Bildklassifikator verwenden"
-
-#: compare/prevalidations_window.py:946
-msgid "Use Prompts"
-msgstr "Eingabeaufforderungen verwenden"
-
-#: compare/prevalidations_window.py:960 compare/prevalidations_window.py:1549
-msgid "Action"
-msgstr "Aktion"
-
-#: compare/prevalidations_window.py:972
-msgid "Action Modifier"
-msgstr "Aktionsmodifikator"
-
-#: compare/prevalidations_window.py:979
-msgid "Image Classifier Name"
-msgstr "Bildklassifikator Name"
-
-#: compare/prevalidations_window.py:991
-msgid "Image Classifier Selected Category"
-msgstr "Bildklassifikator Ausgewählte Kategorie"
-
-#: compare/prevalidations_window.py:995
-msgid "Select Categories..."
-msgstr "Kategorien auswählen..."
-
-#: compare/prevalidations_window.py:1002
+#: compare/prevalidations_window.py:40
 msgid "Lookaheads (select from shared list)"
 msgstr "Vorausschauen (Auswahl aus gemeinsamer Liste)"
 
-#: compare/prevalidations_window.py:1008
+#: compare/prevalidations_window.py:49
 msgid "Select Lookaheads..."
 msgstr "Vorausschauen auswählen..."
 
-#: compare/prevalidations_window.py:1015
+#: compare/prevalidations_window.py:59
 msgid "Directory Profile"
 msgstr "Verzeichnisprofil"
 
-#: compare/prevalidations_window.py:1273
-msgid ""
-"No prevalidation found with name: {0}. Set it on the Prevalidations Window."
-msgstr ""
-"Es wurde keine Vorabgenehmigung mit dem Namen {0} gefunden. Legen Sie sie im"
-" Fenster Prävalidierungen fest."
-
-#: compare/prevalidations_window.py:1298 compare/prevalidations_window.py:1328
-msgid "Prevalidations"
-msgstr "Prävalidierungen"
-
-#: compare/prevalidations_window.py:1334
+#: compare/prevalidations_window.py:223
 msgid "Add prevalidation"
 msgstr "Prävalidierung hinzufügen"
 
-#: compare/prevalidations_window.py:1336
+#: compare/prevalidations_window.py:225
 msgid "Clear prevalidations"
 msgstr "Klare Prävalidierungen"
 
-#: compare/prevalidations_window.py:1343 utils/help_and_config.py:254
+#: compare/prevalidations_window.py:232 utils/help_and_config.py:254
 msgid "Enable Prevalidations"
 msgstr "Freigabe von Prävalidierungen"
 
-#: compare/prevalidations_window.py:1359
+#: compare/prevalidations_window.py:245
 msgid "Lookaheads"
 msgstr "Vorausschauen"
 
-#: compare/prevalidations_window.py:1384
+#: compare/prevalidations_window.py:272
 msgid "Add Lookahead"
 msgstr "Vorschau hinzufügen"
 
-#: compare/prevalidations_window.py:1390
+#: compare/prevalidations_window.py:278
 msgid "Remove Lookahead"
 msgstr "Vorschau entfernen"
 
-#: compare/prevalidations_window.py:1448
+#: compare/prevalidations_window.py:340
 msgid "Directory Profiles"
 msgstr "Verzeichnisprofile"
 
-#: compare/prevalidations_window.py:1473
+#: compare/prevalidations_window.py:367
 msgid "Add Profile"
 msgstr "Profil hinzufügen"
 
-#: compare/prevalidations_window.py:1479
+#: compare/prevalidations_window.py:373
 msgid "Remove Profile"
 msgstr "Profil entfernen"
 
-#: compare/prevalidations_window.py:1546 utils/constants.py:129
-#: utils/constants.py:144
-msgid "Name"
-msgstr "Name"
-
-#: compare/prevalidations_window.py:1552
+#: compare/prevalidations_window.py:451
 msgid "Profile"
 msgstr "Profil"
 
-#: compare/prevalidations_window.py:1555
-msgid "Active"
-msgstr "Aktiv"
-
-#: compare/prevalidations_window.py:1577
+#: compare/prevalidations_window.py:476
 msgid "(Global)"
 msgstr "(Global)"
 
-#: compare/prevalidations_window.py:1593 files/hotkey_actions_window.py:96
+#: compare/prevalidations_window.py:492 files/hotkey_actions_window.py:96
 msgid "Set"
 msgstr "Einstellen"
-
-#: compare/prevalidations_window.py:1601 files/file_actions_window.py:497
-#: files/file_actions_window.py:548
-msgid "Modify"
-msgstr "Ändern"
-
-#: compare/prevalidations_window.py:1608 image/prevalidation_action.py:34
-msgid "Delete"
-msgstr "Löschen"
-
-#: compare/prevalidations_window.py:1615
-msgid "Move down"
-msgstr "Nach unten gehen"
 
 #: extensions/sd_runner_client.py:67
 msgid "Image does not contain a prompt to redo!"
@@ -1798,12 +2009,12 @@ msgid "(auto)"
 msgstr "(auto)"
 
 #: files/file_actions_window.py:486 files/marked_file_mover.py:322
-#: image/prevalidation_action.py:30
+#: image/classifier_action_type.py:30
 msgid "Move"
 msgstr "Bewegen"
 
 #: files/file_actions_window.py:486 files/marked_file_mover.py:329
-#: image/prevalidation_action.py:32
+#: image/classifier_action_type.py:32
 msgid "Copy"
 msgstr "Kopie"
 
@@ -1869,10 +2080,6 @@ msgstr "Gehe zu Datei"
 #: files/go_to_file.py:134
 msgid "Go To"
 msgstr "Los"
-
-#: files/go_to_file.py:137 files/go_to_file.py:378
-msgid "Browse..."
-msgstr "Durchsuchen..."
 
 #: files/go_to_file.py:141 utils/help_and_config.py:177
 msgid "Go To Last Moved"
@@ -2477,6 +2684,22 @@ msgstr ""
 msgid "Media type configuration updated"
 msgstr "Medientyp-Konfiguration aktualisiert"
 
+#: image/classifier_action_type.py:24
+msgid "Hide"
+msgstr "Verstecken"
+
+#: image/classifier_action_type.py:26
+msgid "Notify"
+msgstr "Benachrichtigen"
+
+#: image/classifier_action_type.py:28
+msgid "Skip"
+msgstr "Überspringen"
+
+#: image/classifier_action_type.py:36
+msgid "Add Mark"
+msgstr "Markierung hinzufügen"
+
 #: image/image_details.py:127
 msgid "Image Path"
 msgstr "Bild Pfad"
@@ -2609,43 +2832,60 @@ msgstr "Keine Eingabeaufforderung gefunden"
 msgid "Copied prompt without BREAK"
 msgstr "Kopierte Aufforderung ohne \"BREAK\""
 
-#: image/image_details.py:346 image/image_details.py:442
+#: image/image_details.py:351
+msgid "No files found in current directory"
+msgstr "Keine Dateien im aktuellen Verzeichnis gefunden"
+
+#: image/image_details.py:356
+msgid "No files available"
+msgstr "Keine Dateien verfügbar"
+
+#: image/image_details.py:382
+msgid "Copied prompt from {0}"
+msgstr "Kopierte Eingabeaufforderung aus {0}"
+
+#: image/image_details.py:389
+msgid "No files with prompts found in current directory"
+msgstr ""
+"Keine Dateien mit Eingabeaufforderungen im aktuellen Verzeichnis gefunden"
+
+#: image/image_details.py:395 image/image_details.py:491
 msgid "Rotated image right"
 msgstr "Gedrehtes Bild rechts"
 
-#: image/image_details.py:346 image/image_details.py:442
+#: image/image_details.py:395 image/image_details.py:491
 msgid "Rotated image left"
 msgstr "Gedrehtes Bild links"
 
-#: image/image_details.py:357 image/image_details.py:453
+#: image/image_details.py:406 image/image_details.py:502
 msgid "Cropped image"
 msgstr "Bild beschnitten"
 
-#: image/image_details.py:361 image/image_details.py:457
+#: image/image_details.py:410 image/image_details.py:506
 msgid "No crops found"
 msgstr "Keine Bildausschnitte gefunden"
 
-#: image/image_details.py:368 image/image_details.py:464
+#: image/image_details.py:417 image/image_details.py:513
 msgid "Enhanced image"
 msgstr "Bild verbessert"
 
-#: image/image_details.py:376 image/image_details.py:473
+#: image/image_details.py:425 image/image_details.py:522
 msgid "Randomly cropped image"
 msgstr "Zufällig beschnittenes Bild"
 
-#: image/image_details.py:388 image/image_details.py:483
+#: image/image_details.py:437 image/image_details.py:532
 msgid "Randomly modified image"
 msgstr "Zufällig modifiziertes Bild"
 
-#: image/image_details.py:393 image/image_details.py:486
+#: image/image_details.py:442 image/image_details.py:535
 msgid "No new image created"
 msgstr "Es wurde kein neues Bild erstellt"
 
-#: image/image_details.py:399
+#: image/image_details.py:448
 msgid "Confirm Vertical Flip"
 msgstr "Vertikale Spiegelung bestätigen"
 
-#: image/image_details.py:400
+#: image/image_details.py:449
 msgid ""
 "Are you sure you want to flip this image vertically? This is an uncommon "
 "operation and may have been clicked by accident."
@@ -2653,51 +2893,51 @@ msgstr ""
 "Möchten Sie dieses Bild wirklich vertikal spiegeln? Dies ist eine "
 "ungewöhnliche Aktion, die möglicherweise versehentlich ausgelöst wurde."
 
-#: image/image_details.py:410 image/image_details.py:493
+#: image/image_details.py:459 image/image_details.py:542
 msgid "Flipped image"
 msgstr "Umgekehrtes Bild"
 
-#: image/image_details.py:418 image/image_details.py:502
+#: image/image_details.py:467 image/image_details.py:551
 msgid "Copied image without EXIF data"
 msgstr "Kopiertes Bild ohne EXIF-Daten"
 
-#: image/image_details.py:423 image/image_details.py:507
+#: image/image_details.py:472 image/image_details.py:556
 msgid "Error copying image without EXIF"
 msgstr "Fehler beim Kopieren des Bildes ohne EXIF"
 
-#: image/image_details.py:430 image/image_details.py:515
+#: image/image_details.py:479 image/image_details.py:564
 msgid "Converted image to JPG"
 msgstr "Bild wurde zu JPG konvertiert"
 
-#: image/image_details.py:435 image/image_details.py:520
+#: image/image_details.py:484 image/image_details.py:569
 msgid "Error converting image to JPG"
 msgstr "Fehler beim Konvertieren des Bildes zu JPG"
 
-#: image/image_details.py:525
+#: image/image_details.py:574
 msgid "No metadata found"
 msgstr "Keine Metadaten gefunden"
 
-#: image/image_details.py:539 image/image_details.py:597
+#: image/image_details.py:588 image/image_details.py:646
 msgid " (Exact Match Not Found)"
 msgstr " (Genaue Übereinstimmung nicht gefunden)"
 
-#: image/image_details.py:541 image/image_details.py:594
+#: image/image_details.py:590 image/image_details.py:643
 msgid "(No related image found)"
 msgstr "(Kein zugehöriges Bild gefunden)"
 
-#: image/image_details.py:657 image/image_details.py:664
+#: image/image_details.py:706 image/image_details.py:713
 msgid "%s downstream image(s) found."
 msgstr "{0} nachgeschaltete(s) Bild(er) gefunden."
 
-#: image/image_details.py:660
+#: image/image_details.py:709
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (zwischengespeicherte) nachgelagerte Bilder gefunden."
 
-#: image/image_details.py:666
+#: image/image_details.py:715
 msgid "No downstream related images found in"
 msgstr "Keine stromabwärts gerichteten Bilder im Verzeichnis gefunden:"
 
-#: image/image_details.py:726
+#: image/image_details.py:775
 msgid "Updated tags for %s"
 msgstr "Aktualisierte Tags für {0}"
 
@@ -2720,22 +2960,6 @@ msgstr "Fehler beim Kopieren der Metadaten in die Zwischenablage: "
 #: image/metadata_viewer_window.py:66
 msgid "Metadata Viewer"
 msgstr "Metadaten-Betrachter"
-
-#: image/prevalidation_action.py:24
-msgid "Hide"
-msgstr "Verstecken"
-
-#: image/prevalidation_action.py:26
-msgid "Notify"
-msgstr "Benachrichtigen"
-
-#: image/prevalidation_action.py:28
-msgid "Skip"
-msgstr "Überspringen"
-
-#: image/prevalidation_action.py:36
-msgid "Add Mark"
-msgstr "Markierung hinzufügen"
 
 #: image/temp_image_canvas.py:116
 msgid "Open a new related image with Shift+R on main window"

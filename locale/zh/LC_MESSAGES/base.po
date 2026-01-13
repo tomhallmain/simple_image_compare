@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2026-01-05 16:53-0500\n"
-"PO-Revision-Date: 2026-01-05 16:53-0500\n"
+"POT-Creation-Date: 2026-01-13 14:16-0500\n"
+"PO-Revision-Date: 2026-01-13 14:16-0500\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
@@ -12,400 +12,405 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:112 app.py:1011 app.py:2469
+#: app.py:113 app.py:1019 app.py:2486
 msgid " Simple Image Compare "
 msgstr " 简单图像比较 "
 
-#: app.py:127
+#: app.py:128
 msgid "(Main Window)"
 msgstr "（主窗口）"
 
-#: app.py:190
+#: app.py:191
 msgid "Theme switched to {0}."
 msgstr "主题切换到{0} 。"
 
-#: app.py:281 app.py:496 app.py:1041 compare/compare_wrapper.py:508
+#: app.py:282 app.py:502 app.py:1049 compare/compare_wrapper.py:508
 msgid "Set a directory to run comparison."
 msgstr "设置目录以运行比较 。"
 
-#: app.py:288
+#: app.py:289
 msgid "Toggle theme"
 msgstr "切换主题"
 
-#: app.py:289
+#: app.py:290
 msgid "Set directory"
 msgstr "设置目录"
 
-#: app.py:290
+#: app.py:291
 msgid "Add dirpath..."
 msgstr "添加目录路径..."
 
-#: app.py:294
+#: app.py:295
 msgid "Filter files by glob pattern"
 msgstr "用 glob 模式筛选文件"
 
-#: app.py:301
+#: app.py:302
 msgid "Browsing mode - Sort by"
 msgstr "浏览模式 - 排序"
 
-#: app.py:308
+#: app.py:309
 msgid "Recurse subdirectories"
 msgstr "递归子目录"
 
-#: app.py:313
+#: app.py:314
 msgid "Image resize to full window"
 msgstr "图像大小调整到全窗口"
 
-#: app.py:317 compare/compare_settings_window.py:277
+#: app.py:318 compare/compare_settings_window.py:277
 msgid "Search only return closest"
 msgstr "仅最接近返回"
 
-#: app.py:322
+#: app.py:323
 msgid "Set search file"
 msgstr "设定搜索文件"
 
-#: app.py:326
+#: app.py:327
 msgid ""
 "Set an image file to search for similar images.\n"
 "Uses embedding similarity to find visually similar images."
 msgstr ""
 
-#: app.py:335
+#: app.py:336
 msgid "Search text (embedding mode)"
 msgstr "搜索文本 (嵌入模式)"
 
-#: app.py:339
+#: app.py:340
 msgid ""
 "Positive text: Find images similar to this text.\n"
 "Negative text: Exclude images similar to this text.\n"
 "Both use embedding similarity matching."
 msgstr ""
 
-#: app.py:343
+#: app.py:344
 msgid "Positive text:"
 msgstr ""
 
-#: app.py:351
+#: app.py:352
 msgid "Negative text:"
 msgstr ""
 
-#: app.py:359 compare/compare_settings_window.py:38
+#: app.py:360 compare/classifier_actions_window.py:105
+#: compare/classifier_management_window.py:591
+msgid "Classifier Actions"
+msgstr ""
+
+#: app.py:364 compare/compare_settings_window.py:38
 #: compare/compare_settings_window.py:53
 #: compare/compare_settings_window.py:161
 msgid "Compare Settings"
 msgstr ""
 
-#: app.py:364
+#: app.py:369
 msgid "Run image compare"
 msgstr "运行图像对比"
 
-#: app.py:366
+#: app.py:371
 msgid "Find duplicates"
 msgstr "查找复制件"
 
-#: app.py:368 image/image_details.py:69
+#: app.py:373 image/image_details.py:69
 msgid "Image details"
 msgstr "图片详情"
 
-#: app.py:380
+#: app.py:385
 msgid "Search current image"
 msgstr "搜索当前图像"
 
-#: app.py:384
+#: app.py:389
 msgid ""
 "Search for images similar to the currently displayed image.\n"
 "Uses embedding similarity matching."
 msgstr ""
 
-#: app.py:385 utils/help_and_config.py:87
+#: app.py:390 utils/help_and_config.py:87
 msgid "Open media location"
 msgstr "打开媒体位置"
 
-#: app.py:386
+#: app.py:391
 msgid "Copy image path"
 msgstr "复制图像路径"
 
-#: app.py:387
+#: app.py:392
 msgid "Copy media basename"
 msgstr ""
 
-#: app.py:388
+#: app.py:393
 msgid "---- DELETE ----"
 msgstr "---- 删除 ----"
 
-#: app.py:553
+#: app.py:559
 msgid "Confirm Quit"
 msgstr "确认退出"
 
-#: app.py:553
+#: app.py:559
 msgid "Would you like to quit the application?"
 msgstr "您想要退出申请吗 ?"
 
-#: app.py:673
+#: app.py:681
 msgid "Ended slideshows"
 msgstr "结束幻灯片放映"
 
-#: app.py:726 app.py:2129 app.py:2136 app.py:2140 app.py:2144 app.py:2150
-#: app.py:2257 app.py:2273 app.py:2290
+#: app.py:734 app.py:2146 app.py:2153 app.py:2157 app.py:2161 app.py:2167
+#: app.py:2274 app.py:2290 app.py:2307
 msgid "Warning"
 msgstr "警告"
 
-#: app.py:726
+#: app.py:734
 msgid "No files found in directory after refresh."
 msgstr "刷新后在目录中未发现文件。"
 
-#: app.py:764
+#: app.py:772
 msgid "Slideshow for new images started"
 msgstr "开始播放新图像的幻灯片"
 
-#: app.py:766
+#: app.py:774
 msgid "Slideshow started"
 msgstr "幻灯片播放开始"
 
-#: app.py:769
+#: app.py:777
 msgid "Slideshows ended"
 msgstr "幻灯片放映结束"
 
-#: app.py:782
+#: app.py:790
 msgid "Browsing mode set."
 msgstr "浏览模式设置 。"
 
-#: app.py:827 utils/constants.py:327
+#: app.py:835 utils/constants.py:327
 msgid "View Media Details"
 msgstr "查看媒体详情"
 
-#: app.py:828
+#: app.py:836
 msgid "Hide Media"
 msgstr "隐藏媒体"
 
-#: app.py:829
+#: app.py:837
 msgid "Remove from Marks"
 msgstr "从标记中移除"
 
-#: app.py:829
+#: app.py:837
 msgid "Add to Marks"
 msgstr "添加到标记"
 
-#: app.py:831
+#: app.py:839
 msgid "Remove from Favorites"
 msgstr "从收藏夹中移除"
 
-#: app.py:831
+#: app.py:839
 msgid "Add to Favorites"
 msgstr "添加到收藏夹"
 
-#: app.py:834
+#: app.py:842
 msgid "Remove from Directory Notes"
 msgstr ""
 
-#: app.py:834
+#: app.py:842
 msgid "Add to Directory Notes"
 msgstr ""
 
-#: app.py:836
+#: app.py:844
 msgid "Edit File Note"
 msgstr ""
 
-#: app.py:838
+#: app.py:846
 msgid "Open in GIMP"
 msgstr "在GIMP中打开"
 
-#: app.py:839 image/image_details.py:201 utils/constants.py:333
+#: app.py:847 image/image_details.py:201 utils/constants.py:333
 #: utils/help_and_config.py:138
 msgid "Run Image Generation"
 msgstr "运行图像生成"
 
-#: app.py:840
+#: app.py:848
 msgid "Run Image Generation on Directory"
 msgstr "在目录上运行图像生成"
 
-#: app.py:841
+#: app.py:849
 msgid "Show Source Image"
 msgstr "显示源图像"
 
-#: app.py:842
+#: app.py:850
 msgid "Find Related Images"
 msgstr "查找相关图片"
 
-#: app.py:843
+#: app.py:851
 msgid "Set Marks from Downstream Related Images"
 msgstr "从下游相关图像中设置标记"
 
-#: app.py:845
+#: app.py:853
 msgid "Set Current Image as Search Image"
 msgstr "将当前图像设置为搜索图像"
 
-#: app.py:846
+#: app.py:854
 msgid "Add Current Image to Negative Search"
 msgstr "将当前图像添加到负片搜索中"
 
-#: app.py:847
+#: app.py:855
 msgid "Run Refacdir"
 msgstr "运行 RefacDir"
 
-#: app.py:865
+#: app.py:873
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(将此图片作为目录的一部分打开，可查看索引详情）。"
 
-#: app.py:902 app.py:1622
+#: app.py:910 app.py:1639
 msgid "Many Files"
 msgstr "许多文件"
 
-#: app.py:930
+#: app.py:938
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
 " load time. Please confirm you want to load the full directory."
 msgstr "检测到外部存储设备中存在包含大量文件的目录或包含一定数量文件的目录，这可能导致加载速度变慢。请确认您是否要加载整个目录。"
 
-#: app.py:931
+#: app.py:939
 msgid "Large Directory Detected: {0}"
 msgstr "检测到大型目录：{0}"
 
-#: app.py:961
+#: app.py:969
 msgid "No downstream related image(s) found in {0}"
 msgstr "在 {0} 中未发现与下游相关的图像"
 
-#: app.py:983
+#: app.py:991
 msgid "{0} file marks set"
 msgstr "{0} 文件标记设定"
 
-#: app.py:989
+#: app.py:997
 msgid "Help and Config"
 msgstr "帮助和配置"
 
-#: app.py:1088
+#: app.py:1096
 msgid "Set Image Comparison Directory"
 msgstr "设置图像比较目录"
 
-#: app.py:1142
+#: app.py:1150
 msgid "No image selected."
 msgstr "未选择图像 。"
 
-#: app.py:1142
+#: app.py:1150
 msgid "Invalid Setting"
 msgstr "无效设置"
 
-#: app.py:1181
+#: app.py:1189
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "比较模式必须设置为嵌入模式，才能搜索文本嵌入内容"
 
-#: app.py:1186
+#: app.py:1194
 msgid "Select image file"
 msgstr "选择图像文件"
 
-#: app.py:1215
+#: app.py:1223
 msgid "Somehow, the search file is invalid"
 msgstr "不知何故, 搜索文件无效"
 
-#: app.py:1301 app.py:1326
+#: app.py:1309 app.py:1334
 msgid "Failed to get active image filepath"
 msgstr "获取活动图像文件路径失败"
 
-#: app.py:1411
+#: app.py:1419
 msgid "{0}: {1}% complete"
 msgstr "{0} : {1} 完成"
 
-#: app.py:1417
+#: app.py:1425
 msgid "Confirm comparison"
 msgstr "确认比较"
 
-#: app.py:1418
+#: app.py:1426
 msgid "No base directory has been set, will use current base directory of "
 msgstr "未设置基本目录，将使用当前基本目录： "
 
-#: app.py:1419
+#: app.py:1427
 msgid "Are you sure you want to proceed?"
 msgstr "你确定要继续吗?"
 
-#: app.py:1442
+#: app.py:1450
 msgid "Error running compare"
 msgstr "运行比较出错"
 
-#: app.py:1477
+#: app.py:1485
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡时无法添加标记"
 
-#: app.py:1488
+#: app.py:1496
 msgid "Mark removed. Remaining: {0}"
 msgstr "标记已去除。剩余 {0}"
 
-#: app.py:1492
+#: app.py:1500
 msgid "Mark added. Total set: {0}"
 msgstr "马克补充道。全套 {0}"
 
-#: app.py:1509
+#: app.py:1517
 msgid "Marks added. Total set: {0}"
 msgstr "标记已添加。总分 {0}"
 
-#: app.py:1518
+#: app.py:1526
 msgid "First sorted mark"
 msgstr "第一个排序标记"
 
-#: app.py:1525
+#: app.py:1533
 msgid "Only one marked file set."
 msgstr "只有一个标记的文件集 。"
 
-#: app.py:1538
+#: app.py:1546
 msgid "Invalid file path"
 msgstr "无效的文件路径"
 
-#: app.py:1538
+#: app.py:1546
 msgid "The file path {0} is invalid."
 msgstr "文件路径 {0} 无效。"
 
-#: app.py:1544
+#: app.py:1552
 msgid "Including marks: {0}"
 msgstr "包括标记：{0}"
 
-#: app.py:1586
+#: app.py:1594
 msgid "NO_MARKS_SET"
 msgstr ""
 "已设置 {0} 标记(预计 >={1})。\n"
 "使用 Shift+M 设置标记。"
 
-#: app.py:1622
+#: app.py:1639
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "您确定要在目录{0}上运行所有预验证吗？这可能需要一些时间。"
 
-#: app.py:1637
+#: app.py:1654
 msgid "Prevalidations now running"
 msgstr "前缀正在运行"
 
-#: app.py:1637
+#: app.py:1654
 msgid "Prevalidations turned off"
 msgstr "关闭前缀"
 
-#: app.py:1658
+#: app.py:1675
 msgid "Please set a base directory first"
 msgstr ""
 
-#: app.py:1687
+#: app.py:1704
 msgid "Removed from directory notes: {0}"
 msgstr ""
 
-#: app.py:1690
+#: app.py:1707
 msgid "Added to directory notes: {0}"
 msgstr ""
 
-#: app.py:1713 files/directory_notes_window.py:242
+#: app.py:1730 files/directory_notes_window.py:242
 msgid "Edit Note - {0}"
 msgstr ""
 
-#: app.py:1737 files/directory_notes_window.py:266
+#: app.py:1754 files/directory_notes_window.py:266
 msgid "Note saved for: {0}"
 msgstr ""
 
-#: app.py:1750 files/directory_notes_window.py:273
+#: app.py:1767 files/directory_notes_window.py:273
 msgid "Save"
 msgstr ""
 
-#: app.py:1753 auth/app_startup_auth.py:127 auth/password_admin_window.py:462
+#: app.py:1770 auth/app_startup_auth.py:127 auth/password_admin_window.py:462
 #: auth/password_dialog.py:152 auth/password_dialog.py:221
 #: auth/password_dialog.py:238 compare/compare_settings_window.py:373
 #: files/directory_notes_window.py:276 files/pdf_options_window.py:77
@@ -414,74 +419,74 @@ msgstr ""
 msgid "Cancel"
 msgstr "取消"
 
-#: app.py:1867
+#: app.py:1884
 msgid "File not found"
 msgstr "未找到文件"
 
-#: app.py:1867
+#: app.py:1884
 msgid "No file was found for the search text: \"{0}\""
 msgstr "没有找到搜索文本的文件 \"{0}”"
 
-#: app.py:1876
+#: app.py:1893
 msgid "Index navigation not available"
 msgstr ""
 
-#: app.py:1876
+#: app.py:1893
 msgid "Index navigation is only available in BROWSE mode."
 msgstr ""
 
-#: app.py:1887
+#: app.py:1904
 msgid "Invalid index"
 msgstr ""
 
-#: app.py:1903
+#: app.py:1920
 msgid "No image selected"
 msgstr "未选择图像"
 
-#: app.py:1903
+#: app.py:1920
 msgid "No image was selected for comparison"
 msgstr "没有选择图像进行比较"
 
-#: app.py:1917
+#: app.py:1934
 msgid "No Text Search Presets Found"
 msgstr "未找到文本搜索预设"
 
-#: app.py:1918
+#: app.py:1935
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "未找到文本嵌入搜索预设。请在 config.json 文件中进行设置。"
 
-#: app.py:2015
+#: app.py:2032
 msgid "Opening media file: {0}"
 msgstr "打开媒体文件：{0}"
 
-#: app.py:2018
+#: app.py:2035
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr "无法打开当前媒体文件，无法获取有效的文件路径。"
 
-#: app.py:2023
+#: app.py:2040
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
 msgstr "GIMP 集成未配置。请在 config.json 中设置 ‘gimp_exe_loc’。"
 
-#: app.py:2023
+#: app.py:2040
 msgid "GIMP Integration Error"
 msgstr "GIMP 集成错误"
 
-#: app.py:2035
+#: app.py:2052
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "在 GIMP 中打开当前文件失败，无法获取有效的文件路径"
 
-#: app.py:2046 image/temp_image_canvas.py:167
+#: app.py:2063 image/temp_image_canvas.py:167
 msgid "Copied filepath to clipboard"
 msgstr ""
 
-#: app.py:2054
+#: app.py:2071
 msgid "Copied filename to clipboard"
 msgstr ""
 
-#: app.py:2061
+#: app.py:2078
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -489,151 +494,151 @@ msgstr ""
 "隐藏当前图像。\n"
 "要取消隐藏，请按 Shift+B。"
 
-#: app.py:2066
+#: app.py:2083
 msgid "Cleared all hidden images."
 msgstr "清除所有隐藏图像"
 
-#: app.py:2074
+#: app.py:2091
 msgid "DELETE_LOCK"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡阻止删除"
 
-#: app.py:2092
+#: app.py:2109
 msgid "Invalid action, no files found to delete"
 msgstr "无效操作，未找到要删除的文件"
 
-#: app.py:2095
+#: app.py:2112
 msgid "Invalid action, search image not found"
 msgstr "无效操作，未找到搜索图像"
 
-#: app.py:2110
+#: app.py:2127
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "删除当前文件失败，无法获取有效的文件路径"
 
-#: app.py:2117
+#: app.py:2134
 msgid "Removing directory: {0}"
 msgstr "删除目录：{0}"
 
-#: app.py:2119
+#: app.py:2136
 msgid "Removing file: {0}"
 msgstr "删除文件： {0}"
 
-#: app.py:2129 app.py:2150
+#: app.py:2146 app.py:2167
 msgid "Failed to delete item: {0}"
 msgstr "无法删除项目：{0}"
 
-#: app.py:2133
+#: app.py:2150
 msgid ""
 "Failed to move directory to {0}. Double check the trash folder is set "
 "properly in config.json."
 msgstr "无法将目录移动到 {0}。请确认 config.json 文件中垃圾桶文件夹的设置是否正确。"
 
-#: app.py:2135
+#: app.py:2152
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
 msgstr "无法将文件发送至 {0}。请确认 config.json 文件中垃圾箱文件夹的设置是否正确。"
 
-#: app.py:2141
+#: app.py:2158
 msgid ""
 "Failed to move directory to the trash. Either pip install send2trash or set "
 "a specific trash folder in config.json."
 msgstr ""
 "无法将目录移动到回收站。请通过 pip install send2trash 安装该工具，或在 config.json 文件中设置特定的回收站文件夹。"
 
-#: app.py:2145
+#: app.py:2162
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "发送文件到垃圾箱失败，因此文件将被删除。要么用 pip 安装 send2trash，要么在 config.json 中设置特定的垃圾文件夹。"
 
-#: app.py:2155
+#: app.py:2172
 msgid "Invalid directory"
 msgstr "无效目录"
 
-#: app.py:2155
+#: app.py:2172
 msgid "No valid base directory to delete"
 msgstr "没有有效的基目录可供删除。"
 
-#: app.py:2166
+#: app.py:2183
 msgid "Cannot Delete Directory"
 msgstr "无法删除目录"
 
-#: app.py:2170
+#: app.py:2187
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "您确定要删除该目录及其所有内容吗？"
 
-#: app.py:2172
+#: app.py:2189
 msgid "Contents to be deleted:"
 msgstr "需删除的内容："
 
-#: app.py:2174
+#: app.py:2191
 msgid "Confirm Delete Directory"
 msgstr "确认删除目录"
 
-#: app.py:2205
+#: app.py:2222
 msgid "Delete Directory Error"
 msgstr "删除目录错误"
 
-#: app.py:2207
+#: app.py:2224
 msgid "Directory {0} deleted."
 msgstr "目录 {0} 已删除。"
 
-#: app.py:2223
+#: app.py:2240
 msgid "Invalid target filepath for replacement: "
 msgstr "替换的目标文件路径无效： "
 
-#: app.py:2227
+#: app.py:2244
 msgid "Moved search image to "
 msgstr "将搜索图像移至 ： "
 
-#: app.py:2257
+#: app.py:2274
 msgid "Failed to get active media filepath"
 msgstr "获取活动媒体文件路径失败"
 
-#: app.py:2271
+#: app.py:2288
 msgid "Running image gen: "
 msgstr "运行图像基因 ： "
 
-#: app.py:2273 app.py:2290
+#: app.py:2290 app.py:2307
 msgid "Error running image generation:"
 msgstr "生成图像时出错："
 
-#: app.py:2288
+#: app.py:2305
 msgid "Running image gen on directory: "
 msgstr "在目录上运行图像生成器： "
 
-#: app.py:2297
+#: app.py:2314
 msgid "Running refacdir"
 msgstr "正在运行 reacdir"
 
-#: app.py:2302 auth/app_startup_auth.py:141 auth/password_dialog.py:249
+#: app.py:2319 auth/app_startup_auth.py:141 auth/password_dialog.py:249
 #: extensions/gimp/gimp_wrapper.py:689 extensions/gimp/gimp_wrapper.py:718
 #: files/pdf_creator.py:133 files/pdf_creator.py:137 files/pdf_creator.py:140
 msgid "Error"
 msgstr "错误"
 
-#: app.py:2404
+#: app.py:2421
 msgid "GROUP_DETAILS"
 msgstr ""
 "第 {0} 组 {1}\n"
 "大小： {2}"
 
-#: app.py:2408
+#: app.py:2425
 msgid "No image files found"
 msgstr "未找到图像文件"
 
-#: app.py:2410
+#: app.py:2427
 msgid "1 image file found"
 msgstr "找到一个图像文件"
 
-#: app.py:2411
+#: app.py:2428
 msgid "{0} image files found"
 msgstr "找到 {0} 图像文件"
 
-#: app.py:2413
+#: app.py:2430
 msgid "(filtered)"
 msgstr "(过滤)"
 
@@ -917,6 +922,327 @@ msgstr "检查点数据包含无效索引。您想重新开始比较吗？"
 msgid "Restarting Comparison"
 msgstr "重新启动比较"
 
+#: compare/classifier_actions_manager.py:43
+msgid "(no positives set)"
+msgstr "(无正片设置）"
+
+#: compare/classifier_actions_manager.py:44
+msgid "(no negatives set)"
+msgstr "(没有底片）"
+
+#: compare/classifier_actions_manager.py:46
+#: compare/classifier_management_window.py:61
+msgid "New Classifier Action"
+msgstr ""
+
+#: compare/classifier_actions_manager.py:115
+msgid "Loading image classifier <{0}> ..."
+msgstr "加载图像分类器 <{0}> ..."
+
+#: compare/classifier_actions_manager.py:210
+msgid "Loading embedding prototype from {0}..."
+msgstr ""
+
+#: compare/classifier_actions_manager.py:226
+msgid "Loading negative embedding prototype from {0}..."
+msgstr ""
+
+#: compare/classifier_actions_manager.py:377
+msgid " detected"
+msgstr " 检测"
+
+#: compare/classifier_actions_manager.py:379
+msgid " - skipped"
+msgstr " - 跳过"
+
+#: compare/classifier_actions_manager.py:382
+msgid " - hidden"
+msgstr " - 隐藏"
+
+#: compare/classifier_actions_manager.py:387
+msgid " - marked"
+msgstr " - 显著的"
+
+#: compare/classifier_actions_manager.py:395
+msgid "Moving file: "
+msgstr "移动文件 : "
+
+#: compare/classifier_actions_manager.py:441
+msgid "Deleting file: "
+msgstr "删除文件 : "
+
+#: compare/classifier_actions_manager.py:497
+msgid "Action modifier is not a valid directory: "
+msgstr "修改动作不是一个有效的目录 : "
+
+#: compare/classifier_actions_manager.py:499
+msgid "Invalid classifier action {0}, may cause errors or be unable to run!"
+msgstr ""
+
+#: compare/classifier_actions_manager.py:597
+msgid "embedding"
+msgstr "嵌入"
+
+#: compare/classifier_actions_manager.py:599
+msgid "classifier {0}"
+msgstr "幅图像 {0}"
+
+#: compare/classifier_actions_manager.py:601
+msgid "prompts"
+msgstr "提示"
+
+#: compare/classifier_actions_manager.py:603
+msgid "prototype"
+msgstr ""
+
+#: compare/classifier_actions_manager.py:611
+msgid "categories: {0}"
+msgstr "类别： {0}"
+
+#: compare/classifier_actions_manager.py:615
+msgid "{0} positives, {1} negatives"
+msgstr "{0}阳性，{1}阴性"
+
+#: compare/classifier_actions_manager.py:619
+msgid " using {0} ({1})"
+msgstr " {0} ({1})"
+
+#: compare/classifier_actions_manager.py:621
+msgid " using {0}"
+msgstr " {0}"
+
+#: compare/classifier_actions_manager.py:623
+msgid " ({0} positives, {1} negatives)"
+msgstr " ({0}阳性，{1}阴性)"
+
+#: compare/classifier_actions_manager.py:626
+msgid "disabled"
+msgstr ""
+
+#: compare/classifier_actions_manager.py:633
+#: compare/classifier_management_window.py:57
+#: compare/prevalidations_window.py:29
+msgid "New Prevalidation"
+msgstr "新建前缀"
+
+#: compare/classifier_actions_manager.py:711
+msgid "Profile directory is not a valid directory: "
+msgstr ""
+
+#: compare/classifier_actions_manager.py:713
+msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
+msgstr "无效的预先验证{0}, 可能导致错误或无法运行 !"
+
+#: compare/classifier_actions_manager.py:786
+msgid "lookaheads: {0}"
+msgstr ""
+
+#: compare/classifier_actions_window.py:111
+msgid "Add Classifier Action"
+msgstr ""
+
+#: compare/classifier_actions_window.py:113
+msgid "Clear Classifier Actions"
+msgstr ""
+
+#: compare/classifier_actions_window.py:115
+msgid "Run All"
+msgstr ""
+
+#: compare/classifier_actions_window.py:119
+msgid "Run on Profile:"
+msgstr ""
+
+#: compare/classifier_actions_window.py:154
+#: compare/prevalidations_window.py:454
+msgid "Active"
+msgstr ""
+
+#: compare/classifier_actions_window.py:158
+#: compare/prevalidations_window.py:445 utils/constants.py:129
+#: utils/constants.py:144
+msgid "Name"
+msgstr "名称"
+
+#: compare/classifier_actions_window.py:162
+#: compare/classifier_management_window.py:157
+#: compare/prevalidations_window.py:448
+msgid "Action"
+msgstr "行动"
+
+#: compare/classifier_actions_window.py:183
+msgid "Run"
+msgstr ""
+
+#: compare/classifier_actions_window.py:212
+#: compare/prevalidations_window.py:500 files/file_actions_window.py:497
+#: files/file_actions_window.py:548
+msgid "Modify"
+msgstr "修改"
+
+#: compare/classifier_actions_window.py:220
+#: compare/prevalidations_window.py:507 image/classifier_action_type.py:34
+msgid "Delete"
+msgstr "删除"
+
+#: compare/classifier_actions_window.py:228
+#: compare/prevalidations_window.py:514
+msgid "Move down"
+msgstr "向下移动"
+
+#: compare/classifier_actions_window.py:288
+#: compare/classifier_actions_window.py:354
+msgid "directories"
+msgstr ""
+
+#: compare/classifier_actions_window.py:294
+msgid "Run classifier action '{0}' on the following directories?"
+msgstr ""
+
+#: compare/classifier_actions_window.py:298
+msgid "Run Classifier Action"
+msgstr ""
+
+#: compare/classifier_actions_window.py:338
+msgid "No active classifier actions to run"
+msgstr ""
+
+#: compare/classifier_actions_window.py:362
+msgid "Run {0} active classifier action(s) on the following directories?"
+msgstr ""
+
+#: compare/classifier_actions_window.py:366
+msgid "Run All Classifier Actions"
+msgstr ""
+
+#: compare/classifier_management_window.py:55
+#: compare/prevalidations_window.py:28
+msgid "Modify Prevalidation"
+msgstr "修改前缀"
+
+#: compare/classifier_management_window.py:56
+#: compare/prevalidations_window.py:28
+msgid "Prevalidation Name"
+msgstr "预验证名称"
+
+#: compare/classifier_management_window.py:59
+msgid "Modify Classifier Action"
+msgstr ""
+
+#: compare/classifier_management_window.py:60
+msgid "Classifier Action Name"
+msgstr ""
+
+#: compare/classifier_management_window.py:98
+msgid "Positives"
+msgstr "积极方面"
+
+#: compare/classifier_management_window.py:106
+msgid "Negatives"
+msgstr "底片"
+
+#: compare/classifier_management_window.py:114
+msgid "Validation Types"
+msgstr "验证类型"
+
+#: compare/classifier_management_window.py:117
+msgid "Use Embedding"
+msgstr "使用嵌入"
+
+#: compare/classifier_management_window.py:124
+msgid "Use Image Classifier"
+msgstr "使用图像分类器"
+
+#: compare/classifier_management_window.py:131
+msgid "Use Prompts"
+msgstr "使用提示"
+
+#: compare/classifier_management_window.py:140
+msgid "Use Embedding Prototype"
+msgstr ""
+
+#: compare/classifier_management_window.py:149
+#: compare/compare_settings_window.py:183 compare/lookahead.py:163
+msgid "Threshold"
+msgstr "阈值"
+
+#: compare/classifier_management_window.py:169
+msgid "Action Modifier"
+msgstr "动作修改器"
+
+#: compare/classifier_management_window.py:177
+msgid "Image Classifier Name"
+msgstr "图像分类器名称"
+
+#: compare/classifier_management_window.py:190
+msgid "Image Classifier Selected Category"
+msgstr "图像分类器选定类别"
+
+#: compare/classifier_management_window.py:195
+msgid "Select Categories..."
+msgstr "选择类别..."
+
+#: compare/classifier_management_window.py:209
+msgid "Should Run"
+msgstr ""
+
+#: compare/classifier_management_window.py:212
+msgid "Enable this classifier action"
+msgstr ""
+
+#: compare/classifier_management_window.py:221
+#: compare/directory_profile.py:195 compare/lookahead.py:170
+msgid "Done"
+msgstr "已完成"
+
+#: compare/classifier_management_window.py:236
+msgid "Prototype Directory"
+msgstr ""
+
+#: compare/classifier_management_window.py:251
+#: compare/classifier_management_window.py:289 files/go_to_file.py:137
+#: files/go_to_file.py:378
+msgid "Browse..."
+msgstr "浏览..."
+
+#: compare/classifier_management_window.py:259
+msgid "Force Recalculate Prototype"
+msgstr ""
+
+#: compare/classifier_management_window.py:269
+msgid "Negative Prototype Directory (Optional)"
+msgstr ""
+
+#: compare/classifier_management_window.py:299
+msgid "Negative Prototype Weight (λ)"
+msgstr ""
+
+#: compare/classifier_management_window.py:462
+msgid "Select Prototype Directory"
+msgstr ""
+
+#: compare/classifier_management_window.py:473
+msgid "Select Negative Prototype Directory"
+msgstr ""
+
+#: compare/classifier_management_window.py:534
+msgid "Prototypes recalculated successfully"
+msgstr ""
+
+#: compare/classifier_management_window.py:565
+msgid "Classifier Management"
+msgstr ""
+
+#: compare/classifier_management_window.py:592
+#: compare/prevalidations_window.py:217
+msgid "Prevalidations"
+msgstr "前言"
+
+#: compare/classifier_management_window.py:611
+msgid ""
+"Prevalidations are disabled. Enable them in the Prevalidations tab settings."
+msgstr ""
+
 #: compare/compare_settings_window.py:70
 msgid "Comparison Modes"
 msgstr ""
@@ -928,11 +1254,6 @@ msgstr ""
 #: compare/compare_settings_window.py:122
 msgid "Combination Logic:"
 msgstr ""
-
-#: compare/compare_settings_window.py:183 compare/prevalidations_window.py:777
-#: compare/prevalidations_window.py:953
-msgid "Threshold"
-msgstr "阈值"
 
 #: compare/compare_settings_window.py:223
 msgid "Max files to compare"
@@ -1089,293 +1410,177 @@ msgid ""
 "filter settings."
 msgstr "此目录和当前过滤器设置已没有剩余的图像组。"
 
-#: compare/prevalidations_window.py:101
-msgid "(no positives set)"
-msgstr "(无正片设置）"
-
-#: compare/prevalidations_window.py:102
-msgid "(no negatives set)"
-msgstr "(没有底片）"
-
-#: compare/prevalidations_window.py:104 compare/prevalidations_window.py:908
-msgid "New Prevalidation"
-msgstr "新建前缀"
-
-#: compare/prevalidations_window.py:195
-msgid "Loading image classifier <{0}> ..."
-msgstr "加载图像分类器 <{0}> ..."
-
-#: compare/prevalidations_window.py:310
-msgid " detected"
-msgstr " 检测"
-
-#: compare/prevalidations_window.py:312
-msgid " - skipped"
-msgstr " - 跳过"
-
-#: compare/prevalidations_window.py:315
-msgid " - hidden"
-msgstr " - 隐藏"
-
-#: compare/prevalidations_window.py:320
-msgid " - marked"
-msgstr " - 显著的"
-
-#: compare/prevalidations_window.py:328
-msgid "Moving file: "
-msgstr "移动文件 : "
-
-#: compare/prevalidations_window.py:374
-msgid "Deleting file: "
-msgstr "删除文件 : "
-
-#: compare/prevalidations_window.py:419
-msgid "Action modifier is not a valid directory: "
-msgstr "修改动作不是一个有效的目录 : "
-
-#: compare/prevalidations_window.py:423
-msgid "Profile directory is not a valid directory: "
-msgstr ""
-
-#: compare/prevalidations_window.py:425
-msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
-msgstr "无效的预先验证{0}, 可能导致错误或无法运行 !"
-
-#: compare/prevalidations_window.py:513
-msgid "embedding"
-msgstr "嵌入"
-
-#: compare/prevalidations_window.py:515
-msgid "classifier {0}"
-msgstr "幅图像 {0}"
-
-#: compare/prevalidations_window.py:517
-msgid "prompts"
-msgstr "提示"
-
-#: compare/prevalidations_window.py:525
-msgid "categories: {0}"
-msgstr "类别： {0}"
-
-#: compare/prevalidations_window.py:529
-msgid "{0} positives, {1} negatives"
-msgstr "{0}阳性，{1}阴性"
-
-#: compare/prevalidations_window.py:533
-msgid " using {0} ({1})"
-msgstr " {0} ({1})"
-
-#: compare/prevalidations_window.py:535
-msgid " using {0}"
-msgstr " {0}"
-
-#: compare/prevalidations_window.py:537
-msgid " ({0} positives, {1} negatives)"
-msgstr " ({0}阳性，{1}阴性)"
-
-#: compare/prevalidations_window.py:540
-msgid "lookaheads: {0}"
-msgstr ""
-
-#: compare/prevalidations_window.py:556 compare/prevalidations_window.py:1476
+#: compare/directory_profile.py:133 compare/prevalidations_window.py:370
 msgid "Edit Profile"
 msgstr ""
 
-#: compare/prevalidations_window.py:556
+#: compare/directory_profile.py:133
 msgid "Create Profile"
 msgstr ""
 
-#: compare/prevalidations_window.py:568
+#: compare/directory_profile.py:145
 msgid "Profile Name"
 msgstr ""
 
-#: compare/prevalidations_window.py:578
+#: compare/directory_profile.py:155
 msgid "Directories"
 msgstr ""
 
-#: compare/prevalidations_window.py:598
+#: compare/directory_profile.py:175
 msgid "Add"
 msgstr ""
 
-#: compare/prevalidations_window.py:601 files/directory_notes_window.py:137
+#: compare/directory_profile.py:178
+msgid "Edit"
+msgstr ""
+
+#: compare/directory_profile.py:181 files/directory_notes_window.py:137
 msgid "Remove"
 msgstr ""
 
-#: compare/prevalidations_window.py:609 compare/prevalidations_window.py:784
-#: compare/prevalidations_window.py:1036
-msgid "Done"
-msgstr "已完成"
+#: compare/directory_profile.py:184
+msgid "Add dirs from subdirs"
+msgstr ""
 
-#: compare/prevalidations_window.py:624
+#: compare/directory_profile.py:187
+msgid "Clear all"
+msgstr ""
+
+#: compare/directory_profile.py:206
+msgid "Select directory"
+msgstr ""
+
+#: compare/directory_profile.py:236
 msgid "Add Directory"
 msgstr ""
 
-#: compare/prevalidations_window.py:624
-msgid "Enter directory path:"
+#: compare/directory_profile.py:261
+msgid "Edit Directory"
 msgstr ""
 
-#: compare/prevalidations_window.py:713 compare/prevalidations_window.py:1387
+#: compare/directory_profile.py:295
+msgid "Select directory to add subdirectories from"
+msgstr ""
+
+#: compare/embedding_prototype.py:92
+msgid "Gathering image files from directory..."
+msgstr ""
+
+#: compare/embedding_prototype.py:126
+msgid "Calculating embeddings for {0} images..."
+msgstr ""
+
+#: compare/embedding_prototype.py:150
+msgid "Processed {0}/{1} images..."
+msgstr ""
+
+#: compare/embedding_prototype.py:165
+msgid "Calculating average embedding..."
+msgstr ""
+
+#: compare/embedding_prototype.py:331
+msgid "Computed embeddings for {0}/{1} images..."
+msgstr ""
+
+#: compare/embedding_prototype.py:502
+msgid "Gathering image files from directories..."
+msgstr ""
+
+#: compare/embedding_prototype.py:537
+msgid "Processing {0} images in {1} batches of up to {2} images..."
+msgstr ""
+
+#: compare/embedding_prototype.py:544
+msgid "Computing embeddings for batch prototype validation..."
+msgstr ""
+
+#: compare/embedding_prototype.py:553
+msgid "Processing batch {0}/{1} ({2} images)..."
+msgstr ""
+
+#: compare/embedding_prototype.py:599
+msgid "Found {0} images that meet the threshold..."
+msgstr ""
+
+#: compare/lookahead.py:98 compare/prevalidations_window.py:275
 msgid "Edit Lookahead"
 msgstr ""
 
-#: compare/prevalidations_window.py:713
+#: compare/lookahead.py:98
 msgid "Create Lookahead"
 msgstr ""
 
-#: compare/prevalidations_window.py:725
+#: compare/lookahead.py:110
 msgid "Lookahead Name"
 msgstr ""
 
-#: compare/prevalidations_window.py:736
+#: compare/lookahead.py:121
 msgid "Reference existing prevalidation name"
 msgstr ""
 
-#: compare/prevalidations_window.py:749
+#: compare/lookahead.py:134
 msgid "Prevalidation Name or Custom Text"
 msgstr ""
 
-#: compare/prevalidations_window.py:894
-msgid "Modify Prevalidation"
-msgstr "修改前缀"
-
-#: compare/prevalidations_window.py:907
-msgid "Prevalidation Name"
-msgstr "预验证名称"
-
-#: compare/prevalidations_window.py:914
-msgid "Positives"
-msgstr "积极方面"
-
-#: compare/prevalidations_window.py:921
-msgid "Negatives"
-msgstr "底片"
-
-#: compare/prevalidations_window.py:929
-msgid "Validation Types"
-msgstr "验证类型"
-
-#: compare/prevalidations_window.py:932
-msgid "Use Embedding"
-msgstr "使用嵌入"
-
-#: compare/prevalidations_window.py:939
-msgid "Use Image Classifier"
-msgstr "使用图像分类器"
-
-#: compare/prevalidations_window.py:946
-msgid "Use Prompts"
-msgstr "使用提示"
-
-#: compare/prevalidations_window.py:960 compare/prevalidations_window.py:1549
-msgid "Action"
-msgstr "行动"
-
-#: compare/prevalidations_window.py:972
-msgid "Action Modifier"
-msgstr "动作修改器"
-
-#: compare/prevalidations_window.py:979
-msgid "Image Classifier Name"
-msgstr "图像分类器名称"
-
-#: compare/prevalidations_window.py:991
-msgid "Image Classifier Selected Category"
-msgstr "图像分类器选定类别"
-
-#: compare/prevalidations_window.py:995
-msgid "Select Categories..."
-msgstr "选择类别..."
-
-#: compare/prevalidations_window.py:1002
+#: compare/prevalidations_window.py:40
 msgid "Lookaheads (select from shared list)"
 msgstr ""
 
-#: compare/prevalidations_window.py:1008
+#: compare/prevalidations_window.py:49
 msgid "Select Lookaheads..."
 msgstr ""
 
-#: compare/prevalidations_window.py:1015
+#: compare/prevalidations_window.py:59
 msgid "Directory Profile"
 msgstr ""
 
-#: compare/prevalidations_window.py:1273
-msgid ""
-"No prevalidation found with name: {0}. Set it on the Prevalidations Window."
-msgstr "未找到名称为 {0} 的预审。请在预验证窗口中进行设置。"
-
-#: compare/prevalidations_window.py:1298 compare/prevalidations_window.py:1328
-msgid "Prevalidations"
-msgstr "前言"
-
-#: compare/prevalidations_window.py:1334
+#: compare/prevalidations_window.py:223
 msgid "Add prevalidation"
 msgstr "添加预验证"
 
-#: compare/prevalidations_window.py:1336
+#: compare/prevalidations_window.py:225
 msgid "Clear prevalidations"
 msgstr "清除预先验证"
 
-#: compare/prevalidations_window.py:1343 utils/help_and_config.py:254
+#: compare/prevalidations_window.py:232 utils/help_and_config.py:254
 msgid "Enable Prevalidations"
 msgstr "启用预先批准"
 
-#: compare/prevalidations_window.py:1359
+#: compare/prevalidations_window.py:245
 msgid "Lookaheads"
 msgstr ""
 
-#: compare/prevalidations_window.py:1384
+#: compare/prevalidations_window.py:272
 msgid "Add Lookahead"
 msgstr ""
 
-#: compare/prevalidations_window.py:1390
+#: compare/prevalidations_window.py:278
 msgid "Remove Lookahead"
 msgstr ""
 
-#: compare/prevalidations_window.py:1448
+#: compare/prevalidations_window.py:340
 msgid "Directory Profiles"
 msgstr ""
 
-#: compare/prevalidations_window.py:1473
+#: compare/prevalidations_window.py:367
 msgid "Add Profile"
 msgstr ""
 
-#: compare/prevalidations_window.py:1479
+#: compare/prevalidations_window.py:373
 msgid "Remove Profile"
 msgstr ""
 
-#: compare/prevalidations_window.py:1546 utils/constants.py:129
-#: utils/constants.py:144
-msgid "Name"
-msgstr "名称"
-
-#: compare/prevalidations_window.py:1552
+#: compare/prevalidations_window.py:451
 msgid "Profile"
 msgstr ""
 
-#: compare/prevalidations_window.py:1555
-msgid "Active"
-msgstr ""
-
-#: compare/prevalidations_window.py:1577
+#: compare/prevalidations_window.py:476
 msgid "(Global)"
 msgstr ""
 
-#: compare/prevalidations_window.py:1593 files/hotkey_actions_window.py:96
+#: compare/prevalidations_window.py:492 files/hotkey_actions_window.py:96
 msgid "Set"
 msgstr "设定"
-
-#: compare/prevalidations_window.py:1601 files/file_actions_window.py:497
-#: files/file_actions_window.py:548
-msgid "Modify"
-msgstr "修改"
-
-#: compare/prevalidations_window.py:1608 image/prevalidation_action.py:34
-msgid "Delete"
-msgstr "删除"
-
-#: compare/prevalidations_window.py:1615
-msgid "Move down"
-msgstr "向下移动"
 
 #: extensions/sd_runner_client.py:67
 msgid "Image does not contain a prompt to redo!"
@@ -1723,12 +1928,12 @@ msgid "(auto)"
 msgstr "(自动)"
 
 #: files/file_actions_window.py:486 files/marked_file_mover.py:322
-#: image/prevalidation_action.py:30
+#: image/classifier_action_type.py:30
 msgid "Move"
 msgstr "移动"
 
 #: files/file_actions_window.py:486 files/marked_file_mover.py:329
-#: image/prevalidation_action.py:32
+#: image/classifier_action_type.py:32
 msgid "Copy"
 msgstr "复制"
 
@@ -1793,10 +1998,6 @@ msgstr "转到文件"
 #: files/go_to_file.py:134
 msgid "Go To"
 msgstr "去"
-
-#: files/go_to_file.py:137 files/go_to_file.py:378
-msgid "Browse..."
-msgstr "浏览..."
 
 #: files/go_to_file.py:141 utils/help_and_config.py:177
 msgid "Go To Last Moved"
@@ -2370,6 +2571,22 @@ msgstr "这将清除所有在开放窗口中的比较 。 继续?"
 msgid "Media type configuration updated"
 msgstr "更新媒体类型配置"
 
+#: image/classifier_action_type.py:24
+msgid "Hide"
+msgstr "隐藏"
+
+#: image/classifier_action_type.py:26
+msgid "Notify"
+msgstr "通知"
+
+#: image/classifier_action_type.py:28
+msgid "Skip"
+msgstr "跳过"
+
+#: image/classifier_action_type.py:36
+msgid "Add Mark"
+msgstr "添加标记"
+
 #: image/image_details.py:127
 msgid "Image Path"
 msgstr "图像路径"
@@ -2499,93 +2716,109 @@ msgstr ""
 msgid "Copied prompt without BREAK"
 msgstr "复制的快速无阻"
 
-#: image/image_details.py:346 image/image_details.py:442
+#: image/image_details.py:351
+msgid "No files found in current directory"
+msgstr ""
+
+#: image/image_details.py:356
+msgid "No files available"
+msgstr ""
+
+#: image/image_details.py:382
+msgid "Copied prompt from {0}"
+msgstr ""
+
+#: image/image_details.py:389
+msgid "No files with prompts found in current directory"
+msgstr ""
+
+#: image/image_details.py:395 image/image_details.py:491
 msgid "Rotated image right"
 msgstr "向右旋转图像"
 
-#: image/image_details.py:346 image/image_details.py:442
+#: image/image_details.py:395 image/image_details.py:491
 msgid "Rotated image left"
 msgstr "左旋图像"
 
-#: image/image_details.py:357 image/image_details.py:453
+#: image/image_details.py:406 image/image_details.py:502
 msgid "Cropped image"
 msgstr "剪切图像"
 
-#: image/image_details.py:361 image/image_details.py:457
+#: image/image_details.py:410 image/image_details.py:506
 msgid "No crops found"
 msgstr "没有找到作物"
 
-#: image/image_details.py:368 image/image_details.py:464
+#: image/image_details.py:417 image/image_details.py:513
 msgid "Enhanced image"
 msgstr "增强图像"
 
-#: image/image_details.py:376 image/image_details.py:473
+#: image/image_details.py:425 image/image_details.py:522
 msgid "Randomly cropped image"
 msgstr "随机裁剪的图像"
 
-#: image/image_details.py:388 image/image_details.py:483
+#: image/image_details.py:437 image/image_details.py:532
 msgid "Randomly modified image"
 msgstr "随机修改的图像"
 
-#: image/image_details.py:393 image/image_details.py:486
+#: image/image_details.py:442 image/image_details.py:535
 msgid "No new image created"
 msgstr "未创建新图像"
 
-#: image/image_details.py:399
+#: image/image_details.py:448
 msgid "Confirm Vertical Flip"
 msgstr "确认垂直翻转"
 
-#: image/image_details.py:400
+#: image/image_details.py:449
 msgid ""
 "Are you sure you want to flip this image vertically? This is an uncommon "
 "operation and may have been clicked by accident."
 msgstr "您确定要将此图像垂直翻转吗？此操作较为罕见，可能是误触所致。"
 
-#: image/image_details.py:410 image/image_details.py:493
+#: image/image_details.py:459 image/image_details.py:542
 msgid "Flipped image"
 msgstr "翻转图像"
 
-#: image/image_details.py:418 image/image_details.py:502
+#: image/image_details.py:467 image/image_details.py:551
 msgid "Copied image without EXIF data"
 msgstr "复制的图像没有 EXIF 数据"
 
-#: image/image_details.py:423 image/image_details.py:507
+#: image/image_details.py:472 image/image_details.py:556
 msgid "Error copying image without EXIF"
 msgstr "复制无 EXIF 的图像时出错"
 
-#: image/image_details.py:430 image/image_details.py:515
+#: image/image_details.py:479 image/image_details.py:564
 msgid "Converted image to JPG"
 msgstr "将图像转换为 JPG"
 
-#: image/image_details.py:435 image/image_details.py:520
+#: image/image_details.py:484 image/image_details.py:569
 msgid "Error converting image to JPG"
 msgstr "将图像转换为 JPG 时出错"
 
-#: image/image_details.py:525
+#: image/image_details.py:574
 msgid "No metadata found"
 msgstr "未找到元数据"
 
-#: image/image_details.py:539 image/image_details.py:597
+#: image/image_details.py:588 image/image_details.py:646
 msgid " (Exact Match Not Found)"
 msgstr " (没有找到精确匹配)"
 
-#: image/image_details.py:541 image/image_details.py:594
+#: image/image_details.py:590 image/image_details.py:643
 msgid "(No related image found)"
 msgstr "(没有找到相关的图像)"
 
-#: image/image_details.py:657 image/image_details.py:664
+#: image/image_details.py:706 image/image_details.py:713
 msgid "%s downstream image(s) found."
 msgstr "{0} 找到下游图像 。"
 
-#: image/image_details.py:660
+#: image/image_details.py:709
 msgid "%s (cached) downstream image(s) found."
 msgstr "{0} (cached) 下游图像找到 。"
 
-#: image/image_details.py:666
+#: image/image_details.py:715
 msgid "No downstream related images found in"
 msgstr "找不到下游相关图像"
 
-#: image/image_details.py:726
+#: image/image_details.py:775
 msgid "Updated tags for %s"
 msgstr "{0} 的更新标签"
 
@@ -2608,22 +2841,6 @@ msgstr "将元数据复制到剪贴板时出错： "
 #: image/metadata_viewer_window.py:66
 msgid "Metadata Viewer"
 msgstr "元数据查看器"
-
-#: image/prevalidation_action.py:24
-msgid "Hide"
-msgstr "隐藏"
-
-#: image/prevalidation_action.py:26
-msgid "Notify"
-msgstr "通知"
-
-#: image/prevalidation_action.py:28
-msgid "Skip"
-msgstr "跳过"
-
-#: image/prevalidation_action.py:36
-msgid "Add Mark"
-msgstr "添加标记"
 
 #: image/temp_image_canvas.py:116
 msgid "Open a new related image with Shift+R on main window"
