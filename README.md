@@ -75,7 +75,9 @@ Prevalidation rules and classifier actions can be configured with:
 - H5 model-based classification rules
 - PyTorch model-based classification rules (supports .pth, .pt, .safetensors, and .bin formats)
 
-Prevalidations automatically run on media as you browse, while classifier actions can be executed manually on selected media directories when needed. This feature is particularly useful for maintaining clean media collections and automating local content filtering, but it can be disabled at any time if desired. You can find an example H5 classifier that is known to work [here](https://github.com/FurkanGozukara/nsfw_model).
+Prevalidations automatically run on media as you browse, while classifier actions can be executed manually on selected media directories when needed. These features are particularly useful for maintaining clean media collections and automating local content filtering, but can be disabled at any time if desired. You can find example classifier models that are known to work here:
+- [Coherence Detection](https://huggingface.co/reddesert/coherence_detection) - A PyTorch ResNet-34 model for classifying AI-generated images into coherent, incoherent, or semi-incoherent categories
+- [NSFW Model](https://github.com/FurkanGozukara/nsfw_model) - An H5 classifier model for filtering out some types of NSFW content
 
 ## Usage
 
