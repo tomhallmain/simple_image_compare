@@ -339,6 +339,55 @@ class ImageDetails():
             prompt = re.sub(r"<[^>]*>", "", prompt)
         return prompt
 
+    @staticmethod
+    def source_random_prompt(file_browser, master, app_actions):
+        """
+        Find a random file from the file browser that contains a prompt,
+        copy the prompt to clipboard, and notify the user.
+        """
+        import random
+        
+        if not file_browser.has_files():
+            app_actions.warn(_("No files found in current directory"))
+            return
+        
+        files = list(file_browser.get_files())
+        if not files:
+            app_actions.warn(_("No files available"))
+            return
+        
+        # Shuffle files randomly
+        random.shuffle(files)
+        
+        # Try up to 500 files to find one with a prompt
+        max_attempts = min(500, len(files))
+        for i in range(max_attempts):
+            file_path = files[i]
+            try:
+                positive, negative, models, loras, prompt_extraction_failed = image_data_extractor.get_image_prompts_and_models(file_path)
+                
+                if not prompt_extraction_failed and positive is not None and positive.strip() != "":
+                    # Found a file with a prompt, copy it to clipboard
+                    # Remove BREAK if present and remove emphases
+                    prompt_text = positive
+                    if "BREAK" in prompt_text:
+                        prompt_text = prompt_text[prompt_text.index("BREAK")+6:]
+                    prompt_text = ImageDetails.remove_emphases(prompt_text)
+                    
+                    master.clipboard_clear()
+                    master.clipboard_append(prompt_text)
+                    
+                    import os
+                    filename = os.path.basename(file_path)
+                    app_actions.success(_("Copied prompt from {0}").format(filename))
+                    return
+            except Exception as e:
+                logger.debug(f"Error extracting prompt from {file_path}: {e}")
+                continue
+        
+        # No prompt found after trying multiple files
+        app_actions.warn(_("No files with prompts found in current directory"))
+
     def rotate_image(self, right=False):
         new_filepath = ImageOps.rotate_image(self.image_path, right)
         self.close_windows()
