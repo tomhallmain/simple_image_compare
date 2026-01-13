@@ -81,7 +81,19 @@ class CompareManager:
         self._instance_counter: int = 0
         
         # Current primary mode (for backward compatibility)
+        # Set default to CLIP_EMBEDDING (matches CompareArgs default and config default)
         self._primary_mode: Optional[CompareMode] = None
+        # Initialize default mode - use config.compare_mode if available, otherwise CLIP_EMBEDDING
+        default_mode = getattr(config, 'compare_mode', CompareMode.CLIP_EMBEDDING)
+        if isinstance(default_mode, CompareMode):
+            self.set_primary_mode(default_mode)
+        else:
+            # If config has a string, convert it
+            try:
+                self.set_primary_mode(CompareMode.get(default_mode))
+            except (ValueError, AttributeError):
+                # Fallback to CLIP_EMBEDDING if conversion fails
+                self.set_primary_mode(CompareMode.CLIP_EMBEDDING)
         
         # Combination logic for composite mode
         self._combination_logic: CombinationLogic = CombinationLogic.AND
@@ -423,12 +435,39 @@ class CompareManager:
     
     @compare_mode.setter
     def compare_mode(self, mode: CompareMode):
-        """Set primary compare mode (for backward compatibility)."""
+        """
+        Set primary compare mode (for backward compatibility).
+        Note: This clears other modes for single-mode operation.
+        TODO: In the future, we should support persisting multiple modes per directory.
+              When implementing this, we'll need to:
+              - Store all active modes in cache (not just primary)
+              - Load all modes when restoring (use set_primary_mode() + add_mode() instead of set_compare_mode())
+              - Consider adding a parameter or separate method to set primary without clearing others
+        """
         self.set_primary_mode(mode)
-        # Clear other modes for single-mode operation
+        # Clear other modes for single-mode operation (backward compatibility)
         if len(self._mode_configs) > 1:
-            self._mode_configs = {mode: self._mode_configs[mode]}
+            # Find all instance IDs for this mode
+            instances_to_keep = {
+                instance_id: config 
+                for instance_id, config in self._mode_configs.items() 
+                if config.compare_mode == mode
+            }
+            # If we have instances of this mode, keep only those; otherwise keep the first one created
+            if instances_to_keep:
+                self._mode_configs = instances_to_keep
+            else:
+                # Fallback: keep only the first instance (shouldn't happen, but be safe)
+                first_instance_id = next(iter(self._mode_configs.keys()))
+                self._mode_configs = {first_instance_id: self._mode_configs[first_instance_id]}
             self._is_composite_mode = False
+    
+    def set_compare_mode(self, mode: CompareMode):
+        """
+        Set the compare mode (alias for compare_mode property setter).
+        This method provides an explicit way to set the compare mode.
+        """
+        self.compare_mode = mode
     
     @property
     def files_matched(self) -> List[str]:

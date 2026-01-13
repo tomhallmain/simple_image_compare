@@ -75,6 +75,10 @@ class CompareMode(Enum):
 
     @staticmethod
     def get(name):
+        # If name is already a CompareMode enum, return it directly
+        if isinstance(name, CompareMode):
+            return name
+        # Otherwise, try to match by text, name, or value
         for key, value in CompareMode.__members__.items():
             if value.get_text() == name or value.name == name or value.value == name:
                 return value

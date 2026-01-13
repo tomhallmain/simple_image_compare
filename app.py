@@ -610,6 +610,7 @@ class App():
                 app_info_cache.set(base_dir, "image_cursor", os.path.basename(self.img_path))
             app_info_cache.set(base_dir, "recursive", self.file_browser.is_recursive())
             app_info_cache.set(base_dir, "sort_by", self.file_browser.get_sort_by().get_text())
+            # TODO: In the future, persist all active modes (not just primary) to support composite mode persistence
             app_info_cache.set(base_dir, "compare_mode", self.compare_manager.get_primary_mode_name())
         if store_window_state:
             secondary_base_dirs = []
@@ -1064,15 +1065,28 @@ class App():
             self.image_browse_recurse_var.set(recursive)
             self.file_browser.set_recursive(recursive)
         try:
-            if compare_mode and compare_mode != self.compare_manager.get_primary_mode_name():
+            if compare_mode:
                 # Handle case where compare_mode might already be a CompareMode enum (from old cache)
                 if isinstance(compare_mode, CompareMode):
-                    self.compare_manager.compare_mode = compare_mode
-                else:
+                    mode_to_set = compare_mode
+                elif isinstance(compare_mode, str):
                     # compare_mode is a string, convert it using CompareMode.get()
-                    self.compare_manager.compare_mode = CompareMode.get(compare_mode)
+                    # This handles both enum names (e.g., "PROMPTS_EXACT") and translated values
+                    mode_to_set = CompareMode.get(compare_mode)
+                else:
+                    # Unknown type, try to convert it
+                    logger.warning(f"Unexpected compare_mode type from cache: {type(compare_mode)}, value: {compare_mode}")
+                    mode_to_set = CompareMode.get(str(compare_mode))
+                
+                # Only set if different from current mode (compare enum to enum)
+                current_mode = self.compare_manager.compare_mode
+                if mode_to_set != current_mode:
+                    self.compare_manager.set_compare_mode(mode_to_set)
         except Exception as e:
-            logger.error(f"Error setting stored compare mode: {e}")
+            logger.error(f"Error setting stored compare mode: {compare_mode} (type: {type(compare_mode)}). Exception: {e}", exc_info=True)
+            # Ensure default is set even if there's an error
+        if self.compare_manager.compare_mode is None:
+            self.compare_manager.set_compare_mode(CompareMode.CLIP_EMBEDDING)
         try:
             if sort_by != self.sort_by.get():
                 self.sort_by.set(sort_by)
