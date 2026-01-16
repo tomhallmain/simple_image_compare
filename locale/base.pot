@@ -1,14 +1,14 @@
 # Translations template for APPLICATION.
-# Copyright (C) 2026 THOMAS HALL <tomhall.main@gmail.com>
+# Copyright (C) 2026 AUTHOR NAME <author@example.com>
 # This file is distributed under the same license as the APPLICATION project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: APPLICATION 1.0\n"
-"Report-Msgid-Bugs-To: Thomas Hall <tomhall.main@gmail.com>\n"
-"POT-Creation-Date: 2026-01-13 17:35-0500\n"
-"PO-Revision-Date: 2026-01-13 17:35-0500\n"
+"Report-Msgid-Bugs-To: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2026-01-16 02:42-0500\n"
+"PO-Revision-Date: 2026-01-16 02:42-0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:113 app.py:1020 app.py:2500
+#: app.py:113 app.py:1022 app.py:2506
 msgid " Simple Image Compare "
 msgstr ""
 
@@ -28,7 +28,7 @@ msgstr ""
 msgid "Theme switched to {0}."
 msgstr ""
 
-#: app.py:282 app.py:502 app.py:1050 compare/compare_wrapper.py:508
+#: app.py:282 app.py:503 app.py:1052 compare/compare_wrapper.py:508
 msgid "Set a directory to run comparison."
 msgstr ""
 
@@ -93,7 +93,7 @@ msgstr ""
 msgid "Negative text:"
 msgstr ""
 
-#: app.py:360 compare/classifier_actions_window.py:105 compare/classifier_management_window.py:591
+#: app.py:360 compare/classifier_actions_tab.py:100 compare/classifier_management_window.py:618
 msgid "Classifier Actions"
 msgstr ""
 
@@ -140,477 +140,485 @@ msgstr ""
 msgid "---- DELETE ----"
 msgstr ""
 
-#: app.py:559
+#: app.py:560
 msgid "Confirm Quit"
 msgstr ""
 
-#: app.py:559
+#: app.py:560
 msgid "Would you like to quit the application?"
 msgstr ""
 
-#: app.py:682
+#: app.py:684
 msgid "Ended slideshows"
 msgstr ""
 
-#: app.py:735 app.py:2160 app.py:2167 app.py:2171 app.py:2175 app.py:2181 app.py:2288 app.py:2304 app.py:2321
+#: app.py:737 app.py:2166 app.py:2173 app.py:2177 app.py:2181 app.py:2187 app.py:2294 app.py:2310 app.py:2327
 msgid "Warning"
 msgstr ""
 
-#: app.py:735
+#: app.py:737
 msgid "No files found in directory after refresh."
 msgstr ""
 
-#: app.py:773
+#: app.py:775
 msgid "Slideshow for new images started"
 msgstr ""
 
-#: app.py:775
+#: app.py:777
 msgid "Slideshow started"
 msgstr ""
 
-#: app.py:778
+#: app.py:780
 msgid "Slideshows ended"
 msgstr ""
 
-#: app.py:791
+#: app.py:793
 msgid "Browsing mode set."
 msgstr ""
 
-#: app.py:836 utils/constants.py:331
+#: app.py:838 utils/constants.py:331
 msgid "View Media Details"
 msgstr ""
 
-#: app.py:837
+#: app.py:839
 msgid "Hide Media"
 msgstr ""
 
-#: app.py:838
+#: app.py:840
 msgid "Remove from Marks"
 msgstr ""
 
-#: app.py:838
+#: app.py:840
 msgid "Add to Marks"
 msgstr ""
 
-#: app.py:840
+#: app.py:842
 msgid "Remove from Favorites"
 msgstr ""
 
-#: app.py:840
+#: app.py:842
 msgid "Add to Favorites"
 msgstr ""
 
-#: app.py:843
+#: app.py:845
 msgid "Remove from Directory Notes"
 msgstr ""
 
-#: app.py:843
+#: app.py:845
 msgid "Add to Directory Notes"
 msgstr ""
 
-#: app.py:845
+#: app.py:847
 msgid "Edit File Note"
 msgstr ""
 
-#: app.py:847
+#: app.py:849
 msgid "Open in GIMP"
 msgstr ""
 
-#: app.py:848 image/image_details.py:201 utils/constants.py:337 utils/help_and_config.py:138
+#: app.py:850 image/image_details.py:201 utils/constants.py:337 utils/help_and_config.py:138
 msgid "Run Image Generation"
 msgstr ""
 
-#: app.py:849
+#: app.py:851
 msgid "Run Image Generation on Directory"
 msgstr ""
 
-#: app.py:850
+#: app.py:852
 msgid "Show Source Image"
 msgstr ""
 
-#: app.py:851
+#: app.py:853
 msgid "Find Related Images"
 msgstr ""
 
-#: app.py:852
+#: app.py:854
 msgid "Set Marks from Downstream Related Images"
 msgstr ""
 
-#: app.py:854
+#: app.py:856
 msgid "Set Current Image as Search Image"
 msgstr ""
 
-#: app.py:855
+#: app.py:857
 msgid "Add Current Image to Negative Search"
 msgstr ""
 
-#: app.py:856
+#: app.py:858
 msgid "Run Refacdir"
 msgstr ""
 
-#: app.py:874
+#: app.py:876
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr ""
 
-#: app.py:911 app.py:1653
+#: app.py:913 app.py:1655
 msgid "Many Files"
 msgstr ""
 
-#: app.py:939
+#: app.py:941
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized number of files on external storage was "
 "detected, which may result in a slow load time. Please confirm you want to load the full directory."
 msgstr ""
 
-#: app.py:940
+#: app.py:942
 msgid "Large Directory Detected: {0}"
 msgstr ""
 
-#: app.py:970
+#: app.py:972
 msgid "No downstream related image(s) found in {0}"
 msgstr ""
 
-#: app.py:992
+#: app.py:994
 msgid "{0} file marks set"
 msgstr ""
 
-#: app.py:998
+#: app.py:1000
 msgid "Help and Config"
 msgstr ""
 
-#: app.py:1110
+#: app.py:1112
 msgid "Set Image Comparison Directory"
 msgstr ""
 
-#: app.py:1164
+#: app.py:1166
 msgid "No image selected."
 msgstr ""
 
-#: app.py:1164
+#: app.py:1166
 msgid "Invalid Setting"
 msgstr ""
 
-#: app.py:1203
+#: app.py:1205
 msgid "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr ""
 
-#: app.py:1208
+#: app.py:1210
 msgid "Select image file"
 msgstr ""
 
-#: app.py:1237
+#: app.py:1239
 msgid "Somehow, the search file is invalid"
 msgstr ""
 
-#: app.py:1323 app.py:1348
+#: app.py:1325 app.py:1350
 msgid "Failed to get active image filepath"
 msgstr ""
 
-#: app.py:1433
+#: app.py:1435
 msgid "{0}: {1}% complete"
 msgstr ""
 
-#: app.py:1439
+#: app.py:1441
 msgid "Confirm comparison"
 msgstr ""
 
-#: app.py:1440
+#: app.py:1442
 msgid "No base directory has been set, will use current base directory of "
 msgstr ""
 
-#: app.py:1441
+#: app.py:1443
 msgid "Are you sure you want to proceed?"
 msgstr ""
 
-#: app.py:1464
+#: app.py:1466
 msgid "Error running compare"
 msgstr ""
 
-#: app.py:1499
+#: app.py:1501
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 
-#: app.py:1510
+#: app.py:1512
 msgid "Mark removed. Remaining: {0}"
 msgstr ""
 
-#: app.py:1514
+#: app.py:1516
 msgid "Mark added. Total set: {0}"
 msgstr ""
 
-#: app.py:1531
+#: app.py:1533
 msgid "Marks added. Total set: {0}"
 msgstr ""
 
-#: app.py:1540
+#: app.py:1542
 msgid "First sorted mark"
 msgstr ""
 
-#: app.py:1547
+#: app.py:1549
 msgid "Only one marked file set."
 msgstr ""
 
-#: app.py:1560
+#: app.py:1562
 msgid "Invalid file path"
 msgstr ""
 
-#: app.py:1560
+#: app.py:1562
 msgid "The file path {0} is invalid."
 msgstr ""
 
-#: app.py:1566
+#: app.py:1568
 msgid "Including marks: {0}"
 msgstr ""
 
-#: app.py:1608
+#: app.py:1610
 msgid "NO_MARKS_SET"
 msgstr ""
 
-#: app.py:1653
+#: app.py:1655
 msgid "Are you sure you want to run all prevalidations on directory {0} ? This may take a while."
 msgstr ""
 
-#: app.py:1668
+#: app.py:1670
 msgid "Prevalidations now running"
 msgstr ""
 
-#: app.py:1668
+#: app.py:1670
 msgid "Prevalidations turned off"
 msgstr ""
 
-#: app.py:1689
+#: app.py:1674
+msgid "Extra debug logging enabled"
+msgstr ""
+
+#: app.py:1674
+msgid "Extra debug logging disabled"
+msgstr ""
+
+#: app.py:1695
 msgid "Please set a base directory first"
 msgstr ""
 
-#: app.py:1718
+#: app.py:1724
 msgid "Removed from directory notes: {0}"
 msgstr ""
 
-#: app.py:1721
+#: app.py:1727
 msgid "Added to directory notes: {0}"
 msgstr ""
 
-#: app.py:1744 files/directory_notes_window.py:242
+#: app.py:1750 files/directory_notes_window.py:242
 msgid "Edit Note - {0}"
 msgstr ""
 
-#: app.py:1768 files/directory_notes_window.py:266
+#: app.py:1774 files/directory_notes_window.py:266
 msgid "Note saved for: {0}"
 msgstr ""
 
-#: app.py:1781 files/directory_notes_window.py:273
+#: app.py:1787 files/directory_notes_window.py:273
 msgid "Save"
 msgstr ""
 
-#: app.py:1784 auth/app_startup_auth.py:127 auth/password_admin_window.py:462 auth/password_dialog.py:152
+#: app.py:1790 auth/app_startup_auth.py:127 auth/password_admin_window.py:462 auth/password_dialog.py:152
 #: auth/password_dialog.py:221 auth/password_dialog.py:238 compare/compare_settings_window.py:373
 #: files/directory_notes_window.py:276 files/pdf_options_window.py:77 files/target_directory_window.py:176
 #: files/type_configuration_window.py:178 lib/custom_dialogs.py:75
 msgid "Cancel"
 msgstr ""
 
-#: app.py:1898
+#: app.py:1904
 msgid "File not found"
 msgstr ""
 
-#: app.py:1898
+#: app.py:1904
 msgid "No file was found for the search text: \"{0}\""
 msgstr ""
 
-#: app.py:1907
+#: app.py:1913
 msgid "Index navigation not available"
 msgstr ""
 
-#: app.py:1907
+#: app.py:1913
 msgid "Index navigation is only available in BROWSE mode."
 msgstr ""
 
-#: app.py:1918
+#: app.py:1924
 msgid "Invalid index"
 msgstr ""
 
-#: app.py:1934
+#: app.py:1940
 msgid "No image selected"
 msgstr ""
 
-#: app.py:1934
+#: app.py:1940
 msgid "No image was selected for comparison"
 msgstr ""
 
-#: app.py:1948
+#: app.py:1954
 msgid "No Text Search Presets Found"
 msgstr ""
 
-#: app.py:1949
+#: app.py:1955
 msgid "No text embedding search presets found. Set them in the config.json file."
 msgstr ""
 
-#: app.py:2046
+#: app.py:2052
 msgid "Opening media file: {0}"
 msgstr ""
 
-#: app.py:2049
+#: app.py:2055
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr ""
 
-#: app.py:2054
+#: app.py:2060
 msgid "GIMP integration is not configured. Please set 'gimp_exe_loc' in config.json."
 msgstr ""
 
-#: app.py:2054
+#: app.py:2060
 msgid "GIMP Integration Error"
 msgstr ""
 
-#: app.py:2066
+#: app.py:2072
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 
-#: app.py:2077 image/temp_image_canvas.py:167
+#: app.py:2083 image/temp_image_canvas.py:167
 msgid "Copied filepath to clipboard"
 msgstr ""
 
-#: app.py:2085
+#: app.py:2091
 msgid "Copied filename to clipboard"
 msgstr ""
 
-#: app.py:2092
+#: app.py:2098
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
 msgstr ""
 
-#: app.py:2097
+#: app.py:2103
 msgid "Cleared all hidden images."
 msgstr ""
 
-#: app.py:2105
+#: app.py:2111
 msgid "DELETE_LOCK"
 msgstr ""
 
-#: app.py:2123
+#: app.py:2129
 msgid "Invalid action, no files found to delete"
 msgstr ""
 
-#: app.py:2126
+#: app.py:2132
 msgid "Invalid action, search image not found"
 msgstr ""
 
-#: app.py:2141
+#: app.py:2147
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr ""
 
-#: app.py:2148
+#: app.py:2154
 msgid "Removing directory: {0}"
 msgstr ""
 
-#: app.py:2150
+#: app.py:2156
 msgid "Removing file: {0}"
 msgstr ""
 
-#: app.py:2160 app.py:2181
+#: app.py:2166 app.py:2187
 msgid "Failed to delete item: {0}"
 msgstr ""
 
-#: app.py:2164
+#: app.py:2170
 msgid "Failed to move directory to {0}. Double check the trash folder is set properly in config.json."
 msgstr ""
 
-#: app.py:2166
+#: app.py:2172
 msgid "Failed to send file to {0}. Double check the trash folder is set properly in config.json."
 msgstr ""
 
-#: app.py:2172
+#: app.py:2178
 msgid "Failed to move directory to the trash. Either pip install send2trash or set a specific trash folder in config.json."
 msgstr ""
 
-#: app.py:2176
+#: app.py:2182
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install send2trash or set a specific trash folder"
 " in config.json."
 msgstr ""
 
-#: app.py:2186
+#: app.py:2192
 msgid "Invalid directory"
 msgstr ""
 
-#: app.py:2186
+#: app.py:2192
 msgid "No valid base directory to delete"
 msgstr ""
 
-#: app.py:2197
+#: app.py:2203
 msgid "Cannot Delete Directory"
 msgstr ""
 
-#: app.py:2201
+#: app.py:2207
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr ""
 
-#: app.py:2203
+#: app.py:2209
 msgid "Contents to be deleted:"
 msgstr ""
 
-#: app.py:2205
+#: app.py:2211
 msgid "Confirm Delete Directory"
 msgstr ""
 
-#: app.py:2236
+#: app.py:2242
 msgid "Delete Directory Error"
 msgstr ""
 
-#: app.py:2238
+#: app.py:2244
 msgid "Directory {0} deleted."
 msgstr ""
 
-#: app.py:2254
+#: app.py:2260
 msgid "Invalid target filepath for replacement: "
 msgstr ""
 
-#: app.py:2258
+#: app.py:2264
 msgid "Moved search image to "
 msgstr ""
 
-#: app.py:2288
+#: app.py:2294
 msgid "Failed to get active media filepath"
 msgstr ""
 
-#: app.py:2302
+#: app.py:2308
 msgid "Running image gen: "
 msgstr ""
 
-#: app.py:2304 app.py:2321
+#: app.py:2310 app.py:2327
 msgid "Error running image generation:"
 msgstr ""
 
-#: app.py:2319
+#: app.py:2325
 msgid "Running image gen on directory: "
 msgstr ""
 
-#: app.py:2328
+#: app.py:2334
 msgid "Running refacdir"
 msgstr ""
 
-#: app.py:2333 auth/app_startup_auth.py:141 auth/password_dialog.py:249 extensions/gimp/gimp_wrapper.py:689
+#: app.py:2339 auth/app_startup_auth.py:141 auth/password_dialog.py:249 extensions/gimp/gimp_wrapper.py:689
 #: extensions/gimp/gimp_wrapper.py:718 files/pdf_creator.py:133 files/pdf_creator.py:137 files/pdf_creator.py:140
 msgid "Error"
 msgstr ""
 
-#: app.py:2435
+#: app.py:2441
 msgid "GROUP_DETAILS"
 msgstr ""
 
-#: app.py:2439
+#: app.py:2445
 msgid "No image files found"
 msgstr ""
 
-#: app.py:2441
+#: app.py:2447
 msgid "1 image file found"
 msgstr ""
 
-#: app.py:2442
+#: app.py:2448
 msgid "{0} image files found"
 msgstr ""
 
-#: app.py:2444
+#: app.py:2450
 msgid "(filtered)"
 msgstr ""
 
@@ -891,299 +899,301 @@ msgstr ""
 msgid "(no negatives set)"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:46 compare/classifier_management_window.py:61
+#: compare/classifier_actions_manager.py:46 compare/classifier_management_window.py:60
 msgid "New Classifier Action"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:115
+#: compare/classifier_actions_manager.py:120
 msgid "Loading image classifier <{0}> ..."
 msgstr ""
 
-#: compare/classifier_actions_manager.py:210
+#: compare/classifier_actions_manager.py:215
 msgid "Loading embedding prototype from {0}..."
 msgstr ""
 
-#: compare/classifier_actions_manager.py:226
+#: compare/classifier_actions_manager.py:231
 msgid "Loading negative embedding prototype from {0}..."
 msgstr ""
 
-#: compare/classifier_actions_manager.py:377
+#: compare/classifier_actions_manager.py:386
 msgid " detected"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:379
+#: compare/classifier_actions_manager.py:388
 msgid " - skipped"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:382
+#: compare/classifier_actions_manager.py:391
 msgid " - hidden"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:387
+#: compare/classifier_actions_manager.py:396
 msgid " - marked"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:395
+#: compare/classifier_actions_manager.py:404
 msgid "Moving file: "
 msgstr ""
 
-#: compare/classifier_actions_manager.py:441
+#: compare/classifier_actions_manager.py:450
 msgid "Deleting file: "
 msgstr ""
 
-#: compare/classifier_actions_manager.py:497
+#: compare/classifier_actions_manager.py:506
 msgid "Action modifier is not a valid directory: "
 msgstr ""
 
-#: compare/classifier_actions_manager.py:499
+#: compare/classifier_actions_manager.py:508
 msgid "Invalid classifier action {0}, may cause errors or be unable to run!"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:597
+#: compare/classifier_actions_manager.py:615
 msgid "embedding"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:599
+#: compare/classifier_actions_manager.py:617
 msgid "classifier {0}"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:601
+#: compare/classifier_actions_manager.py:619
 msgid "prompts"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:603
+#: compare/classifier_actions_manager.py:621
 msgid "prototype"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:611
+#: compare/classifier_actions_manager.py:629
 msgid "categories: {0}"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:615
+#: compare/classifier_actions_manager.py:633
 msgid "{0} positives, {1} negatives"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:619
+#: compare/classifier_actions_manager.py:637
 msgid " using {0} ({1})"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:621
+#: compare/classifier_actions_manager.py:639
 msgid " using {0}"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:623
+#: compare/classifier_actions_manager.py:641
 msgid " ({0} positives, {1} negatives)"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:626
+#: compare/classifier_actions_manager.py:644
 msgid "disabled"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:633 compare/classifier_management_window.py:57 compare/prevalidations_window.py:29
+#: compare/classifier_actions_manager.py:651 compare/classifier_management_window.py:56 compare/prevalidations_tab.py:29
 msgid "New Prevalidation"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:711
+#: compare/classifier_actions_manager.py:731
 msgid "Profile directory is not a valid directory: "
 msgstr ""
 
-#: compare/classifier_actions_manager.py:713
+#: compare/classifier_actions_manager.py:733
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr ""
 
-#: compare/classifier_actions_manager.py:786
+#: compare/classifier_actions_manager.py:813
 msgid "lookaheads: {0}"
 msgstr ""
 
-#: compare/classifier_actions_window.py:111
+#: compare/classifier_actions_tab.py:106
 msgid "Add Classifier Action"
 msgstr ""
 
-#: compare/classifier_actions_window.py:113
+#: compare/classifier_actions_tab.py:108
 msgid "Clear Classifier Actions"
 msgstr ""
 
-#: compare/classifier_actions_window.py:115
+#: compare/classifier_actions_tab.py:110
 msgid "Run All"
 msgstr ""
 
-#: compare/classifier_actions_window.py:119
+#: compare/classifier_actions_tab.py:114
 msgid "Run on Profile:"
 msgstr ""
 
-#: compare/classifier_actions_window.py:154 compare/prevalidations_window.py:454
+#: compare/classifier_actions_tab.py:149 compare/prevalidations_tab.py:454
 msgid "Active"
 msgstr ""
 
-#: compare/classifier_actions_window.py:158 compare/prevalidations_window.py:445 utils/constants.py:133
-#: utils/constants.py:148
+#: compare/classifier_actions_tab.py:153 compare/prevalidations_tab.py:445 utils/constants.py:133 utils/constants.py:148
 msgid "Name"
 msgstr ""
 
-#: compare/classifier_actions_window.py:162 compare/classifier_management_window.py:157
-#: compare/prevalidations_window.py:448
+#: compare/classifier_actions_tab.py:157 compare/classifier_management_window.py:164 compare/prevalidations_tab.py:448
 msgid "Action"
 msgstr ""
 
-#: compare/classifier_actions_window.py:183
+#: compare/classifier_actions_tab.py:178
 msgid "Run"
 msgstr ""
 
-#: compare/classifier_actions_window.py:212 compare/prevalidations_window.py:500 files/file_actions_window.py:497
+#: compare/classifier_actions_tab.py:207 compare/prevalidations_tab.py:500 files/file_actions_window.py:497
 #: files/file_actions_window.py:548
 msgid "Modify"
 msgstr ""
 
-#: compare/classifier_actions_window.py:220 compare/prevalidations_window.py:507 image/classifier_action_type.py:34
+#: compare/classifier_actions_tab.py:215 compare/prevalidations_tab.py:507 image/classifier_action_type.py:34
 msgid "Delete"
 msgstr ""
 
-#: compare/classifier_actions_window.py:228 compare/prevalidations_window.py:514
+#: compare/classifier_actions_tab.py:223 compare/prevalidations_tab.py:514
 msgid "Move down"
 msgstr ""
 
-#: compare/classifier_actions_window.py:288 compare/classifier_actions_window.py:354 compare/prevalidations_window.py:387
+#: compare/classifier_actions_tab.py:283 compare/classifier_actions_tab.py:349 compare/prevalidations_tab.py:387
 msgid "directories"
 msgstr ""
 
-#: compare/classifier_actions_window.py:294
+#: compare/classifier_actions_tab.py:289
 msgid "Run classifier action '{0}' on the following directories?"
 msgstr ""
 
-#: compare/classifier_actions_window.py:298
+#: compare/classifier_actions_tab.py:293
 msgid "Run Classifier Action"
 msgstr ""
 
-#: compare/classifier_actions_window.py:338
+#: compare/classifier_actions_tab.py:333
 msgid "No active classifier actions to run"
 msgstr ""
 
-#: compare/classifier_actions_window.py:362
+#: compare/classifier_actions_tab.py:357
 msgid "Run {0} active classifier action(s) on the following directories?"
 msgstr ""
 
-#: compare/classifier_actions_window.py:366
+#: compare/classifier_actions_tab.py:361
 msgid "Run All Classifier Actions"
 msgstr ""
 
-#: compare/classifier_management_window.py:55 compare/prevalidations_window.py:28
+#: compare/classifier_management_window.py:54 compare/prevalidations_tab.py:28
 msgid "Modify Prevalidation"
 msgstr ""
 
-#: compare/classifier_management_window.py:56 compare/prevalidations_window.py:28
+#: compare/classifier_management_window.py:55 compare/prevalidations_tab.py:28
 msgid "Prevalidation Name"
 msgstr ""
 
-#: compare/classifier_management_window.py:59
+#: compare/classifier_management_window.py:58
 msgid "Modify Classifier Action"
 msgstr ""
 
-#: compare/classifier_management_window.py:60
+#: compare/classifier_management_window.py:59
 msgid "Classifier Action Name"
 msgstr ""
 
-#: compare/classifier_management_window.py:98
+#: compare/classifier_management_window.py:97
 msgid "Positives"
 msgstr ""
 
-#: compare/classifier_management_window.py:106
+#: compare/classifier_management_window.py:105
 msgid "Negatives"
 msgstr ""
 
-#: compare/classifier_management_window.py:114
+#: compare/classifier_management_window.py:113
 msgid "Validation Types"
 msgstr ""
 
-#: compare/classifier_management_window.py:117
-msgid "Use Embedding"
+#: compare/classifier_management_window.py:116
+msgid "Use Text Embeddings"
 msgstr ""
 
-#: compare/classifier_management_window.py:124
+#: compare/classifier_management_window.py:123
 msgid "Use Image Classifier"
 msgstr ""
 
-#: compare/classifier_management_window.py:131
+#: compare/classifier_management_window.py:130
 msgid "Use Prompts"
 msgstr ""
 
-#: compare/classifier_management_window.py:140
+#: compare/classifier_management_window.py:139
 msgid "Use Embedding Prototype"
 msgstr ""
 
-#: compare/classifier_management_window.py:149 compare/compare_settings_window.py:183 compare/lookahead.py:163
-msgid "Threshold"
+#: compare/classifier_management_window.py:148
+msgid "Text Embedding Threshold"
 msgstr ""
 
-#: compare/classifier_management_window.py:169
+#: compare/classifier_management_window.py:156
+msgid "Embedding Prototype Threshold"
+msgstr ""
+
+#: compare/classifier_management_window.py:176
 msgid "Action Modifier"
 msgstr ""
 
-#: compare/classifier_management_window.py:177
+#: compare/classifier_management_window.py:184
 msgid "Image Classifier Name"
 msgstr ""
 
-#: compare/classifier_management_window.py:190
+#: compare/classifier_management_window.py:197
 msgid "Image Classifier Selected Category"
 msgstr ""
 
-#: compare/classifier_management_window.py:195
+#: compare/classifier_management_window.py:202
 msgid "Select Categories..."
 msgstr ""
 
-#: compare/classifier_management_window.py:209
+#: compare/classifier_management_window.py:216
 msgid "Should Run"
 msgstr ""
 
-#: compare/classifier_management_window.py:212
+#: compare/classifier_management_window.py:219
 msgid "Enable this classifier action"
 msgstr ""
 
-#: compare/classifier_management_window.py:221 compare/directory_profile.py:195 compare/lookahead.py:170
+#: compare/classifier_management_window.py:228 compare/directory_profile.py:195 compare/lookahead.py:170
 msgid "Done"
 msgstr ""
 
-#: compare/classifier_management_window.py:236
+#: compare/classifier_management_window.py:243
 msgid "Prototype Directory"
 msgstr ""
 
-#: compare/classifier_management_window.py:251 compare/classifier_management_window.py:289 files/go_to_file.py:137
+#: compare/classifier_management_window.py:258 compare/classifier_management_window.py:296 files/go_to_file.py:137
 #: files/go_to_file.py:378
 msgid "Browse..."
 msgstr ""
 
-#: compare/classifier_management_window.py:259
+#: compare/classifier_management_window.py:266
 msgid "Force Recalculate Prototype"
 msgstr ""
 
-#: compare/classifier_management_window.py:269
+#: compare/classifier_management_window.py:276
 msgid "Negative Prototype Directory (Optional)"
 msgstr ""
 
-#: compare/classifier_management_window.py:299
+#: compare/classifier_management_window.py:306
 msgid "Negative Prototype Weight (λ)"
 msgstr ""
 
-#: compare/classifier_management_window.py:462
+#: compare/classifier_management_window.py:489
 msgid "Select Prototype Directory"
 msgstr ""
 
-#: compare/classifier_management_window.py:473
+#: compare/classifier_management_window.py:500
 msgid "Select Negative Prototype Directory"
 msgstr ""
 
-#: compare/classifier_management_window.py:534
+#: compare/classifier_management_window.py:561
 msgid "Prototypes recalculated successfully"
 msgstr ""
 
-#: compare/classifier_management_window.py:565
+#: compare/classifier_management_window.py:592
 msgid "Classifier Management"
 msgstr ""
 
-#: compare/classifier_management_window.py:592 compare/prevalidations_window.py:217
+#: compare/classifier_management_window.py:619 compare/prevalidations_tab.py:217
 msgid "Prevalidations"
 msgstr ""
 
-#: compare/classifier_management_window.py:611
+#: compare/classifier_management_window.py:638
 msgid "Prevalidations are disabled. Enable them in the Prevalidations tab settings."
 msgstr ""
 
@@ -1197,6 +1207,10 @@ msgstr ""
 
 #: compare/compare_settings_window.py:122
 msgid "Combination Logic:"
+msgstr ""
+
+#: compare/compare_settings_window.py:183 compare/lookahead.py:163
+msgid "Threshold"
 msgstr ""
 
 #: compare/compare_settings_window.py:223
@@ -1349,7 +1363,7 @@ msgstr ""
 msgid "There are no more image groups remaining for this directory and current filter settings."
 msgstr ""
 
-#: compare/directory_profile.py:133 compare/prevalidations_window.py:370
+#: compare/directory_profile.py:133 compare/prevalidations_tab.py:370
 msgid "Edit Profile"
 msgstr ""
 
@@ -1441,7 +1455,7 @@ msgstr ""
 msgid "Found {0} images that meet the threshold..."
 msgstr ""
 
-#: compare/lookahead.py:98 compare/prevalidations_window.py:275
+#: compare/lookahead.py:98 compare/prevalidations_tab.py:275
 msgid "Edit Lookahead"
 msgstr ""
 
@@ -1461,71 +1475,71 @@ msgstr ""
 msgid "Prevalidation Name or Custom Text"
 msgstr ""
 
-#: compare/prevalidations_window.py:40
+#: compare/prevalidations_tab.py:40
 msgid "Lookaheads (select from shared list)"
 msgstr ""
 
-#: compare/prevalidations_window.py:49
+#: compare/prevalidations_tab.py:49
 msgid "Select Lookaheads..."
 msgstr ""
 
-#: compare/prevalidations_window.py:59
+#: compare/prevalidations_tab.py:59
 msgid "Directory Profile"
 msgstr ""
 
-#: compare/prevalidations_window.py:223
+#: compare/prevalidations_tab.py:223
 msgid "Add prevalidation"
 msgstr ""
 
-#: compare/prevalidations_window.py:225
+#: compare/prevalidations_tab.py:225
 msgid "Clear prevalidations"
 msgstr ""
 
-#: compare/prevalidations_window.py:232 utils/help_and_config.py:254
+#: compare/prevalidations_tab.py:232 utils/help_and_config.py:254
 msgid "Enable Prevalidations"
 msgstr ""
 
-#: compare/prevalidations_window.py:245
+#: compare/prevalidations_tab.py:245
 msgid "Lookaheads"
 msgstr ""
 
-#: compare/prevalidations_window.py:272
+#: compare/prevalidations_tab.py:272
 msgid "Add Lookahead"
 msgstr ""
 
-#: compare/prevalidations_window.py:278
+#: compare/prevalidations_tab.py:278
 msgid "Remove Lookahead"
 msgstr ""
 
-#: compare/prevalidations_window.py:291
+#: compare/prevalidations_tab.py:291
 msgid "{name} ({name_or_text}, threshold: {threshold:.2f})"
 msgstr ""
 
-#: compare/prevalidations_window.py:340
+#: compare/prevalidations_tab.py:340
 msgid "Directory Profiles"
 msgstr ""
 
-#: compare/prevalidations_window.py:367
+#: compare/prevalidations_tab.py:367
 msgid "Add Profile"
 msgstr ""
 
-#: compare/prevalidations_window.py:373
+#: compare/prevalidations_tab.py:373
 msgid "Remove Profile"
 msgstr ""
 
-#: compare/prevalidations_window.py:387
+#: compare/prevalidations_tab.py:387
 msgid "directory"
 msgstr ""
 
-#: compare/prevalidations_window.py:451
+#: compare/prevalidations_tab.py:451
 msgid "Profile"
 msgstr ""
 
-#: compare/prevalidations_window.py:476
+#: compare/prevalidations_tab.py:476
 msgid "(Global)"
 msgstr ""
 
-#: compare/prevalidations_window.py:492 files/hotkey_actions_window.py:96
+#: compare/prevalidations_tab.py:492 files/hotkey_actions_window.py:96
 msgid "Set"
 msgstr ""
 

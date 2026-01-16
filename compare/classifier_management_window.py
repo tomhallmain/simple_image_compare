@@ -112,8 +112,8 @@ class ClassifierActionModifyWindow:
         self.label_validation_types = Label(self.frame)
         self.add_label(self.label_validation_types, _("Validation Types"), row=row, wraplength=self.COL_0_WIDTH)
         
-        self.use_embedding_var = BooleanVar(value=self.classifier_action.use_embedding)
-        self.use_embedding_checkbox = Checkbutton(self.frame, text=_("Use Embedding"), variable=self.use_embedding_var, 
+        self.use_test_embedding_var = BooleanVar(value=self.classifier_action.use_embedding)
+        self.use_embedding_checkbox = Checkbutton(self.frame, text=_("Use Text Embeddings"), variable=self.use_test_embedding_var, 
                                                 command=self.update_ui_for_validation_types,
                                                 bg=AppStyle.BG_COLOR, fg=AppStyle.FG_COLOR)
         self.use_embedding_checkbox.grid(row=row, column=1, sticky=W)
@@ -143,12 +143,20 @@ class ClassifierActionModifyWindow:
         self.use_prototype_checkbox.grid(row=row, column=1, sticky=W)
 
         row += 1
-        # Threshold slider
-        self.label_threshold = Label(self.frame)
-        self.add_label(self.label_threshold, _("Threshold"), row=row, wraplength=self.COL_0_WIDTH)
-        self.threshold_slider = Scale(self.frame, from_=0, to=100, orient=HORIZONTAL, command=self.set_threshold)
-        self.threshold_slider.set(float(self.classifier_action.threshold) * 100)
-        self.threshold_slider.grid(row=row, column=1, sticky=W)
+        # Text Embedding Threshold slider
+        self.label_text_embedding_threshold = Label(self.frame)
+        self.add_label(self.label_text_embedding_threshold, _("Text Embedding Threshold"), row=row, wraplength=self.COL_0_WIDTH)
+        self.text_embedding_threshold_slider = Scale(self.frame, from_=0, to=100, orient=HORIZONTAL, command=self.set_text_embedding_threshold)
+        self.text_embedding_threshold_slider.set(float(self.classifier_action.text_embedding_threshold) * 100)
+        self.text_embedding_threshold_slider.grid(row=row, column=1, sticky=W)
+        
+        row += 1
+        # Embedding Prototype Threshold slider
+        self.label_prototype_threshold = Label(self.frame)
+        self.add_label(self.label_prototype_threshold, _("Embedding Prototype Threshold"), row=row, wraplength=self.COL_0_WIDTH)
+        self.prototype_threshold_slider = Scale(self.frame, from_=0, to=100, orient=HORIZONTAL, command=self.set_prototype_threshold)
+        self.prototype_threshold_slider.set(float(self.classifier_action.prototype_threshold) * 100)
+        self.prototype_threshold_slider.grid(row=row, column=1, sticky=W)
 
         row += 1
         # Action dropdown
@@ -328,18 +336,23 @@ class ClassifierActionModifyWindow:
         if text != ClassifierAction.NO_NEGATIVES_STR:
             self.classifier_action.set_negatives(text)
 
-    def set_threshold(self, event=None):
-        self.classifier_action.threshold = float(self.threshold_slider.get()) / 100
+    def set_text_embedding_threshold(self, event=None):
+        self.classifier_action.text_embedding_threshold = float(self.text_embedding_threshold_slider.get()) / 100
+        # Keep threshold for backward compatibility
+        self.classifier_action.threshold = self.classifier_action.text_embedding_threshold
+    
+    def set_prototype_threshold(self, event=None):
+        self.classifier_action.prototype_threshold = float(self.prototype_threshold_slider.get()) / 100
 
     def set_validation_types(self):
-        self.classifier_action.use_embedding = self.use_embedding_var.get()
+        self.classifier_action.use_embedding = self.use_test_embedding_var.get()
         self.classifier_action.use_image_classifier = self.use_image_classifier_var.get()
         self.classifier_action.use_prompts = self.use_prompts_var.get()
         self.classifier_action.use_prototype = self.use_prototype_var.get()
 
     def update_ui_for_validation_types(self):
         """Update UI elements based on the selected validation types."""
-        use_embedding = self.use_embedding_var.get()
+        use_text_embedding = self.use_test_embedding_var.get()
         use_image_classifier = self.use_image_classifier_var.get()
         use_prompts = self.use_prompts_var.get()
         use_prototype = self.use_prototype_var.get()
@@ -357,7 +370,7 @@ class ClassifierActionModifyWindow:
             self.label_selected_category.grid_remove()
         
         # Show/hide positive/negative fields based on type
-        if use_embedding or use_prompts:
+        if use_text_embedding or use_prompts:
             self.positives_entry.grid()
             self.label_positives.grid()
             self.negatives_entry.grid()
@@ -368,7 +381,15 @@ class ClassifierActionModifyWindow:
             self.negatives_entry.grid_remove()
             self.label_negatives.grid_remove()
         
-        # Show/hide prototype fields
+        # Show/hide text embedding threshold based on use_embedding
+        if use_text_embedding:
+            self.text_embedding_threshold_slider.grid()
+            self.label_text_embedding_threshold.grid()
+        else:
+            self.text_embedding_threshold_slider.grid_remove()
+            self.label_text_embedding_threshold.grid_remove()
+        
+        # Show/hide prototype fields and prototype threshold
         if use_prototype:
             if hasattr(self, 'prototype_dir_frame'):
                 self.prototype_dir_frame.grid()
@@ -379,6 +400,9 @@ class ClassifierActionModifyWindow:
                 self.label_negative_prototype_directory.grid()
                 self.negative_prototype_lambda_slider.grid()
                 self.label_negative_prototype_lambda.grid()
+            # Show prototype threshold
+            self.prototype_threshold_slider.grid()
+            self.label_prototype_threshold.grid()
         else:
             if hasattr(self, 'prototype_dir_frame'):
                 self.prototype_dir_frame.grid_remove()
@@ -389,6 +413,9 @@ class ClassifierActionModifyWindow:
                 self.label_negative_prototype_directory.grid_remove()
                 self.negative_prototype_lambda_slider.grid_remove()
                 self.label_negative_prototype_lambda.grid_remove()
+            # Hide prototype threshold
+            self.prototype_threshold_slider.grid_remove()
+            self.label_prototype_threshold.grid_remove()
         
         # Let subclasses handle their specific UI updates
         self.update_specific_ui_for_validation_types()
@@ -419,7 +446,8 @@ class ClassifierActionModifyWindow:
         self.set_name()
         self.set_positives()
         self.set_negatives()
-        self.set_threshold()
+        self.set_text_embedding_threshold()
+        self.set_prototype_threshold()
         self.set_validation_types()
         self.set_action()
         self.set_action_modifier()

@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2026-01-13 17:45-0500\n"
-"PO-Revision-Date: 2026-01-13 17:45-0500\n"
-"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
+"POT-Creation-Date: 2026-01-16 02:50-0500\n"
+"PO-Revision-Date: 2026-01-16 02:50-0500\n"
+"Last-Translator: Translator Name <translator@example.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:113 app.py:1020 app.py:2500
+#: app.py:113 app.py:1022 app.py:2506
 msgid " Simple Image Compare "
 msgstr " シンプルな画像比較 "
 
@@ -24,7 +24,7 @@ msgstr "（メインウィンドウ）"
 msgid "Theme switched to {0}."
 msgstr "テーマを{0}に切り替えます。"
 
-#: app.py:282 app.py:502 app.py:1050 compare/compare_wrapper.py:508
+#: app.py:282 app.py:503 app.py:1052 compare/compare_wrapper.py:508
 msgid "Set a directory to run comparison."
 msgstr "比較を実行するディレクトリを設定します。"
 
@@ -94,8 +94,8 @@ msgstr "肯定的なテキスト："
 msgid "Negative text:"
 msgstr "否定的なテキスト："
 
-#: app.py:360 compare/classifier_actions_window.py:105
-#: compare/classifier_management_window.py:591
+#: app.py:360 compare/classifier_actions_tab.py:100
+#: compare/classifier_management_window.py:618
 msgid "Classifier Actions"
 msgstr "分類器アクション"
 
@@ -145,125 +145,125 @@ msgstr "メディアのベース名をコピーする"
 msgid "---- DELETE ----"
 msgstr "---- 染料 ----"
 
-#: app.py:559
+#: app.py:560
 msgid "Confirm Quit"
 msgstr "終了を確認する"
 
-#: app.py:559
+#: app.py:560
 msgid "Would you like to quit the application?"
 msgstr "応募をお願いしたいですか?"
 
-#: app.py:682
+#: app.py:684
 msgid "Ended slideshows"
 msgstr "終了したスライドショー"
 
-#: app.py:735 app.py:2160 app.py:2167 app.py:2171 app.py:2175 app.py:2181
-#: app.py:2288 app.py:2304 app.py:2321
+#: app.py:737 app.py:2166 app.py:2173 app.py:2177 app.py:2181 app.py:2187
+#: app.py:2294 app.py:2310 app.py:2327
 msgid "Warning"
 msgstr "警告"
 
-#: app.py:735
+#: app.py:737
 msgid "No files found in directory after refresh."
 msgstr "更新後、ディレクトリにファイルが見つかりません。"
 
-#: app.py:773
+#: app.py:775
 msgid "Slideshow for new images started"
 msgstr "新しい画像のスライドショー開始"
 
-#: app.py:775
+#: app.py:777
 msgid "Slideshow started"
 msgstr "スライドショー開始"
 
-#: app.py:778
+#: app.py:780
 msgid "Slideshows ended"
 msgstr "スライドショー終了"
 
-#: app.py:791
+#: app.py:793
 msgid "Browsing mode set."
 msgstr "ブラウジングモードセット。"
 
-#: app.py:836 utils/constants.py:331
+#: app.py:838 utils/constants.py:331
 msgid "View Media Details"
 msgstr "メディア詳細を見る"
 
-#: app.py:837
+#: app.py:839
 msgid "Hide Media"
 msgstr "メディアを非表示にする"
 
-#: app.py:838
+#: app.py:840
 msgid "Remove from Marks"
 msgstr "マークから削除する"
 
-#: app.py:838
+#: app.py:840
 msgid "Add to Marks"
 msgstr "マークに追加"
 
-#: app.py:840
+#: app.py:842
 msgid "Remove from Favorites"
 msgstr "お気に入りから削除する"
 
-#: app.py:840
+#: app.py:842
 msgid "Add to Favorites"
 msgstr "お気に入りに追加"
 
-#: app.py:843
+#: app.py:845
 msgid "Remove from Directory Notes"
 msgstr "ディレクトリのメモから削除"
 
-#: app.py:843
+#: app.py:845
 msgid "Add to Directory Notes"
 msgstr "ディレクトリのメモに追加"
 
-#: app.py:845
+#: app.py:847
 msgid "Edit File Note"
 msgstr "ファイル編集の注意"
 
-#: app.py:847
+#: app.py:849
 msgid "Open in GIMP"
 msgstr "GIMPで開く"
 
-#: app.py:848 image/image_details.py:201 utils/constants.py:337
+#: app.py:850 image/image_details.py:201 utils/constants.py:337
 #: utils/help_and_config.py:138
 msgid "Run Image Generation"
 msgstr "映像生成の実行"
 
-#: app.py:849
+#: app.py:851
 msgid "Run Image Generation on Directory"
 msgstr "ディレクトリで画像生成を実行する"
 
-#: app.py:850
+#: app.py:852
 msgid "Show Source Image"
 msgstr "ソース画像を表示"
 
-#: app.py:851
+#: app.py:853
 msgid "Find Related Images"
 msgstr "関連する画像を探す"
 
-#: app.py:852
+#: app.py:854
 msgid "Set Marks from Downstream Related Images"
 msgstr "下流に関連する画像からマークを設定する"
 
-#: app.py:854
+#: app.py:856
 msgid "Set Current Image as Search Image"
 msgstr "現在の画像を検索結果の画像として設定する"
 
-#: app.py:855
+#: app.py:857
 msgid "Add Current Image to Negative Search"
 msgstr "現在の画像をネガティブ検索に追加する"
 
-#: app.py:856
+#: app.py:858
 msgid "Run Refacdir"
 msgstr "RefacDirを実行してください。"
 
-#: app.py:874
+#: app.py:876
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(インデックスの詳細を見るには、この画像をディレクトリの一部として開いてください）。"
 
-#: app.py:911 app.py:1653
+#: app.py:913 app.py:1655
 msgid "Many Files"
 msgstr "多くのファイル"
 
-#: app.py:939
+#: app.py:941
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
@@ -271,154 +271,154 @@ msgid ""
 msgstr ""
 "外部ストレージに大量のファイルを含むディレクトリまたは相当数のファイルを含むディレクトリが検出されました。これにより、読み込み時間が遅くなる可能性があります。フルディレクトリを読み込むことを確認してください。"
 
-#: app.py:940
+#: app.py:942
 msgid "Large Directory Detected: {0}"
 msgstr "大規模なディレクトリが検出されました: {0}"
 
-#: app.py:970
+#: app.py:972
 msgid "No downstream related image(s) found in {0}"
 msgstr "{0} に下流関連の画像は見つかりませんでした。"
 
-#: app.py:992
+#: app.py:994
 msgid "{0} file marks set"
 msgstr "{0} ファイル マーク セット"
 
-#: app.py:998
+#: app.py:1000
 msgid "Help and Config"
 msgstr "ヘルプと設定"
 
-#: app.py:1110
+#: app.py:1112
 msgid "Set Image Comparison Directory"
 msgstr "画像比較ディレクトリの設定"
 
-#: app.py:1164
+#: app.py:1166
 msgid "No image selected."
 msgstr "選択した画像はありません。"
 
-#: app.py:1164
+#: app.py:1166
 msgid "Invalid Setting"
 msgstr "無効な設定"
 
-#: app.py:1203
+#: app.py:1205
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "テキスト埋め込みを検索するには、比較モードを埋め込みモードに設定する必要があります。"
 
-#: app.py:1208
+#: app.py:1210
 msgid "Select image file"
 msgstr "画像ファイルの選択"
 
-#: app.py:1237
+#: app.py:1239
 msgid "Somehow, the search file is invalid"
 msgstr "どういうわけか、検索ファイルが無効です"
 
-#: app.py:1323 app.py:1348
+#: app.py:1325 app.py:1350
 msgid "Failed to get active image filepath"
 msgstr "アクティブなイメージファイルパスを取得する失敗"
 
-#: app.py:1433
+#: app.py:1435
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% 完了"
 
-#: app.py:1439
+#: app.py:1441
 msgid "Confirm comparison"
 msgstr "比較確認"
 
-#: app.py:1440
+#: app.py:1442
 msgid "No base directory has been set, will use current base directory of "
 msgstr "ベースディレクトリが設定されていないので、現在のベースディレクトリを使用する： "
 
-#: app.py:1441
+#: app.py:1443
 msgid "Are you sure you want to proceed?"
 msgstr "続行したいですか?"
 
-#: app.py:1464
+#: app.py:1466
 msgid "Error running compare"
 msgstr "エラー実行比較"
 
-#: app.py:1499
+#: app.py:1501
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションでマークが付かない"
 
-#: app.py:1510
+#: app.py:1512
 msgid "Mark removed. Remaining: {0}"
 msgstr "マーク削除 残っている {0}"
 
-#: app.py:1514
+#: app.py:1516
 msgid "Mark added. Total set: {0}"
 msgstr "マークが付け加えた。合計セット： {0}"
 
-#: app.py:1531
+#: app.py:1533
 msgid "Marks added. Total set: {0}"
 msgstr "マークが追加された。合計セット： {0}"
 
-#: app.py:1540
+#: app.py:1542
 msgid "First sorted mark"
 msgstr "ファーストソートマーク"
 
-#: app.py:1547
+#: app.py:1549
 msgid "Only one marked file set."
 msgstr "1つのマーク付きファイルセットのみ。"
 
-#: app.py:1560
+#: app.py:1562
 msgid "Invalid file path"
 msgstr "無効なファイルパス"
 
-#: app.py:1560
+#: app.py:1562
 msgid "The file path {0} is invalid."
 msgstr "ファイルパス {0} は無効です。"
 
-#: app.py:1566
+#: app.py:1568
 msgid "Including marks: {0}"
 msgstr "マークを含む：{0}"
 
-#: app.py:1608
+#: app.py:1610
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0}マークが設定された(>={1}の予定)。\n"
 "マークを設定するには Shift+M を使用します。"
 
-#: app.py:1653
+#: app.py:1655
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "本当にディレクトリ{0}ですべての事前検証を実行したいのですか？時間がかかるかもしれません。"
 
-#: app.py:1668
+#: app.py:1670
 msgid "Prevalidations now running"
 msgstr "今すぐ実行する準備"
 
-#: app.py:1668
+#: app.py:1670
 msgid "Prevalidations turned off"
 msgstr "無効化がオフ"
 
-#: app.py:1689
+#: app.py:1695
 msgid "Please set a base directory first"
 msgstr "まずベースディレクトリを設定してください"
 
-#: app.py:1718
+#: app.py:1724
 msgid "Removed from directory notes: {0}"
 msgstr "ディレクトリのメモから削除されました: {0}"
 
-#: app.py:1721
+#: app.py:1727
 msgid "Added to directory notes: {0}"
 msgstr "ディレクトリのメモへ追加: {0}"
 
-#: app.py:1744 files/directory_notes_window.py:242
+#: app.py:1750 files/directory_notes_window.py:242
 msgid "Edit Note - {0}"
 msgstr "編集注 - {0}"
 
-#: app.py:1768 files/directory_notes_window.py:266
+#: app.py:1774 files/directory_notes_window.py:266
 msgid "Note saved for: {0}"
 msgstr "メモを保存しました：{0}"
 
-#: app.py:1781 files/directory_notes_window.py:273
+#: app.py:1787 files/directory_notes_window.py:273
 msgid "Save"
 msgstr "保存"
 
-#: app.py:1784 auth/app_startup_auth.py:127 auth/password_admin_window.py:462
+#: app.py:1790 auth/app_startup_auth.py:127 auth/password_admin_window.py:462
 #: auth/password_dialog.py:152 auth/password_dialog.py:221
 #: auth/password_dialog.py:238 compare/compare_settings_window.py:373
 #: files/directory_notes_window.py:276 files/pdf_options_window.py:77
@@ -427,74 +427,74 @@ msgstr "保存"
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: app.py:1898
+#: app.py:1904
 msgid "File not found"
 msgstr "ファイルが見つかりません"
 
-#: app.py:1898
+#: app.py:1904
 msgid "No file was found for the search text: \"{0}\""
 msgstr "検索テキストに該当するファイルが見つかりませんでした： \"{0}\""
 
-#: app.py:1907
+#: app.py:1913
 msgid "Index navigation not available"
 msgstr "インデックスナビゲーションは利用できません"
 
-#: app.py:1907
+#: app.py:1913
 msgid "Index navigation is only available in BROWSE mode."
 msgstr "インデックスナビゲーションは閲覧モードでのみ利用可能です。"
 
-#: app.py:1918
+#: app.py:1924
 msgid "Invalid index"
 msgstr "無効なインデックス"
 
-#: app.py:1934
+#: app.py:1940
 msgid "No image selected"
 msgstr "選択した画像なし"
 
-#: app.py:1934
+#: app.py:1940
 msgid "No image was selected for comparison"
 msgstr "比較のために画像が選択されていない"
 
-#: app.py:1948
+#: app.py:1954
 msgid "No Text Search Presets Found"
 msgstr "テキスト検索プリセットが見つかりません"
 
-#: app.py:1949
+#: app.py:1955
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "テキスト埋め込み検索プリセットが見つかりません。config.jsonファイルに設定してください。"
 
-#: app.py:2046
+#: app.py:2052
 msgid "Opening media file: {0}"
 msgstr "メディアファイルを開く: {0}"
 
-#: app.py:2049
+#: app.py:2055
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr "現在のメディアファイルを開くことができませんでした。有効なファイルパスを取得できませんでした。"
 
-#: app.py:2054
+#: app.py:2060
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
 msgstr "GIMPの統合設定が有効になっていません。config.jsonファイルで『gimp_exe_loc』を設定してください。"
 
-#: app.py:2054
+#: app.py:2060
 msgid "GIMP Integration Error"
 msgstr "GIMP 統合エラー"
 
-#: app.py:2066
+#: app.py:2072
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "GIMPで現在のファイルを開くのに失敗しました。"
 
-#: app.py:2077 image/temp_image_canvas.py:167
+#: app.py:2083 image/temp_image_canvas.py:167
 msgid "Copied filepath to clipboard"
 msgstr "ファイルパスをクリップボードにコピーしました"
 
-#: app.py:2085
+#: app.py:2091
 msgid "Copied filename to clipboard"
 msgstr "ファイル名をクリップボードにコピーしました"
 
-#: app.py:2092
+#: app.py:2098
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -502,53 +502,53 @@ msgstr ""
 "現在の画像を隠す。\n"
 "非表示を解除するには、Shift+Bキーを押します。"
 
-#: app.py:2097
+#: app.py:2103
 msgid "Cleared all hidden images."
 msgstr "すべての隠し画像を消去。"
 
-#: app.py:2105
+#: app.py:2111
 msgid "DELETE_LOCK"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションが削除を阻止"
 
-#: app.py:2123
+#: app.py:2129
 msgid "Invalid action, no files found to delete"
 msgstr "無効なアクションです。"
 
-#: app.py:2126
+#: app.py:2132
 msgid "Invalid action, search image not found"
 msgstr "無効なアクションです。"
 
-#: app.py:2141
+#: app.py:2147
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの削除に失敗しました。"
 
-#: app.py:2148
+#: app.py:2154
 msgid "Removing directory: {0}"
 msgstr "ディレクトリを削除中: {0}"
 
-#: app.py:2150
+#: app.py:2156
 msgid "Removing file: {0}"
 msgstr "ファイルを削除しています： {0}"
 
-#: app.py:2160 app.py:2181
+#: app.py:2166 app.py:2187
 msgid "Failed to delete item: {0}"
 msgstr "アイテムの削除に失敗しました: {0}"
 
-#: app.py:2164
+#: app.py:2170
 msgid ""
 "Failed to move directory to {0}. Double check the trash folder is set "
 "properly in config.json."
 msgstr "ディレクトリを{0}に移動できませんでした。config.jsonでゴミ箱フォルダーが正しく設定されているか確認してください。"
 
-#: app.py:2166
+#: app.py:2172
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
 msgstr "ファイルを{0}に送信できませんでした。config.jsonでゴミ箱フォルダーが正しく設定されているか確認してください。"
 
-#: app.py:2172
+#: app.py:2178
 msgid ""
 "Failed to move directory to the trash. Either pip install send2trash or set "
 "a specific trash folder in config.json."
@@ -556,98 +556,98 @@ msgstr ""
 "ディレクトリをゴミ箱に移動できませんでしたので。pip install send2trash を実行するか、config.json "
 "で特定のゴミ箱フォルダーを設定してください。"
 
-#: app.py:2176
+#: app.py:2182
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "ゴミ箱へのファイル送信に失敗しました。pipでsend2trashをインストールするか、config.jsonでゴミ箱フォルダを指定してください。"
 
-#: app.py:2186
+#: app.py:2192
 msgid "Invalid directory"
 msgstr "無効なディレクトリ"
 
-#: app.py:2186
+#: app.py:2192
 msgid "No valid base directory to delete"
 msgstr "削除可能な有効なベースディレクトリがありません。"
 
-#: app.py:2197
+#: app.py:2203
 msgid "Cannot Delete Directory"
 msgstr "ディレクトリを削除できません"
 
-#: app.py:2201
+#: app.py:2207
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "ディレクトリとすべてのコンテンツを削除してもよろしいですか？"
 
-#: app.py:2203
+#: app.py:2209
 msgid "Contents to be deleted:"
 msgstr "削除対象の内容："
 
-#: app.py:2205
+#: app.py:2211
 msgid "Confirm Delete Directory"
 msgstr "ディレクトリの削除を確認してください"
 
-#: app.py:2236
+#: app.py:2242
 msgid "Delete Directory Error"
 msgstr "ディレクトリ削除エラー"
 
-#: app.py:2238
+#: app.py:2244
 msgid "Directory {0} deleted."
 msgstr "ディレクトリ {0} が削除されました。"
 
-#: app.py:2254
+#: app.py:2260
 msgid "Invalid target filepath for replacement: "
 msgstr "置換対象のファイルパスが無効です： "
 
-#: app.py:2258
+#: app.py:2264
 msgid "Moved search image to "
 msgstr "検索画像を： "
 
-#: app.py:2288
+#: app.py:2294
 msgid "Failed to get active media filepath"
 msgstr "アクティブなメディアファイルパスを取得できませんでした"
 
-#: app.py:2302
+#: app.py:2308
 msgid "Running image gen: "
 msgstr "イメージ・ジェネレーションの実行： "
 
-#: app.py:2304 app.py:2321
+#: app.py:2310 app.py:2327
 msgid "Error running image generation:"
 msgstr "画像生成の実行エラー："
 
-#: app.py:2319
+#: app.py:2325
 msgid "Running image gen on directory: "
 msgstr "ディレクトリで画像生成を実行中: "
 
-#: app.py:2328
+#: app.py:2334
 msgid "Running refacdir"
 msgstr "ランニング refacdir"
 
-#: app.py:2333 auth/app_startup_auth.py:141 auth/password_dialog.py:249
+#: app.py:2339 auth/app_startup_auth.py:141 auth/password_dialog.py:249
 #: extensions/gimp/gimp_wrapper.py:689 extensions/gimp/gimp_wrapper.py:718
 #: files/pdf_creator.py:133 files/pdf_creator.py:137 files/pdf_creator.py:140
 msgid "Error"
 msgstr "エラー"
 
-#: app.py:2435
+#: app.py:2441
 msgid "GROUP_DETAILS"
 msgstr ""
 "グループ{0}/{1}\n"
 "サイズ：{2}"
 
-#: app.py:2439
+#: app.py:2445
 msgid "No image files found"
 msgstr "画像ファイルが見つかりません"
 
-#: app.py:2441
+#: app.py:2447
 msgid "1 image file found"
 msgstr "1 見つかった画像ファイル"
 
-#: app.py:2442
+#: app.py:2448
 msgid "{0} image files found"
 msgstr "{0} イメージファイルが見つかりました"
 
-#: app.py:2444
+#: app.py:2450
 msgid "(filtered)"
 msgstr "(フィルタリング)"
 
@@ -940,218 +940,210 @@ msgid "(no negatives set)"
 msgstr "(ネガなし）"
 
 #: compare/classifier_actions_manager.py:46
-#: compare/classifier_management_window.py:61
+#: compare/classifier_management_window.py:60
 msgid "New Classifier Action"
 msgstr "新分類器アクション"
 
-#: compare/classifier_actions_manager.py:115
+#: compare/classifier_actions_manager.py:120
 msgid "Loading image classifier <{0}> ..."
 msgstr "画像分類器<{0}>をロード中 ..."
 
-#: compare/classifier_actions_manager.py:210
+#: compare/classifier_actions_manager.py:215
 msgid "Loading embedding prototype from {0}..."
 msgstr "{0}から埋め込みプロトタイプを読み込み中..."
 
-#: compare/classifier_actions_manager.py:226
+#: compare/classifier_actions_manager.py:231
 msgid "Loading negative embedding prototype from {0}..."
 msgstr "{0}からネガティブ埋め込みプロトタイプを読み込み中..."
 
-#: compare/classifier_actions_manager.py:377
+#: compare/classifier_actions_manager.py:386
 msgid " detected"
 msgstr " 検出する"
 
-#: compare/classifier_actions_manager.py:379
+#: compare/classifier_actions_manager.py:388
 msgid " - skipped"
 msgstr " - スキップ"
 
-#: compare/classifier_actions_manager.py:382
+#: compare/classifier_actions_manager.py:391
 msgid " - hidden"
 msgstr " - 隠し"
 
-#: compare/classifier_actions_manager.py:387
+#: compare/classifier_actions_manager.py:396
 msgid " - marked"
 msgstr " - マーク"
 
-#: compare/classifier_actions_manager.py:395
+#: compare/classifier_actions_manager.py:404
 msgid "Moving file: "
 msgstr "ファイルの移動: "
 
-#: compare/classifier_actions_manager.py:441
+#: compare/classifier_actions_manager.py:450
 msgid "Deleting file: "
 msgstr "ファイルの削除: "
 
-#: compare/classifier_actions_manager.py:497
+#: compare/classifier_actions_manager.py:506
 msgid "Action modifier is not a valid directory: "
 msgstr "アクション修飾子は有効なディレクトリではありません : "
 
-#: compare/classifier_actions_manager.py:499
+#: compare/classifier_actions_manager.py:508
 msgid "Invalid classifier action {0}, may cause errors or be unable to run!"
 msgstr "無効な分類器アクション {0} は、エラーを引き起こすか、実行できない可能性があります！"
 
-#: compare/classifier_actions_manager.py:597
+#: compare/classifier_actions_manager.py:615
 msgid "embedding"
 msgstr "埋め込み"
 
-#: compare/classifier_actions_manager.py:599
+#: compare/classifier_actions_manager.py:617
 msgid "classifier {0}"
 msgstr "クラシファイア {0}"
 
-#: compare/classifier_actions_manager.py:601
+#: compare/classifier_actions_manager.py:619
 msgid "prompts"
 msgstr "プロンプト"
 
-#: compare/classifier_actions_manager.py:603
+#: compare/classifier_actions_manager.py:621
 msgid "prototype"
 msgstr "試作品"
 
-#: compare/classifier_actions_manager.py:611
+#: compare/classifier_actions_manager.py:629
 msgid "categories: {0}"
 msgstr "カテゴリに分類されます： {0}"
 
-#: compare/classifier_actions_manager.py:615
+#: compare/classifier_actions_manager.py:633
 msgid "{0} positives, {1} negatives"
 msgstr "{0} 陽性、{1} 陰性"
 
-#: compare/classifier_actions_manager.py:619
+#: compare/classifier_actions_manager.py:637
 msgid " using {0} ({1})"
 msgstr " {0} ({1})"
 
-#: compare/classifier_actions_manager.py:621
+#: compare/classifier_actions_manager.py:639
 msgid " using {0}"
 msgstr " {0}"
 
-#: compare/classifier_actions_manager.py:623
+#: compare/classifier_actions_manager.py:641
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} 陽性、{1} 陰性)"
 
-#: compare/classifier_actions_manager.py:626
+#: compare/classifier_actions_manager.py:644
 msgid "disabled"
 msgstr "無効化"
 
-#: compare/classifier_actions_manager.py:633
-#: compare/classifier_management_window.py:57
-#: compare/prevalidations_window.py:29
+#: compare/classifier_actions_manager.py:651
+#: compare/classifier_management_window.py:56 compare/prevalidations_tab.py:29
 msgid "New Prevalidation"
 msgstr "新規登録"
 
-#: compare/classifier_actions_manager.py:711
+#: compare/classifier_actions_manager.py:731
 msgid "Profile directory is not a valid directory: "
 msgstr "プロファイルディレクトリが無効なディレクトリです: "
 
-#: compare/classifier_actions_manager.py:713
+#: compare/classifier_actions_manager.py:733
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr "無効な優先値 {0} は、エラーや実行できません。"
 
-#: compare/classifier_actions_manager.py:786
+#: compare/classifier_actions_manager.py:813
 msgid "lookaheads: {0}"
 msgstr "先読み: {0}"
 
-#: compare/classifier_actions_window.py:111
+#: compare/classifier_actions_tab.py:106
 msgid "Add Classifier Action"
 msgstr "分類器アクションを追加"
 
-#: compare/classifier_actions_window.py:113
+#: compare/classifier_actions_tab.py:108
 msgid "Clear Classifier Actions"
 msgstr "分類器アクションをクリア"
 
-#: compare/classifier_actions_window.py:115
+#: compare/classifier_actions_tab.py:110
 msgid "Run All"
 msgstr "すべて実行"
 
-#: compare/classifier_actions_window.py:119
+#: compare/classifier_actions_tab.py:114
 msgid "Run on Profile:"
 msgstr "プロファイル上で実行:"
 
-#: compare/classifier_actions_window.py:154
-#: compare/prevalidations_window.py:454
+#: compare/classifier_actions_tab.py:149 compare/prevalidations_tab.py:454
 msgid "Active"
 msgstr "アクティブ"
 
-#: compare/classifier_actions_window.py:158
-#: compare/prevalidations_window.py:445 utils/constants.py:133
-#: utils/constants.py:148
+#: compare/classifier_actions_tab.py:153 compare/prevalidations_tab.py:445
+#: utils/constants.py:133 utils/constants.py:148
 msgid "Name"
 msgstr "お名前 (必須)"
 
-#: compare/classifier_actions_window.py:162
-#: compare/classifier_management_window.py:157
-#: compare/prevalidations_window.py:448
+#: compare/classifier_actions_tab.py:157
+#: compare/classifier_management_window.py:164
+#: compare/prevalidations_tab.py:448
 msgid "Action"
 msgstr "アクション"
 
-#: compare/classifier_actions_window.py:183
+#: compare/classifier_actions_tab.py:178
 msgid "Run"
 msgstr "実行"
 
-#: compare/classifier_actions_window.py:212
-#: compare/prevalidations_window.py:500 files/file_actions_window.py:497
-#: files/file_actions_window.py:548
+#: compare/classifier_actions_tab.py:207 compare/prevalidations_tab.py:500
+#: files/file_actions_window.py:497 files/file_actions_window.py:548
 msgid "Modify"
 msgstr "変更する"
 
-#: compare/classifier_actions_window.py:220
-#: compare/prevalidations_window.py:507 image/classifier_action_type.py:34
+#: compare/classifier_actions_tab.py:215 compare/prevalidations_tab.py:507
+#: image/classifier_action_type.py:34
 msgid "Delete"
 msgstr "削除"
 
-#: compare/classifier_actions_window.py:228
-#: compare/prevalidations_window.py:514
+#: compare/classifier_actions_tab.py:223 compare/prevalidations_tab.py:514
 msgid "Move down"
 msgstr "移動する"
 
-#: compare/classifier_actions_window.py:288
-#: compare/classifier_actions_window.py:354
-#: compare/prevalidations_window.py:387
+#: compare/classifier_actions_tab.py:283 compare/classifier_actions_tab.py:349
+#: compare/prevalidations_tab.py:387
 msgid "directories"
 msgstr "ディレクトリ"
 
-#: compare/classifier_actions_window.py:294
+#: compare/classifier_actions_tab.py:289
 msgid "Run classifier action '{0}' on the following directories?"
 msgstr "以下のディレクトリで分類器アクション 『{0}』 を実行しますか？"
 
-#: compare/classifier_actions_window.py:298
+#: compare/classifier_actions_tab.py:293
 msgid "Run Classifier Action"
 msgstr "分類器アクションを実行"
 
-#: compare/classifier_actions_window.py:338
+#: compare/classifier_actions_tab.py:333
 msgid "No active classifier actions to run"
 msgstr "実行中の分類器アクションはありません"
 
-#: compare/classifier_actions_window.py:362
+#: compare/classifier_actions_tab.py:357
 msgid "Run {0} active classifier action(s) on the following directories?"
 msgstr "以下のディレクトリで {0} 個のアクティブな分類器アクションを実行しますか？"
 
-#: compare/classifier_actions_window.py:366
+#: compare/classifier_actions_tab.py:361
 msgid "Run All Classifier Actions"
 msgstr "すべての分類器アクションを実行"
 
-#: compare/classifier_management_window.py:55
-#: compare/prevalidations_window.py:28
+#: compare/classifier_management_window.py:54 compare/prevalidations_tab.py:28
 msgid "Modify Prevalidation"
 msgstr "無効化の修正"
 
-#: compare/classifier_management_window.py:56
-#: compare/prevalidations_window.py:28
+#: compare/classifier_management_window.py:55 compare/prevalidations_tab.py:28
 msgid "Prevalidation Name"
 msgstr "バリデーション名"
 
-#: compare/classifier_management_window.py:59
+#: compare/classifier_management_window.py:58
 msgid "Modify Classifier Action"
 msgstr "分類器アクションの変更"
 
-#: compare/classifier_management_window.py:60
+#: compare/classifier_management_window.py:59
 msgid "Classifier Action Name"
 msgstr "分類器アクション名"
 
-#: compare/classifier_management_window.py:98
+#: compare/classifier_management_window.py:97
 msgid "Positives"
 msgstr "ポジティブ"
 
-#: compare/classifier_management_window.py:106
+#: compare/classifier_management_window.py:105
 msgid "Negatives"
 msgstr "ネガティブ"
 
-#: compare/classifier_management_window.py:114
+#: compare/classifier_management_window.py:113
 msgid "Validation Types"
 msgstr "バリデーション・タイプ"
 
@@ -1159,96 +1151,95 @@ msgstr "バリデーション・タイプ"
 msgid "Use Embedding"
 msgstr "埋め込みを使用する"
 
-#: compare/classifier_management_window.py:124
+#: compare/classifier_management_window.py:123
 msgid "Use Image Classifier"
 msgstr "画像分類器を使う"
 
-#: compare/classifier_management_window.py:131
+#: compare/classifier_management_window.py:130
 msgid "Use Prompts"
 msgstr "プロンプトの使用"
 
-#: compare/classifier_management_window.py:140
+#: compare/classifier_management_window.py:139
 msgid "Use Embedding Prototype"
 msgstr "埋め込みプロトタイプを使用する"
 
-#: compare/classifier_management_window.py:149
 #: compare/compare_settings_window.py:183 compare/lookahead.py:163
 msgid "Threshold"
 msgstr "しきい値"
 
-#: compare/classifier_management_window.py:169
+#: compare/classifier_management_window.py:176
 msgid "Action Modifier"
 msgstr "アクション修飾子"
 
-#: compare/classifier_management_window.py:177
+#: compare/classifier_management_window.py:184
 msgid "Image Classifier Name"
 msgstr "画像分類器名"
 
-#: compare/classifier_management_window.py:190
+#: compare/classifier_management_window.py:197
 msgid "Image Classifier Selected Category"
 msgstr "画像分類器 選択されたカテゴリー"
 
-#: compare/classifier_management_window.py:195
+#: compare/classifier_management_window.py:202
 msgid "Select Categories..."
 msgstr "カテゴリーを選択..."
 
-#: compare/classifier_management_window.py:209
+#: compare/classifier_management_window.py:216
 msgid "Should Run"
 msgstr "実行すべき"
 
-#: compare/classifier_management_window.py:212
+#: compare/classifier_management_window.py:219
 msgid "Enable this classifier action"
 msgstr "この分類器アクションを有効にする"
 
-#: compare/classifier_management_window.py:221
+#: compare/classifier_management_window.py:228
 #: compare/directory_profile.py:195 compare/lookahead.py:170
 msgid "Done"
 msgstr "完了"
 
-#: compare/classifier_management_window.py:236
+#: compare/classifier_management_window.py:243
 msgid "Prototype Directory"
 msgstr "プロトタイプ用ディレクトリ"
 
-#: compare/classifier_management_window.py:251
-#: compare/classifier_management_window.py:289 files/go_to_file.py:137
+#: compare/classifier_management_window.py:258
+#: compare/classifier_management_window.py:296 files/go_to_file.py:137
 #: files/go_to_file.py:378
 msgid "Browse..."
 msgstr "閲覧..."
 
-#: compare/classifier_management_window.py:259
+#: compare/classifier_management_window.py:266
 msgid "Force Recalculate Prototype"
 msgstr "プロトタイプの再計算を強制"
 
-#: compare/classifier_management_window.py:269
+#: compare/classifier_management_window.py:276
 msgid "Negative Prototype Directory (Optional)"
 msgstr "ネガティブプロトタイプ用ディレクトリ（オプション）"
 
-#: compare/classifier_management_window.py:299
+#: compare/classifier_management_window.py:306
 msgid "Negative Prototype Weight (λ)"
 msgstr "負の原型の重み（λ）"
 
-#: compare/classifier_management_window.py:462
+#: compare/classifier_management_window.py:489
 msgid "Select Prototype Directory"
 msgstr "プロトタイプ用ディレクトリを選択"
 
-#: compare/classifier_management_window.py:473
+#: compare/classifier_management_window.py:500
 msgid "Select Negative Prototype Directory"
 msgstr "ネガティブプロトタイプ用ディレクトリを選択"
 
-#: compare/classifier_management_window.py:534
+#: compare/classifier_management_window.py:561
 msgid "Prototypes recalculated successfully"
 msgstr "プロトタイプが正常に再計算されました"
 
-#: compare/classifier_management_window.py:565
+#: compare/classifier_management_window.py:592
 msgid "Classifier Management"
 msgstr "分類器管理"
 
-#: compare/classifier_management_window.py:592
-#: compare/prevalidations_window.py:217
+#: compare/classifier_management_window.py:619
+#: compare/prevalidations_tab.py:217
 msgid "Prevalidations"
 msgstr "事前検証"
 
-#: compare/classifier_management_window.py:611
+#: compare/classifier_management_window.py:638
 msgid ""
 "Prevalidations are disabled. Enable them in the Prevalidations tab settings."
 msgstr "事前検証は無効になっています。事前検証タブの設定で有効にしてください。"
@@ -1421,7 +1412,7 @@ msgid ""
 "filter settings."
 msgstr "このディレクトリと現在のフィルター設定に対応する画像グループはもう残っていません。"
 
-#: compare/directory_profile.py:133 compare/prevalidations_window.py:370
+#: compare/directory_profile.py:133 compare/prevalidations_tab.py:370
 msgid "Edit Profile"
 msgstr "ディレクトリプロファイルを編集する"
 
@@ -1513,7 +1504,7 @@ msgstr "バッチ {0}/{1} の処理中（{2} 枚の画像）..."
 msgid "Found {0} images that meet the threshold..."
 msgstr "閾値を満たす画像を{0}枚見つけました..."
 
-#: compare/lookahead.py:98 compare/prevalidations_window.py:275
+#: compare/lookahead.py:98 compare/prevalidations_tab.py:275
 msgid "Edit Lookahead"
 msgstr "編集先読み"
 
@@ -1533,63 +1524,71 @@ msgstr "既存の事前検証名を参照"
 msgid "Prevalidation Name or Custom Text"
 msgstr "事前検証名またはカスタムテキスト"
 
-#: compare/prevalidations_window.py:40
+#: compare/prevalidations_tab.py:40
 msgid "Lookaheads (select from shared list)"
 msgstr "先読み（共有リストから選択）"
 
-#: compare/prevalidations_window.py:49
+#: compare/prevalidations_tab.py:49
 msgid "Select Lookaheads..."
 msgstr "先読みを選択..."
 
-#: compare/prevalidations_window.py:59
+#: compare/prevalidations_tab.py:59
 msgid "Directory Profile"
 msgstr "ディレクトリプロファイル"
 
-#: compare/prevalidations_window.py:223
+#: compare/prevalidations_tab.py:223
 msgid "Add prevalidation"
 msgstr "優先権を追加"
 
-#: compare/prevalidations_window.py:225
+#: compare/prevalidations_tab.py:225
 msgid "Clear prevalidations"
 msgstr "明確な優先順位"
 
-#: compare/prevalidations_window.py:232 utils/help_and_config.py:254
+#: compare/prevalidations_tab.py:232 utils/help_and_config.py:254
 msgid "Enable Prevalidations"
 msgstr "プレバリデーションを有効にする"
 
-#: compare/prevalidations_window.py:245
+#: compare/prevalidations_tab.py:245
 msgid "Lookaheads"
 msgstr "先読み"
 
-#: compare/prevalidations_window.py:272
+#: compare/prevalidations_tab.py:272
 msgid "Add Lookahead"
 msgstr "先読みを追加"
 
-#: compare/prevalidations_window.py:278
+#: compare/prevalidations_tab.py:278
 msgid "Remove Lookahead"
 msgstr "先読みを削除"
 
-#: compare/prevalidations_window.py:340
+#: compare/prevalidations_tab.py:291
+msgid "{name} ({name_or_text}, threshold: {threshold:.2f})"
+msgstr "{name} ({name_or_text}, 閾値: {threshold:.2f})"
+
+#: compare/prevalidations_tab.py:340
 msgid "Directory Profiles"
 msgstr "ディレクトリプロファイル"
 
-#: compare/prevalidations_window.py:367
+#: compare/prevalidations_tab.py:367
 msgid "Add Profile"
 msgstr "プロフィールを追加"
 
-#: compare/prevalidations_window.py:373
+#: compare/prevalidations_tab.py:373
 msgid "Remove Profile"
 msgstr "プロフィールを削除"
 
-#: compare/prevalidations_window.py:451
+#: compare/prevalidations_tab.py:387
+msgid "directory"
+msgstr "ディレクトリ"
+
+#: compare/prevalidations_tab.py:451
 msgid "Profile"
 msgstr "ディレクトリプロファイル"
 
-#: compare/prevalidations_window.py:476
+#: compare/prevalidations_tab.py:476
 msgid "(Global)"
 msgstr "(グローバル)"
 
-#: compare/prevalidations_window.py:492 files/hotkey_actions_window.py:96
+#: compare/prevalidations_tab.py:492 files/hotkey_actions_window.py:96
 msgid "Set"
 msgstr "セット"
 
@@ -3412,10 +3411,22 @@ msgstr "ファイルパスのバックスラッシュをエスケープする"
 msgid " etc."
 msgstr " その他"
 
-#: compare/prevalidations_window.py:291
-msgid "{name} ({name_or_text}, threshold: {threshold:.2f})"
-msgstr "{name} ({name_or_text}, 閾値: {threshold:.2f})"
+#: app.py:1674
+msgid "Extra debug logging enabled"
+msgstr "追加デバッグログ記録を有効化"
 
-#: compare/prevalidations_window.py:387
-msgid "directory"
-msgstr "ディレクトリ"
+#: app.py:1674
+msgid "Extra debug logging disabled"
+msgstr "追加デバッグログ記録を無効化"
+
+#: compare/classifier_management_window.py:116
+msgid "Use Text Embeddings"
+msgstr "テキスト埋め込みを使用する"
+
+#: compare/classifier_management_window.py:148
+msgid "Text Embedding Threshold"
+msgstr "テキスト埋め込みの閾値"
+
+#: compare/classifier_management_window.py:156
+msgid "Embedding Prototype Threshold"
+msgstr "埋め込みプロトタイプの閾値"

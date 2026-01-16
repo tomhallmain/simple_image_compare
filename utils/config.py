@@ -24,6 +24,7 @@ class Config:
         self.toast_color_warning = None
         self.toast_color_success = None
         self.debug = False
+        self.debug2 = False
         self.log_level = "info"
         self.clip_model = "ViT-B/32"
         self.compare_mode = CompareMode.CLIP_EMBEDDING
@@ -63,7 +64,7 @@ class Config:
         self.always_open_new_windows = False
         self.image_types = [".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".bmp", ".heic", ".avif"]
         self.video_types = [".mp4", ".mkv", ".avi", ".wmv", ".mov", ".flv"]
-        self.image_classifier_h5_models = []
+        self.image_classifier_models = []
         self.enable_videos = True
         self.enable_gifs = True
         self.enable_pdfs = False
@@ -117,6 +118,11 @@ class Config:
         if "file_types" in self.dict:
             self.dict["image_types"] = list(self.dict["file_types"])
 
+        # Backward compatibility: support old key name
+        if "image_classifier_h5_models" in self.dict and "image_classifier_models" not in self.dict:
+            self.dict["image_classifier_models"] = self.dict["image_classifier_h5_models"]
+            logger.info("Migrated 'image_classifier_h5_models' to 'image_classifier_models' for backward compatibility")
+
         if dict_set:
             self.set_values(None, "trash_folder")
             self.set_values(list,
@@ -124,7 +130,7 @@ class Config:
                             "video_types",
                             "text_embedding_search_presets",
                             "directories_to_search_for_related_images",
-                            "image_classifier_h5_models")
+                            "image_classifier_models")
             self.set_values(str,
                             "foreground_color",
                             "background_color",
@@ -428,10 +434,10 @@ class Config:
             self.image_edit_configuration.set_from_dict(self.dict["image_edit_configuration"])
 
     def remove_example_h5_model_details(self):
-        for i in range(len(self.image_classifier_h5_models)):
-            model_details = self.image_classifier_h5_models[i]
+        for i in range(len(self.image_classifier_models)):
+            model_details = self.image_classifier_models[i]
             if "(be sure to change this)" in model_details["model_name"]:
-                del self.image_classifier_h5_models[i]
+                del self.image_classifier_models[i]
                 break
 
     def validate_and_set_directory(self, key, override=False):

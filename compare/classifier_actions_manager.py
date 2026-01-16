@@ -22,6 +22,7 @@ from image.image_classifier_manager import image_classifier_manager
 from image.image_data_extractor import image_data_extractor
 from image.image_ops import ImageOps
 from utils.app_info_cache import app_info_cache
+from utils.config import config
 from utils.constants import ActionType
 from utils.logging_setup import get_logger
 from utils.running_tasks_registry import start_thread
@@ -43,6 +44,7 @@ class ClassifierAction:
     NO_NEGATIVES_STR = _("(no negatives set)")
 
     def __init__(self, name=_("New Classifier Action"), positives=[], negatives=[], threshold=0.23,
+                 text_embedding_threshold=None, prototype_threshold=0.23,
                  action=ClassifierActionType.NOTIFY, action_modifier="",
                  image_classifier_name="", image_classifier_selected_categories=[], 
                  use_embedding=True, use_image_classifier=False, use_prompts=False, use_blacklist=False,
@@ -52,7 +54,11 @@ class ClassifierAction:
         self.name = name
         self.positives = positives
         self.negatives = negatives
-        self.threshold = threshold
+        # Backward compatibility: if text_embedding_threshold is None, use threshold
+        self.text_embedding_threshold = text_embedding_threshold if text_embedding_threshold is not None else threshold
+        self.prototype_threshold = prototype_threshold
+        # Keep threshold for backward compatibility (maps to text_embedding_threshold)
+        self.threshold = self.text_embedding_threshold
         self.action = action if isinstance(action, Enum) else ClassifierActionType[action]
         self.action_modifier = action_modifier  # Target directory for MOVE/COPY actions
         self.is_active = is_active  # Whether this action is enabled/active
@@ -249,19 +255,23 @@ class ClassifierAction:
             positive_similarity = EmbeddingPrototype.compare_with_prototype(
                 image_path, self._cached_prototype, session_cache_key=self.name
             )
-            # print(self.name + " Positive similarity: ", positive_similarity)
+            if config.debug2:
+                logger.info(self.name + " Positive similarity: " + str(positive_similarity))
             # If negative prototype is set, subtract weighted negative similarity (prototype_type=1)
             if self._cached_negative_prototype is not None:
                 negative_similarity = EmbeddingPrototype.compare_with_prototype(
                     image_path, self._cached_negative_prototype, session_cache_key=self.name, negative_prototype=1
                 )
-                # print(self.name + " Negative similarity: ", negative_similarity)
+                if config.debug2:
+                    logger.info(self.name + " Negative similarity: " + str(negative_similarity))
                 final_score = positive_similarity - self.negative_prototype_lambda * negative_similarity
-                # print(self.name + " Final score: ", final_score)
+                if config.debug2:
+                    logger.info(self.name + " Final score: " + str(final_score))
             else:
                 final_score = positive_similarity
-                print(self.name + " Final score: ", final_score)
-            return final_score >= self.threshold
+                if config.debug2:
+                    logger.info(self.name + " Final score: " + str(final_score))
+            return final_score >= self.prototype_threshold
         except Exception as e:
             logger.error(f"Error checking prototype validation for {image_path}: {e}")
             return False
@@ -290,7 +300,7 @@ class ClassifierAction:
                 matching_paths = EmbeddingPrototype.batch_validate_with_prototypes(
                     directories=directory_paths,
                     positive_prototype=self._cached_prototype,
-                    threshold=self.threshold,
+                    threshold=self.prototype_threshold,
                     negative_prototype=self._cached_negative_prototype,
                     negative_lambda=self.negative_prototype_lambda,
                     notify_callback=notify_callback,
@@ -355,7 +365,7 @@ class ClassifierAction:
             return None
 
         if self.use_embedding:
-            if CompareEmbeddingClip.multi_text_compare(image_path, self.positives, self.negatives, self.threshold):
+            if CompareEmbeddingClip.multi_text_compare(image_path, self.positives, self.negatives, self.text_embedding_threshold):
                 return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
         
         if self.use_image_classifier:
@@ -536,7 +546,9 @@ class ClassifierAction:
             "name": self.name,
             "positives": self.positives,
             "negatives": self.negatives,
-            "threshold": self.threshold,
+            "threshold": self.text_embedding_threshold,  # Keep for backward compatibility
+            "text_embedding_threshold": self.text_embedding_threshold,
+            "prototype_threshold": self.prototype_threshold,
             "action": self.action.value,
             "action_modifier": self.action_modifier,
             "is_active": self.is_active,
@@ -586,6 +598,13 @@ class ClassifierAction:
             d['negative_prototype_lambda'] = 0.5
         if '_last_used_profile' not in d:
             d['_last_used_profile'] = None
+        # Handle threshold backward compatibility
+        if 'text_embedding_threshold' not in d:
+            # Use existing threshold as text_embedding_threshold
+            d['text_embedding_threshold'] = d.get('threshold', 0.23)
+        if 'prototype_threshold' not in d:
+            # Use existing threshold as prototype_threshold for backward compatibility
+            d['prototype_threshold'] = d.get('threshold', 0.23)
         
         return ClassifierAction(**d)
 
@@ -630,13 +649,15 @@ class ClassifierAction:
 
 class Prevalidation(ClassifierAction):
     def __init__(self, name=_("New Prevalidation"), positives=[], negatives=[], threshold=0.23,
+                 text_embedding_threshold=None, prototype_threshold=0.23,
                  action=ClassifierActionType.NOTIFY, action_modifier="", run_on_folder=None, is_active=True,
                  image_classifier_name="", image_classifier_selected_categories=[], 
                  use_embedding=True, use_image_classifier=False, use_prompts=False, use_blacklist=False,
                  lookahead_names=[], profile_name=None, use_prototype=False, prototype_directory="", 
                  negative_prototype_directory="", negative_prototype_lambda=0.5, _last_used_profile=None):
         # Pass all parameters including prototype settings to parent ClassifierAction
-        super().__init__(name, positives, negatives, threshold, action, action_modifier, 
+        super().__init__(name, positives, negatives, threshold, 
+                        text_embedding_threshold, prototype_threshold, action, action_modifier, 
                         image_classifier_name, image_classifier_selected_categories,
                         use_embedding, use_image_classifier, use_prompts, use_blacklist,
                         is_active, use_prototype, prototype_directory,
@@ -766,6 +787,13 @@ class Prevalidation(ClassifierAction):
             d['profile_name'] = None
         if 'is_active' not in d:
             d['is_active'] = True  # Default to active for prevalidations
+        # Handle threshold backward compatibility
+        if 'text_embedding_threshold' not in d:
+            # Use existing threshold as text_embedding_threshold
+            d['text_embedding_threshold'] = d.get('threshold', 0.23)
+        if 'prototype_threshold' not in d:
+            # Use existing threshold as prototype_threshold for backward compatibility
+            d['prototype_threshold'] = d.get('threshold', 0.23)
         
         # Handle backward compatibility: if run_on_folder exists but no profile_name, create temporary profile
         run_on_folder = d.get('run_on_folder')

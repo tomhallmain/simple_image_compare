@@ -14,8 +14,9 @@ class ImageClassifierManager:
     def __init__(self) -> None:
         self.classifier_metadata = {}
         self.classifiers = {}
-        if isinstance(config.image_classifier_h5_models, list):
-            for model_details in config.image_classifier_h5_models:
+        models = getattr(config, 'image_classifier_models', [])
+        if isinstance(models, list):
+            for model_details in models:
                 model_name = model_details['model_name']
                 self.classifier_metadata[model_name] = model_details
 

@@ -67,7 +67,7 @@
     "cool car",
     {"positive": "masterpiece, artful", "negative": "ugly, deformed"}
   ],
-  "image_classifier_h5_models": [
+  "image_classifier_models": [
     {
       "model_name": "model name (be sure to change this)",
       "model_location": "path/to/my/model.h5",

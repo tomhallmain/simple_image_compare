@@ -451,7 +451,7 @@ class App():
         self.master.bind("<Control-f>", self.open_favorites_window)
         self.master.bind("<Control-n>", self.open_file_actions_window)
         self.master.bind("<Control-m>", self.open_move_marks_window)
-        self.master.bind("<Control-Shift-n>", self.open_directory_notes_window)
+        self.master.bind("<Control-Shift-N>", self.open_directory_notes_window)
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
         self.master.bind("<Control-j>", self.open_prevalidations_window)
         self.master.bind("<Control-r>", self.run_previous_marks_action)
@@ -463,7 +463,8 @@ class App():
         self.master.bind("<Control-s>", self.next_text_embedding_preset)
         self.master.bind("<Control-b>", self.return_to_browsing_mode)
         self.master.bind("<Control-v>", lambda e: self.check_focus(e, self.open_type_configuration_window))
-        self.master.bind("<Control-Shift-c>", lambda e: self.check_focus(e, self.open_compare_settings_window))
+        self.master.bind("<Control-Shift-C>", lambda e: self.check_focus(e, self.open_compare_settings_window))
+        self.master.bind("<Control-Shift-D>", lambda e: self.check_focus(e, self.toggle_extra_debug_logging))
         self.master.bind("<Home>", self.home)
         self.master.bind("<End>", lambda event: self.home(last_file=True))
         self.master.bind("<Prior>", self.page_up)
@@ -576,7 +577,8 @@ class App():
             TargetDirectoryWindow.load_recent_directories()
             return app_info_cache.get_meta("base_dir")
         except Exception as e:
-            logger.error(e)
+            logger.error(f"Error loading info cache: {e}")
+            logger.error(traceback.format_exc())
 
     def apply_cached_display_position(self) -> bool:
         """
@@ -1666,6 +1668,10 @@ class App():
     def toggle_prevalidations(self, event=None) -> None:
         config.enable_prevalidations = not config.enable_prevalidations
         self.toast(_("Prevalidations now running") if config.enable_prevalidations else _("Prevalidations turned off"))
+
+    def toggle_extra_debug_logging(self, event=None) -> None:
+        config.debug2 = not config.debug2
+        self.toast(_("Extra debug logging enabled") if config.debug2 else _("Extra debug logging disabled"))
 
     @require_password(ProtectedActions.CONFIGURE_MEDIA_TYPES)
     def open_type_configuration_window(self, event=None) -> None:
