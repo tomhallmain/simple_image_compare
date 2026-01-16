@@ -13,6 +13,7 @@ pillow-heif
 psutil
 pypdfium2
 python-vlc
+safetensors
 scikit-image>=0.20.0
 scikit-learn>=1.3.2
 send2trash

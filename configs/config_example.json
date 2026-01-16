@@ -69,10 +69,20 @@
   ],
   "image_classifier_models": [
     {
-      "model_name": "model name (be sure to change this)",
+      "model_name": "h5 model name (be sure to change this)",
       "model_location": "path/to/my/model.h5",
       "model_categories": ["photograph", "drawing"],
       "use_hub_keras_layers": false
+    },
+    {
+      "model_name": "safetensors model name (be sure to change this)",
+      "model_location": "path/to/my/model.safetensors",
+      "model_categories": ["category1", "category2", "category3"],
+      "model_kwargs": {
+        "architecture_module_name": "my_model_architecture_module",
+        "architecture_class_path": "MyModelArchitectureClass (optional)",
+        "architecture_location": "path/to/my/model_architecture.py (optional)"
+      }
     }
   ],
   "text_embedding_search_presets_exclusive": false,

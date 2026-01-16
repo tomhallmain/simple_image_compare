@@ -120,6 +120,8 @@ class ClassifierAction:
                     notify_callback(_("Loading image classifier <{0}> ...").format(self.image_classifier_name))
                 self.set_image_classifier(self.image_classifier_name)
             except Exception as e:
+                import traceback
+                logger.error(traceback.format_exc())
                 logger.error(f"Error loading image classifier <{self.image_classifier_name}>!")
 
     def is_selected_category_unset(self):

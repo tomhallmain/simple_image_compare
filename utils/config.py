@@ -222,7 +222,7 @@ class Config:
 
         self.set_directories_to_search_for_related_images()
         self.check_image_edit_configuration()
-        self.remove_example_h5_model_details()
+        self.remove_example_classifier_model_details()
         
         # GIMP and GEGL availability will be checked lazily when first needed
 
@@ -433,7 +433,7 @@ class Config:
         else:   
             self.image_edit_configuration.set_from_dict(self.dict["image_edit_configuration"])
 
-    def remove_example_h5_model_details(self):
+    def remove_example_classifier_model_details(self):
         for i in range(len(self.image_classifier_models)):
             model_details = self.image_classifier_models[i]
             if "(be sure to change this)" in model_details["model_name"]:

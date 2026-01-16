@@ -1,7 +1,9 @@
 # Simple Image Compare Tool
 
-Simple media comparison tool that detects color and face similarities using CLIP embeddings (default) and color matching (separate optional mode). The tool now supports multiple embedding models:
+Simple visual media comparison tool that detects color and face similarities using CLIP embeddings (default) and color matching (separate optional mode). The tool now supports multiple embedding models:
 
+<details>
+<summary>View Embedding Models</summary>
 - CLIP (default): 512D embeddings, high zero-shot performance
 - SigLIP: 768D or 1024D embeddings, excellent retrieval performance
 - ALIGN: 640D embeddings, high accuracy for retrieval
@@ -10,12 +12,13 @@ Simple media comparison tool that detects color and face similarities using CLIP
 - LAION: 1024D embeddings, high-quality visual-language understanding - based on CLIP ViT-H/14 architecture
 
 Each model offers different tradeoffs between accuracy, speed, and resource usage. The default CLIP model provides a good balance for most use cases.
+</details>
 
 ## Image and Video Browser
 
-The UI can be used as a media file browser. The following features are available that your OS default photo application may not have:
+The UI can be used as a media file browser. The following features are available that your OS default photo viewer application may not have:
 <details>
-<summary>Expand Features</summary>
+<summary>View Features</summary>
 <ul>
     <li>Auto-resize images to fill the screen</li>
     <li>Auto-refresh directory files</li>
@@ -59,13 +62,19 @@ The Directory Notes feature allows you to maintain persistent notes and marked f
 
 The tool includes a flexible prevalidation system that can automatically process media before they're shown to the user, as well as classifier actions that can be run ad-hoc on selected directories. Both are managed through a unified window. This is useful for:
 
+<details>
+<summary>View Use Cases</summary>
 - Automatically skipping, hiding, or deleting unwanted media
 - Moving or copying media to specific directories based on content
 - Filtering media using CLIP embeddings, embedding prototypes, H5 image classifiers, PyTorch image classifiers, prompt string detection
 - Setting up rules that apply to specific directories
 - Running one-off classification actions on selected directories
+</details>
 
 Prevalidation rules and classifier actions can be configured with:
+
+<details>
+<summary>View Rule Options</summary>
 - Multiple validation types enabled simultaneously (OR logic - any type can trigger the action)
 - Positive and negative text prompts shared across embedding and prompt validation
 - **Embedding prototypes**: Create prototype embeddings from directories of sample images, then compare images against these prototypes. Supports both positive and negative prototypes with configurable weighting (lambda) for fine-tuning similarity matching
@@ -74,6 +83,7 @@ Prevalidation rules and classifier actions can be configured with:
 - Directory-specific rules
 - H5 model-based classification rules
 - PyTorch model-based classification rules (supports .pth, .pt, .safetensors, and .bin formats)
+</details>
 
 Prevalidations automatically run on media as you browse, while classifier actions can be executed manually on selected media directories when needed. These features are particularly useful for maintaining clean media collections and automating local content filtering, but can be disabled at any time if desired. You can find example classifier models that are known to work here:
 - [Coherence Detection](https://huggingface.co/reddesert/coherence_detection) - A PyTorch ResNet-34 model for classifying AI-generated images into coherent, incoherent, or semi-incoherent categories
@@ -86,7 +96,7 @@ Clone this repository and ensure Python 3 and the required packages are installe
 Run `app.py` to start the UI, or provide the location of the directory containing media files for comparison to `compare_embeddings.py` or `compare.py` at runtime.
 
 <details>
-<summary>Expand Details</summary>
+<summary>View Usage Details</summary>
 Useful for detecting duplicates or finding associations between large unstructured sets of media files. File management controls are available after the analysis has completed.
 
 Individual media files can be passed to search against the full data set by passing flag `--search` with the path of the search file, or setting a search file in the UI before running comparison.
@@ -101,7 +111,7 @@ If a search image is set simultaneously with search text, its embedding will be 
 ### Configuration
 
 <details>
-<summary>Expand Details</summary>
+<summary>View Configuration Details</summary>
 
 `locale` supports any of the following locales:
 - en (English)
@@ -129,13 +139,15 @@ If a search image is set simultaneously with search text, its embedding will be 
 
 `enable_prevalidations` enables the prevalidation system. When enabled, prevalidation rules will be applied to media before they are shown.
 
-`image_classifier_h5_models` defines a list of image classifier models (H5 or PyTorch) that can be used for prevalidation rules. Each model should specify:
+`image_classifier_models` defines a list of image classifier models (H5 or PyTorch) that can be used for prevalidation rules. Each model should specify:
 - `model_name`: A unique name for the model
 - `model_location`: Path to the model file (.h5 for TensorFlow/Keras, or .pth/.pt/.safetensors/.bin for PyTorch)
 - `model_categories`: List of categories the model can classify
 - `backend`: "auto" (detected from file extension), "hdf5"/"tensorflow" for H5 models, or "pytorch" for PyTorch models
 - `use_hub_keras_layers`: Whether to use Keras hub layers (H5 models only)
-- Additional PyTorch-specific parameters: `model_architecture`, `weights_only`, `device`, `input_shape`, etc.
+- Additional PyTorch-specific parameters: `architecture_module_name`, `weights_only`, `device`, `input_shape`, etc.
+
+**Note:** For `.safetensors` models, you must provide the model architecture configuration. See `config_example.json` for the required format. Only the `architecture_module_name` is required if the model architecture file is located in the same directory as the model.
 
 If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) then opening image details for an image with a stable diffusion prompt will give prompt information found in the image.
 
@@ -159,7 +171,7 @@ Press Shift+H to open up a help window with all key bindings. A directory with m
 This window helps with efficient filing of file marks.
 
 <details>
-<summary>Expand Details</summary>
+<summary>View File Marks Details</summary>
 <p>When the move marks window is open -- with or without GUI -- marks can be moved to a target directory by pressing the Enter key, or with the GUI elements if visible. After pressing the Enter key, a number of things can occur:</p>
 <li>If no target directories have been set, a folder picker window will open to set a new directory.</li>
 <li>If a marks action has been run previously, simply pressing Enter without a filter set will use the directory last used for the move or copy action.</li>
