@@ -12,6 +12,9 @@ from utils.app_info_cache import app_info_cache
 from utils.config import config
 from utils.constants import CompareMode
 from utils.logging_setup import get_logger
+from utils.translations import I18N
+
+_ = I18N._
 
 logger = get_logger("embedding_prototype")
 
@@ -181,29 +184,30 @@ class EmbeddingPrototype:
             EmbeddingPrototype._remove_cache_from_memory(directory_path)
         
         # Cache the result
-        EmbeddingPrototype._cache_prototype(file_list_id, image_files, mean_embedding)
+        EmbeddingPrototype._cache_prototype(file_list_id, mean_embedding)
         
         logger.info(f"Calculated prototype from {len(embeddings)} images (ID: {file_list_id[:8]}...)")
         
         return mean_embedding
     
     @staticmethod
-    def _cache_prototype(file_list_id: str, file_paths: List[str], prototype: np.ndarray):
+    def _cache_prototype(file_list_id: str, prototype: np.ndarray):
         """
-        Cache a prototype embedding and its file list.
+        Cache a prototype embedding.
+        
+        Note: file_list is no longer stored to reduce memory usage. The file_list_id
+        (which is a hash of the file paths) is sufficient for identification.
         
         Args:
-            file_list_id: Unique ID for this file configuration
-            file_paths: List of file paths used to create the prototype
+            file_list_id: Unique ID for this file configuration (hash of file paths)
             prototype: The prototype embedding vector
         """
         # Store the prototype as a list (numpy arrays aren't JSON serializable)
         prototype_list = prototype.tolist()
         
-        # Store both prototype and file list in a dictionary
+        # Store only the prototype - file_list_id is sufficient for identification
         cache_data = {
-            "prototype": prototype_list,
-            "file_list": file_paths
+            "prototype": prototype_list
         }
         
         # Get the prototypes dictionary and update it
@@ -216,13 +220,13 @@ class EmbeddingPrototype:
     @staticmethod
     def _get_cached_data(file_list_id: str) -> Optional[dict]:
         """
-        Retrieve cached data for a prototype (both prototype and file_list).
+        Retrieve cached data for a prototype.
         
         Args:
             file_list_id: Unique ID for the file configuration
             
         Returns:
-            Dictionary with "prototype" and "file_list" keys, or None if not found
+            Dictionary with "prototype" key, or None if not found
         """
         prototypes_dict = EmbeddingPrototype._get_prototypes_dict()
         return prototypes_dict.get(file_list_id)
@@ -251,24 +255,6 @@ class EmbeddingPrototype:
         except Exception as e:
             logger.error(f"Error loading cached prototype: {e}")
             return None
-    
-    @staticmethod
-    def get_cached_file_list(file_list_id: str) -> Optional[List[str]]:
-        """
-        Retrieve the file list for a cached prototype.
-        
-        Args:
-            file_list_id: Unique ID for the file configuration
-            
-        Returns:
-            List of file paths, or None if not found
-        """
-        cached_data = EmbeddingPrototype._get_cached_data(file_list_id)
-        
-        if cached_data is None:
-            return None
-        
-        return cached_data.get("file_list")
     
     @staticmethod
     def compute_embeddings_batch_with_dirs(image_paths_with_dirs: List[tuple[str, str]], notify_callback=None) -> tuple[np.ndarray, List[str]]:
@@ -679,6 +665,30 @@ class EmbeddingPrototype:
             logger.info("Cleared all prototype caches")
     
     @staticmethod
+    def cleanup_file_lists():
+        """
+        Remove file_list entries from existing cache entries to reduce memory usage.
+        This is a one-time cleanup operation for old cache entries that still have file_list stored.
+        
+        Returns:
+            Number of cache entries cleaned up
+        """
+        prototypes_dict = EmbeddingPrototype._get_prototypes_dict()
+        cleaned_count = 0
+        
+        for file_list_id, cache_data in prototypes_dict.items():
+            if isinstance(cache_data, dict) and "file_list" in cache_data:
+                # Remove file_list but keep prototype
+                del cache_data["file_list"]
+                cleaned_count += 1
+        
+        if cleaned_count > 0:
+            EmbeddingPrototype._set_prototypes_dict(prototypes_dict)
+            logger.info(f"Cleaned up file_list from {cleaned_count} cache entries")
+        
+        return cleaned_count
+    
+    @staticmethod
     def clear_session_cache(session_cache_key: Optional[str] = None):
         """
         Clear session comparison result caches. If session_cache_key is provided, only clear that one.
@@ -707,7 +717,13 @@ class EmbeddingPrototype:
             logger.debug("Cleared all session comparison caches")
 
 
-# Import translation function
-from utils.translations import I18N
-_ = I18N._
+
+# Initialize: Clean up file_list entries from old cache entries on module import
+# This reduces memory usage by removing unnecessary file list storage
+try:
+    cleaned_count = EmbeddingPrototype.cleanup_file_lists()
+    if cleaned_count > 0:
+        logger.info(f"Cleaned up {cleaned_count} embedding prototype cache entries on startup")
+except Exception as e:
+    logger.warning(f"Failed to clean up embedding prototype file lists on startup: {e}")
 

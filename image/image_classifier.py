@@ -389,16 +389,17 @@ class PyTorchImageClassifier(BaseImageClassifier):
         # First, check if it's a filesystem path (absolute or relative)
         possible_paths = []
 
-        if os.path.isfile(architecture_location):
-            possible_paths.append(architecture_location)
-        
-        architecture_file_path = os.path.join(architecture_location, architecture_module_name + '.py')
-        if os.path.isfile(architecture_file_path):
-            possible_paths.append(architecture_file_path)
+        if architecture_location:
+            if os.path.isfile(architecture_location):
+                possible_paths.append(architecture_location)
+            
+            architecture_file_path = os.path.join(architecture_location, architecture_module_name + '.py')
+            if os.path.isfile(architecture_file_path):
+                possible_paths.append(architecture_file_path)
 
-        architecture_init_file_path = os.path.join(architecture_location, '__init__.py')
-        if os.path.isfile(architecture_init_file_path):
-            possible_paths.append(architecture_init_file_path)
+            architecture_init_file_path = os.path.join(architecture_location, '__init__.py')
+            if os.path.isfile(architecture_init_file_path):
+                possible_paths.append(architecture_init_file_path)
         
         # It may be a file in the model directory
         if model_dir and os.path.isdir(model_dir):

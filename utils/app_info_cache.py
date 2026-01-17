@@ -1,7 +1,9 @@
+from abc import ABC
 import json
 import os
 import shutil
 import sys
+from typing import Any, Dict, List
 
 from lib.position_data import PositionData
 from utils.constants import AppInfo
@@ -11,7 +13,187 @@ from utils.logging_setup import get_logger
 logger = get_logger(__name__)
 
 
-class AppInfoCache:
+class InflationMonitor(ABC):
+    """
+    Abstract base class for cache systems that need to monitor list inflation.
+    Concrete classes must implement get_cache_dict() and optionally get_meta() to provide the cache dictionary.
+    """
+    
+    # Configuration
+    INFLATION_ENABLED_KEY = "__monitor_list_inflation"
+    INFLATION_MIN_LIST_SIZE = 5
+    INFLATION_GROWTH_THRESHOLD = 2.0
+    INFLATION_MAX_LIST_SIZE = 1000
+    
+    def __init__(self):
+        self._monitor_inflation = False
+        self._initial_list_sizes = {}
+        self._suspected_keys = set()
+        self._check_monitoring_enabled()
+    
+    def get_cache_dict(self, scope_key: str = "info") -> Dict:
+        """Get the cache dictionary to monitor (required by InflationMonitor)."""
+        raise NotImplementedError("get_cache_dict is not implemented in the base class")
+    
+    def get_meta(self, key: str, default_val: Any = None) -> Any:
+        """
+        Optional method to get meta value. If not implemented, monitoring will only check environment variable.
+        Override this if your cache supports meta storage.
+        """
+        return default_val
+    
+    def _check_monitoring_enabled(self, scope_key: str = "info"):
+        """Check if monitoring should be enabled via environment variable or meta flag."""
+        # Check environment variable first
+        if os.environ.get("MONITOR_CACHE_INFLATION", "0") == "1":
+            self.enable_inflation_monitoring(True, scope_key)
+            return
+        
+        # Check meta flag if get_meta is implemented
+        try:
+            monitor_flag = self.get_meta(self.INFLATION_ENABLED_KEY, False)
+            if monitor_flag:
+                self.enable_inflation_monitoring(True, scope_key)
+        except (AttributeError, NotImplementedError):
+            # get_meta not implemented or not available yet, skip
+            pass
+    
+    def enable_inflation_monitoring(self, enable: bool = True, scope_key: str = "info"):
+        """Enable or disable inflation monitoring."""
+        if enable:
+            self._monitor_inflation = True
+            self._record_initial_list_sizes(scope_key)
+            logger.info(f"Inflation monitoring enabled. Tracking {len(self._initial_list_sizes)} lists.")
+        else:
+            self._monitor_inflation = False
+            self._initial_list_sizes = {}
+            self._suspected_keys = set()
+            logger.info("Inflation monitoring disabled.")
+    
+    def _record_initial_list_sizes(self, scope_key: str):
+        """Record initial list sizes from cache with debug logging."""
+        cache_dict = self.get_cache_dict(scope_key)
+        self._initial_list_sizes = {}
+        
+        def _traverse_and_record(data: Any, path: str):
+            """Recursively find and record list sizes in dictionaries."""
+            if isinstance(data, dict):
+                for key, value in data.items():
+                    current_path = f"{path}.{key}" if path else key
+                    if isinstance(value, list):
+                        self._initial_list_sizes[current_path] = len(value)
+                        logger.debug(f"Tracking list: {current_path} = {len(value)} items")
+                        
+                        # Check for immediate issues with large lists
+                        if len(value) > self.INFLATION_MAX_LIST_SIZE:
+                            logger.warning(f"Large initial list at {current_path}: {len(value)} items")
+                    elif isinstance(value, dict):
+                        _traverse_and_record(value, current_path)
+            elif isinstance(data, list):
+                self._initial_list_sizes[path] = len(data)
+                logger.debug(f"Tracking list: {path} = {len(data)} items")
+                if len(data) > self.INFLATION_MAX_LIST_SIZE:
+                    logger.warning(f"Large initial list at {path}: {len(data)} items")
+        
+        if cache_dict:
+            _traverse_and_record(cache_dict, path=scope_key)
+    
+    def _collect_list_sizes(self, data: Any, path: str = "") -> Dict[str, int]:
+        """Collect sizes of all lists in a data structure."""
+        sizes = {}
+        
+        if isinstance(data, dict):
+            for key, value in data.items():
+                current_path = f"{path}.{key}" if path else key
+                if isinstance(value, (dict, list)):
+                    sizes.update(self._collect_list_sizes(value, current_path))
+        elif isinstance(data, list):
+            sizes[path] = len(data)
+        
+        return sizes
+    
+    def check_for_inflation(self, scope_key: str = "info") -> List[str]:
+        """
+        Check for list inflation and return list of suspected keys with detailed logging.
+        
+        Returns:
+            List of key paths suspected of inflation
+        """
+        if not self._monitor_inflation:
+            return []
+        
+        cache_dict = self.get_cache_dict(scope_key)
+        current_sizes = self._collect_list_sizes(cache_dict, scope_key)
+        
+        suspected = []
+        inflation_detected = False
+        
+        for list_path, initial_size in self._initial_list_sizes.items():
+            if list_path in current_sizes:
+                current_size = current_sizes[list_path]
+                
+                # Skip very small lists
+                if initial_size < self.INFLATION_MIN_LIST_SIZE:
+                    continue
+                
+                # Check for doubling or significant growth
+                if current_size >= initial_size * self.INFLATION_GROWTH_THRESHOLD:
+                    inflation_detected = True
+                    suspected.append(list_path)
+                    
+                    if list_path not in self._suspected_keys:
+                        logger.warning(
+                            f"⚠️ LIST INFLATION DETECTED: {list_path}\n"
+                            f"   Initial size: {initial_size}\n"
+                            f"   Current size: {current_size}\n"
+                            f"   Growth factor: {current_size/initial_size:.1f}x\n"
+                            f"   This may indicate duplicate entries or append-instead-of-update."
+                        )
+                        
+                        # Try to identify if it's likely a duplication issue
+                        if current_size % initial_size == 0:
+                            multiples = current_size // initial_size
+                            logger.info(f"   Note: Current size is exactly {multiples} times initial size.")
+        
+        if not inflation_detected and self._initial_list_sizes:
+            logger.debug(f"No list inflation detected in '{scope_key}' dictionary.")
+        
+        self._suspected_keys = set(suspected)
+        return suspected
+    
+    def get_suspected_inflation_keys(self, scope_key: str = "info") -> List[str]:
+        """
+        Get list of keys suspected of inflation with formatted details.
+        
+        Returns:
+            List of formatted strings describing suspected inflation
+        """
+        if not self._monitor_inflation:
+            return []
+        
+        suspected = []
+        cache_dict = self.get_cache_dict(scope_key)
+        current_sizes = self._collect_list_sizes(cache_dict, scope_key)
+        
+        for list_path, initial_size in self._initial_list_sizes.items():
+            if list_path in current_sizes:
+                current_size = current_sizes[list_path]
+                if (initial_size >= self.INFLATION_MIN_LIST_SIZE and 
+                    current_size >= initial_size * self.INFLATION_GROWTH_THRESHOLD):
+                    suspected.append(f"{list_path} ({initial_size} → {current_size}, {current_size/initial_size:.1f}x)")
+        
+        return suspected
+    
+    def get_inflation_report(self) -> Dict[str, Any]:
+        """Get inflation monitoring report."""
+        return {
+            "enabled": self._monitor_inflation,
+            "tracked_lists": len(self._initial_list_sizes),
+            "suspected_keys": list(self._suspected_keys)
+        }
+
+
+class AppInfoCache(InflationMonitor):
     CACHE_LOC = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app_info_cache.enc")
     JSON_LOC = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), "app_info_cache.json")
     META_INFO_KEY = "info"
@@ -19,12 +201,25 @@ class AppInfoCache:
     NUM_BACKUPS = 4  # Number of backup files to maintain
 
     def __init__(self):
-        self._cache = {AppInfoCache.META_INFO_KEY: {}, AppInfoCache.DIRECTORIES_KEY: {}}
+        super().__init__()
+        self._cache = {self.META_INFO_KEY: {}, self.DIRECTORIES_KEY: {}}
         self.load()
         self.validate()
 
+    def get_cache_dict(self, scope_key: str = "info") -> Dict:
+        """Get the cache dictionary to monitor (required by InflationMonitor)."""
+        if scope_key == "info":
+            return self._cache.get(self.META_INFO_KEY, {})
+        elif scope_key == "directories":
+            return self._cache.get(self.DIRECTORIES_KEY, {})
+        return self._cache.get(scope_key, {})
+
     def store(self):
         try:
+            # Check for list inflation before storing if monitoring is enabled
+            if self._monitor_inflation:
+                self.check_for_inflation()
+            
             cache_data = json.dumps(self._cache).encode('utf-8')
             encrypt_data_to_file(
                 cache_data,
@@ -227,4 +422,6 @@ class AppInfoCache:
         
         return rotated_count
 
+
 app_info_cache = AppInfoCache()
+# app_info_cache.enable_inflation_monitoring(True)
