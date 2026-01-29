@@ -12,13 +12,13 @@ import tkinter.font as fnt
 
 from compare.classifier_actions_manager import ClassifierAction
 from compare.classifier_actions_manager import ClassifierActionsManager
-from image.classifier_action_type import ClassifierActionType
 from image.image_classifier_manager import image_classifier_manager
 from lib.multiselect_dropdown import MultiSelectDropdown
 from lib.multi_display import SmartToplevel
 from lib.tooltip import create_tooltip
 from utils.app_style import AppStyle
 from utils.config import config
+from utils.constants import ClassifierActionType
 from utils.translations import I18N
 
 _ = I18N._
@@ -571,6 +571,7 @@ class ClassifierManagementWindow:
     This window acts as a container, delegating the actual UI to tab content classes.
     """
     top_level = None
+    instance = None  # Store the instance for access from other windows
 
     @staticmethod
     def get_geometry(is_gui=True):
@@ -593,6 +594,7 @@ class ClassifierManagementWindow:
             geometry=ClassifierManagementWindow.get_geometry()
         )
         self.master = ClassifierManagementWindow.top_level
+        ClassifierManagementWindow.instance = self  # Store instance for access from other windows
         self.app_actions = app_actions
 
         # Main frame
@@ -662,4 +664,5 @@ class ClassifierManagementWindow:
 
     def close_windows(self, event=None):
         """Close the window."""
+        ClassifierManagementWindow.instance = None  # Clear instance reference
         self.master.destroy()

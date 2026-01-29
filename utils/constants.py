@@ -294,6 +294,83 @@ class ActionType(Enum):
         raise Exception("Unhandled action type translation: " + str(self))
 
 
+class ClassifierActionClass(Enum):
+    """Classifier item type: classifier action or prevalidation."""
+    CLASSIFIER_ACTION = "classifier_action"
+    PREVALIDATION = "prevalidation"
+
+    def get_display_value(self):
+        """Return the translated display string for this type."""
+        if self == ClassifierActionClass.CLASSIFIER_ACTION:
+            return _("Classifier Action")
+        elif self == ClassifierActionClass.PREVALIDATION:
+            return _("Prevalidation")
+        raise Exception("Unhandled ClassifierActionClass: " + str(self))
+
+    @staticmethod
+    def from_key(key):
+        """Get enum from string key ('classifier_action' or 'prevalidation')."""
+        if isinstance(key, ClassifierActionClass):
+            return key
+        key = (key or "").strip().lower()
+        if key in ("classifier_action", "classifier action"):
+            return ClassifierActionClass.CLASSIFIER_ACTION
+        if key == "prevalidation":
+            return ClassifierActionClass.PREVALIDATION
+        raise ValueError(f"Unknown ClassifierActionClass key: {key!r}")
+
+    @staticmethod
+    def from_display_value(display_value):
+        """Get enum from translated display string."""
+        if isinstance(display_value, ClassifierActionClass):
+            return display_value
+        display_value = (display_value or "").strip()
+        for member in ClassifierActionClass:
+            if member.get_display_value() == display_value:
+                return member
+        raise ValueError(f"Unknown ClassifierActionClass display value: {display_value!r}")
+
+
+
+class ClassifierActionType(Enum):
+    SKIP = "SKIP"
+    HIDE = "HIDE"
+    NOTIFY = "NOTIFY"
+    MOVE = "MOVE"
+    COPY = "COPY"
+    DELETE = "DELETE"
+    ADD_MARK = "ADD_MARK"
+
+    def is_cache_type(self):
+        # If the action is not one of these types, it should have been moved out of the directory.
+        return (self == ClassifierActionType.HIDE or self == ClassifierActionType.NOTIFY 
+            or self == ClassifierActionType.SKIP or self == ClassifierActionType.ADD_MARK)
+
+    def get_translation(self):
+        if self == ClassifierActionType.HIDE:
+            return _("Hide")
+        elif self == ClassifierActionType.NOTIFY:
+            return _("Notify")
+        elif self == ClassifierActionType.SKIP:
+            return _("Skip")
+        elif self == ClassifierActionType.MOVE:
+            return _("Move")
+        elif self == ClassifierActionType.COPY:
+            return _("Copy")
+        elif self == ClassifierActionType.DELETE:
+            return _("Delete")
+        elif self == ClassifierActionType.ADD_MARK:
+            return _("Add Mark")
+        raise Exception("Classifier action translation not found: " + str(self))
+
+    @staticmethod
+    def get_action(action_name):
+        for name, value in ClassifierActionType.__members__.items():
+            if action_name.upper() == name.upper() or action_name == value.get_translation():
+                return value
+        raise Exception("Invalid classifier action: " + action_name)
+
+
 class ProtectedActions(Enum):
     """Enumeration of actions that can be password protected."""
     OPEN_APPLICATION = "start_application"

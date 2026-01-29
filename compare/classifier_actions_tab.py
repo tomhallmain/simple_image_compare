@@ -7,6 +7,7 @@ from tkinter.ttk import Button, Combobox
 
 from compare.classifier_actions_manager import ClassifierAction, ClassifierActionsManager
 from compare.classifier_management_window import ClassifierActionModifyWindow
+from compare.classifier_copy_window import ClassifierCopyWindow
 from compare.directory_profile import DirectoryProfile
 from utils.app_style import AppStyle
 from utils.config import config
@@ -77,6 +78,7 @@ class ClassifierActionsTab:
         self.is_active_var_list = []
         self.set_classifier_action_btn_list = []
         self.modify_classifier_action_btn_list = []
+        self.copy_classifier_action_btn_list = []
         self.delete_classifier_action_btn_list = []
         self.run_classifier_action_btn_list = []
         self.move_down_btn_list = []
@@ -86,14 +88,15 @@ class ClassifierActionsTab:
         self.frame = parent_frame
         self.master = parent_frame.winfo_toplevel()  # Get the top-level window for StringVar
         
-        # Column configuration: Run (0), Active (1), Name (2), Action (3), Modify (4), Delete (5), Move down (6)
+        # Column configuration: Run (0), Active (1), Name (2), Action (3), Modify (4), Copy (5), Delete (6), Move down (7)
         self.frame.columnconfigure(0, weight=0, minsize=60)  # Run button column
         self.frame.columnconfigure(1, weight=0, minsize=50)  # Active checkbox column
         self.frame.columnconfigure(2, weight=5, minsize=200)  # Name column (reduced width)
         self.frame.columnconfigure(3, weight=1, minsize=80)  # Action column (reduced width)
         self.frame.columnconfigure(4, weight=0, minsize=70)  # Modify button column
-        self.frame.columnconfigure(5, weight=0, minsize=60)  # Delete button column
-        self.frame.columnconfigure(6, weight=0, minsize=90)  # Move down button column
+        self.frame.columnconfigure(5, weight=0, minsize=60)  # Copy button column
+        self.frame.columnconfigure(6, weight=0, minsize=60)  # Delete button column
+        self.frame.columnconfigure(7, weight=0, minsize=90)  # Move down button column
         self.frame.config(bg=AppStyle.BG_COLOR)
         
         # Classifier Actions section title
@@ -164,15 +167,16 @@ class ClassifierActionsTab:
             
             # Create a frame for each row to add visual separation
             row_frame = Frame(self.frame, bg=AppStyle.BG_COLOR, relief="flat", borderwidth=1)
-            row_frame.grid(row=row, column=0, columnspan=7, sticky=(W, E), padx=1, pady=1)
+            row_frame.grid(row=row, column=0, columnspan=8, sticky=(W, E), padx=1, pady=1)
             self.row_frames.append(row_frame)  # Store for cleanup
             row_frame.columnconfigure(0, weight=0, minsize=60)  # Run
             row_frame.columnconfigure(1, weight=0, minsize=50)  # Active
             row_frame.columnconfigure(2, weight=5, minsize=200)  # Name
             row_frame.columnconfigure(3, weight=1, minsize=80)  # Action
             row_frame.columnconfigure(4, weight=0, minsize=70)  # Modify
-            row_frame.columnconfigure(5, weight=0, minsize=60)  # Delete
-            row_frame.columnconfigure(6, weight=0, minsize=90)  # Move down
+            row_frame.columnconfigure(5, weight=0, minsize=60)  # Copy
+            row_frame.columnconfigure(6, weight=0, minsize=60)  # Delete
+            row_frame.columnconfigure(7, weight=0, minsize=90)  # Move down
             
             # Run button (column 0)
             run_classifier_action_btn = Button(row_frame, text=_("Run"))
@@ -211,18 +215,26 @@ class ClassifierActionsTab:
                 return self.open_classifier_action_modify_window(event, classifier_action)
             modify_classifier_action_btn.bind("<Button-1>", modify_classifier_action_handler)
 
-            # Delete button (column 5)
+            # Copy button (column 5)
+            copy_classifier_action_btn = Button(row_frame, text=_("Copy"))
+            self.copy_classifier_action_btn_list.append(copy_classifier_action_btn)
+            copy_classifier_action_btn.grid(row=0, column=5, padx=2, pady=2)
+            def copy_classifier_action_handler(event, self=self, classifier_action=classifier_action):
+                return self.open_classifier_action_copy_window(event, classifier_action)
+            copy_classifier_action_btn.bind("<Button-1>", copy_classifier_action_handler)
+
+            # Delete button (column 6)
             delete_classifier_action_btn = Button(row_frame, text=_("Delete"))
             self.delete_classifier_action_btn_list.append(delete_classifier_action_btn)
-            delete_classifier_action_btn.grid(row=0, column=5, padx=2, pady=2)
+            delete_classifier_action_btn.grid(row=0, column=6, padx=2, pady=2)
             def delete_classifier_action_handler(event, self=self, classifier_action=classifier_action):
                 return self.delete_classifier_action(event, classifier_action)
             delete_classifier_action_btn.bind("<Button-1>", delete_classifier_action_handler)
 
-            # Move down button (column 6)
+            # Move down button (column 7)
             move_down_btn = Button(row_frame, text=_("Move down"))
             self.move_down_btn_list.append(move_down_btn)
-            move_down_btn.grid(row=0, column=6, padx=2, pady=2)
+            move_down_btn.grid(row=0, column=7, padx=2, pady=2)
             def move_down_handler(event, self=self, idx=i, classifier_action=classifier_action):
                 classifier_action.move_index(idx, 1)
                 self.refresh()
@@ -238,6 +250,15 @@ class ClassifierActionsTab:
                 ClassifierActionsTab.classifier_action_modify_window = None
         ClassifierActionsTab.classifier_action_modify_window = ClassifierActionModifyWindow(
             self.master, self.app_actions, self.refresh_classifier_actions, classifier_action)
+
+    def open_classifier_action_copy_window(self, event=None, classifier_action=None):
+        """Open the copy window for a classifier action."""
+        ClassifierCopyWindow(
+            self.master, self.app_actions, classifier_action, 
+            source_type="classifier_action",
+            refresh_classifier_actions_callback=self.refresh_classifier_actions,
+            refresh_prevalidations_callback=self.refresh_prevalidations if hasattr(self, 'refresh_prevalidations') else None
+        )
 
     def refresh_classifier_actions(self, classifier_action):
         # Check if this is a new classifier action, if so, insert it at the start
@@ -405,6 +426,7 @@ class ClassifierActionsTab:
         self.is_active_list = []
         self.is_active_var_list = []
         self.modify_classifier_action_btn_list = []
+        self.copy_classifier_action_btn_list = []
         self.delete_classifier_action_btn_list = []
         self.run_classifier_action_btn_list = []
         self.move_down_btn_list = []

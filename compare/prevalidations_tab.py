@@ -6,6 +6,7 @@ from tkinter.ttk import Button, Combobox
 
 from compare.classifier_actions_manager import Prevalidation, ClassifierActionsManager
 from compare.classifier_management_window import ClassifierActionModifyWindow
+from compare.classifier_copy_window import ClassifierCopyWindow
 from compare.directory_profile import DirectoryProfile, DirectoryProfileWindow
 from compare.lookahead import Lookahead, LookaheadWindow
 from lib.multiselect_dropdown import MultiSelectDropdown
@@ -193,6 +194,7 @@ class PrevalidationsTab:
         self.is_active_list = []
         self.set_prevalidation_btn_list = []
         self.modify_prevalidation_btn_list = []
+        self.copy_prevalidation_btn_list = []
         self.delete_prevalidation_btn_list = []
         self.move_down_btn_list = []
 
@@ -208,6 +210,7 @@ class PrevalidationsTab:
         self.frame.columnconfigure(5, weight=1)
         self.frame.columnconfigure(6, weight=1)
         self.frame.columnconfigure(7, weight=1)
+        self.frame.columnconfigure(8, weight=1)
         self.frame.config(bg=AppStyle.BG_COLOR)
         
         self.add_lookahead_management_section()
@@ -498,22 +501,29 @@ class PrevalidationsTab:
             set_prevalidation_btn.bind("<Button-1>", set_prevalidation_handler)
 
             modify_prevalidation_btn = Button(self.frame, text=_("Modify"))
-            self.set_prevalidation_btn_list.append(modify_prevalidation_btn)
+            self.modify_prevalidation_btn_list.append(modify_prevalidation_btn)
             modify_prevalidation_btn.grid(row=row, column=base_col+5)
             def modify_prevalidation_handler(event, self=self, prevalidation=prevalidation):
                 return self.open_prevalidation_modify_window(event, prevalidation)
             modify_prevalidation_btn.bind("<Button-1>", modify_prevalidation_handler)
 
+            copy_prevalidation_btn = Button(self.frame, text=_("Copy"))
+            self.copy_prevalidation_btn_list.append(copy_prevalidation_btn)
+            copy_prevalidation_btn.grid(row=row, column=base_col+6)
+            def copy_prevalidation_handler(event, self=self, prevalidation=prevalidation):
+                return self.open_prevalidation_copy_window(event, prevalidation)
+            copy_prevalidation_btn.bind("<Button-1>", copy_prevalidation_handler)
+
             delete_prevalidation_btn = Button(self.frame, text=_("Delete"))
             self.delete_prevalidation_btn_list.append(delete_prevalidation_btn)
-            delete_prevalidation_btn.grid(row=row, column=base_col+6)
+            delete_prevalidation_btn.grid(row=row, column=base_col+7)
             def delete_prevalidation_handler(event, self=self, prevalidation=prevalidation):
                 return self.delete_prevalidation(event, prevalidation)
             delete_prevalidation_btn.bind("<Button-1>", delete_prevalidation_handler)
 
             move_down_btn = Button(self.frame, text=_("Move down"))
             self.move_down_btn_list.append(move_down_btn)
-            move_down_btn.grid(row=row, column=base_col+7)
+            move_down_btn.grid(row=row, column=base_col+8)
             def move_down_handler(event, self=self, idx=i, prevalidation=prevalidation):
                 prevalidation.move_index(idx, 1)
                 self.refresh()
@@ -524,6 +534,15 @@ class PrevalidationsTab:
             PrevalidationsTab.prevalidation_modify_window.master.destroy()
         PrevalidationsTab.prevalidation_modify_window = PrevalidationModifyWindow(
             self.master, self.app_actions, self.refresh_prevalidations, prevalidation)
+
+    def open_prevalidation_copy_window(self, event=None, prevalidation=None):
+        """Open the copy window for a prevalidation."""
+        ClassifierCopyWindow(
+            self.master, self.app_actions, prevalidation, 
+            source_type="prevalidation",
+            refresh_classifier_actions_callback=self.refresh_classifier_actions if hasattr(self, 'refresh_classifier_actions') else None,
+            refresh_prevalidations_callback=self.refresh_prevalidations
+        )
 
     def refresh_prevalidations(self, prevalidation):
         # Check if this is a new prevalidation, if so, insert it at the start
@@ -650,6 +669,8 @@ class PrevalidationsTab:
             btn.destroy()
         for btn in self.modify_prevalidation_btn_list:
             btn.destroy()
+        for btn in self.copy_prevalidation_btn_list:
+            btn.destroy()
         for btn in self.delete_prevalidation_btn_list:
             btn.destroy()
         for btn in self.move_down_btn_list:
@@ -664,6 +685,7 @@ class PrevalidationsTab:
         self.is_active_list = []
         self.set_prevalidation_btn_list = []
         self.modify_prevalidation_btn_list = []
+        self.copy_prevalidation_btn_list = []
         self.delete_prevalidation_btn_list = []
         self.move_down_btn_list = []
 
