@@ -5,9 +5,9 @@ from tkinter import Frame, Label, Checkbutton, BooleanVar, StringVar, LEFT, W, E
 import tkinter.font as fnt
 from tkinter.ttk import Button, Combobox
 
+from compare.classifier_action_copy_window import ClassifierActionCopyWindow
 from compare.classifier_actions_manager import ClassifierAction, ClassifierActionsManager
 from compare.classifier_management_window import ClassifierActionModifyWindow
-from compare.classifier_copy_window import ClassifierCopyWindow
 from compare.directory_profile import DirectoryProfile
 from utils.app_style import AppStyle
 from utils.config import config
@@ -253,7 +253,7 @@ class ClassifierActionsTab:
 
     def open_classifier_action_copy_window(self, event=None, classifier_action=None):
         """Open the copy window for a classifier action."""
-        ClassifierCopyWindow(
+        ClassifierActionCopyWindow(
             self.master, self.app_actions, classifier_action, 
             source_type="classifier_action",
             refresh_classifier_actions_callback=self.refresh_classifier_actions,

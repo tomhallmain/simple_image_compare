@@ -4,9 +4,9 @@ from tkinter import Frame, Label, Checkbutton, BooleanVar, StringVar, LEFT, W, S
 import tkinter.font as fnt
 from tkinter.ttk import Button, Combobox
 
+from compare.classifier_action_copy_window import ClassifierActionCopyWindow
 from compare.classifier_actions_manager import Prevalidation, ClassifierActionsManager
 from compare.classifier_management_window import ClassifierActionModifyWindow
-from compare.classifier_copy_window import ClassifierCopyWindow
 from compare.directory_profile import DirectoryProfile, DirectoryProfileWindow
 from compare.lookahead import Lookahead, LookaheadWindow
 from lib.multiselect_dropdown import MultiSelectDropdown
@@ -537,7 +537,7 @@ class PrevalidationsTab:
 
     def open_prevalidation_copy_window(self, event=None, prevalidation=None):
         """Open the copy window for a prevalidation."""
-        ClassifierCopyWindow(
+        ClassifierActionCopyWindow(
             self.master, self.app_actions, prevalidation, 
             source_type="prevalidation",
             refresh_classifier_actions_callback=self.refresh_classifier_actions if hasattr(self, 'refresh_classifier_actions') else None,

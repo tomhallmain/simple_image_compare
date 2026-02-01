@@ -20,7 +20,7 @@ from utils.translations import I18N
 _ = I18N._
 
 
-class ClassifierCopyWindow:
+class ClassifierActionCopyWindow:
     """
     Intermediary window for copying ClassifierAction and Prevalidation objects.
     
@@ -51,7 +51,7 @@ class ClassifierCopyWindow:
             title=_("Copy Classifier Action / Prevalidation"),
             geometry="500x300"
         )
-        ClassifierCopyWindow.top_level = self.top_level
+        ClassifierActionCopyWindow.top_level = self.top_level
         self.master = self.top_level
         self.app_actions = app_actions
         self.source_item = source_item
