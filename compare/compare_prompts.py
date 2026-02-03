@@ -6,8 +6,8 @@ from compare.base_compare_embedding import BaseCompareEmbedding, gather_files
 from compare.compare_args import CompareArgs
 from compare.compare_data import CompareData
 from compare.compare_result import CompareResult
+from compare.compare_prompts_exact import extract_prompts_from_image, _ensure_str
 from compare.model import text_embeddings_flava
-from image.image_data_extractor import ImageDataExtractor
 from utils.config import config
 from utils.constants import CompareMode
 from utils.logging_setup import get_logger
@@ -19,47 +19,25 @@ _ = I18N._
 logger = get_logger("compare_prompts")
 
 
-_image_data_extractor = None
-
-def get_image_data_extractor():
-    global _image_data_extractor
-    if _image_data_extractor is None:
-        _image_data_extractor = ImageDataExtractor()
-    return _image_data_extractor
-
-def extract_prompts_from_image(image_path):
-    """
-    Module-level helper to extract (positive, negative) prompts from image metadata.
-    Returns (None, None) if none found or on handled error.
-    """
-    try:
-        extractor = get_image_data_extractor()
-        positive, negative = extractor.extract_prompts_all_strategies(image_path)
-        if positive is not None:
-            return positive, negative
-        return None, None
-    except Exception as e:
-        logger.error(f"Error extracting prompt from {image_path}: {e}")
-        return None, None
-
 def prompt_embedding_from_image(image_path):
     """
     Module-level helper to extract prompts and convert them to a single embedding
     vector using FLAVA, combined as (positive - 0.5 * negative).
     """
     try:
-        extractor = get_image_data_extractor()
-        positive_prompt, negative_prompt = extractor.extract_prompts_all_strategies(image_path)
+        positive_prompt, negative_prompt = extract_prompts_from_image(image_path)
         if positive_prompt is None and negative_prompt is None:
             return np.zeros(768)
 
-        if positive_prompt and len(positive_prompt) > 2000:
+        positive_prompt = _ensure_str(positive_prompt)
+        negative_prompt = _ensure_str(negative_prompt)
+        if len(positive_prompt) > 2000:
             positive_prompt = positive_prompt[:2000] + "..."
-        if negative_prompt and len(negative_prompt) > 2000:
+        if len(negative_prompt) > 2000:
             negative_prompt = negative_prompt[:2000] + "..."
 
-        positive_embedding = np.array(text_embeddings_flava(positive_prompt or ""))
-        negative_embedding = np.array(text_embeddings_flava(negative_prompt or ""))
+        positive_embedding = np.array(text_embeddings_flava(positive_prompt))
+        negative_embedding = np.array(text_embeddings_flava(negative_prompt))
         return positive_embedding - (0.5 * negative_embedding)
     except Exception as e:
         logger.error(f"Error extracting prompt embedding from {image_path}: {e}")
@@ -293,10 +271,12 @@ class ComparePrompts(BaseCompareEmbedding):
                 # Generate embedding for the search image using the centralized method
                 search_embedding = prompt_embedding_from_image(search_file_path)
                 
-                # Add to the beginning of our data
+                # Add to the beginning of our data; keep cache in sync only if still in memory
+                # (save_data() clears file_data_dict to free memory after persist)
                 self._file_embeddings = np.insert(self._file_embeddings, 0, [search_embedding], 0)
                 self.compare_data.files_found.insert(0, search_file_path)
-                self.compare_data.file_data_dict[search_file_path] = (positive_prompt, negative_prompt)
+                if self.compare_data.file_data_dict is not None:
+                    self.compare_data.file_data_dict[search_file_path] = (positive_prompt, negative_prompt)
                 
             except OSError as e:
                 if self.verbose:
