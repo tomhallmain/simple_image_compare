@@ -34,6 +34,7 @@ from files.target_directory_window import TargetDirectoryWindow
 from files.type_configuration_window import TypeConfigurationWindow
 from image.media_frame import MediaFrame
 from lib.aware_entry import AwareEntry
+from lib.debounce import Debouncer
 from lib.multi_display import SmartToplevel
 from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
@@ -365,6 +366,7 @@ class App():
 
         ################################ Run context-aware UI elements
         self.progress_bar = None
+        self._run_compare_debouncer = Debouncer(self.master, delay_seconds=0.5, callback=self._debounced_run_compare,)
         self.run_compare_btn = None
         self.add_button("run_compare_btn", _("Run image compare"), self.run_compare)
         self.find_duplicates_btn = None
@@ -1447,6 +1449,10 @@ class App():
 
     @require_password(ProtectedActions.RUN_COMPARES)
     def run_compare(self, compare_args: CompareArgs = CompareArgs(), find_duplicates: bool = False) -> None:
+        self._run_compare_debouncer.schedule(compare_args, find_duplicates)
+
+    def _debounced_run_compare(self, compare_args: CompareArgs, find_duplicates: bool) -> None:
+        """Called by debouncer after quiet period; validates and runs compare."""
         if not self._validate_run():
             return
         compare_args.find_duplicates = find_duplicates
