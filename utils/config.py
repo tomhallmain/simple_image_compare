@@ -54,6 +54,7 @@ class Config:
         self.delete_instantly = False
         self.clear_marks_with_errors_after_move = False
         self.move_marks_overwrite_existing_file = False
+        self.marked_file_svg_move_type = "svg"  # "svg" = move/copy the SVG; "png" = move/copy the generated PNG
         self.trash_folder = None
         self.sd_prompt_reader_loc = None
         self.siglip_enable_large_model = False
@@ -164,6 +165,7 @@ class Config:
                             "delete_instantly",
                             "clear_marks_with_errors_after_move",
                             "move_marks_overwrite_existing_file",
+                            "marked_file_svg_move_type",
                             "siglip_enable_large_model",
                             "laion_enable_half_precision",
                             "use_file_paths_json",

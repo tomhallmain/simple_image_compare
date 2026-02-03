@@ -12,6 +12,7 @@ from files.file_browser import FileBrowser
 from files.hotkey_actions_window import HotkeyActionsWindow
 from files.pdf_creator import PDFCreator
 from files.pdf_options_window import PDFOptionsWindow
+from image.frame_cache import FrameCache
 from image.image_data_extractor import image_data_extractor
 from image.image_ops import ImageOps
 from lib.multi_display import SmartToplevel
@@ -441,18 +442,42 @@ class MarkedFiles():
         for marked_file in files_to_move:
             if MarkedFiles.is_cancelled_action:
                 break
-            new_filename = os.path.join(target_dir, os.path.basename(marked_file))
+            # Resolve source path for SVG: move/copy either the SVG or the generated PNG per config
+            source_path = marked_file
+            moved_svg_as_png = False
+            if config.enable_svgs and marked_file.lower().endswith(".svg"):
+                cached_png = FrameCache.get_cached_path(marked_file)
+                if cached_png and os.path.isfile(cached_png):
+                    if config.marked_file_svg_move_type == "png":
+                        if is_moving and current_image == marked_file and app_actions:
+                            app_actions.release_media_canvas()
+                        source_path = cached_png
+                        moved_svg_as_png = True
+                    elif is_moving:
+                        # Move SVG: release media and remove temp PNG so we don't hold handles
+                        if current_image == marked_file and app_actions:
+                            app_actions.release_media_canvas()
+                        FrameCache.remove_from_cache(marked_file, delete_temp_file=True)
+            new_filename = os.path.join(target_dir, os.path.basename(source_path))
             if not set_last_moved_file:
                 MarkedFiles.last_moved_image = new_filename
                 set_last_moved_file = True
             success, result = MarkedFiles._process_single_file_operation(
                 marked_file, target_dir, move_func, new_filename, current_image, app_actions,
-                overwrite_existing=config.move_marks_overwrite_existing_file
+                overwrite_existing=config.move_marks_overwrite_existing_file,
+                source_path=source_path
             )
-            
+
             if success:
-                action.add_file(new_filename)
+                action.add_file(result)
                 MarkedFiles.previous_marks.append(marked_file)
+                if moved_svg_as_png and is_moving:
+                    FrameCache.remove_from_cache(marked_file, delete_temp_file=False)
+                    if app_actions:
+                        try:
+                            app_actions.delete(marked_file, toast=False, manual_delete=False)
+                        except Exception as e:
+                            logger.warning(f"Failed to remove SVG after moving PNG: {marked_file} - {e}")
             else:
                 exceptions[marked_file] = (result, new_filename)  # result is error message
                 if not os.path.exists(marked_file):
@@ -586,8 +611,17 @@ class MarkedFiles():
         logger.warning(f"Undoing action: {action_part1} {len(MarkedFiles.previous_marks)} files from directory:\n{MarkedFiles.last_set_target_dir}")
         exceptions = {}
         invalid_files = []
-        for marked_file in MarkedFiles.previous_marks:
-            expected_new_filepath = os.path.join(target_dir, os.path.basename(marked_file))
+        action = FileActionsWindow.action_history[0]
+        for i, marked_file in enumerate(MarkedFiles.previous_marks):
+            # previous_marks holds source paths (e.g. foo.svg); action.new_files holds the paths we
+            # actually created in the target. If we moved the generated PNG instead of the SVG,
+            # the file in the target is foo.png, not foo.svg, so we must use action.new_files[i]
+            # to know which file to move back. Both lists are appended in lockstep on success,
+            # so they are normally the same length; the fallback is for legacy or edge cases.
+            if i < len(action.new_files):
+                expected_new_filepath = action.new_files[i]
+            else:
+                expected_new_filepath = os.path.join(target_dir, os.path.basename(marked_file))
             try:
                 if is_moving_back:
                     # Move the file back to its original place.
@@ -595,7 +629,7 @@ class MarkedFiles():
                 else:
                     # Remove the file.
                     os.remove(expected_new_filepath)
-                logger.info(f"{action_part2} file from {target_dir}: {os.path.basename(marked_file)}")
+                logger.info(f"{action_part2} file from {target_dir}: {os.path.basename(expected_new_filepath)}")
             except Exception as e:
                 exceptions[marked_file] = str(e)
                 if is_moving_back:
@@ -846,10 +880,16 @@ class MarkedFiles():
         if res != messagebox.OK and res != True:
             return
 
+        # Release media if current image is among marked files (e.g. SVG with open temp PNG)
+        if self.current_image and self.current_image in MarkedFiles.file_marks:
+            self.app_actions.release_media_canvas()
         removed_files = []
         failed_to_delete = []
         for filepath in MarkedFiles.file_marks:
             try:
+                # For SVG (and other cached types), clear frame cache and temp file so no handles are held
+                if config.enable_svgs and filepath.lower().endswith(".svg"):
+                    FrameCache.remove_from_cache(filepath, delete_temp_file=True)
                 # NOTE since undo delete is not supported, the delete callback handles setting a delete lock
                 self.app_actions.delete(filepath, manual_delete=False)
                 removed_files.append(filepath)
@@ -1122,18 +1162,22 @@ class MarkedFiles():
             app_actions.title_notify(error_text)
 
     @staticmethod
-    def _process_single_file_operation(marked_file: str, target_dir: str, move_func: Callable, 
-                                      new_filename: str, current_image: Optional[str] = None, 
-                                      app_actions=None, overwrite_existing: bool = False) -> Tuple[bool, str]:
+    def _process_single_file_operation(marked_file: str, target_dir: str, move_func: Callable,
+                                      new_filename: str, current_image: Optional[str] = None,
+                                      app_actions=None, overwrite_existing: bool = False,
+                                      source_path: Optional[str] = None) -> Tuple[bool, str]:
         """
         Process a single file operation using a thread-safe lock.
-        
+        When source_path is set (e.g. for SVG->PNG move), that path is moved/copied instead of marked_file.
+        new_filename is ignored; the destination path is computed from source_path.
+
         Returns:
             Tuple[bool, str]: (success, new_filename)
         """
-        new_filename = os.path.join(target_dir, os.path.basename(marked_file))
+        actual_source = source_path if source_path is not None else marked_file
+        new_filename = os.path.join(target_dir, os.path.basename(actual_source))
         is_moving = move_func == Utils.move_file
-        
+
         try:
             # Use lock to ensure thread-safe file operations
             with Utils.file_operation_lock:
@@ -1141,14 +1185,14 @@ class MarkedFiles():
                 if is_moving and current_image == marked_file:
                     if app_actions:
                         app_actions.release_media_canvas()
-                
-                # Perform the actual file operation
-                move_func(marked_file, target_dir, overwrite_existing=overwrite_existing)
-            
+
+                # Perform the actual file operation on the resolved source
+                move_func(actual_source, target_dir, overwrite_existing=overwrite_existing)
+
             action_part2 = _("Moved") if is_moving else _("Copied")
             logger.info(f"{action_part2} file to {new_filename}")
             return True, new_filename
-                
+
         except Exception as e:
             return False, str(e)
 

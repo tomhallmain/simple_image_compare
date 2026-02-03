@@ -1,7 +1,7 @@
 import os
 import tempfile
 import asyncio
-from typing import Dict
+from typing import Dict, Optional
 
 import cv2
 
@@ -258,6 +258,29 @@ class FrameCache:
             cls.cache[video_path] = frame_path
         finally:
             cap.release()
+
+    @classmethod
+    def get_cached_path(cls, media_path: str) -> Optional[str]:
+        """
+        Return the cached temp path for a media file (e.g. SVG -> PNG path), if any.
+        Returns None if the media is not in the cache or is not a type that uses a temp file.
+        """
+        return cls.cache.get(media_path)
+
+    @classmethod
+    def remove_from_cache(cls, media_path: str, delete_temp_file: bool = False) -> None:
+        """
+        Remove a media path from the cache. If it had a temp file (e.g. generated PNG for SVG),
+        optionally delete that temp file from disk. Call this before moving/deleting the source
+        file so the temp file is not left behind and no handles are held.
+        """
+        temp_path = cls.cache.pop(media_path, None)
+        if delete_temp_file and temp_path and os.path.isfile(temp_path):
+            try:
+                os.remove(temp_path)
+                logger.debug(f"Removed cached temp file: {temp_path}")
+            except OSError as e:
+                logger.warning(f"Could not remove cached temp file {temp_path}: {e}")
 
     @classmethod
     def clear(cls) -> None:
