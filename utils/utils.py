@@ -30,8 +30,9 @@ class Utils:
             sha256 = hashlib.sha256()
             while True:
                 data = f.read(65536)
-                if not data: break
-                sha256.update(f.read())
+                if not data:
+                    break
+                sha256.update(data)
         return sha256.hexdigest()
 
     @staticmethod
