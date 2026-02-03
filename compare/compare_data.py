@@ -99,6 +99,8 @@ class CompareData:
             if compare_faces:
                 with open(self._file_faces_filepath, "wb") as store:
                     pickle.dump(self.file_faces_dict, store)
+            # Free memory after persist: comparison/search must use in-memory data
+            # (e.g. embedding mode uses _file_embeddings; prompts_exact uses _file_pos_texts/_file_neg_texts).
             self.file_data_dict = None
             self.file_faces_dict = None
             if verbose:

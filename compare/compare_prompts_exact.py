@@ -1,6 +1,6 @@
 import os
 import re
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Any
 
 from compare.base_compare import BaseCompare, gather_files
 from compare.compare_args import CompareArgs
@@ -16,6 +16,50 @@ from utils.utils import Utils
 _ = I18N._
 
 logger = get_logger("compare_prompts_exact")
+
+
+def _ensure_str(val: Any) -> str:
+    """Normalize a value to a string safe for text comparison. Handles None, bytes, dict, and other types."""
+    if val is None:
+        return ""
+    if isinstance(val, str):
+        return val
+    if isinstance(val, bytes):
+        try:
+            return val.decode("utf-8", errors="replace")
+        except Exception:
+            return ""
+    if isinstance(val, dict):
+        # Old cache format or A1111-style object; avoid using dict as string
+        for key in ("positive", "Positive prompt", "text"):
+            if key in val and isinstance(val[key], str):
+                return val[key]
+        return ""
+    try:
+        return str(val)
+    except Exception:
+        return ""
+
+
+def _normalize_search_text_list(val: Any) -> List[str]:
+    """Return a list of non-empty stripped strings from search text input. Safe for None, dict, bytes."""
+    if val is None:
+        return []
+    s = _ensure_str(val)
+    if not s or not s.strip():
+        return []
+    return [t.strip() for t in s.split(",") if t and t.strip()]
+
+
+def _parse_cached_prompts(prompts: Any) -> Tuple[str, str]:
+    """Parse cached prompt value (tuple or dict) into (positive_str, negative_str)."""
+    if isinstance(prompts, tuple) and len(prompts) == 2:
+        return _ensure_str(prompts[0]), _ensure_str(prompts[1])
+    if isinstance(prompts, dict):
+        pos = prompts.get("positive") or prompts.get("Positive prompt") or ""
+        neg = prompts.get("negative") or prompts.get("Negative prompt") or ""
+        return _ensure_str(pos), _ensure_str(neg)
+    return "", ""
 
 
 _image_data_extractor = None
@@ -84,6 +128,8 @@ def _compute_fuzzy_word_similarity(words1: set, words2: set) -> float:
     return total_matches / total_words if total_words > 0 else 0.0
 
 def compute_text_similarity(text1: str, text2: str) -> float:
+    text1 = _ensure_str(text1)
+    text2 = _ensure_str(text2)
     if not text1 or not text2:
         return 0.0
     text1_lower = text1.lower().strip()
@@ -252,10 +298,10 @@ class ComparePromptsExact(BaseCompare):
             counter += 1
             # For exact matching, we just store the prompt text, no embeddings needed
             self.compare_data.files_found.append(f)
-            # Maintain in-memory prompt arrays aligned with files_found
-            pos, neg = prompts
-            self._file_pos_texts.append(pos or "")
-            self._file_neg_texts.append(neg or "")
+            # Maintain in-memory prompt arrays aligned with files_found; normalize to str
+            pos, neg = _parse_cached_prompts(prompts)
+            self._file_pos_texts.append(pos)
+            self._file_neg_texts.append(neg)
             self._handle_progress(counter, self.max_files_processed_even)
 
         # Save prompt data
@@ -276,44 +322,58 @@ class ComparePromptsExact(BaseCompare):
         data = self.compare_data.file_data_dict or {}
         for f in self.compare_data.files_found or []:
             prompts = data.get(f, ("", ""))
-            pos, neg = prompts if isinstance(prompts, tuple) and len(prompts) == 2 else ("", "")
-            self._file_pos_texts.append(pos or "")
-            self._file_neg_texts.append(neg or "")
+            pos, neg = _parse_cached_prompts(prompts)
+            self._file_pos_texts.append(pos)
+            self._file_neg_texts.append(neg)
 
     def find_similars_to_image(self, search_path, search_file_index):
         '''
         Search for images with similar prompts to the provided image using exact text matching.
+        Uses in-memory _file_pos_texts / _file_neg_texts when aligned with files_found;
+        otherwise falls back to file_data_dict or extraction (e.g. when search file was just added).
         '''
+        # Ensure in-memory prompt arrays are populated
+        if (len(self._file_pos_texts) != len(self.compare_data.files_found) or
+                len(self._file_neg_texts) != len(self.compare_data.files_found)):
+            self._populate_text_arrays_from_cache()
+
         files_grouped = {}
         _files_found = list(self.compare_data.files_found)
 
         if self.verbose:
             logger.info("Identifying similar prompt files using exact text matching...")
-        
-        # Get the search image's prompts
-        if search_path in self.compare_data.file_data_dict:
-            search_positive, search_negative = self.compare_data.file_data_dict[search_path]
+
+        # Get the search image's prompts from arrays (by index) or extract if missing
+        if search_file_index < len(self._file_pos_texts) and search_file_index < len(self._file_neg_texts):
+            search_positive = self._file_pos_texts[search_file_index]
+            search_negative = self._file_neg_texts[search_file_index]
         else:
             search_positive, search_negative = extract_prompts_from_image(search_path)
             if search_positive is None and search_negative is None:
                 if self.verbose:
                     logger.warning(f"No prompt data found in search image {search_path}")
                 return {0: {}}
+            search_positive = _ensure_str(search_positive)
+            search_negative = _ensure_str(search_negative)
 
         # Remove search file from comparison list
         if search_file_index < len(_files_found):
             _files_found.pop(search_file_index)
 
-        # Compare with all other files
-        for i, file_path in enumerate(_files_found):
-            if file_path in self.compare_data.file_data_dict:
-                file_positive, file_negative = self.compare_data.file_data_dict[file_path]
-            else:
-                continue  # Skip files without prompt data
-            
+        # Compare with all other files using in-memory arrays by index
+        for file_path in _files_found:
+            try:
+                idx = self.compare_data.files_found.index(file_path)
+            except ValueError:
+                continue
+            if idx >= len(self._file_pos_texts) or idx >= len(self._file_neg_texts):
+                continue
+            file_positive = self._file_pos_texts[idx]
+            file_negative = self._file_neg_texts[idx]
+
             # Calculate similarity scores
-            positive_similarity = compute_text_similarity(search_positive or "", file_positive or "")
-            negative_similarity = compute_text_similarity(search_negative or "", file_negative or "")
+            positive_similarity = compute_text_similarity(search_positive, file_positive)
+            negative_similarity = compute_text_similarity(search_negative, file_negative)
             
             # Combined similarity (weighted average)
             combined_similarity = (positive_similarity * 0.7) + (negative_similarity * 0.3)
@@ -349,7 +409,7 @@ class ComparePromptsExact(BaseCompare):
                     logger.info("")
 
         # For exact matching, we don't need to preprocess the search image
-        # We just need to make sure it's in our file list
+        # We just need to make sure it's in our file list and in-memory arrays stay in sync
         if search_file_path not in self.compare_data.files_found:
             if self.verbose:
                 logger.info("Filepath not found in initial list - adding to comparison list")
@@ -359,8 +419,11 @@ class ComparePromptsExact(BaseCompare):
             positive_prompt, negative_prompt = extract_prompts_from_image(search_file_path)
             if positive_prompt is None and negative_prompt is None:
                 raise AssertionError("No prompt data found in the provided image. This image may not contain prompt metadata.")
-            
-            self.compare_data.file_data_dict[search_file_path] = (positive_prompt, negative_prompt)
+            # Keep in-memory arrays in sync (primary source for comparison); update dict only if still in memory
+            self._file_pos_texts.insert(0, _ensure_str(positive_prompt))
+            self._file_neg_texts.insert(0, _ensure_str(negative_prompt))
+            if self.compare_data.file_data_dict is not None:
+                self.compare_data.file_data_dict[search_file_path] = (positive_prompt, negative_prompt)
 
         files_grouped = self.find_similars_to_image(
             search_file_path, self.compare_data.files_found.index(search_file_path))
@@ -384,10 +447,10 @@ class ComparePromptsExact(BaseCompare):
         # If a search image is provided, use its positive as positive and its negative as negative
         if self.args.search_file_path is not None:
             pos, neg = extract_prompts_from_image(self.args.search_file_path)
-            if pos:
-                positive_texts.append(pos)
-            if neg:
-                negative_texts.append(neg)
+            if pos is not None:
+                positive_texts.append(_ensure_str(pos))
+            if neg is not None:
+                negative_texts.append(_ensure_str(neg))
 
         # If a negative search image is provided, treat its positive as negative context
         if self.args.negative_search_file_path is not None:
@@ -404,16 +467,13 @@ class ComparePromptsExact(BaseCompare):
                 if t:
                     positive_texts.append(t)
 
-        # Add explicit negative texts
-        if self.args.search_text_negative is not None and self.args.search_text_negative.strip() != "":
-            for text in self.args.search_text_negative.split(","):
-                t = text.strip()
-                if t:
-                    negative_texts.append(t)
+        # Add explicit positive and negative texts (safe for None/dict/bytes)
+        positive_texts.extend(_normalize_search_text_list(self.args.search_text))
+        negative_texts.extend(_normalize_search_text_list(self.args.search_text_negative))
 
         if len(positive_texts) == 0 and len(negative_texts) == 0:
             logger.error(
-                f"Failed to prepare texts for search.\n"
+                "Failed to prepare texts for search.\n"
                 f"search image = {self.args.search_file_path}\n"
                 f"negative search image = {self.args.negative_search_file_path}\n"
                 f"search text = {self.args.search_text}\n"
@@ -430,8 +490,8 @@ class ComparePromptsExact(BaseCompare):
         for idx, file_path in enumerate(self.compare_data.files_found):
             if idx >= len(self._file_pos_texts):
                 continue
-            file_pos = self._file_pos_texts[idx] or ""
-            file_neg = self._file_neg_texts[idx] or ""
+            file_pos = _ensure_str(self._file_pos_texts[idx] if idx < len(self._file_pos_texts) else "")
+            file_neg = _ensure_str(self._file_neg_texts[idx] if idx < len(self._file_neg_texts) else "")
 
             # Positive score: best match of any positive text against file's positive prompt
             pos_score = 0.0
@@ -473,7 +533,14 @@ class ComparePromptsExact(BaseCompare):
     def run_comparison(self, store_checkpoints=False):
         '''
         Compare all found prompt texts to each other using exact text matching.
+        Uses in-memory _file_pos_texts / _file_neg_texts (aligned with files_found), not
+        file_data_dict, because save_data() clears file_data_dict to free memory after persist.
         '''
+        # Ensure in-memory prompt arrays are populated (from get_data() or from cache)
+        if (len(self._file_pos_texts) != len(self.compare_data.files_found) or
+                len(self._file_neg_texts) != len(self.compare_data.files_found)):
+            self._populate_text_arrays_from_cache()
+
         overwrite = self.args.overwrite or not store_checkpoints
         self.compare_result = CompareResult.load(
             self.base_dir, self.compare_data.files_found, overwrite=overwrite)
@@ -503,25 +570,25 @@ class ComparePromptsExact(BaseCompare):
                 self.compare_result.i = i
             self._handle_progress(i, n_files_found_even, gathering_data=False)
 
-            # Get prompts for current file
-            current_file = self.compare_data.files_found[i]
-            if current_file not in self.compare_data.file_data_dict:
+            # Get prompts from in-memory arrays (same pattern as embedding mode using _file_embeddings)
+            if i >= len(self._file_pos_texts) or i >= len(self._file_neg_texts):
                 continue
-            current_positive, current_negative = self.compare_data.file_data_dict[current_file]
+            current_positive = self._file_pos_texts[i]
+            current_negative = self._file_neg_texts[i]
 
             # Compare with all other files
             for j in range(i + 1, self.compare_data.n_files_found):
                 if self.is_cancelled():
                     self.raise_cancellation_exception()
                 
-                compare_file = self.compare_data.files_found[j]
-                if compare_file not in self.compare_data.file_data_dict:
+                if j >= len(self._file_pos_texts) or j >= len(self._file_neg_texts):
                     continue
-                compare_positive, compare_negative = self.compare_data.file_data_dict[compare_file]
+                compare_positive = self._file_pos_texts[j]
+                compare_negative = self._file_neg_texts[j]
 
                 # Calculate similarity
-                positive_similarity = compute_text_similarity(current_positive or "", compare_positive or "")
-                negative_similarity = compute_text_similarity(current_negative or "", compare_negative or "")
+                positive_similarity = compute_text_similarity(current_positive, compare_positive)
+                negative_similarity = compute_text_similarity(current_negative, compare_negative)
                 combined_similarity = (positive_similarity * 0.7) + (negative_similarity * 0.3)
 
                 if combined_similarity >= self.threshold_duplicate:
@@ -589,10 +656,10 @@ class ComparePromptsExact(BaseCompare):
         '''
         Runs the specified operation on this Compare.
         '''
-        # Treat presence of any search text (or negative) as a search request
-        has_text_search = (
-            (self.args.search_text is not None and self.args.search_text.strip() != "") or
-            (self.args.search_text_negative is not None and self.args.search_text_negative.strip() != "")
+        # Treat presence of any search text (or negative) as a search request (safe for None/dict)
+        has_text_search = bool(
+            _normalize_search_text_list(getattr(self.args, "search_text", None))
+            or _normalize_search_text_list(getattr(self.args, "search_text_negative", None))
         )
 
         if self.is_run_search and self.args.search_file_path:

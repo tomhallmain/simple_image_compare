@@ -114,9 +114,23 @@ class ImageDataExtractor:
             info = img.info
         if isinstance(info, dict):
             if ImageDataExtractor.A1111_PARAMS_KEY in info:
-                return self._build_a1111_prompt_info_object(info[ImageDataExtractor.A1111_PARAMS_KEY]), SoftwareType.A1111
+                params_val = info[ImageDataExtractor.A1111_PARAMS_KEY]
+                if isinstance(params_val, bytes):
+                    try:
+                        params_val = params_val.decode("utf-8", errors="replace")
+                    except Exception as e:
+                        logger.warning(f"Failed to decode A1111 parameters bytes: {e}")
+                        return None, None
+                return self._build_a1111_prompt_info_object(params_val), SoftwareType.A1111
             if ImageDataExtractor.COMFYUI_PROMPT_KEY in info:
                 prompt_value = info[ImageDataExtractor.COMFYUI_PROMPT_KEY]
+                # Handle bytes (e.g. binary metadata): decode to str to avoid UTF-8 decode errors
+                if isinstance(prompt_value, bytes):
+                    try:
+                        prompt_value = prompt_value.decode("utf-8", errors="replace")
+                    except Exception as e:
+                        logger.warning(f"Failed to decode prompt bytes: {e}")
+                        return None, None
                 # Handle both string (newer ComfyUI) and dict (legacy) formats
                 if isinstance(prompt_value, str):
                     try:
@@ -208,9 +222,24 @@ class ImageDataExtractor:
                         node_inputs[ImageDataExtractor.POSITIVE] = v[ImageDataExtractor.INPUTS][ImageDataExtractor.POSITIVE][0]
                         node_inputs[ImageDataExtractor.NEGATIVE] = v[ImageDataExtractor.INPUTS][ImageDataExtractor.NEGATIVE][0]
 
-            if positive is None or positive.strip() == "":
-                positive = prompt_dicts.get(node_inputs[ImageDataExtractor.POSITIVE], "")
-            negative = prompt_dicts.get(node_inputs[ImageDataExtractor.NEGATIVE], "")
+            def _prompt_str(v):
+                if v is None:
+                    return ""
+                if isinstance(v, bytes):
+                    try:
+                        return v.decode("utf-8", errors="replace")
+                    except Exception:
+                        return ""
+                return str(v) if isinstance(v, str) else str(v)
+
+            # Only use node_inputs if we found a node with positive/negative (e.g. KSampler)
+            pos_key = node_inputs.get(ImageDataExtractor.POSITIVE)
+            neg_key = node_inputs.get(ImageDataExtractor.NEGATIVE)
+            if positive is None or (isinstance(positive, str) and positive.strip() == ""):
+                positive = prompt_dicts.get(pos_key, "") if pos_key is not None else ""
+            negative = prompt_dicts.get(neg_key, "") if neg_key is not None else ""
+            positive = _prompt_str(positive)
+            negative = _prompt_str(negative)
             # logger.debug(f"Positive: \"{positive}\"")
             # logger.debug(f"Negative: \"{negative}\"")
 
@@ -348,11 +377,37 @@ class ImageDataExtractor:
             raise Exception("Stable diffusion prompt reader failed to import. Please check log and config.json file.")
         return ImageDataReader(image_path)
 
+    def _prompt_to_str_or_none(self, val):
+        """Return a string or None from a library/extract result. Avoids returning dict/bytes to callers."""
+        if val is None:
+            return None
+        if isinstance(val, str):
+            return val if val.strip() else None
+        if isinstance(val, bytes):
+            try:
+                s = val.decode("utf-8", errors="replace")
+                return s if s.strip() else None
+            except Exception:
+                return None
+        if isinstance(val, dict):
+            for key in ("positive", "Positive prompt", "text"):
+                if key in val and isinstance(val[key], str) and val[key].strip():
+                    return val[key]
+            return None
+        try:
+            s = str(val)
+            return s if s.strip() else None
+        except Exception:
+            return None
+
     def extract_prompts_all_strategies(self, image_path):
         positive = None
         negative = None
         if has_imported_sd_prompt_reader:
-            positive, negative = self.extract_with_sd_prompt_reader(image_path)
+            try:
+                positive, negative = self.extract_with_sd_prompt_reader(image_path)
+            except Exception as e:
+                logger.debug(f"SD prompt reader failed: {e}")
         
         # Fallback to custom extract if results are empty
         if positive is None or (isinstance(positive, str) and positive.strip() == ""):
@@ -361,7 +416,7 @@ class ImageDataExtractor:
             except Exception as e:
                 logger.debug(f"Custom extract also failed: {e}")
 
-        return positive, negative
+        return self._prompt_to_str_or_none(positive), self._prompt_to_str_or_none(negative)
 
     def get_image_prompts_and_models(self, image_path):
         positive, negative = self.extract_prompts_all_strategies(image_path)
@@ -413,6 +468,17 @@ class ImageDataExtractor:
         return related_image_path
 
     def _build_a1111_prompt_info_object(self, prompt_text):
+        if prompt_text is None:
+            return {}
+        if isinstance(prompt_text, bytes):
+            try:
+                prompt_text = prompt_text.decode("utf-8", errors="replace")
+            except Exception:
+                return {}
+        # TODO: Maybe handle the below better, it may be causing invalid values 
+        # from the prompt dicts to be forced into the prompt string
+        if not isinstance(prompt_text, str):
+            prompt_text = str(prompt_text)
         negative_prompt = "Negative prompt: "
         steps = "Steps: "
         sampler = "Sampler: "

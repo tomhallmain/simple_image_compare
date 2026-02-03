@@ -36,10 +36,14 @@ class CompareArgs:
         self.app_actions = app_actions
 
     def not_searching(self):
-        return (self.search_file_path is None or self.search_file_path.strip() == "") and \
-               (self.search_text is None or self.search_text.strip() == "") and \
-               (self.search_text_negative is None or self.search_text_negative.strip() == "") and \
-               (self.negative_search_file_path is None or self.negative_search_file_path.strip() == "")
+        def _empty(v):
+            if v is None:
+                return True
+            if isinstance(v, str):
+                return v.strip() == ""
+            return True  # e.g. dict or other type treated as "no search"
+        return (_empty(self.search_file_path) and _empty(self.search_text)
+                and _empty(self.search_text_negative) and _empty(self.negative_search_file_path))
 
     def _is_new_data_request_required(self, other):
         return (self.threshold != other.threshold
