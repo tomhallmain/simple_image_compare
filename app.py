@@ -39,7 +39,7 @@ from lib.multi_display import SmartToplevel
 from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
-from utils.config import config, FileCheckConfig, SlideshowConfig
+from utils.config import config, FileCheckConfig, SlideshowConfig, StoreCacheConfig
 from utils.constants import Mode, CompareMode, Direction, ActionType, ProtectedActions
 from utils.help_and_config import HelpAndConfig
 from utils.logging_setup import get_logger
@@ -210,6 +210,7 @@ class App():
         self.file_browser = FileBrowser(recursive=config.image_browse_recursive, sort_by=config.sort_by)
         self.file_check_config = FileCheckConfig(self.window_id)
         self.slideshow_config = SlideshowConfig(self.window_id)
+        self.store_cache_config = StoreCacheConfig(self.window_id)
         self.mode = Mode.BROWSE
         self.fullscreen = False
         self.delete_lock = False
@@ -512,6 +513,7 @@ class App():
         start_thread(self.check_files)
 
         if not self.is_secondary():
+            start_thread(self.do_periodic_store_cache)
             for _dir in app_info_cache.get_meta("secondary_base_dirs", default_val=[]):
                 App.add_secondary_window(_dir)
 
@@ -554,6 +556,7 @@ class App():
         else:
             # Clean up notification manager threads for main window
             notification_manager.cleanup_threads()
+            self.store_cache_config.end_store_cache()
             for _app in App.open_windows:
                 _app.store_info_cache()
         self.master.destroy()
@@ -758,6 +761,20 @@ class App():
         except Exception as e:
             # Log any errors but don't crash the periodic task
             logger.debug(f"Error in _check_files_main_thread: {e}")
+
+    @periodic(registry_attr_name="store_cache_config")
+    async def do_periodic_store_cache(self, **kwargs):
+        if not self.master.winfo_exists():
+            return
+        self.master.after_idle(self._store_info_cache_main_thread)
+
+    def _store_info_cache_main_thread(self) -> None:
+        """Run on the main thread to persist application cache."""
+        try:
+            if self.master.winfo_exists():
+                self.store_info_cache(store_window_state=True)
+        except Exception as e:
+            logger.debug(f"Error in periodic store info cache: {e}")
 
     @periodic(registry_attr_name="slideshow_config")
     async def do_slideshow(self, **kwargs):

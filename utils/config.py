@@ -561,6 +561,26 @@ class SlideshowConfig:
         if self.slideshow_running or self.show_new_images:
             self.slideshow_running = False
             self.show_new_images = False
+            running_tasks_registry.remove(self.registry_id)
             return True
         return False
 
+
+class StoreCacheConfig:
+    """Periodic task to persist application cache. Runs only on the main window (window_id == 0)."""
+    interval_seconds = 300
+
+    def __init__(self, window_id: int):
+        self.window_id = window_id
+        self.registry_id = "0_store_cache"
+        self.is_main = window_id == 0
+        if self.is_main:
+            running_tasks_registry.add(
+                self.registry_id,
+                StoreCacheConfig.interval_seconds,
+                "Store application cache",
+            )
+
+    def end_store_cache(self) -> None:
+        if self.is_main:
+            running_tasks_registry.remove(self.registry_id)
