@@ -1,4 +1,11 @@
 
+# TODO: Remove this module after the PySide6 port is verified.
+# In the Qt port, QTimer replaces the RunningTasksRegistry + @periodic +
+# start_thread pattern entirely.  Each QTimer natively manages its own
+# interval, start/stop, and runs callbacks on the main thread -- eliminating
+# the need for asyncio, a centralized registry, and thread-safety
+# workarounds.  See PORTING_PLAN.md § 14 "Post-Port Cleanup".
+
 import asyncio
 import threading
 

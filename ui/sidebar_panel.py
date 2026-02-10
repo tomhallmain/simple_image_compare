@@ -1,0 +1,430 @@
+"""
+SidebarPanel -- owns the sidebar QWidget and its layout.
+
+Extracted from the sidebar-building portion of App.__init__ (~200 lines)
+and the helper methods: add_button, add_label, apply_to_grid, new_entry,
+destroy_grid_element.
+
+Contains the QScrollArea wrapping a QVBoxLayout with all sidebar widgets
+(labels, entries, buttons, checkboxes, dropdowns). Exposes references to
+key widgets so that controllers can read/write them.
+"""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Callable, Optional
+
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QComboBox,
+    QHBoxLayout,
+    QLabel,
+    QProgressBar,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
+
+from lib.aware_entry_qt import AwareEntry
+from lib.scroll_frame_qt import ScrollFrame
+from lib.tooltip_qt import create_tooltip
+from ui.app_style import AppStyle
+from utils.config import config
+from utils.constants import Mode, SortBy
+from utils.logging_setup import get_logger
+from utils.translations import I18N
+from utils.utils import Utils
+
+if TYPE_CHECKING:
+    from ui.app_window import AppWindow
+
+_ = I18N._
+logger = get_logger("sidebar_panel")
+
+
+class SidebarPanel(QWidget):
+    """
+    Sidebar widget containing all navigation controls, search inputs,
+    labels, and dynamically-added mode buttons.
+
+    Mirrors the sidebar built inside the original ``App.__init__``.
+    """
+
+    def __init__(self, parent: QWidget, app_window: AppWindow):
+        super().__init__(parent)
+        self._app = app_window
+        self._dynamic_buttons: dict[str, QWidget] = {}
+
+        self._init_ui()
+
+    # ==================================================================
+    # UI construction
+    # ==================================================================
+    def _init_ui(self) -> None:
+        """Build the sidebar layout with all persistent widgets."""
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(4, 4, 4, 4)
+        outer.setSpacing(2)
+
+        # Scrollable area for sidebar content
+        self._scroll = ScrollFrame(self)
+        outer.addWidget(self._scroll)
+
+        # -- Mode & state labels -------------------------------------------
+        self.label_mode = QLabel(Mode.BROWSE.get_text(), self)
+        self._scroll.add_widget(self.label_mode)
+
+        self.label_state = QLabel(_("Set a directory to run comparison."), self)
+        self.label_state.setWordWrap(True)
+        self._scroll.add_widget(self.label_state)
+
+        # ========== Settings UI ===========================================
+
+        # Toggle theme button
+        self.toggle_theme_btn = self._make_button(
+            _("Toggle theme"), lambda: self._app.toggle_theme()
+        )
+
+        # Set directory
+        self.set_base_dir_btn = self._make_button(
+            _("Set directory"), lambda: self._app.set_base_dir()
+        )
+
+        self.set_base_dir_box = AwareEntry(self)
+        self.set_base_dir_box.setPlaceholderText(_("Enter base directory..."))
+        self.set_base_dir_box.returnPressed.connect(lambda: self._app.set_base_dir())
+        self._scroll.add_widget(self.set_base_dir_box)
+
+        # Inclusion pattern (file glob filter)
+        self._add_label(_("Filter files by glob pattern"))
+        self.inclusion_pattern = AwareEntry(self)
+        self.inclusion_pattern.returnPressed.connect(self._on_set_file_filter)
+        self._scroll.add_widget(self.inclusion_pattern)
+
+        # Sort by
+        self._add_label(_("Browsing mode - Sort by"))
+        self.sort_by_choice = QComboBox(self)
+        for text in SortBy.members():
+            self.sort_by_choice.addItem(text)
+        self.sort_by_choice.setCurrentText(config.sort_by.get_text())
+        self.sort_by_choice.currentTextChanged.connect(self._on_sort_by_changed)
+        self._scroll.add_widget(self.sort_by_choice)
+
+        # Checkboxes
+        self.recursive_check = QCheckBox(_("Recurse subdirectories"), self)
+        self.recursive_check.setChecked(config.image_browse_recursive)
+        self.recursive_check.stateChanged.connect(self._on_toggle_recursive)
+        self._scroll.add_widget(self.recursive_check)
+
+        self.fill_canvas_check = QCheckBox(_("Image resize to full window"), self)
+        self.fill_canvas_check.setChecked(config.fill_canvas)
+        self.fill_canvas_check.stateChanged.connect(self._on_toggle_fill_canvas)
+        self._scroll.add_widget(self.fill_canvas_check)
+
+        self.search_return_closest_check = QCheckBox(_("Search only return closest"), self)
+        self.search_return_closest_check.setChecked(config.search_only_return_closest)
+        self.search_return_closest_check.stateChanged.connect(self._on_toggle_search_return_closest)
+        self._scroll.add_widget(self.search_return_closest_check)
+
+        # ========== Search UI =============================================
+
+        # Search image
+        self.set_search_btn = self._make_button(
+            _("Set search file"), lambda: self._app.search_ctrl.set_search_for_image()
+        )
+        create_tooltip(
+            self.set_search_btn,
+            _("Set an image file to search for similar images.\n"
+              "Uses embedding similarity to find visually similar images."),
+        )
+
+        self.search_img_path_box = AwareEntry(self)
+        self.search_img_path_box.setPlaceholderText(_("Search image path..."))
+        self.search_img_path_box.returnPressed.connect(
+            lambda: self._app.search_ctrl.set_search_for_image()
+        )
+        self._scroll.add_widget(self.search_img_path_box)
+
+        # Search text (embedding)
+        self.search_text_btn = self._make_button(
+            _("Search text (embedding mode)"),
+            lambda: self._app.search_ctrl.set_search_for_text(),
+        )
+        create_tooltip(
+            self.search_text_btn,
+            _("Positive text: Find images similar to this text.\n"
+              "Negative text: Exclude images similar to this text.\n"
+              "Both use embedding similarity matching."),
+        )
+
+        # Positive text
+        self._add_label(_("Positive text:"))
+        self.search_text_box = AwareEntry(self)
+        self.search_text_box.returnPressed.connect(
+            lambda: self._app.search_ctrl.set_search_for_text()
+        )
+        self._scroll.add_widget(self.search_text_box)
+
+        # Negative text
+        self._add_label(_("Negative text:"))
+        self.search_text_negative_box = AwareEntry(self)
+        self.search_text_negative_box.returnPressed.connect(
+            lambda: self._app.search_ctrl.set_search_for_text()
+        )
+        self._scroll.add_widget(self.search_text_negative_box)
+
+        # Classifier actions & compare settings buttons
+        self.classifier_actions_btn = self._make_button(
+            _("Classifier Actions"),
+            lambda: self._app.window_launcher.open_classifier_actions_window(),
+        )
+        self.compare_settings_btn = self._make_button(
+            _("Compare Settings"),
+            lambda: self._app.window_launcher.open_compare_settings_window(),
+        )
+
+        # ========== Run context-aware UI ==================================
+
+        # Progress bar (hidden by default)
+        self.progress_bar = QProgressBar(self)
+        self.progress_bar.setRange(0, 100)
+        self.progress_bar.setVisible(False)
+        self._scroll.add_widget(self.progress_bar)
+
+        # Compare buttons
+        self.run_compare_btn = self._make_button(
+            _("Run image compare"),
+            lambda: self._app.search_ctrl.run_compare(),
+        )
+        self.find_duplicates_btn = self._make_button(
+            _("Find duplicates"),
+            lambda: self._app.search_ctrl.run_compare(find_duplicates=True),
+        )
+        self.image_details_btn = self._make_button(
+            _("Image details"),
+            lambda: self._app.window_launcher.open_media_details(),
+        )
+
+        # Search current image
+        self.search_current_image_btn = self._make_button(
+            _("Search current image"),
+            lambda: self._app.search_ctrl.set_current_image_run_search(),
+        )
+        create_tooltip(
+            self.search_current_image_btn,
+            _("Search for images similar to the currently displayed image.\n"
+              "Uses embedding similarity matching."),
+        )
+
+        # File action buttons
+        self.open_media_location_btn = self._make_button(
+            _("Open media location"),
+            lambda: self._app.file_ops_ctrl.open_media_location(),
+        )
+        self.copy_image_path_btn = self._make_button(
+            _("Copy image path"),
+            lambda: self._app.file_ops_ctrl.copy_media_path(),
+        )
+        self.copy_image_basename_btn = self._make_button(
+            _("Copy media basename"),
+            lambda: self._app.file_ops_ctrl.copy_media_basename(),
+        )
+        self.delete_image_btn = self._make_button(
+            _("---- DELETE ----"),
+            lambda: self._app.file_ops_ctrl.delete_image(),
+        )
+
+        # Current image name label (at the bottom)
+        self.label_current_image_name = QLabel("", self)
+        self.label_current_image_name.setWordWrap(True)
+        self._scroll.add_widget(self.label_current_image_name)
+
+        # -- Mode-specific button container --------------------------------
+        self._mode_button_container = QVBoxLayout()
+        self._mode_button_container.setContentsMargins(0, 0, 0, 0)
+        mode_widget = QWidget(self)
+        mode_widget.setLayout(self._mode_button_container)
+        self._scroll.add_widget(mode_widget)
+
+    # ==================================================================
+    # Widget factory helpers
+    # ==================================================================
+    def _add_label(self, text: str) -> QLabel:
+        """Add a simple text label to the sidebar."""
+        lbl = QLabel(text, self)
+        self._scroll.add_widget(lbl)
+        return lbl
+
+    def _make_button(self, text: str, command: Callable) -> QPushButton:
+        """Create a button, connect its signal, and add it to the scroll area."""
+        btn = QPushButton(text, self)
+        btn.clicked.connect(command)
+        self._scroll.add_widget(btn)
+        return btn
+
+    # ==================================================================
+    # Dynamic (mode-specific) button management
+    # ==================================================================
+    def add_button(self, name: str, text: str, command: Callable) -> QPushButton:
+        """Add a dynamically-named button to the mode button container."""
+        if name in self._dynamic_buttons:
+            return self._dynamic_buttons[name]
+        btn = QPushButton(_(text), self)
+        btn.clicked.connect(command)
+        self._mode_button_container.addWidget(btn)
+        self._dynamic_buttons[name] = btn
+        return btn
+
+    def destroy_button(self, name: str) -> None:
+        """Remove a dynamically-added button by name."""
+        btn = self._dynamic_buttons.pop(name, None)
+        if btn is not None:
+            self._mode_button_container.removeWidget(btn)
+            btn.deleteLater()
+
+    def add_buttons_for_mode(self) -> None:
+        """
+        Add buttons appropriate for the current application mode.
+
+        Ported from App._add_buttons_for_mode.
+        """
+        mode = self._app.mode
+        if self._app.has_added_buttons_for_mode.get(mode, False):
+            return
+
+        if mode == Mode.SEARCH:
+            cm = self._app.compare_manager
+            if (cm.search_image_full_path
+                    and cm.search_image_full_path.strip() != ""
+                    and "toggle_image_view_btn" not in self._dynamic_buttons):
+                self.add_button(
+                    "toggle_image_view_btn",
+                    "Toggle image view",
+                    self._app.media_navigator.toggle_image_view,
+                )
+                self.add_button(
+                    "replace_current_image_btn",
+                    "Replace with search image",
+                    self._app.file_ops_ctrl.replace_current_image_with_search_image,
+                )
+
+        elif mode == Mode.GROUP:
+            self.add_button(
+                "prev_group_btn",
+                "Previous group",
+                self._app.compare_manager.show_prev_group,
+            )
+            self.add_button(
+                "next_group_btn",
+                "Next group",
+                self._app.compare_manager.show_next_group,
+            )
+
+        elif mode == Mode.DUPLICATES:
+            pass  # no extra buttons currently
+
+        self._app.has_added_buttons_for_mode[mode] = True
+
+    def remove_all_mode_buttons(self) -> None:
+        """Remove all dynamically-added mode buttons and reset flags."""
+        for name in list(self._dynamic_buttons.keys()):
+            self.destroy_button(name)
+        for mode in self._app.has_added_buttons_for_mode:
+            self._app.has_added_buttons_for_mode[mode] = False
+
+    def remove_search_mode_buttons(self) -> None:
+        """Remove buttons specific to search mode."""
+        for name in ("toggle_image_view_btn", "replace_current_image_btn"):
+            self.destroy_button(name)
+
+    def remove_group_mode_buttons(self) -> None:
+        """Remove buttons specific to group/duplicates mode."""
+        for name in ("prev_group_btn", "next_group_btn"):
+            self.destroy_button(name)
+
+    # ==================================================================
+    # Progress bar
+    # ==================================================================
+    def show_progress(self, context: str, percent_complete: Optional[int] = None) -> None:
+        """
+        Display or update the progress bar during a compare.
+
+        Ported from App.display_progress.
+        """
+        if percent_complete is None:
+            self.update_state_label(Utils._wrap_text_to_fit_length(context, 30))
+            self.progress_bar.setVisible(False)
+        else:
+            self.update_state_label(
+                Utils._wrap_text_to_fit_length(
+                    _("{0}: {1}% complete").format(context, int(percent_complete)), 30
+                )
+            )
+            self.progress_bar.setValue(int(percent_complete))
+            self.progress_bar.setVisible(True)
+
+    def hide_progress(self) -> None:
+        """Hide the progress bar."""
+        self.progress_bar.setVisible(False)
+
+    # ==================================================================
+    # Sidebar-triggered actions (signal handlers)
+    # ==================================================================
+    def _on_sort_by_changed(self, text: str) -> None:
+        """Handle sort-by dropdown change."""
+        try:
+            self._app.file_browser.set_sort_by(SortBy.get(text))
+            self._app.file_browser.refresh()
+            if self._app.mode == Mode.BROWSE:
+                self._app.media_navigator.show_next_media()
+        except Exception as e:
+            logger.error(f"Error changing sort: {e}")
+
+    def _on_set_file_filter(self) -> None:
+        """Handle inclusion pattern entry Return key."""
+        if self._app.slideshow_config.end_slideshows():
+            self._app.notification_ctrl.toast(_("Ended slideshows"))
+        pattern = self.inclusion_pattern.text().strip()
+        self._app.file_browser.set_filter(pattern if pattern else None)
+        self._app.refresh(file_check=False)
+
+    def _on_toggle_recursive(self, state: int) -> None:
+        """Handle recursive checkbox toggle."""
+        is_recursive = state == Qt.CheckState.Checked.value
+        self._app.file_browser.set_recursive(is_recursive)
+        if self._app.mode == Mode.BROWSE and self._app.img_path:
+            self._app.media_navigator.show_next_media()
+
+    def _on_toggle_fill_canvas(self, state: int) -> None:
+        """Handle fill-canvas checkbox toggle."""
+        self._app.media_frame.fill_canvas = not self._app.media_frame.fill_canvas
+
+    def _on_toggle_search_return_closest(self, state: int) -> None:
+        """Handle search-return-closest checkbox toggle."""
+        self._app.compare_manager.toggle_search_only_return_closest()
+
+    # ==================================================================
+    # External update hooks
+    # ==================================================================
+    def set_mode_label(self, text: str) -> None:
+        """Update the mode indicator label."""
+        self.label_mode.setText(text)
+
+    def update_base_dir_display(self, base_dir: str) -> None:
+        """Update the base directory entry widget."""
+        self.set_base_dir_box.setText(base_dir)
+
+    def update_current_image_label(self, text: str) -> None:
+        """Update the current image name label."""
+        self.label_current_image_name.setText(text)
+
+    def update_state_label(self, text: str) -> None:
+        """Update the file state label (e.g. '5 / 120')."""
+        self.label_state.setText(text)
+
+    def set_sort_by_value(self, text: str) -> None:
+        """Programmatically set the sort-by combo without triggering the signal."""
+        self.sort_by_choice.blockSignals(True)
+        self.sort_by_choice.setCurrentText(text)
+        self.sort_by_choice.blockSignals(False)

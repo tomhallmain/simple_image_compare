@@ -1,0 +1,231 @@
+"""
+NotificationController -- toast display, title notifications, alerts, and label state.
+
+Extracted from: toast, title_notify, alert, handle_error, _set_label_state.
+Uses signals internally so it is safe to call from any thread.
+"""
+
+from __future__ import annotations
+
+import traceback
+from typing import TYPE_CHECKING, Optional
+
+from PySide6.QtCore import QObject, QTimer, Signal, Qt
+from PySide6.QtWidgets import QLabel, QMessageBox, QVBoxLayout, QWidget
+
+from lib.qt_alert import qt_alert
+from ui.app_style import AppStyle
+from utils.config import config
+from utils.constants import ActionType
+from utils.logging_setup import get_logger
+from utils.notification_manager import notification_manager
+from utils.translations import I18N
+from utils.utils import Utils
+
+if TYPE_CHECKING:
+    from ui.app_window import AppWindow
+
+_ = I18N._
+logger = get_logger("notification_controller")
+
+
+class _NotificationSignals(QObject):
+    """Signals for cross-thread toast / title-notify delivery."""
+    toast_requested = Signal(str, int, str)       # message, seconds, bg_color
+    title_notify_requested = Signal(str, str, int)  # message, base_message, seconds
+
+
+class NotificationController:
+    """
+    Owns toast display, title-bar notifications, message-box alerts,
+    and the sidebar state / label updates.
+    """
+
+    def __init__(self, app_window: AppWindow):
+        self._app = app_window
+        self._signals = _NotificationSignals()
+        self._signals.toast_requested.connect(self._do_toast)
+        self._signals.title_notify_requested.connect(self._do_title_notify)
+
+    # ------------------------------------------------------------------
+    # Toast
+    # ------------------------------------------------------------------
+    def toast(
+        self,
+        message: str,
+        time_in_seconds: int = config.toasts_persist_seconds,
+        bg_color: Optional[str] = None,
+    ) -> None:
+        """
+        Show a transient toast notification. Thread-safe: if called from
+        a background thread the signal is queued to the main thread.
+        """
+        logger.info("Toast: " + message.replace("\n", " "))
+        if not config.show_toasts:
+            return
+        color = bg_color or AppStyle.BG_COLOR
+        self._signals.toast_requested.emit(message, time_in_seconds, color)
+
+    def _do_toast(self, message: str, time_in_seconds: int, bg_color: str) -> None:
+        """
+        Main-thread implementation of toast display.
+
+        Creates a frameless overlay widget at the top-right of the parent
+        window, which auto-destructs after *time_in_seconds*.
+        Ported from App.toast.
+        """
+        parent = self._app
+
+        # Calculate position: top-right of parent window
+        width = 300
+        height = 100
+        parent_geo = parent.geometry()
+        x = parent_geo.x() + parent_geo.width() - width
+        y = parent_geo.y()
+
+        # Create frameless overlay
+        toast_widget = QWidget(
+            None,
+            Qt.WindowType.FramelessWindowHint
+            | Qt.WindowType.WindowStaysOnTopHint
+            | Qt.WindowType.Tool,
+        )
+        toast_widget.setFixedSize(width, height)
+        toast_widget.move(x, y)
+        toast_widget.setStyleSheet(
+            f"background-color: {bg_color}; border: 1px solid {AppStyle.FG_COLOR};"
+        )
+
+        layout = QVBoxLayout(toast_widget)
+        layout.setContentsMargins(10, 5, 10, 5)
+        label = QLabel(message.strip())
+        label.setStyleSheet(f"color: {AppStyle.FG_COLOR}; font-size: 10pt; border: none;")
+        label.setWordWrap(True)
+        layout.addWidget(label)
+
+        toast_widget.show()
+
+        # Auto-destruct after the specified time
+        QTimer.singleShot(
+            time_in_seconds * 1000,
+            lambda: toast_widget.close() if toast_widget else None,
+        )
+
+    # ------------------------------------------------------------------
+    # Title notifications
+    # ------------------------------------------------------------------
+    def title_notify(
+        self,
+        message: str,
+        base_message: str = "",
+        time_in_seconds: int = 0,
+        action_type: ActionType = ActionType.SYSTEM,
+        is_manual: bool = True,
+    ) -> None:
+        """
+        Temporarily modify the window title to show a notification message.
+        Thread-safe via signals.
+
+        Ported from App.title_notify.
+        """
+        if not config.show_toasts:
+            return
+        if time_in_seconds == 0:
+            time_in_seconds = config.title_notify_persist_seconds
+
+        notification_manager.set_current_title(
+            self._app._get_title_from_base_dir(), window_id=self._app.window_id
+        )
+        notification_manager.add_notification(
+            message, base_message, time_in_seconds, action_type, is_manual,
+            window_id=self._app.window_id,
+        )
+
+    def _do_title_notify(self, message: str, base_message: str, time_in_seconds: int) -> None:
+        """Main-thread implementation of title notification."""
+        self._app.setWindowTitle(message)
+        QTimer.singleShot(
+            time_in_seconds * 1000,
+            lambda: self._app.setWindowTitle(
+                base_message or self._app._get_title_from_base_dir()
+            ),
+        )
+
+    # ------------------------------------------------------------------
+    # Alerts / errors
+    # ------------------------------------------------------------------
+    def alert(
+        self,
+        title: str,
+        message: str,
+        kind: str = "info",
+        severity: str = "normal",
+        master: Optional[QWidget] = None,
+    ) -> bool:
+        """
+        Show a modal message box. Returns True for OK/Yes, False otherwise.
+
+        Ported from App.alert.
+        """
+        logger.warning(f'Alert - Title: "{title}" Message: {message}')
+        parent = master or self._app
+
+        # For dangerous operations with high severity, use a custom styled dialog
+        if severity == "high" and kind == "askokcancel":
+            from lib.custom_dialogs_qt import show_high_severity_dialog
+            return show_high_severity_dialog(parent, title, message)
+
+        return qt_alert(parent, title, message, kind=kind)
+
+    def handle_error(self, error_text: str, title: Optional[str] = None, kind: str = "error") -> None:
+        """Display an error dialog."""
+        traceback.print_exc()
+        title = title or _("Error")
+        self.alert(title, error_text, kind=kind)
+
+    # ------------------------------------------------------------------
+    # Sidebar label state
+    # ------------------------------------------------------------------
+    def set_label_state(
+        self, text: Optional[str] = None, group_number: Optional[int] = None, size: int = -1
+    ) -> None:
+        """
+        Update the sidebar state label with the current file position info.
+
+        Ported from App._set_label_state.
+        """
+        if text is not None:
+            self._app.sidebar_panel.update_state_label(text)
+            return
+
+        if size > -1:
+            if group_number is None:
+                self._app.sidebar_panel.update_state_label("")
+            else:
+                args = (
+                    group_number + 1,
+                    len(self._app.compare_manager.file_groups),
+                    size,
+                )
+                label_text = Utils._wrap_text_to_fit_length(
+                    _("GROUP_DETAILS").format(*args), 30
+                )
+                self._app.sidebar_panel.update_state_label(label_text)
+            return
+
+        # Default: set based on file count
+        fb = self._app.file_browser
+        file_count = fb.count() if fb else 0
+        if file_count == 0:
+            label_text = _("No image files found")
+        elif file_count == 1:
+            label_text = _("1 image file found")
+        else:
+            label_text = _("{0} image files found").format(file_count)
+
+        # Check inclusion pattern
+        inclusion_text = self._app.sidebar_panel.inclusion_pattern.text().strip()
+        if inclusion_text != "":
+            label_text += "\n" + _("(filtered)")
+
+        self._app.sidebar_panel.update_state_label(label_text)

@@ -125,7 +125,18 @@ class PositionData:
         return PositionData(x=min_x, y=min_y, width=max_x - min_x, height=max_y - min_y)
 
     @staticmethod
-    def from_dict(data: dict):
-        return PositionData(x=data.get("x"), y=data.get("y"), width=data.get("width"), height=data.get("height"))
-        
+    def from_dict(data):
+        """
+        Reconstruct PositionData from a dict.
 
+        Handles cross-toolkit cache gracefully: if *data* is not a dict or
+        is missing expected keys the result will have ``None`` fields that
+        ``is_valid()`` will reject.
+        """
+        if not isinstance(data, dict):
+            logger.warning(f"PositionData.from_dict received non-dict: {type(data)}")
+            return PositionData()
+        return PositionData(
+            x=data.get("x"), y=data.get("y"),
+            width=data.get("width"), height=data.get("height"),
+        )
