@@ -1,6 +1,6 @@
 # Simple Image Compare Tool
 
-Simple visual media comparison tool that detects color and face similarities using CLIP embeddings (default) and color matching (separate optional mode). The tool now supports multiple embedding models:
+Simple visual media comparison tool that detects color and face similarities using embeddings (default) and color matching (separate optional mode). The tool supports multiple embedding models:
 
 <details>
 <summary>View Embedding Models</summary>
