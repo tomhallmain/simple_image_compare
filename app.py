@@ -2429,8 +2429,11 @@ class App():
         # Start a new thread that will destroy the window after a few seconds
         def self_destruct_after(time_in_seconds):
             time.sleep(time_in_seconds)
-            label.destroy()
-            toast.destroy()
+            try:
+                self.master.after(0, label.destroy)
+                self.master.after(10, toast.destroy)
+            except RuntimeError:
+                pass  # Main loop already exited
         start_thread(self_destruct_after, use_asyncio=False, args=[time_in_seconds])
         if sys.platform == "darwin":
             self.media_canvas.focus()
