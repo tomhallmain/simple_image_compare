@@ -16,12 +16,12 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QMenu
 
 from files.directory_notes import DirectoryNotes
-from files.marked_file_mover import MarkedFiles
+from ui.files.marked_file_mover_qt import MarkedFiles
 from utils.logging_setup import get_logger
 from utils.translations import I18N
 
 if TYPE_CHECKING:
-    from ui.app_window import AppWindow
+    from ui.app_window.app_window import AppWindow
 
 _ = I18N._
 logger = get_logger("context_menu_builder")

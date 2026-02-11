@@ -23,7 +23,7 @@ from utils.logging_setup import get_logger
 from utils.translations import I18N
 
 if TYPE_CHECKING:
-    from ui.app_window import AppWindow
+    from ui.app_window.app_window import AppWindow
 
 _ = I18N._
 logger = get_logger("window_launcher")
@@ -202,15 +202,16 @@ class WindowLauncher:
     def open_file_actions_window(self, event=None) -> None:
         """Open the file actions window."""
         try:
-            from files.file_actions_window import FileActionsWindow
+            from ui.files.file_actions_window_qt import FileActionsWindow
             from image.image_details import ImageDetails
-            from files.marked_file_mover import MarkedFiles
-            FileActionsWindow(
+            from ui.files.marked_file_mover_qt import MarkedFiles
+            window = FileActionsWindow(
                 self._app,
                 self._app.app_actions,
                 ImageDetails.open_temp_image_canvas,
                 MarkedFiles.move_marks_to_dir_static,
             )
+            window.show()
         except Exception as e:
             self._handle_error(e, "File Actions Window Error")
 
@@ -316,15 +317,9 @@ class WindowLauncher:
     def get_help_and_config(self, event=None) -> None:
         """Open the help and configuration window."""
         try:
-            from lib.multi_display_qt import SmartWindow
-            from utils.help_and_config import HelpAndConfig
-            window = SmartWindow(
-                persistent_parent=self._app,
-                title=_("Help and Config"),
-                geometry="900x600",
-            )
-            HelpAndConfig(window)
-            window.show()
+            from ui.help_and_config_qt import HelpAndConfig
+            dialog = HelpAndConfig(parent=self._app, position_parent=self._app)
+            dialog.show()
         except Exception as e:
             self._app.notification_ctrl.alert(
                 "Help & Config Error", str(e), kind="error"
@@ -354,7 +349,7 @@ class WindowLauncher:
     def run_prevalidations_for_base_dir(self, event=None) -> None:
         """Run all prevalidations on every file in the current directory."""
         from compare.prevalidations_tab import PrevalidationsTab
-        from files.marked_file_mover import MarkedFiles
+        from ui.files.marked_file_mover_qt import MarkedFiles
         from PySide6.QtWidgets import QMessageBox
 
         fb = self._app.file_browser

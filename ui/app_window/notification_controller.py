@@ -23,7 +23,7 @@ from utils.translations import I18N
 from utils.utils import Utils
 
 if TYPE_CHECKING:
-    from ui.app_window import AppWindow
+    from ui.app_window.app_window import AppWindow
 
 _ = I18N._
 logger = get_logger("notification_controller")

@@ -22,7 +22,7 @@ from utils.logging_setup import get_logger
 from utils.translations import I18N
 
 if TYPE_CHECKING:
-    from ui.app_window import AppWindow
+    from ui.app_window.app_window import AppWindow
 
 _ = I18N._
 logger = get_logger("window_manager")
@@ -159,7 +159,7 @@ class WindowManager:
         Ported from App.add_secondary_window. Reuses an existing window
         for the same base_dir unless ``config.always_open_new_windows`` is set.
         """
-        from ui.app_window import AppWindow
+        from ui.app_window.app_window import AppWindow
 
         # Reuse existing window for the same directory unless config says otherwise
         if not config.always_open_new_windows:

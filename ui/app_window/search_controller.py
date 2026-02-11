@@ -32,8 +32,8 @@ from utils.utils import Utils
 if TYPE_CHECKING:
     from compare.compare_manager import CompareManager
     from files.file_browser import FileBrowser
-    from ui.app_window import AppWindow
-    from ui.sidebar_panel import SidebarPanel
+    from ui.app_window.app_window import AppWindow
+    from ui.app_window.sidebar_panel import SidebarPanel
 
 _ = I18N._
 logger = get_logger("search_controller")
@@ -355,7 +355,7 @@ class SearchController:
 
         Ported from App.set_current_image_run_search.
         """
-        from ui.window_manager import WindowManager
+        from ui.app_window.window_manager import WindowManager
 
         if base_dir is None:
             window, dirs = WindowManager.get_other_window_or_self_dir(
@@ -401,7 +401,7 @@ class SearchController:
 
         Ported from App.add_current_image_to_negative_search.
         """
-        from ui.window_manager import WindowManager
+        from ui.app_window.window_manager import WindowManager
 
         filepath = self._app.media_navigator.get_active_media_filepath()
         if filepath:
@@ -560,9 +560,9 @@ class SearchController:
 
         Ported from App.find_related_images_in_open_window.
         """
-        from files.marked_file_mover import MarkedFiles
+        from ui.files.marked_file_mover_qt import MarkedFiles
         from image.image_details import ImageDetails
-        from ui.window_manager import WindowManager
+        from ui.app_window.window_manager import WindowManager
 
         if base_dir is None:
             window, dirs = WindowManager.get_other_window_or_self_dir(self._app)

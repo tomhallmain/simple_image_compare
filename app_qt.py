@@ -67,7 +67,7 @@ def main():
             os._exit(0)
 
         # Password verified or not required -- create the main window
-        from ui.app_window import AppWindow
+        from ui.app_window.app_window import AppWindow
 
         app_window = AppWindow()
         app_window.show()

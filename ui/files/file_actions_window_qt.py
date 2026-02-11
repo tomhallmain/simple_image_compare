@@ -1,0 +1,773 @@
+"""
+PySide6 port of files/file_actions_window.py -- FileActionsWindow.
+
+Fully self-contained: ``Action`` data class, module-level setup helpers,
+persistence, static state management, and the Qt UI.
+
+Key improvement over original: the action history list uses a **Load More**
+pattern so that only a small initial page of rows is created on open,
+keeping widget count and memory low.  Statistics always reflect the
+full (or today-filtered) action collection regardless of visible page.
+"""
+
+from __future__ import annotations
+
+import os
+from datetime import datetime
+from typing import Callable, Optional
+
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QKeySequence, QShortcut
+from PySide6.QtWidgets import (
+    QApplication, QFrame, QGridLayout, QHBoxLayout, QLabel,
+    QPushButton, QScrollArea, QVBoxLayout, QWidget,
+)
+
+from files.file_actions_window import Action
+from lib.multi_display_qt import SmartDialog
+from ui.app_style import AppStyle
+from utils.app_actions import AppActions
+from utils.app_info_cache import app_info_cache
+from utils.config import config
+from utils.logging_setup import get_logger
+from utils.translations import I18N
+from utils.utils import Utils
+
+_ = I18N._
+
+logger = get_logger("file_actions_window_qt")
+
+
+# ======================================================================
+# Module-level setup helpers
+# ======================================================================
+def _setup_permanent_action() -> Action:
+    target = app_info_cache.get_meta("permanent_mark_target")
+    func_name = app_info_cache.get_meta("permanent_action")
+    return Action(Action.convert_action_from_text(func_name), target)
+
+
+def _setup_hotkey_actions() -> dict[int, Action]:
+    raw: dict = app_info_cache.get_meta("hotkey_actions", default_val={})
+    assert isinstance(raw, dict)
+    result: dict[int, Action] = {}
+    for number, info in raw.items():
+        result[int(number)] = Action(
+            Action.convert_action_from_text(info["action"]), info["target"]
+        )
+    return result
+
+
+# ======================================================================
+# FileActionsWindow
+# ======================================================================
+class FileActionsWindow(SmartDialog):
+    """
+    Window displaying completed file actions with statistics,
+    filter-by-typing, and a paginated action history ("Load More").
+    """
+
+    _instance: Optional[FileActionsWindow] = None
+
+    # -- shared class-level state ----------------------------------------
+    permanent_action: Action = _setup_permanent_action()
+    hotkey_actions: dict[int, Action] = _setup_hotkey_actions()
+    action_history: list[Action] = []
+    MAX_ACTIONS: int = config.file_actions_history_max
+
+    # -- pagination -------------------------------------------------------
+    INITIAL_PAGE_SIZE: int = 20
+    PAGE_SIZE: int = 20
+
+    # -- layout -----------------------------------------------------------
+    COL_0_WIDTH: int = 600
+    MAX_DISPLAY_DIRS: int = 6
+
+    # ==================================================================
+    # Persistence
+    # ==================================================================
+    @staticmethod
+    def store_action_history() -> None:
+        dicts = [a.to_dict() for a in FileActionsWindow.action_history]
+        app_info_cache.set_meta("file_actions", dicts)
+
+    @staticmethod
+    def load_action_history() -> None:
+        dicts = app_info_cache.get_meta("file_actions", default_val=[])
+        for d in dicts:
+            FileActionsWindow.action_history.append(Action.from_dict(d))
+
+    @staticmethod
+    def get_history_action(
+        start_index: int = 0, exclude_auto: bool = True
+    ) -> Action | None:
+        action = None
+        seen: list[Action] = []
+        for i, action in enumerate(FileActionsWindow.action_history):
+            is_returnable = (
+                action != FileActionsWindow.permanent_action
+                and not (exclude_auto and action.auto)
+            )
+            if not is_returnable or action in seen:
+                start_index += 1
+            seen.append(action)
+            if i < start_index:
+                continue
+            if is_returnable:
+                break
+        return action
+
+    @staticmethod
+    def set_permanent_action(target_dir, move_func, toast_callback) -> None:
+        FileActionsWindow.permanent_action = Action(
+            move_func, target_dir, timestamp=datetime.now()
+        )
+        app_info_cache.set_meta("permanent_action", move_func.__name__)
+        app_info_cache.set_meta("permanent_mark_target", target_dir)
+        toast_callback(
+            f"Set permanent action:\n{move_func.__name__} to {target_dir}"
+        )
+
+    @staticmethod
+    def set_hotkey_action(number, target_dir, move_func, toast_callback) -> None:
+        FileActionsWindow.hotkey_actions[number] = Action(
+            move_func, target_dir, timestamp=datetime.now()
+        )
+        raw: dict = app_info_cache.get_meta("hotkey_actions", default_val={})
+        assert isinstance(raw, dict)
+        raw[number] = {"action": move_func.__name__, "target": target_dir}
+        app_info_cache.set_meta("hotkey_actions", raw)
+
+    @staticmethod
+    def update_history(latest_action: Action) -> None:
+        FileActionsWindow.action_history.insert(0, latest_action)
+        if len(FileActionsWindow.action_history) > FileActionsWindow.MAX_ACTIONS:
+            del FileActionsWindow.action_history[-1]
+
+    @staticmethod
+    def add_file_action(
+        action, source, target, auto: bool = True, overwrite_existing: bool = False
+    ) -> None:
+        with Utils.file_operation_lock:
+            new_filepath = str(
+                action(source, target, overwrite_existing=overwrite_existing)
+            )
+        logger.info("Moved file to " + new_filepath)
+        new_action = Action(action, target, [source], [new_filepath], auto)
+        FileActionsWindow.update_history(new_action)
+
+    @staticmethod
+    def get_action_statistics(today_only: bool = False) -> dict:
+        stats: dict[str, dict[str, int]] = {}
+        for action in FileActionsWindow.action_history:
+            if action.auto or (today_only and not action.is_today()):
+                continue
+            td = action.target
+            if td not in stats:
+                stats[td] = {"moved": 0, "copied": 0}
+            if action.is_move_action():
+                stats[td]["moved"] += len(action.new_files)
+            else:
+                stats[td]["copied"] += len(action.new_files)
+        for td in stats:
+            stats[td]["total"] = stats[td]["moved"] + stats[td]["copied"]
+        return stats
+
+    # ==================================================================
+    # Construction
+    # ==================================================================
+    def __init__(
+        self,
+        app_master: QWidget,
+        app_actions: AppActions,
+        view_image_callback: Callable,
+        move_marks_callback: Callable,
+        geometry: str = "700x1200",
+    ) -> None:
+        super().__init__(
+            parent=app_master,
+            position_parent=app_master,
+            title=_("File Actions"),
+            geometry=geometry,
+        )
+        FileActionsWindow._instance = self
+        self._app_master = app_master
+        self._app_actions = app_actions
+        self._view_image_callback = view_image_callback
+        self._move_marks_callback = move_marks_callback
+        self._filter_text: str = ""
+        self._filtered_history: list[Action] = FileActionsWindow.action_history[:]
+        self._show_today_only: bool = False
+        self._visible_count: int = self.INITIAL_PAGE_SIZE
+
+        root = QVBoxLayout(self)
+        root.setContentsMargins(10, 10, 10, 10)
+        root.setSpacing(6)
+
+        # -- header row ---------------------------------------------------
+        header = QHBoxLayout()
+        title_lbl = QLabel(_("File Action History"))
+        title_lbl.setStyleSheet(
+            f"font-size: 12pt; font-weight: bold; color: {AppStyle.FG_COLOR};"
+        )
+        header.addWidget(title_lbl)
+        header.addStretch()
+
+        search_btn = QPushButton(_("Search Image"))
+        search_btn.clicked.connect(self._search_for_active_image)
+        header.addWidget(search_btn)
+
+        clear_btn = QPushButton(_("Clear History"))
+        clear_btn.clicked.connect(self._clear_action_history)
+        header.addWidget(clear_btn)
+        root.addLayout(header)
+
+        # -- scroll area --------------------------------------------------
+        self._scroll = QScrollArea()
+        self._scroll.setWidgetResizable(True)
+        self._scroll.setStyleSheet(
+            f"QScrollArea {{ border: none; background: {AppStyle.BG_COLOR}; }}"
+        )
+        self._scroll_content = QWidget()
+        self._scroll_layout = QVBoxLayout(self._scroll_content)
+        self._scroll_layout.setContentsMargins(0, 0, 0, 0)
+        self._scroll_layout.setSpacing(4)
+        self._scroll.setWidget(self._scroll_content)
+        root.addWidget(self._scroll, 1)
+
+        # -- filter indicator (hidden by default) -------------------------
+        self._filter_label = QLabel("")
+        self._filter_label.setStyleSheet("color: orange; font-style: italic;")
+        self._filter_label.setVisible(False)
+        root.addWidget(self._filter_label)
+
+        # -- initial content build ----------------------------------------
+        self._rebuild_content()
+
+        # -- keyboard shortcuts -------------------------------------------
+        QShortcut(QKeySequence(Qt.Key_Escape), self).activated.connect(self.close)
+        QShortcut(QKeySequence("Shift+A"), self).activated.connect(
+            self._search_for_active_image
+        )
+
+        # Focus the scroll area so key events are captured
+        QTimer.singleShot(1, self._scroll.setFocus)
+
+    # ==================================================================
+    # Content rebuild
+    # ==================================================================
+    def _rebuild_content(self) -> None:
+        """Clear and rebuild the entire scrollable content area."""
+        _clear_layout(self._scroll_layout)
+
+        # Statistics section
+        stats_widget = self._build_statistics()
+        if stats_widget is not None:
+            self._scroll_layout.addWidget(stats_widget)
+
+            # Separator
+            sep = QFrame()
+            sep.setFrameShape(QFrame.HLine)
+            sep.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
+            self._scroll_layout.addWidget(sep)
+
+        # Action rows (paginated)
+        self._build_action_rows()
+
+        # "Load More" button
+        remaining = len(self._filtered_history) - self._visible_count
+        if remaining > 0:
+            load_more = QPushButton(
+                _("Load More ({0} remaining)").format(remaining)
+            )
+            load_more.setStyleSheet(
+                f"color: {AppStyle.FG_COLOR}; padding: 6px 12px; margin-top: 4px;"
+            )
+            load_more.clicked.connect(self._load_more)
+            self._scroll_layout.addWidget(load_more, 0, Qt.AlignCenter)
+
+        self._scroll_layout.addStretch()
+
+    # ------------------------------------------------------------------
+    # Statistics section
+    # ------------------------------------------------------------------
+    def _build_statistics(self) -> QFrame | None:
+        stats = FileActionsWindow.get_action_statistics(
+            today_only=self._show_today_only
+        )
+        if not stats:
+            return None
+
+        sorted_stats = sorted(
+            stats.items(), key=lambda x: x[1]["total"], reverse=True
+        )
+        display_stats = sorted_stats[: self.MAX_DISPLAY_DIRS]
+        remaining_stats = sorted_stats[self.MAX_DISPLAY_DIRS :]
+
+        frame = QFrame()
+        frame.setStyleSheet(
+            f"QFrame {{ background: {AppStyle.BG_COLOR}; border: none; }}"
+        )
+        grid = QGridLayout(frame)
+        grid.setContentsMargins(5, 5, 5, 5)
+        grid.setSpacing(2)
+        grid.setColumnStretch(0, 3)
+        grid.setColumnStretch(1, 1)
+        grid.setColumnStretch(2, 1)
+        grid.setColumnStretch(3, 1)
+
+        # Title + toggle button (row 0)
+        title_text = (
+            _("Today's File Actions")
+            if self._show_today_only
+            else _("File Action Statistics")
+        )
+        title = QLabel(title_text)
+        title.setStyleSheet(
+            f"font-weight: bold; color: {AppStyle.FG_COLOR};"
+        )
+        title.setAlignment(Qt.AlignCenter)
+        grid.addWidget(title, 0, 0, 1, 3)
+
+        toggle_btn = QPushButton(
+            _("All Time") if self._show_today_only else _("Today Only")
+        )
+        toggle_btn.clicked.connect(self._toggle_statistics_view)
+        grid.addWidget(toggle_btn, 0, 3, Qt.AlignRight)
+
+        # Headers (row 1)
+        for col, text in enumerate(
+            [_("Target Directory"), _("Moved"), _("Copied"), _("Total")]
+        ):
+            lbl = QLabel(text)
+            lbl.setStyleSheet(
+                f"font-weight: bold; color: {AppStyle.FG_COLOR};"
+            )
+            align = Qt.AlignLeft if col == 0 else Qt.AlignRight
+            grid.addWidget(lbl, 1, col, align)
+
+        # Data rows
+        for i, (target_dir, counts) in enumerate(display_stats):
+            row = i + 2
+            target_display = Utils.get_relative_dirpath(target_dir, levels=2)
+            if len(target_display) > 30:
+                target_display = Utils.get_centrally_truncated_string(
+                    target_display, 30
+                )
+
+            self._add_stat_cell(grid, target_display, row, 0, Qt.AlignLeft)
+            self._add_stat_cell(grid, str(counts["moved"]), row, 1, Qt.AlignRight)
+            self._add_stat_cell(grid, str(counts["copied"]), row, 2, Qt.AlignRight)
+            self._add_stat_cell(grid, str(counts["total"]), row, 3, Qt.AlignRight)
+
+        # "etc." row
+        if remaining_stats:
+            row = len(display_stats) + 2
+            rem_moved = sum(c["moved"] for _, c in remaining_stats)
+            rem_copied = sum(c["copied"] for _, c in remaining_stats)
+            rem_total = sum(c["total"] for _, c in remaining_stats)
+
+            self._add_stat_cell(
+                grid,
+                _("... and {0} more").format(len(remaining_stats)),
+                row, 0, Qt.AlignLeft,
+            )
+            self._add_stat_cell(grid, str(rem_moved), row, 1, Qt.AlignRight)
+            self._add_stat_cell(grid, str(rem_copied), row, 2, Qt.AlignRight)
+            self._add_stat_cell(grid, str(rem_total), row, 3, Qt.AlignRight)
+
+        return frame
+
+    @staticmethod
+    def _add_stat_cell(
+        grid: QGridLayout, text: str, row: int, col: int, align
+    ) -> None:
+        lbl = QLabel(text)
+        lbl.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
+        grid.addWidget(lbl, row, col, align)
+
+    # ------------------------------------------------------------------
+    # Action history rows (paginated)
+    # ------------------------------------------------------------------
+    def _build_action_rows(self) -> None:
+        visible = self._filtered_history[: self._visible_count]
+        last_action: Action | None = None
+        current_group_layout: QVBoxLayout | None = None
+
+        for action in visible:
+            need_header = (
+                action != last_action
+                or len(action.new_files) != 1
+                or (last_action is not None and len(last_action.new_files) != 1)
+            )
+
+            if need_header:
+                group = QFrame()
+                group.setStyleSheet(
+                    f"QFrame {{ background: {AppStyle.BG_COLOR}; "
+                    f"border-bottom: 1px solid {AppStyle.BORDER_COLOR}; "
+                    f"padding: 2px 0; }}"
+                )
+                current_group_layout = QVBoxLayout(group)
+                current_group_layout.setContentsMargins(4, 4, 4, 4)
+                current_group_layout.setSpacing(2)
+                self._scroll_layout.addWidget(group)
+
+                # Header row
+                header = QHBoxLayout()
+
+                action_text = Utils.get_relative_dirpath(action.target, levels=2)
+                if len(action.new_files) > 1:
+                    action_text += _(" ({0} files)").format(len(action.new_files))
+                if action.auto:
+                    action_text += " " + _("(auto)")
+
+                dir_lbl = QLabel(action_text)
+                dir_lbl.setWordWrap(True)
+                dir_lbl.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
+                header.addWidget(dir_lbl, 1)
+
+                type_lbl = QLabel(
+                    _("Move") if action.is_move_action() else _("Copy")
+                )
+                type_lbl.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
+                header.addWidget(type_lbl)
+
+                undo_btn = QPushButton(_("Undo"))
+                undo_btn.setFixedWidth(60)
+                undo_btn.clicked.connect(
+                    lambda _=False, a=action: self._undo(a)
+                )
+                header.addWidget(undo_btn)
+
+                modify_btn = QPushButton(_("Modify"))
+                modify_btn.setFixedWidth(60)
+                modify_btn.clicked.connect(
+                    lambda _=False, a=action: self._modify(a)
+                )
+                header.addWidget(modify_btn)
+
+                current_group_layout.addLayout(header)
+
+            last_action = action
+
+            # File rows
+            for filename in action.new_files:
+                file_row = QHBoxLayout()
+
+                display_name = os.path.basename(filename)
+                if len(display_name) > 50:
+                    display_name = Utils.get_centrally_truncated_string(
+                        display_name, 50
+                    )
+
+                name_lbl = QLabel(display_name)
+                name_lbl.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
+                name_lbl.setWordWrap(True)
+                file_row.addWidget(name_lbl, 1)
+
+                view_btn = QPushButton(_("View"))
+                view_btn.setFixedWidth(50)
+                view_btn.clicked.connect(
+                    lambda _=False, p=filename: self._view(p)
+                )
+                file_row.addWidget(view_btn)
+
+                copy_btn = QPushButton(_("Copy Filename"))
+                copy_btn.setFixedWidth(100)
+                copy_btn.clicked.connect(
+                    lambda _=False, p=filename: self._copy_filename(p)
+                )
+                file_row.addWidget(copy_btn)
+
+                undo_file_btn = QPushButton(_("Undo"))
+                undo_file_btn.setFixedWidth(60)
+                undo_file_btn.clicked.connect(
+                    lambda _=False, a=action, p=filename: self._undo(
+                        a, specific_image=p
+                    )
+                )
+                file_row.addWidget(undo_file_btn)
+
+                modify_file_btn = QPushButton(_("Modify"))
+                modify_file_btn.setFixedWidth(60)
+                modify_file_btn.clicked.connect(
+                    lambda _=False, p=filename: self._modify(p)
+                )
+                file_row.addWidget(modify_file_btn)
+
+                if current_group_layout is not None:
+                    current_group_layout.addLayout(file_row)
+
+    # ==================================================================
+    # Actions
+    # ==================================================================
+    def _view(self, image_path: str) -> None:
+        self._view_image_callback(
+            master=self._app_master,
+            image_path=image_path,
+            app_actions=self._app_actions,
+        )
+
+    def _undo(self, action: Action, specific_image: str | None = None) -> None:
+        if specific_image is not None:
+            if not os.path.isfile(specific_image):
+                error_text = _("Image does not exist: ") + specific_image
+                self._app_actions.alert(
+                    _("File Action Error"), error_text, master=self
+                )
+                raise Exception(error_text)
+            if action.is_move_action():
+                original_directory = action.get_original_directory()
+                self._move_marks_callback(
+                    self._app_actions,
+                    target_dir=original_directory,
+                    move_func=Utils.move_file,
+                    files=[specific_image],
+                    single_image=True,
+                )
+            else:
+                os.remove(specific_image)
+        else:
+            if not action.any_new_files_exist():
+                error_text = _("Images not found")
+                self._app_actions.alert(
+                    _("File Action Error"), error_text, master=self
+                )
+                raise Exception(error_text)
+            if action.is_move_action():
+                original_directory = action.get_original_directory()
+                self._move_marks_callback(
+                    self._app_actions,
+                    target_dir=original_directory,
+                    move_func=Utils.move_file,
+                    files=action.new_files,
+                    single_image=(len(action.new_files) == 1),
+                )
+            else:
+                action.remove_new_files()
+
+    def _modify(self, image_path_or_action) -> None:
+        # TODO: implement this (matches original stub)
+        pass
+
+    def _copy_filename(self, filepath: str) -> None:
+        if not filepath:
+            return
+        filename = os.path.basename(filepath)
+        clipboard = QApplication.clipboard()
+        if clipboard is not None:
+            clipboard.setText(filename)
+        if hasattr(self._app_actions, "toast"):
+            self._app_actions.toast(f"Copied filename: {filename}")
+
+    # ==================================================================
+    # Load More / Clear / Toggle
+    # ==================================================================
+    def _load_more(self) -> None:
+        self._visible_count += self.PAGE_SIZE
+        self._rebuild_content()
+
+    def _clear_action_history(self) -> None:
+        FileActionsWindow.action_history.clear()
+        self._filtered_history.clear()
+        self._visible_count = self.INITIAL_PAGE_SIZE
+        self._rebuild_content()
+
+    def _toggle_statistics_view(self) -> None:
+        self._show_today_only = not self._show_today_only
+        self._rebuild_content()
+
+    # ==================================================================
+    # Search for active image
+    # ==================================================================
+    def _search_for_active_image(self, image_path: str | None = None) -> None:
+        if image_path is None:
+            image_path = self._app_actions.get_active_media_filepath()
+            if image_path is None:
+                raise Exception("No active image")
+
+        image_path = os.path.normpath(image_path)
+        search_basename = os.path.basename(image_path).lower()
+        basename_no_ext = os.path.splitext(search_basename)[0].lower()
+
+        temp: list[Action] = []
+        # Pass 1: exact path match
+        for action in FileActionsWindow.action_history:
+            for f in action.new_files:
+                if f == image_path:
+                    temp.append(action)
+                    break
+        # Pass 2: basename match
+        for action in FileActionsWindow.action_history:
+            if action not in temp:
+                for f in action.new_files:
+                    if os.path.basename(os.path.normpath(f)).lower() == search_basename:
+                        temp.append(action)
+                        break
+        # Pass 3: basename prefix match
+        for action in FileActionsWindow.action_history:
+            if action not in temp:
+                for f in action.new_files:
+                    if os.path.basename(os.path.normpath(f)).lower().startswith(
+                        basename_no_ext
+                    ):
+                        temp.append(action)
+                        break
+
+        self._filtered_history = temp[:]
+        self._visible_count = self.INITIAL_PAGE_SIZE
+        self._rebuild_content()
+
+    # ==================================================================
+    # Filter by typing
+    # ==================================================================
+    def _apply_filter(self) -> None:
+        # Update indicator
+        if self._filter_text:
+            self._filter_label.setText(_("Filter: {}").format(self._filter_text))
+            self._filter_label.setVisible(True)
+        else:
+            self._filter_label.setVisible(False)
+
+        ft = self._filter_text.strip().lower()
+
+        if not ft:
+            if self._show_today_only:
+                self._filtered_history = [
+                    a for a in FileActionsWindow.action_history if a.is_today()
+                ]
+            else:
+                self._filtered_history = FileActionsWindow.action_history[:]
+        else:
+            if self._show_today_only:
+                actions = [
+                    a for a in FileActionsWindow.action_history if a.is_today()
+                ]
+            else:
+                actions = FileActionsWindow.action_history[:]
+
+            temp: list[Action] = []
+
+            # Pass 1: directory basename exact match
+            for action in actions:
+                basename = os.path.basename(os.path.normpath(action.target))
+                if basename.lower() == ft:
+                    temp.append(action)
+
+            # Pass 2: directory basename starts-with
+            for action in actions:
+                if not Action._is_matching_action_in_list(temp, action):
+                    basename = os.path.basename(os.path.normpath(action.target))
+                    if basename.lower().startswith(ft):
+                        temp.append(action)
+
+            # Pass 3: parent directory starts-with
+            for action in actions:
+                if not Action._is_matching_action_in_list(temp, action):
+                    dirname = os.path.basename(
+                        os.path.dirname(os.path.normpath(action.target))
+                    )
+                    if dirname and dirname.lower().startswith(ft):
+                        temp.append(action)
+
+            # Pass 4: substring match in basename
+            for action in actions:
+                if not Action._is_matching_action_in_list(temp, action):
+                    basename = os.path.basename(os.path.normpath(action.target))
+                    if basename and (
+                        f" {ft}" in basename.lower()
+                        or f"_{ft}" in basename.lower()
+                    ):
+                        temp.append(action)
+
+            self._filtered_history = temp[:]
+
+        self._visible_count = self.INITIAL_PAGE_SIZE
+        self._rebuild_content()
+
+    # ==================================================================
+    # Enter-key action dispatch
+    # ==================================================================
+    def _do_action(self, *, shift: bool, ctrl: bool, alt: bool) -> None:
+        """Act on the first filtered action based on modifier keys."""
+        if not self._filtered_history:
+            return
+        if len(self._filtered_history) != 1 and not self._filter_text.strip():
+            return
+
+        action = self._filtered_history[0]
+        if alt:
+            self._undo(action)
+        elif ctrl:
+            self._modify(action)
+        else:
+            if action.new_files:
+                self._view(action.new_files[0])
+
+    # ==================================================================
+    # Key event handling
+    # ==================================================================
+    def keyPressEvent(self, event) -> None:  # noqa: N802
+        key = event.key()
+        modifiers = event.modifiers()
+
+        # Return / Enter -> do action
+        if key in (Qt.Key_Return, Qt.Key_Enter):
+            self._do_action(
+                shift=bool(modifiers & Qt.ShiftModifier),
+                ctrl=bool(modifiers & Qt.ControlModifier),
+                alt=bool(modifiers & Qt.AltModifier),
+            )
+            return
+
+        # Backspace -> trim filter
+        if key == Qt.Key_Backspace:
+            if self._filter_text:
+                self._filter_text = self._filter_text[:-1]
+                self._apply_filter()
+            return
+
+        # Ignore when Ctrl or Alt held (let shortcuts handle)
+        if modifiers & (Qt.ControlModifier | Qt.AltModifier):
+            super().keyPressEvent(event)
+            return
+
+        # Ignore Shift alone (but allow shift+char for uppercase)
+        if key in (Qt.Key_Shift, Qt.Key_Control, Qt.Key_Alt, Qt.Key_Meta):
+            super().keyPressEvent(event)
+            return
+
+        # Printable text -> append to filter
+        text = event.text()
+        if text and text.isprintable():
+            self._filter_text += text
+            self._apply_filter()
+            return
+
+        super().keyPressEvent(event)
+
+    # ==================================================================
+    # Lifecycle
+    # ==================================================================
+    def close_windows(self) -> None:
+        self.close()
+
+    def closeEvent(self, event) -> None:  # noqa: N802
+        FileActionsWindow._instance = None
+        super().closeEvent(event)
+
+
+# ======================================================================
+# Helpers
+# ======================================================================
+def _clear_layout(layout) -> None:
+    """Recursively remove all items from a QLayout."""
+    while layout.count():
+        item = layout.takeAt(0)
+        widget = item.widget()
+        if widget is not None:
+            widget.deleteLater()
+        sub = item.layout()
+        if sub is not None:
+            _clear_layout(sub)

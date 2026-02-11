@@ -29,8 +29,8 @@ from utils.utils import Utils
 if TYPE_CHECKING:
     from compare.compare_manager import CompareManager
     from files.file_browser import FileBrowser
-    from ui.app_window import AppWindow
-    from ui.media_navigator import MediaNavigator
+    from ui.app_window.app_window import AppWindow
+    from ui.app_window.media_navigator import MediaNavigator
 
 _ = I18N._
 logger = get_logger("file_ops_controller")
@@ -109,7 +109,7 @@ class FileOpsController:
 
         Ported from App.delete_image.
         """
-        from files.marked_file_mover import MarkedFiles
+        from ui.files.marked_file_mover_qt import MarkedFiles
 
         if self._app.delete_lock:
             self._app.app_actions.warn(_("DELETE_LOCK"))
@@ -177,7 +177,7 @@ class FileOpsController:
 
         Ported from App._handle_delete.
         """
-        from files.marked_file_mover import MarkedFiles
+        from ui.files.marked_file_mover_qt import MarkedFiles
 
         MarkedFiles.set_delete_lock()  # Undo deleting action is not supported
 
@@ -243,10 +243,10 @@ class FileOpsController:
 
         Ported from App.delete_current_base_dir.
         """
-        from files.marked_file_mover import MarkedFiles
+        from ui.files.marked_file_mover_qt import MarkedFiles
         from files.recent_directory_window import RecentDirectories
         from utils.app_info_cache import app_info_cache
-        from ui.window_manager import WindowManager
+        from ui.app_window.window_manager import WindowManager
 
         base_dir = self._app.get_base_dir()
         if not base_dir or base_dir == "." or base_dir.strip() == "" or not os.path.isdir(base_dir):
@@ -440,7 +440,7 @@ class FileOpsController:
 
         Ported from App.open_image_in_gimp.
         """
-        from files.marked_file_mover import MarkedFiles
+        from ui.files.marked_file_mover_qt import MarkedFiles
 
         config.validate_and_find_gimp()
         if not config.gimp_exe_loc:

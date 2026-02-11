@@ -1,0 +1,108 @@
+"""
+PySide6 port of files/target_directory_window.py -- TargetDirectoryWindow.
+
+A simple directory picker backed by its own recent-directory list
+(separate from ``RecentDirectories``).  Subclasses
+``DirectoryPickerDialog`` for the shared scrollable-directory-list UI.
+
+Persistence delegates to the original module's class-level cache helpers.
+"""
+
+from __future__ import annotations
+
+import os
+from typing import Callable, Optional
+
+from PySide6.QtWidgets import QWidget
+
+from files.target_directory_window import (
+    TargetDirectoryWindow as _OrigTargetDirWindow,
+)
+from ui.files.directory_picker_dialog import DirectoryPickerDialog
+from utils.translations import I18N
+
+_ = I18N._
+
+
+class TargetDirectoryWindow(DirectoryPickerDialog):
+    """
+    Directory picker for related-file searches.
+
+    Backed by ``_OrigTargetDirWindow.recent_directories`` (persisted
+    under a separate cache key from the main recent-directories list).
+    Calls ``callback(directory)`` on selection.
+    """
+
+    # Delegate class-level state to the original module
+    MAX_RECENT_DIRECTORIES = _OrigTargetDirWindow.MAX_RECENT_DIRECTORIES
+    RECENT_DIRECTORIES_KEY = _OrigTargetDirWindow.RECENT_DIRECTORIES_KEY
+
+    # ------------------------------------------------------------------
+    # Persistence (delegate to original module)
+    # ------------------------------------------------------------------
+    @staticmethod
+    def load_recent_directories() -> None:
+        _OrigTargetDirWindow.load_recent_directories()
+
+    @staticmethod
+    def save_recent_directories() -> None:
+        _OrigTargetDirWindow.save_recent_directories()
+
+    @staticmethod
+    def add_recent_directory(directory: str) -> None:
+        _OrigTargetDirWindow.add_recent_directory(directory)
+
+    @staticmethod
+    def get_geometry() -> str:
+        return _OrigTargetDirWindow.get_geometry()
+
+    # ------------------------------------------------------------------
+    # Construction
+    # ------------------------------------------------------------------
+    def __init__(
+        self,
+        master: QWidget,
+        callback: Optional[Callable[[str], None]] = None,
+        initial_dir: Optional[str] = None,
+    ) -> None:
+        # Ensure backing list is loaded
+        _OrigTargetDirWindow.load_recent_directories()
+
+        self._callback = callback
+        self._initial_dir = initial_dir
+
+        super().__init__(
+            parent=master,
+            title=_("Select Target Directory"),
+            geometry=self.get_geometry(),
+            position_parent=master,
+        )
+
+    # ------------------------------------------------------------------
+    # DirectoryPickerDialog hooks
+    # ------------------------------------------------------------------
+    def _get_all_directories(self) -> list[str]:
+        return _OrigTargetDirWindow.recent_directories
+
+    def _on_directory_selected(self, directory: str) -> None:
+        _OrigTargetDirWindow.add_recent_directory(directory)
+        if self._callback:
+            self._callback(directory)
+
+    def _add_directory(self, directory: str) -> None:
+        _OrigTargetDirWindow.add_recent_directory(os.path.normpath(directory))
+
+    def _clear_directories(self) -> None:
+        _OrigTargetDirWindow.recent_directories.clear()
+        _OrigTargetDirWindow.save_recent_directories()
+
+    def _browse_dialog_title(self) -> str:
+        return _("Select directory to search for related files")
+
+    def _get_initial_browse_dir(self) -> str:
+        if self._initial_dir and os.path.isdir(self._initial_dir):
+            return self._initial_dir
+        dirs = _OrigTargetDirWindow.recent_directories
+        if dirs and os.path.isdir(dirs[0]):
+            return dirs[0]
+        return os.path.expanduser("~")

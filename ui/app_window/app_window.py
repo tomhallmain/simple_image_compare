@@ -19,21 +19,21 @@ from PySide6.QtWidgets import QHBoxLayout, QSplitter, QWidget
 
 from files.file_browser import FileBrowser
 from compare.compare_manager import CompareManager
-from files.marked_file_mover import MarkedFiles
+from ui.files.marked_file_mover_qt import MarkedFiles
 from lib.multi_display_qt import SmartMainWindow
 from ui.app_style import AppStyle
-from ui.cache_controller import CacheController
-from ui.context_menu_builder import ContextMenuBuilder
-from ui.file_marks_controller import FileMarksController
-from ui.file_ops_controller import FileOpsController
-from ui.key_binding_manager import KeyBindingManager
-from ui.media_frame import MediaFrame
-from ui.media_navigator import MediaNavigator
-from ui.notification_controller import NotificationController
-from ui.search_controller import SearchController
-from ui.sidebar_panel import SidebarPanel
-from ui.window_launcher import WindowLauncher
-from ui.window_manager import WindowManager
+from ui.app_window.cache_controller import CacheController
+from ui.app_window.context_menu_builder import ContextMenuBuilder
+from ui.app_window.file_marks_controller import FileMarksController
+from ui.app_window.file_ops_controller import FileOpsController
+from ui.app_window.key_binding_manager import KeyBindingManager
+from ui.app_window.media_frame import MediaFrame
+from ui.app_window.media_navigator import MediaNavigator
+from ui.app_window.notification_controller import NotificationController
+from ui.app_window.search_controller import SearchController
+from ui.app_window.sidebar_panel import SidebarPanel
+from ui.app_window.window_launcher import WindowLauncher
+from ui.app_window.window_manager import WindowManager
 from utils.app_actions import AppActions
 from utils.config import config, FileCheckConfig, SlideshowConfig, StoreCacheConfig
 from utils.constants import Mode, Direction

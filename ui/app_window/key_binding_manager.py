@@ -34,7 +34,7 @@ from lib.aware_entry_qt import AwareEntry
 from utils.logging_setup import get_logger
 
 if TYPE_CHECKING:
-    from ui.app_window import AppWindow
+    from ui.app_window.app_window import AppWindow
 
 logger = get_logger("key_binding_manager")
 
@@ -79,9 +79,9 @@ class KeyBindingManager:
     def _bind_all(self) -> None:  # noqa: C901  (complexity is inherent)
         """Register all keyboard shortcuts."""
         app = self._app
-        from files.marked_file_mover import MarkedFiles
+        from ui.files.marked_file_mover_qt import MarkedFiles
         from image.image_details import ImageDetails
-        from ui.window_manager import WindowManager
+        from ui.app_window.window_manager import WindowManager
         from utils.constants import Mode
 
         # ==============================================================

@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING, Optional
 
 from PySide6.QtWidgets import QApplication
 
-from files.marked_file_mover import MarkedFiles
+from ui.files.marked_file_mover_qt import MarkedFiles
 from ui.auth.password_utils import require_password
 from utils.config import config
 from utils.constants import Mode, ProtectedActions
@@ -26,8 +26,8 @@ from utils.utils import ModifierKey, Utils
 if TYPE_CHECKING:
     from compare.compare_manager import CompareManager
     from files.file_browser import FileBrowser
-    from ui.app_window import AppWindow
-    from ui.media_navigator import MediaNavigator
+    from ui.app_window.app_window import AppWindow
+    from ui.app_window.media_navigator import MediaNavigator
 
 _ = I18N._
 logger = get_logger("file_marks_controller")
@@ -324,7 +324,7 @@ class FileMarksController:
         Ported from App.set_marks_from_downstream_related_images.
         """
         from image.image_details import ImageDetails
-        from ui.window_manager import WindowManager
+        from ui.app_window.window_manager import WindowManager
 
         if base_dir is None:
             window, dirs = WindowManager.get_other_window_or_self_dir(

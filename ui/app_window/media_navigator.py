@@ -23,8 +23,8 @@ from utils.utils import Utils
 if TYPE_CHECKING:
     from compare.compare_manager import CompareManager
     from files.file_browser import FileBrowser, SortBy
-    from ui.app_window import AppWindow
-    from ui.media_frame import MediaFrame
+    from ui.app_window.app_window import AppWindow
+    from ui.app_window.media_frame import MediaFrame
 
 _ = I18N._
 logger = get_logger("media_navigator")
@@ -123,7 +123,7 @@ class MediaNavigator:
 
         Ported from App.home.
         """
-        from files.marked_file_mover import MarkedFiles
+        from ui.files.marked_file_mover_qt import MarkedFiles
 
         if self._app.mode == Mode.BROWSE:
             current_file = self.get_active_media_filepath()
@@ -215,7 +215,7 @@ class MediaNavigator:
         Ported from App.go_to_file.
         """
         from image.image_details import ImageDetails
-        from ui.window_manager import WindowManager
+        from ui.app_window.window_manager import WindowManager
 
         original_search_text = search_text
         resolved_path = Utils.get_valid_file(self._app.get_base_dir(), original_search_text)

@@ -19,7 +19,7 @@ from utils.translations import I18N
 
 if TYPE_CHECKING:
     from files.file_browser import FileBrowser
-    from ui.app_window import AppWindow
+    from ui.app_window.app_window import AppWindow
 
 _ = I18N._
 logger = get_logger("cache_controller")
@@ -51,13 +51,13 @@ class CacheController:
         every module that persists data through the app_info_cache.
         """
         try:
-            from files.marked_file_mover import MarkedFiles
+            from ui.files.marked_file_mover_qt import MarkedFiles
             from files.recent_directory_window import RecentDirectories
-            from files.file_actions_window import FileActionsWindow
+            from ui.files.file_actions_window_qt import FileActionsWindow
             from image.image_details import ImageDetails
             from compare.classifier_management_window import ClassifierManagementWindow
             from files.favorites_window import FavoritesWindow
-            from files.go_to_file import GoToFile
+            from ui.files.go_to_file_qt import GoToFile
             from files.target_directory_window import TargetDirectoryWindow
 
             MarkedFiles.load_target_dirs()
@@ -86,15 +86,15 @@ class CacheController:
 
         Ported from App.store_info_cache.
         """
-        from files.marked_file_mover import MarkedFiles
+        from ui.files.marked_file_mover_qt import MarkedFiles
         from files.recent_directory_window import RecentDirectories
-        from files.file_actions_window import FileActionsWindow
+        from ui.files.file_actions_window_qt import FileActionsWindow
         from image.image_details import ImageDetails
         from compare.classifier_management_window import ClassifierManagementWindow
         from files.favorites_window import FavoritesWindow
-        from files.go_to_file import GoToFile
+        from ui.files.go_to_file_qt import GoToFile
         from files.target_directory_window import TargetDirectoryWindow
-        from ui.window_manager import WindowManager
+        from ui.app_window.window_manager import WindowManager
 
         base_dir = self._app.get_base_dir()
         logger.info("Storing app info cache")
