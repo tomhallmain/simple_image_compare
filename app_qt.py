@@ -64,7 +64,7 @@ def main():
         if not result:
             logger.info("User cancelled password dialog, exiting application")
             cleanup_lock()
-            os._exit(0)
+            sys.exit(0)
 
         # Password verified or not required -- create the main window
         from ui.app_window.app_window import AppWindow
@@ -89,9 +89,8 @@ def main():
     # ------------------------------------------------------------------
     # Check if startup password is required
     # ------------------------------------------------------------------
-    # TODO: Port auth/app_startup_auth.py to ui/auth/app_startup_auth_qt.py
-    # For now, bypass startup auth and proceed directly.
-    startup_callback(True)
+    from ui.auth.app_startup_auth_qt import check_startup_password_required
+    check_startup_password_required(callback=startup_callback)
 
     # ------------------------------------------------------------------
     # Run the event loop

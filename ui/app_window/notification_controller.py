@@ -20,7 +20,6 @@ from utils.constants import ActionType
 from utils.logging_setup import get_logger
 from utils.notification_manager import notification_manager
 from utils.translations import I18N
-from utils.utils import Utils
 
 if TYPE_CHECKING:
     from ui.app_window.app_window import AppWindow
@@ -207,9 +206,7 @@ class NotificationController:
                     len(self._app.compare_manager.file_groups),
                     size,
                 )
-                label_text = Utils._wrap_text_to_fit_length(
-                    _("GROUP_DETAILS").format(*args), 30
-                )
+                label_text = _("GROUP_DETAILS").format(*args)
                 self._app.sidebar_panel.update_state_label(label_text)
             return
 

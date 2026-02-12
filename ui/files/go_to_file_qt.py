@@ -498,7 +498,7 @@ class GoToFile(SmartDialog):
         if hasattr(self._app_actions, "get_base_dir"):
             initial_dir = self._app_actions.get_base_dir()
 
-        selected, _ = QFileDialog.getOpenFileName(
+        selected, _filter = QFileDialog.getOpenFileName(
             self,
             _("Select file to go to"),
             initial_dir,

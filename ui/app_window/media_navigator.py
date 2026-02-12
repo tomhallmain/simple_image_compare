@@ -359,7 +359,6 @@ class MediaNavigator:
         self._app.img_path = image_path
 
         text = basename if relative_filepath == "" else relative_filepath + "\n" + basename
-        text = Utils._wrap_text_to_fit_length(text, 30)
         if extra_text is not None:
             text += "\n" + extra_text
         self._app.sidebar_panel.update_current_image_label(text)

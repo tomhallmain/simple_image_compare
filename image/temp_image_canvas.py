@@ -2,7 +2,7 @@ import os
 import sys
 
 from PIL import Image, ImageTk
-from tkinter import Frame, Canvas, Label
+from tkinter import Frame, Canvas, Label, Menu
 
 from files.marked_file_mover import MarkedFiles
 from image.frame_cache import FrameCache
@@ -86,7 +86,7 @@ class TempImageCanvas:
         self.master.bind("<Shift-Escape>", self.close_windows)
         self.master.bind("<Shift-D>", lambda event: self.app_actions.get_media_details(media_path=self.image_path))
         self.master.bind("<Shift-I>", lambda event: self.app_actions.run_image_generation(_type=None, image_path=self.image_path))
-        self.master.bind("<Button-3>", lambda event: self.app_actions.run_image_generation(_type=None, image_path=self.image_path))
+        self.master.bind("<Button-3>", self._show_context_menu)
         self.master.bind("<Shift-Y>", lambda event: self.app_actions.set_marks_from_downstream_related_images(image_to_use=self.image_path))
         self.master.bind("<Control-m>", self.open_move_marks_window)
         self.master.bind("<Control-k>", lambda event: self.open_move_marks_window(event=event, open_gui=False))
@@ -182,4 +182,25 @@ class TempImageCanvas:
         base_dir = os.path.dirname(self.image_path)
         self.app_actions.new_window(base_dir=base_dir, image_path=self.image_path)
         self.close_windows()
+
+    def _show_context_menu(self, event):
+        if self.image_path is None:
+            return
+        menu = Menu(self.master, tearoff=0)
+        menu.add_command(
+            label=_("Open in Full Window"),
+            command=self.new_full_window_with_image,
+        )
+        menu.add_command(
+            label=_("Run Image Generation"),
+            command=lambda: self.app_actions.run_image_generation(
+                _type=None, image_path=self.image_path
+            ),
+        )
+        menu.add_separator()
+        menu.add_command(
+            label=_("Copy File Path"),
+            command=self.copy_image_path,
+        )
+        menu.post(event.x_root, event.y_root)
 

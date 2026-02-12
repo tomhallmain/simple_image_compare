@@ -23,7 +23,7 @@ from PySide6.QtWidgets import (
     QPushButton, QScrollArea, QVBoxLayout, QWidget,
 )
 
-from files.file_actions_window import Action
+from files.file_actions_window import Action, FileActionsWindow as _TkFileActionsWindow
 from lib.multi_display_qt import SmartDialog
 from ui.app_style import AppStyle
 from utils.app_actions import AppActions
@@ -72,7 +72,10 @@ class FileActionsWindow(SmartDialog):
     # -- shared class-level state ----------------------------------------
     permanent_action: Action = _setup_permanent_action()
     hotkey_actions: dict[int, Action] = _setup_hotkey_actions()
-    action_history: list[Action] = []
+    # Share the SAME list object with the Tkinter class so that auto
+    # actions added by classifier_actions_manager (which imports the
+    # Tkinter FileActionsWindow) are visible here too.
+    action_history: list[Action] = _TkFileActionsWindow.action_history
     MAX_ACTIONS: int = config.file_actions_history_max
 
     # -- pagination -------------------------------------------------------
@@ -182,13 +185,14 @@ class FileActionsWindow(SmartDialog):
         app_actions: AppActions,
         view_image_callback: Callable,
         move_marks_callback: Callable,
-        geometry: str = "700x1200",
+        geometry: str = "900x1400",
     ) -> None:
         super().__init__(
             parent=app_master,
             position_parent=app_master,
             title=_("File Actions"),
             geometry=geometry,
+            respect_title_bar=True,
         )
         FileActionsWindow._instance = self
         self._app_master = app_master
@@ -392,6 +396,7 @@ class FileActionsWindow(SmartDialog):
     def _build_action_rows(self) -> None:
         visible = self._filtered_history[: self._visible_count]
         last_action: Action | None = None
+        last_target: str | None = None
         current_group_layout: QVBoxLayout | None = None
 
         for action in visible:
@@ -402,10 +407,18 @@ class FileActionsWindow(SmartDialog):
             )
 
             if need_header:
+                # Insert a separator only when the target directory changes
+                if last_target is not None and action.target != last_target:
+                    sep = QFrame()
+                    sep.setFixedHeight(1)
+                    sep.setStyleSheet(
+                        f"background: {AppStyle.BORDER_COLOR};"
+                    )
+                    self._scroll_layout.addWidget(sep)
+
                 group = QFrame()
                 group.setStyleSheet(
                     f"QFrame {{ background: {AppStyle.BG_COLOR}; "
-                    f"border-bottom: 1px solid {AppStyle.BORDER_COLOR}; "
                     f"padding: 2px 0; }}"
                 )
                 current_group_layout = QVBoxLayout(group)
@@ -433,21 +446,24 @@ class FileActionsWindow(SmartDialog):
                 type_lbl.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
                 header.addWidget(type_lbl)
 
-                undo_btn = QPushButton(_("Undo"))
-                undo_btn.setFixedWidth(60)
-                undo_btn.clicked.connect(
-                    lambda _=False, a=action: self._undo(a)
-                )
-                header.addWidget(undo_btn)
+                # Only show header-level Undo/Modify when the group
+                # has multiple files; for single-file groups the
+                # file row already provides identical buttons.
+                if len(action.new_files) > 1:
+                    undo_btn = QPushButton(_("Undo"))
+                    undo_btn.clicked.connect(
+                        lambda _=False, a=action: self._undo(a)
+                    )
+                    header.addWidget(undo_btn)
 
-                modify_btn = QPushButton(_("Modify"))
-                modify_btn.setFixedWidth(60)
-                modify_btn.clicked.connect(
-                    lambda _=False, a=action: self._modify(a)
-                )
-                header.addWidget(modify_btn)
+                    modify_btn = QPushButton(_("Modify"))
+                    modify_btn.clicked.connect(
+                        lambda _=False, a=action: self._modify(a)
+                    )
+                    header.addWidget(modify_btn)
 
                 current_group_layout.addLayout(header)
+                last_target = action.target
 
             last_action = action
 
@@ -467,21 +483,18 @@ class FileActionsWindow(SmartDialog):
                 file_row.addWidget(name_lbl, 1)
 
                 view_btn = QPushButton(_("View"))
-                view_btn.setFixedWidth(50)
                 view_btn.clicked.connect(
                     lambda _=False, p=filename: self._view(p)
                 )
                 file_row.addWidget(view_btn)
 
                 copy_btn = QPushButton(_("Copy Filename"))
-                copy_btn.setFixedWidth(100)
                 copy_btn.clicked.connect(
                     lambda _=False, p=filename: self._copy_filename(p)
                 )
                 file_row.addWidget(copy_btn)
 
                 undo_file_btn = QPushButton(_("Undo"))
-                undo_file_btn.setFixedWidth(60)
                 undo_file_btn.clicked.connect(
                     lambda _=False, a=action, p=filename: self._undo(
                         a, specific_image=p
@@ -490,7 +503,6 @@ class FileActionsWindow(SmartDialog):
                 file_row.addWidget(undo_file_btn)
 
                 modify_file_btn = QPushButton(_("Modify"))
-                modify_file_btn.setFixedWidth(60)
                 modify_file_btn.clicked.connect(
                     lambda _=False, p=filename: self._modify(p)
                 )
@@ -503,11 +515,21 @@ class FileActionsWindow(SmartDialog):
     # Actions
     # ==================================================================
     def _view(self, image_path: str) -> None:
-        self._view_image_callback(
-            master=self._app_master,
-            image_path=image_path,
-            app_actions=self._app_actions,
-        )
+        if not os.path.isfile(image_path):
+            self._app_actions.toast(
+                _("File not found: ") + os.path.basename(image_path)
+            )
+            return
+        try:
+            self._view_image_callback(
+                master=self._app_master,
+                image_path=image_path,
+                app_actions=self._app_actions,
+            )
+        except Exception as e:
+            self._app_actions.toast(
+                _("Error opening image: ") + str(e)
+            )
 
     def _undo(self, action: Action, specific_image: str | None = None) -> None:
         if specific_image is not None:

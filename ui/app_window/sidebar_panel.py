@@ -346,27 +346,15 @@ class SidebarPanel(QWidget):
     # ==================================================================
     # Progress bar
     # ==================================================================
-    def show_progress(self, context: str, percent_complete: Optional[int] = None) -> None:
-        """
-        Display or update the progress bar during a compare.
+    def start_progress_bar(self) -> None:
+        """Show an indeterminate (bouncing) progress bar."""
+        self.progress_bar.setRange(0, 0)
+        self.progress_bar.setVisible(True)
 
-        Ported from App.display_progress.
-        """
-        if percent_complete is None:
-            self.update_state_label(Utils._wrap_text_to_fit_length(context, 30))
-            self.progress_bar.setVisible(False)
-        else:
-            self.update_state_label(
-                Utils._wrap_text_to_fit_length(
-                    _("{0}: {1}% complete").format(context, int(percent_complete)), 30
-                )
-            )
-            self.progress_bar.setValue(int(percent_complete))
-            self.progress_bar.setVisible(True)
-
-    def hide_progress(self) -> None:
+    def stop_progress_bar(self) -> None:
         """Hide the progress bar."""
         self.progress_bar.setVisible(False)
+        self.progress_bar.setRange(0, 100)
 
     # ==================================================================
     # Sidebar-triggered actions (signal handlers)

@@ -17,14 +17,36 @@ from PySide6.QtGui import QFont
 
 from lib.multi_display_qt import SmartDialog
 from ui.app_style import AppStyle
-
-# Qt.KeyboardModifier has no CapsLockModifier in standard Qt; use getattr for compatibility
-_CAPS_LOCK_MODIFIER = getattr(Qt.KeyboardModifier, "CapsLockModifier", None)
 from ui.auth.password_core import PasswordManager
 from ui.auth.password_session_manager import PasswordSessionManager
 from utils.translations import I18N
 
 _ = I18N._
+
+
+def _is_caps_lock_on() -> bool:
+    """Detect caps lock state using native platform API."""
+    import platform
+    if platform.system() == "Windows":
+        try:
+            import ctypes
+            # GetKeyState(VK_CAPITAL=0x14): low bit == 1 means toggled ON
+            return bool(ctypes.windll.user32.GetKeyState(0x14) & 1)
+        except Exception:
+            pass
+    elif platform.system() == "Darwin":
+        try:
+            import subprocess
+            # ioreg reports the HIDCapsLockState
+            out = subprocess.check_output(
+                ["ioreg", "-n", "IOHIDKeyboard", "-r"],
+                timeout=1, text=True,
+            )
+            return "CapsLockState" in out and '"CapsLockState" = Yes' in out
+        except Exception:
+            pass
+    # Linux / fallback: not reliably detectable without X11/Wayland bindings
+    return False
 
 
 class PasswordLineEdit(QLineEdit):
@@ -34,19 +56,19 @@ class PasswordLineEdit(QLineEdit):
         super().__init__(parent)
         self.caps_label = caps_label
 
-    def keyPressEvent(self, event):
-        if _CAPS_LOCK_MODIFIER is not None and (event.modifiers() & _CAPS_LOCK_MODIFIER):
+    def _update_caps_indicator(self):
+        if _is_caps_lock_on():
             self.caps_label.setText(_("⚠ Caps Lock is ON"))
         else:
             self.caps_label.setText("")
+
+    def keyPressEvent(self, event):
         super().keyPressEvent(event)
+        self._update_caps_indicator()
 
     def keyReleaseEvent(self, event):
-        if _CAPS_LOCK_MODIFIER is not None and (event.modifiers() & _CAPS_LOCK_MODIFIER):
-            self.caps_label.setText(_("⚠ Caps Lock is ON"))
-        else:
-            self.caps_label.setText("")
         super().keyReleaseEvent(event)
+        self._update_caps_indicator()
 
 
 class PasswordDialog(SmartDialog):

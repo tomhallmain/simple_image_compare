@@ -16,8 +16,8 @@ class SecurityConfig:
     """Central configuration manager for password protection settings."""
     
     # Default password-protected actions for Media Compare
-    # OPEN_APPLICATION is excluded (startup auth handled separately)
     DEFAULT_PROTECTED_ACTIONS = {
+        ProtectedActions.OPEN_APPLICATION.value: False,
         ProtectedActions.RUN_COMPARES.value: False,
         ProtectedActions.RUN_SEARCH.value: False,
         ProtectedActions.RUN_SEARCH_PRESET.value: False,
@@ -52,14 +52,8 @@ class SecurityConfig:
         self.protected_actions = app_info_cache.get_meta("protected_actions", default_val=self.DEFAULT_PROTECTED_ACTIONS.copy())
         self.show_security_advice = app_info_cache.get_meta("show_security_advice", default_val=self.DEFAULT_SHOW_SECURITY_ADVICE)
 
-        # Exclude OPEN_APPLICATION from Qt (startup auth handled separately)
-        if ProtectedActions.OPEN_APPLICATION.value in self.protected_actions:
-            del self.protected_actions[ProtectedActions.OPEN_APPLICATION.value]
-
         # Add any new protected actions that aren't in cache yet
         for action_enum in ProtectedActions:
-            if action_enum == ProtectedActions.OPEN_APPLICATION:
-                continue
             action = action_enum.value
             if action not in self.protected_actions:
                 # Default to True for new actions (protected by default)

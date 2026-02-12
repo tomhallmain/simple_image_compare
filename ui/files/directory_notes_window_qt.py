@@ -34,7 +34,6 @@ class DirectoryNotesWindow(SmartDialog):
     with edit, export-to-file, and import-from-file capabilities.
     """
 
-    COL_0_WIDTH = 600
     MAX_ROWS = 30
 
     def __init__(
@@ -138,8 +137,6 @@ class DirectoryNotesWindow(SmartDialog):
         basename = os.path.basename(filepath)
 
         name_lbl = QLabel(basename)
-        name_lbl.setWordWrap(True)
-        name_lbl.setMaximumWidth(self.COL_0_WIDTH)
         name_lbl.setStyleSheet(
             f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_COLOR};"
         )
@@ -156,8 +153,6 @@ class DirectoryNotesWindow(SmartDialog):
 
         # Subdued path line
         path_lbl = QLabel(filepath)
-        path_lbl.setWordWrap(True)
-        path_lbl.setMaximumWidth(self.COL_0_WIDTH - 20)
         path_lbl.setStyleSheet(
             f"color: gray; background: {AppStyle.BG_COLOR}; "
             f"font-size: 9pt; padding-left: 20px;"
@@ -172,8 +167,6 @@ class DirectoryNotesWindow(SmartDialog):
         basename = os.path.basename(filepath)
 
         name_lbl = QLabel(basename)
-        name_lbl.setWordWrap(True)
-        name_lbl.setMaximumWidth(self.COL_0_WIDTH)
         name_lbl.setStyleSheet(
             f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_COLOR};"
         )
@@ -192,8 +185,6 @@ class DirectoryNotesWindow(SmartDialog):
 
         # Path line
         path_lbl = QLabel(filepath)
-        path_lbl.setWordWrap(True)
-        path_lbl.setMaximumWidth(self.COL_0_WIDTH - 20)
         path_lbl.setStyleSheet(
             f"color: gray; background: {AppStyle.BG_COLOR}; "
             f"font-size: 9pt; padding-left: 20px;"
@@ -307,7 +298,7 @@ class DirectoryNotesWindow(SmartDialog):
     # ==================================================================
     def export_to_file(self) -> None:
         default_name = f"{os.path.basename(self._base_dir) or 'root'}_notes.txt"
-        path, _ = QFileDialog.getSaveFileName(
+        path, _filter = QFileDialog.getSaveFileName(
             self,
             _("Export Directory Notes"),
             os.path.join(self._base_dir, default_name),
@@ -322,7 +313,7 @@ class DirectoryNotesWindow(SmartDialog):
                                      _("Failed to export notes: {0}").format(str(e)))
 
     def import_from_text_file(self) -> None:
-        path, _ = QFileDialog.getOpenFileName(
+        path, _filter = QFileDialog.getOpenFileName(
             self,
             _("Import Marked Files from Text File"),
             self._base_dir,
@@ -360,7 +351,7 @@ class DirectoryNotesWindow(SmartDialog):
             )
 
     def import_from_json_file(self) -> None:
-        path, _ = QFileDialog.getOpenFileName(
+        path, _filter = QFileDialog.getOpenFileName(
             self,
             _("Import Marked Files from JSON File"),
             self._base_dir,
@@ -399,16 +390,15 @@ class DirectoryNotesWindow(SmartDialog):
             f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_COLOR}; "
             f"font-weight: bold; padding: 4px 0;"
         )
-        self._grid.addWidget(lbl, self._row, 0, 1, 3, Qt.AlignLeft)
+        self._grid.addWidget(lbl, self._row, 0, 1, 3)
         self._row += 1
 
     def _add_text_label(self, text: str) -> None:
         lbl = QLabel(text)
-        lbl.setWordWrap(True)
         lbl.setStyleSheet(
             f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_COLOR};"
         )
-        self._grid.addWidget(lbl, self._row, 0, 1, 3, Qt.AlignLeft)
+        self._grid.addWidget(lbl, self._row, 0, 1, 3)
         self._row += 1
 
     def _add_separator(self) -> None:

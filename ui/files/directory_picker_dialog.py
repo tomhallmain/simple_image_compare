@@ -50,8 +50,6 @@ class DirectoryPickerDialog(SmartDialog):
         ``_extra_action_buttons`` -- add more buttons to the action bar
     """
 
-    COL_0_WIDTH = 600
-
     # ------------------------------------------------------------------
     # Construction
     # ------------------------------------------------------------------
@@ -66,7 +64,7 @@ class DirectoryPickerDialog(SmartDialog):
         offset_y: int = 30,
     ) -> None:
         title = title or _("Select Directory")
-        geometry = geometry or self._auto_geometry()
+        geometry = geometry or "420x500"
 
         super().__init__(
             parent=parent,
@@ -85,17 +83,21 @@ class DirectoryPickerDialog(SmartDialog):
         outer.setContentsMargins(10, 10, 10, 10)
         outer.setSpacing(6)
 
-        # Action bar
+        # Action bar – all buttons use NoFocus so Up/Down arrow keys
+        # always reach keyPressEvent for list rolling / filter-by-typing.
         action_bar = QHBoxLayout()
         browse_btn = QPushButton(_("Add directory"))
+        browse_btn.setFocusPolicy(Qt.NoFocus)
         browse_btn.clicked.connect(self._browse_new_directory)
         action_bar.addWidget(browse_btn)
 
         add_parent_btn = QPushButton(_("Add directories from parent"))
+        add_parent_btn.setFocusPolicy(Qt.NoFocus)
         add_parent_btn.clicked.connect(self._add_dirs_from_parent)
         action_bar.addWidget(add_parent_btn)
 
         clear_btn = QPushButton(_("Clear targets"))
+        clear_btn.setFocusPolicy(Qt.NoFocus)
         clear_btn.clicked.connect(self._on_clear_clicked)
         action_bar.addWidget(clear_btn)
 
@@ -111,14 +113,17 @@ class DirectoryPickerDialog(SmartDialog):
         self._filter_label.setVisible(False)
         outer.addWidget(self._filter_label)
 
-        # Scroll area for directory rows
+        # Scroll area for directory rows – NoFocus so arrow keys
+        # are not consumed for scrolling (the dialog handles them).
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
+        scroll.setFocusPolicy(Qt.NoFocus)
         scroll.setStyleSheet(
             f"QScrollArea {{ background: {AppStyle.BG_COLOR}; border: none; }}"
         )
 
         self._viewport = QWidget()
+        self._viewport.setFocusPolicy(Qt.NoFocus)
         self._viewport.setStyleSheet(f"background: {AppStyle.BG_COLOR};")
         self._grid = QGridLayout(self._viewport)
         self._grid.setAlignment(Qt.AlignTop)
@@ -133,6 +138,9 @@ class DirectoryPickerDialog(SmartDialog):
         # Keybindings
         QShortcut(QKeySequence(Qt.Key_Escape), self).activated.connect(self.close)
         QShortcut(QKeySequence(Qt.Key_Return), self).activated.connect(self._on_return)
+
+        # Ensure the dialog itself has focus so keyPressEvent fires
+        self.setFocus()
 
     # ------------------------------------------------------------------
     # Subclass hooks
@@ -170,15 +178,6 @@ class DirectoryPickerDialog(SmartDialog):
         """Override to add more buttons to the action bar."""
 
     # ------------------------------------------------------------------
-    # Geometry
-    # ------------------------------------------------------------------
-    def _auto_geometry(self) -> str:
-        n = len(self._get_all_directories())
-        width = 600
-        height = max(300, min(n * 22 + 100, 900))
-        return f"{width}x{height}"
-
-    # ------------------------------------------------------------------
     # Row building
     # ------------------------------------------------------------------
     def _clear_rows(self) -> None:
@@ -191,14 +190,13 @@ class DirectoryPickerDialog(SmartDialog):
     def _build_rows(self) -> None:
         for i, _dir in enumerate(self._filtered_dirs):
             lbl = QLabel(_dir)
-            lbl.setWordWrap(True)
-            lbl.setMaximumWidth(self.COL_0_WIDTH)
             lbl.setStyleSheet(
                 f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_COLOR};"
             )
             self._grid.addWidget(lbl, i, 0, Qt.AlignLeft | Qt.AlignVCenter)
 
             btn = QPushButton(_("Set"))
+            btn.setFocusPolicy(Qt.NoFocus)
             btn.clicked.connect(
                 lambda _c=False, d=_dir: self._select_and_close(d)
             )

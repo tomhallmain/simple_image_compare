@@ -1009,7 +1009,6 @@ class MarkedFiles(SmartDialog):
             row.addWidget(dir_label, 1)
 
             move_btn = QPushButton(_("Move"))
-            move_btn.setFixedWidth(50)
             move_btn.clicked.connect(
                 lambda _=False, d=target_dir: self._move_marks_to_dir(
                     target_dir=d
@@ -1018,7 +1017,6 @@ class MarkedFiles(SmartDialog):
             row.addWidget(move_btn)
 
             copy_btn = QPushButton(_("Copy"))
-            copy_btn.setFixedWidth(50)
             copy_btn.clicked.connect(
                 lambda _=False, d=target_dir: self._move_marks_to_dir(
                     target_dir=d, move_func=Utils.copy_file

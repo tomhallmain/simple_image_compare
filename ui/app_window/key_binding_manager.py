@@ -171,7 +171,10 @@ class KeyBindingManager:
             lambda: ImageDetails.run_image_generation_static(app.app_actions),
             guarded=False,
         )
-        self._bind("Return", lambda: app.search_ctrl.run_compare(), guarded=False)
+        # Note: no global Return binding. The individual search QLineEdits
+        # connect their returnPressed signals to the appropriate set_search_*
+        # methods (see SidebarPanel), matching the Tkinter version where
+        # <Return> was only bound on the entry widgets.
 
         # ==============================================================
         # Slideshow
@@ -216,6 +219,7 @@ class KeyBindingManager:
         # Window management
         # ==============================================================
         self._bind("Ctrl+Tab", WindowManager.cycle_windows, guarded=False)
+        self._bind("Ctrl+Shift+Tab", lambda: WindowManager.cycle_windows(reverse=True), guarded=False)
         self._bind(
             "Shift+Escape",
             lambda: app.close() if app.is_secondary() else None,

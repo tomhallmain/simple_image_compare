@@ -223,29 +223,32 @@ class WindowManager:
     # Window cycling
     # ------------------------------------------------------------------
     @classmethod
-    def cycle_windows(cls) -> None:
+    def cycle_windows(cls, reverse: bool = False) -> None:
         """
-        Cycle focus to the next open window (round-robin).
+        Cycle focus to the next (or previous) open window (round-robin).
 
         Ported from App.cycle_windows.
         """
         if len(cls._windows) <= 1:
             return
 
-        if cls._cycle_index >= len(cls._windows):
+        n = len(cls._windows)
+        step = -1 if reverse else 1
+
+        if cls._cycle_index >= n:
             cls._cycle_index = 0
 
         target = cls._windows[cls._cycle_index]
 
         # If the target is the currently active window, advance once more
-        if target.isActiveWindow() and len(cls._windows) > 1:
-            cls._cycle_index = (cls._cycle_index + 1) % len(cls._windows)
+        if target.isActiveWindow() and n > 1:
+            cls._cycle_index = (cls._cycle_index + step) % n
             target = cls._windows[cls._cycle_index]
 
         target.raise_()
         target.activateWindow()
         target.media_frame.setFocus()
-        cls._cycle_index = (cls._cycle_index + 1) % len(cls._windows)
+        cls._cycle_index = (cls._cycle_index + step) % n
 
     # ------------------------------------------------------------------
     # Cross-window queries

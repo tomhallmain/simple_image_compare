@@ -12,10 +12,12 @@ All substantial logic lives in the controller modules:
 """
 
 import os
+import functools
+import threading
 from typing import Optional
 
-from PySide6.QtCore import Qt, QTimer, Signal
-from PySide6.QtWidgets import QHBoxLayout, QSplitter, QWidget, QVBoxLayout, QFrame
+from PySide6.QtCore import Qt, QTimer, Signal, Slot, QThread, QMetaObject
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QSplitter, QWidget, QVBoxLayout, QFrame
 
 from files.file_browser import FileBrowser
 from compare.compare_manager import CompareManager
@@ -44,6 +46,57 @@ from utils.utils import Utils
 
 _ = I18N._
 logger = get_logger("app_window")
+
+
+class _MainThreadBridge(QWidget):
+    """Marshals arbitrary callables from worker threads to the main/GUI thread.
+
+    Uses ``QMetaObject.invokeMethod`` with ``BlockingQueuedConnection`` so that
+    the calling (worker) thread blocks until the callable finishes on the main
+    thread.  When already on the main thread the callable runs directly.
+    """
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.hide()  # invisible helper widget
+        self._lock = threading.Lock()
+        self._func = None
+        self._args = ()
+        self._kwargs = {}
+        self._result = None
+        self._error = None
+
+    @Slot()
+    def _execute(self):
+        try:
+            self._result = self._func(*self._args, **self._kwargs)
+        except Exception as e:
+            self._error = e
+
+    def invoke(self, func, *args, **kwargs):
+        """Call *func* on the main thread, blocking until it returns."""
+        app = QApplication.instance()
+        if app is None or QThread.currentThread() == app.thread():
+            return func(*args, **kwargs)
+        with self._lock:
+            self._func = func
+            self._args = args
+            self._kwargs = kwargs
+            self._result = None
+            self._error = None
+            QMetaObject.invokeMethod(
+                self, "_execute", Qt.ConnectionType.BlockingQueuedConnection,
+            )
+            if self._error:
+                raise self._error
+            return self._result
+
+    def wrap(self, func):
+        """Return a wrapper that always invokes *func* on the main thread."""
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            return self.invoke(func, *args, **kwargs)
+        return wrapper
 
 
 class AppWindow(FramelessWindowMixin, SmartMainWindow):
@@ -78,6 +131,14 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         self.setup_frameless_window(
             title=_(" Simple Image Compare "), corner_radius=10
         )
+
+        # Set icon in the custom title bar
+        _root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+        icon_path = os.path.join(_root, "assets", "icon.png")
+        if os.path.isfile(icon_path):
+            title_bar = self.get_title_bar()
+            if title_bar:
+                title_bar.set_icon(icon_path)
 
         # Thread-safe title update signal → slot
         self._sig_set_title.connect(self._on_set_title)
@@ -223,6 +284,12 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         )
 
         # ------------------------------------------------------------------
+        # Thread-safety bridge (compare engine calls app_actions from a
+        # worker thread; the bridge marshals those calls to the main thread)
+        # ------------------------------------------------------------------
+        self._thread_bridge = _MainThreadBridge(parent=self)
+
+        # ------------------------------------------------------------------
         # Assemble AppActions dict
         # ------------------------------------------------------------------
         self.app_actions = self._build_app_actions()
@@ -303,52 +370,59 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
     # AppActions assembly
     # ------------------------------------------------------------------
     def _build_app_actions(self) -> AppActions:
-        """Wire the AppActions dict, mapping action names to controller methods."""
+        """Wire the AppActions dict, mapping action names to controller methods.
+
+        Actions that touch the Qt GUI are wrapped via :class:`_MainThreadBridge`
+        so that the compare engine (which runs on a worker thread) can call them
+        safely.  Pure-data / thread-safe getters are left unwrapped.
+        """
+        ts = self._thread_bridge.wrap  # shorthand
+
         actions = {
             # Window title -- thread-safe via Signal so that
             # notification_manager's Timer thread never touches Qt directly
             "title": self._sig_set_title.emit,
             # Window management (static)
-            "new_window": WindowManager.add_secondary_window,
+            "new_window": ts(WindowManager.add_secondary_window),
             "get_window": WindowManager.get_window,
             "get_open_windows": WindowManager.get_open_windows,
-            "refresh_all_compares": WindowManager.refresh_all_compares,
+            "refresh_all_compares": ts(WindowManager.refresh_all_compares),
             "find_window_with_compare": WindowManager.find_window_with_compare,
             # Notifications
-            "toast": self.notification_ctrl.toast,
-            "title_notify": self.notification_ctrl.title_notify,
-            "_alert": self.notification_ctrl.alert,
+            "toast": ts(self.notification_ctrl.toast),
+            "title_notify": ts(self.notification_ctrl.title_notify),
+            "_alert": ts(self.notification_ctrl.alert),
             # Navigation / display
-            "refresh": self.refresh,
-            "refocus": self.refocus,
-            "set_mode": self.set_mode,
+            "refresh": ts(self.refresh),
+            "refocus": ts(self.refocus),
+            "set_mode": ts(self.set_mode),
             "is_fullscreen": lambda: self.fullscreen,
             "get_active_media_filepath": self.media_navigator.get_active_media_filepath,
-            "create_image": self.media_navigator.create_image,
-            "show_next_media": self.media_navigator.show_next_media,
+            "create_image": ts(self.media_navigator.create_image),
+            "show_next_media": ts(self.media_navigator.show_next_media),
             # Window launchers
-            "get_media_details": self.window_launcher.open_media_details,
-            "open_move_marks_window": self.file_marks_ctrl.open_move_marks_window,
-            "open_password_admin_window": self.window_launcher.open_password_admin_window,
+            "get_media_details": ts(self.window_launcher.open_media_details),
+            "open_move_marks_window": ts(self.file_marks_ctrl.open_move_marks_window),
+            "open_password_admin_window": ts(self.window_launcher.open_password_admin_window),
             # Search / compare
-            "run_image_generation": self.search_ctrl.run_image_generation,
-            "set_marks_from_downstream_related_images": self.file_marks_ctrl.set_marks_from_downstream_related_images,
+            "run_image_generation": ts(self.search_ctrl.run_image_generation),
+            "set_marks_from_downstream_related_images": ts(self.file_marks_ctrl.set_marks_from_downstream_related_images),
             # File navigation
-            "go_to_file": self.media_navigator.go_to_file,
-            "go_to_file_by_index": self.media_navigator.go_to_file_by_index,
-            "set_base_dir": self.set_base_dir,
+            "go_to_file": ts(self.media_navigator.go_to_file),
+            "go_to_file_by_index": ts(self.media_navigator.go_to_file_by_index),
+            "set_base_dir": ts(self.set_base_dir),
             "get_base_dir": self.get_base_dir,
             # File operations
-            "delete": self.file_ops_ctrl.handle_delete,
-            "hide_current_media": self.file_ops_ctrl.hide_current_media,
-            "copy_media_path": self.file_ops_ctrl.copy_media_path,
-            "release_media_canvas": lambda: self.media_frame.release_media(),
+            "delete": ts(self.file_ops_ctrl.handle_delete),
+            "hide_current_media": ts(self.file_ops_ctrl.hide_current_media),
+            "copy_media_path": ts(self.file_ops_ctrl.copy_media_path),
+            "release_media_canvas": ts(lambda: self.media_frame.release_media()),
             # Persistence
             "store_info_cache": self.cache_ctrl.store_info_cache,
             # Internal (prefixed with _)
-            "_set_toggled_view_matches": self.media_navigator.set_toggled_view_matches,
-            "_set_label_state": self.notification_ctrl.set_label_state,
-            "_add_buttons_for_mode": self.sidebar_panel.add_buttons_for_mode,
+            "_set_toggled_view_matches": ts(self.media_navigator.set_toggled_view_matches),
+            "_set_label_state": ts(self.notification_ctrl.set_label_state),
+            "_add_buttons_for_mode": ts(self.sidebar_panel.add_buttons_for_mode),
         }
         return AppActions(actions=actions, master=self)
 
@@ -509,8 +583,14 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         Check if a directory has many files before loading.
         Returns True if the user cancels, False to proceed.
         """
+        if self.file_browser.has_confirmed_dir() and self.file_browser.directory == base_dir:
+            return False
+
+        # Snapshot all mutable state that _gather_files touches
         original_directory = self.file_browser.directory
         original_files = self.file_browser._files.copy()
+        original_filepaths = self.file_browser.filepaths.copy()
+
         try:
             self.file_browser.directory = base_dir
             if self.file_browser.has_confirmed_dir():
@@ -529,8 +609,10 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
                     return True
                 self.file_browser.set_dir_confirmed()
         finally:
+            # Restore ALL mutated state so the file browser is unchanged
             self.file_browser.directory = original_directory
             self.file_browser._files = original_files
+            self.file_browser.filepaths = original_filepaths
         return False
 
     def set_mode(self, mode: Mode, do_update: bool = True) -> None:
@@ -681,6 +763,42 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             )
 
     # ------------------------------------------------------------------
+    # Context menu (right-click)
+    # ------------------------------------------------------------------
+    def contextMenuEvent(self, event):  # noqa: N802
+        """Show the right-click context menu at the cursor position."""
+        self.context_menu_builder.show(event.globalPos())
+
+    # ------------------------------------------------------------------
+    # Middle-click → delete image
+    # ------------------------------------------------------------------
+    def mousePressEvent(self, event):  # noqa: N802
+        """Middle mouse button (wheel click) deletes the current image."""
+        if event.button() == Qt.MouseButton.MiddleButton:
+            self.file_ops_ctrl.delete_image()
+            event.accept()
+            return
+        super().mousePressEvent(event)
+
+    # ------------------------------------------------------------------
+    # Mouse scroll → navigate media
+    # ------------------------------------------------------------------
+    def wheelEvent(self, event):  # noqa: N802
+        """Scroll up/down navigates between images (matches Tkinter behaviour).
+
+        Ignored when Shift is held (reserved for future pan/zoom).
+        """
+        if event.modifiers() & Qt.KeyboardModifier.ShiftModifier:
+            super().wheelEvent(event)
+            return
+        delta = event.angleDelta().y()
+        if delta > 0:
+            self.media_navigator.show_next_media()
+        elif delta < 0:
+            self.media_navigator.show_prev_media()
+        event.accept()
+
+    # ------------------------------------------------------------------
     # Lifecycle
     # ------------------------------------------------------------------
     _closing = False  # guard against recursive closeEvent
@@ -727,6 +845,11 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         self._closing = True
         self.on_closing()
         event.accept()
+        # If this is the primary window, terminate the entire application
+        # so the process doesn't linger after the window is destroyed.
+        if not self.is_secondary():
+            from PySide6.QtWidgets import QApplication
+            QApplication.instance().quit()
 
     def quit(self, event=None) -> None:
         """

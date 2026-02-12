@@ -59,6 +59,7 @@ class WindowLauncher:
 
             from ui.files.go_to_file_qt import GoToFile
             self._go_to_file_window = GoToFile(self._app, self._app.app_actions)
+            self._go_to_file_window.show()
         except Exception as e:
             self._handle_error(e, "Go To File Window Error")
 
@@ -75,6 +76,7 @@ class WindowLauncher:
 
             from ui.files.go_to_file_qt import GoToFile
             self._go_to_file_window = GoToFile(self._app, self._app.app_actions)
+            self._go_to_file_window.show()
             self._go_to_file_window.update_with_current_media(focus=True)
         except Exception as e:
             self._handle_error(e, "Go To File Window Error")
@@ -147,7 +149,7 @@ class WindowLauncher:
         """Open the compare settings window."""
         try:
             from ui.compare.compare_settings_window_qt import CompareSettingsWindow
-            CompareSettingsWindow.show(parent=self._app, compare_manager=self._app.compare_manager)
+            CompareSettingsWindow.open(parent=self._app, compare_manager=self._app.compare_manager)
         except Exception as e:
             self._handle_error(e, "Compare Settings Window Error")
 

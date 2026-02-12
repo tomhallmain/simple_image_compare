@@ -185,50 +185,36 @@ class H5ImageClassifier(BaseImageClassifier):
             model_path: Path to .h5 model file
             custom_objects: Dictionary of custom layer classes {name: class}
         """
-        logger.info(f"[H5] __init__ start for {model_path}")
         super().__init__(model_path)
         self.custom_objects = custom_objects or {}
         self.load_errors = []
-        logger.info("[H5] About to call load_model ...")
         self.load_model()
-        logger.info("[H5] __init__ complete")
     
     def _register_common_layers(self, custom_objects: Dict):
         """Auto-register common custom layers and handle compatibility issues"""
         try:
-            logger.info("[H5] Importing tensorflow_hub ...")
             import tensorflow_hub as hub
-            logger.info("[H5] tensorflow_hub imported successfully")
             custom_objects['KerasLayer'] = hub.KerasLayer
         except ImportError:
-            logger.info("[H5] tensorflow_hub not available, skipping")
             pass
 
     def _load_model_tensorflow_keras(self, model_path: str, custom_objects: Dict):
         """Attempt loading with TensorFlow's built-in Keras"""
         try:
-            logger.info("[TF-Keras] Importing tensorflow.keras.models ...")
             from tensorflow.keras.models import load_model as tf_load_model
-            logger.info("[TF-Keras] Importing tensorflow.keras.utils ...")
             from tensorflow.keras.utils import custom_object_scope
             with custom_object_scope(custom_objects):
-                logger.info("[TF-Keras] Attempting TensorFlow Keras load_model ...")
                 model = tf_load_model(model_path)
-                logger.info("[TF-Keras] load_model completed successfully")
                 return model
         except Exception as e:
             self.load_errors.append(f"TensorFlow Keras load failed: {str(e)[:300]}")
-            logger.info(f"[TF-Keras] Load failed: {str(e)[:200]}")
             return None
 
     def _load_model_tf_keras(self, model_path: str, custom_objects: Dict):
         """Fallback to tf_keras package"""
         try:
-            logger.info("[tf_keras] Importing tf_keras.models ...")
             from tf_keras.models import load_model
-            logger.info("[tf_keras] Attempting tf_keras load_model ...")
             model = load_model(model_path, custom_objects=custom_objects)
-            logger.info("[tf_keras] load_model completed successfully")
             return model
         except Exception as e:
             self.load_errors.append(f"tf_keras load failed: {str(e)[:300]}")
@@ -238,14 +224,10 @@ class H5ImageClassifier(BaseImageClassifier):
     def _load_model_keras(self, model_path: str, custom_objects: Dict):
         """Last-resort standalone Keras attempt"""
         try:
-            logger.info("[keras] Importing keras.models ...")
             from keras.models import load_model as keras_load_model
-            logger.info("[keras] Importing keras.utils ...")
             from keras.utils.custom_object_scope import custom_object_scope
             with custom_object_scope(custom_objects):
-                logger.info("[keras] Attempting standalone Keras load_model ...")
                 model = keras_load_model(model_path)
-                logger.info("[keras] load_model completed successfully")
                 return model
         except Exception as e:
             self.load_errors.append(f"Standalone Keras load failed: {str(e)[:300]}")
@@ -254,9 +236,6 @@ class H5ImageClassifier(BaseImageClassifier):
 
     def load_model(self) -> bool:
         """Load model with fallback strategies"""
-        import threading
-        logger.info(f"[H5] load_model called on thread={threading.current_thread().name} "
-                     f"for {self.model_path}")
         self._register_common_layers(self.custom_objects)
         
         loaders = [
@@ -266,13 +245,11 @@ class H5ImageClassifier(BaseImageClassifier):
         ]
         
         for loader in loaders:
-            logger.info(f"[H5] Trying loader: {loader.__name__}")
             self.model = loader(self.model_path, self.custom_objects)
             if self.model is not None:
                 self.is_loaded = True
                 self.input_shape = self._get_input_shape()
                 self._verify_model_compatibility()
-                logger.info(f"[H5] Model loaded successfully via {loader.__name__}")
                 return True
 
         logger.error(f"Failed to load model at {self.model_path}")
@@ -789,26 +766,10 @@ class ImageClassifierWrapper:
         # Initialize appropriate classifier
         try:
             if self.backend == BackendType.HDF5:
-                logger.info(f"[load_classifier] HDF5 backend for {self.model_location}")
-                # Dump the full call stack so we can see what locks
-                # might be held when we reach the TF import.
-                import traceback as _tb
-                logger.info("[load_classifier] === CALL STACK ===\n"
-                            + "".join(_tb.format_stack()))
-                # Prevent TensorFlow CUDA/GPU init from deadlocking with
-                # Qt's OpenGL context and Windows DLL loading locks.
-                # Must be set before the first `import tensorflow`.
-                import os as _os
-                _os.environ.setdefault('TF_CPP_MIN_LOG_LEVEL', '2')
-                _os.environ.setdefault('CUDA_VISIBLE_DEVICES', '-1')
-                _os.environ.setdefault('TF_ENABLE_ONEDNN_OPTS', '0')
-                _os.environ.setdefault('OMP_NUM_THREADS', '1')
                 custom_objects = {}
                 if self.use_hub_keras_layers:
                     try:
-                        logger.info("[load_classifier] Importing tensorflow_hub ...")
                         import tensorflow_hub as hub
-                        logger.info("[load_classifier] tensorflow_hub imported")
                         custom_objects['KerasLayer'] = hub.KerasLayer
                     except ImportError:
                         logger.error("Failed to import tensorflow hub to support h5 model, please install it using pip")
@@ -817,13 +778,11 @@ class ImageClassifierWrapper:
                 
                 # NOTE: Separate model architecture loading is not supported for h5 models as a standard
                 
-                logger.info("[load_classifier] Creating H5ImageClassifier ...")
                 self.classifier = H5ImageClassifier(
                     self.model_location,
                     custom_objects=custom_objects,
                     **self.model_kwargs
                 )
-                logger.info("[load_classifier] H5ImageClassifier created")
                 
             elif self.backend == BackendType.PYTORCH:
                 # Default kwargs for PyTorch

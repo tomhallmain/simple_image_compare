@@ -57,7 +57,7 @@ class _CompareWorkerSignals(QObject):
     """Signals emitted by the background compare worker."""
     finished = Signal()
     error = Signal(str)
-    progress = Signal(str, int)  # context, percent
+    progress = Signal(str, int)  # context, percent (-1 means indeterminate)
 
 
 class _CompareWorker(QThread):
@@ -113,6 +113,7 @@ class SearchController:
             callback=self._fire_pending_compare,
         )
         self._worker: Optional[_CompareWorker] = None
+        self._img_gen_worker: Optional[_CompareWorker] = None
 
     def _fire_pending_compare(self) -> None:
         """Callback for the debouncer — invokes whatever compare was last scheduled."""
@@ -187,7 +188,7 @@ class SearchController:
             )
 
         if image_path is not None and not os.path.isfile(image_path):
-            image_path, _ = QFileDialog.getOpenFileName(
+            image_path, _filter = QFileDialog.getOpenFileName(
                 self._app,
                 _("Select image file"),
                 self._app.get_search_dir(),
@@ -249,20 +250,34 @@ class SearchController:
 
         Ported from App._run_with_progress.
         """
-        self._sidebar.show_progress()
+        self._sidebar.start_progress_bar()
 
         worker = _CompareWorker(exec_func, args)
         worker.signals.finished.connect(self._on_worker_finished)
         worker.signals.error.connect(self._on_worker_error)
+        worker.signals.progress.connect(self._on_progress)
         self._worker = worker
         worker.start()
 
     def _on_worker_finished(self) -> None:
-        self._sidebar.hide_progress()
+        self._sidebar.stop_progress_bar()
         self._worker = None
 
     def _on_worker_error(self, error_text: str) -> None:
         self._app.notification_ctrl.alert(_("Error running compare"), error_text, kind="error")
+
+    def _on_progress(self, context: str, percent: int) -> None:
+        """Main-thread handler for progress updates from the worker."""
+        if percent < 0:
+            self._app.notification_ctrl.set_label_state(context)
+        else:
+            self._app.notification_ctrl.set_label_state(
+                _("{0}: {1}% complete").format(context, percent)
+            )
+
+    def _on_img_gen_finished(self) -> None:
+        """Release the image-generation worker so it can be garbage-collected."""
+        self._img_gen_worker = None
 
     def _run_compare(self, args: CompareArgs = CompareArgs()) -> None:
         """
@@ -306,20 +321,18 @@ class SearchController:
 
     def display_progress(self, context: str, percent_complete: Optional[int] = None) -> None:
         """
-        Update the sidebar state label during a compare.
+        Thread-safe progress callback invoked by the compare engine.
 
-        Ported from App.display_progress.
+        Emits the worker's progress signal so the update happens on the
+        main thread.  Ported from App.display_progress.
         """
-        if percent_complete is None:
-            self._app.notification_ctrl.set_label_state(
-                Utils._wrap_text_to_fit_length(context, 30)
+        if self._worker is not None:
+            self._worker.signals.progress.emit(
+                context, int(percent_complete) if percent_complete is not None else -1
             )
         else:
-            self._app.notification_ctrl.set_label_state(
-                Utils._wrap_text_to_fit_length(
-                    _("{0}: {1}% complete").format(context, int(percent_complete)), 30
-                )
-            )
+            # Fallback: called outside a worker (shouldn't happen normally)
+            self._app.notification_ctrl.set_label_state(context)
 
     # ==================================================================
     # Search helpers
@@ -516,16 +529,20 @@ class SearchController:
         sd_client = SDRunnerClient()
 
         def _do_run() -> None:
-            try:
-                sd_client.run(_type, image_path, append=modify_call)
-                ImageDetails.previous_image_generation_image = image_path
-                self._app.notification_ctrl.toast(_("Running image gen: ") + str(_type))
-            except Exception as e:
-                self._app.notification_ctrl.handle_error(
-                    _("Error running image generation:") + "\n" + str(e), title=_("Warning")
-                )
+            sd_client.run(_type, image_path, append=modify_call)
+            ImageDetails.previous_image_generation_image = image_path
 
         worker = _CompareWorker(_do_run, [])
+        worker.signals.finished.connect(
+            lambda: self._app.notification_ctrl.toast(_("Running image gen: ") + str(_type))
+        )
+        worker.signals.error.connect(
+            lambda msg: self._app.notification_ctrl.handle_error(
+                _("Error running image generation:") + "\n" + msg, title=_("Warning")
+            )
+        )
+        worker.signals.finished.connect(lambda: self._on_img_gen_finished())
+        self._img_gen_worker = worker
         worker.start()
 
     @require_password(ProtectedActions.RUN_IMAGE_GENERATION)
@@ -551,17 +568,21 @@ class SearchController:
         sd_client = SDRunnerClient()
 
         def _do_run() -> None:
-            try:
-                sd_client.run_on_directory(_type, directory_path)
-                self._app.notification_ctrl.toast(
-                    _("Running image gen on directory: ") + str(_type)
-                )
-            except Exception as e:
-                self._app.notification_ctrl.handle_error(
-                    _("Error running image generation:") + "\n" + str(e), title=_("Warning")
-                )
+            sd_client.run_on_directory(_type, directory_path)
 
         worker = _CompareWorker(_do_run, [])
+        worker.signals.finished.connect(
+            lambda: self._app.notification_ctrl.toast(
+                _("Running image gen on directory: ") + str(_type)
+            )
+        )
+        worker.signals.error.connect(
+            lambda msg: self._app.notification_ctrl.handle_error(
+                _("Error running image generation:") + "\n" + msg, title=_("Warning")
+            )
+        )
+        worker.signals.finished.connect(lambda: self._on_img_gen_finished())
+        self._img_gen_worker = worker
         worker.start()
 
     # ==================================================================

@@ -35,7 +35,6 @@ class FavoritesWindow(SmartDialog):
     Each favourite row has Open and Remove buttons.
     """
 
-    COL_0_WIDTH = 600
     MAX_ROWS = 30
     has_any_favorites: bool = False
 
@@ -90,6 +89,7 @@ class FavoritesWindow(SmartDialog):
             title=_("Favorites"),
             geometry=geometry,
             offset_y=0,
+            respect_title_bar=True,
         )
         self._app_master = app_master
         self._app_actions = app_actions
@@ -183,8 +183,6 @@ class FavoritesWindow(SmartDialog):
         for base_dir, favorites in self._favorites_by_dir.items():
             # Directory header
             header = QLabel(f"{_('Directory')}: {os.path.normpath(base_dir)}")
-            header.setWordWrap(True)
-            header.setMaximumWidth(self.COL_0_WIDTH)
             header.setStyleSheet(
                 f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_COLOR}; "
                 f"font-weight: bold; padding-top: 8px;"
@@ -194,8 +192,6 @@ class FavoritesWindow(SmartDialog):
 
             for fav in favorites:
                 fav_label = QLabel(os.path.basename(fav))
-                fav_label.setWordWrap(True)
-                fav_label.setMaximumWidth(self.COL_0_WIDTH)
                 fav_label.setStyleSheet(
                     f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_COLOR};"
                 )
@@ -231,16 +227,24 @@ class FavoritesWindow(SmartDialog):
     # Actions
     # ------------------------------------------------------------------
     def open_favorite(self, fav: str, base_dir: str) -> None:
-        if hasattr(self._app_actions, "get_window"):
-            window = self._app_actions.get_window(base_dir=base_dir)
-            if window is not None:
-                window.go_to_file(search_text=os.path.basename(fav), exact_match=True)
-                window.media_canvas.focus()
-                self._app_actions.toast(_("Opened favorite: ") + fav)
-                return
-        if hasattr(self._app_actions, "new_window"):
-            self._app_actions.new_window(base_dir=base_dir, image_path=fav)
-            self._app_actions.toast(_("Opened favorite in new window: ") + fav)
+        if not os.path.isfile(fav):
+            self._app_actions.warn(
+                _("File not found: ") + os.path.basename(fav)
+            )
+            return
+
+        from ui.image.image_details_qt import ImageDetails
+
+        try:
+            ImageDetails.open_temp_image_canvas(
+                master=self._app_master,
+                image_path=fav,
+                app_actions=self._app_actions,
+            )
+        except Exception as e:
+            self._app_actions.warn(
+                _("Error opening image: ") + str(e)
+            )
 
     def remove_favorite(self, fav: str, base_dir: str) -> None:
         favs = app_info_cache.get(base_dir, "favorites", default_val=[])

@@ -12,26 +12,48 @@ class AppStyle:
     DARK_THEME = "dark"
 
     # Dark violet palette (dark theme) — base: #26242f from config
-    BG_COLOR = "#26242f"
-    FG_COLOR = "#e8e6ef"
-    BG_SIDEBAR = "#1e1c26"
-    BG_BUTTON = "#33303d"
-    BG_BUTTON_HOVER = "#3f3c4a"
-    BG_INPUT = "#2d2b37"
-    BORDER_COLOR = "#33303d"
-    PROGRESS_CHUNK = "#5c4f8a"
-    MEDIA_BG = "#1e1c26"
-    
+    _DARK_BG_COLOR = "#26242f"
+    _DARK_FG_COLOR = "#e8e6ef"
+    _DARK_BG_SIDEBAR = "#1e1c26"
+    _DARK_BG_BUTTON = "#33303d"
+    _DARK_BG_BUTTON_HOVER = "#3f3c4a"
+    _DARK_BG_INPUT = "#2d2b37"
+    _DARK_BORDER_COLOR = "#33303d"
+    _DARK_PROGRESS_CHUNK = "#5c4f8a"
+    _DARK_MEDIA_BG = "#1e1c26"
+
     # Light theme palette
-    LIGHT_BG_COLOR = "#f0f4f8"
-    LIGHT_FG_COLOR = "#1a1a2e"
-    LIGHT_BG_SIDEBAR = "#e8ecf0"
-    LIGHT_BG_BUTTON = "#d8dce0"
-    LIGHT_BG_BUTTON_HOVER = "#c8ccd0"
-    LIGHT_BG_INPUT = "#ffffff"
-    LIGHT_BORDER_COLOR = "#c0c4c8"
-    LIGHT_PROGRESS_CHUNK = "#4a90d9"
-    LIGHT_MEDIA_BG = "#e8ecf0"
+    _LIGHT_BG_COLOR = "#f0f4f8"
+    _LIGHT_FG_COLOR = "#1a1a2e"
+    _LIGHT_BG_SIDEBAR = "#e8ecf0"
+    _LIGHT_BG_BUTTON = "#d8dce0"
+    _LIGHT_BG_BUTTON_HOVER = "#c8ccd0"
+    _LIGHT_BG_INPUT = "#ffffff"
+    _LIGHT_BORDER_COLOR = "#c0c4c8"
+    _LIGHT_PROGRESS_CHUNK = "#4a90d9"
+    _LIGHT_MEDIA_BG = "#e8ecf0"
+
+    # Active palette — updated by _apply_palette()
+    BG_COLOR = _DARK_BG_COLOR
+    FG_COLOR = _DARK_FG_COLOR
+    BG_SIDEBAR = _DARK_BG_SIDEBAR
+    BG_BUTTON = _DARK_BG_BUTTON
+    BG_BUTTON_HOVER = _DARK_BG_BUTTON_HOVER
+    BG_INPUT = _DARK_BG_INPUT
+    BORDER_COLOR = _DARK_BORDER_COLOR
+    PROGRESS_CHUNK = _DARK_PROGRESS_CHUNK
+    MEDIA_BG = _DARK_MEDIA_BG
+
+    # Legacy aliases for code that still references LIGHT_* directly
+    LIGHT_BG_COLOR = _LIGHT_BG_COLOR
+    LIGHT_FG_COLOR = _LIGHT_FG_COLOR
+    LIGHT_BG_SIDEBAR = _LIGHT_BG_SIDEBAR
+    LIGHT_BG_BUTTON = _LIGHT_BG_BUTTON
+    LIGHT_BG_BUTTON_HOVER = _LIGHT_BG_BUTTON_HOVER
+    LIGHT_BG_INPUT = _LIGHT_BG_INPUT
+    LIGHT_BORDER_COLOR = _LIGHT_BORDER_COLOR
+    LIGHT_PROGRESS_CHUNK = _LIGHT_PROGRESS_CHUNK
+    LIGHT_MEDIA_BG = _LIGHT_MEDIA_BG
     
     # Title bar specific colors
     CLOSE_HOVER = "#e81123"
@@ -54,6 +76,21 @@ class AppStyle:
             cls.IS_DEFAULT_THEME = False
         else:
             cls.IS_DEFAULT_THEME = not cls.IS_DEFAULT_THEME
+        cls._apply_palette()
+
+    @classmethod
+    def _apply_palette(cls):
+        """Swap the active colour attributes to match the current theme."""
+        dark = cls.IS_DEFAULT_THEME
+        cls.BG_COLOR        = cls._DARK_BG_COLOR        if dark else cls._LIGHT_BG_COLOR
+        cls.FG_COLOR        = cls._DARK_FG_COLOR        if dark else cls._LIGHT_FG_COLOR
+        cls.BG_SIDEBAR      = cls._DARK_BG_SIDEBAR      if dark else cls._LIGHT_BG_SIDEBAR
+        cls.BG_BUTTON       = cls._DARK_BG_BUTTON       if dark else cls._LIGHT_BG_BUTTON
+        cls.BG_BUTTON_HOVER = cls._DARK_BG_BUTTON_HOVER if dark else cls._LIGHT_BG_BUTTON_HOVER
+        cls.BG_INPUT        = cls._DARK_BG_INPUT        if dark else cls._LIGHT_BG_INPUT
+        cls.BORDER_COLOR    = cls._DARK_BORDER_COLOR    if dark else cls._LIGHT_BORDER_COLOR
+        cls.PROGRESS_CHUNK  = cls._DARK_PROGRESS_CHUNK  if dark else cls._LIGHT_PROGRESS_CHUNK
+        cls.MEDIA_BG        = cls._DARK_MEDIA_BG        if dark else cls._LIGHT_MEDIA_BG
 
     @classmethod
     def set_corner_radius(cls, radius: int):
@@ -75,30 +112,30 @@ class AppStyle:
         """Get color dictionary for the specified theme."""
         if is_dark is None:
             is_dark = cls.IS_DEFAULT_THEME
-        
+
         if is_dark:
             return {
-                'bg': cls.BG_COLOR,
-                'fg': cls.FG_COLOR,
-                'sidebar': cls.BG_SIDEBAR,
-                'button': cls.BG_BUTTON,
-                'hover': cls.BG_BUTTON_HOVER,
-                'input': cls.BG_INPUT,
-                'border': cls.BORDER_COLOR,
-                'progress': cls.PROGRESS_CHUNK,
-                'media': cls.MEDIA_BG,
+                'bg': cls._DARK_BG_COLOR,
+                'fg': cls._DARK_FG_COLOR,
+                'sidebar': cls._DARK_BG_SIDEBAR,
+                'button': cls._DARK_BG_BUTTON,
+                'hover': cls._DARK_BG_BUTTON_HOVER,
+                'input': cls._DARK_BG_INPUT,
+                'border': cls._DARK_BORDER_COLOR,
+                'progress': cls._DARK_PROGRESS_CHUNK,
+                'media': cls._DARK_MEDIA_BG,
             }
         else:
             return {
-                'bg': cls.LIGHT_BG_COLOR,
-                'fg': cls.LIGHT_FG_COLOR,
-                'sidebar': cls.LIGHT_BG_SIDEBAR,
-                'button': cls.LIGHT_BG_BUTTON,
-                'hover': cls.LIGHT_BG_BUTTON_HOVER,
-                'input': cls.LIGHT_BG_INPUT,
-                'border': cls.LIGHT_BORDER_COLOR,
-                'progress': cls.LIGHT_PROGRESS_CHUNK,
-                'media': cls.LIGHT_MEDIA_BG,
+                'bg': cls._LIGHT_BG_COLOR,
+                'fg': cls._LIGHT_FG_COLOR,
+                'sidebar': cls._LIGHT_BG_SIDEBAR,
+                'button': cls._LIGHT_BG_BUTTON,
+                'hover': cls._LIGHT_BG_BUTTON_HOVER,
+                'input': cls._LIGHT_BG_INPUT,
+                'border': cls._LIGHT_BORDER_COLOR,
+                'progress': cls._LIGHT_PROGRESS_CHUNK,
+                'media': cls._LIGHT_MEDIA_BG,
             }
 
     @staticmethod

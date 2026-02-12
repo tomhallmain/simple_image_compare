@@ -70,17 +70,8 @@ class RecentDirectoryWindow(DirectoryPickerDialog):
     @staticmethod
     def get_geometry(is_gui: bool = True) -> str:
         if is_gui:
-            width = 600
-            n = len(RecentDirectories.directories)
-            height = max(300, min(n * 22 + 20, RecentDirectoryWindow.MAX_HEIGHT))
-            if height >= RecentDirectoryWindow.MAX_HEIGHT:
-                if n < RecentDirectoryWindow.N_DIRECTORIES_CUTOFF * 2:
-                    width *= 2
-                else:
-                    width *= 3
-        else:
-            width, height = 300, 100
-        return f"{width}x{height}"
+            return "800x800"
+        return "300x100"
 
     # ------------------------------------------------------------------
     # Construction

@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 # Module-level constants
 BUFFER_DISTANCE_FROM_SCREEN_BOTTOM = 20  # Buffer from bottom of screen
+TITLE_BAR_HEIGHT = 40  # Assumed height for OS title bar / taskbar clearance
 
 
 class MultiDisplayManager:
@@ -126,7 +127,8 @@ class MultiDisplayManager:
     def position_window_on_same_display(self, parent_window, new_window, 
                                       offset_x=50, offset_y=50, 
                                       center=False, center_relative_to=None,
-                                      geometry=None):
+                                      geometry=None,
+                                      respect_title_bar=False):
         """
         Position a new window on the same display as the parent window.
         
@@ -139,6 +141,8 @@ class MultiDisplayManager:
             center_relative_to: When center=True, center relative to this window if provided;
                 otherwise center on the display. Use None for display-centered.
             geometry: Custom geometry string (e.g., "400x300"). If None, uses window's natural size
+            respect_title_bar: If True (default: False), enforce a minimum Y offset of
+                TITLE_BAR_HEIGHT from the screen top so the title bar is always visible
             
         Returns:
             QRect: The geometry rectangle that was applied
@@ -194,17 +198,16 @@ class MultiDisplayManager:
                 screen_y = screen_geometry.y()
                 screen_height = screen_geometry.height()
                 
+                min_y = screen_y + (TITLE_BAR_HEIGHT if respect_title_bar else 0)
+
                 if new_y + height > screen_y + screen_height - BUFFER_DISTANCE_FROM_SCREEN_BOTTOM:
                     # Wrap to top; keep same horizontal offset so window aligns with others
-                    new_y = screen_y + 50  # Start near top of screen
+                    new_y = min_y
                     new_x = parent_x + offset_x
                     logger.debug(f"Window would go off-screen, wrapping to top")
                 
-                # For multi-display setups, we need to allow coordinates outside primary screen
-                # Only apply minimal bounds checking to prevent windows from being completely off-screen
-                # Don't clamp to screen bounds as that breaks multi-display positioning
-                new_x = new_x  # Keep the calculated position
-                new_y = max(screen_y, new_y)  # Only prevent going above screen (title bar should be visible)
+                # Ensure the window's title bar is always visible.
+                new_y = max(min_y, new_y)
                 
                 final_rect = QRect(new_x, new_y, width, height)
             
@@ -619,6 +622,7 @@ class SmartDialog(QDialog):
         offset_y=50,
         center=False,
         auto_position=True,
+        respect_title_bar=False,
         **kwargs,
     ):
         super().__init__(parent, **kwargs)
@@ -644,6 +648,8 @@ class SmartDialog(QDialog):
                 parts = pos_part.split("+", 1)
                 x = int(parts[0])
                 y = int(parts[1]) if len(parts) > 1 else 0
+                if respect_title_bar:
+                    y = max(y, TITLE_BAR_HEIGHT)
                 self.move(x, y)
                 self.resize(width, height)
             except (ValueError, AttributeError):
@@ -660,6 +666,7 @@ class SmartDialog(QDialog):
                     center=center,
                     center_relative_to=position_parent,
                     geometry=geometry,
+                    respect_title_bar=respect_title_bar,
                 )
             except Exception as e:
                 logger.warning(f"Failed to position SmartDialog on same display: {e}")

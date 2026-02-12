@@ -54,7 +54,7 @@ class CompareSettingsWindow(SmartDialog):
     # Factory
     # ------------------------------------------------------------------
     @classmethod
-    def show(cls, parent: QWidget, compare_manager: CompareManager) -> None:
+    def open(cls, parent: QWidget, compare_manager: CompareManager) -> None:
         """Show or focus the settings window for *compare_manager*."""
         if compare_manager in cls._open_windows:
             win = cls._open_windows[compare_manager]

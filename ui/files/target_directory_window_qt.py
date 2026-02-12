@@ -54,7 +54,7 @@ class TargetDirectoryWindow(DirectoryPickerDialog):
 
     @staticmethod
     def get_geometry() -> str:
-        return _OrigTargetDirWindow.get_geometry()
+        return "800x800"
 
     # ------------------------------------------------------------------
     # Construction

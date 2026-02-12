@@ -171,12 +171,24 @@ def require_password(
     """
     def decorator(func):
         def wrapper(self, *args, **kwargs):
-            # Get the master window from self if it exists
-            master = getattr(self, 'master', None)
+            # Resolve the parent window for the password dialog.
+            # Different classes store it under different names:
+            #   - Tkinter App / dialogs:  self.master
+            #   - Qt controllers:         self._app  (the AppWindow)
+            #   - Qt dialogs:             self._parent
+            #   - Class-level fallback:   cls.top_level
+            #   - If self IS a QWidget:   self
+            master = (
+                getattr(self, 'master', None)
+                or getattr(self, '_app', None)
+                or getattr(self, '_parent', None)
+                or getattr(self.__class__, 'top_level', None)
+            )
             if not master:
-                # Try to get it from the class if it's a static method
-                master = getattr(self.__class__, 'top_level', None)
-            
+                # self might be the window itself (e.g. AppWindow / QMainWindow)
+                if 'QWidget' in [c.__name__ for c in type(self).__mro__]:
+                    master = self
+
             if not master:
                 print("No master window found - failed to require password")
                 # If we can't find a master window, proceed without password check

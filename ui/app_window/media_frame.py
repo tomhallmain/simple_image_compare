@@ -170,7 +170,12 @@ class MediaFrame(QFrame):
         return QImage()
 
     def _show_image_in_view(self, path):
-        """Load image from path, scale to fit view, display in QGraphicsView."""
+        """Load image from path, display at full resolution in QGraphicsView.
+
+        The view's ``SmoothPixmapTransform`` render hint handles the
+        down-scaling to screen size in a single pass, avoiding the
+        quality loss of a double-scale (pre-scale then fitInView).
+        """
         if not path or path == "." or not os.path.exists(path):
             return
         qimg = self._load_image_to_qimage(path)
@@ -180,17 +185,7 @@ class MediaFrame(QFrame):
         self.imwidth = qimg.width()
         self.imheight = qimg.height()
 
-        view_size = self._graphics_view.viewport().size()
-        cw, ch = view_size.width(), view_size.height()
-        fit_w, fit_h = scale_dims(
-            (self.imwidth, self.imheight), (cw, ch), maximize=self.fill_canvas
-        )
-        scaled = qimg.scaled(
-            fit_w, fit_h,
-            Qt.AspectRatioMode.KeepAspectRatio,
-            Qt.TransformationMode.SmoothTransformation,
-        )
-        pix = QPixmap.fromImage(scaled)
+        pix = QPixmap.fromImage(qimg)
         self._current_pixmap = pix
         self._pixmap_item.setPixmap(pix)
         self._scene.setSceneRect(QRectF(pix.rect()))
@@ -208,18 +203,18 @@ class MediaFrame(QFrame):
 
     def show_image(self, path):
         """Show image or video at path. Dispatches to show_video when appropriate."""
-        if _VLC_AVAILABLE and self.vlc_media_player and getattr(config, "show_videos_in_main_window", False):
-            if path and self._is_video_path(path):
-                self.show_video(path)
-                return
         if isinstance(self._video_ui, VideoUI):
             self.video_stop()
         self.path = path or "."
         if not path or path == "." or path.strip() == "" or not os.path.exists(path):
             self.clear()
             return
-        if self._is_video_path(path) and getattr(config, "show_videos_in_main_window", False):
-            self.show_video(path)
+        # Video dispatch: use VLC if available, otherwise show placeholder
+        if self._is_video_path(path):
+            if _VLC_AVAILABLE and self.vlc_media_player:
+                self.show_video(path)
+            else:
+                self._show_placeholder(_("Video: ") + os.path.basename(path))
             return
         self._video_ui = None
         self.imscale = 1.0
@@ -303,6 +298,11 @@ class MediaFrame(QFrame):
         self._graphics_view.show()
         self._placeholder_label.setText(_("Album art"))
         self._placeholder_label.show()
+
+    def _show_placeholder(self, text: str) -> None:
+        """Clear the view and show a text placeholder (e.g. for unsupported video)."""
+        self.clear()
+        self._placeholder_label.setText(text)
 
     def release_media(self):
         if isinstance(self._video_ui, VideoUI):
