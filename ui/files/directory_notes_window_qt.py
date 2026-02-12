@@ -331,11 +331,13 @@ class DirectoryNotesWindow(SmartDialog):
         if not path:
             return
         try:
-            recursive = QMessageBox.question(
+            from lib.qt_alert import qt_alert
+            recursive = qt_alert(
                 self,
                 _("Import Options"),
                 _("Search recursively in subdirectories for matching filenames?"),
-            ) == QMessageBox.Yes
+                kind="askyesno",
+            )
 
             added, not_found_count, not_found = DirectoryNotes.import_from_text_file(
                 self._base_dir, path, recursive=recursive,

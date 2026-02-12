@@ -398,59 +398,55 @@ class PasswordAdminWindow(SmartWindow):
     @require_password(ProtectedActions.ACCESS_ADMIN)
     def reset_to_defaults(self):
         """Reset all settings to their default values."""
-        result = QMessageBox.question(
+        from lib.qt_alert import qt_alert
+        if not qt_alert(
             self,
             _("Reset to Defaults"),
-            _(
-                "Are you sure you want to reset all password protection settings to their default values?"
-            ),
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-            QMessageBox.StandardButton.No,
+            _("Are you sure you want to reset all password protection settings to their default values?"),
+            kind="askyesno",
+        ):
+            return
+
+        self.config.reset_to_defaults()
+
+        for action, cb in self.action_checkboxes.items():
+            cb.setChecked(self.config.protected_actions.get(action, False))
+
+        self.session_timeout_check.setChecked(self.config.session_timeout_enabled)
+        self.timeout_entry.setText(str(self.config.session_timeout_minutes))
+        self.show_advice_check.setChecked(
+            self.config.is_security_advice_enabled()
         )
 
-        if result == QMessageBox.StandardButton.Yes:
-            self.config.reset_to_defaults()
+        self.clear_sessions()
 
-            for action, cb in self.action_checkboxes.items():
-                cb.setChecked(self.config.protected_actions.get(action, False))
-
-            self.session_timeout_check.setChecked(self.config.session_timeout_enabled)
-            self.timeout_entry.setText(str(self.config.session_timeout_minutes))
-            self.show_advice_check.setChecked(
-                self.config.is_security_advice_enabled()
-            )
-
-            self.clear_sessions()
-
-            self._show_toast_or_messagebox(_("Settings reset to defaults."))
+        self._show_toast_or_messagebox(_("Settings reset to defaults."))
 
     def set_to_current(self):
         """Restore settings to their current saved state."""
-        result = QMessageBox.question(
+        from lib.qt_alert import qt_alert
+        if not qt_alert(
             self,
             _("Set to Current"),
-            _(
-                "Are you sure you want to restore all settings to their current saved state? This will discard any unsaved changes."
-            ),
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-            QMessageBox.StandardButton.No,
+            _("Are you sure you want to restore all settings to their current saved state? This will discard any unsaved changes."),
+            kind="askyesno",
+        ):
+            return
+
+        self.config._load_settings()
+
+        for action, cb in self.action_checkboxes.items():
+            cb.setChecked(self.config.protected_actions.get(action, False))
+
+        self.session_timeout_check.setChecked(self.config.session_timeout_enabled)
+        self.timeout_entry.setText(str(self.config.session_timeout_minutes))
+        self.show_advice_check.setChecked(
+            self.config.is_security_advice_enabled()
         )
 
-        if result == QMessageBox.StandardButton.Yes:
-            self.config._load_settings()
-
-            for action, cb in self.action_checkboxes.items():
-                cb.setChecked(self.config.protected_actions.get(action, False))
-
-            self.session_timeout_check.setChecked(self.config.session_timeout_enabled)
-            self.timeout_entry.setText(str(self.config.session_timeout_minutes))
-            self.show_advice_check.setChecked(
-                self.config.is_security_advice_enabled()
-            )
-
-            self._show_toast_or_messagebox(
-                _("Settings restored to current saved state.")
-            )
+        self._show_toast_or_messagebox(
+            _("Settings restored to current saved state.")
+        )
 
     @require_password(ProtectedActions.ACCESS_ADMIN)
     def set_password(self):
@@ -495,25 +491,23 @@ class PasswordAdminWindow(SmartWindow):
     @require_password(ProtectedActions.ACCESS_ADMIN)
     def remove_password(self):
         """Remove the current password."""
-        result = QMessageBox.question(
+        from lib.qt_alert import qt_alert
+        if not qt_alert(
             self,
             _("Remove Password"),
-            _(
-                "Are you sure you want to remove password protection? This will disable all password requirements."
-            ),
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-            QMessageBox.StandardButton.No,
-        )
+            _("Are you sure you want to remove password protection? This will disable all password requirements."),
+            kind="askyesno",
+        ):
+            return
 
-        if result == QMessageBox.StandardButton.Yes:
-            if PasswordManager.clear_password():
-                self.clear_sessions()
-                self._show_toast_or_messagebox(_("Password removed successfully."))
-                self.refresh_ui()
-            else:
-                self._show_toast_or_messagebox(
-                    _("Failed to remove password."), error=True
-                )
+        if PasswordManager.clear_password():
+            self.clear_sessions()
+            self._show_toast_or_messagebox(_("Password removed successfully."))
+            self.refresh_ui()
+        else:
+            self._show_toast_or_messagebox(
+                _("Failed to remove password."), error=True
+            )
 
     def refresh_ui(self):
         """Refresh the UI to reflect current state."""

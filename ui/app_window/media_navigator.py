@@ -214,7 +214,7 @@ class MediaNavigator:
 
         Ported from App.go_to_file.
         """
-        from image.image_details import ImageDetails
+        from ui.image.image_details_qt import ImageDetails
         from ui.app_window.window_manager import WindowManager
 
         original_search_text = search_text

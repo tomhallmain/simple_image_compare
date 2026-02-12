@@ -87,7 +87,6 @@ class RecentDirectoryWindow(DirectoryPickerDialog):
     # ------------------------------------------------------------------
     def __init__(
         self,
-        master: QWidget,
         app_master: QWidget,
         is_gui: bool,
         app_actions: AppActions,
@@ -118,7 +117,7 @@ class RecentDirectoryWindow(DirectoryPickerDialog):
             RecentDirectories.directories.insert(0, d)
 
         super().__init__(
-            parent=master,
+            parent=app_master,
             title=_("Set Image Comparison Directory"),
             geometry=self.get_geometry(is_gui=is_gui),
             position_parent=app_master,

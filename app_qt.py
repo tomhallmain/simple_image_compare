@@ -69,12 +69,22 @@ def main():
         # Password verified or not required -- create the main window
         from ui.app_window.app_window import AppWindow
 
-        app_window = AppWindow()
-        app_window.show()
+        try:
+            app_window = AppWindow()
+            app_window.show()
 
-        # Bring window to front and give it focus
-        app_window.raise_()
-        app_window.activateWindow()
+            # Bring window to front and give it focus
+            app_window.raise_()
+            app_window.activateWindow()
+        except Exception as e:
+            logger.critical(f"Failed to create main window: {e}", exc_info=True)
+            from PySide6.QtWidgets import QMessageBox
+            QMessageBox.critical(
+                None, "Startup Error",
+                f"Failed to create main window:\n\n{e}"
+            )
+            cleanup_lock()
+            os._exit(1)
 
     # ------------------------------------------------------------------
     # Check if startup password is required

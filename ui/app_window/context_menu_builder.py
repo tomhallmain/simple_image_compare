@@ -83,7 +83,7 @@ class ContextMenuBuilder:
         # Favorites
         # ------------------------------------------------------------------
         try:
-            from files.favorites_window import FavoritesWindow
+            from ui.files.favorites_window_qt import FavoritesWindow
             in_favorites = image_path in FavoritesWindow.get_favorites(base_dir)
             fav_command = (
                 FavoritesWindow.remove_favorite if in_favorites else FavoritesWindow.add_favorite

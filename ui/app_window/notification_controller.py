@@ -134,7 +134,7 @@ class NotificationController:
             time_in_seconds = config.title_notify_persist_seconds
 
         notification_manager.set_current_title(
-            self._app._get_title_from_base_dir(), window_id=self._app.window_id
+            self._app.get_title_from_base_dir(), window_id=self._app.window_id
         )
         notification_manager.add_notification(
             message, base_message, time_in_seconds, action_type, is_manual,
@@ -147,7 +147,7 @@ class NotificationController:
         QTimer.singleShot(
             time_in_seconds * 1000,
             lambda: self._app.setWindowTitle(
-                base_message or self._app._get_title_from_base_dir()
+                base_message or self._app.get_title_from_base_dir()
             ),
         )
 

@@ -117,7 +117,9 @@ class ClassifierAction:
             try:
                 if notify_callback is not None:
                     notify_callback(_("Loading image classifier <{0}> ...").format(self.image_classifier_name))
+                logger.info(f"[ensure_classifier] Loading {self.image_classifier_name} on main thread ...")
                 self.set_image_classifier(self.image_classifier_name)
+                logger.info(f"[ensure_classifier] {self.image_classifier_name} loaded successfully")
             except Exception as e:
                 import traceback
                 logger.error(traceback.format_exc())

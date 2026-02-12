@@ -54,11 +54,11 @@ class CacheController:
             from ui.files.marked_file_mover_qt import MarkedFiles
             from files.recent_directory_window import RecentDirectories
             from ui.files.file_actions_window_qt import FileActionsWindow
-            from image.image_details import ImageDetails
-            from compare.classifier_management_window import ClassifierManagementWindow
-            from files.favorites_window import FavoritesWindow
+            from ui.image.image_details_qt import ImageDetails
+            from ui.compare.classifier_management_window_qt import ClassifierManagementWindow
+            from ui.files.favorites_window_qt import FavoritesWindow
             from ui.files.go_to_file_qt import GoToFile
-            from files.target_directory_window import TargetDirectoryWindow
+            from ui.files.target_directory_window_qt import TargetDirectoryWindow
 
             MarkedFiles.load_target_dirs()
             RecentDirectories.load_recent_directories()
@@ -89,11 +89,11 @@ class CacheController:
         from ui.files.marked_file_mover_qt import MarkedFiles
         from files.recent_directory_window import RecentDirectories
         from ui.files.file_actions_window_qt import FileActionsWindow
-        from image.image_details import ImageDetails
-        from compare.classifier_management_window import ClassifierManagementWindow
-        from files.favorites_window import FavoritesWindow
+        from ui.image.image_details_qt import ImageDetails
+        from ui.compare.classifier_management_window_qt import ClassifierManagementWindow
+        from ui.files.favorites_window_qt import FavoritesWindow
         from ui.files.go_to_file_qt import GoToFile
-        from files.target_directory_window import TargetDirectoryWindow
+        from ui.files.target_directory_window_qt import TargetDirectoryWindow
         from ui.app_window.window_manager import WindowManager
 
         base_dir = self._app.get_base_dir()

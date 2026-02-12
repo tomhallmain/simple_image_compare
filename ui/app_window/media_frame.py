@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, QRectF, QSize
 from PySide6.QtGui import QImage, QPixmap, QImageReader, QPainter
 
-from ui_qt.app_style import AppStyle
+from ui.app_style import AppStyle
 from utils.config import config
 from utils.translations import I18N
 

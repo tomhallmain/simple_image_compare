@@ -1,26 +1,26 @@
 """
 Qt (PySide6) application style for Media Compare.
-Dark blue theme. Used by app_qt and ui_qt widgets.
+Dark violet theme. Used by app_qt and ui widgets.
 Includes title bar styling for frameless windows.
 """
 
 
 class AppStyle:
-    """Application theme and colors for the Qt UI. Dark blue by default."""
-    IS_DEFAULT_THEME = True   # True = dark blue theme
+    """Application theme and colors for the Qt UI. Dark violet by default."""
+    IS_DEFAULT_THEME = True   # True = dark violet theme
     LIGHT_THEME = "light"
     DARK_THEME = "dark"
 
-    # Dark blue palette (dark theme)
-    BG_COLOR = "#0a1628"
-    FG_COLOR = "#e8ecf0"
-    BG_SIDEBAR = "#0d1b2a"
-    BG_BUTTON = "#1b2838"
-    BG_BUTTON_HOVER = "#243447"
-    BG_INPUT = "#162536"
-    BORDER_COLOR = "#1b2838"
-    PROGRESS_CHUNK = "#2d4a6f"
-    MEDIA_BG = "#0d1b2a"
+    # Dark violet palette (dark theme) — base: #26242f from config
+    BG_COLOR = "#26242f"
+    FG_COLOR = "#e8e6ef"
+    BG_SIDEBAR = "#1e1c26"
+    BG_BUTTON = "#33303d"
+    BG_BUTTON_HOVER = "#3f3c4a"
+    BG_INPUT = "#2d2b37"
+    BORDER_COLOR = "#33303d"
+    PROGRESS_CHUNK = "#5c4f8a"
+    MEDIA_BG = "#1e1c26"
     
     # Light theme palette
     LIGHT_BG_COLOR = "#f0f4f8"
@@ -44,7 +44,17 @@ class AppStyle:
     @staticmethod
     def get_theme_name():
         return AppStyle.DARK_THEME if AppStyle.IS_DEFAULT_THEME else AppStyle.LIGHT_THEME
-    
+
+    @classmethod
+    def toggle_theme(cls, to_theme=None):
+        """Toggle between dark and light themes, or set a specific theme."""
+        if to_theme == cls.DARK_THEME:
+            cls.IS_DEFAULT_THEME = True
+        elif to_theme == cls.LIGHT_THEME:
+            cls.IS_DEFAULT_THEME = False
+        else:
+            cls.IS_DEFAULT_THEME = not cls.IS_DEFAULT_THEME
+
     @classmethod
     def set_corner_radius(cls, radius: int):
         """Set the corner radius for rounded window corners."""

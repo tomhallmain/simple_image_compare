@@ -106,8 +106,20 @@ class SearchController:
         self._fb = file_browser
         self._cm = compare_manager
         self._sidebar = sidebar_panel
-        self._debouncer = QtDebouncer(delay_ms=300)
+        self._pending_compare: Optional[Callable] = None
+        self._debouncer = QtDebouncer(
+            parent=app_window,
+            delay_seconds=0.3,
+            callback=self._fire_pending_compare,
+        )
         self._worker: Optional[_CompareWorker] = None
+
+    def _fire_pending_compare(self) -> None:
+        """Callback for the debouncer — invokes whatever compare was last scheduled."""
+        fn = self._pending_compare
+        self._pending_compare = None
+        if fn is not None:
+            fn()
 
     # ==================================================================
     # Search setup
@@ -213,9 +225,10 @@ class SearchController:
 
         Ported from App.run_compare.
         """
-        self._debouncer.debounce(
-            lambda: self._debounced_run_compare(compare_args, find_duplicates)
+        self._pending_compare = lambda: self._debounced_run_compare(
+            compare_args, find_duplicates
         )
+        self._debouncer.schedule()
 
     def _debounced_run_compare(
         self, compare_args: CompareArgs, find_duplicates: bool
@@ -470,7 +483,7 @@ class SearchController:
 
         Ported from App.trigger_image_generation.
         """
-        from image.image_details import ImageDetails
+        from ui.image.image_details_qt import ImageDetails
 
         # In Tkinter, shift state was checked from event; in Qt we don't
         # have the event from QShortcut, so always pass False here.
@@ -491,7 +504,7 @@ class SearchController:
         Ported from App.run_image_generation.
         """
         from extensions.sd_runner_client import SDRunnerClient
-        from image.image_details import ImageDetails
+        from ui.image.image_details_qt import ImageDetails
 
         if image_path is None:
             image_path = self._get_image_path()
@@ -525,7 +538,7 @@ class SearchController:
         Ported from App.run_image_generation_on_directory.
         """
         from extensions.sd_runner_client import SDRunnerClient
-        from image.image_details import ImageDetails
+        from ui.image.image_details_qt import ImageDetails
 
         if image_path is None:
             image_path = self._get_image_path()
@@ -561,7 +574,7 @@ class SearchController:
         Ported from App.find_related_images_in_open_window.
         """
         from ui.files.marked_file_mover_qt import MarkedFiles
-        from image.image_details import ImageDetails
+        from ui.image.image_details_qt import ImageDetails
         from ui.app_window.window_manager import WindowManager
 
         if base_dir is None:

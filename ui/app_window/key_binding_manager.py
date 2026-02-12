@@ -80,7 +80,7 @@ class KeyBindingManager:
         """Register all keyboard shortcuts."""
         app = self._app
         from ui.files.marked_file_mover_qt import MarkedFiles
-        from image.image_details import ImageDetails
+        from ui.image.image_details_qt import ImageDetails
         from ui.app_window.window_manager import WindowManager
         from utils.constants import Mode
 
@@ -218,7 +218,7 @@ class KeyBindingManager:
         self._bind("Ctrl+Tab", WindowManager.cycle_windows, guarded=False)
         self._bind(
             "Shift+Escape",
-            lambda: app.on_closing() if app.is_secondary() else None,
+            lambda: app.close() if app.is_secondary() else None,
             guarded=False,
         )
         self._bind("Ctrl+Q", app.quit, guarded=False)

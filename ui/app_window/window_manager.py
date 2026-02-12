@@ -262,7 +262,7 @@ class WindowManager:
 
         Ported from App.get_other_window_or_self_dir.
         """
-        from files.recent_directory_window import RecentDirectoryWindow
+        from ui.files.recent_directory_window_qt import RecentDirectoryWindow
 
         if prefer_compare_window:
             win = cls.find_window_with_compare()

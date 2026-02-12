@@ -1,0 +1,1104 @@
+"""
+PySide6 port of image/image_details.py -- ImageDetails.
+
+Displays image metadata, file info, prompt extraction, and provides
+actions for rotate/crop/flip/enhance/convert/generation/related images.
+
+Non-UI imports (reuse policy):
+  - FileBrowser        from files.file_browser
+  - FrameCache         from image.frame_cache
+  - image_data_extractor from image.image_data_extractor
+  - ImageOps           from image.image_ops
+  - Cropper            from image.smart_crop
+  - app_info_cache     from utils.app_info_cache
+"""
+
+from __future__ import annotations
+
+import glob
+import os
+import random
+import re
+from datetime import datetime
+from typing import Optional
+
+from PIL import Image
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QGuiApplication, QKeySequence, QShortcut
+from PySide6.QtWidgets import (
+    QComboBox, QGridLayout, QLabel, QLineEdit, QMessageBox,
+    QPushButton, QScrollArea, QVBoxLayout, QWidget,
+)
+
+from files.file_browser import FileBrowser
+from image.frame_cache import FrameCache
+from image.image_data_extractor import image_data_extractor
+from image.image_ops import ImageOps
+from image.smart_crop import Cropper
+from lib.multi_display_qt import SmartDialog
+from ui.app_style import AppStyle
+from ui.image.metadata_viewer_window_qt import MetadataViewerWindow
+from ui.image.temp_image_window_qt import TempImageWindow
+from utils.app_info_cache import app_info_cache
+from utils.config import config
+from utils.constants import ImageGenerationType
+from utils.logging_setup import get_logger
+from utils.translations import I18N
+from utils.utils import Utils, ModifierKey
+
+_ = I18N._
+logger = get_logger("image_details_qt")
+
+
+# ── Utility ───────────────────────────────────────────────────────────
+
+
+def get_readable_file_size(path: str) -> str:
+    size = os.path.getsize(path)
+    if size < 1024:
+        return f"{size} bytes"
+    elif size < 1024 * 1024:
+        return f"{round(size / 1024, 1)} KB"
+    else:
+        return f"{round(size / (1024 * 1024), 1)} MB"
+
+
+# ── ImageDetails ──────────────────────────────────────────────────────
+
+
+class ImageDetails(SmartDialog):
+    """Image details / actions dialog."""
+
+    # -- Class-level state -----------------------------------------
+    temp_media_canvas: Optional[TempImageWindow] = None
+    related_image_saved_node_id: str = "LoadImage"
+    downstream_related_image_index: int = 0
+    downstream_related_images_cache: dict = {}
+    downstream_related_image_browser: FileBrowser = FileBrowser()
+    image_generation_mode = ImageGenerationType.CONTROL_NET
+    previous_image_generation_image: Optional[str] = None
+    metadata_viewer_window: Optional[MetadataViewerWindow] = None
+
+    COL_0_WIDTH = 100
+
+    # -- Static persistence ----------------------------------------
+
+    @staticmethod
+    def load_image_generation_mode() -> None:
+        try:
+            ImageDetails.image_generation_mode = ImageGenerationType.get(
+                app_info_cache.get_meta(
+                    "image_generation_mode", default_val="CONTROL_NET"
+                )
+            )
+        except Exception as e:
+            logger.error(f"Error loading image generation mode: {e}")
+
+    @staticmethod
+    def store_image_generation_mode() -> None:
+        app_info_cache.set_meta(
+            "image_generation_mode",
+            ImageDetails.image_generation_mode.name,
+        )
+
+    # -- Construction ----------------------------------------------
+
+    def __init__(
+        self,
+        parent: QWidget,
+        media_path: str,
+        index_text: str,
+        app_actions,
+        do_refresh: bool = True,
+    ) -> None:
+        super().__init__(
+            parent=parent,
+            position_parent=parent,
+            title=_("Image details"),
+            geometry="700x600",
+        )
+        self._parent_ref = parent
+        self._image_path = FrameCache.get_image_path(media_path)
+        self._prompt_extraction_failed = True
+        self._app_actions = app_actions
+        self._do_refresh = do_refresh
+        self._has_closed = False
+        self._is_image = True
+
+        # -- Determine content type --------------------------------
+        if any(
+            self._image_path.lower().endswith(ext)
+            for ext in config.video_types
+        ):
+            self._is_image = False
+            image_mode = ""
+            image_dims = ""
+            positive = ""
+            negative = ""
+            models: list[str] = []
+            loras: list[str] = []
+            related_image_text = ""
+        else:
+            self._is_image = True
+            image_mode, image_dims = self._get_image_info()
+            (positive, negative, models, loras, prompt_extraction_failed,
+            ) = image_data_extractor.get_image_prompts_and_models(self._image_path)
+            self._prompt_extraction_failed = prompt_extraction_failed
+            related_image_text = self.get_related_image_text()
+
+        mod_time, file_size = self._get_file_info()
+
+        # -- Build UI ----------------------------------------------
+        self._build_ui(
+            image_mode,
+            image_dims,
+            positive,
+            negative,
+            models,
+            loras,
+            mod_time,
+            file_size,
+            index_text,
+            related_image_text,
+        )
+        self._bind_shortcuts()
+        self.focus()
+
+    # -- UI construction -------------------------------------------
+
+    def _build_ui(
+        self,
+        image_mode: str,
+        image_dims: str,
+        positive: str,
+        negative: str,
+        models,
+        loras,
+        mod_time: str,
+        file_size: str,
+        index_text: str,
+        related_image_text: str,
+    ) -> None:
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setStyleSheet(f"background: {AppStyle.BG_COLOR};")
+        content = QWidget()
+        grid = QGridLayout(content)
+        grid.setSpacing(6)
+        scroll.setWidget(content)
+
+        outer = QVBoxLayout()
+        outer.setContentsMargins(0, 0, 0, 0)
+        outer.addWidget(scroll)
+        self.setLayout(outer)
+
+        row = 0
+
+        # -- helpers local to _build_ui ----------------------------
+        def _header(text: str, r: int, c: int = 0) -> QLabel:
+            lbl = QLabel(text)
+            lbl.setWordWrap(True)
+            lbl.setMaximumWidth(ImageDetails.COL_0_WIDTH)
+            lbl.setStyleSheet(
+                f"color: {AppStyle.FG_COLOR};"
+                f"background: {AppStyle.BG_COLOR};"
+            )
+            lbl.setAlignment(
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
+            )
+            grid.addWidget(lbl, r, c)
+            return lbl
+
+        def _value(text: str, r: int, c: int = 1) -> QLabel:
+            lbl = QLabel(text)
+            lbl.setWordWrap(True)
+            lbl.setStyleSheet(
+                f"color: {AppStyle.FG_COLOR};"
+                f"background: {AppStyle.BG_COLOR};"
+            )
+            lbl.setAlignment(
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
+            )
+            lbl.setTextInteractionFlags(
+                Qt.TextInteractionFlag.TextSelectableByMouse
+            )
+            grid.addWidget(lbl, r, c)
+            return lbl
+
+        def _btn(text: str, callback, r: int, c: int = 0) -> QPushButton:
+            b = QPushButton(text)
+            b.clicked.connect(callback)
+            grid.addWidget(b, r, c)
+            return b
+
+        # -- Info labels -------------------------------------------
+        _header(_("Image Path"), row)
+        self._lbl_path = _value(self._image_path, row)
+        row += 1
+
+        _header(_("File Index"), row)
+        self._lbl_index = _value(index_text, row)
+        row += 1
+
+        _header(_("Color Mode"), row)
+        self._lbl_mode = _value(image_mode, row)
+        row += 1
+
+        _header(_("Dimensions"), row)
+        self._lbl_dims = _value(image_dims, row)
+        row += 1
+
+        _header(_("Size"), row)
+        self._lbl_size = _value(file_size, row)
+        row += 1
+
+        _header(_("Modification Time"), row)
+        self._lbl_mtime = _value(mod_time, row)
+        row += 1
+
+        _header(_("Positive"), row)
+        self._lbl_positive = _value(positive, row)
+        row += 1
+
+        neg_text = (
+            negative
+            if config.show_negative_prompt and negative != ""
+            else _("(negative prompt not shown by config setting)")
+        )
+        _header(_("Negative"), row)
+        self._lbl_negative = _value(neg_text, row)
+        row += 1
+
+        _header(_("Models"), row)
+        self._lbl_models = _value(", ".join(models), row)
+        row += 1
+
+        _header(_("LoRAs"), row)
+        self._lbl_loras = _value(", ".join(loras), row)
+        row += 1
+
+        # -- Action buttons (two columns) --------------------------
+        _btn(_("Copy Prompt"), self.copy_prompt, row, 0)
+        _btn(_("Copy Prompt No BREAK"), self.copy_prompt_no_break, row, 1)
+        row += 1
+
+        _btn(_("Rotate Image Left"), lambda: self.rotate_image(right=False), row, 0)
+        _btn(_("Rotate Image Right"), lambda: self.rotate_image(right=True), row, 1)
+        row += 1
+
+        _btn(_("Crop Image (Smart Detect)"), lambda: self.crop_image(), row, 0)
+        _btn(_("Enhance Image"), lambda: self.enhance_image(), row, 1)
+        row += 1
+
+        _btn(_("Random Crop"), lambda: self.random_crop(), row, 0)
+        _btn(_("Randomly Modify"), lambda: self.random_modification(), row, 1)
+        row += 1
+
+        _btn(_("Flip Image Horizontally"), lambda: self.flip_image(), row, 0)
+        _btn(_("Flip Image Vertically"), lambda: self.flip_image(top_bottom=True), row, 1)
+        row += 1
+
+        _btn(_("Copy Without EXIF"), lambda: self.copy_without_exif(), row, 0)
+        _btn(_("Convert to JPG"), lambda: self.convert_to_jpg(), row, 1)
+        row += 1
+
+        _btn(_("Show Metadata"), lambda: self.show_metadata(), row, 0)
+        row += 1
+
+        _btn(_("Open Related Image"), self.open_related_image, row, 0)
+        self._lbl_related_image = _value(related_image_text, row)
+        row += 1
+
+        # -- Image generation section ------------------------------
+        _header(_("Image Generation"), row)
+        self._gen_mode_combo = QComboBox()
+        for member in ImageGenerationType.members():
+            self._gen_mode_combo.addItem(member)
+        self._gen_mode_combo.setCurrentText(ImageDetails.image_generation_mode.name)
+        self._gen_mode_combo.currentTextChanged.connect(self._on_gen_mode_changed)
+        grid.addWidget(self._gen_mode_combo, row, 1)
+        row += 1
+
+        _btn(_("Run Image Generation"), self.run_image_generation, row, 0)
+        _value(_("Press Shift+I on a main app window to run this"), row)
+        row += 1
+
+        _btn(_("Redo Prompt"), self.run_redo_prompt, row, 0)
+        row += 1
+
+        # -- Tags section (conditional) ----------------------------
+        if config.image_tagging_enabled and self._is_image:
+            _header(_("Tags"), row)
+            tags = image_data_extractor.extract_tags(self._image_path)
+            self._tags = tags if tags else []
+            tags_str = ", ".join(self._tags) if self._tags else ""
+            self._tags_entry = QLineEdit(tags_str)
+            grid.addWidget(self._tags_entry, row, 1)
+            row += 1
+
+            _btn(_("Update Tags"), self.update_tags, row, 0)
+            row += 1
+
+        # Stretch at bottom
+        grid.setRowStretch(row, 1)
+
+    # -- Shortcuts -------------------------------------------------
+
+    def _bind_shortcuts(self) -> None:
+        def sc(key: str, fn) -> None:
+            s = QShortcut(QKeySequence(key), self)
+            s.activated.connect(fn)
+
+        sc("Escape", self.close_windows)
+
+        # Shift+key -- action only
+        sc("Shift+C", lambda: self.crop_image())
+        sc("Shift+L", lambda: self.rotate_image(right=False))
+        sc("Shift+P", lambda: self.rotate_image(right=True))
+        sc("Shift+R", self.open_related_image)
+        sc("Shift+E", lambda: self.copy_prompt_no_break())
+        sc("Shift+B", lambda: self.enhance_image())
+        sc("Shift+A", lambda: self.random_crop())
+        sc("Shift+Q", lambda: self.random_modification())
+        sc("Shift+H", lambda: self.flip_image())
+        sc("Shift+V", lambda: self.flip_image(top_bottom=True))
+        sc("Shift+X", lambda: self.copy_without_exif())
+        sc("Shift+J", lambda: self.convert_to_jpg())
+        sc("Shift+K", lambda: self.convert_to_jpg())
+        sc("Shift+D", lambda: self.show_metadata())
+        sc("Shift+I", self.run_image_generation)
+        sc("Shift+Y", self.run_redo_prompt)
+
+        # Ctrl+key -- action + mark (opens marks window without GUI)
+        sc("Ctrl+C", lambda: self._crop_image_and_mark())
+        sc("Ctrl+L", lambda: self._rotate_image_and_mark(right=False))
+        sc("Ctrl+R", lambda: self._rotate_image_and_mark(right=True))
+        sc("Ctrl+E", lambda: self._enhance_image_and_mark())
+        sc("Ctrl+A", lambda: self._random_crop_and_mark())
+        sc("Ctrl+Q", lambda: self._random_modification_and_mark())
+        sc("Ctrl+H", lambda: self._flip_image_and_mark())
+        sc("Ctrl+V", lambda: self._flip_image_and_mark(top_bottom=True))
+        sc("Ctrl+X", lambda: self._copy_without_exif_and_mark())
+        sc("Ctrl+J", lambda: self._convert_to_jpg_and_mark())
+        sc("Ctrl+K", lambda: self._convert_to_jpg_and_mark())
+
+    # -- Focus -----------------------------------------------------
+
+    def focus(self) -> None:
+        QTimer.singleShot(
+            1, lambda: (self.raise_(), self.activateWindow())
+        )
+
+    # -- Info helpers ----------------------------------------------
+
+    def _get_image_info(self) -> tuple[str, str]:
+        image = Image.open(self._image_path)
+        image_mode = str(image.mode)
+        image_dims = f"{image.size[0]}x{image.size[1]}"
+        image.close()
+        return image_mode, image_dims
+
+    def _get_file_info(self) -> tuple[str, str]:
+        mod_time = datetime.fromtimestamp(
+            os.path.getmtime(self._image_path)
+        ).strftime("%Y-%m-%d %H:%M")
+        file_size = get_readable_file_size(self._image_path)
+        return mod_time, file_size
+
+    def update_image_details(self, image_path: str, index_text: str) -> None:
+        """Refresh all displayed fields for a new image."""
+        self._image_path = image_path
+        self._is_image = not any(
+            self._image_path.lower().endswith(ext)
+            for ext in config.video_types
+        )
+        if self._is_image:
+            image_mode, image_dims = self._get_image_info()
+            (
+                positive,
+                negative,
+                models,
+                loras,
+                prompt_extraction_failed,
+            ) = image_data_extractor.get_image_prompts_and_models(
+                self._image_path
+            )
+            self._prompt_extraction_failed = prompt_extraction_failed
+            related_image_text = self.get_related_image_text()
+        else:
+            image_mode = ""
+            image_dims = ""
+            positive = ""
+            negative = ""
+            models = []
+            loras = []
+            related_image_text = ""
+
+        mod_time, file_size = self._get_file_info()
+        self._lbl_path.setText(image_path)
+        self._lbl_index.setText(index_text)
+        self._lbl_mode.setText(image_mode)
+        self._lbl_dims.setText(image_dims)
+        self._lbl_mtime.setText(mod_time)
+        self._lbl_size.setText(file_size)
+        self._lbl_positive.setText(positive)
+        if config.show_negative_prompt:
+            self._lbl_negative.setText(negative)
+        self._lbl_models.setText(", ".join(models))
+        self._lbl_loras.setText(", ".join(loras))
+        self._lbl_related_image.setText(related_image_text)
+
+        # Refresh open metadata viewer
+        if ImageDetails.metadata_viewer_window is not None:
+            if ImageDetails.metadata_viewer_window.has_closed:
+                ImageDetails.metadata_viewer_window = None
+            else:
+                self.show_metadata()
+
+    # ── Clipboard operations ──────────────────────────────────────
+
+    def copy_prompt(self) -> None:
+        positive = self._lbl_positive.text()
+        ImageDetails._copy_prompt_static(
+            positive, self._app_actions, self._prompt_extraction_failed
+        )
+
+    def copy_prompt_no_break(self) -> None:
+        positive = self._lbl_positive.text()
+        ImageDetails._copy_prompt_static(
+            positive,
+            self._app_actions,
+            self._prompt_extraction_failed,
+            remove_emphases=True,
+        )
+
+    @staticmethod
+    def copy_prompt_no_break_static(
+        image_path: str, master, app_actions
+    ) -> None:
+        positive, _neg, _mod, _lor, prompt_extraction_failed = (
+            image_data_extractor.get_image_prompts_and_models(image_path)
+        )
+        ImageDetails._copy_prompt_static(
+            positive,
+            app_actions,
+            prompt_extraction_failed,
+            remove_emphases=True,
+        )
+
+    @staticmethod
+    def _copy_prompt_static(
+        positive,
+        app_actions,
+        prompt_extraction_failed,
+        remove_emphases=False,
+    ) -> None:
+        if (
+            prompt_extraction_failed
+            or positive is None
+            or positive.strip() == ""
+        ):
+            app_actions.warn(_("No prompt found"))
+        else:
+            if remove_emphases:
+                if "BREAK" in positive:
+                    positive = positive[positive.index("BREAK") + 6 :]
+                positive = ImageDetails.remove_emphases(positive)
+            QGuiApplication.clipboard().setText(positive)
+            app_actions.toast(_("Copied prompt without BREAK"))
+
+    @staticmethod
+    def remove_emphases(prompt: str) -> str:
+        prompt = prompt.replace("(", "").replace(")", "")
+        prompt = prompt.replace("[", "").replace("]", "")
+        if ":" in prompt:
+            prompt = re.sub(r":[0-9]*\.[0-9]+", "", prompt)
+        if "<" in prompt:
+            prompt = re.sub(r"<[^>]*>", "", prompt)
+        return prompt
+
+    @staticmethod
+    def source_random_prompt(file_browser, master, app_actions) -> None:
+        """
+        Find a random file from the file browser that contains a prompt,
+        copy the prompt to clipboard, and notify the user.
+        """
+        if not file_browser.has_files():
+            app_actions.warn(_("No files found in current directory"))
+            return
+
+        files = list(file_browser.get_files())
+        if not files:
+            app_actions.warn(_("No files available"))
+            return
+
+        random.shuffle(files)
+        max_attempts = min(500, len(files))
+        for i in range(max_attempts):
+            file_path = files[i]
+            try:
+                (
+                    positive, _neg, _mod, _lor, prompt_extraction_failed,
+                ) = image_data_extractor.get_image_prompts_and_models(
+                    file_path
+                )
+                if (
+                    not prompt_extraction_failed
+                    and positive is not None
+                    and positive.strip() != ""
+                ):
+                    prompt_text = positive
+                    if "BREAK" in prompt_text:
+                        prompt_text = prompt_text[prompt_text.index("BREAK") + 6:]
+                    prompt_text = ImageDetails.remove_emphases(prompt_text)
+                    QGuiApplication.clipboard().setText(prompt_text)
+                    filename = os.path.basename(file_path)
+                    app_actions.success(
+                        _("Copied prompt from {0}").format(filename)
+                    )
+                    return
+            except Exception as e:
+                logger.debug(f"Error extracting prompt from {file_path}: {e}")
+                continue
+
+        app_actions.warn(_("No files with prompts found in current directory"))
+
+    # ── Unified image-action handler ──────────────────────────────
+
+    def _handle_action_result(
+        self,
+        new_filepath: str,
+        success_msg: str,
+        *,
+        mark: bool = False,
+        close: bool = True,
+    ) -> None:
+        """Common post-processing for image manipulation actions.
+
+        Parameters
+        ----------
+        new_filepath : str
+            Path returned by the image operation.
+        success_msg : str
+            Toast text shown to the user.
+        mark : bool
+            If *True*, open the marks window (no GUI) instead of the
+            temp image canvas.
+        close : bool
+            If *True*, close this ImageDetails window before refreshing.
+        """
+        if close:
+            self.close_windows()
+        self._app_actions.refresh()
+        self._app_actions.success(success_msg)
+        if new_filepath and os.path.exists(new_filepath):
+            if mark:
+                self._app_actions.open_move_marks_window(
+                    filepath=new_filepath, open_gui=False
+                )
+            else:
+                ImageDetails.open_temp_image_canvas(
+                    master=self._parent_ref,
+                    image_path=new_filepath,
+                    app_actions=self._app_actions,
+                )
+
+    # ── Image manipulation actions ────────────────────────────────
+
+    def rotate_image(self, right: bool = False) -> None:
+        new_filepath = ImageOps.rotate_image(self._image_path, right)
+        msg = (
+            _("Rotated image right") if right else _("Rotated image left")
+        )
+        self._handle_action_result(new_filepath, msg)
+
+    def crop_image(self, event=None) -> None:
+        saved_files = Cropper.smart_crop_multi_detect(self._image_path, "")
+        if len(saved_files) > 0:
+            self.close_windows()
+            self._app_actions.refresh()
+            self._app_actions.success(_("Cropped image"))
+            ImageDetails.open_temp_image_canvas(
+                master=self._parent_ref,
+                image_path=saved_files[0],
+                app_actions=self._app_actions,
+            )
+        else:
+            self._app_actions.toast(_("No crops found"))
+
+    def enhance_image(self) -> None:
+        new_filepath = ImageOps.enhance_image(self._image_path)
+        self._handle_action_result(new_filepath, _("Enhanced image"))
+
+    def random_crop(self) -> None:
+        new_filepath = ImageOps.random_crop_and_upscale(self._image_path)
+        self._handle_action_result(new_filepath, _("Randomly cropped image"))
+
+    def random_modification(self) -> None:
+        ImageDetails.randomly_modify_image(
+            self._image_path, self._app_actions, self._parent_ref
+        )
+
+    @staticmethod
+    def randomly_modify_image(
+        image_path: str, app_actions, master=None
+    ) -> None:
+        new_filepath = ImageOps.randomly_modify_image(image_path)
+        app_actions.refresh()
+        if os.path.exists(new_filepath):
+            app_actions.success(_("Randomly modified image"))
+            if master is not None:
+                ImageDetails.open_temp_image_canvas(
+                    master=master,
+                    image_path=new_filepath,
+                    app_actions=app_actions,
+                )
+        else:
+            app_actions.toast(_("No new image created"))
+
+    def flip_image(self, top_bottom: bool = False) -> None:
+        if top_bottom:
+            from lib.qt_alert import qt_alert
+            if not qt_alert(
+                self,
+                _("Confirm Vertical Flip"),
+                _(
+                    "Are you sure you want to flip this image vertically? "
+                    "This is an uncommon operation and may have been "
+                    "clicked by accident."
+                ),
+                kind="askokcancel",
+            ):
+                return
+        new_filepath = ImageOps.flip_image(
+            self._image_path, top_bottom=top_bottom
+        )
+        self._handle_action_result(new_filepath, _("Flipped image"))
+
+    def copy_without_exif(self) -> None:
+        try:
+            new_filepath = image_data_extractor.copy_without_exif(self._image_path)
+            self._handle_action_result(
+                new_filepath,
+                _("Copied image without EXIF data"),
+                close=False,
+            )
+        except Exception as e:
+            logger.error(f"Error copying image without EXIF: {e}")
+            self._app_actions.warn(_("Error copying image without EXIF"))
+
+    def convert_to_jpg(self) -> None:
+        try:
+            new_filepath = ImageOps.convert_to_jpg(self._image_path)
+            self._handle_action_result(new_filepath, _("Converted image to JPG"))
+        except Exception as e:
+            logger.error(f"Error converting image to JPG: {e}")
+            self._app_actions.warn(_("Error converting image to JPG"))
+
+    # ── Mark-and-action variants ──────────────────────────────────
+
+    def _rotate_image_and_mark(self, right: bool = False) -> None:
+        new_filepath = ImageOps.rotate_image(self._image_path, right)
+        msg = _("Rotated image right") if right else _("Rotated image left")
+        self._handle_action_result(new_filepath, msg, mark=True)
+
+    def _crop_image_and_mark(self, event=None) -> None:
+        saved_files = Cropper.smart_crop_multi_detect(self._image_path, "")
+        if len(saved_files) > 0:
+            self.close_windows()
+            self._app_actions.refresh()
+            self._app_actions.toast(_("Cropped image"))
+            self._app_actions.open_move_marks_window(
+                filepath=saved_files[0], open_gui=False
+            )
+        else:
+            self._app_actions.toast(_("No crops found"))
+
+    def _enhance_image_and_mark(self) -> None:
+        """Enhance and mark.  Uses toast (not success) per original."""
+        new_filepath = ImageOps.enhance_image(self._image_path)
+        self.close_windows()
+        self._app_actions.refresh()
+        self._app_actions.toast(_("Enhanced image"))
+        if new_filepath and os.path.exists(new_filepath):
+            self._app_actions.open_move_marks_window(
+                filepath=new_filepath, open_gui=False
+            )
+
+    def _random_crop_and_mark(self) -> None:
+        new_filepath = ImageOps.random_crop_and_upscale(self._image_path)
+        self._handle_action_result(
+            new_filepath, _("Randomly cropped image"), mark=True
+        )
+
+    def _random_modification_and_mark(self) -> None:
+        new_filepath = ImageOps.randomly_modify_image(self._image_path)
+        self.close_windows()
+        self._app_actions.refresh()
+        if new_filepath and os.path.exists(new_filepath):
+            self._app_actions.toast(_("Randomly modified image"))
+            self._app_actions.open_move_marks_window(
+                filepath=new_filepath, open_gui=False
+            )
+        else:
+            self._app_actions.toast(_("No new image created"))
+
+    def _flip_image_and_mark(self, top_bottom: bool = False) -> None:
+        new_filepath = ImageOps.flip_image(self._image_path, top_bottom=top_bottom)
+        self._handle_action_result(new_filepath, _("Flipped image"), mark=True)
+
+    def _copy_without_exif_and_mark(self) -> None:
+        try:
+            new_filepath = image_data_extractor.copy_without_exif(self._image_path)
+            self._handle_action_result(
+                new_filepath,
+                _("Copied image without EXIF data"),
+                mark=True,
+                close=False,
+            )
+        except Exception as e:
+            logger.error(f"Error copying image without EXIF: {e}")
+            self._app_actions.warn(_("Error copying image without EXIF"))
+
+    def _convert_to_jpg_and_mark(self) -> None:
+        try:
+            new_filepath = ImageOps.convert_to_jpg(self._image_path)
+            self._handle_action_result(new_filepath, _("Converted image to JPG"), mark=True)
+        except Exception as e:
+            logger.error(f"Error converting image to JPG: {e}")
+            self._app_actions.warn(_("Error converting image to JPG"))
+
+    # ── Metadata viewer ──────────────────────────────────────────
+
+    def show_metadata(self, event=None) -> None:
+        metadata_text = image_data_extractor.get_raw_metadata_text(self._image_path)
+        if metadata_text is None:
+            self._app_actions.toast(_("No metadata found"))
+        else:
+            self._show_metadata_window(metadata_text)
+
+    def _show_metadata_window(self, metadata_text: str) -> None:
+        mvw = ImageDetails.metadata_viewer_window
+        if mvw is None or mvw.has_closed:
+            ImageDetails.metadata_viewer_window = MetadataViewerWindow(
+                self, self._app_actions, metadata_text, self._image_path
+            )
+            ImageDetails.metadata_viewer_window.show()
+        else:
+            mvw.update_metadata(metadata_text, self._image_path)
+
+    # ── Related images ───────────────────────────────────────────
+
+    def get_related_image_text(self) -> str:
+        node_id = ImageDetails.related_image_saved_node_id
+        related_image_path, exact_match = (
+            ImageDetails.get_related_image_path(
+                self._image_path, node_id, check_extra_directories=False
+            )
+        )
+        if related_image_path is not None:
+            return (
+                related_image_path if exact_match
+                else related_image_path + _(" (Exact Match Not Found)")
+            )
+        return _("(No related image found)")
+
+    def open_related_image(self, event=None) -> None:
+        ImageDetails.show_related_image(
+            self._parent_ref, None, self._image_path, self._app_actions
+        )
+
+    @staticmethod
+    def get_related_image_path(
+        image_path: str,
+        node_id: str | None = None,
+        check_extra_directories: bool | None = True,
+    ) -> tuple[str | None, bool]:
+        if node_id is None or node_id == "":
+            node_id = ImageDetails.related_image_saved_node_id
+        related_image_path = image_data_extractor.get_related_image_path(
+            image_path, node_id
+        )
+        if related_image_path is None or related_image_path == "":
+            return None, False
+        elif check_extra_directories is None:
+            return related_image_path, False
+        elif not os.path.isfile(related_image_path):
+            if not check_extra_directories:
+                return related_image_path, False
+            logger.info(
+                f"{image_path} - Related image "
+                f"{related_image_path} not found"
+            )
+            related_image_path_found = False
+            if len(config.directories_to_search_for_related_images) > 0:
+                basename = os.path.basename(related_image_path)
+                for directory in (
+                    config.directories_to_search_for_related_images
+                ):
+                    dir_filepaths = glob.glob(
+                        os.path.join(directory, "**/*"), recursive=True
+                    )
+                    for file_path in dir_filepaths:
+                        if file_path == image_path:
+                            continue
+                        if file_path.endswith(basename):
+                            file_basename = os.path.basename(file_path)
+                            if basename == file_basename:
+                                related_image_path = file_path
+                                related_image_path_found = True
+                                break
+                    if related_image_path_found:
+                        break
+            if (
+                not related_image_path_found
+                or not os.path.isfile(related_image_path)
+            ):
+                return related_image_path, False
+            logger.info(
+                f"{image_path} - Possibly related image {related_image_path} found"
+            )
+        return related_image_path, True
+
+    @staticmethod
+    def show_related_image(
+        master=None, node_id=None, image_path="", app_actions=None
+    ) -> None:
+        if master is None or image_path == "":
+            raise Exception("No master or image path given")
+        related_image_path, exact_match = (
+            ImageDetails.get_related_image_path(image_path, node_id)
+        )
+        if related_image_path is None or related_image_path == "":
+            app_actions.toast(_("(No related image found)"))
+            return
+        elif not exact_match:
+            app_actions.toast(_(" (Exact Match Not Found)"))
+            return
+        ImageDetails.open_temp_image_canvas(
+            master=master,
+            image_path=related_image_path,
+            app_actions=app_actions,
+        )
+
+    @staticmethod
+    def open_temp_image_canvas(
+        master=None,
+        image_path=None,
+        app_actions=None,
+        skip_get_window_check=False,
+    ) -> None:
+        if image_path is None:
+            return
+        base_dir = os.path.dirname(image_path)
+        if not skip_get_window_check:
+            if (
+                app_actions.get_window(
+                    base_dir=base_dir,
+                    img_path=image_path,
+                    refocus=True,
+                    disallow_if_compare_state=True,
+                    new_image=True,
+                )
+                is not None
+            ):
+                return
+        if ImageDetails.temp_media_canvas is None:
+            ImageDetails.set_temp_media_canvas(
+                master, image_path, app_actions
+            )
+        try:
+            ImageDetails.temp_media_canvas.create_image(image_path)
+        except Exception:
+            # Re-create the canvas window if the old one was destroyed
+            ImageDetails.set_temp_media_canvas(
+                master, image_path, app_actions
+            )
+            ImageDetails.temp_media_canvas.create_image(image_path)
+
+    @staticmethod
+    def set_temp_media_canvas(
+        master, media_path: str, app_actions
+    ) -> None:
+        with Image.open(media_path) as image:
+            width = min(700, image.size[0])
+            height = int(image.size[1] * width / image.size[0])
+        canvas = TempImageWindow(
+            parent=master,
+            title=media_path,
+            dimensions=f"{width}x{height}",
+            app_actions=app_actions,
+        )
+        canvas.show()
+        ImageDetails.temp_media_canvas = canvas
+
+    # ── Downstream related images ─────────────────────────────────
+
+    @staticmethod
+    def refresh_downstream_related_image_cache(
+        key: str, image_path: str, other_base_dir: str
+    ) -> None:
+        downstream_related_images: list[str] = []
+        image_basename = os.path.basename(image_path)
+        if (
+            ImageDetails.downstream_related_image_browser.directory
+            != other_base_dir
+        ):
+            ImageDetails.downstream_related_image_browser = FileBrowser(
+                directory=other_base_dir
+            )
+        ImageDetails.downstream_related_image_browser._gather_files()
+        for path in (
+            ImageDetails.downstream_related_image_browser.filepaths
+        ):
+            if path == image_path:
+                continue
+            related, _exact = ImageDetails.get_related_image_path(
+                path, check_extra_directories=None
+            )
+            if related is not None:
+                if related == image_path:
+                    downstream_related_images.append(path)
+                else:
+                    file_basename = os.path.basename(related)
+                    if (
+                        len(file_basename) > 10
+                        and image_basename == file_basename
+                    ):
+                        # NOTE: relation criteria is intentionally loose
+                        downstream_related_images.append(path)
+        ImageDetails.downstream_related_images_cache[key] = (
+            downstream_related_images
+        )
+
+    @staticmethod
+    def get_downstream_related_images(
+        image_path: str,
+        other_base_dir: str,
+        app_actions,
+        force_refresh: bool = False,
+    ):
+        key = image_path + "/" + other_base_dir
+        if (force_refresh or key not in ImageDetails.downstream_related_images_cache):
+            ImageDetails.refresh_downstream_related_image_cache(
+                key, image_path, other_base_dir
+            )
+            downstream = ImageDetails.downstream_related_images_cache[key]
+            toast_text = _("{0} downstream image(s) found.").format(len(downstream))
+        else:
+            downstream = ImageDetails.downstream_related_images_cache[key]
+            toast_text = _("{0} (cached) downstream image(s) found.").format(len(downstream))
+            if ImageDetails.downstream_related_image_index >= len(downstream):
+                ImageDetails.refresh_downstream_related_image_cache(
+                    key, image_path, other_base_dir
+                )
+                downstream = ImageDetails.downstream_related_images_cache[key]
+                toast_text = _("{0} downstream image(s) found.").format(len(downstream))
+
+        if len(downstream) == 0:
+            app_actions.toast(
+                _("No downstream related images found in")
+                + f"\n{other_base_dir}"
+            )
+            return None
+        app_actions.toast(toast_text)
+        return downstream
+
+    @staticmethod
+    def next_downstream_related_image(
+        image_path: str, other_base_dir: str, app_actions
+    ) -> str | None:
+        """Find the next image that has been created from the given image."""
+        downstream = ImageDetails.get_downstream_related_images(
+            image_path, other_base_dir, app_actions
+        )
+        if downstream is None:
+            return None
+        if ImageDetails.downstream_related_image_index >= len(downstream):
+            ImageDetails.downstream_related_image_index = 0
+        path = downstream[ImageDetails.downstream_related_image_index]
+        ImageDetails.downstream_related_image_index += 1
+        return path
+
+    # ── Image generation ─────────────────────────────────────────
+
+    def _on_gen_mode_changed(self, text: str) -> None:
+        ImageDetails.image_generation_mode = ImageGenerationType.get(text)
+
+    def set_image_generation_mode(self, event=None) -> None:
+        ImageDetails.image_generation_mode = ImageGenerationType.get(
+            self._gen_mode_combo.currentText()
+        )
+
+    def run_image_generation(self, event=None) -> None:
+        ImageDetails.run_image_generation_static(self._app_actions)
+
+    def run_redo_prompt(self, event=None) -> None:
+        ImageDetails.run_image_generation_static(
+            self._app_actions, _type=ImageGenerationType.REDO_PROMPT
+        )
+
+    @staticmethod
+    def run_image_generation_static(
+        app_actions, _type=None, modify_call=False, event=None
+    ) -> None:
+        if event is not None:
+            if Utils.modifier_key_pressed(event, [ModifierKey.SHIFT]):
+                _type = ImageGenerationType.CANCEL
+            elif Utils.modifier_key_pressed(event, [ModifierKey.ALT]):
+                _type = ImageGenerationType.REVERT_TO_SIMPLE_GEN
+            else:
+                _type = ImageGenerationType.LAST_SETTINGS
+            app_actions.run_image_generation(
+                _type=_type,
+                image_path=ImageDetails.previous_image_generation_image,
+                modify_call=modify_call,
+            )
+        else:
+            if _type is None:
+                _type = ImageDetails.image_generation_mode
+            app_actions.run_image_generation(
+                _type=_type, modify_call=modify_call
+            )
+
+    @staticmethod
+    def get_image_specific_generation_mode():
+        if ImageDetails.image_generation_mode in [
+            ImageGenerationType.REDO_PROMPT,
+            ImageGenerationType.CONTROL_NET,
+            ImageGenerationType.IP_ADAPTER,
+        ]:
+            return ImageDetails.image_generation_mode
+        return ImageGenerationType.CONTROL_NET
+
+    # ── Tags ─────────────────────────────────────────────────────
+
+    def update_tags(self) -> None:
+        logger.info(f"Updating tags for {self._image_path}")
+        tags_str = self._tags_entry.text()
+        if tags_str == "":
+            self._tags = []
+        else:
+            self._tags = [t.strip() for t in tags_str.split(",")]
+        image_data_extractor.set_tags(self._image_path, self._tags)
+        logger.info("Updated tags for " + self._image_path)
+        self._app_actions.success(_("Updated tags for {0}").format(self._image_path))
+
+    # ── Lifecycle ────────────────────────────────────────────────
+
+    @property
+    def has_closed(self) -> bool:
+        return self._has_closed
+
+    @property
+    def do_refresh(self) -> bool:
+        return self._do_refresh
+
+    def close_windows(self, event=None) -> None:
+        self._app_actions.set_image_details_window(None)
+        self._has_closed = True
+        self.close()
+
+    def closeEvent(self, event) -> None:  # noqa: N802
+        self._has_closed = True
+        super().closeEvent(event)

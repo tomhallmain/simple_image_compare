@@ -67,7 +67,7 @@ class CompareManager:
     and CompareWrapper.
     """
     
-    def __init__(self, master, app_actions):
+    def __init__(self, master=None, app_actions=None):
         self._master = master
         self._app_actions = app_actions
         
@@ -116,6 +116,18 @@ class CompareManager:
         # State management (delegated to primary wrapper for single-mode)
         self._is_composite_mode: bool = False
     
+    def set_app_actions(self, master, app_actions):
+        """Set master and app_actions after construction.
+
+        Also back-fills any CompareWrapper instances that were created
+        during __init__ (via set_primary_mode → _ensure_wrapper).
+        """
+        self._master = master
+        self._app_actions = app_actions
+        for wrapper in self._wrappers.values():
+            wrapper._master = master
+            wrapper._app_actions = app_actions
+
     # ========== Mode Management ==========
     
     def _generate_instance_id(self, compare_mode: CompareMode) -> str:

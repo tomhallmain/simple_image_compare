@@ -323,7 +323,7 @@ class FileMarksController:
 
         Ported from App.set_marks_from_downstream_related_images.
         """
-        from image.image_details import ImageDetails
+        from ui.image.image_details_qt import ImageDetails
         from ui.app_window.window_manager import WindowManager
 
         if base_dir is None:

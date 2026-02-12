@@ -135,10 +135,14 @@ class CustomTitleBar(QWidget):
             layout.addWidget(self.icon_label, 0, Qt.AlignVCenter)
             layout.addSpacing(8)
         
-        # Title label
+        # Title label – uses Ignored horizontal policy so long notification
+        # text never forces the window to grow.  stretch=1 lets the label
+        # fill all available space between icon/menus and window buttons.
         self.title_label = QLabel(title)
         self.title_label.setStyleSheet("font-size: 12px;")
-        layout.addWidget(self.title_label, 0, Qt.AlignVCenter)
+        self.title_label.setMinimumWidth(0)
+        self.title_label.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
+        layout.addWidget(self.title_label, 1, Qt.AlignVCenter)
         
         # Container for menu buttons (added after title)
         self._menu_container = QWidget()
@@ -146,9 +150,6 @@ class CustomTitleBar(QWidget):
         self._menu_layout.setContentsMargins(15, 0, 0, 0)
         self._menu_layout.setSpacing(0)
         layout.addWidget(self._menu_container, 0, Qt.AlignVCenter)
-        
-        # Spacer
-        layout.addStretch()
         
         # Window control buttons - aligned to fill height
         self.minimize_btn = TitleBarButton("─", "minimize", self)

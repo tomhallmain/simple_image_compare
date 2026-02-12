@@ -14,14 +14,15 @@ All substantial logic lives in the controller modules:
 import os
 from typing import Optional
 
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import QHBoxLayout, QSplitter, QWidget
+from PySide6.QtCore import Qt, QTimer, Signal
+from PySide6.QtWidgets import QHBoxLayout, QSplitter, QWidget, QVBoxLayout, QFrame
 
 from files.file_browser import FileBrowser
 from compare.compare_manager import CompareManager
 from ui.files.marked_file_mover_qt import MarkedFiles
 from lib.multi_display_qt import SmartMainWindow
 from ui.app_style import AppStyle
+from ui.custom_title_bar import FramelessWindowMixin, WindowResizeHandler
 from ui.app_window.cache_controller import CacheController
 from ui.app_window.context_menu_builder import ContextMenuBuilder
 from ui.app_window.file_marks_controller import FileMarksController
@@ -45,14 +46,23 @@ _ = I18N._
 logger = get_logger("app_window")
 
 
-class AppWindow(SmartMainWindow):
+class AppWindow(FramelessWindowMixin, SmartMainWindow):
     """
     Main application window.
 
     Orchestrates controllers via composition. Each controller receives the
     dependencies it needs at construction time; the AppWindow itself keeps
     only cross-cutting state (mode, fullscreen flag, direction).
+
+    Inherits FramelessWindowMixin for a custom draggable title bar, and
+    SmartMainWindow for automatic geometry persistence.
     """
+
+    # Signal for thread-safe title updates.
+    # notification_manager fires threading.Timer callbacks that call
+    # app_actions.title() from a background thread.  Using a Signal
+    # ensures setWindowTitle always runs on the main / GUI thread.
+    _sig_set_title = Signal(str)
 
     def __init__(
         self,
@@ -63,6 +73,14 @@ class AppWindow(SmartMainWindow):
         window_id: int = 0,
     ):
         super().__init__(restore_geometry=(window_id == 0))
+
+        # Set up frameless window with custom title bar
+        self.setup_frameless_window(
+            title=_(" Simple Image Compare "), corner_radius=10
+        )
+
+        # Thread-safe title update signal → slot
+        self._sig_set_title.connect(self._on_set_title)
 
         self.window_id = window_id
         self.base_title = ""
@@ -91,7 +109,7 @@ class AppWindow(SmartMainWindow):
         self.file_browser = FileBrowser(
             recursive=config.image_browse_recursive, sort_by=config.sort_by
         )
-        self.compare_manager = CompareManager()
+        self.compare_manager = CompareManager(master=self)
         self.file_check_config = FileCheckConfig(self.window_id)
         self.slideshow_config = SlideshowConfig(self.window_id)
         self.store_cache_config = StoreCacheConfig(self.window_id)
@@ -100,18 +118,46 @@ class AppWindow(SmartMainWindow):
         # Window title
         # ------------------------------------------------------------------
         self.setWindowTitle(_(" Simple Image Compare "))
-        self.setStyleSheet(AppStyle.get_stylesheet())
 
         # ------------------------------------------------------------------
-        # Central widget with splitter: sidebar | media frame
+        # Central widget: frameless structure with custom title bar
         # ------------------------------------------------------------------
-        central = QWidget(self)
-        self.setCentralWidget(central)
-        layout = QHBoxLayout(central)
-        layout.setContentsMargins(0, 0, 0, 0)
+        grip_size = getattr(self, '_frameless_grip_size', 8)
 
-        self.splitter = QSplitter(Qt.Orientation.Horizontal, central)
-        layout.addWidget(self.splitter)
+        # Outer widget for translucent background (needed for rounded corners)
+        outer_widget = QWidget()
+        outer_widget.setObjectName("transparentOuter")
+        outer_widget.setAttribute(Qt.WA_TranslucentBackground)
+        self.setCentralWidget(outer_widget)
+        outer_layout = QVBoxLayout(outer_widget)
+        outer_layout.setContentsMargins(0, 0, 0, 0)
+        outer_layout.setSpacing(0)
+
+        # Main container frame with rounded corners
+        self._main_frame = QFrame()
+        self._main_frame.setObjectName("mainFrame")
+        outer_layout.addWidget(self._main_frame)
+
+        root_layout = QVBoxLayout(self._main_frame)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        root_layout.setSpacing(0)
+
+        # Custom title bar at the top
+        title_bar = self.get_title_bar()
+        if title_bar:
+            root_layout.addWidget(title_bar)
+
+        # Content area below title bar
+        content_widget = QWidget()
+        content_widget.setObjectName("contentArea")
+        content_layout = QHBoxLayout(content_widget)
+        content_layout.setContentsMargins(0, 0, 0, 0)
+        content_layout.setSpacing(0)
+        root_layout.addWidget(content_widget)
+
+        # Splitter inside content: sidebar | media frame
+        self.splitter = QSplitter(Qt.Orientation.Horizontal)
+        content_layout.addWidget(self.splitter)
 
         # Sidebar panel (left)
         self.sidebar_panel = SidebarPanel(parent=self, app_window=self)
@@ -127,6 +173,12 @@ class AppWindow(SmartMainWindow):
 
         if not sidebar_visible:
             self.sidebar_panel.setVisible(False)
+
+        # Install resize handler for frameless edge resizing
+        self._resize_handler = WindowResizeHandler(self, grip_size)
+
+        # Apply combined stylesheet (base + frameless)
+        self._apply_theme()
 
         # ------------------------------------------------------------------
         # Controllers
@@ -174,6 +226,10 @@ class AppWindow(SmartMainWindow):
         # Assemble AppActions dict
         # ------------------------------------------------------------------
         self.app_actions = self._build_app_actions()
+
+        # CompareManager was created early (without app_actions) so
+        # controllers could receive it.  Now wire in the real values.
+        self.compare_manager.set_app_actions(self, self.app_actions)
 
         # ------------------------------------------------------------------
         # Key bindings & context menu (need app_actions / controllers ready)
@@ -235,6 +291,13 @@ class AppWindow(SmartMainWindow):
         from utils.app_info_cache_qt import app_info_cache
         for _dir in app_info_cache.get_meta("secondary_base_dirs", default_val=[]):
             WindowManager.add_secondary_window(_dir)
+        # Re-focus the primary after all secondaries have been opened
+        QTimer.singleShot(50, self._refocus_primary)
+
+    def _refocus_primary(self) -> None:
+        """Raise and focus the primary window."""
+        self.raise_()
+        self.activateWindow()
 
     # ------------------------------------------------------------------
     # AppActions assembly
@@ -242,8 +305,9 @@ class AppWindow(SmartMainWindow):
     def _build_app_actions(self) -> AppActions:
         """Wire the AppActions dict, mapping action names to controller methods."""
         actions = {
-            # Window title
-            "title": self.setWindowTitle,
+            # Window title -- thread-safe via Signal so that
+            # notification_manager's Timer thread never touches Qt directly
+            "title": self._sig_set_title.emit,
             # Window management (static)
             "new_window": WindowManager.add_secondary_window,
             "get_window": WindowManager.get_window,
@@ -287,6 +351,37 @@ class AppWindow(SmartMainWindow):
             "_add_buttons_for_mode": self.sidebar_panel.add_buttons_for_mode,
         }
         return AppActions(actions=actions, master=self)
+
+    # ------------------------------------------------------------------
+    # Title bar / theme helpers
+    # ------------------------------------------------------------------
+    def setWindowTitle(self, title: str) -> None:
+        """Override to keep the custom title bar text in sync."""
+        super().setWindowTitle(title)
+        title_bar = self.get_title_bar()
+        if title_bar:
+            title_bar.set_title(title)
+
+    def _on_set_title(self, title: str) -> None:
+        """Slot for :pyattr:`_sig_set_title` -- always runs on the GUI thread.
+
+        Calls processEvents() so that the title-bar repaint happens
+        immediately, even when the main thread is about to block on a
+        long-running operation (e.g. TensorFlow model loading).
+        """
+        self.setWindowTitle(title)
+        from PySide6.QtWidgets import QApplication
+        QApplication.processEvents()
+
+    def _apply_theme(self) -> None:
+        """Apply the combined base + frameless stylesheet and title bar theme."""
+        is_dark = AppStyle.IS_DEFAULT_THEME
+        stylesheet = AppStyle.get_stylesheet() + AppStyle.get_frameless_stylesheet(is_dark)
+        self.setStyleSheet(stylesheet)
+        self.media_frame.set_background_color(
+            AppStyle.MEDIA_BG if is_dark else AppStyle.LIGHT_MEDIA_BG
+        )
+        self.apply_frameless_theme(is_dark)
 
     # ------------------------------------------------------------------
     # Properties / simple accessors
@@ -561,9 +656,11 @@ class AppWindow(SmartMainWindow):
         self.fullscreen = not self.fullscreen
         if self.fullscreen:
             self.sidebar_panel.setVisible(False)
+            self.set_title_bar_visible(False)
             self.showFullScreen()
         else:
             self.sidebar_panel.setVisible(True)
+            self.set_title_bar_visible(True)
             self.showNormal()
 
     def end_fullscreen(self, event=None) -> bool:
@@ -577,8 +674,7 @@ class AppWindow(SmartMainWindow):
     def toggle_theme(self, to_theme: Optional[str] = None, do_toast: bool = True) -> None:
         """Switch between dark and light themes."""
         AppStyle.toggle_theme(to_theme)
-        self.setStyleSheet(AppStyle.get_stylesheet())
-        self.media_frame.set_background_color(AppStyle.BG_COLOR)
+        self._apply_theme()
         if do_toast:
             self.notification_ctrl.toast(
                 _("Theme switched to {0}.").format(AppStyle.get_theme_name())
@@ -587,9 +683,17 @@ class AppWindow(SmartMainWindow):
     # ------------------------------------------------------------------
     # Lifecycle
     # ------------------------------------------------------------------
+    _closing = False  # guard against recursive closeEvent
+
     def on_closing(self) -> None:
-        """Clean up and close the window."""
-        # Stop periodic timers first
+        """
+        Clean up and close this window.
+
+        Mirrors App.on_closing: secondary windows clean up their own
+        resources; the primary window stores all caches, then destroys
+        the application (Qt equivalent of ``self.master.destroy()``).
+        """
+        # Stop periodic timers
         self.file_ops_ctrl.stop_file_check_timer()
         self.cache_ctrl.stop_periodic_store()
 
@@ -607,34 +711,41 @@ class AppWindow(SmartMainWindow):
             self.file_check_config.end_filecheck()
             self.slideshow_config.end_slideshows()
         else:
+            # Primary window: clean up global resources and store all caches
             from utils.notification_manager import notification_manager
             notification_manager.cleanup_threads()
             self.store_cache_config.end_store_cache()
-            for win in WindowManager.get_open_windows():
+            for win in list(WindowManager.get_open_windows()):
                 if win is not self:
                     win.cache_ctrl.store_info_cache()
 
-        self.close()
-
     def closeEvent(self, event):
         """Qt close event handler."""
+        if self._closing:
+            event.accept()
+            return
+        self._closing = True
         self.on_closing()
         event.accept()
 
     def quit(self, event=None) -> None:
-        """Prompt the user and quit the application."""
-        from PySide6.QtWidgets import QMessageBox
+        """
+        Prompt the user and quit the entire application.
 
-        result = QMessageBox.question(
-            self,
-            _("Confirm Quit"),
-            _("Would you like to quit the application?"),
-            QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
-            QMessageBox.StandardButton.Cancel,
-        )
-        if result == QMessageBox.StandardButton.Ok:
+        Mirrors App.quit: finds the primary window, calls on_closing
+        on it (which stores all caches), then terminates the app.
+        In Tkinter this was ``self.master.destroy()``; in Qt the
+        equivalent is ``QApplication.quit()``.
+        """
+        from PySide6.QtWidgets import QApplication
+        from lib.qt_alert import qt_alert
+
+        if qt_alert(self, _("Confirm Quit"), _("Would you like to quit the application?"), kind="askokcancel"):
             logger.warning("Exiting application")
             primary = WindowManager.get_primary()
             if primary:
                 primary.on_closing()
+            # Equivalent of self.master.destroy() — kills all windows and
+            # exits the event loop, matching the original Tkinter behaviour.
+            QApplication.instance().quit()
 

@@ -5,11 +5,7 @@ A thin class where each method creates the appropriate dialog/window.
 Extracted from: all open_*_window methods, get_media_details,
 get_help_and_config.
 
-Note: many of these still create the *tkinter* versions of windows.
-They will be updated incrementally as each window is ported to PySide6.
-Until then they use the original tkinter window classes, which is
-acceptable because the backend logic does not depend on the host
-framework -- only the UI wrapper does.
+All window imports now point to the PySide6 (_qt) versions.
 """
 
 from __future__ import annotations
@@ -61,7 +57,7 @@ class WindowLauncher:
                 except (RuntimeError, AttributeError):
                     self._go_to_file_window = None
 
-            from files.go_to_file import GoToFile
+            from ui.files.go_to_file_qt import GoToFile
             self._go_to_file_window = GoToFile(self._app, self._app.app_actions)
         except Exception as e:
             self._handle_error(e, "Go To File Window Error")
@@ -77,7 +73,7 @@ class WindowLauncher:
                 except (RuntimeError, AttributeError):
                     self._go_to_file_window = None
 
-            from files.go_to_file import GoToFile
+            from ui.files.go_to_file_qt import GoToFile
             self._go_to_file_window = GoToFile(self._app, self._app.app_actions)
             self._go_to_file_window.update_with_current_media(focus=True)
         except Exception as e:
@@ -95,20 +91,9 @@ class WindowLauncher:
     ) -> None:
         """Open the recent directories window."""
         try:
-            from files.recent_directory_window import RecentDirectoryWindow
-            from lib.multi_display_qt import SmartWindow
+            from ui.files.recent_directory_window_qt import RecentDirectoryWindow
 
-            geometry = RecentDirectoryWindow.get_geometry(is_gui=open_gui)
-            window = SmartWindow(
-                persistent_parent=self._app,
-                title=_("Set Image Comparison Directory"),
-                geometry=geometry,
-            )
-            if not open_gui:
-                window.setWindowOpacity(0.3)
-
-            RecentDirectoryWindow(
-                window,
+            window = RecentDirectoryWindow(
                 self._app,
                 open_gui,
                 self._app.app_actions,
@@ -123,8 +108,9 @@ class WindowLauncher:
     def open_favorites_window(self, event=None) -> None:
         """Open the favorites directory window."""
         try:
-            from files.favorites_window import FavoritesWindow
-            FavoritesWindow(self._app, self._app.app_actions)
+            from ui.files.favorites_window_qt import FavoritesWindow
+            window = FavoritesWindow(self._app, self._app.app_actions)
+            window.show()
         except Exception as e:
             self._handle_error(e, "Favorites Window Error")
 
@@ -146,10 +132,11 @@ class WindowLauncher:
                 except (RuntimeError, AttributeError):
                     self._directory_notes_window = None
 
-            from files.directory_notes_window import DirectoryNotesWindow
+            from ui.files.directory_notes_window_qt import DirectoryNotesWindow
             self._directory_notes_window = DirectoryNotesWindow(
                 self._app, self._app.app_actions, base_dir
             )
+            self._directory_notes_window.show()
         except Exception as e:
             self._handle_error(e, "Directory Notes Window Error")
 
@@ -159,7 +146,7 @@ class WindowLauncher:
     def open_compare_settings_window(self, event=None) -> None:
         """Open the compare settings window."""
         try:
-            from compare.compare_settings_window import CompareSettingsWindow
+            from ui.compare.compare_settings_window_qt import CompareSettingsWindow
             CompareSettingsWindow.show(parent=self._app, compare_manager=self._app.compare_manager)
         except Exception as e:
             self._handle_error(e, "Compare Settings Window Error")
@@ -167,7 +154,7 @@ class WindowLauncher:
     @require_password(ProtectedActions.CONFIGURE_MEDIA_TYPES)
     def open_type_configuration_window(self, event=None) -> None:
         """Open the file type configuration window."""
-        from files.type_configuration_window import TypeConfigurationWindow
+        from ui.files.type_configuration_window_qt import TypeConfigurationWindow
         TypeConfigurationWindow.show(master=self._app, app_actions=self._app.app_actions)
 
     @require_password(ProtectedActions.EDIT_PREVALIDATIONS)
@@ -177,11 +164,11 @@ class WindowLauncher:
         if not _config.enable_prevalidations:
             return
         try:
-            from compare.classifier_management_window import ClassifierManagementWindow
-            mgmt = ClassifierManagementWindow(self._app, self._app.app_actions)
-            # Select prevalidations tab (index 1)
-            if hasattr(mgmt, "notebook"):
-                mgmt.notebook.setCurrentIndex(1)
+            from ui.compare.classifier_management_window_qt import ClassifierManagementWindow
+            ClassifierManagementWindow.show_window(self._app, self._app.app_actions)
+            mgmt = ClassifierManagementWindow._instance
+            if mgmt and hasattr(mgmt, '_tabs'):
+                mgmt._tabs.setCurrentIndex(1)
         except Exception as e:
             self._handle_error(e, "Prevalidations Window Error")
 
@@ -189,10 +176,11 @@ class WindowLauncher:
     def open_classifier_actions_window(self, event=None) -> None:
         """Open the classifier management window (classifier actions tab)."""
         try:
-            from compare.classifier_management_window import ClassifierManagementWindow
-            mgmt = ClassifierManagementWindow(self._app, self._app.app_actions)
-            if hasattr(mgmt, "notebook"):
-                mgmt.notebook.setCurrentIndex(0)
+            from ui.compare.classifier_management_window_qt import ClassifierManagementWindow
+            ClassifierManagementWindow.show_window(self._app, self._app.app_actions)
+            mgmt = ClassifierManagementWindow._instance
+            if mgmt and hasattr(mgmt, '_tabs'):
+                mgmt._tabs.setCurrentIndex(0)
         except Exception as e:
             self._handle_error(e, "Classifier Actions Window Error")
 
@@ -203,7 +191,7 @@ class WindowLauncher:
         """Open the file actions window."""
         try:
             from ui.files.file_actions_window_qt import FileActionsWindow
-            from image.image_details import ImageDetails
+            from ui.image.image_details_qt import ImageDetails
             from ui.files.marked_file_mover_qt import MarkedFiles
             window = FileActionsWindow(
                 self._app,
@@ -242,7 +230,7 @@ class WindowLauncher:
         Ported from App.get_media_details. Manages the singleton
         ImageDetails window reference stored on AppActions.
         """
-        from image.image_details import ImageDetails
+        from ui.image.image_details_qt import ImageDetails
 
         app_actions = self._app.app_actions
 
@@ -290,6 +278,7 @@ class WindowLauncher:
                     self._app, media_path, index_text,
                     app_actions, do_refresh=not preset_image_path,
                 )
+                details_win.show()
                 app_actions.set_image_details_window(details_win)
             except Exception as e:
                 self._handle_error(e, "Image Details Error")
@@ -297,7 +286,7 @@ class WindowLauncher:
     @require_password(ProtectedActions.VIEW_MEDIA_DETAILS)
     def copy_prompt(self, event=None) -> None:
         """Copy the AI prompt from the currently viewed image."""
-        from image.image_details import ImageDetails
+        from ui.image.image_details_qt import ImageDetails
         ImageDetails.copy_prompt_no_break_static(
             self._app.media_navigator.get_active_media_filepath(),
             self._app,
@@ -307,7 +296,7 @@ class WindowLauncher:
     @require_password(ProtectedActions.VIEW_MEDIA_DETAILS)
     def show_related_image(self, event=None) -> None:
         """Show a related image to the current one."""
-        from image.image_details import ImageDetails
+        from ui.image.image_details_qt import ImageDetails
         ImageDetails.show_related_image(
             master=self._app,
             image_path=self._app.img_path,
@@ -348,7 +337,7 @@ class WindowLauncher:
     @require_password(ProtectedActions.RUN_PREVALIDATIONS)
     def run_prevalidations_for_base_dir(self, event=None) -> None:
         """Run all prevalidations on every file in the current directory."""
-        from compare.prevalidations_tab import PrevalidationsTab
+        from ui.compare.prevalidations_tab_qt import PrevalidationsTab
         from ui.files.marked_file_mover_qt import MarkedFiles
         from PySide6.QtWidgets import QMessageBox
 
@@ -366,6 +355,7 @@ class WindowLauncher:
 
         logger.warning("Running prevalidations for " + self._app.get_base_dir())
         PrevalidationsTab.clear_prevalidated_cache()
+        from PySide6.QtWidgets import QApplication
         for image_path in fb.get_files():
             try:
                 PrevalidationsTab.prevalidate(
@@ -377,6 +367,8 @@ class WindowLauncher:
                 )
             except Exception as e:
                 logger.error(e)
+            # Keep the UI responsive during long-running prevalidation
+            QApplication.processEvents()
 
     @require_password(ProtectedActions.RUN_PREVALIDATIONS)
     def toggle_prevalidations(self, event=None) -> None:
