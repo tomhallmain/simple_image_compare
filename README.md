@@ -20,7 +20,7 @@ Each model offers different tradeoffs between accuracy, speed, and resource usag
 
 Clone this repository and ensure Python 3 and the required packages are installed from requirements.txt. Optionally, run `pip install -r requirements-optional.txt` for platform-specific extras (e.g. keychain integration, EXIF tools). Note: some dependencies in requirements.txt (e.g. **torch**) may need to be installed from the provider’s site (e.g. [pytorch.org](https://pytorch.org)) for GPU support specific to your system.
 
-Run `app.py` to start the UI. For more details, see [USAGE.md](https://www.github.com/tomhallmain/simple_image_compare/blob/master/USAGE.md).
+Run `app.py` to start the Tkinter UI, or `app_qt.py` for the PySide6 (Qt) UI. Both share the same backend and configuration. For more details, see [USAGE.md](https://www.github.com/tomhallmain/simple_image_compare/blob/master/USAGE.md).
 
 ---
 

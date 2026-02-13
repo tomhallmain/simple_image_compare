@@ -2,7 +2,7 @@
 
 Clone this repository and ensure Python 3 and the required packages are installed from requirements.txt.
 
-Run `python app.py` to start the UI.
+Run `python app.py` to start the Tkinter UI, or `python app_qt.py` to start the PySide6 (Qt) UI. Both versions share the same backend and configuration; the Qt version is under active development.
 
 You can also run comparison from the command line. The compare logic lives in the `compare` package. From the project root:
 
