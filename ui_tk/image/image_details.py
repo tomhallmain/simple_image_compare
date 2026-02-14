@@ -12,10 +12,10 @@ from files.file_browser import FileBrowser
 from image.frame_cache import FrameCache
 from image.image_data_extractor import image_data_extractor
 from image.image_ops import ImageOps
-from image.metadata_viewer_window import MetadataViewerWindow
 from image.smart_crop import Cropper
-from image.temp_image_canvas import TempImageCanvas
 from lib.multi_display import SmartToplevel
+from ui_tk.image.metadata_viewer_window import MetadataViewerWindow
+from ui_tk.image.temp_image_canvas import TempImageCanvas
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config

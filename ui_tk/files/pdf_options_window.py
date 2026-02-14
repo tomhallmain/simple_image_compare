@@ -1,8 +1,8 @@
 from tkinter import Frame, Label, BooleanVar, W, StringVar
 from tkinter.ttk import Checkbutton, Button, Entry
 
-from utils.app_style import AppStyle
 from lib.multi_display import SmartToplevel
+from utils.app_style import AppStyle
 from utils.translations import I18N
 
 _ = I18N._

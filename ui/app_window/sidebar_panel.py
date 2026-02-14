@@ -29,12 +29,10 @@ from PySide6.QtWidgets import (
 from lib.aware_entry_qt import AwareEntry
 from lib.scroll_frame_qt import ScrollFrame
 from lib.tooltip_qt import create_tooltip
-from ui.app_style import AppStyle
 from utils.config import config
 from utils.constants import Mode, SortBy
 from utils.logging_setup import get_logger
 from utils.translations import I18N
-from utils.utils import Utils
 
 if TYPE_CHECKING:
     from ui.app_window.app_window import AppWindow

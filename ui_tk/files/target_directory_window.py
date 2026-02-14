@@ -1,14 +1,12 @@
 import os
 
-from tkinter import Frame, Label, filedialog, LEFT, W
+from tkinter import Frame, Label, filedialog, W
 from tkinter.ttk import Button
 
 from lib.multi_display import SmartToplevel
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
-from utils.config import config
 from utils.translations import I18N
-from utils.utils import ModifierKey, Utils
 from utils.logging_setup import get_logger
 
 logger = get_logger("target_directory_window")

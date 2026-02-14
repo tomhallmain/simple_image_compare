@@ -7,15 +7,15 @@ from tkinter import Frame, Label, filedialog, LEFT, W
 from tkinter.ttk import Button
 
 from compare.compare_embeddings_clip import CompareEmbeddingClip
-from files.file_actions_window import Action, FileActionsWindow
+from files.file_action import FileAction
 from files.file_browser import FileBrowser
-from files.hotkey_actions_window import HotkeyActionsWindow
 from files.pdf_creator import PDFCreator
-from files.pdf_options_window import PDFOptionsWindow
 from image.frame_cache import FrameCache
 from image.image_data_extractor import image_data_extractor
 from image.image_ops import ImageOps
 from lib.multi_display import SmartToplevel
+from ui_tk.files.hotkey_actions_window import HotkeyActionsWindow
+from ui_tk.files.pdf_options_window import PDFOptionsWindow
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config
@@ -105,7 +105,7 @@ class MarkedFiles():
 
     @staticmethod
     def run_previous_action(app_actions, current_image=None):
-        previous_action = FileActionsWindow.get_history_action(start_index=0)
+        previous_action = FileAction.get_history_action(start_index=0)
         if previous_action is None:
             return False, False
         return MarkedFiles.move_marks_to_dir_static(app_actions,
@@ -116,7 +116,7 @@ class MarkedFiles():
 
     @staticmethod
     def run_penultimate_action(app_actions, current_image=None):
-        penultimate_action = FileActionsWindow.get_history_action(start_index=1)
+        penultimate_action = FileAction.get_history_action(start_index=1)
         if penultimate_action is None:
             return False, False
         return MarkedFiles.move_marks_to_dir_static(app_actions,
@@ -127,22 +127,22 @@ class MarkedFiles():
 
     @staticmethod
     def run_permanent_action(app_actions, current_image=None):
-        if not FileActionsWindow.permanent_action:
+        if not FileAction.permanent_action:
             app_actions.toast(_("NO_MARK_TARGET_SET"))
             return False, False
         return MarkedFiles.move_marks_to_dir_static(app_actions,
-                                             target_dir=FileActionsWindow.permanent_action.target,
-                                             move_func=FileActionsWindow.permanent_action.action,
+                                             target_dir=FileAction.permanent_action.target,
+                                             move_func=FileAction.permanent_action.action,
                                              single_image=(len(MarkedFiles.file_marks)==1),
                                              current_image=current_image)
 
     @staticmethod
     def run_hotkey_action(app_actions, current_image=None, number=-1, shift_key_pressed=False):
         assert number in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        if number not in FileActionsWindow.hotkey_actions:
+        if number not in FileAction.hotkey_actions:
             app_actions.toast(_("NO_HOTKEY_ACTION_SET").format(number, number))
             return False, False
-        file_action = FileActionsWindow.hotkey_actions[number]
+        file_action = FileAction.hotkey_actions[number]
         return MarkedFiles.move_marks_to_dir_static(app_actions,
                                              target_dir=file_action.target,
                                              move_func=file_action.get_action(do_flip=shift_key_pressed),
@@ -411,10 +411,10 @@ class MarkedFiles():
         if config.debug and self.filter_text is not None and self.filter_text.strip() != "":
             logger.debug(f"Filtered by string: {self.filter_text}")
         if self.do_set_permanent_mark_target:
-            FileActionsWindow.set_permanent_action(target_dir, move_func, self.app_actions.toast)
+            FileAction.set_permanent_action(target_dir, move_func, self.app_actions.toast)
             self.do_set_permanent_mark_target = False
         if self.do_set_hotkey_action > -1:
-            FileActionsWindow.set_hotkey_action(self.do_set_hotkey_action, target_dir, move_func, self.app_actions.toast)
+            FileAction.set_hotkey_action(self.do_set_hotkey_action, target_dir, move_func, self.app_actions.toast)
             self.do_set_hotkey_action = -1
         some_files_already_present, exceptions_present = MarkedFiles.move_marks_to_dir_static(
             self.app_actions, target_dir=target_dir, move_func=move_func,
@@ -433,7 +433,7 @@ class MarkedFiles():
         action_part1 = _("Moving") if is_moving else _("Copying")
         MarkedFiles.previous_marks.clear()
         files_to_move = MarkedFiles.file_marks if files is None else files
-        action = Action(move_func, target_dir, MarkedFiles.file_marks)
+        action = FileAction(move_func, target_dir, MarkedFiles.file_marks)
         if len(files_to_move) > 1:
             logger.warning(f"{action_part1} {len(files_to_move)} files to directory: {target_dir}")
         exceptions = {}
@@ -490,7 +490,7 @@ class MarkedFiles():
                 MarkedFiles.undo_move_marks(app_actions.get_base_dir(), app_actions, parent=app_actions.master)
             return False, False
         if len(exceptions) < len(files_to_move):
-            FileActionsWindow.update_history(action)
+            FileAction.update_history(action)
             action_type = ActionType.MOVE_FILE if is_moving else ActionType.COPY_FILE
             target_dir_name = Utils.get_relative_dirpath(target_dir, levels=2)
             if is_moving:
@@ -596,7 +596,7 @@ class MarkedFiles():
             return
         if MarkedFiles.delete_lock:
             return
-        is_moving_back = FileActionsWindow.action_history[0].action == Utils.move_file
+        is_moving_back = FileAction.action_history[0].action == Utils.move_file
         action_part1 = _("Moving back") if is_moving_back else _("Removing")
         action_part2 = _("Moved back") if is_moving_back else _("Removed")
         target_dir, target_was_valid = MarkedFiles.get_target_directory(MarkedFiles.last_set_target_dir, None, app_actions)
@@ -611,7 +611,7 @@ class MarkedFiles():
         logger.warning(f"Undoing action: {action_part1} {len(MarkedFiles.previous_marks)} files from directory:\n{MarkedFiles.last_set_target_dir}")
         exceptions = {}
         invalid_files = []
-        action = FileActionsWindow.action_history[0]
+        action = FileAction.action_history[0]
         for i, marked_file in enumerate(MarkedFiles.previous_marks):
             # previous_marks holds source paths (e.g. foo.svg); action.new_files holds the paths we
             # actually created in the target. If we moved the generated PNG instead of the SVG,
@@ -811,7 +811,7 @@ class MarkedFiles():
             event, keys_to_check=[ModifierKey.SHIFT, ModifierKey.CTRL, ModifierKey.ALT])
         move_func = Utils.copy_file if shift_key_pressed else Utils.move_file
         if alt_key_pressed:
-            penultimate_action = FileActionsWindow.get_history_action(start_index=1)
+            penultimate_action = FileAction.get_history_action(start_index=1)
             if penultimate_action is not None and os.path.isdir(penultimate_action.target):
                 self.move_marks_to_dir(target_dir=penultimate_action.target, move_func=move_func)
         elif len(self.filtered_target_dirs) == 0 or control_key_pressed:
@@ -917,7 +917,7 @@ class MarkedFiles():
             event, keys_to_check=[ModifierKey.CTRL, ModifierKey.ALT])
         target_dir = None
         if alt_key_pressed:
-            penultimate_action = FileActionsWindow.get_history_action(start_index=1)
+            penultimate_action = FileAction.get_history_action(start_index=1)
             if penultimate_action is not None and os.path.isdir(penultimate_action.target):
                 target_dir = penultimate_action.target
         elif len(self.filtered_target_dirs) == 0 or control_key_pressed:
@@ -1107,11 +1107,11 @@ class MarkedFiles():
         
         should_check = False
         
-        if len(FileActionsWindow.action_history) == 0:
+        if len(FileAction.action_history) == 0:
             MarkedFiles.gimp_opened_in_last_action = False
             return True
         
-        previous_action = FileActionsWindow.action_history[0]
+        previous_action = FileAction.action_history[0]
         if previous_action.target == target_dir:
             # Check if the same file was involved in the previous action
             if (marked_file in previous_action.original_marks or 

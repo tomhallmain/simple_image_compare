@@ -3,9 +3,9 @@
 from tkinter import Frame, Label, LEFT, W
 from tkinter.ttk import Button
 
-from auth.password_utils import require_password
-from files.file_actions_window import FileActionsWindow
 from lib.multi_display import SmartToplevel
+from ui_tk.auth.password_utils import require_password
+from ui_tk.files.file_actions_window import FileActionsWindow
 from utils.app_style import AppStyle
 from utils.constants import ProtectedActions
 from utils.translations import I18N

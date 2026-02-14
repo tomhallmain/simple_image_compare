@@ -4,12 +4,13 @@ from tkinter import Frame, Label, Checkbutton, BooleanVar, StringVar, LEFT, W, S
 import tkinter.font as fnt
 from tkinter.ttk import Button, Combobox
 
-from compare.classifier_action_copy_window import ClassifierActionCopyWindow
 from compare.classifier_actions_manager import Prevalidation, ClassifierActionsManager
-from compare.classifier_management_window import ClassifierActionModifyWindow
-from compare.directory_profile import DirectoryProfile, DirectoryProfileWindow
-from compare.lookahead import Lookahead, LookaheadWindow
+from compare.lookahead import Lookahead
 from lib.multiselect_dropdown import MultiSelectDropdown
+from ui_tk.compare.classifier_action_copy_window import ClassifierActionCopyWindow
+from ui_tk.compare.classifier_management_window import ClassifierActionModifyWindow
+from ui_tk.compare.lookahead_window import LookaheadWindow
+from ui_tk.files.directory_profile_window import DirectoryProfileWindow
 from utils.app_style import AppStyle
 from utils.config import config
 from utils.logging_setup import get_logger

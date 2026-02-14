@@ -2,10 +2,10 @@ import os
 from tkinter import Label, LEFT, W, font
 from tkinter.ttk import Button
 
-from utils.app_info_cache import app_info_cache
-from utils.app_style import AppStyle
 from lib.tk_scroll_demo import ScrollFrame
 from lib.multi_display import SmartToplevel
+from utils.app_info_cache import app_info_cache
+from utils.app_style import AppStyle
 from utils.translations import I18N
 
 _ = I18N._

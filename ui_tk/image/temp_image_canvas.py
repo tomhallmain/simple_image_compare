@@ -4,9 +4,9 @@ import sys
 from PIL import Image, ImageTk
 from tkinter import Frame, Canvas, Label, Menu
 
-from files.marked_file_mover import MarkedFiles
 from image.frame_cache import FrameCache
 from lib.multi_display import SmartToplevel
+from ui_tk.files.marked_file_mover import MarkedFiles
 from utils.config import config
 from utils.app_style import AppStyle
 from utils.utils import Utils

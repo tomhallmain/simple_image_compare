@@ -5,10 +5,10 @@ from tkinter import Frame, Label, Checkbutton, BooleanVar, StringVar, LEFT, W, E
 import tkinter.font as fnt
 from tkinter.ttk import Button, Combobox
 
-from compare.classifier_action_copy_window import ClassifierActionCopyWindow
 from compare.classifier_actions_manager import ClassifierAction, ClassifierActionsManager
-from compare.classifier_management_window import ClassifierActionModifyWindow
-from compare.directory_profile import DirectoryProfile
+from files.directory_profile import DirectoryProfile
+from ui_tk.compare.classifier_action_copy_window import ClassifierActionCopyWindow
+from ui_tk.compare.classifier_management_window import ClassifierActionModifyWindow
 from utils.app_style import AppStyle
 from utils.config import config
 from utils.logging_setup import get_logger

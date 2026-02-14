@@ -20,10 +20,9 @@ from PySide6.QtWidgets import (
     QListWidget, QPushButton, QVBoxLayout, QWidget,
 )
 
-from compare.directory_profile import DirectoryProfile
+from files.directory_profile import DirectoryProfile
 from lib.multi_display_qt import SmartDialog
 from ui.app_style import AppStyle
-from utils.config import config
 from utils.translations import I18N
 from utils.logging_setup import get_logger
 
@@ -70,9 +69,7 @@ class DirectoryProfileWindow(SmartDialog):
         self._build_ui()
 
         QShortcut(QKeySequence(Qt.Key_Escape), self).activated.connect(self.close)
-        QShortcut(QKeySequence(Qt.Key_Return), self).activated.connect(
-            self._finalize_profile
-        )
+        QShortcut(QKeySequence(Qt.Key_Return), self).activated.connect(self._finalize_profile)
 
     # ------------------------------------------------------------------
     # UI
@@ -151,17 +148,11 @@ class DirectoryProfileWindow(SmartDialog):
         self, title: str = _("Select directory"), initial_dir: Optional[str] = None
     ) -> Optional[str]:
         if initial_dir is None:
-            initial_dir = (
-                self._profile.directories[-1]
-                if self._profile.directories
-                else "."
-            )
+            initial_dir = self._profile.directories[-1] if self._profile.directories else "."
         if not os.path.isdir(initial_dir):
             initial_dir = "."
 
-        directory = QFileDialog.getExistingDirectory(
-            self, title, initial_dir
-        )
+        directory = QFileDialog.getExistingDirectory(self, title, initial_dir)
         return directory if directory and directory.strip() else None
 
     def _add_directory(self) -> None:
@@ -187,9 +178,7 @@ class DirectoryProfileWindow(SmartDialog):
             return
 
         current_dir = self._profile.directories[idx]
-        new_directory = self._browse_directory(
-            _("Edit Directory"), initial_dir=current_dir
-        )
+        new_directory = self._browse_directory(_("Edit Directory"), initial_dir=current_dir)
         if new_directory:
             new_directory = new_directory.strip()
             if os.path.isdir(new_directory):
@@ -197,9 +186,7 @@ class DirectoryProfileWindow(SmartDialog):
                     new_directory in self._profile.directories
                     and self._profile.directories.index(new_directory) != idx
                 ):
-                    logger.warning(
-                        f"Directory {new_directory} already in profile"
-                    )
+                    logger.warning(f"Directory {new_directory} already in profile")
                 else:
                     self._profile.directories[idx] = new_directory
                     self._refresh_directory_list()
@@ -220,9 +207,7 @@ class DirectoryProfileWindow(SmartDialog):
         logger.info("Cleared all directories from profile")
 
     def _add_subdirectories(self) -> None:
-        parent_dir = self._browse_directory(
-            _("Select directory to add subdirectories from")
-        )
+        parent_dir = self._browse_directory(_("Select directory to add subdirectories from"))
         if not parent_dir:
             return
         parent_dir = parent_dir.strip()
@@ -239,20 +224,14 @@ class DirectoryProfileWindow(SmartDialog):
                         self._profile.directories.append(subdir_path)
                         subdirs_added += 1
                     else:
-                        logger.debug(
-                            f"Subdirectory {subdir_path} already in profile"
-                        )
+                        logger.debug(f"Subdirectory {subdir_path} already in profile")
             if subdirs_added > 0:
                 self._refresh_directory_list()
-                logger.info(
-                    f"Added {subdirs_added} subdirectories from {parent_dir}"
-                )
+                logger.info(f"Added {subdirs_added} subdirectories from {parent_dir}")
             else:
                 logger.info(f"No new subdirectories found in {parent_dir}")
         except Exception as e:
-            logger.error(
-                f"Error reading subdirectories from {parent_dir}: {e}"
-            )
+            logger.error(f"Error reading subdirectories from {parent_dir}: {e}")
 
     # ------------------------------------------------------------------
     # Finalize

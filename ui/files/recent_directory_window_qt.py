@@ -15,11 +15,9 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import QFileDialog, QHBoxLayout, QPushButton, QWidget
 
-from files.recent_directory_window import RecentDirectories  # reuse non-UI class
-from ui.app_style import AppStyle
+from files.recent_directories import RecentDirectories
 from ui.files.directory_picker_dialog import DirectoryPickerDialog
 from utils.app_actions import AppActions
-from utils.config import config
 from utils.translations import I18N
 from utils.logging_setup import get_logger
 
@@ -42,8 +40,6 @@ class RecentDirectoryWindow(DirectoryPickerDialog):
     # Class-level history (matches original)
     last_set_directory: Optional[str] = None
     last_comparison_directory: Optional[str] = None
-    directory_history: list[str] = []
-    MAX_DIRECTORIES = 100
 
     MAX_HEIGHT = 900
     N_DIRECTORIES_CUTOFF = 30
@@ -53,18 +49,18 @@ class RecentDirectoryWindow(DirectoryPickerDialog):
     # ------------------------------------------------------------------
     @staticmethod
     def get_history_directory(start_index: int = 0) -> Optional[str]:
-        for i, d in enumerate(RecentDirectoryWindow.directory_history):
+        for i, d in enumerate(RecentDirectories.directory_history):
             if i >= start_index:
                 return d
         return None
 
     @staticmethod
     def update_history(_dir: str) -> None:
-        hist = RecentDirectoryWindow.directory_history
+        hist = RecentDirectories.directory_history
         if hist and hist[0] == _dir:
             return
         hist.insert(0, _dir)
-        if len(hist) > RecentDirectoryWindow.MAX_DIRECTORIES:
+        if len(hist) > RecentDirectories.MAX_RECENT_DIRECTORIES:
             del hist[-1]
 
     @staticmethod
@@ -137,7 +133,7 @@ class RecentDirectoryWindow(DirectoryPickerDialog):
 
         if self._downstream_callback is not None:
             self._downstream_callback(base_dir=_dir, **self._callback_kwargs)
-            RecentDirectoryWindow.last_comparison_directory = _dir
+            RecentDirectories.last_comparison_directory = _dir
         elif self._run_compare_image is None:
             self._app_actions.set_base_dir(base_dir_from_dir_window=_dir)
         elif self._run_compare_image == "":
@@ -149,7 +145,7 @@ class RecentDirectoryWindow(DirectoryPickerDialog):
                 do_search=True,
             )
 
-        RecentDirectoryWindow.last_set_directory = _dir
+        RecentDirectories.last_set_directory = _dir
 
     def _add_directory(self, directory: str) -> None:
         RecentDirectories.set_recent_directory(os.path.normpath(directory))

@@ -12,30 +12,31 @@ import tkinter.font as fnt
 from tkinter.ttk import Button, Entry, OptionMenu, Progressbar, Style
 from ttkthemes import ThemedTk
 
-from auth.password_admin_window import PasswordAdminWindow
-from auth.password_utils import require_password, check_session_expired
 from compare.base_compare import CompareCancelled
 from compare.compare_args import CompareArgs
 from compare.compare_manager import CompareManager
-from compare.classifier_management_window import ClassifierManagementWindow
-from compare.compare_settings_window import CompareSettingsWindow
-from compare.prevalidations_tab import PrevalidationsTab
 from extensions.refacdir_client import RefacDirClient
 from extensions.sd_runner_client import SDRunnerClient
 from files.directory_notes import DirectoryNotes
-from files.directory_notes_window import DirectoryNotesWindow
-from files.favorites_window import FavoritesWindow
-from files.file_actions_window import FileActionsWindow
 from files.file_browser import FileBrowser, SortBy
-from files.go_to_file import GoToFile
-from files.marked_file_mover import MarkedFiles
-from files.recent_directory_window import RecentDirectories, RecentDirectoryWindow
-from files.target_directory_window import TargetDirectoryWindow
-from files.type_configuration_window import TypeConfigurationWindow
-from image.media_frame import MediaFrame
+from files.recent_directories import RecentDirectories
 from lib.aware_entry import AwareEntry
 from lib.debounce import Debouncer
 from lib.multi_display import SmartToplevel
+from ui_tk.auth.password_admin_window import PasswordAdminWindow
+from ui_tk.auth.password_utils import require_password, check_session_expired
+from ui_tk.compare.classifier_management_window import ClassifierManagementWindow
+from ui_tk.compare.compare_settings_window import CompareSettingsWindow
+from ui_tk.compare.prevalidations_tab import PrevalidationsTab
+from ui_tk.files.directory_notes_window import DirectoryNotesWindow
+from ui_tk.files.favorites_window import FavoritesWindow
+from ui_tk.files.file_actions_window import FileActionsWindow
+from ui_tk.files.go_to_file import GoToFile
+from ui_tk.files.marked_file_mover import MarkedFiles
+from ui_tk.files.recent_directory_window import RecentDirectoryWindow
+from ui_tk.files.target_directory_window import TargetDirectoryWindow
+from ui_tk.files.type_configuration_window import TypeConfigurationWindow
+from ui_tk.image.media_frame import MediaFrame
 from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
@@ -48,7 +49,7 @@ from utils.running_tasks_registry import periodic, start_thread
 from utils.translations import I18N
 from utils.utils import Utils, ModifierKey
 # must import after config because of dynamic import
-from image.image_details import ImageDetails
+from ui_tk.image.image_details import ImageDetails
 
 _ = I18N._
 logger = get_logger("app")

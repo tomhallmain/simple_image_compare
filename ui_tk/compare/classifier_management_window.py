@@ -10,8 +10,7 @@ from tkinter import Frame, Label, Scale, Checkbutton, BooleanVar, StringVar, LEF
 from tkinter.ttk import Notebook, Entry, Button, Combobox
 import tkinter.font as fnt
 
-from compare.classifier_actions_manager import ClassifierAction
-from compare.classifier_actions_manager import ClassifierActionsManager
+from compare.classifier_actions_manager import ClassifierAction, ClassifierActionsManager
 from image.image_classifier_manager import image_classifier_manager
 from lib.multiselect_dropdown import MultiSelectDropdown
 from lib.multi_display import SmartToplevel
@@ -621,15 +620,11 @@ class ClassifierManagementWindow:
         self.notebook.add(self.prevalidations_frame, text=_("Prevalidations"))
 
         # Create tab content classes (import here to avoid circular import)
-        from compare.classifier_actions_tab import ClassifierActionsTab
-        from compare.prevalidations_tab import PrevalidationsTab
+        from ui_tk.compare.classifier_actions_tab import ClassifierActionsTab
+        from ui_tk.compare.prevalidations_tab import PrevalidationsTab
         
-        self.classifier_actions_tab = ClassifierActionsTab(
-            self.classifier_actions_frame, app_actions
-        )
-        self.prevalidations_tab = PrevalidationsTab(
-            self.prevalidations_frame, app_actions
-        )
+        self.classifier_actions_tab = ClassifierActionsTab(self.classifier_actions_frame, app_actions)
+        self.prevalidations_tab = PrevalidationsTab(self.prevalidations_frame, app_actions)
 
         # Disable prevalidations tab if prevalidations are disabled
         if not config.enable_prevalidations:

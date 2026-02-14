@@ -19,9 +19,8 @@ from typing import Optional
 from PySide6.QtCore import Qt, QTimer, Signal, Slot, QThread, QMetaObject
 from PySide6.QtWidgets import QApplication, QHBoxLayout, QSplitter, QWidget, QVBoxLayout, QFrame
 
-from files.file_browser import FileBrowser
 from compare.compare_manager import CompareManager
-from ui.files.marked_file_mover_qt import MarkedFiles
+from files.file_browser import FileBrowser
 from lib.multi_display_qt import SmartMainWindow
 from ui.app_style import AppStyle
 from ui.custom_title_bar import FramelessWindowMixin, WindowResizeHandler
@@ -37,6 +36,7 @@ from ui.app_window.search_controller import SearchController
 from ui.app_window.sidebar_panel import SidebarPanel
 from ui.app_window.window_launcher import WindowLauncher
 from ui.app_window.window_manager import WindowManager
+from ui.files.marked_file_mover_qt import MarkedFiles
 from utils.app_actions import AppActions
 from utils.config import config, FileCheckConfig, SlideshowConfig, StoreCacheConfig
 from utils.constants import Mode, Direction

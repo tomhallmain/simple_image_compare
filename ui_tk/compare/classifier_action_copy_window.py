@@ -10,8 +10,8 @@ from tkinter.ttk import Button, Combobox, Entry
 import tkinter.font as fnt
 
 from compare.classifier_actions_manager import ClassifierAction, Prevalidation, ClassifierActionsManager
-from compare.classifier_management_window import ClassifierActionModifyWindow, ClassifierManagementWindow
 from lib.multi_display import SmartToplevel
+from ui_tk.compare.classifier_management_window import ClassifierActionModifyWindow, ClassifierManagementWindow
 from utils.constants import ClassifierActionClass
 from utils.app_style import AppStyle
 from utils.config import config

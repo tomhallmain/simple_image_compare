@@ -23,7 +23,7 @@ from PySide6.QtWidgets import (
     QPushButton, QScrollArea, QVBoxLayout, QWidget,
 )
 
-from files.file_actions_window import Action, FileActionsWindow as _TkFileActionsWindow
+from files.file_action import FileAction
 from lib.multi_display_qt import SmartDialog
 from ui.app_style import AppStyle
 from utils.app_actions import AppActions
@@ -38,25 +38,6 @@ _ = I18N._
 logger = get_logger("file_actions_window_qt")
 
 
-# ======================================================================
-# Module-level setup helpers
-# ======================================================================
-def _setup_permanent_action() -> Action:
-    target = app_info_cache.get_meta("permanent_mark_target")
-    func_name = app_info_cache.get_meta("permanent_action")
-    return Action(Action.convert_action_from_text(func_name), target)
-
-
-def _setup_hotkey_actions() -> dict[int, Action]:
-    raw: dict = app_info_cache.get_meta("hotkey_actions", default_val={})
-    assert isinstance(raw, dict)
-    result: dict[int, Action] = {}
-    for number, info in raw.items():
-        result[int(number)] = Action(
-            Action.convert_action_from_text(info["action"]), info["target"]
-        )
-    return result
-
 
 # ======================================================================
 # FileActionsWindow
@@ -69,15 +50,6 @@ class FileActionsWindow(SmartDialog):
 
     _instance: Optional[FileActionsWindow] = None
 
-    # -- shared class-level state ----------------------------------------
-    permanent_action: Action = _setup_permanent_action()
-    hotkey_actions: dict[int, Action] = _setup_hotkey_actions()
-    # Share the SAME list object with the Tkinter class so that auto
-    # actions added by classifier_actions_manager (which imports the
-    # Tkinter FileActionsWindow) are visible here too.
-    action_history: list[Action] = _TkFileActionsWindow.action_history
-    MAX_ACTIONS: int = config.file_actions_history_max
-
     # -- pagination -------------------------------------------------------
     INITIAL_PAGE_SIZE: int = 20
     PAGE_SIZE: int = 20
@@ -85,96 +57,6 @@ class FileActionsWindow(SmartDialog):
     # -- layout -----------------------------------------------------------
     COL_0_WIDTH: int = 600
     MAX_DISPLAY_DIRS: int = 6
-
-    # ==================================================================
-    # Persistence
-    # ==================================================================
-    @staticmethod
-    def store_action_history() -> None:
-        dicts = [a.to_dict() for a in FileActionsWindow.action_history]
-        app_info_cache.set_meta("file_actions", dicts)
-
-    @staticmethod
-    def load_action_history() -> None:
-        dicts = app_info_cache.get_meta("file_actions", default_val=[])
-        for d in dicts:
-            FileActionsWindow.action_history.append(Action.from_dict(d))
-
-    @staticmethod
-    def get_history_action(
-        start_index: int = 0, exclude_auto: bool = True
-    ) -> Action | None:
-        action = None
-        seen: list[Action] = []
-        for i, action in enumerate(FileActionsWindow.action_history):
-            is_returnable = (
-                action != FileActionsWindow.permanent_action
-                and not (exclude_auto and action.auto)
-            )
-            if not is_returnable or action in seen:
-                start_index += 1
-            seen.append(action)
-            if i < start_index:
-                continue
-            if is_returnable:
-                break
-        return action
-
-    @staticmethod
-    def set_permanent_action(target_dir, move_func, toast_callback) -> None:
-        FileActionsWindow.permanent_action = Action(
-            move_func, target_dir, timestamp=datetime.now()
-        )
-        app_info_cache.set_meta("permanent_action", move_func.__name__)
-        app_info_cache.set_meta("permanent_mark_target", target_dir)
-        toast_callback(
-            f"Set permanent action:\n{move_func.__name__} to {target_dir}"
-        )
-
-    @staticmethod
-    def set_hotkey_action(number, target_dir, move_func, toast_callback) -> None:
-        FileActionsWindow.hotkey_actions[number] = Action(
-            move_func, target_dir, timestamp=datetime.now()
-        )
-        raw: dict = app_info_cache.get_meta("hotkey_actions", default_val={})
-        assert isinstance(raw, dict)
-        raw[number] = {"action": move_func.__name__, "target": target_dir}
-        app_info_cache.set_meta("hotkey_actions", raw)
-
-    @staticmethod
-    def update_history(latest_action: Action) -> None:
-        FileActionsWindow.action_history.insert(0, latest_action)
-        if len(FileActionsWindow.action_history) > FileActionsWindow.MAX_ACTIONS:
-            del FileActionsWindow.action_history[-1]
-
-    @staticmethod
-    def add_file_action(
-        action, source, target, auto: bool = True, overwrite_existing: bool = False
-    ) -> None:
-        with Utils.file_operation_lock:
-            new_filepath = str(
-                action(source, target, overwrite_existing=overwrite_existing)
-            )
-        logger.info("Moved file to " + new_filepath)
-        new_action = Action(action, target, [source], [new_filepath], auto)
-        FileActionsWindow.update_history(new_action)
-
-    @staticmethod
-    def get_action_statistics(today_only: bool = False) -> dict:
-        stats: dict[str, dict[str, int]] = {}
-        for action in FileActionsWindow.action_history:
-            if action.auto or (today_only and not action.is_today()):
-                continue
-            td = action.target
-            if td not in stats:
-                stats[td] = {"moved": 0, "copied": 0}
-            if action.is_move_action():
-                stats[td]["moved"] += len(action.new_files)
-            else:
-                stats[td]["copied"] += len(action.new_files)
-        for td in stats:
-            stats[td]["total"] = stats[td]["moved"] + stats[td]["copied"]
-        return stats
 
     # ==================================================================
     # Construction
@@ -200,7 +82,7 @@ class FileActionsWindow(SmartDialog):
         self._view_image_callback = view_image_callback
         self._move_marks_callback = move_marks_callback
         self._filter_text: str = ""
-        self._filtered_history: list[Action] = FileActionsWindow.action_history[:]
+        self._filtered_history: list[FileAction] = FileAction.action_history[:]
         self._show_today_only: bool = False
         self._visible_count: int = self.INITIAL_PAGE_SIZE
 
@@ -296,9 +178,7 @@ class FileActionsWindow(SmartDialog):
     # Statistics section
     # ------------------------------------------------------------------
     def _build_statistics(self) -> QFrame | None:
-        stats = FileActionsWindow.get_action_statistics(
-            today_only=self._show_today_only
-        )
+        stats = FileAction.get_action_statistics(today_only=self._show_today_only)
         if not stats:
             return None
 
@@ -327,9 +207,7 @@ class FileActionsWindow(SmartDialog):
             else _("File Action Statistics")
         )
         title = QLabel(title_text)
-        title.setStyleSheet(
-            f"font-weight: bold; color: {AppStyle.FG_COLOR};"
-        )
+        title.setStyleSheet(f"font-weight: bold; color: {AppStyle.FG_COLOR};")
         title.setAlignment(Qt.AlignCenter)
         grid.addWidget(title, 0, 0, 1, 3)
 
@@ -344,9 +222,7 @@ class FileActionsWindow(SmartDialog):
             [_("Target Directory"), _("Moved"), _("Copied"), _("Total")]
         ):
             lbl = QLabel(text)
-            lbl.setStyleSheet(
-                f"font-weight: bold; color: {AppStyle.FG_COLOR};"
-            )
+            lbl.setStyleSheet(f"font-weight: bold; color: {AppStyle.FG_COLOR};")
             align = Qt.AlignLeft if col == 0 else Qt.AlignRight
             grid.addWidget(lbl, 1, col, align)
 
@@ -355,9 +231,7 @@ class FileActionsWindow(SmartDialog):
             row = i + 2
             target_display = Utils.get_relative_dirpath(target_dir, levels=2)
             if len(target_display) > 30:
-                target_display = Utils.get_centrally_truncated_string(
-                    target_display, 30
-                )
+                target_display = Utils.get_centrally_truncated_string(target_display, 30)
 
             self._add_stat_cell(grid, target_display, row, 0, Qt.AlignLeft)
             self._add_stat_cell(grid, str(counts["moved"]), row, 1, Qt.AlignRight)
@@ -383,9 +257,7 @@ class FileActionsWindow(SmartDialog):
         return frame
 
     @staticmethod
-    def _add_stat_cell(
-        grid: QGridLayout, text: str, row: int, col: int, align
-    ) -> None:
+    def _add_stat_cell(grid: QGridLayout, text: str, row: int, col: int, align) -> None:
         lbl = QLabel(text)
         lbl.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
         grid.addWidget(lbl, row, col, align)
@@ -395,7 +267,7 @@ class FileActionsWindow(SmartDialog):
     # ------------------------------------------------------------------
     def _build_action_rows(self) -> None:
         visible = self._filtered_history[: self._visible_count]
-        last_action: Action | None = None
+        last_action: FileAction | None = None
         last_target: str | None = None
         current_group_layout: QVBoxLayout | None = None
 
@@ -531,7 +403,7 @@ class FileActionsWindow(SmartDialog):
                 _("Error opening image: ") + str(e)
             )
 
-    def _undo(self, action: Action, specific_image: str | None = None) -> None:
+    def _undo(self, action: FileAction, specific_image: str | None = None) -> None:
         if specific_image is not None:
             if not os.path.isfile(specific_image):
                 error_text = _("Image does not exist: ") + specific_image
@@ -591,7 +463,7 @@ class FileActionsWindow(SmartDialog):
         self._rebuild_content()
 
     def _clear_action_history(self) -> None:
-        FileActionsWindow.action_history.clear()
+        FileAction.action_history.clear()
         self._filtered_history.clear()
         self._visible_count = self.INITIAL_PAGE_SIZE
         self._rebuild_content()
@@ -613,22 +485,22 @@ class FileActionsWindow(SmartDialog):
         search_basename = os.path.basename(image_path).lower()
         basename_no_ext = os.path.splitext(search_basename)[0].lower()
 
-        temp: list[Action] = []
+        temp: list[FileAction] = []
         # Pass 1: exact path match
-        for action in FileActionsWindow.action_history:
+        for action in FileAction.action_history:
             for f in action.new_files:
                 if f == image_path:
                     temp.append(action)
                     break
         # Pass 2: basename match
-        for action in FileActionsWindow.action_history:
+        for action in FileAction.action_history:
             if action not in temp:
                 for f in action.new_files:
                     if os.path.basename(os.path.normpath(f)).lower() == search_basename:
                         temp.append(action)
                         break
         # Pass 3: basename prefix match
-        for action in FileActionsWindow.action_history:
+        for action in FileAction.action_history:
             if action not in temp:
                 for f in action.new_files:
                     if os.path.basename(os.path.normpath(f)).lower().startswith(
@@ -657,19 +529,19 @@ class FileActionsWindow(SmartDialog):
         if not ft:
             if self._show_today_only:
                 self._filtered_history = [
-                    a for a in FileActionsWindow.action_history if a.is_today()
+                    a for a in FileAction.action_history if a.is_today()
                 ]
             else:
-                self._filtered_history = FileActionsWindow.action_history[:]
+                self._filtered_history = FileAction.action_history[:]
         else:
             if self._show_today_only:
                 actions = [
-                    a for a in FileActionsWindow.action_history if a.is_today()
+                    a for a in FileAction.action_history if a.is_today()
                 ]
             else:
-                actions = FileActionsWindow.action_history[:]
+                actions = FileAction.action_history[:]
 
-            temp: list[Action] = []
+            temp: list[FileAction] = []
 
             # Pass 1: directory basename exact match
             for action in actions:
@@ -679,14 +551,14 @@ class FileActionsWindow(SmartDialog):
 
             # Pass 2: directory basename starts-with
             for action in actions:
-                if not Action._is_matching_action_in_list(temp, action):
+                if not FileAction._is_matching_action_in_list(temp, action):
                     basename = os.path.basename(os.path.normpath(action.target))
                     if basename.lower().startswith(ft):
                         temp.append(action)
 
             # Pass 3: parent directory starts-with
             for action in actions:
-                if not Action._is_matching_action_in_list(temp, action):
+                if not FileAction._is_matching_action_in_list(temp, action):
                     dirname = os.path.basename(
                         os.path.dirname(os.path.normpath(action.target))
                     )
@@ -695,7 +567,7 @@ class FileActionsWindow(SmartDialog):
 
             # Pass 4: substring match in basename
             for action in actions:
-                if not Action._is_matching_action_in_list(temp, action):
+                if not FileAction._is_matching_action_in_list(temp, action):
                     basename = os.path.basename(os.path.normpath(action.target))
                     if basename and (
                         f" {ft}" in basename.lower()

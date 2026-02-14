@@ -4,10 +4,10 @@ from enum import Enum
 from tkinter import Frame, StringVar, BooleanVar, LEFT, W, filedialog, Label, Listbox, Scrollbar
 from tkinter.ttk import Entry, Button, Checkbutton, OptionMenu, Progressbar
 
-from files.file_actions_window import FileActionsWindow
-from files.marked_file_mover import MarkedFiles
-from files.target_directory_window import TargetDirectoryWindow
 from lib.multi_display import SmartToplevel
+from ui_tk.files.file_actions_window import FileActionsWindow
+from ui_tk.files.marked_file_mover import MarkedFiles
+from ui_tk.files.target_directory_window import TargetDirectoryWindow
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.config import config

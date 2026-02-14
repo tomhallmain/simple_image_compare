@@ -25,8 +25,8 @@ except ImportError:
 import vlc
 
 from image.frame_cache import FrameCache
-# from image.gif_image_ui import GifImageUI
-from image.video_ui import VideoUI
+# from ui_tk.image.gif_image_ui import GifImageUI
+from ui_tk.image.video_ui import VideoUI
 from utils.config import config
 from utils.utils import Utils
 from utils.logging_setup import get_logger

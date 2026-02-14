@@ -52,8 +52,8 @@ class CacheController:
         """
         try:
             from ui.files.marked_file_mover_qt import MarkedFiles
-            from files.recent_directory_window import RecentDirectories
-            from ui.files.file_actions_window_qt import FileActionsWindow
+            from files.recent_directories import RecentDirectories
+            from files.file_action import FileAction
             from ui.image.image_details_qt import ImageDetails
             from ui.compare.classifier_management_window_qt import ClassifierManagementWindow
             from ui.files.favorites_window_qt import FavoritesWindow
@@ -62,7 +62,7 @@ class CacheController:
 
             MarkedFiles.load_target_dirs()
             RecentDirectories.load_recent_directories()
-            FileActionsWindow.load_action_history()
+            FileAction.load_action_history()
             ImageDetails.load_image_generation_mode()
             ClassifierManagementWindow.set_prevalidations()
             ClassifierManagementWindow.set_classifier_actions()
@@ -87,8 +87,8 @@ class CacheController:
         Ported from App.store_info_cache.
         """
         from ui.files.marked_file_mover_qt import MarkedFiles
-        from files.recent_directory_window import RecentDirectories
-        from ui.files.file_actions_window_qt import FileActionsWindow
+        from files.recent_directories import RecentDirectories
+        from files.file_action import FileAction
         from ui.image.image_details_qt import ImageDetails
         from ui.compare.classifier_management_window_qt import ClassifierManagementWindow
         from ui.files.favorites_window_qt import FavoritesWindow
@@ -130,7 +130,7 @@ class CacheController:
 
         RecentDirectories.store_recent_directories()
         MarkedFiles.store_target_dirs()
-        FileActionsWindow.store_action_history()
+        FileAction.store_action_history()
         ImageDetails.store_image_generation_mode()
         ClassifierManagementWindow.store_prevalidations()
         ClassifierManagementWindow.store_classifier_actions()

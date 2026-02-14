@@ -19,7 +19,6 @@ from __future__ import annotations
 import os
 import re
 import sys
-from datetime import datetime
 from typing import Callable, Optional, Tuple
 
 from PySide6.QtCore import Qt, QTimer
@@ -29,13 +28,12 @@ from PySide6.QtWidgets import (
     QScrollArea, QVBoxLayout, QWidget,
 )
 
-from files.file_actions_window import Action
+from files.file_action import FileAction
 from image.frame_cache import FrameCache
 from image.image_ops import ImageOps
 from lib.multi_display_qt import SmartDialog
 from ui.app_style import AppStyle
 from ui.auth.password_utils import require_password
-from ui.files.file_actions_window_qt import FileActionsWindow
 from utils.app_actions import AppActions
 from utils.app_info_cache import app_info_cache
 from utils.config import config
@@ -176,7 +174,7 @@ class MarkedFiles(SmartDialog):
     # ==================================================================
     @staticmethod
     def run_previous_action(app_actions, current_image=None):
-        previous_action = FileActionsWindow.get_history_action(start_index=0)
+        previous_action = FileAction.get_history_action(start_index=0)
         if previous_action is None:
             return False, False
         return MarkedFiles.move_marks_to_dir_static(
@@ -189,7 +187,7 @@ class MarkedFiles(SmartDialog):
 
     @staticmethod
     def run_penultimate_action(app_actions, current_image=None):
-        penultimate_action = FileActionsWindow.get_history_action(start_index=1)
+        penultimate_action = FileAction.get_history_action(start_index=1)
         if penultimate_action is None:
             return False, False
         return MarkedFiles.move_marks_to_dir_static(
@@ -202,13 +200,13 @@ class MarkedFiles(SmartDialog):
 
     @staticmethod
     def run_permanent_action(app_actions, current_image=None):
-        if not FileActionsWindow.permanent_action:
+        if not FileAction.permanent_action:
             app_actions.toast(_("NO_MARK_TARGET_SET"))
             return False, False
         return MarkedFiles.move_marks_to_dir_static(
             app_actions,
-            target_dir=FileActionsWindow.permanent_action.target,
-            move_func=FileActionsWindow.permanent_action.action,
+            target_dir=FileAction.permanent_action.target,
+            move_func=FileAction.permanent_action.action,
             single_image=(len(MarkedFiles.file_marks) == 1),
             current_image=current_image,
         )
@@ -221,12 +219,12 @@ class MarkedFiles(SmartDialog):
         shift_key_pressed: bool = False,
     ):
         assert number in range(10)
-        if number not in FileActionsWindow.hotkey_actions:
+        if number not in FileAction.hotkey_actions:
             app_actions.toast(
                 _("NO_HOTKEY_ACTION_SET").format(number, number)
             )
             return False, False
-        file_action = FileActionsWindow.hotkey_actions[number]
+        file_action = FileAction.hotkey_actions[number]
         return MarkedFiles.move_marks_to_dir_static(
             app_actions,
             target_dir=file_action.target,
@@ -281,7 +279,7 @@ class MarkedFiles(SmartDialog):
         action_part1 = _("Moving") if is_moving else _("Copying")
         MarkedFiles.previous_marks.clear()
         files_to_move = MarkedFiles.file_marks if files is None else files
-        action = Action(move_func, target_dir, MarkedFiles.file_marks)
+        action = FileAction(move_func, target_dir, MarkedFiles.file_marks)
 
         if len(files_to_move) > 1:
             logger.warning(
@@ -365,7 +363,7 @@ class MarkedFiles(SmartDialog):
             return False, False
 
         if len(exceptions) < len(files_to_move):
-            FileActionsWindow.update_history(action)
+            FileAction.update_history(action)
             action_type = (
                 ActionType.MOVE_FILE if is_moving else ActionType.COPY_FILE
             )
@@ -533,7 +531,7 @@ class MarkedFiles(SmartDialog):
             return
 
         is_moving_back = (
-            FileActionsWindow.action_history[0].action == Utils.move_file
+            FileAction.action_history[0].action == Utils.move_file
         )
         action_part1 = (
             _("Moving back") if is_moving_back else _("Removing")
@@ -567,7 +565,7 @@ class MarkedFiles(SmartDialog):
 
         exceptions: dict[str, str] = {}
         invalid_files: list[str] = []
-        action = FileActionsWindow.action_history[0]
+        action = FileAction.action_history[0]
 
         for i, marked_file in enumerate(MarkedFiles.previous_marks):
             if i < len(action.new_files):
@@ -711,11 +709,11 @@ class MarkedFiles(SmartDialog):
 
         should_check = False
 
-        if len(FileActionsWindow.action_history) == 0:
+        if len(FileAction.action_history) == 0:
             MarkedFiles.gimp_opened_in_last_action = False
             return True
 
-        previous_action = FileActionsWindow.action_history[0]
+        previous_action = FileAction.action_history[0]
         if previous_action.target == target_dir:
             if (
                 marked_file in previous_action.original_marks
@@ -793,9 +791,7 @@ class MarkedFiles(SmartDialog):
     ) -> Tuple[bool, str]:
         """Process a single file move/copy with thread-safe lock."""
         actual_source = source_path if source_path is not None else marked_file
-        new_filename = os.path.join(
-            target_dir, os.path.basename(actual_source)
-        )
+        new_filename = os.path.join(target_dir, os.path.basename(actual_source))
         is_moving = move_func == Utils.move_file
 
         try:
@@ -832,11 +828,7 @@ class MarkedFiles(SmartDialog):
             try:
                 if MarkedFiles._current_window.isVisible():
                     win = MarkedFiles._current_window
-                    win.setWindowTitle(
-                        _("Move {0} Marked File(s)").format(
-                            len(MarkedFiles.file_marks)
-                        )
-                    )
+                    win.setWindowTitle(_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)))
                     win.setWindowOpacity(1.0)
                     win.raise_()
                     win.activateWindow()
@@ -873,9 +865,7 @@ class MarkedFiles(SmartDialog):
         super().__init__(
             parent=master,
             position_parent=master,
-            title=_("Move {0} Marked File(s)").format(
-                len(MarkedFiles.file_marks)
-            ),
+            title=_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)),
             geometry=geometry,
         )
         MarkedFiles._current_window = self
@@ -1083,13 +1073,13 @@ class MarkedFiles(SmartDialog):
             logger.debug(f"Filtered by string: {self._filter_text}")
 
         if self._do_set_permanent_mark_target:
-            FileActionsWindow.set_permanent_action(
+            FileAction.set_permanent_action(
                 target_dir, move_func, self._app_actions.toast
             )
             self._do_set_permanent_mark_target = False
 
         if self._do_set_hotkey_action > -1:
-            FileActionsWindow.set_hotkey_action(
+            FileAction.set_hotkey_action(
                 self._do_set_hotkey_action,
                 target_dir,
                 move_func,
@@ -1107,24 +1097,18 @@ class MarkedFiles(SmartDialog):
         self.close_windows()
 
     def _delete_marked_files(self) -> None:
-        severity = (
-            "high" if len(MarkedFiles.file_marks) > 5 else "normal"
-        )
         if not self._app_actions.alert(
             _("Confirm Delete"),
             _("Deleting {0} marked files - Are you sure you want to proceed?").format(
                 len(MarkedFiles.file_marks)
             ),
             kind="askokcancel",
-            severity=severity,
+            severity="high" if len(MarkedFiles.file_marks) > 5 else "normal",
             master=self,
         ):
             return
 
-        if (
-            self._current_image
-            and self._current_image in MarkedFiles.file_marks
-        ):
+        if self._current_image and self._current_image in MarkedFiles.file_marks:
             self._app_actions.release_media_canvas()
 
         removed_files: list[str] = []
@@ -1148,24 +1132,14 @@ class MarkedFiles(SmartDialog):
             MarkedFiles.file_marks.extend(failed_to_delete)
             self._app_actions.alert(
                 _("Delete Failed"),
-                _("Failed to delete {0} files - check log for details.").format(
-                    len(failed_to_delete)
-                ),
+                _("Failed to delete {0} files - check log for details.").format(len(failed_to_delete)),
                 kind="warning",
                 master=self,
             )
         else:
-            self._app_actions.warn(
-                _("Deleted {0} marked files.").format(len(removed_files))
-            )
+            self._app_actions.warn(_("Deleted {0} marked files.").format(len(removed_files)))
 
-        self._app_actions.refresh(
-            removed_files=(
-                removed_files
-                if self._app_mode != Mode.BROWSE
-                else []
-            )
-        )
+        self._app_actions.refresh(removed_files=removed_files if self._app_mode != Mode.BROWSE else [])
         self.close_windows()
 
     def _clear_marks(self) -> None:
@@ -1248,9 +1222,7 @@ class MarkedFiles(SmartDialog):
         self._do_set_hotkey_action = (
             int(hotkey_override) if hotkey_override is not None else -1
         )
-        logger.debug(
-            f"Doing set hotkey action: {self._do_set_hotkey_action}"
-        )
+        logger.debug(f"Doing set hotkey action: {self._do_set_hotkey_action}")
         self._app_actions.toast(_("Recording next mark target and action."))
 
     def _sort_target_dirs_by_embedding(self) -> None:
@@ -1267,9 +1239,7 @@ class MarkedFiles(SmartDialog):
         )
         self._filtered_target_dirs = [
             dirpath
-            for dirpath, _ in sorted(
-                similarities.items(), key=lambda x: -x[1]
-            )
+            for dirpath, _ in sorted(similarities.items(), key=lambda x: -x[1])
         ]
         self._is_sorted_by_embedding = True
         if self._is_gui:
@@ -1281,12 +1251,8 @@ class MarkedFiles(SmartDialog):
     def _get_embedding_text_for_dirpath(self, dirpath: str) -> Optional[str]:
         basename = os.path.basename(dirpath)
         for text in config.text_embedding_search_presets:
-            if basename == text or re.search(
-                f"(^|_| ){text}($|_| )", basename
-            ):
-                logger.info(
-                    f"Found embeddable directory for text {text}: {dirpath}"
-                )
+            if basename == text or re.search(f"(^|_| ){text}($|_| )", basename):
+                logger.info(f"Found embeddable directory for text {text}: {dirpath}")
                 return text
         return None
 
@@ -1304,9 +1270,7 @@ class MarkedFiles(SmartDialog):
     def _test_is_in_directory(
         self, target_dir=None, shift: bool = False
     ) -> None:
-        target_dir = self._handle_target_directory(
-            target_dir=target_dir, move_func=None
-        )
+        target_dir = self._handle_target_directory(target_dir=target_dir, move_func=None)
         if target_dir is None:
             return
         if (
@@ -1333,12 +1297,8 @@ class MarkedFiles(SmartDialog):
     ) -> None:
         target_dir = None
         if alt:
-            penultimate_action = FileActionsWindow.get_history_action(
-                start_index=1
-            )
-            if penultimate_action is not None and os.path.isdir(
-                penultimate_action.target
-            ):
+            penultimate_action = FileAction.get_history_action(start_index=1)
+            if penultimate_action is not None and os.path.isdir(penultimate_action.target):
                 target_dir = penultimate_action.target
         elif len(self._filtered_target_dirs) == 0 or ctrl:
             self._handle_target_directory(move_func=None)
@@ -1358,9 +1318,7 @@ class MarkedFiles(SmartDialog):
         else:
             self._test_is_in_directory(target_dir=target_dir, shift=shift)
 
-    def _find_is_downstream_related_image_in_directory(
-        self, target_dir: str
-    ) -> None:
+    def _find_is_downstream_related_image_in_directory(self, target_dir: str) -> None:
         from files.file_browser import FileBrowser
         from image.image_data_extractor import image_data_extractor
 
@@ -1374,16 +1332,12 @@ class MarkedFiles(SmartDialog):
             )
         MarkedFiles.file_browser._gather_files(files=None)
 
-        marked_file_basenames = [
-            os.path.basename(f) for f in MarkedFiles.file_marks
-        ]
+        marked_file_basenames = [os.path.basename(f) for f in MarkedFiles.file_marks]
         downstream_related_images: list[str] = []
         for path in MarkedFiles.file_browser.filepaths:
             if path in MarkedFiles.file_marks:
                 continue
-            related_image_path = image_data_extractor.get_related_image_path(
-                path
-            )
+            related_image_path = image_data_extractor.get_related_image_path(path)
             if related_image_path is not None:
                 if related_image_path in MarkedFiles.file_marks:
                     downstream_related_images.append(path)
@@ -1404,9 +1358,7 @@ class MarkedFiles(SmartDialog):
                 )
             )
         else:
-            self._app_actions.toast(
-                _("No downstream related images found")
-            )
+            self._app_actions.toast(_("No downstream related images found"))
 
     # ==================================================================
     # Paging
@@ -1436,7 +1388,7 @@ class MarkedFiles(SmartDialog):
     def _apply_filter(self) -> None:
         if self._filter_text:
             self._filter_label.setText(
-                _("Filter: {}").format(self._filter_text)
+                _("Filter: {0}").format(self._filter_text)
             ) if self._is_gui else None
             if self._is_gui:
                 self._filter_label.setVisible(True)
@@ -1497,15 +1449,9 @@ class MarkedFiles(SmartDialog):
         move_func = Utils.copy_file if shift else Utils.move_file
 
         if alt:
-            penultimate_action = FileActionsWindow.get_history_action(
-                start_index=1
-            )
-            if penultimate_action is not None and os.path.isdir(
-                penultimate_action.target
-            ):
-                self._move_marks_to_dir(
-                    target_dir=penultimate_action.target, move_func=move_func
-                )
+            penultimate_action = FileAction.get_history_action(start_index=1)
+            if penultimate_action is not None and os.path.isdir(penultimate_action.target):
+                self._move_marks_to_dir(target_dir=penultimate_action.target, move_func=move_func)
         elif len(self._filtered_target_dirs) == 0 or ctrl:
             self._handle_target_directory(move_func=move_func)
         else:

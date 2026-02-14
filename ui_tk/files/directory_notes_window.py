@@ -2,11 +2,11 @@ import os
 from tkinter import Label, Text, LEFT, W, END, font, filedialog
 from tkinter.ttk import Button, Frame, Separator
 
-from utils.app_style import AppStyle
+from files.directory_notes import DirectoryNotes
 from lib.tk_scroll_demo import ScrollFrame
 from lib.multi_display import SmartToplevel
+from utils.app_style import AppStyle
 from utils.translations import I18N
-from files.directory_notes import DirectoryNotes
 
 _ = I18N._
 
