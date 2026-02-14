@@ -1100,5 +1100,6 @@ class ImageDetails(SmartDialog):
         self.close()
 
     def closeEvent(self, event) -> None:  # noqa: N802
+        self._app_actions.set_image_details_window(None)
         self._has_closed = True
         super().closeEvent(event)
