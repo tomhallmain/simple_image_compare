@@ -86,7 +86,7 @@ class FavoritesWindow:
             open_dirs = self.app_actions.get_open_directories()
         recent_dirs = []
         try:
-            from files.recent_directory_window import RecentDirectories
+            from files.recent_directories import RecentDirectories
             recent_dirs = RecentDirectories.directories[:]
         except Exception:
             pass

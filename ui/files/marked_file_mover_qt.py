@@ -18,8 +18,7 @@ from __future__ import annotations
 
 import os
 import re
-import sys
-from typing import Callable, Optional, Tuple
+from typing import Optional
 
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut
@@ -28,16 +27,15 @@ from PySide6.QtWidgets import (
     QScrollArea, QVBoxLayout, QWidget,
 )
 
+from files.marked_files import MarkedFiles
 from files.file_action import FileAction
 from image.frame_cache import FrameCache
-from image.image_ops import ImageOps
 from lib.multi_display_qt import SmartDialog
 from ui.app_style import AppStyle
 from ui.auth.password_utils import require_password
 from utils.app_actions import AppActions
-from utils.app_info_cache import app_info_cache
 from utils.config import config
-from utils.constants import Mode, ActionType, ProtectedActions
+from utils.constants import Mode, ProtectedActions
 from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils
@@ -46,7 +44,7 @@ _ = I18N._
 logger = get_logger("marked_file_mover_qt")
 
 
-class MarkedFiles(SmartDialog):
+class MarkedFileMover(SmartDialog):
     """
     Move / copy / delete marked files to target directories.
 
@@ -58,183 +56,13 @@ class MarkedFiles(SmartDialog):
       dialog with no widgets; the user types to filter, presses Enter.
     """
 
-    # ==================================================================
-    # Class-level shared state
-    # ==================================================================
-    file_marks: list[str] = []
-    mark_cursor: int = -1
-    mark_target_dirs: list[str] = []
-    previous_marks: list[str] = []
-    last_moved_image: Optional[str] = None
-    last_set_target_dir: Optional[str] = None
-    file_browser = None  # FileBrowser for test_is_in_directory
-
-    _current_window: Optional[MarkedFiles] = None
-
-    is_performing_action: bool = False
-    is_cancelled_action: bool = False
-    delete_lock: bool = False
-    gimp_opened_in_last_action: bool = False
+    _current_window: Optional[MarkedFileMover] = None
 
     MAX_HEIGHT: int = 900
     COL_0_WIDTH: int = 600
 
     # ==================================================================
-    # Static persistence
-    # ==================================================================
-    @staticmethod
-    def load_target_dirs() -> None:
-        MarkedFiles.set_target_dirs(
-            app_info_cache.get_meta("marked_file_target_dirs", default_val=[])
-        )
-
-    @staticmethod
-    def set_target_dirs(target_dirs: list[str]) -> None:
-        MarkedFiles.mark_target_dirs = target_dirs
-        for d in MarkedFiles.mark_target_dirs[:]:
-            if not os.path.isdir(d):
-                if sys.platform == "win32" and not d.startswith("C:\\"):
-                    base_dir = d.split("\\")[0] + "\\"
-                    if not os.path.isdir(base_dir):
-                        continue
-                MarkedFiles.mark_target_dirs.remove(d)
-                logger.warning(f"Removed stale target directory reference: {d}")
-
-    @staticmethod
-    def store_target_dirs() -> None:
-        app_info_cache.set_meta(
-            "marked_file_target_dirs", MarkedFiles.mark_target_dirs
-        )
-
-    # ==================================================================
-    # Static mark management
-    # ==================================================================
-    @staticmethod
-    def add_mark_if_not_present(filepath: str) -> bool:
-        if filepath not in MarkedFiles.file_marks:
-            MarkedFiles.file_marks.append(filepath)
-            return True
-        return False
-
-    @staticmethod
-    def set_delete_lock(delete_lock: bool = True) -> None:
-        MarkedFiles.delete_lock = delete_lock
-
-    @staticmethod
-    def clear_file_marks(toast_callback) -> None:
-        MarkedFiles.file_marks = []
-        toast_callback(_("Marks cleared."))
-
-    @staticmethod
-    def set_current_marks_from_previous(toast_callback) -> None:
-        for f in MarkedFiles.previous_marks:
-            if f not in MarkedFiles.file_marks and os.path.exists(f):
-                MarkedFiles.file_marks.append(f)
-        toast_callback(
-            _("Set current marks from previous.")
-            + "\n"
-            + _("Total set: {0}").format(len(MarkedFiles.file_marks))
-        )
-
-    @staticmethod
-    def handle_file_removal(filepath: str) -> None:
-        if filepath in MarkedFiles.file_marks:
-            filepath_index = MarkedFiles.file_marks.index(filepath)
-            if filepath_index < MarkedFiles.mark_cursor:
-                MarkedFiles.mark_cursor -= 1
-            elif filepath_index == len(MarkedFiles.file_marks) - 1:
-                MarkedFiles.mark_cursor = 0
-            MarkedFiles.file_marks.remove(filepath)
-
-    @staticmethod
-    def remove_marks_for_base_dir(base_dir, app_actions) -> None:
-        if len(MarkedFiles.file_marks) > 0 and base_dir and base_dir != "":
-            removed_count = 0
-            i = 0
-            while i < len(MarkedFiles.file_marks):
-                marked_file = MarkedFiles.file_marks[i]
-                if os.path.dirname(marked_file) == base_dir:
-                    MarkedFiles.file_marks.remove(marked_file)
-                    removed_count += 1
-                    if MarkedFiles.mark_cursor >= len(MarkedFiles.file_marks):
-                        MarkedFiles.mark_cursor = 0
-                    elif MarkedFiles.mark_cursor > i:
-                        MarkedFiles.mark_cursor -= 1
-                else:
-                    i += 1
-            if len(MarkedFiles.file_marks) == 0:
-                app_actions.toast(_("Marks cleared."))
-            elif removed_count > 0:
-                app_actions.toast(
-                    _("Removed {0} marks").format(removed_count)
-                )
-
-    # ==================================================================
-    # Static action runners
-    # ==================================================================
-    @staticmethod
-    def run_previous_action(app_actions, current_image=None):
-        previous_action = FileAction.get_history_action(start_index=0)
-        if previous_action is None:
-            return False, False
-        return MarkedFiles.move_marks_to_dir_static(
-            app_actions,
-            target_dir=previous_action.target,
-            move_func=previous_action.action,
-            single_image=(len(MarkedFiles.file_marks) == 1),
-            current_image=current_image,
-        )
-
-    @staticmethod
-    def run_penultimate_action(app_actions, current_image=None):
-        penultimate_action = FileAction.get_history_action(start_index=1)
-        if penultimate_action is None:
-            return False, False
-        return MarkedFiles.move_marks_to_dir_static(
-            app_actions,
-            target_dir=penultimate_action.target,
-            move_func=penultimate_action.action,
-            single_image=(len(MarkedFiles.file_marks) == 1),
-            current_image=current_image,
-        )
-
-    @staticmethod
-    def run_permanent_action(app_actions, current_image=None):
-        if not FileAction.permanent_action:
-            app_actions.toast(_("NO_MARK_TARGET_SET"))
-            return False, False
-        return MarkedFiles.move_marks_to_dir_static(
-            app_actions,
-            target_dir=FileAction.permanent_action.target,
-            move_func=FileAction.permanent_action.action,
-            single_image=(len(MarkedFiles.file_marks) == 1),
-            current_image=current_image,
-        )
-
-    @staticmethod
-    def run_hotkey_action(
-        app_actions,
-        current_image=None,
-        number: int = -1,
-        shift_key_pressed: bool = False,
-    ):
-        assert number in range(10)
-        if number not in FileAction.hotkey_actions:
-            app_actions.toast(
-                _("NO_HOTKEY_ACTION_SET").format(number, number)
-            )
-            return False, False
-        file_action = FileAction.hotkey_actions[number]
-        return MarkedFiles.move_marks_to_dir_static(
-            app_actions,
-            target_dir=file_action.target,
-            move_func=file_action.get_action(do_flip=shift_key_pressed),
-            single_image=(len(MarkedFiles.file_marks) == 1),
-            current_image=current_image,
-        )
-
-    # ==================================================================
-    # Static target directory helper
+    # Static helper methods
     # ==================================================================
     @staticmethod
     def get_target_directory(
@@ -257,558 +85,21 @@ class MarkedFiles(SmartDialog):
         )
         return target_dir, False
 
-    # ==================================================================
-    # Core file operations (static)
-    # ==================================================================
     @staticmethod
-    def move_marks_to_dir_static(
-        app_actions,
-        target_dir=None,
-        move_func=None,
-        files=None,
-        single_image: bool = False,
-        current_image=None,
-    ) -> Tuple[bool, bool]:
-        """Move or copy the marked files to *target_dir*."""
-        if move_func is None:
-            move_func = Utils.move_file
-
-        MarkedFiles.is_performing_action = True
-        some_files_already_present = False
-        is_moving = move_func == Utils.move_file
-        action_part1 = _("Moving") if is_moving else _("Copying")
-        MarkedFiles.previous_marks.clear()
-        files_to_move = MarkedFiles.file_marks if files is None else files
-        action = FileAction(move_func, target_dir, MarkedFiles.file_marks)
-
-        if len(files_to_move) > 1:
-            logger.warning(
-                f"{action_part1} {len(files_to_move)} files to directory: {target_dir}"
-            )
-
-        exceptions: dict[str, tuple] = {}
-        invalid_files: list[str] = []
-        set_last_moved_file = False
-
-        for marked_file in files_to_move:
-            if MarkedFiles.is_cancelled_action:
-                break
-
-            # Resolve source path for SVG
-            source_path = marked_file
-            moved_svg_as_png = False
-            if config.enable_svgs and marked_file.lower().endswith(".svg"):
-                cached_png = FrameCache.get_cached_path(marked_file)
-                if cached_png and os.path.isfile(cached_png):
-                    if config.marked_file_svg_move_type == "png":
-                        if is_moving and current_image == marked_file and app_actions:
-                            app_actions.release_media_canvas()
-                        source_path = cached_png
-                        moved_svg_as_png = True
-                    elif is_moving:
-                        if current_image == marked_file and app_actions:
-                            app_actions.release_media_canvas()
-                        FrameCache.remove_from_cache(
-                            marked_file, delete_temp_file=True
-                        )
-
-            new_filename = os.path.join(
-                target_dir, os.path.basename(source_path)
-            )
-            if not set_last_moved_file:
-                MarkedFiles.last_moved_image = new_filename
-                set_last_moved_file = True
-
-            success, result = MarkedFiles._process_single_file_operation(
-                marked_file,
-                target_dir,
-                move_func,
-                new_filename,
-                current_image,
-                app_actions,
-                overwrite_existing=config.move_marks_overwrite_existing_file,
-                source_path=source_path,
-            )
-
-            if success:
-                action.add_file(result)
-                MarkedFiles.previous_marks.append(marked_file)
-                if moved_svg_as_png and is_moving:
-                    FrameCache.remove_from_cache(
-                        marked_file, delete_temp_file=False
-                    )
-                    if app_actions:
-                        try:
-                            app_actions.delete(
-                                marked_file, toast=False, manual_delete=False
-                            )
-                        except Exception as e:
-                            logger.warning(
-                                f"Failed to remove SVG after moving PNG: "
-                                f"{marked_file} - {e}"
-                            )
-            else:
-                exceptions[marked_file] = (result, new_filename)
-                if not os.path.exists(marked_file):
-                    invalid_files.append(marked_file)
-
-        if MarkedFiles.is_cancelled_action:
-            MarkedFiles.is_cancelled_action = False
-            MarkedFiles.is_performing_action = False
-            logger.warning(f"Cancelled {action_part1} to {target_dir}")
-            if len(MarkedFiles.previous_marks) > 0:
-                MarkedFiles.undo_move_marks(
-                    app_actions.get_base_dir(), app_actions
-                )
-            return False, False
-
-        if len(exceptions) < len(files_to_move):
-            FileAction.update_history(action)
-            action_type = (
-                ActionType.MOVE_FILE if is_moving else ActionType.COPY_FILE
-            )
-            target_dir_name = Utils.get_relative_dirpath(target_dir, levels=2)
-            if is_moving:
-                message = _("Moved {0} files to {1}").format(
-                    len(files_to_move) - len(exceptions), target_dir_name
-                )
-            else:
-                message = _("Copied {0} files to {1}").format(
-                    len(files_to_move) - len(exceptions), target_dir_name
-                )
-            logger.warning(message.replace("\n", " "))
-            app_actions.title_notify(
-                message, base_message=target_dir_name, action_type=action_type
-            )
-            MarkedFiles.delete_lock = False
-
-        MarkedFiles.file_marks.clear()
-        exceptions_present = len(exceptions) > 0
-
-        if exceptions_present:
-            action_part3 = "move" if is_moving else "copy"
-            logger.error(f"Failed to {action_part3} some files:")
-            names_are_short = False
-            matching_files = False
-            content_matching_files = False
-
-            for marked_file, exc_tuple in exceptions.items():
-                error_msg = exc_tuple[0]
-                target_filepath = exc_tuple[1]
-                logger.error(error_msg)
-
-                if marked_file not in invalid_files:
-                    if (
-                        not config.clear_marks_with_errors_after_move
-                        and not single_image
-                    ):
-                        MarkedFiles.file_marks.append(marked_file)
-
-                    if error_msg.startswith("File already exists"):
-                        if Utils.calculate_hash(marked_file) == Utils.calculate_hash(
-                            target_filepath
-                        ):
-                            matching_files = True
-                            logger.info(
-                                f"File hashes match: {marked_file} <> {target_filepath}"
-                            )
-                            if is_moving and marked_file != target_filepath:
-                                if MarkedFiles._check_delete_source_file(
-                                    marked_file,
-                                    target_dir,
-                                    target_filepath,
-                                    app_actions,
-                                ):
-                                    MarkedFiles._auto_delete_source_file(
-                                        marked_file, current_image, app_actions
-                                    )
-                        elif ImageOps.compare_image_content_without_exif(
-                            marked_file, target_filepath
-                        ):
-                            logger.info(
-                                f"File hashes differ but image content matches: "
-                                f"{marked_file} <> {target_filepath}"
-                            )
-                            logger.info(
-                                "Replacing target file with source file "
-                                "(source has more EXIF data)"
-                            )
-                            try:
-                                success2, result2 = MarkedFiles._process_single_file_operation(
-                                    marked_file,
-                                    os.path.dirname(target_filepath),
-                                    move_func,
-                                    target_filepath,
-                                    current_image,
-                                    app_actions,
-                                    overwrite_existing=True,
-                                )
-                                if success2:
-                                    content_matching_files = True
-                                    logger.info(
-                                        "Replaced target file with source: "
-                                        + marked_file
-                                    )
-                                    del exceptions[marked_file]
-                                    action.add_file(target_filepath)
-                                    MarkedFiles.previous_marks.append(
-                                        marked_file
-                                    )
-                                else:
-                                    error_text = (
-                                        f"Failed to replace target file with "
-                                        f"source: {marked_file} - {result2}"
-                                    )
-                                    logger.warning(error_text)
-                                    app_actions.title_notify(error_text)
-                            except Exception as e:
-                                error_text = (
-                                    f"Failed to replace target file with "
-                                    f"source: {marked_file} - {e}"
-                                )
-                                logger.warning(error_text)
-                                app_actions.title_notify(error_text)
-                        elif (
-                            len(os.path.basename(marked_file)) < 13
-                            and not names_are_short
-                        ):
-                            names_are_short = True
-
-                        if not some_files_already_present:
-                            some_files_already_present = True
-                            if not matching_files:
-                                try:
-                                    app_actions.copy_media_path(
-                                        target_filepath
-                                    )
-                                    logger.info(
-                                        f"Copied first target file path to "
-                                        f"clipboard: {target_filepath}"
-                                    )
-                                except Exception as e:
-                                    logger.warning(
-                                        f"Failed to copy file path to "
-                                        f"clipboard: {e}"
-                                    )
-
-            if some_files_already_present:
-                if (
-                    config.clear_marks_with_errors_after_move
-                    and not single_image
-                ):
-                    logger.info("Cleared invalid marks by config option")
-                warning = _("Existing filenames match!")
-                if matching_files:
-                    warning += "\n" + _("WARNING: Exact file match.")
-                if content_matching_files:
-                    warning += "\n" + _(
-                        "INFO: Target files with different EXIF data replaced."
-                    )
-                if names_are_short:
-                    warning += "\n" + _("WARNING: Short filenames.")
-                app_actions.warn(warning)
-
-        MarkedFiles.is_performing_action = False
-        if len(MarkedFiles.previous_marks) > 0:
-            MarkedFiles.last_set_target_dir = target_dir
-            if is_moving:
-                app_actions.refresh(
-                    removed_files=list(MarkedFiles.previous_marks)
-                )
-            else:
-                app_actions.refresh()
-            if not exceptions_present:
-                app_actions.refocus()
-        return some_files_already_present, exceptions_present
-
-    @staticmethod
-    def undo_move_marks(base_dir, app_actions) -> None:
+    def undo_move_marks(target_dir, app_actions) -> None:
         """Undo the previous move/copy operation."""
-        if MarkedFiles.is_performing_action:
-            MarkedFiles.is_cancelled_action = True
-            return
-        if MarkedFiles.delete_lock:
-            return
-
-        is_moving_back = (
-            FileAction.action_history[0].action == Utils.move_file
-        )
-        action_part1 = (
-            _("Moving back") if is_moving_back else _("Removing")
-        )
-        action_part2 = _("Moved back") if is_moving_back else _("Removed")
-
-        target_dir, target_was_valid = MarkedFiles.get_target_directory(
-            MarkedFiles.last_set_target_dir, None, app_actions
-        )
-        if not target_was_valid:
-            raise Exception(
-                f"{action_part1} previously marked files failed, "
-                f"somehow previous target directory invalid: {target_dir}"
-            )
-
-        if base_dir is None:
+        def get_base_dir_callback():
             base_dir = QFileDialog.getExistingDirectory(
                 None,
                 _("Where should the marked files have gone?"),
                 target_dir or "",
             )
-        if base_dir is None or base_dir == "" or not os.path.isdir(base_dir):
-            raise Exception(
-                "Failed to get valid base directory for undo move marked files."
-            )
-
-        logger.warning(
-            f"Undoing action: {action_part1} {len(MarkedFiles.previous_marks)} "
-            f"files from directory:\n{MarkedFiles.last_set_target_dir}"
+            return base_dir
+        return MarkedFiles.undo_move_marks(
+            target_dir, app_actions,
+            get_base_dir_callback=get_base_dir_callback,
+            get_target_dir_callback=MarkedFileMover.get_target_directory
         )
-
-        exceptions: dict[str, str] = {}
-        invalid_files: list[str] = []
-        action = FileAction.action_history[0]
-
-        for i, marked_file in enumerate(MarkedFiles.previous_marks):
-            if i < len(action.new_files):
-                expected_new_filepath = action.new_files[i]
-            else:
-                expected_new_filepath = os.path.join(
-                    target_dir, os.path.basename(marked_file)
-                )
-            try:
-                if is_moving_back:
-                    Utils.move_file(
-                        expected_new_filepath,
-                        base_dir,
-                        overwrite_existing=config.move_marks_overwrite_existing_file,
-                    )
-                else:
-                    os.remove(expected_new_filepath)
-                logger.info(
-                    f"{action_part2} file from {target_dir}: "
-                    f"{os.path.basename(expected_new_filepath)}"
-                )
-            except Exception as e:
-                exceptions[marked_file] = str(e)
-                if is_moving_back:
-                    if not os.path.exists(marked_file):
-                        invalid_files.append(expected_new_filepath)
-                elif os.path.exists(expected_new_filepath):
-                    invalid_files.append(expected_new_filepath)
-
-        if len(exceptions) < len(MarkedFiles.previous_marks):
-            if is_moving_back:
-                message = _("Moved back {0} files from {1}").format(
-                    len(MarkedFiles.previous_marks) - len(exceptions),
-                    target_dir,
-                )
-            else:
-                message = _("Removed {0} files from {1}").format(
-                    len(MarkedFiles.previous_marks) - len(exceptions),
-                    target_dir,
-                )
-            app_actions.toast(message)
-
-        MarkedFiles.previous_marks.clear()
-        if len(exceptions) > 0:
-            for marked_file in exceptions:
-                if marked_file not in invalid_files:
-                    MarkedFiles.previous_marks.append(marked_file)
-            action_part3 = "move" if is_moving_back else "copy"
-            raise Exception(
-                f"Failed to {action_part3} some files: {exceptions}"
-            )
-        app_actions.refresh()
-
-    @staticmethod
-    def test_in_directory_static(
-        app_actions, target_dir=None, single_image: bool = False
-    ) -> bool:
-        """Check if the marked files already exist in *target_dir*."""
-        MarkedFiles.is_performing_action = True
-        if len(MarkedFiles.file_marks) > 1:
-            logger.info(
-                f"Checking if {len(MarkedFiles.file_marks)} files "
-                f"are in directory: {target_dir}"
-            )
-
-        found_files: list[tuple[str, str]] = []
-        for marked_file in MarkedFiles.file_marks:
-            new_filename = os.path.join(
-                target_dir, os.path.basename(marked_file)
-            )
-            if os.path.isfile(new_filename):
-                logger.warning(
-                    f"{marked_file} is already present in {target_dir}"
-                )
-                found_files.append((marked_file, new_filename))
-
-        names_are_short = False
-        matching_files = 0
-        content_matching_files = 0
-        for marked_file, new_filename in found_files:
-            if Utils.calculate_hash(marked_file) == Utils.calculate_hash(
-                new_filename
-            ):
-                matching_files += 1
-                logger.info(
-                    f"File hashes match: {marked_file} <> {new_filename}"
-                )
-            elif ImageOps.compare_image_content_without_exif(
-                marked_file, new_filename
-            ):
-                content_matching_files += 1
-                logger.info(
-                    f"File hashes differ but image content matches: "
-                    f"{marked_file} <> {new_filename}"
-                )
-            elif (
-                len(os.path.basename(marked_file)) < 13
-                and not names_are_short
-            ):
-                names_are_short = True
-
-        if len(found_files) > 0:
-            warning = _("Existing filenames found!")
-            if matching_files == len(MarkedFiles.file_marks):
-                warning += "\n" + _("WARNING: All file hashes match.")
-            elif matching_files > 0:
-                warning += "\n" + _(
-                    "WARNING: %s of %s file hashes match."
-                ).format(matching_files, len(MarkedFiles.file_marks))
-            if content_matching_files > 0:
-                warning += "\n" + _(
-                    "INFO: %s files have identical content but different EXIF data."
-                ).format(content_matching_files)
-            if (matching_files + content_matching_files) == len(
-                MarkedFiles.file_marks
-            ):
-                warning += "\n" + _(
-                    "WARNING: All files are either identical or have "
-                    "matching content."
-                )
-            if names_are_short:
-                warning += "\n" + _("WARNING: Short filenames.")
-            app_actions.warn(warning)
-        else:
-            app_actions.toast(_("No existing filenames found."))
-
-        app_actions.refocus()
-        return len(found_files) > 0
-
-    @staticmethod
-    def _check_delete_source_file(
-        marked_file: str,
-        target_dir: str,
-        target_filepath: str,
-        app_actions,
-    ) -> bool:
-        """Check if we should delete the source after a move (duplicate)."""
-        if MarkedFiles.gimp_opened_in_last_action:
-            MarkedFiles.gimp_opened_in_last_action = False
-            return True
-
-        should_check = False
-
-        if len(FileAction.action_history) == 0:
-            MarkedFiles.gimp_opened_in_last_action = False
-            return True
-
-        previous_action = FileAction.action_history[0]
-        if previous_action.target == target_dir:
-            if (
-                marked_file in previous_action.original_marks
-                or target_filepath in previous_action.new_files
-            ):
-                should_check = True
-
-        if should_check:
-            warning_message = _(
-                "WARNING: You just copied this file to this directory, "
-                "and now you're trying to move it here.\n\n"
-                "This would delete the original file. If this was a mistake, "
-                "please cancel this operation.\n\n"
-                "File: {0}\n"
-                "Target: {1}\n\n"
-                "Do you want to continue and delete the source file?"
-            ).format(os.path.basename(marked_file), target_dir)
-
-            if app_actions.alert(
-                _("Potential Mistake Detected"),
-                warning_message,
-                kind="askokcancel",
-            ):
-                logger.warning(
-                    f"User confirmed deletion after copy-then-move "
-                    f"detection for {marked_file}"
-                )
-                MarkedFiles.gimp_opened_in_last_action = False
-                return True
-            else:
-                logger.warning(
-                    f"User cancelled deletion after copy-then-move "
-                    f"detection for {marked_file}"
-                )
-                MarkedFiles.gimp_opened_in_last_action = False
-                return False
-
-        MarkedFiles.gimp_opened_in_last_action = False
-        return True
-
-    @staticmethod
-    def _auto_delete_source_file(
-        marked_file: str,
-        current_image: Optional[str] = None,
-        app_actions=None,
-    ) -> None:
-        """Auto-delete source after move when target already exists."""
-        try:
-            if current_image is not None and current_image == marked_file:
-                app_actions.release_media_canvas()
-            app_actions.delete(marked_file)
-            if marked_file in MarkedFiles.file_marks:
-                MarkedFiles.file_marks.remove(marked_file)
-            app_actions.warn(
-                _("Removed marked file from source: {0}").format(marked_file)
-            )
-        except Exception as e:
-            error_text = (
-                f"Failed to remove marked file from source: "
-                f"{marked_file} - {e}"
-            )
-            logger.warning(error_text)
-            app_actions.title_notify(error_text)
-
-    @staticmethod
-    def _process_single_file_operation(
-        marked_file: str,
-        target_dir: str,
-        move_func: Callable,
-        new_filename: str,
-        current_image: Optional[str] = None,
-        app_actions=None,
-        overwrite_existing: bool = False,
-        source_path: Optional[str] = None,
-    ) -> Tuple[bool, str]:
-        """Process a single file move/copy with thread-safe lock."""
-        actual_source = source_path if source_path is not None else marked_file
-        new_filename = os.path.join(target_dir, os.path.basename(actual_source))
-        is_moving = move_func == Utils.move_file
-
-        try:
-            with Utils.file_operation_lock:
-                if is_moving and current_image == marked_file:
-                    if app_actions:
-                        app_actions.release_media_canvas()
-                move_func(
-                    actual_source,
-                    target_dir,
-                    overwrite_existing=overwrite_existing,
-                )
-            action_part2 = _("Moved") if is_moving else _("Copied")
-            logger.info(f"{action_part2} file to {new_filename}")
-            return True, new_filename
-        except Exception as e:
-            return False, str(e)
 
     # ==================================================================
     # Factory
@@ -824,19 +115,19 @@ class MarkedFiles(SmartDialog):
         base_dir: str = ".",
     ):
         """Create or focus the MarkedFiles dialog. Returns the instance."""
-        if MarkedFiles._current_window is not None:
+        if MarkedFileMover._current_window is not None:
             try:
-                if MarkedFiles._current_window.isVisible():
-                    win = MarkedFiles._current_window
+                if MarkedFileMover._current_window.isVisible():
+                    win = MarkedFileMover._current_window
                     win.setWindowTitle(_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)))
                     win.setWindowOpacity(1.0)
                     win.raise_()
                     win.activateWindow()
                     return win
             except Exception:
-                MarkedFiles._current_window = None
+                MarkedFileMover._current_window = None
 
-        window = MarkedFiles(
+        window = MarkedFileMover(
             master,
             is_gui,
             single_image,
@@ -868,7 +159,7 @@ class MarkedFiles(SmartDialog):
             title=_("Move {0} Marked File(s)").format(len(MarkedFiles.file_marks)),
             geometry=geometry,
         )
-        MarkedFiles._current_window = self
+        MarkedFileMover._current_window = self
 
         self._is_gui = is_gui
         self._single_image = single_image
@@ -1000,9 +291,7 @@ class MarkedFiles(SmartDialog):
 
             move_btn = QPushButton(_("Move"))
             move_btn.clicked.connect(
-                lambda _=False, d=target_dir: self._move_marks_to_dir(
-                    target_dir=d
-                )
+                lambda _=False, d=target_dir: self._move_marks_to_dir(target_dir=d)
             )
             row.addWidget(move_btn)
 
@@ -1033,11 +322,8 @@ class MarkedFiles(SmartDialog):
         self, target_dir=None, move_func=Utils.move_file
     ) -> Optional[str]:
         """Validate/ask for target dir, add to list, trigger action."""
-        target_dir, target_was_valid = MarkedFiles.get_target_directory(
-            target_dir,
-            self._starting_target,
-            self._app_actions,
-            parent=self,
+        target_dir, target_was_valid = MarkedFileMover.get_target_directory(
+            target_dir, self._starting_target, self._app_actions, parent=self
         )
         if not target_dir or not os.path.isdir(target_dir):
             self.close_windows()
@@ -1219,9 +505,7 @@ class MarkedFiles(SmartDialog):
 
     def set_hotkey_action(self, event=None, hotkey_override=None) -> None:
         assert event is not None or hotkey_override is not None
-        self._do_set_hotkey_action = (
-            int(hotkey_override) if hotkey_override is not None else -1
-        )
+        self._do_set_hotkey_action = int(hotkey_override) if hotkey_override is not None else -1
         logger.debug(f"Doing set hotkey action: {self._do_set_hotkey_action}")
         self._app_actions.toast(_("Recording next mark target and action."))
 
@@ -1259,10 +543,21 @@ class MarkedFiles(SmartDialog):
     def _create_pdf_from_marks(self, output_path=None) -> None:
         from files.pdf_creator import PDFCreator
         from ui.files.pdf_options_window_qt import PDFOptionsWindow
+        from PySide6.QtWidgets import QFileDialog
+
+        def _save_file_dialog(default_dir, default_name):
+            path, _filter = QFileDialog.getSaveFileName(
+                self,
+                _("Save PDF as"),
+                os.path.join(default_dir, default_name + ".pdf"),
+                "PDF files (*.pdf)",
+            )
+            return path or None
 
         def pdf_callback(options):
             PDFCreator.create_pdf_from_files(
-                MarkedFiles.file_marks, self._app_actions, output_path, options
+                MarkedFiles.file_marks, self._app_actions, output_path, options,
+                save_file_callback=_save_file_dialog,
             )
 
         PDFOptionsWindow.show(self, self._app_actions, pdf_callback)
@@ -1552,8 +847,8 @@ class MarkedFiles(SmartDialog):
         self.close()
 
     def closeEvent(self, event) -> None:  # noqa: N802
-        if MarkedFiles._current_window is self:
-            MarkedFiles._current_window = None
+        if MarkedFileMover._current_window is self:
+            MarkedFileMover._current_window = None
         if (
             self._single_image is not None
             and len(MarkedFiles.file_marks) == 1

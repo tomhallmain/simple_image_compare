@@ -131,7 +131,7 @@ class FavoritesWindow(SmartDialog):
 
         recent_dirs: list[str] = []
         try:
-            from files.recent_directory_window import RecentDirectories
+            from files.recent_directories import RecentDirectories
             recent_dirs = RecentDirectories.directories[:]
         except Exception:
             pass

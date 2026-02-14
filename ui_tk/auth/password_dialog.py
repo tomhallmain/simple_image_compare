@@ -1,10 +1,10 @@
 from tkinter import Frame, Label, StringVar, Entry, Button, messagebox, Checkbutton, BooleanVar
 import tkinter.font as fnt
 
-from auth.password_core import PasswordManager
-from auth.password_session_manager import PasswordSessionManager
 from lib.caps_lock_mixin import CapsLockMixin
 from lib.multi_display import SmartToplevel
+from ui_tk.auth.password_core import PasswordManager
+from ui_tk.auth.password_session_manager import PasswordSessionManager
 from utils.app_style import AppStyle
 from utils.translations import I18N
 

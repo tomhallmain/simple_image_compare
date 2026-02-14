@@ -4,9 +4,9 @@ This module provides the authentication flow logic and decorators.
 It imports from password_core.py and password_dialog.py to avoid circular dependencies.
 """
 
-from auth.password_core import get_security_config, PasswordManager
-from auth.password_dialog import PasswordDialog
-from auth.password_session_manager import PasswordSessionManager
+from ui_tk.auth.password_core import get_security_config, PasswordManager
+from ui_tk.auth.password_dialog import PasswordDialog
+from ui_tk.auth.password_session_manager import PasswordSessionManager
 from utils.constants import ProtectedActions
 
 

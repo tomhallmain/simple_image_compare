@@ -1,6 +1,4 @@
-import io
 import os
-from tkinter import filedialog
 
 from PIL import Image
 import pypdfium2 as pdfium
@@ -8,10 +6,10 @@ import pypdfium2 as pdfium
 from image.frame_cache import FrameCache
 from utils.logging_setup import get_logger
 from utils.translations import I18N
-from utils.utils import Utils
 
 _ = I18N._
 logger = get_logger("pdf_creator")
+
 
 class PDFCreator:
     """
@@ -21,18 +19,23 @@ class PDFCreator:
     """
     
     @staticmethod
-    def create_pdf_from_files(file_paths, app_actions, output_path=None, options=None):
+    def create_pdf_from_files(file_paths, app_actions, output_path=None, options=None,
+                              save_file_callback=None):
         """
         Create a PDF from a list of files. Each file will be added as a page in the PDF.
         
         Args:
             file_paths: List of file paths to include in the PDF
             app_actions: AppActions instance for UI feedback
-            output_path: Optional path to save the PDF. If None, will prompt user.
+            output_path: Optional path to save the PDF. If None, will prompt user
+                         via *save_file_callback*.
             options: Dictionary of PDF creation options:
                 - preserve_quality: If True, maintain original image quality and format
                                   If False, compress images to reduce PDF size
                 - filename: Base filename for the PDF
+            save_file_callback: A callable(default_dir, default_name) -> str|None
+                that shows a "Save As" dialog and returns the chosen path, or
+                None if the user cancelled.  Required when *output_path* is None.
             
         Returns:
             bool: True if PDF was created successfully, False otherwise
@@ -49,14 +52,10 @@ class PDFCreator:
             combined_images = _('combined_images')
             default_name = options.get('filename', combined_images) if options else combined_images
             
-            output_path = filedialog.asksaveasfilename(
-                parent=app_actions.get_master(),
-                defaultextension=".pdf",
-                initialdir=default_dir,
-                initialfile=default_name,
-                filetypes=[("PDF files", "*.pdf")],
-                title=_("Save PDF as")
-            )
+            if save_file_callback is None:
+                logger.error("save_file_callback is required when output_path is not provided")
+                return False
+            output_path = save_file_callback(default_dir, default_name)
             if not output_path:
                 return False
 

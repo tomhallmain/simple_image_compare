@@ -22,11 +22,8 @@ from PySide6.QtWidgets import (
     QPushButton, QScrollArea, QVBoxLayout, QWidget,
 )
 
-from compare.classifier_actions_manager import (
-    ClassifierAction,
-    ClassifierActionsManager,
-)
-from compare.directory_profile import DirectoryProfile
+from compare.classifier_actions_manager import ClassifierAction, ClassifierActionsManager
+from files.directory_profile import DirectoryProfile
 from lib.qt_alert import qt_alert
 from ui.app_style import AppStyle
 from utils.config import config
@@ -180,16 +177,12 @@ class ClassifierActionsTab(QWidget):
 
             run_btn = QPushButton(_("Run"))
             run_btn.setFixedWidth(45)
-            run_btn.clicked.connect(
-                lambda _=False, c=ca: self._run_single(c)
-            )
+            run_btn.clicked.connect(lambda _=False, c=ca: self._run_single(c))
             row.addWidget(run_btn)
 
             active_cb = QCheckBox()
             active_cb.setChecked(ca.is_active)
-            active_cb.stateChanged.connect(
-                lambda state, c=ca: setattr(c, "is_active", bool(state))
-            )
+            active_cb.stateChanged.connect(lambda state, c=ca: setattr(c, "is_active", bool(state)))
             row.addWidget(active_cb)
 
             name_lbl = QLabel(str(ca))
@@ -203,30 +196,22 @@ class ClassifierActionsTab(QWidget):
 
             mod_btn = QPushButton(_("Modify"))
             mod_btn.setFixedWidth(55)
-            mod_btn.clicked.connect(
-                lambda _=False, c=ca: self._open_modify_window(c)
-            )
+            mod_btn.clicked.connect(lambda _=False, c=ca: self._open_modify_window(c))
             row.addWidget(mod_btn)
 
             copy_btn = QPushButton(_("Copy"))
             copy_btn.setFixedWidth(45)
-            copy_btn.clicked.connect(
-                lambda _=False, c=ca: self._open_copy_window(c)
-            )
+            copy_btn.clicked.connect(lambda _=False, c=ca: self._open_copy_window(c))
             row.addWidget(copy_btn)
 
             del_btn = QPushButton(_("Delete"))
             del_btn.setFixedWidth(52)
-            del_btn.clicked.connect(
-                lambda _=False, c=ca: self._delete(c)
-            )
+            del_btn.clicked.connect(lambda _=False, c=ca: self._delete(c))
             row.addWidget(del_btn)
 
             down_btn = QPushButton(_("Move down"))
             down_btn.setFixedWidth(75)
-            down_btn.clicked.connect(
-                lambda _=False, i=idx, c=ca: self._move_down(i, c)
-            )
+            down_btn.clicked.connect(lambda _=False, i=idx, c=ca: self._move_down(i, c))
             row.addWidget(down_btn)
 
             self._scroll_layout.addLayout(row)
@@ -237,9 +222,7 @@ class ClassifierActionsTab(QWidget):
     # Actions
     # ------------------------------------------------------------------
     def _open_modify_window(self, classifier_action=None) -> None:
-        from ui.compare.classifier_management_window_qt import (
-            ClassifierActionModifyWindow,
-        )
+        from ui.compare.classifier_management_window_qt import ClassifierActionModifyWindow
 
         if self._is_modify_window_valid():
             try:
@@ -256,9 +239,7 @@ class ClassifierActionsTab(QWidget):
         ClassifierActionsTab._modify_window.show()
 
     def _open_copy_window(self, classifier_action) -> None:
-        from ui.compare.classifier_action_copy_window_qt import (
-            ClassifierActionCopyWindow,
-        )
+        from ui.compare.classifier_action_copy_window_qt import ClassifierActionCopyWindow
 
         ClassifierActionCopyWindow(
             self.window(),
@@ -318,10 +299,7 @@ class ClassifierActionsTab(QWidget):
             parent_counts: dict[str, int] = defaultdict(int)
             for d in directories:
                 parent_counts[os.path.dirname(d)] += 1
-            return "\n".join(
-                f"{p} - {c} " + _("directories")
-                for p, c in sorted(parent_counts.items())
-            )
+            return "\n".join(f"{p} - {c} " + _("directories") for p, c in sorted(parent_counts.items()))
         return "\n".join(f"  - {d}" for d in directories)
 
     def _run_single(self, classifier_action: ClassifierAction) -> None:
@@ -334,16 +312,14 @@ class ClassifierActionsTab(QWidget):
         )
         full = f"{msg}\n\n{self._format_directory_message(profile.directories)}"
 
-        if not qt_alert(
-            _("Run Classifier Action"), full, kind="askokcancel", master=self
-        ):
+        if not qt_alert(_("Run Classifier Action"), full, kind="askokcancel", master=self):
             return
 
         hide_cb = getattr(self._app_actions, "hide_current_media", None)
         notify_cb = getattr(self._app_actions, "title_notify", None)
         add_mark_cb = None
         try:
-            from ui.files.marked_file_mover_qt import MarkedFiles
+            from files.marked_files import MarkedFiles
             add_mark_cb = MarkedFiles.add_mark_if_not_present
         except ImportError:
             pass
@@ -377,16 +353,14 @@ class ClassifierActionsTab(QWidget):
             f"\n\n{_('Directories:')}\n{dir_list}"
         )
 
-        if not qt_alert(
-            _("Run All Classifier Actions"), full, kind="askokcancel", master=self
-        ):
+        if not qt_alert(_("Run All Classifier Actions"), full, kind="askokcancel", master=self):
             return
 
         hide_cb = getattr(self._app_actions, "hide_current_media", None)
         notify_cb = getattr(self._app_actions, "title_notify", None)
         add_mark_cb = None
         try:
-            from ui.files.marked_file_mover_qt import MarkedFiles
+            from files.marked_files import MarkedFiles
             add_mark_cb = MarkedFiles.add_mark_if_not_present
         except ImportError:
             pass

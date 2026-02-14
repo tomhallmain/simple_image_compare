@@ -5,7 +5,7 @@ A simple directory picker backed by its own recent-directory list
 (separate from ``RecentDirectories``).  Subclasses
 ``DirectoryPickerDialog`` for the shared scrollable-directory-list UI.
 
-Persistence delegates to the original module's class-level cache helpers.
+Non-UI data management is in ``files.target_directories.TargetDirectories``.
 """
 
 from __future__ import annotations
@@ -15,9 +15,7 @@ from typing import Callable, Optional
 
 from PySide6.QtWidgets import QWidget
 
-from files.target_directory_window import (
-    TargetDirectoryWindow as _OrigTargetDirWindow,
-)
+from files.target_directories import TargetDirectories
 from ui.files.directory_picker_dialog import DirectoryPickerDialog
 from utils.translations import I18N
 
@@ -28,29 +26,29 @@ class TargetDirectoryWindow(DirectoryPickerDialog):
     """
     Directory picker for related-file searches.
 
-    Backed by ``_OrigTargetDirWindow.recent_directories`` (persisted
+    Backed by ``TargetDirectories.recent_directories`` (persisted
     under a separate cache key from the main recent-directories list).
     Calls ``callback(directory)`` on selection.
     """
 
-    # Delegate class-level state to the original module
-    MAX_RECENT_DIRECTORIES = _OrigTargetDirWindow.MAX_RECENT_DIRECTORIES
-    RECENT_DIRECTORIES_KEY = _OrigTargetDirWindow.RECENT_DIRECTORIES_KEY
+    # Delegate class-level state to the data module
+    MAX_RECENT_DIRECTORIES = TargetDirectories.MAX_RECENT_DIRECTORIES
+    RECENT_DIRECTORIES_KEY = TargetDirectories.RECENT_DIRECTORIES_KEY
 
     # ------------------------------------------------------------------
-    # Persistence (delegate to original module)
+    # Persistence (delegate to data module)
     # ------------------------------------------------------------------
     @staticmethod
     def load_recent_directories() -> None:
-        _OrigTargetDirWindow.load_recent_directories()
+        TargetDirectories.load_recent_directories()
 
     @staticmethod
     def save_recent_directories() -> None:
-        _OrigTargetDirWindow.save_recent_directories()
+        TargetDirectories.save_recent_directories()
 
     @staticmethod
     def add_recent_directory(directory: str) -> None:
-        _OrigTargetDirWindow.add_recent_directory(directory)
+        TargetDirectories.add_recent_directory(directory)
 
     @staticmethod
     def get_geometry() -> str:
@@ -66,7 +64,7 @@ class TargetDirectoryWindow(DirectoryPickerDialog):
         initial_dir: Optional[str] = None,
     ) -> None:
         # Ensure backing list is loaded
-        _OrigTargetDirWindow.load_recent_directories()
+        TargetDirectories.load_recent_directories()
 
         self._callback = callback
         self._initial_dir = initial_dir
@@ -82,19 +80,19 @@ class TargetDirectoryWindow(DirectoryPickerDialog):
     # DirectoryPickerDialog hooks
     # ------------------------------------------------------------------
     def _get_all_directories(self) -> list[str]:
-        return _OrigTargetDirWindow.recent_directories
+        return TargetDirectories.recent_directories
 
     def _on_directory_selected(self, directory: str) -> None:
-        _OrigTargetDirWindow.add_recent_directory(directory)
+        TargetDirectories.add_recent_directory(directory)
         if self._callback:
             self._callback(directory)
 
     def _add_directory(self, directory: str) -> None:
-        _OrigTargetDirWindow.add_recent_directory(os.path.normpath(directory))
+        TargetDirectories.add_recent_directory(os.path.normpath(directory))
 
     def _clear_directories(self) -> None:
-        _OrigTargetDirWindow.recent_directories.clear()
-        _OrigTargetDirWindow.save_recent_directories()
+        TargetDirectories.recent_directories.clear()
+        TargetDirectories.save_recent_directories()
 
     def _browse_dialog_title(self) -> str:
         return _("Select directory to search for related files")
@@ -102,7 +100,7 @@ class TargetDirectoryWindow(DirectoryPickerDialog):
     def _get_initial_browse_dir(self) -> str:
         if self._initial_dir and os.path.isdir(self._initial_dir):
             return self._initial_dir
-        dirs = _OrigTargetDirWindow.recent_directories
+        dirs = TargetDirectories.recent_directories
         if dirs and os.path.isdir(dirs[0]):
             return dirs[0]
         return os.path.expanduser("~")

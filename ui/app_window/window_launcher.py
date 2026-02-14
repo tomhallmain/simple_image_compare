@@ -192,9 +192,9 @@ class WindowLauncher:
     def open_file_actions_window(self, event=None) -> None:
         """Open the file actions window."""
         try:
+            from files.marked_files import MarkedFiles
             from ui.files.file_actions_window_qt import FileActionsWindow
             from ui.image.image_details_qt import ImageDetails
-            from ui.files.marked_file_mover_qt import MarkedFiles
             window = FileActionsWindow(
                 self._app,
                 self._app.app_actions,
@@ -340,8 +340,6 @@ class WindowLauncher:
     def run_prevalidations_for_base_dir(self, event=None) -> None:
         """Run all prevalidations on every file in the current directory."""
         from ui.compare.prevalidations_tab_qt import PrevalidationsTab
-        from ui.files.marked_file_mover_qt import MarkedFiles
-        from PySide6.QtWidgets import QMessageBox
 
         fb = self._app.file_browser
         if fb.is_slow_total_files(threshold=100, use_sortable_files=True):
@@ -358,6 +356,7 @@ class WindowLauncher:
         logger.warning("Running prevalidations for " + self._app.get_base_dir())
         PrevalidationsTab.clear_prevalidated_cache()
         from PySide6.QtWidgets import QApplication
+        from files.marked_files import MarkedFiles
         for image_path in fb.get_files():
             try:
                 PrevalidationsTab.prevalidate(

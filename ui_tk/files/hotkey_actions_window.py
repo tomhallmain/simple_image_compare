@@ -1,11 +1,9 @@
-
-
 from tkinter import Frame, Label, LEFT, W
 from tkinter.ttk import Button
 
+from files.file_action import FileAction
 from lib.multi_display import SmartToplevel
 from ui_tk.auth.password_utils import require_password
-from ui_tk.files.file_actions_window import FileActionsWindow
 from utils.app_style import AppStyle
 from utils.constants import ProtectedActions
 from utils.translations import I18N
@@ -80,13 +78,13 @@ class HotkeyActionsWindow():
         self.add_label(_label_info, hotkey_name, row=row, column=base_col, wraplength=200)
 
         if is_index:
-            if key_index in FileActionsWindow.hotkey_actions:
-                action = FileActionsWindow.hotkey_actions[key_index]
+            if key_index in FileAction.hotkey_actions:
+                action = FileAction.hotkey_actions[key_index]
             else:
                 action = _("(unset)")
         else:
-            if FileActionsWindow.permanent_action is not None:
-                action  = FileActionsWindow.permanent_action
+            if FileAction.permanent_action is not None:
+                action  = FileAction.permanent_action
             else:
                 action  = _("(unset)")
         _label_target_dir = Label(self.frame)

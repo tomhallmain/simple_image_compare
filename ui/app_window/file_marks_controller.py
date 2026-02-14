@@ -15,7 +15,8 @@ from typing import TYPE_CHECKING, Optional
 
 from PySide6.QtWidgets import QApplication
 
-from ui.files.marked_file_mover_qt import MarkedFiles
+from files.marked_files import MarkedFiles
+from ui.files.marked_file_mover_qt import MarkedFileMover
 from ui.auth.password_utils import require_password
 from utils.config import config
 from utils.constants import Mode, ProtectedActions
@@ -208,7 +209,7 @@ class FileMarksController:
             single_image = True
 
         try:
-            MarkedFiles.show_window(
+            MarkedFileMover.show_window(
                 self._app,  # parent widget for the window
                 open_gui,
                 single_image,
@@ -235,7 +236,7 @@ class FileMarksController:
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark(show_toast=False)
         MarkedFiles.run_previous_action(
-            self._app.app_actions, self._nav.get_active_media_filepath()
+            self._app.app_actions, self._nav.get_active_media_filepath(), ui_class=MarkedFileMover
         )
 
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
@@ -248,7 +249,7 @@ class FileMarksController:
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark(show_toast=False)
         MarkedFiles.run_penultimate_action(
-            self._app.app_actions, self._nav.get_active_media_filepath()
+            self._app.app_actions, self._nav.get_active_media_filepath(), ui_class=MarkedFileMover
         )
 
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
@@ -261,7 +262,7 @@ class FileMarksController:
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark(show_toast=False)
         MarkedFiles.run_permanent_action(
-            self._app.app_actions, self._nav.get_active_media_filepath()
+            self._app.app_actions, self._nav.get_active_media_filepath(), ui_class=MarkedFileMover
         )
 
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
@@ -283,6 +284,7 @@ class FileMarksController:
             self._nav.get_active_media_filepath(),
             number,
             shift_pressed,
+            ui_class=MarkedFileMover
         )
 
     def _check_marks(self, min_mark_size: int = 1) -> None:
@@ -306,7 +308,7 @@ class FileMarksController:
         Ported from App.revert_last_marks_change.
         """
         if not config.use_file_paths_json:
-            MarkedFiles.undo_move_marks(self._app.get_base_dir(), self._app.app_actions)
+            MarkedFileMover.undo_move_marks(self._app.get_base_dir(), self._app.app_actions)
 
     # ==================================================================
     # Related images / downstream marks
@@ -332,10 +334,7 @@ class FileMarksController:
             )
             if window is None:
                 self._app.window_launcher.open_recent_directory_window(
-                    extra_callback_args=(
-                        self.set_marks_from_downstream_related_images,
-                        dirs,
-                    )
+                    extra_callback_args=(self.set_marks_from_downstream_related_images, dirs)
                 )
                 return
             base_dir = dirs[0]

@@ -13,10 +13,10 @@ import threading
 from typing import List, Optional
 
 from compare.compare_embeddings_clip import CompareEmbeddingClip
-from compare.directory_profile import DirectoryProfile
 from compare.embedding_prototype import EmbeddingPrototype
 from compare.lookahead import Lookahead
-from files.file_actions_window import FileActionsWindow
+from files.directory_profile import DirectoryProfile
+from files.file_action import FileAction
 from image.image_classifier_manager import image_classifier_manager
 from image.image_data_extractor import image_data_extractor
 from image.image_ops import ImageOps
@@ -404,7 +404,7 @@ class ClassifierAction:
                     notify_callback("\n" + specific_message, base_message=base_message,
                                     action_type=action_type, is_manual=False)
                     try:
-                        FileActionsWindow.add_file_action(
+                        FileAction.add_file_action(
                             Utils.move_file if self.action == ClassifierActionType.MOVE else Utils.copy_file,
                             image_path, self.action_modifier
                         )
@@ -432,7 +432,7 @@ class ClassifierAction:
                                 logger.info("Replacing target file with source file (source has more EXIF data)")
                                 try:
                                     # Replace target with source file (source has more information)
-                                    FileActionsWindow.add_file_action(
+                                    FileAction.add_file_action(
                                         Utils.move_file if self.action == ClassifierActionType.MOVE else Utils.copy_file,
                                         image_path, self.action_modifier, auto=True, overwrite_existing=True
                                     )

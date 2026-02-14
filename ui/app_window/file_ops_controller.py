@@ -109,7 +109,7 @@ class FileOpsController:
 
         Ported from App.delete_image.
         """
-        from ui.files.marked_file_mover_qt import MarkedFiles
+        from files.marked_files import MarkedFiles
 
         if self._app.delete_lock:
             self._app.app_actions.warn(_("DELETE_LOCK"))
@@ -177,7 +177,7 @@ class FileOpsController:
 
         Ported from App._handle_delete.
         """
-        from ui.files.marked_file_mover_qt import MarkedFiles
+        from files.marked_files import MarkedFiles
 
         MarkedFiles.set_delete_lock()  # Undo deleting action is not supported
 
@@ -243,8 +243,8 @@ class FileOpsController:
 
         Ported from App.delete_current_base_dir.
         """
-        from ui.files.marked_file_mover_qt import MarkedFiles
-        from files.recent_directory_window import RecentDirectories
+        from files.marked_files import MarkedFiles
+        from files.recent_directories import RecentDirectories
         from utils.app_info_cache import app_info_cache
         from ui.app_window.window_manager import WindowManager
 
@@ -440,8 +440,6 @@ class FileOpsController:
 
         Ported from App.open_image_in_gimp.
         """
-        from ui.files.marked_file_mover_qt import MarkedFiles
-
         config.validate_and_find_gimp()
         if not config.gimp_exe_loc:
             self._app.notification_ctrl.handle_error(
@@ -457,6 +455,7 @@ class FileOpsController:
 
         if filepath is not None:
             from extensions.gimp.gimp_wrapper import open_image_in_gimp_wrapper
+            from files.marked_files import MarkedFiles
             open_image_in_gimp_wrapper(
                 filepath,
                 config.gimp_exe_loc,

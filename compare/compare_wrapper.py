@@ -15,7 +15,7 @@ from compare.compare_prompts_exact import ComparePromptsExact
 from compare.compare_size import CompareSize
 from compare.compare_models import CompareModels
 from compare.classifier_actions_manager import ClassifierActionsManager
-from files.marked_file_mover import MarkedFiles
+from files.marked_files import MarkedFiles
 from image.frame_cache import FrameCache
 from utils.config import config
 from utils.constants import Mode, CompareMode, Direction, ClassifierActionType
@@ -324,8 +324,7 @@ class CompareWrapper:
                 res = self._app_actions.alert(_("Confirm group run"),
                                  _("Search mode detected, please confirm switch to group mode before run. Group mode will take longer as all images in the base directory are compared."),
                                  kind="askokcancel")
-                from tkinter import messagebox
-                if res != messagebox.OK and res != True:
+                if not res:
                     return
             self._app_actions.set_mode(Mode.GROUP, do_update=False)
 

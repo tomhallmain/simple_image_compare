@@ -4,8 +4,8 @@ from enum import Enum
 from tkinter import Frame, StringVar, BooleanVar, LEFT, W, filedialog, Label, Listbox, Scrollbar
 from tkinter.ttk import Entry, Button, Checkbutton, OptionMenu, Progressbar
 
+from files.file_action import FileAction
 from lib.multi_display import SmartToplevel
-from ui_tk.files.file_actions_window import FileActionsWindow
 from ui_tk.files.marked_file_mover import MarkedFiles
 from ui_tk.files.target_directory_window import TargetDirectoryWindow
 from utils.app_info_cache import app_info_cache
@@ -258,7 +258,7 @@ class GoToFile:
         """Set closest search, populate with full path of last moved image, and go."""
         last_moved = MarkedFiles.last_moved_image
         if not last_moved:
-            action = FileActionsWindow.get_history_action(start_index=0, exclude_auto=True)
+            action = FileAction.get_history_action(start_index=0, exclude_auto=True)
             if action and getattr(action, "new_files", None) and len(action.new_files) > 0:
                 last_moved = action.new_files[0]
             else:

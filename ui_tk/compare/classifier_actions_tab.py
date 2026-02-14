@@ -321,7 +321,7 @@ class ClassifierActionsTab:
             notify_callback = self.app_actions.title_notify if hasattr(self.app_actions, 'title_notify') else None
             add_mark_callback = None
             try:
-                from files.marked_file_mover import MarkedFiles
+                from files.marked_files import MarkedFiles
                 add_mark_callback = MarkedFiles.add_mark_if_not_present
             except ImportError:
                 pass
@@ -389,7 +389,7 @@ class ClassifierActionsTab:
             notify_callback = self.app_actions.title_notify if hasattr(self.app_actions, 'title_notify') else None
             add_mark_callback = None
             try:
-                from files.marked_file_mover import MarkedFiles
+                from files.marked_files import MarkedFiles
                 add_mark_callback = MarkedFiles.add_mark_if_not_present
             except ImportError:
                 pass

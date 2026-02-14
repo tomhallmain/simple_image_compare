@@ -30,7 +30,7 @@ from compare.classifier_actions_manager import (
     Prevalidation,
     ClassifierActionsManager,
 )
-from compare.directory_profile import DirectoryProfile
+from files.directory_profile import DirectoryProfile
 from compare.lookahead import Lookahead
 from ui.compare.classifier_management_window_qt import ClassifierActionModifyWindow
 from ui.app_style import AppStyle

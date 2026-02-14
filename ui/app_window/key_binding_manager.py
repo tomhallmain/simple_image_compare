@@ -79,7 +79,7 @@ class KeyBindingManager:
     def _bind_all(self) -> None:  # noqa: C901  (complexity is inherent)
         """Register all keyboard shortcuts."""
         app = self._app
-        from ui.files.marked_file_mover_qt import MarkedFiles
+        from ui.files.marked_file_mover_qt import MarkedFiles, MarkedFileMover
         from ui.image.image_details_qt import ImageDetails
         from ui.app_window.window_manager import WindowManager
         from utils.constants import Mode
@@ -267,7 +267,7 @@ class KeyBindingManager:
         self._bind("Ctrl+Z", app.file_marks_ctrl.revert_last_marks_change, guarded=False)
         self._bind(
             "Ctrl+X",
-            lambda: MarkedFiles.undo_move_marks(None, app.app_actions),
+            lambda: MarkedFileMover.undo_move_marks(None, app.app_actions),
         )
 
         # ==============================================================

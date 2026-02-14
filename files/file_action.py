@@ -24,7 +24,10 @@ class FileAction():
     def setup_permanent_action():
         permanent_mark_target = app_info_cache.get_meta("permanent_mark_target")
         permanent_action = app_info_cache.get_meta("permanent_action")
-        return FileAction(FileAction.convert_action_from_text(permanent_action), permanent_mark_target)
+        if permanent_action and permanent_mark_target:
+            FileAction.permanent_action = FileAction(
+                FileAction.convert_action_from_text(permanent_action), permanent_mark_target
+            )
 
     @staticmethod
     def setup_hotkey_actions():
@@ -32,21 +35,36 @@ class FileAction():
         assert type(hotkey_actions_dict) == dict
         hotkey_actions = {}
         for number, action in hotkey_actions_dict.items():
-            hotkey_actions[int(number)] = FileAction(FileAction.convert_action_from_text(action["action"]), action["target"])
-        return hotkey_actions
+            hotkey_actions[int(number)] = FileAction(
+                FileAction.convert_action_from_text(action["action"]), action["target"]
+            )
+        FileAction.hotkey_actions = hotkey_actions
 
     @staticmethod
-    def store_action_history():
+    def store_actions():
         action_dicts = []
         for action in FileAction.action_history:
             action_dicts.append(action.to_dict())
         app_info_cache.set_meta("file_actions", action_dicts)
+
+        # Persist permanent action
+        if FileAction.permanent_action is not None:
+            app_info_cache.set_meta("permanent_action", FileAction.permanent_action.action.__name__)
+            app_info_cache.set_meta("permanent_mark_target", FileAction.permanent_action.target)
+
+        # Persist hotkey actions
+        hotkey_actions_dict = {}
+        for number, action in FileAction.hotkey_actions.items():
+            hotkey_actions_dict[number] = {"action": action.action.__name__, "target": action.target}
+        app_info_cache.set_meta("hotkey_actions", hotkey_actions_dict)
     
     @staticmethod
-    def load_action_history():
+    def load_actions():
         action_history_dicts = app_info_cache.get_meta("file_actions", default_val=[])
         for action_dict in action_history_dicts:
             FileAction.action_history.append(FileAction.from_dict(action_dict))
+        FileAction.setup_permanent_action()
+        FileAction.setup_hotkey_actions()
 
     @staticmethod
     def get_history_action(start_index=0, exclude_auto=True):

@@ -10,10 +10,10 @@ from tkinter import messagebox
 import tkinter.font as fnt
 from ttkthemes import ThemedTk
 
-from utils.app_style import AppStyle
-from auth.password_core import PasswordManager
-from auth.password_session_manager import PasswordSessionManager
 from lib.caps_lock_mixin import CapsLockMixin
+from ui_tk.auth.password_core import PasswordManager
+from ui_tk.auth.password_session_manager import PasswordSessionManager
+from utils.app_style import AppStyle
 from utils.constants import ProtectedActions
 from utils.translations import I18N
 
@@ -172,7 +172,7 @@ def check_startup_password_required(callback=None):
     Returns:
         bool: True if password was verified or not required, False if cancelled
     """
-    from auth.password_core import get_security_config
+    from ui_tk.auth.password_core import get_security_config
     
     config = get_security_config()
     

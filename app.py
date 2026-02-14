@@ -18,7 +18,9 @@ from compare.compare_manager import CompareManager
 from extensions.refacdir_client import RefacDirClient
 from extensions.sd_runner_client import SDRunnerClient
 from files.directory_notes import DirectoryNotes
+from files.file_action import FileAction
 from files.file_browser import FileBrowser, SortBy
+from files.marked_files import MarkedFiles
 from files.recent_directories import RecentDirectories
 from lib.aware_entry import AwareEntry
 from lib.debounce import Debouncer
@@ -32,7 +34,7 @@ from ui_tk.files.directory_notes_window import DirectoryNotesWindow
 from ui_tk.files.favorites_window import FavoritesWindow
 from ui_tk.files.file_actions_window import FileActionsWindow
 from ui_tk.files.go_to_file import GoToFile
-from ui_tk.files.marked_file_mover import MarkedFiles
+from ui_tk.files.marked_file_mover import MarkedFileMover
 from ui_tk.files.recent_directory_window import RecentDirectoryWindow
 from ui_tk.files.target_directory_window import TargetDirectoryWindow
 from ui_tk.files.type_configuration_window import TypeConfigurationWindow
@@ -463,7 +465,7 @@ class App():
         self.master.bind("<Control-t>", self.run_permanent_marks_action)
         self.master.bind("<Control-d>", lambda event: MarkedFiles.set_current_marks_from_previous(self.toast))
         self.master.bind("<Control-z>", self.revert_last_marks_change)
-        self.master.bind("<Control-x>", lambda e: self.check_focus(e, lambda: MarkedFiles.undo_move_marks(None, self.app_actions)))
+        self.master.bind("<Control-x>", lambda e: self.check_focus(e, lambda: MarkedFileMover.undo_move_marks(None, self.app_actions)))
         self.master.bind("<Control-s>", self.next_text_embedding_preset)
         self.master.bind("<Control-b>", self.return_to_browsing_mode)
         self.master.bind("<Control-v>", lambda e: self.check_focus(e, self.open_type_configuration_window))
@@ -574,7 +576,7 @@ class App():
         try:
             MarkedFiles.load_target_dirs()
             RecentDirectories.load_recent_directories()
-            FileActionsWindow.load_action_history()
+            FileAction.load_actions()
             ImageDetails.load_image_generation_mode()
             ClassifierManagementWindow.set_prevalidations()
             ClassifierManagementWindow.set_classifier_actions()
@@ -636,7 +638,7 @@ class App():
                     logger.warning(f"Failed to store display position or virtual screen info: {e}")
         RecentDirectories.store_recent_directories()
         MarkedFiles.store_target_dirs()
-        FileActionsWindow.store_action_history()
+        FileAction.store_actions()
         ImageDetails.store_image_generation_mode()
         ClassifierManagementWindow.store_prevalidations()
         ClassifierManagementWindow.store_classifier_actions()
@@ -1606,19 +1608,19 @@ class App():
     def run_previous_marks_action(self, event=None) -> None:
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark(show_toast=False)
-        MarkedFiles.run_previous_action(self.app_actions, self.get_active_media_filepath())
+        MarkedFiles.run_previous_action(self.app_actions, self.get_active_media_filepath(), ui_class=MarkedFileMover)
 
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def run_penultimate_marks_action(self, event=None) -> None:
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark(show_toast=False)
-        MarkedFiles.run_penultimate_action(self.app_actions, self.get_active_media_filepath())
+        MarkedFiles.run_penultimate_action(self.app_actions, self.get_active_media_filepath(), ui_class=MarkedFileMover)
 
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def run_permanent_marks_action(self, event=None) -> None:
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark(show_toast=False)
-        MarkedFiles.run_permanent_action(self.app_actions, self.get_active_media_filepath())
+        MarkedFiles.run_permanent_action(self.app_actions, self.get_active_media_filepath(), ui_class=MarkedFileMover)
 
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def run_hotkey_marks_action(self, event=None) -> None:
@@ -1627,7 +1629,7 @@ class App():
         if len(MarkedFiles.file_marks) == 0:
             self.add_or_remove_mark(show_toast=False)
         number = int(event.keysym)
-        MarkedFiles.run_hotkey_action(self.app_actions, self.get_active_media_filepath(), number, bool(shift_key_pressed))
+        MarkedFiles.run_hotkey_action(self.app_actions, self.get_active_media_filepath(), number, bool(shift_key_pressed), ui_class=MarkedFileMover)
 
     def _check_marks(self, min_mark_size: int = 1) -> None:
         if len(MarkedFiles.file_marks) < min_mark_size:
@@ -1638,7 +1640,7 @@ class App():
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def revert_last_marks_change(self, event=None) -> None:
         if not config.use_file_paths_json:
-            MarkedFiles.undo_move_marks(self.get_base_dir(), self.app_actions)
+            MarkedFileMover.undo_move_marks(self.get_base_dir(), self.app_actions)
 
     @require_password(ProtectedActions.VIEW_FILE_ACTIONS)
     def open_file_actions_window(self, event=None) -> None:
@@ -2601,7 +2603,7 @@ if __name__ == "__main__":
         # Check if startup password is required
         # This will either call the callback immediately (if no password required)
         # or show a password dialog and call the callback when done
-        from auth.app_startup_auth import check_startup_password_required
+        from ui_tk.auth.app_startup_auth import check_startup_password_required
         check_startup_password_required(startup_callback)
     except KeyboardInterrupt:
         cleanup_lock()  # Clean up lock file or mutex

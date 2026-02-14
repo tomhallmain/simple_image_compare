@@ -21,6 +21,7 @@ from PySide6.QtWidgets import QApplication, QHBoxLayout, QSplitter, QWidget, QVB
 
 from compare.compare_manager import CompareManager
 from files.file_browser import FileBrowser
+from files.marked_files import MarkedFiles
 from lib.multi_display_qt import SmartMainWindow
 from ui.app_style import AppStyle
 from ui.custom_title_bar import FramelessWindowMixin, WindowResizeHandler
@@ -36,7 +37,6 @@ from ui.app_window.search_controller import SearchController
 from ui.app_window.sidebar_panel import SidebarPanel
 from ui.app_window.window_launcher import WindowLauncher
 from ui.app_window.window_manager import WindowManager
-from ui.files.marked_file_mover_qt import MarkedFiles
 from utils.app_actions import AppActions
 from utils.config import config, FileCheckConfig, SlideshowConfig, StoreCacheConfig
 from utils.constants import Mode, Direction
@@ -485,7 +485,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         it is used directly; otherwise the sidebar entry is read, and if it is
         empty the recent-directory window is opened.
         """
-        from files.recent_directory_window import RecentDirectories
+        from files.recent_directories import RecentDirectories
         from utils.app_info_cache import app_info_cache as base_cache
         from utils.constants import CompareMode
 

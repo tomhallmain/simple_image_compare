@@ -1,13 +1,12 @@
-import os
-from tkinter import Frame, Label, StringVar, BooleanVar, LEFT, W, E, Checkbutton
+from tkinter import Frame, Label, StringVar, BooleanVar, Checkbutton
 import tkinter.font as fnt
 from tkinter.ttk import Entry, Button
 from tkinter import messagebox
 
-from utils.app_style import AppStyle
-from auth.password_core import PasswordManager, get_security_config
-from auth.password_utils import require_password
 from lib.multi_display import SmartToplevel
+from ui_tk.auth.password_core import PasswordManager, get_security_config
+from ui_tk.auth.password_utils import require_password
+from utils.app_style import AppStyle
 from utils.constants import ProtectedActions
 from utils.translations import I18N
 
@@ -284,7 +283,7 @@ class PasswordAdminWindow():
 
     def clear_sessions(self):
         """Clear all sessions when settings change to ensure changes take effect immediately."""
-        from auth.password_session_manager import PasswordSessionManager
+        from ui_tk.auth.password_session_manager import PasswordSessionManager
         PasswordSessionManager.clear_all_sessions()
 
     @require_password(ProtectedActions.ACCESS_ADMIN)

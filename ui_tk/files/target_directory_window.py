@@ -3,8 +3,8 @@ import os
 from tkinter import Frame, Label, filedialog, W
 from tkinter.ttk import Button
 
+from files.target_directories import TargetDirectories
 from lib.multi_display import SmartToplevel
-from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
 from utils.translations import I18N
 from utils.logging_setup import get_logger
@@ -17,56 +17,34 @@ _ = I18N._
 class TargetDirectoryWindow:
     """Window for selecting target directories for related file searches."""
     
-    # Static class variables for managing recent directories
-    recent_directories = []
-    MAX_RECENT_DIRECTORIES = 50
-    RECENT_DIRECTORIES_KEY = "target_directory_window.recent_directories"
+    # Delegate class-level state to the data module
+    recent_directories = TargetDirectories.recent_directories
+    MAX_RECENT_DIRECTORIES = TargetDirectories.MAX_RECENT_DIRECTORIES
+    RECENT_DIRECTORIES_KEY = TargetDirectories.RECENT_DIRECTORIES_KEY
     
     @staticmethod
     def load_recent_directories():
         """Load recent directories from app cache."""
-        dirs = app_info_cache.get_meta(TargetDirectoryWindow.RECENT_DIRECTORIES_KEY, default_val=[])
-        if not isinstance(dirs, list):
-            dirs = []
-        # Filter out any paths that are no longer valid directories
-        filtered_dirs = [os.path.normpath(d) for d in dirs if isinstance(d, str) and os.path.isdir(d)]
-        TargetDirectoryWindow.recent_directories = filtered_dirs
-        # Persist the filtered list back into the cache so stale entries are removed
-        if filtered_dirs != dirs:
-            app_info_cache.set_meta(TargetDirectoryWindow.RECENT_DIRECTORIES_KEY, filtered_dirs)
+        TargetDirectories.load_recent_directories()
+        TargetDirectoryWindow.recent_directories = TargetDirectories.recent_directories
     
     @staticmethod
     def save_recent_directories():
         """Save recent directories to app cache."""
-        app_info_cache.set_meta(TargetDirectoryWindow.RECENT_DIRECTORIES_KEY, TargetDirectoryWindow.recent_directories)
+        TargetDirectories.save_recent_directories()
     
     @staticmethod
     def add_recent_directory(directory):
         """Add a directory to the recent list (most recent first)."""
-        if not directory or not os.path.isdir(directory):
-            return
-        
-        normalized_dir = os.path.normpath(os.path.abspath(directory))
-        
-        # Remove if already exists
-        if normalized_dir in TargetDirectoryWindow.recent_directories:
-            TargetDirectoryWindow.recent_directories.remove(normalized_dir)
-        
-        # Add to beginning
-        TargetDirectoryWindow.recent_directories.insert(0, normalized_dir)
-        
-        # Enforce maximum limit
-        if len(TargetDirectoryWindow.recent_directories) > TargetDirectoryWindow.MAX_RECENT_DIRECTORIES:
-            TargetDirectoryWindow.recent_directories = TargetDirectoryWindow.recent_directories[:TargetDirectoryWindow.MAX_RECENT_DIRECTORIES]
-        
-        TargetDirectoryWindow.save_recent_directories()
+        TargetDirectories.add_recent_directory(directory)
+        TargetDirectoryWindow.recent_directories = TargetDirectories.recent_directories
     
     @staticmethod
     def get_geometry():
         """Get window geometry based on number of directories."""
         width = 600
         min_height = 300
-        height = len(TargetDirectoryWindow.recent_directories) * 22 + 100
+        height = len(TargetDirectories.recent_directories) * 22 + 100
         max_height = 600
         if height > max_height:
             height = max_height

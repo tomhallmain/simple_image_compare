@@ -13,7 +13,6 @@ from typing import TYPE_CHECKING, Optional
 from PySide6.QtCore import QTimer
 
 from utils.app_info_cache_qt import app_info_cache
-from utils.config import config
 from utils.logging_setup import get_logger
 from utils.translations import I18N
 
@@ -62,7 +61,7 @@ class CacheController:
 
             MarkedFiles.load_target_dirs()
             RecentDirectories.load_recent_directories()
-            FileAction.load_action_history()
+            FileAction.load_actions()
             ImageDetails.load_image_generation_mode()
             ClassifierManagementWindow.set_prevalidations()
             ClassifierManagementWindow.set_classifier_actions()
@@ -130,7 +129,7 @@ class CacheController:
 
         RecentDirectories.store_recent_directories()
         MarkedFiles.store_target_dirs()
-        FileAction.store_action_history()
+        FileAction.store_actions()
         ImageDetails.store_image_generation_mode()
         ClassifierManagementWindow.store_prevalidations()
         ClassifierManagementWindow.store_classifier_actions()
