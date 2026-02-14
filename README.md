@@ -54,6 +54,7 @@ The UI can be used as a media file browser. The following features are available
     <li>Create PDFs from marked files with customizable quality and compression options</li>
     <li>Password protection system for sensitive operations with configurable session timeouts</li>
     <li>Extract text using OCR from images</li>
+    <li>Set custom title bar colors for specific directories</li>
 </ul>
 </details>
 

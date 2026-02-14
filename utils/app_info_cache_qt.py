@@ -78,6 +78,20 @@ class _AppInfoCacheQtAdapter:
         return PositionData.from_dict(data)
 
     # ------------------------------------------------------------------
+    # Directory color helpers
+    # ------------------------------------------------------------------
+    def get_directory_color(self, directory: str):
+        """Return the custom title-bar colour stored for *directory*, or None."""
+        return self._base.get(directory, "title_bar_color")
+
+    def set_directory_color(self, directory: str, color_hex: str | None):
+        """Persist a custom title-bar colour for *directory*.
+
+        Pass *color_hex* as ``None`` to clear the stored colour.
+        """
+        self._base.set(directory, "title_bar_color", color_hex)
+
+    # ------------------------------------------------------------------
     # Transparent delegation for everything else
     # ------------------------------------------------------------------
     def __getattr__(self, name):

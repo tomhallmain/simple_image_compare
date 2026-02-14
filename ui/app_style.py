@@ -325,17 +325,23 @@ class AppStyle:
         """
     
     @classmethod
-    def get_title_bar_style(cls, is_dark: bool = None) -> str:
-        """Get the stylesheet for the custom title bar."""
+    def get_title_bar_style(cls, is_dark: bool = None, bg_override: str = None) -> str:
+        """Get the stylesheet for the custom title bar.
+        
+        Args:
+            is_dark: Whether dark theme is active.
+            bg_override: Optional hex color to use instead of the theme background.
+        """
         if is_dark is None:
             is_dark = cls.IS_DEFAULT_THEME
         
         colors = cls.get_colors(is_dark)
         radius = cls._corner_radius
+        bg_color = bg_override if bg_override else colors['bg']
         
         return f"""
             CustomTitleBar {{
-                background-color: {colors['bg']};
+                background-color: {bg_color};
                 border-bottom: 1px solid {colors['border']};
                 border-top-left-radius: {radius}px;
                 border-top-right-radius: {radius}px;
@@ -397,21 +403,22 @@ class AppStyle:
             """
     
     @classmethod
-    def apply_to_title_bar(cls, title_bar, is_dark: bool = None):
+    def apply_to_title_bar(cls, title_bar, is_dark: bool = None, bg_override: str = None):
         """
         Apply theme styling to a CustomTitleBar widget.
         
         Args:
             title_bar: CustomTitleBar instance
             is_dark: Whether dark theme is active
+            bg_override: Optional hex color to use instead of the theme background
         """
         if is_dark is None:
             is_dark = cls.IS_DEFAULT_THEME
             
         colors = cls.get_colors(is_dark)
         
-        # Apply title bar container style
-        title_bar.setStyleSheet(cls.get_title_bar_style(is_dark))
+        # Apply title bar container style (with optional custom background)
+        title_bar.setStyleSheet(cls.get_title_bar_style(is_dark, bg_override=bg_override))
         
         # Apply title label style
         title_bar.title_label.setStyleSheet(

@@ -132,13 +132,18 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             title=_(" Simple Image Compare "), corner_radius=10
         )
 
-        # Set icon in the custom title bar
+        # Set icon in the custom title bar and connect context menu
         _root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
         icon_path = os.path.join(_root, "assets", "icon.png")
         if os.path.isfile(icon_path):
             title_bar = self.get_title_bar()
             if title_bar:
                 title_bar.set_icon(icon_path)
+
+        # Connect title bar right-click context menu
+        title_bar = self.get_title_bar()
+        if title_bar:
+            title_bar.context_menu_requested.connect(self._show_title_bar_context_menu)
 
         # Thread-safe title update signal → slot
         self._sig_set_title.connect(self._on_set_title)
@@ -458,6 +463,82 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         self.apply_frameless_theme(is_dark)
 
     # ------------------------------------------------------------------
+    # Title bar directory color
+    # ------------------------------------------------------------------
+    def _apply_directory_title_bar_color(self, directory: str) -> None:
+        """Apply any stored custom title bar color for the given directory."""
+        from utils.app_info_cache_qt import app_info_cache
+        title_bar = self.get_title_bar()
+        if not title_bar:
+            return
+        color = app_info_cache.get_directory_color(directory)
+        if color:
+            title_bar.set_custom_bg_color(color)
+        else:
+            title_bar.clear_custom_bg_color()
+
+    def _show_title_bar_context_menu(self, global_pos) -> None:
+        """Show a context menu specific to the title bar."""
+        from PySide6.QtWidgets import QMenu
+        menu = QMenu(self)
+
+        menu.addAction(
+            _("Set Title Bar Color..."),
+            self._set_title_bar_color_for_directory,
+        )
+
+        # Only show the clear option if a custom color is currently set
+        from utils.app_info_cache_qt import app_info_cache
+        current_color = app_info_cache.get_directory_color(self.base_dir) if self.base_dir else None
+        if current_color:
+            menu.addAction(
+                _("Clear Title Bar Color"),
+                self._clear_title_bar_color_for_directory,
+            )
+
+        menu.exec(global_pos)
+
+    def _set_title_bar_color_for_directory(self) -> None:
+        """Open a color picker and set the title bar color for the current directory."""
+        from PySide6.QtWidgets import QColorDialog
+        from PySide6.QtGui import QColor
+        from utils.app_info_cache_qt import app_info_cache
+
+        if not self.base_dir:
+            self.notification_ctrl.toast(_("No directory loaded."))
+            return
+
+        # Use the current custom color (or the theme background) as the initial color
+        current_hex = app_info_cache.get_directory_color(self.base_dir)
+        initial_color = QColor(current_hex) if current_hex else QColor(AppStyle.BG_COLOR)
+
+        color = QColorDialog.getColor(initial_color, self, _("Choose Title Bar Color"))
+        if color.isValid():
+            color_hex = color.name()  # "#rrggbb"
+            app_info_cache.set_directory_color(self.base_dir, color_hex)
+            title_bar = self.get_title_bar()
+            if title_bar:
+                title_bar.set_custom_bg_color(color_hex)
+            self.notification_ctrl.toast(
+                _("Title bar color set for this directory.")
+            )
+
+    def _clear_title_bar_color_for_directory(self) -> None:
+        """Clear the custom title bar color for the current directory."""
+        from utils.app_info_cache_qt import app_info_cache
+
+        if not self.base_dir:
+            return
+
+        app_info_cache.set_directory_color(self.base_dir, None)
+        title_bar = self.get_title_bar()
+        if title_bar:
+            title_bar.clear_custom_bg_color()
+        self.notification_ctrl.toast(
+            _("Title bar color cleared for this directory.")
+        )
+
+    # ------------------------------------------------------------------
     # Properties / simple accessors
     # ------------------------------------------------------------------
     def is_secondary(self) -> bool:
@@ -569,6 +650,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             self.notification_ctrl.set_label_state()
 
         self.setWindowTitle(self.get_title_from_base_dir(overwrite=True))
+        self._apply_directory_title_bar_color(new_dir)
         RecentDirectories.set_recent_directory(new_dir)
 
     def get_title_from_base_dir(self, overwrite: bool = False) -> str:

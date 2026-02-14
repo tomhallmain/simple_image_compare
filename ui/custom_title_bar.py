@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
     QSizePolicy, QApplication, QFrame, QMenu, QMenuBar
 )
 from PySide6.QtCore import Qt, QPoint, Signal, QSize, QRect, QEvent, QObject
-from PySide6.QtGui import QMouseEvent, QCursor, QAction, QPixmap, QIcon
+from PySide6.QtGui import QMouseEvent, QCursor, QAction, QPixmap, QIcon, QContextMenuEvent
 
 
 class TitleBarMenuButton(QPushButton):
@@ -103,6 +103,7 @@ class CustomTitleBar(QWidget):
     maximize_clicked = Signal()
     close_clicked = Signal()
     double_clicked = Signal()
+    context_menu_requested = Signal(QPoint)
     
     def __init__(self, parent=None, title: str = "", show_icon: bool = True, corner_radius: int = 0):
         super().__init__(parent)
@@ -113,6 +114,7 @@ class CustomTitleBar(QWidget):
         self._is_dark = True
         self._corner_radius = corner_radius
         self._menu_buttons = []  # Track menu buttons for styling
+        self._custom_bg_color = None  # Per-directory custom background color
         
         self.setFixedHeight(32)
         self.setMouseTracking(True)
@@ -295,10 +297,24 @@ class CustomTitleBar(QWidget):
         """Apply theme to the title bar using AppStyle."""
         self._is_dark = is_dark
         from .app_style import AppStyle
-        AppStyle.apply_to_title_bar(self, is_dark)
+        AppStyle.apply_to_title_bar(self, is_dark, bg_override=self._custom_bg_color)
         # Also style menu buttons
         for btn in self._menu_buttons:
             self._apply_menu_button_style(btn)
+    
+    def set_custom_bg_color(self, color_hex: str):
+        """Set a custom background color for the title bar and re-apply theme."""
+        self._custom_bg_color = color_hex
+        self.apply_theme(self._is_dark)
+    
+    def clear_custom_bg_color(self):
+        """Clear the custom background color, reverting to theme default."""
+        self._custom_bg_color = None
+        self.apply_theme(self._is_dark)
+    
+    def get_custom_bg_color(self) -> str:
+        """Return the current custom background color, or None."""
+        return self._custom_bg_color
             
     def _on_minimize(self):
         """Handle minimize button click."""
@@ -382,6 +398,17 @@ class CustomTitleBar(QWidget):
             self.double_clicked.emit()
             self._on_maximize()
             event.accept()
+    
+    def contextMenuEvent(self, event: QContextMenuEvent):
+        """Emit context menu signal for right-click on the title bar."""
+        # Don't show context menu when right-clicking on buttons
+        widget = self.childAt(event.pos())
+        if isinstance(widget, (TitleBarButton, TitleBarMenuButton)):
+            return
+        if widget and isinstance(widget.parent(), (TitleBarButton, TitleBarMenuButton)):
+            return
+        self.context_menu_requested.emit(event.globalPos())
+        event.accept()
 
 
 class ResizeGrip:
