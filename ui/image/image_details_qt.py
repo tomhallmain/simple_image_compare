@@ -38,6 +38,7 @@ from image.smart_crop import Cropper
 from lib.multi_display_qt import SmartDialog
 from ui.app_style import AppStyle
 from ui.image.metadata_viewer_window_qt import MetadataViewerWindow
+from ui.image.ocr_text_window_qt import OCRTextWindow
 from ui.image.temp_image_window_qt import TempImageWindow
 from utils.app_info_cache import app_info_cache
 from utils.config import config
@@ -78,6 +79,7 @@ class ImageDetails(SmartDialog):
     image_generation_mode = ImageGenerationType.CONTROL_NET
     previous_image_generation_image: Optional[str] = None
     metadata_viewer_window: Optional[MetadataViewerWindow] = None
+    ocr_text_window: Optional[OCRTextWindow] = None
 
     COL_0_WIDTH = 100
 
@@ -303,6 +305,7 @@ class ImageDetails(SmartDialog):
         row += 1
 
         _btn(_("Show Metadata"), lambda: self.show_metadata(), row, 0)
+        _btn(_("Run OCR"), lambda: self.run_ocr(), row, 1)
         row += 1
 
         _btn(_("Open Related Image"), self.open_related_image, row, 0)
@@ -366,6 +369,7 @@ class ImageDetails(SmartDialog):
         sc("Shift+J", lambda: self.convert_to_jpg())
         sc("Shift+K", lambda: self.convert_to_jpg())
         sc("Shift+D", lambda: self.show_metadata())
+        sc("Shift+O", lambda: self.run_ocr())
         sc("Shift+I", self.run_image_generation)
         sc("Shift+Y", self.run_redo_prompt)
 
@@ -786,6 +790,39 @@ class ImageDetails(SmartDialog):
             ImageDetails.metadata_viewer_window.show()
         else:
             mvw.update_metadata(metadata_text, self._image_path)
+
+    # ── OCR ──────────────────────────────────────────────────────
+
+    def run_ocr(self) -> None:
+        """Run Surya OCR on the current image and show the result."""
+        if not self._is_image:
+            self._app_actions.toast(_("OCR is only available for images"))
+            return
+        if not ImageOps.is_surya_ocr_available():
+            self._app_actions.warn(_("Surya OCR is not installed"))
+            return
+        try:
+            result = ImageOps.run_ocr(self._image_path)
+            if not result.has_text:
+                self._app_actions.toast(_("No text found in image"))
+                return
+            self._show_ocr_window(result.text, result.avg_confidence)
+        except RuntimeError as e:
+            self._app_actions.warn(str(e))
+        except Exception as e:
+            logger.error(f"OCR failed: {e}")
+            self._app_actions.warn(_("OCR failed: ") + str(e))
+
+    def _show_ocr_window(self, ocr_text: str, confidence: float | None) -> None:
+        w = ImageDetails.ocr_text_window
+        if w is None or w.has_closed:
+            ImageDetails.ocr_text_window = OCRTextWindow(
+                self, self._app_actions, ocr_text, self._image_path,
+                confidence=confidence,
+            )
+            ImageDetails.ocr_text_window.show()
+        else:
+            w.update_text(ocr_text, self._image_path, confidence)
 
     # ── Related images ───────────────────────────────────────────
 

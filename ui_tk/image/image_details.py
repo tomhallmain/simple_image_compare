@@ -15,6 +15,7 @@ from image.image_ops import ImageOps
 from image.smart_crop import Cropper
 from lib.multi_display import SmartToplevel
 from ui_tk.image.metadata_viewer_window import MetadataViewerWindow
+from ui_tk.image.ocr_text_window import OCRTextWindow
 from ui_tk.image.temp_image_canvas import TempImageCanvas
 from utils.app_info_cache import app_info_cache
 from utils.app_style import AppStyle
@@ -51,6 +52,7 @@ class ImageDetails():
     image_generation_mode = ImageGenerationType.CONTROL_NET
     previous_image_generation_image = None
     metatdata_viewer_window = None
+    ocr_text_window = None
 
     @staticmethod
     def load_image_generation_mode():
@@ -178,6 +180,8 @@ class ImageDetails():
 
         self.metadata_btn = None
         self.add_button("metadata_btn",  _("Show Metadata"), lambda: self.show_metadata(), column=0)
+        self.run_ocr_btn = None
+        self.add_button("run_ocr_btn", _("Run OCR"), lambda: self.run_ocr(), column=1)
         self.row_count1 += 1
 
         self.open_related_image_btn = None
@@ -234,6 +238,7 @@ class ImageDetails():
         self.master.bind("<Shift-J>", lambda e: self.convert_to_jpg())           # Convert to JPG
         self.master.bind("<Shift-K>", lambda e: self.convert_to_jpg())           # Convert to JPG
         self.master.bind("<Shift-D>", self.show_metadata)                        # Show Metadata (metaData)
+        self.master.bind("<Shift-O>", lambda e: self.run_ocr())                  # Run OCR
         self.master.bind("<Shift-R>", self.open_related_image)                   # Open Related Image
         self.master.bind("<Shift-I>", self.run_image_generation)                 # Run image Generation
         self.master.bind("<Shift-Y>", self.run_redo_prompt)                      # Redo prompt (like redo)
@@ -580,6 +585,36 @@ class ImageDetails():
             ImageDetails.metatdata_viewer_window = MetadataViewerWindow(self.master, self.app_actions, metadata_text, self.image_path)
         else:
             ImageDetails.metatdata_viewer_window.update_metadata(metadata_text, self.image_path)
+
+    def run_ocr(self):
+        """Run Surya OCR on the current image and show the result."""
+        if not self.is_image:
+            self.app_actions.toast(_("OCR is only available for images"))
+            return
+        if not ImageOps.is_surya_ocr_available():
+            self.app_actions.warn(_("Surya OCR is not installed"))
+            return
+        try:
+            result = ImageOps.run_ocr(self.image_path)
+            if not result.has_text:
+                self.app_actions.toast(_("No text found in image"))
+                return
+            self._show_ocr_window(result.text, result.avg_confidence)
+        except RuntimeError as e:
+            self.app_actions.warn(str(e))
+        except Exception as e:
+            logger.error(f"OCR failed: {e}")
+            self.app_actions.warn(_("OCR failed: ") + str(e))
+
+    def _show_ocr_window(self, ocr_text, confidence=None):
+        w = ImageDetails.ocr_text_window
+        if w is None or getattr(w, "has_closed", True):
+            ImageDetails.ocr_text_window = OCRTextWindow(
+                self.master, self.app_actions, ocr_text, self.image_path,
+                confidence=confidence,
+            )
+        else:
+            w.update_text(ocr_text, self.image_path, confidence)
 
     def get_related_image_text(self):
         node_id = ImageDetails.related_image_saved_node_id

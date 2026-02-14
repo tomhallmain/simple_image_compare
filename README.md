@@ -53,6 +53,7 @@ The UI can be used as a media file browser. The following features are available
     <li>Content filtering of images and videos based on their text encoding similarity (automatically hide, move to dir, delete etc)</li>
     <li>Create PDFs from marked files with customizable quality and compression options</li>
     <li>Password protection system for sensitive operations with configurable session timeouts</li>
+    <li>Extract text using OCR from images</li>
 </ul>
 </details>
 

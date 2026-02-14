@@ -1261,6 +1261,30 @@ class ImageOps:
             logger.error(f"Failed to create GEGL client: {e}")
             raise RuntimeError(f"Failed to create GEGL client: {e}")
 
+    # ── Surya OCR ──────────────────────────────────────────────────
+
+    @staticmethod
+    def is_surya_ocr_available() -> bool:
+        """Return True if the Surya OCR extension is usable."""
+        try:
+            from extensions.surya_ocr_client import is_surya_available
+            return is_surya_available()
+        except Exception:
+            return False
+
+    @staticmethod
+    def run_ocr(image_path: str):
+        """
+        Run OCR on *image_path* using Surya and return a
+        :class:`~extensions.surya_ocr_client.SuryaOCRResult`.
+
+        Raises ``RuntimeError`` if Surya is not installed.
+        """
+        from extensions.surya_ocr_client import run_ocr as _run_ocr
+        return _run_ocr(image_path)
+
+    # ── Image content comparison ─────────────────────────────────
+
     @staticmethod
     def compare_image_content_without_exif(filepath1, filepath2):
         """
