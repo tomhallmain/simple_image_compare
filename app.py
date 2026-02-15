@@ -1599,8 +1599,8 @@ class App():
             self.add_or_remove_mark(filepath=filepath)
             single_image = True
         try:
-            MarkedFiles.show_window(self.master, open_gui, single_image, current_image, self.mode,
-                                   self.app_actions, base_dir=self.get_base_dir())
+            MarkedFileMover.show_window(self.master, open_gui, single_image, current_image, self.mode,
+                                        self.app_actions, base_dir=self.get_base_dir())
         except Exception as e:
             self.handle_error(str(e), title="Marked Files Window Error")
 
