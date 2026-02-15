@@ -54,6 +54,10 @@ class ImageDetails():
     metatdata_viewer_window = None
     ocr_text_window = None
 
+    # Muted colors for special prompt label states
+    _PROMPT_NOT_FOUND_COLOR = "#c07830"    # dark orange, differentiable at a glance
+    _NEGATIVE_HIDDEN_COLOR = "#55526a"     # dark gray near background, hidden in plain sight
+
     @staticmethod
     def load_image_generation_mode():
         try:
@@ -138,11 +142,15 @@ class ImageDetails():
         self.add_label(self.label_size, file_size, column=1)
         self.add_label(self._label_mtime, _("Modification Time"), wraplength=col_0_width)
         self.add_label(self.label_mtime, mod_time, column=1)
-        # TODO - warning text color if prompt not found
         self.add_label(self._label_positive, _("Positive"), wraplength=col_0_width)
         self.add_label(self.label_positive, positive, column=1)
+        if self.prompt_extraction_failed:
+            self.label_positive.config(fg=ImageDetails._PROMPT_NOT_FOUND_COLOR)
         self.add_label(self._label_negative, _("Negative"), wraplength=col_0_width)
+        neg_is_placeholder = not config.show_negative_prompt or negative == ""
         self.add_label(self.label_negative, negative if config.show_negative_prompt and negative != "" else _("(negative prompt not shown by config setting)"), column=1)
+        if neg_is_placeholder:
+            self.label_negative.config(fg=ImageDetails._NEGATIVE_HIDDEN_COLOR)
         self.add_label(self._label_models, _("Models"), wraplength=col_0_width)
         self.add_label(self.label_models, ", ".join(models), column=1)
         self.add_label(self._label_loras, _("LoRAs"), wraplength=col_0_width)
@@ -278,6 +286,7 @@ class ImageDetails():
         if self.is_image:
             image_mode, image_dims = self._get_image_info()
             positive, negative, models, loras, prompt_extraction_failed = image_data_extractor.get_image_prompts_and_models(self.image_path)
+            self.prompt_extraction_failed = prompt_extraction_failed
             related_image_text = self.get_related_image_text()
         else:
             image_mode = ""
@@ -287,6 +296,7 @@ class ImageDetails():
             models = ""
             loras = ""
             related_image_text = ""
+            self.prompt_extraction_failed = True
 
         mod_time, file_size = self._get_file_info()
         self.label_path["text"] = image_path
@@ -296,8 +306,14 @@ class ImageDetails():
         self.label_mtime["text"] = mod_time
         self.label_size["text"] = file_size
         self.label_positive["text"] = positive
+        if self.prompt_extraction_failed:
+            self.label_positive.config(fg=ImageDetails._PROMPT_NOT_FOUND_COLOR)
+        else:
+            self.label_positive.config(fg=AppStyle.FG_COLOR)
         if config.show_negative_prompt:
             self.label_negative["text"] = negative
+            # Restore default style when actually showing negative prompt content
+            self.label_negative.config(fg=AppStyle.FG_COLOR)
         self.label_models["text"] = ", ".join(models)
         self.label_loras["text"] = ", ".join(loras)
         self.label_related_image["text"] = related_image_text

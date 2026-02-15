@@ -83,6 +83,10 @@ class ImageDetails(SmartDialog):
 
     COL_0_WIDTH = 100
 
+    # Muted colors for special prompt label states
+    _PROMPT_NOT_FOUND_COLOR = "#c07830"    # dark orange, differentiable at a glance
+    _NEGATIVE_HIDDEN_COLOR = "#55526a"     # dark gray near background, hidden in plain sight
+
     # -- Static persistence ----------------------------------------
 
     @staticmethod
@@ -260,8 +264,14 @@ class ImageDetails(SmartDialog):
 
         _header(_("Positive"), row)
         self._lbl_positive = _value(positive, row)
+        if self._prompt_extraction_failed:
+            self._lbl_positive.setStyleSheet(
+                f"color: {ImageDetails._PROMPT_NOT_FOUND_COLOR};"
+                f"background: {AppStyle.BG_COLOR};"
+            )
         row += 1
 
+        neg_is_placeholder = not config.show_negative_prompt or negative == ""
         neg_text = (
             negative
             if config.show_negative_prompt and negative != ""
@@ -269,6 +279,11 @@ class ImageDetails(SmartDialog):
         )
         _header(_("Negative"), row)
         self._lbl_negative = _value(neg_text, row)
+        if neg_is_placeholder:
+            self._lbl_negative.setStyleSheet(
+                f"color: {ImageDetails._NEGATIVE_HIDDEN_COLOR};"
+                f"background: {AppStyle.BG_COLOR};"
+            )
         row += 1
 
         _header(_("Models"), row)
@@ -446,8 +461,23 @@ class ImageDetails(SmartDialog):
         self._lbl_mtime.setText(mod_time)
         self._lbl_size.setText(file_size)
         self._lbl_positive.setText(positive)
+        if self._prompt_extraction_failed:
+            self._lbl_positive.setStyleSheet(
+                f"color: {ImageDetails._PROMPT_NOT_FOUND_COLOR};"
+                f"background: {AppStyle.BG_COLOR};"
+            )
+        else:
+            self._lbl_positive.setStyleSheet(
+                f"color: {AppStyle.FG_COLOR};"
+                f"background: {AppStyle.BG_COLOR};"
+            )
         if config.show_negative_prompt:
             self._lbl_negative.setText(negative)
+            # Restore default style when actually showing negative prompt content
+            self._lbl_negative.setStyleSheet(
+                f"color: {AppStyle.FG_COLOR};"
+                f"background: {AppStyle.BG_COLOR};"
+            )
         self._lbl_models.setText(", ".join(models))
         self._lbl_loras.setText(", ".join(loras))
         self._lbl_related_image.setText(related_image_text)
