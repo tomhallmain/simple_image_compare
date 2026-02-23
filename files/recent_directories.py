@@ -53,20 +53,20 @@ class RecentDirectories:
             RecentDirectories.directories = RecentDirectories.directories[:RecentDirectories.MAX_RECENT_DIRECTORIES]
 
     @staticmethod
-    def remove_directory(base_dir: str) -> None:
+    def remove_directory(directory: str) -> None:
         """Remove a directory from all recent directory caches and persist the changes."""
         try:
             # Remove from main recent directories list
-            if base_dir in RecentDirectories.directories:
-                RecentDirectories.directories.remove(base_dir)
+            if directory in RecentDirectories.directories:
+                RecentDirectories.directories.remove(directory)
                 app_info_cache.set_meta("recent_directories", RecentDirectories.directories)
             
             # Remove from in-memory history trackers
             try:
-                RecentDirectories.directory_history = [d for d in RecentDirectories.directory_history if d != base_dir]
-                if RecentDirectories.last_comparison_directory == base_dir:
+                RecentDirectories.directory_history = [d for d in RecentDirectories.directory_history if d != directory]
+                if RecentDirectories.last_comparison_directory == directory:
                     RecentDirectories.last_comparison_directory = None
-                if RecentDirectories.last_set_directory == base_dir:
+                if RecentDirectories.last_set_directory == directory:
                     RecentDirectories.last_set_directory = None
             except Exception:
                 pass

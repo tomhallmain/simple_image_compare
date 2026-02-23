@@ -82,6 +82,9 @@ class TargetDirectoryWindow(DirectoryPickerDialog):
     def _get_all_directories(self) -> list[str]:
         return TargetDirectories.recent_directories
 
+    def _get_all_directories_copy(self) -> list[str]:
+        return TargetDirectories.recent_directories[:]
+
     def _on_directory_selected(self, directory: str) -> None:
         TargetDirectories.add_recent_directory(directory)
         if self._callback:
@@ -93,6 +96,11 @@ class TargetDirectoryWindow(DirectoryPickerDialog):
     def _clear_directories(self) -> None:
         TargetDirectories.recent_directories.clear()
         TargetDirectories.save_recent_directories()
+
+    def _remove_directory(self, directory: str) -> None:
+        if directory in TargetDirectories.recent_directories:
+            TargetDirectories.recent_directories.remove(directory)
+            TargetDirectories.save_recent_directories()
 
     def _browse_dialog_title(self) -> str:
         return _("Select directory to search for related files")

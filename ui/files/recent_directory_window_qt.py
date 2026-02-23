@@ -123,6 +123,9 @@ class RecentDirectoryWindow(DirectoryPickerDialog):
     def _get_all_directories(self) -> list[str]:
         return RecentDirectories.directories
 
+    def _get_all_directories_copy(self) -> list[str]:
+        return RecentDirectories.directories[:]
+
     def _on_directory_selected(self, directory: str) -> None:
         """Route the selection to the correct handler."""
         _dir = self._validate_and_add(directory)
@@ -152,6 +155,9 @@ class RecentDirectoryWindow(DirectoryPickerDialog):
 
     def _clear_directories(self) -> None:
         RecentDirectories.directories.clear()
+
+    def _remove_directory(self, directory: str) -> None:
+        RecentDirectories.remove_directory(directory)
 
     def _browse_dialog_title(self) -> str:
         return _("Set image comparison directory")

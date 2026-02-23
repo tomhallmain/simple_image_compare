@@ -17,6 +17,7 @@ Subclasses override a small set of hooks to specialise behaviour.
 from __future__ import annotations
 
 import os
+import string
 from abc import abstractmethod
 from typing import Optional
 
@@ -34,6 +35,36 @@ from utils.translations import I18N
 _ = I18N._
 
 
+class AlphabetAvailabilityDialog(SmartDialog):
+    """Simple modal for showing used/unused initial directory letters."""
+
+    def __init__(self, parent: QWidget, *, title: str, message: str) -> None:
+        super().__init__(
+            parent=parent,
+            position_parent=parent,
+            title=title,
+            geometry="520x220",
+            center=True,
+        )
+        self.setModal(True)
+
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(14, 14, 14, 14)
+        outer.setSpacing(10)
+
+        label = QLabel(message)
+        label.setWordWrap(True)
+        label.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
+        outer.addWidget(label, 1)
+
+        close_bar = QHBoxLayout()
+        close_bar.addStretch()
+        close_btn = QPushButton(_("Close"))
+        close_btn.clicked.connect(self.accept)
+        close_bar.addWidget(close_btn)
+        outer.addLayout(close_bar)
+
+
 class DirectoryPickerDialog(SmartDialog):
     """
     Abstract base for directory-picker dialogs.
@@ -42,6 +73,7 @@ class DirectoryPickerDialog(SmartDialog):
         ``_get_all_directories``  -- return the full (unfiltered) directory list
         ``_on_directory_selected`` -- handle the user's selection
         ``_add_directory``        -- persist a newly browsed directory
+        ``_remove_directory``     -- remove one directory from backing store
         ``_clear_directories``    -- clear the backing store
 
     Optionally override:
@@ -127,8 +159,9 @@ class DirectoryPickerDialog(SmartDialog):
         self._viewport.setStyleSheet(f"background: {AppStyle.BG_COLOR};")
         self._grid = QGridLayout(self._viewport)
         self._grid.setAlignment(Qt.AlignTop)
-        self._grid.setColumnStretch(0, 9)
+        self._grid.setColumnStretch(0, 8)
         self._grid.setColumnStretch(1, 1)
+        self._grid.setColumnStretch(2, 1)
 
         scroll.setWidget(self._viewport)
         outer.addWidget(scroll, 1)
@@ -138,6 +171,7 @@ class DirectoryPickerDialog(SmartDialog):
         # Keybindings
         QShortcut(QKeySequence(Qt.Key_Escape), self).activated.connect(self.close)
         QShortcut(QKeySequence(Qt.Key_Return), self).activated.connect(self._on_return)
+        QShortcut(QKeySequence("Ctrl+L"), self).activated.connect(self._show_unused_alphabet_popup)
 
         # Ensure the dialog itself has focus so keyPressEvent fires
         self.setFocus()
@@ -165,6 +199,11 @@ class DirectoryPickerDialog(SmartDialog):
         """Clear the backing directory store."""
         ...
 
+    @abstractmethod
+    def _remove_directory(self, directory: str) -> None:
+        """Remove one directory from the backing directory store."""
+        ...
+
     def _browse_dialog_title(self) -> str:
         return _("Select directory")
 
@@ -176,6 +215,10 @@ class DirectoryPickerDialog(SmartDialog):
 
     def _add_extra_action_buttons(self, layout: QHBoxLayout) -> None:
         """Override to add more buttons to the action bar."""
+
+    def _get_all_directories_copy(self) -> list[str]:
+        """Override when the popup should use a different directory source."""
+        return list(self._get_all_directories())
 
     # ------------------------------------------------------------------
     # Row building
@@ -201,6 +244,13 @@ class DirectoryPickerDialog(SmartDialog):
                 lambda _c=False, d=_dir: self._select_and_close(d)
             )
             self._grid.addWidget(btn, i, 1)
+
+            remove_btn = QPushButton(_("Clear"))
+            remove_btn.setFocusPolicy(Qt.NoFocus)
+            remove_btn.clicked.connect(
+                lambda _c=False, d=_dir: self._remove_and_refresh(d)
+            )
+            self._grid.addWidget(remove_btn, i, 2)
 
     def _rebuild(self) -> None:
         self._clear_rows()
@@ -293,6 +343,11 @@ class DirectoryPickerDialog(SmartDialog):
         if self._filtered_dirs:
             self._select_and_close(self._filtered_dirs[0])
 
+    def _remove_and_refresh(self, directory: str) -> None:
+        self._remove_directory(directory)
+        # Keep current filter text, but recompute from the updated source list.
+        self._apply_filter()
+
     def _browse_new_directory(self) -> None:
         _dir = QFileDialog.getExistingDirectory(
             self,
@@ -338,6 +393,44 @@ class DirectoryPickerDialog(SmartDialog):
         self._filter_text = ""
         self._filter_label.setVisible(False)
         self._rebuild()
+
+    @staticmethod
+    def _used_initial_letters(directories: list[str]) -> set[str]:
+        letters: set[str] = set()
+        for directory in directories:
+            base = os.path.basename(os.path.normpath(directory))
+            if not base:
+                continue
+            first = base[0].upper()
+            if first in string.ascii_uppercase:
+                letters.add(first)
+        return letters
+
+    def _show_unused_alphabet_popup(self) -> None:
+        directories = self._get_all_directories_copy()
+        used = self._used_initial_letters(directories)
+        all_letters = set(string.ascii_uppercase)
+
+        if not used:
+            message = _(
+                "No alphabet letters are currently used as the first character "
+                "of any directory name in this list."
+            )
+        elif used == all_letters:
+            message = _(
+                "All letters A-Z are already used as the first character of at "
+                "least one directory in this list."
+            )
+        else:
+            unused = sorted(all_letters - used)
+            message = _("Unused starting letters:") + "\n\n" + ", ".join(unused)
+
+        dialog = AlphabetAvailabilityDialog(
+            self,
+            title=_("Alphabet Availability"),
+            message=message,
+        )
+        dialog.exec()
 
     def close_windows(self, event=None) -> None:
         self.close()
