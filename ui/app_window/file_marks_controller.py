@@ -253,6 +253,17 @@ class FileMarksController:
         )
 
     @require_password(ProtectedActions.RUN_FILE_ACTIONS)
+    def run_antepenultimate_marks_action(self, event=None) -> None:
+        """
+        Re-run the third-to-last marks action.
+        """
+        if len(MarkedFiles.file_marks) == 0:
+            self.add_or_remove_mark(show_toast=False)
+        MarkedFiles.run_antepenultimate_action(
+            self._app.app_actions, self._nav.get_active_media_filepath(), ui_class=MarkedFileMover
+        )
+
+    @require_password(ProtectedActions.RUN_FILE_ACTIONS)
     def run_permanent_marks_action(self, event=None) -> None:
         """
         Run the permanently-configured marks action.

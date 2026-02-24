@@ -115,6 +115,21 @@ class MarkedFiles():
                                              )
 
     @staticmethod
+    def run_antepenultimate_action(app_actions, current_image=None, ui_class=None):
+        antepenultimate_action = FileAction.get_history_action(start_index=2)
+        if antepenultimate_action is None:
+            return False, False
+        if ui_class is None:
+            raise Exception("ui_class is required to get the target directory for undo move marked files.")
+        return MarkedFiles.move_marks_to_dir_static(app_actions,
+                                             target_dir=antepenultimate_action.target,
+                                             move_func=antepenultimate_action.action,
+                                             single_image=(len(MarkedFiles.file_marks)==1),
+                                             current_image=current_image,
+                                             get_target_dir_callback=ui_class.get_target_directory
+                                             )
+
+    @staticmethod
     def run_permanent_action(app_actions, current_image=None, ui_class=None):
         if not FileAction.permanent_action:
             app_actions.toast(_("NO_MARK_TARGET_SET"))
