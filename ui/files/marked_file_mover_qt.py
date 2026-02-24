@@ -227,30 +227,36 @@ class MarkedFileMover(SmartDialog):
         bar.addWidget(new_lbl)
 
         move_new_btn = QPushButton(_("MOVE"))
+        move_new_btn.setFocusPolicy(Qt.NoFocus)
         move_new_btn.clicked.connect(
             lambda: self._handle_target_directory(move_func=Utils.move_file)
         )
         bar.addWidget(move_new_btn)
 
         copy_new_btn = QPushButton(_("COPY"))
+        copy_new_btn.setFocusPolicy(Qt.NoFocus)
         copy_new_btn.clicked.connect(
             lambda: self._handle_target_directory(move_func=Utils.copy_file)
         )
         bar.addWidget(copy_new_btn)
 
         del_btn = QPushButton(_("DELETE"))
+        del_btn.setFocusPolicy(Qt.NoFocus)
         del_btn.clicked.connect(self._delete_marked_files)
         bar.addWidget(del_btn)
 
         add_parent_btn = QPushButton(_("Add from parent"))
+        add_parent_btn.setFocusPolicy(Qt.NoFocus)
         add_parent_btn.clicked.connect(self._set_target_dirs_from_dir)
         bar.addWidget(add_parent_btn)
 
         clear_btn = QPushButton(_("Clear targets"))
+        clear_btn.setFocusPolicy(Qt.NoFocus)
         clear_btn.clicked.connect(self._clear_target_dirs)
         bar.addWidget(clear_btn)
 
         pdf_btn = QPushButton(_("Create PDF"))
+        pdf_btn.setFocusPolicy(Qt.NoFocus)
         pdf_btn.clicked.connect(self._create_pdf_from_marks)
         bar.addWidget(pdf_btn)
 
@@ -259,10 +265,12 @@ class MarkedFileMover(SmartDialog):
         # -- scroll area for directory rows -------------------------------
         self._scroll = QScrollArea()
         self._scroll.setWidgetResizable(True)
+        self._scroll.setFocusPolicy(Qt.NoFocus)
         self._scroll.setStyleSheet(
             f"QScrollArea {{ border: none; background: {AppStyle.BG_COLOR}; }}"
         )
         self._scroll_content = QWidget()
+        self._scroll_content.setFocusPolicy(Qt.NoFocus)
         self._scroll_layout = QVBoxLayout(self._scroll_content)
         self._scroll_layout.setContentsMargins(0, 0, 0, 0)
         self._scroll_layout.setSpacing(2)
@@ -290,12 +298,14 @@ class MarkedFileMover(SmartDialog):
             row.addWidget(dir_label, 1)
 
             move_btn = QPushButton(_("Move"))
+            move_btn.setFocusPolicy(Qt.NoFocus)
             move_btn.clicked.connect(
                 lambda _=False, d=target_dir: self._move_marks_to_dir(target_dir=d)
             )
             row.addWidget(move_btn)
 
             copy_btn = QPushButton(_("Copy"))
+            copy_btn.setFocusPolicy(Qt.NoFocus)
             copy_btn.clicked.connect(
                 lambda _=False, d=target_dir: self._move_marks_to_dir(
                     target_dir=d, move_func=Utils.copy_file
@@ -304,6 +314,7 @@ class MarkedFileMover(SmartDialog):
             row.addWidget(copy_btn)
 
             remove_btn = QPushButton("\u00d7")  # multiplication sign
+            remove_btn.setFocusPolicy(Qt.NoFocus)
             remove_btn.setFixedWidth(28)
             remove_btn.setToolTip(_("Remove this target directory"))
             remove_btn.clicked.connect(
