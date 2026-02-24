@@ -13,7 +13,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QShortcut, QKeySequence
 from PySide6.QtWidgets import (
     QCheckBox, QFrame, QGridLayout, QLabel, QLineEdit,
-    QScrollArea, QVBoxLayout, QWidget,
+    QScrollArea, QSizePolicy, QVBoxLayout, QWidget,
 )
 
 from lib.multi_display_qt import SmartDialog
@@ -88,7 +88,7 @@ class HelpAndConfig(SmartDialog):
             "Ctrl+P": _("Open security configuration window"),
             "Ctrl+R": _("Run previous marks action"),
             "Ctrl+E": _("Run penultimate marks action"),
-            "Ctrl+Shift+E": _("Run third-most-recent marks action"),
+            "Ctrl+Shift+R": _("Run third-most-recent marks action"),
             "Ctrl+Return": _("Continue image generation"),
             "Ctrl+Shift+Return": _("Cancel image generation"),
             "Ctrl+S": _("Run next text embedding search preset"),
@@ -164,11 +164,15 @@ class HelpAndConfig(SmartDialog):
               "and opens the marks window without GUI."),
         )
         note.setWordWrap(True)
+        note.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+        note.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        note.setContentsMargins(10, 10, 10, 10)
         note.setStyleSheet(
             f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_COLOR}; "
-            f"padding: 10px 10px 0 10px;"
+            "padding: 0;"
         )
-        self._grid.addWidget(note, self._row, 0, 1, 2, Qt.AlignLeft)
+        self._grid.addWidget(note, self._row, 0, 1, 2)
+        note.setMinimumHeight(note.sizeHint().height())
         self._row += 1
         self._help_labels.append(note)
 
@@ -212,6 +216,7 @@ class HelpAndConfig(SmartDialog):
 
         # Sort By (read-only display)
         sort_label = self._make_label(_("Sort By"), col_0_width)
+        sort_label.setFixedWidth(col_0_width)
         sort_value = self._make_label(str(config.sort_by))
         self._grid.addWidget(sort_label, self._row, 0, Qt.AlignLeft | Qt.AlignTop)
         self._grid.addWidget(sort_value, self._row, 1, Qt.AlignLeft | Qt.AlignTop)
@@ -274,9 +279,13 @@ class HelpAndConfig(SmartDialog):
     def _add_help_table(self, items: dict[str, str], col_0_width: int) -> None:
         for key, value in items.items():
             key_label = self._make_label(key, col_0_width)
+            # Keep command labels visually stable: no auto-wrap in column 0.
+            # Explicit newlines in the shortcut text still render as intended.
+            key_label.setFixedWidth(col_0_width)
+            key_label.setWordWrap(False)
             val_label = self._make_label(value)
             self._grid.addWidget(key_label, self._row, 0, Qt.AlignLeft | Qt.AlignTop)
-            self._grid.addWidget(val_label, self._row, 1, Qt.AlignLeft | Qt.AlignTop)
+            self._grid.addWidget(val_label, self._row, 1, Qt.AlignTop)
             self._row += 1
             self._help_labels.extend([key_label, val_label])
 
@@ -292,6 +301,7 @@ class HelpAndConfig(SmartDialog):
 
     def _add_checkbox_row(self, label_text: str, initial: bool) -> QCheckBox:
         lbl = self._make_label(label_text, 250)
+        lbl.setFixedWidth(250)
         cb = QCheckBox()
         cb.setChecked(initial)
         cb.setStyleSheet(
@@ -304,6 +314,7 @@ class HelpAndConfig(SmartDialog):
 
     def _add_entry_row(self, label_text: str, initial: str) -> QLineEdit:
         lbl = self._make_label(label_text, 250)
+        lbl.setFixedWidth(250)
         entry = QLineEdit(initial)
         entry.setFixedWidth(300)
         entry.setStyleSheet(
