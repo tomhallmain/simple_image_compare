@@ -16,11 +16,14 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QLabel,
     QSizePolicy,
+    QApplication,
+    QDialog,
 )
-from PySide6.QtCore import Qt, QRectF, QSize
-from PySide6.QtGui import QImage, QPixmap, QImageReader, QPainter
+from PySide6.QtCore import Qt, QRectF, QSize, QPoint, QRect, QEvent, QTimer, Signal
+from PySide6.QtGui import QImage, QPixmap, QImageReader, QPainter, QCursor
 
 from ui.app_style import AppStyle
+from ui.app_window.media_controls_overlay import MediaControlsOverlay, OVERLAY_HEIGHT
 from utils.config import config
 from utils.translations import I18N
 
@@ -80,12 +83,17 @@ class MediaFrame(QFrame):
     Display image (with pan/zoom via QGraphicsView) and optional in-window video via VLC.
     Provides winId() for VLC embedding (used by muse/playback.py).
     """
+    seek_requested = Signal(int)
+    play_pause_requested = Signal()
+    volume_requested = Signal(int)
+    mute_requested = Signal()
 
     def __init__(self, parent=None, fill_canvas=False):
         super().__init__(parent)
         self.setMinimumSize(320, 320)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setStyleSheet(f"background-color: {AppStyle.MEDIA_BG};")
+        self.setMouseTracking(True)
 
         self.fill_canvas = fill_canvas
         self.path = "."
@@ -125,11 +133,33 @@ class MediaFrame(QFrame):
         if _VLC_AVAILABLE:
             self.vlc_instance = vlc.Instance()
             self.vlc_media_player = self.vlc_instance.media_player_new()
+            self.vlc_media_player.video_set_mouse_input(False)
+            self.vlc_media_player.video_set_key_input(False)
             self.vlc_media = None
         else:
             self.vlc_instance = None
             self.vlc_media_player = None
             self.vlc_media = None
+
+        self._controls_overlay = MediaControlsOverlay(self)
+        self._controls_overlay.seek_requested.connect(self.seek_requested.emit)
+        self._controls_overlay.play_pause_requested.connect(self.play_pause_requested.emit)
+        self._controls_overlay.volume_changed.connect(self.volume_requested.emit)
+        self._controls_overlay.mute_toggled.connect(self.mute_requested.emit)
+        self._window_filter_installed = False
+        self._mouse_inside = False
+        self._last_cursor_pos = None
+        self._last_known_volume = 100
+        self._last_known_muted = False
+
+        self._mouse_poll_timer = QTimer(self)
+        self._mouse_poll_timer.setInterval(100)
+        self._mouse_poll_timer.timeout.connect(self._poll_mouse_position)
+        self._mouse_poll_timer.start()
+
+        self._playback_timer = QTimer(self)
+        self._playback_timer.setInterval(250)
+        self._playback_timer.timeout.connect(self._update_vlc_playback_progress)
 
     def set_background_color(self, background_color):
         color = background_color or AppStyle.MEDIA_BG
@@ -198,6 +228,7 @@ class MediaFrame(QFrame):
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
+        self._position_overlay()
         if self.image_displayed and self.path and self.path != "." and not isinstance(self._video_ui, VideoUI):
             self._show_image_in_view(self.path)
 
@@ -237,6 +268,9 @@ class MediaFrame(QFrame):
             raise Exception("Failed to play video")
         self._graphics_view.hide()
         self._placeholder_label.hide()
+        self.on_track_changed()
+        self._sync_overlay_volume_state(force=True)
+        self._playback_timer.start()
 
     def ensure_video_frame(self):
         """Set the window id for VLC video output."""
@@ -261,6 +295,9 @@ class MediaFrame(QFrame):
         self.vlc_media_player.set_media(self.vlc_media)
         if self.vlc_media_player.play() == -1:
             raise Exception("Failed to play video")
+        self.on_track_changed()
+        self._sync_overlay_volume_state(force=True)
+        self._playback_timer.start()
 
     def close(self):
         self.video_stop()
@@ -269,10 +306,32 @@ class MediaFrame(QFrame):
         if _VLC_AVAILABLE and self.vlc_media_player:
             self.vlc_media_player.stop()
         self._video_ui = None
+        self.on_playback_stopped()
+        self._playback_timer.stop()
 
     def video_pause(self):
         if _VLC_AVAILABLE and self.vlc_media_player:
-            self.vlc_media_player.pause()
+            self.vlc_media_player.set_pause(1)
+            self.set_playback_paused(True)
+
+    def video_play(self):
+        if not _VLC_AVAILABLE or not self.vlc_media_player:
+            return
+        state = self.vlc_media_player.get_state()
+        if state in (vlc.State.Stopped, vlc.State.Ended):
+            self.video_display()
+        else:
+            self.vlc_media_player.set_pause(0)
+        self.set_playback_paused(False)
+        self._playback_timer.start()
+
+    def video_toggle_pause(self):
+        if not _VLC_AVAILABLE or not self.vlc_media_player:
+            return
+        if self.vlc_media_player.is_playing():
+            self.video_pause()
+        else:
+            self.video_play()
 
     def video_take_screenshot(self):
         if _VLC_AVAILABLE and self.vlc_media_player:
@@ -284,6 +343,50 @@ class MediaFrame(QFrame):
     def video_seek(self, pos):
         if _VLC_AVAILABLE and self.vlc_media_player:
             self.vlc_media_player.set_position(pos)
+
+    def video_seek_ms(self, position_ms: int):
+        if not _VLC_AVAILABLE or not self.vlc_media_player:
+            return
+        duration_ms = self.vlc_media_player.get_length()
+        if duration_ms <= 0:
+            return
+        bounded = max(0, min(int(position_ms), int(duration_ms)))
+        self.vlc_media_player.set_time(bounded)
+
+    def set_volume(self, volume: int):
+        bounded = max(0, min(int(volume), 100))
+        if _VLC_AVAILABLE and self.vlc_media_player:
+            self.vlc_media_player.audio_set_volume(bounded)
+            if bounded > 0 and self.vlc_media_player.audio_get_mute():
+                self.vlc_media_player.audio_set_mute(False)
+        self._last_known_volume = bounded
+        self._last_known_muted = self.is_muted()
+        self._sync_overlay_volume_state(force=True)
+
+    def get_volume(self) -> int:
+        if _VLC_AVAILABLE and self.vlc_media_player:
+            volume = int(self.vlc_media_player.audio_get_volume() or 0)
+            if volume >= 0:
+                return volume
+        return self._last_known_volume
+
+    def set_mute(self, muted: bool):
+        if _VLC_AVAILABLE and self.vlc_media_player:
+            self.vlc_media_player.audio_set_mute(bool(muted))
+        self._last_known_muted = bool(muted)
+        self._sync_overlay_volume_state(force=True)
+
+    def toggle_mute(self):
+        if _VLC_AVAILABLE and self.vlc_media_player:
+            self.vlc_media_player.audio_toggle_mute()
+        else:
+            self._last_known_muted = not self._last_known_muted
+        self._sync_overlay_volume_state(force=True)
+
+    def is_muted(self) -> bool:
+        if _VLC_AVAILABLE and self.vlc_media_player:
+            return bool(self.vlc_media_player.audio_get_mute())
+        return self._last_known_muted
 
     def clear(self):
         if isinstance(self._video_ui, VideoUI):
@@ -298,6 +401,7 @@ class MediaFrame(QFrame):
         self._graphics_view.show()
         self._placeholder_label.setText(_("Album art"))
         self._placeholder_label.show()
+        self._controls_overlay.dismiss()
 
     def _show_placeholder(self, text: str) -> None:
         """Clear the view and show a text placeholder (e.g. for unsupported video)."""
@@ -312,6 +416,7 @@ class MediaFrame(QFrame):
         self._current_pixmap = None
         self._pixmap_item.setPixmap(QPixmap())
         self.image_displayed = False
+        self._controls_overlay.dismiss()
 
     def focus(self, refresh_image=False):
         self.setFocus(Qt.FocusReason.OtherFocusReason)
@@ -322,7 +427,134 @@ class MediaFrame(QFrame):
         """Dummy for compatibility with children that override."""
         pass
 
+    def _position_overlay(self):
+        """Place the controls overlay at the bottom of the frame in global coords."""
+        h = OVERLAY_HEIGHT
+        bottom_left = self.mapToGlobal(QPoint(0, self.height() - h))
+        self._controls_overlay.setGeometry(bottom_left.x(), bottom_left.y(), self.width(), h)
+
+    def _ensure_window_filter(self):
+        if self._window_filter_installed:
+            return
+        top = self.window()
+        if top and top is not self:
+            top.installEventFilter(self)
+            self._window_filter_installed = True
+
+    def eventFilter(self, watched, event):
+        etype = event.type()
+        if etype in (QEvent.Type.Move, QEvent.Type.Resize, QEvent.Type.WindowStateChange):
+            self._position_overlay()
+        return super().eventFilter(watched, event)
+
+    def moveEvent(self, event):
+        super().moveEvent(event)
+        self._position_overlay()
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        self._ensure_window_filter()
+        self._position_overlay()
+
+    def hideEvent(self, event):
+        super().hideEvent(event)
+        self._mouse_inside = False
+        self._controls_overlay.dismiss()
+
+    def _poll_mouse_position(self):
+        if not self.isVisible() or not isinstance(self._video_ui, VideoUI):
+            return
+        app = QApplication.instance()
+        top_window = self.window()
+        active_window = app.activeWindow() if app is not None else None
+
+        if self._has_visible_child_dialog(top_window):
+            self._mouse_inside = False
+            self._controls_overlay.dismiss()
+            self._last_cursor_pos = QCursor.pos()
+            return
+
+        # Hide controls whenever a different top-level window is active
+        # (e.g. a dialog opened from this window), so the overlay never
+        # obscures dialog content.
+        if active_window is None or active_window is not top_window:
+            self._mouse_inside = False
+            self._controls_overlay.dismiss()
+            self._last_cursor_pos = QCursor.pos()
+            return
+
+        cursor = QCursor.pos()
+        frame_rect = QRect(self.mapToGlobal(QPoint(0, 0)), self.size())
+        overlay_geo = self._controls_overlay.geometry()
+        inside = frame_rect.contains(cursor) or overlay_geo.contains(cursor)
+        moved = self._last_cursor_pos is None or cursor != self._last_cursor_pos
+
+        if inside:
+            self._mouse_inside = True
+            # Movement within the media area is the activity signal.
+            # If the cursor stays still, the overlay auto-hides.
+            if moved:
+                self._position_overlay()
+                self._controls_overlay.show_overlay()
+        elif not inside and self._mouse_inside:
+            self._mouse_inside = False
+            self._controls_overlay.hide_overlay()
+        self._last_cursor_pos = cursor
+
+    def _has_visible_child_dialog(self, top_window) -> bool:
+        """Return True when any visible QDialog is owned by this window."""
+        app = QApplication.instance()
+        if app is None or top_window is None:
+            return False
+        for widget in app.topLevelWidgets():
+            if widget is top_window or widget is self._controls_overlay:
+                continue
+            if not widget.isVisible() or not isinstance(widget, QDialog):
+                continue
+            parent = widget.parentWidget()
+            while parent is not None:
+                if parent is top_window:
+                    return True
+                parent = parent.parentWidget()
+        return False
+
+    def _update_vlc_playback_progress(self):
+        """Poll VLC and feed progress/paused state to the overlay."""
+        if not _VLC_AVAILABLE or not self.vlc_media_player or not isinstance(self._video_ui, VideoUI):
+            return
+
+        duration_ms = max(int(self.vlc_media_player.get_length() or 0), 0)
+        current_ms = max(int(self.vlc_media_player.get_time() or 0), 0)
+        if duration_ms > 0:
+            self.update_playback_progress(current_ms, duration_ms)
+        self.set_playback_paused(not bool(self.vlc_media_player.is_playing()))
+        self._sync_overlay_volume_state()
+
+    def _sync_overlay_volume_state(self, force: bool = False):
+        """Keep overlay mute/volume controls in sync with VLC state."""
+        volume = self.get_volume()
+        muted = self.is_muted()
+        if force or volume != self._last_known_volume or muted != self._last_known_muted:
+            self._last_known_volume = volume
+            self._last_known_muted = muted
+            self._controls_overlay.set_volume_state(volume, muted)
+
     def get_media_frame_handle(self):
         """Return window id for VLC embedding (muse/playback.py)."""
         wid = self.winId()
         return int(wid) if wid else None
+
+    # ------------------------------------------------------------------
+    # Playback progress & overlay
+    # ------------------------------------------------------------------
+    def update_playback_progress(self, current_ms: int, duration_ms: int):
+        self._controls_overlay.update_progress(current_ms, duration_ms)
+
+    def set_playback_paused(self, paused: bool):
+        self._controls_overlay.set_paused(paused)
+
+    def on_track_changed(self):
+        self._controls_overlay.on_track_changed()
+
+    def on_playback_stopped(self):
+        self._controls_overlay.on_playback_stopped()

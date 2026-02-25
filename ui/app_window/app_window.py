@@ -232,6 +232,10 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         # Media frame (right)
         self.media_frame = MediaFrame(parent=self)
         self.splitter.addWidget(self.media_frame)
+        self.media_frame.seek_requested.connect(self.seek_media_position)
+        self.media_frame.play_pause_requested.connect(self.toggle_media_play_pause)
+        self.media_frame.volume_requested.connect(self.set_media_volume)
+        self.media_frame.mute_requested.connect(self.toggle_media_mute)
 
         # Give most space to the media frame
         self.splitter.setStretchFactor(0, 1)  # sidebar
@@ -405,6 +409,16 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             "get_active_media_filepath": self.media_navigator.get_active_media_filepath,
             "create_image": ts(self.media_navigator.create_image),
             "show_next_media": ts(self.media_navigator.show_next_media),
+            "play_media": ts(self.play_media),
+            "pause_media": ts(self.pause_media),
+            "toggle_media_play_pause": ts(self.toggle_media_play_pause),
+            "seek_media": ts(self.seek_media_position),
+            "stop_media": ts(self.stop_media),
+            "set_media_volume": ts(self.set_media_volume),
+            "get_media_volume": self.get_media_volume,
+            "toggle_media_mute": ts(self.toggle_media_mute),
+            "set_media_mute": ts(self.set_media_mute),
+            "is_media_muted": self.is_media_muted,
             # Window launchers
             "get_media_details": ts(self.window_launcher.open_media_details),
             "open_move_marks_window": ts(self.file_marks_ctrl.open_move_marks_window),
@@ -812,6 +826,46 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         """Return keyboard focus to the main window."""
         self.activateWindow()
         self.media_frame.setFocus()
+
+    def play_media(self, event=None) -> None:
+        """Resume/start VLC playback in the media frame."""
+        self.media_frame.video_play()
+
+    def pause_media(self, event=None) -> None:
+        """Pause VLC playback in the media frame."""
+        self.media_frame.video_pause()
+
+    def toggle_media_play_pause(self, event=None) -> None:
+        """Toggle VLC playback state in the media frame."""
+        self.media_frame.video_toggle_pause()
+
+    def stop_media(self, event=None) -> None:
+        """Stop VLC playback in the media frame."""
+        self.media_frame.video_stop()
+
+    def seek_media_position(self, position_ms: int) -> None:
+        """Seek VLC playback to an absolute millisecond position."""
+        self.media_frame.video_seek_ms(position_ms)
+
+    def set_media_volume(self, volume: int) -> None:
+        """Set VLC volume level (0-100)."""
+        self.media_frame.set_volume(volume)
+
+    def get_media_volume(self) -> int:
+        """Return current VLC volume level (0-100)."""
+        return self.media_frame.get_volume()
+
+    def toggle_media_mute(self, event=None) -> None:
+        """Toggle VLC mute state."""
+        self.media_frame.toggle_mute()
+
+    def set_media_mute(self, muted: bool) -> None:
+        """Set VLC mute state explicitly."""
+        self.media_frame.set_mute(muted)
+
+    def is_media_muted(self) -> bool:
+        """Return whether VLC audio is muted."""
+        return self.media_frame.is_muted()
 
     # ------------------------------------------------------------------
     # View toggles (kept on AppWindow -- they touch the top-level layout)
