@@ -226,6 +226,14 @@ class MediaControlsOverlay(QWidget):
         self._volume_slider.blockSignals(False)
         self._refresh_mute_button()
 
+    def set_audio_controls_visible(self, visible: bool):
+        """Show/hide mute + volume controls (used for non-audio media like GIFs)."""
+        is_visible = bool(visible)
+        self._mute_btn.setVisible(is_visible)
+        self._mute_btn.setEnabled(is_visible)
+        self._volume_slider.setVisible(is_visible)
+        self._volume_slider.setEnabled(is_visible)
+
     def show_overlay(self):
         if not self._has_track:
             return

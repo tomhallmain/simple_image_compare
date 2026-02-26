@@ -557,6 +557,15 @@ class WindowResizeHandler(QObject):
     def _handle_mouse_move(self, event: QMouseEvent) -> bool:
         """Handle mouse move for resize cursor and resizing."""
         global_pos = event.globalPos()
+
+        # Don't show resize cursors while hovering independent tool windows
+        # (e.g. media overlay controls) that are not this main window.
+        widget_at_pos = QApplication.widgetAt(global_pos)
+        if widget_at_pos is not None and widget_at_pos.window() is not self._window:
+            if self._current_cursor_edge != ResizeGrip.EDGE_NONE:
+                QApplication.restoreOverrideCursor()
+                self._current_cursor_edge = ResizeGrip.EDGE_NONE
+            return False
         
         if self._is_resizing:
             self._perform_resize(global_pos)
@@ -590,6 +599,9 @@ class WindowResizeHandler(QObject):
         # Check if clicked widget is a button - don't intercept button clicks
         widget_at_pos = QApplication.widgetAt(event.globalPos())
         if widget_at_pos is not None:
+            # Let independent tool windows process their own mouse events.
+            if widget_at_pos.window() is not self._window:
+                return False
             if isinstance(widget_at_pos, QPushButton):
                 return False
             # Also check parent in case click is on button's label

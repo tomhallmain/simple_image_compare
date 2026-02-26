@@ -135,6 +135,10 @@ class MediaFrame(QFrame):
         self._gif_label.hide()
         layout.addWidget(self._gif_label)
         self._gif_movie = None
+        self._gif_is_animated = False
+        self._gif_frame_delays = []
+        self._gif_timeline = []
+        self._gif_total_duration_ms = 0
 
         if _VLC_AVAILABLE:
             self.vlc_instance = vlc.Instance()
@@ -185,6 +189,9 @@ class MediaFrame(QFrame):
     def _is_gif_path(self, path):
         return bool(path and path.lower().endswith(".gif"))
 
+    def _has_active_overlay_media(self):
+        return isinstance(self._video_ui, VideoUI) or (self._gif_movie is not None and self._gif_is_animated)
+
     def _apply_image_scale_mode(self):
         """Scale only when needed, unless fill-canvas is enabled."""
         if self._current_pixmap is None or self._current_pixmap.isNull():
@@ -217,6 +224,46 @@ class MediaFrame(QFrame):
             self._gif_movie.setScaledSize(QSize())
         else:
             self._gif_movie.setScaledSize(QSize(target_w, target_h))
+
+    def _analyze_gif(self, path):
+        frame_count = 0
+        delays = []
+        reader = QImageReader(path)
+        if not reader.supportsAnimation():
+            return frame_count, delays
+        while True:
+            frame = reader.read()
+            if frame.isNull():
+                break
+            frame_count += 1
+            delay = int(reader.nextImageDelay() or 100)
+            delays.append(max(delay, 20))
+            if not reader.canRead():
+                break
+        return frame_count, delays
+
+    def _reset_gif_state(self):
+        self._gif_is_animated = False
+        self._gif_frame_delays = []
+        self._gif_timeline = []
+        self._gif_total_duration_ms = 0
+
+    def _build_gif_timeline(self, frame_delays):
+        timeline = [0]
+        elapsed = 0
+        for delay in frame_delays:
+            elapsed += max(int(delay), 20)
+            timeline.append(elapsed)
+        return timeline, elapsed
+
+    def _update_gif_overlay_progress(self):
+        if self._gif_movie is None or not self._gif_is_animated or self._gif_total_duration_ms <= 0:
+            return
+        frame_idx = max(int(self._gif_movie.currentFrameNumber()), 0)
+        frame_idx = min(frame_idx, max(len(self._gif_timeline) - 2, 0))
+        current_ms = self._gif_timeline[frame_idx] if self._gif_timeline else 0
+        self.update_playback_progress(current_ms, self._gif_total_duration_ms)
+        self.set_playback_paused(self._gif_movie.state() != QMovie.MovieState.Running)
 
     def _load_image_to_qimage(self, path):
         """Load path to QImage; use QImageReader first, fallback to Pillow if available."""
@@ -266,28 +313,44 @@ class MediaFrame(QFrame):
         self._graphics_view.show()
         self._gif_label.hide()
         self._placeholder_label.hide()
+        self._controls_overlay.set_audio_controls_visible(True)
         self.image_displayed = True
 
     def _show_gif(self, path):
         if not path or path == "." or not os.path.exists(path):
             return
         self.clear()
+        frame_count, frame_delays = self._analyze_gif(path)
+        is_animated = frame_count > 1
+        if not is_animated:
+            self._show_image_in_view(path)
+            return
         self._gif_movie = QMovie(path)
         if not self._gif_movie.isValid():
             self._gif_movie = None
             self._show_image_in_view(path)
             return
+        # Random-access seeking is unreliable without frame caching.
+        self._gif_movie.setCacheMode(QMovie.CacheMode.CacheAll)
+        self._gif_is_animated = True
+        self._gif_frame_delays = frame_delays or [100] * max(frame_count, 1)
+        self._gif_timeline, self._gif_total_duration_ms = self._build_gif_timeline(self._gif_frame_delays)
         self._gif_label.setMovie(self._gif_movie)
         self._gif_movie.jumpToFrame(0)
+        self._gif_movie.frameChanged.connect(lambda _idx: self._update_gif_overlay_progress())
         self._update_gif_scale_mode()
         self._gif_movie.start()
         self._graphics_view.hide()
         self._placeholder_label.hide()
         self._gif_label.show()
+        self._controls_overlay.set_audio_controls_visible(False)
         self._image = None
         self._video_ui = None
         self._current_pixmap = None
         self.image_displayed = True
+        self.on_track_changed()
+        self._update_gif_overlay_progress()
+        self._playback_timer.start()
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -303,6 +366,8 @@ class MediaFrame(QFrame):
         """Show image or video at path. Dispatches to show_video when appropriate."""
         if isinstance(self._video_ui, VideoUI):
             self.video_stop()
+        if self._gif_movie is not None:
+            self.gif_stop()
         self.path = path or "."
         if not path or path == "." or path.strip() == "" or not os.path.exists(path):
             self.clear()
@@ -347,6 +412,7 @@ class MediaFrame(QFrame):
             raise Exception("Failed to play video")
         self._graphics_view.hide()
         self._placeholder_label.hide()
+        self._controls_overlay.set_audio_controls_visible(True)
         self.on_track_changed()
         self._sync_overlay_volume_state(force=True)
         self._playback_timer.start()
@@ -393,6 +459,16 @@ class MediaFrame(QFrame):
         self.on_playback_stopped()
         self._playback_timer.stop()
 
+    def gif_stop(self):
+        try:
+            self._gif_movie.stop()
+            self._gif_movie = None
+            self._reset_gif_state()
+            self._gif_label.clear()
+            self._gif_label.hide()
+        except Exception:
+            pass
+
     def dispose_vlc(self):
         """Fully tear down VLC resources for this widget instance."""
         if self._vlc_disposed:
@@ -423,11 +499,23 @@ class MediaFrame(QFrame):
             self.vlc_instance = None
 
     def video_pause(self):
+        if self._gif_movie is not None and self._gif_is_animated:
+            self._gif_movie.setPaused(True)
+            self.set_playback_paused(True)
+            return
         if _VLC_AVAILABLE and self.vlc_media_player:
             self.vlc_media_player.set_pause(1)
             self.set_playback_paused(True)
 
     def video_play(self):
+        if self._gif_movie is not None and self._gif_is_animated:
+            if self._gif_movie.state() == QMovie.MovieState.NotRunning:
+                self._gif_movie.start()
+            else:
+                self._gif_movie.setPaused(False)
+            self.set_playback_paused(False)
+            self._playback_timer.start()
+            return
         if not _VLC_AVAILABLE or not self.vlc_media_player:
             return
         state = self.vlc_media_player.get_state()
@@ -439,6 +527,12 @@ class MediaFrame(QFrame):
         self._playback_timer.start()
 
     def video_toggle_pause(self):
+        if self._gif_movie is not None and self._gif_is_animated:
+            if self._gif_movie.state() == QMovie.MovieState.Running:
+                self.video_pause()
+            else:
+                self.video_play()
+            return
         if not _VLC_AVAILABLE or not self.vlc_media_player:
             return
         if self.vlc_media_player.is_playing():
@@ -458,6 +552,29 @@ class MediaFrame(QFrame):
             self.vlc_media_player.set_position(pos)
 
     def video_seek_ms(self, position_ms: int):
+        if self._gif_movie is not None and self._gif_is_animated and self._gif_total_duration_ms > 0:
+            bounded = max(0, min(int(position_ms), int(self._gif_total_duration_ms)))
+            frame_idx = 0
+            for idx in range(len(self._gif_timeline) - 1):
+                if self._gif_timeline[idx] <= bounded < self._gif_timeline[idx + 1]:
+                    frame_idx = idx
+                    break
+            else:
+                frame_idx = max(len(self._gif_timeline) - 2, 0)
+            was_running = self._gif_movie.state() == QMovie.MovieState.Running
+            if was_running:
+                self._gif_movie.setPaused(True)
+            jumped = self._gif_movie.jumpToFrame(frame_idx)
+            if not jumped:
+                # Fallback for back-seeks on some backends.
+                self._gif_movie.stop()
+                self._gif_movie.start()
+                self._gif_movie.setPaused(True)
+                self._gif_movie.jumpToFrame(frame_idx)
+            self._update_gif_overlay_progress()
+            if was_running:
+                self._gif_movie.setPaused(False)
+            return
         if not _VLC_AVAILABLE or not self.vlc_media_player:
             return
         duration_ms = self.vlc_media_player.get_length()
@@ -507,6 +624,7 @@ class MediaFrame(QFrame):
         if self._gif_movie is not None:
             self._gif_movie.stop()
             self._gif_movie = None
+        self._reset_gif_state()
         self._gif_label.clear()
         self._gif_label.hide()
         self._video_ui = None
@@ -519,6 +637,7 @@ class MediaFrame(QFrame):
         self._graphics_view.show()
         self._placeholder_label.setText(_("Album art"))
         self._placeholder_label.show()
+        self._controls_overlay.set_audio_controls_visible(True)
         self._controls_overlay.dismiss()
 
     def _show_placeholder(self, text: str) -> None:
@@ -534,11 +653,13 @@ class MediaFrame(QFrame):
             self._gif_movie = None
             self._gif_label.clear()
             self._gif_label.hide()
-        elif self._image is not None:
+        self._reset_gif_state()
+        if self._image is not None:
             self._image = None
         self._current_pixmap = None
         self._pixmap_item.setPixmap(QPixmap())
         self.image_displayed = False
+        self._controls_overlay.set_audio_controls_visible(True)
         self._controls_overlay.dismiss()
 
     def focus(self, refresh_image=False):
@@ -585,7 +706,7 @@ class MediaFrame(QFrame):
         self._controls_overlay.dismiss()
 
     def _poll_mouse_position(self):
-        if not self.isVisible() or not isinstance(self._video_ui, VideoUI):
+        if not self.isVisible() or not self._has_active_overlay_media():
             return
         app = QApplication.instance()
         top_window = self.window()
@@ -642,16 +763,19 @@ class MediaFrame(QFrame):
         return False
 
     def _update_vlc_playback_progress(self):
-        """Poll VLC and feed progress/paused state to the overlay."""
-        if not _VLC_AVAILABLE or not self.vlc_media_player or not isinstance(self._video_ui, VideoUI):
+        """Poll active media (VLC or animated GIF) and update overlay."""
+        if isinstance(self._video_ui, VideoUI):
+            if not _VLC_AVAILABLE or not self.vlc_media_player:
+                return
+            duration_ms = max(int(self.vlc_media_player.get_length() or 0), 0)
+            current_ms = max(int(self.vlc_media_player.get_time() or 0), 0)
+            if duration_ms > 0:
+                self.update_playback_progress(current_ms, duration_ms)
+            self.set_playback_paused(not bool(self.vlc_media_player.is_playing()))
+            self._sync_overlay_volume_state()
             return
-
-        duration_ms = max(int(self.vlc_media_player.get_length() or 0), 0)
-        current_ms = max(int(self.vlc_media_player.get_time() or 0), 0)
-        if duration_ms > 0:
-            self.update_playback_progress(current_ms, duration_ms)
-        self.set_playback_paused(not bool(self.vlc_media_player.is_playing()))
-        self._sync_overlay_volume_state()
+        if self._gif_movie is not None and self._gif_is_animated:
+            self._update_gif_overlay_progress()
 
     def _sync_overlay_volume_state(self, force: bool = False):
         """Keep overlay mute/volume controls in sync with VLC state."""
