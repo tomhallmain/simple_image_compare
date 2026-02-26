@@ -2,6 +2,7 @@ import os
 import random
 import sys
 import time
+import math
 
 import cv2
 import numpy as np
@@ -439,6 +440,75 @@ class ImageOps:
     @staticmethod
     def _flip_image(im, top_bottom=False):
         return im.transpose(method=PIL.Image.FLIP_TOP_BOTTOM if top_bottom else PIL.Image.FLIP_LEFT_RIGHT), im
+
+    @staticmethod
+    def _parse_aspect_ratio(target_aspect_ratio) -> float:
+        """
+        Parse an aspect ratio from formats like:
+        - float/int (e.g. 1.777)
+        - "16:9"
+        - "4/3"
+        - "1.5"
+        """
+        if isinstance(target_aspect_ratio, (int, float)):
+            ratio = float(target_aspect_ratio)
+        else:
+            ratio_text = str(target_aspect_ratio).strip()
+            if ratio_text == "":
+                raise ValueError("Aspect ratio cannot be empty")
+            ratio_text = ratio_text.replace(" ", "")
+            if ":" in ratio_text:
+                lhs, rhs = ratio_text.split(":", 1)
+                ratio = float(lhs) / float(rhs)
+            elif "/" in ratio_text:
+                lhs, rhs = ratio_text.split("/", 1)
+                ratio = float(lhs) / float(rhs)
+            else:
+                ratio = float(ratio_text)
+        if ratio <= 0:
+            raise ValueError("Aspect ratio must be greater than zero")
+        return ratio
+
+    @staticmethod
+    def change_aspect_ratio(image_path: str, target_aspect_ratio, anchor: str = "center") -> str:
+        """
+        Convert an image to a target aspect ratio using interpolation-based
+        non-uniform scaling (no cropping).
+
+        Args:
+            image_path: Path to source image
+            target_aspect_ratio: Desired ratio (e.g. "16:9", "4/3", 1.777...)
+            anchor: Reserved for future behavior variants
+        """
+        target_ratio = ImageOps._parse_aspect_ratio(target_aspect_ratio)
+        with PIL.Image.open(image_path) as image:
+            width, height = image.size
+            if width <= 0 or height <= 0:
+                raise ValueError("Image dimensions must be greater than zero")
+
+            current_ratio = width / height
+            if math.isclose(current_ratio, target_ratio, rel_tol=0.0, abs_tol=1e-6):
+                converted = image.copy()
+            else:
+                # Keep image area approximately constant, then warp into target ratio.
+                area = width * height
+                target_height = max(1, int(round(math.sqrt(area / target_ratio))))
+                target_width = max(1, int(round(target_height * target_ratio)))
+
+                if target_width == width and target_height == height:
+                    converted = image.copy()
+                else:
+                    resampling = (
+                        PIL.Image.Resampling.BICUBIC
+                        if target_width > width or target_height > height
+                        else PIL.Image.Resampling.LANCZOS
+                    )
+                    converted = image.resize((target_width, target_height), resampling)
+
+            new_filepath = ImageOps.new_filepath(image_path, append_part="_aspect")
+            converted.save(new_filepath)
+            converted.close()
+            return new_filepath
 
     @staticmethod
     def _upscale(im, shortest_side=1200):

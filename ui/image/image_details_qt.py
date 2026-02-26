@@ -16,6 +16,7 @@ Non-UI imports (reuse policy):
 from __future__ import annotations
 
 import glob
+import math
 import os
 import random
 import re
@@ -27,7 +28,8 @@ from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QGuiApplication, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QComboBox, QGridLayout, QLabel, QLineEdit, QMessageBox,
-    QPushButton, QScrollArea, QVBoxLayout, QWidget,
+    QPushButton, QScrollArea, QVBoxLayout, QWidget, QDialog,
+    QDialogButtonBox,
 )
 
 from files.file_browser import FileBrowser
@@ -88,6 +90,7 @@ class ImageDetails(SmartDialog):
     _NEGATIVE_HIDDEN_COLOR = "#55526a"     # dark gray near background, hidden in plain sight
 
     # -- Static persistence ----------------------------------------
+    ASPECT_RATIO_SETTINGS_KEY = "change_aspect_ratio_settings"
 
     @staticmethod
     def load_image_generation_mode() -> None:
@@ -313,6 +316,10 @@ class ImageDetails(SmartDialog):
 
         _btn(_("Flip Image Horizontally"), lambda: self.flip_image(), row, 0)
         _btn(_("Flip Image Vertically"), lambda: self.flip_image(top_bottom=True), row, 1)
+        row += 1
+
+        _btn(_("Change Aspect Ratio"), self.open_change_aspect_ratio_dialog, row, 0)
+        _btn(_("Flip Aspect Ratio"), self.flip_aspect_ratio, row, 1)
         row += 1
 
         _btn(_("Copy Without EXIF"), lambda: self.copy_without_exif(), row, 0)
@@ -708,6 +715,102 @@ class ImageDetails(SmartDialog):
             self._image_path, top_bottom=top_bottom
         )
         self._handle_action_result(new_filepath, _("Flipped image"))
+
+    def _get_current_dimensions(self) -> tuple[int, int]:
+        with Image.open(self._image_path) as image:
+            return image.size
+
+    @staticmethod
+    def _ratio_text(width: int, height: int) -> str:
+        divisor = math.gcd(width, height)
+        if divisor <= 0:
+            return f"{width}:{height}"
+        return f"{width // divisor}:{height // divisor}"
+
+    def _store_aspect_ratio_settings(self, target_ratio: str) -> None:
+        app_info_cache.set_meta(
+            ImageDetails.ASPECT_RATIO_SETTINGS_KEY,
+            {"target_ratio": target_ratio},
+        )
+
+    def _get_saved_aspect_ratio(self) -> str | None:
+        settings = app_info_cache.get_meta(
+            ImageDetails.ASPECT_RATIO_SETTINGS_KEY,
+            default_val={},
+        )
+        if isinstance(settings, dict):
+            value = settings.get("target_ratio")
+            if isinstance(value, str) and value.strip() != "":
+                return value
+        return None
+
+    def _apply_aspect_ratio_change(self, target_ratio: str) -> bool:
+        ratio_text = target_ratio.strip()
+        if ratio_text == "":
+            self._app_actions.warn(_("Please enter a target ratio"))
+            return False
+        try:
+            new_filepath = ImageOps.change_aspect_ratio(
+                self._image_path,
+                ratio_text,
+            )
+            self._store_aspect_ratio_settings(ratio_text)
+            self._handle_action_result(
+                new_filepath,
+                _("Changed image aspect ratio"),
+            )
+            return True
+        except Exception as e:
+            logger.error(f"Error changing image aspect ratio: {e}")
+            self._app_actions.warn(_("Error changing image aspect ratio"))
+            return False
+
+    def flip_aspect_ratio(self) -> None:
+        if not self._is_image:
+            self._app_actions.toast(_("Aspect ratio changes are only available for images"))
+            return
+        width, height = self._get_current_dimensions()
+        self._apply_aspect_ratio_change(f"{height}:{width}")
+
+    def open_change_aspect_ratio_dialog(self) -> None:
+        if not self._is_image:
+            self._app_actions.toast(_("Aspect ratio changes are only available for images"))
+            return
+
+        width, height = self._get_current_dimensions()
+        current_ratio = ImageDetails._ratio_text(width, height)
+        saved_ratio = self._get_saved_aspect_ratio()
+        default_ratio = saved_ratio if saved_ratio is not None else current_ratio
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle(_("Change Aspect Ratio"))
+        dialog.setModal(True)
+
+        layout = QVBoxLayout(dialog)
+        current_label = QLabel(
+            _("Current ratio: {0}").format(current_ratio)
+        )
+        target_label = QLabel(_("Target ratio (e.g. 16:9 or 1.777):"))
+        ratio_input = QLineEdit(default_ratio)
+        ratio_input.selectAll()
+
+        layout.addWidget(current_label)
+        layout.addWidget(target_label)
+        layout.addWidget(ratio_input)
+
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        layout.addWidget(buttons)
+
+        def _apply_from_input() -> None:
+            if self._apply_aspect_ratio_change(ratio_input.text()):
+                dialog.accept()
+
+        buttons.accepted.connect(_apply_from_input)
+        buttons.rejected.connect(dialog.reject)
+        dialog.exec()
 
     def copy_without_exif(self) -> None:
         try:
