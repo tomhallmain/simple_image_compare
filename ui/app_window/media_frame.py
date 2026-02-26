@@ -160,6 +160,7 @@ class MediaFrame(QFrame):
         self._playback_timer = QTimer(self)
         self._playback_timer.setInterval(250)
         self._playback_timer.timeout.connect(self._update_vlc_playback_progress)
+        self._vlc_disposed = False
 
     def set_background_color(self, background_color):
         color = background_color or AppStyle.MEDIA_BG
@@ -299,15 +300,49 @@ class MediaFrame(QFrame):
         self._sync_overlay_volume_state(force=True)
         self._playback_timer.start()
 
-    def close(self):
-        self.video_stop()
+    def closeEvent(self, event):
+        self.dispose_vlc()
+        super().closeEvent(event)
 
     def video_stop(self):
         if _VLC_AVAILABLE and self.vlc_media_player:
             self.vlc_media_player.stop()
+            self.vlc_media_player.set_media(None)
+        if _VLC_AVAILABLE and self.vlc_media:
+            self.vlc_media.release()
+            self.vlc_media = None
         self._video_ui = None
         self.on_playback_stopped()
         self._playback_timer.stop()
+
+    def dispose_vlc(self):
+        """Fully tear down VLC resources for this widget instance."""
+        if self._vlc_disposed:
+            return
+        self._vlc_disposed = True
+        self._playback_timer.stop()
+        try:
+            self.video_stop()
+        except Exception:
+            pass
+        if _VLC_AVAILABLE and self.vlc_media_player:
+            try:
+                # Detach video output from this window handle before release.
+                if platform.system() == "Windows":
+                    self.vlc_media_player.set_hwnd(0)
+            except Exception:
+                pass
+            try:
+                self.vlc_media_player.release()
+            except Exception:
+                pass
+            self.vlc_media_player = None
+        if _VLC_AVAILABLE and self.vlc_instance:
+            try:
+                self.vlc_instance.release()
+            except Exception:
+                pass
+            self.vlc_instance = None
 
     def video_pause(self):
         if _VLC_AVAILABLE and self.vlc_media_player:

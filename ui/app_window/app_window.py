@@ -950,6 +950,8 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         # Stop periodic timers
         self.file_ops_ctrl.stop_file_check_timer()
         self.cache_ctrl.stop_periodic_store()
+        # Ensure VLC playback is fully torn down before window destruction.
+        self.media_frame.dispose_vlc()
 
         self.cache_ctrl.store_info_cache(store_window_state=not self.is_secondary())
 
