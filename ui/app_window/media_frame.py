@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
     QDialog,
 )
 from PySide6.QtCore import Qt, QRectF, QSize, QPoint, QRect, QEvent, QTimer, Signal
-from PySide6.QtGui import QImage, QPixmap, QImageReader, QPainter, QCursor
+from PySide6.QtGui import QImage, QPixmap, QImageReader, QPainter, QCursor, QMovie
 
 from ui.app_style import AppStyle
 from ui.app_window.media_controls_overlay import MediaControlsOverlay, OVERLAY_HEIGHT
@@ -130,6 +130,12 @@ class MediaFrame(QFrame):
         layout.addWidget(self._placeholder_label)
         self._placeholder_label.hide()
 
+        self._gif_label = QLabel(self)
+        self._gif_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self._gif_label.hide()
+        layout.addWidget(self._gif_label)
+        self._gif_movie = None
+
         if _VLC_AVAILABLE:
             self.vlc_instance = vlc.Instance()
             self.vlc_media_player = self.vlc_instance.media_player_new()
@@ -176,6 +182,42 @@ class MediaFrame(QFrame):
         path_lower = path.lower()
         return any(path_lower.endswith(ext) for ext in self._video_types())
 
+    def _is_gif_path(self, path):
+        return bool(path and path.lower().endswith(".gif"))
+
+    def _apply_image_scale_mode(self):
+        """Scale only when needed, unless fill-canvas is enabled."""
+        if self._current_pixmap is None or self._current_pixmap.isNull():
+            return
+        viewport_size = self._graphics_view.viewport().size()
+        if viewport_size.width() <= 0 or viewport_size.height() <= 0:
+            return
+        pix_w = self._current_pixmap.width()
+        pix_h = self._current_pixmap.height()
+        if pix_w <= 0 or pix_h <= 0:
+            return
+        should_fit = self.fill_canvas or pix_w > viewport_size.width() or pix_h > viewport_size.height()
+        self._graphics_view.resetTransform()
+        if should_fit:
+            self._graphics_view.fitInView(self._pixmap_item, Qt.AspectRatioMode.KeepAspectRatio)
+
+    def _update_gif_scale_mode(self):
+        if self._gif_movie is None:
+            return
+        frame_size = self._gif_movie.frameRect().size()
+        if frame_size.width() <= 0 or frame_size.height() <= 0:
+            return
+        max_dims = (max(1, self._gif_label.width()), max(1, self._gif_label.height()))
+        target_w, target_h = scale_dims(
+            (frame_size.width(), frame_size.height()),
+            max_dims,
+            maximize=self.fill_canvas,
+        )
+        if target_w == frame_size.width() and target_h == frame_size.height():
+            self._gif_movie.setScaledSize(QSize())
+        else:
+            self._gif_movie.setScaledSize(QSize(target_w, target_h))
+
     def _load_image_to_qimage(self, path):
         """Load path to QImage; use QImageReader first, fallback to Pillow if available."""
         reader = QImageReader(path)
@@ -220,18 +262,42 @@ class MediaFrame(QFrame):
         self._current_pixmap = pix
         self._pixmap_item.setPixmap(pix)
         self._scene.setSceneRect(QRectF(pix.rect()))
-        self._graphics_view.fitInView(
-            self._pixmap_item, Qt.AspectRatioMode.KeepAspectRatio
-        )
+        self._apply_image_scale_mode()
         self._graphics_view.show()
+        self._gif_label.hide()
         self._placeholder_label.hide()
+        self.image_displayed = True
+
+    def _show_gif(self, path):
+        if not path or path == "." or not os.path.exists(path):
+            return
+        self.clear()
+        self._gif_movie = QMovie(path)
+        if not self._gif_movie.isValid():
+            self._gif_movie = None
+            self._show_image_in_view(path)
+            return
+        self._gif_label.setMovie(self._gif_movie)
+        self._gif_movie.jumpToFrame(0)
+        self._update_gif_scale_mode()
+        self._gif_movie.start()
+        self._graphics_view.hide()
+        self._placeholder_label.hide()
+        self._gif_label.show()
+        self._image = None
+        self._video_ui = None
+        self._current_pixmap = None
         self.image_displayed = True
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
         self._position_overlay()
-        if self.image_displayed and self.path and self.path != "." and not isinstance(self._video_ui, VideoUI):
-            self._show_image_in_view(self.path)
+        if not self.image_displayed or isinstance(self._video_ui, VideoUI):
+            return
+        if self._gif_movie is not None:
+            self._update_gif_scale_mode()
+        else:
+            self._apply_image_scale_mode()
 
     def show_image(self, path):
         """Show image or video at path. Dispatches to show_video when appropriate."""
@@ -248,9 +314,21 @@ class MediaFrame(QFrame):
             else:
                 self._show_placeholder(_("Video: ") + os.path.basename(path))
             return
+        if self._is_gif_path(path):
+            self._show_gif(path)
+            return
         self._video_ui = None
         self.imscale = 1.0
         self._show_image_in_view(self.path)
+
+    def set_fill_canvas(self, fill_canvas: bool):
+        self.fill_canvas = bool(fill_canvas)
+        if not self.image_displayed or isinstance(self._video_ui, VideoUI):
+            return
+        if self._gif_movie is not None:
+            self._update_gif_scale_mode()
+        else:
+            self._apply_image_scale_mode()
 
     def show_video(self, path):
         """Play video in this frame (VLC embeds via winId())."""
@@ -426,6 +504,11 @@ class MediaFrame(QFrame):
     def clear(self):
         if isinstance(self._video_ui, VideoUI):
             self.video_stop()
+        if self._gif_movie is not None:
+            self._gif_movie.stop()
+            self._gif_movie = None
+        self._gif_label.clear()
+        self._gif_label.hide()
         self._video_ui = None
         self._scene.clear()
         self._pixmap_item = QGraphicsPixmapItem()
@@ -446,6 +529,11 @@ class MediaFrame(QFrame):
     def release_media(self):
         if isinstance(self._video_ui, VideoUI):
             self.video_stop()
+        if self._gif_movie is not None:
+            self._gif_movie.stop()
+            self._gif_movie = None
+            self._gif_label.clear()
+            self._gif_label.hide()
         elif self._image is not None:
             self._image = None
         self._current_pixmap = None

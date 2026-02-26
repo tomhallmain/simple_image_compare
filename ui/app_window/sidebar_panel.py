@@ -384,7 +384,7 @@ class SidebarPanel(QWidget):
 
     def _on_toggle_fill_canvas(self, state: int) -> None:
         """Handle fill-canvas checkbox toggle."""
-        self._app.media_frame.fill_canvas = not self._app.media_frame.fill_canvas
+        self._app.media_frame.set_fill_canvas(state == Qt.CheckState.Checked.value)
 
     def _on_toggle_search_return_closest(self, state: int) -> None:
         """Handle search-return-closest checkbox toggle."""
