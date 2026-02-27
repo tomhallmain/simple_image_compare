@@ -38,6 +38,8 @@ class Config:
         self.escape_backslash_filepaths = False
         self.file_counter_limit = 40000
         self.fill_canvas = False
+        self.screenshot_directory = None
+        self.save_screenshot_to_same_dir = True
         self.image_browse_recursive = False
         self.sidebar_visible = True
         self.image_tagging_enabled = True
@@ -139,6 +141,7 @@ class Config:
                             "toast_color_success",
                             "locale",
                             "log_level",
+                            "screenshot_directory",
                             "default_main_window_size",
                             "default_secondary_window_size",
                             "clip_model",
@@ -155,6 +158,7 @@ class Config:
                             "image_tagging_enabled",
                             "escape_backslash_filepaths",
                             "fill_canvas",
+                            "save_screenshot_to_same_dir",
                             "enable_videos",
                             "enable_gifs",
                             "enable_pdfs",

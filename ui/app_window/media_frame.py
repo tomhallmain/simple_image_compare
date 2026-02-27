@@ -540,6 +540,47 @@ class MediaFrame(QFrame):
         else:
             self.video_play()
 
+    def has_time_based_media(self) -> bool:
+        return isinstance(self._video_ui, VideoUI) or (self._gif_movie is not None and self._gif_is_animated)
+
+    def save_media_screenshot(self, output_path: str) -> tuple[bool, str]:
+        """Save screenshot for active time-based media (video or animated GIF)."""
+        if not output_path:
+            return False, _("No output path provided.")
+
+        if isinstance(self._video_ui, VideoUI):
+            if not _VLC_AVAILABLE or not self.vlc_media_player:
+                return False, _("VLC player is unavailable.")
+            try:
+                ret = self.vlc_media_player.video_take_snapshot(0, output_path, 0, 0)
+                if ret != 0:
+                    return False, _("VLC snapshot operation failed.")
+                for _ in range(20):
+                    if os.path.isfile(output_path) and os.path.getsize(output_path) > 0:
+                        return True, ""
+                    time.sleep(0.05)
+                return False, _("Snapshot file was not created.")
+            except Exception as e:
+                return False, str(e)
+
+        if self._gif_movie is not None and self._gif_is_animated:
+            img = self._gif_movie.currentImage()
+            if img.isNull():
+                pix = self._gif_label.pixmap()
+                if pix is not None and not pix.isNull():
+                    img = pix.toImage()
+            if img.isNull():
+                return False, _("No GIF frame available for screenshot.")
+            try:
+                ok = img.save(output_path)
+            except Exception as e:
+                return False, str(e)
+            if not ok:
+                return False, _("Failed to save GIF frame image.")
+            return True, ""
+
+        return False, _("No time-based media is currently active.")
+
     def video_take_screenshot(self):
         if _VLC_AVAILABLE and self.vlc_media_player:
             try:

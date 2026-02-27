@@ -55,6 +55,9 @@ The UI can be used as a media file browser. The following features are available
     <li>Password protection system for sensitive operations with configurable session timeouts</li>
     <li>Extract text using OCR from images</li>
     <li>Set custom title bar colors for specific directories</li>
+    <li>In-window media playback controls (timeline and play/pause) for video and animated GIF files</li>
+    <li>Apply custom aspect ratio settings to image display</li>
+    <li>Capture screenshots from time-based media with a keyboard shortcut and configurable save directory</li>
 </ul>
 </details>
 

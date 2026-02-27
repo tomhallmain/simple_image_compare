@@ -179,7 +179,8 @@ class KeyBindingManager:
         # ==============================================================
         # Slideshow
         # ==============================================================
-        self._bind("Shift+S", app.media_navigator.toggle_slideshow)
+        self._bind("Shift+S", app.take_media_screenshot)
+        self._bind("Ctrl+S", app.media_navigator.toggle_slideshow, guarded=False)
 
         # ==============================================================
         # Prevalidations / debug
@@ -274,7 +275,7 @@ class KeyBindingManager:
         # ==============================================================
         # Search presets / mode
         # ==============================================================
-        self._bind("Ctrl+S", app.search_ctrl.next_text_embedding_preset, guarded=False)
+        self._bind("Ctrl+Shift+S", app.search_ctrl.next_text_embedding_preset, guarded=False)
         self._bind("Ctrl+B", app.return_to_browsing_mode, guarded=False)
 
         # ==============================================================

@@ -14,6 +14,7 @@ All substantial logic lives in the controller modules:
 import os
 import functools
 import threading
+from datetime import datetime
 from typing import Optional
 
 from PySide6.QtCore import Qt, QTimer, Signal, Slot, QThread, QMetaObject
@@ -866,6 +867,57 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
     def is_media_muted(self) -> bool:
         """Return whether VLC audio is muted."""
         return self.media_frame.is_muted()
+
+    def _get_screenshot_directory(self, active_path: Optional[str] = None) -> str:
+        configured = config.screenshot_directory
+        if configured and str(configured).strip():
+            out_dir = str(configured).strip().replace("{HOME}", os.path.expanduser("~"))
+        elif config.save_screenshot_to_same_dir and active_path:
+            out_dir = os.path.dirname(active_path) or os.path.join(
+                os.path.expanduser("~"), "Pictures", "Screenshots"
+            )
+        else:
+            out_dir = os.path.join(os.path.expanduser("~"), "Pictures", "Screenshots")
+        return os.path.normpath(out_dir)
+
+    def take_media_screenshot(self, event=None) -> None:
+        """Save screenshot for active time-based media and alert the user."""
+        if not self.media_frame.has_time_based_media():
+            self.app_actions.warn(
+                _("Screenshots are available for videos and animated GIF files.")
+            )
+            return
+
+        active_path = self.media_navigator.get_active_media_filepath() or ""
+        out_dir = self._get_screenshot_directory(active_path=active_path)
+        try:
+            os.makedirs(out_dir, exist_ok=True)
+        except Exception as e:
+            self.notification_ctrl.alert(
+                _("Screenshot Failed"),
+                _("Unable to create screenshot directory:\n{0}\n\n{1}").format(out_dir, str(e)),
+                kind="error",
+            )
+            return
+
+        active_path = active_path or "media"
+        stem = os.path.splitext(os.path.basename(active_path))[0] or "media"
+        safe_stem = "".join(ch if (ch.isalnum() or ch in ("-", "_")) else "_" for ch in stem).strip("_") or "media"
+        filename = f"{safe_stem}_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')[:-3]}.png"
+        out_path = os.path.join(out_dir, filename)
+
+        ok, error = self.media_frame.save_media_screenshot(out_path)
+        if not ok:
+            self.notification_ctrl.alert(
+                _("Screenshot Failed"),
+                _("Unable to save screenshot.\n\n{0}").format(error),
+                kind="error",
+            )
+            return
+
+        self.app_actions.success(
+            _("Screenshot saved to:\n{0}").format(out_path)
+        )
 
     # ------------------------------------------------------------------
     # View toggles (kept on AppWindow -- they touch the top-level layout)
