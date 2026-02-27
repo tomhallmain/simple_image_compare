@@ -68,8 +68,13 @@ def main():
 
         # Password verified or not required -- create the main window
         from ui.app_window.app_window import AppWindow
+        from ui.files.type_configuration_window_qt import TypeConfigurationWindow
 
         try:
+            # Keep behavior in sync with Tk startup: apply persisted type toggles
+            # before FileBrowser and windows are initialized.
+            TypeConfigurationWindow.load_pending_changes()
+            TypeConfigurationWindow.apply_changes()
             app_window = AppWindow()
             app_window.show()
 

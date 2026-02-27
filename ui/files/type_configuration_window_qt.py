@@ -84,9 +84,15 @@ class TypeConfigurationWindow(SmartDialog):
     @classmethod
     def save_pending_changes(cls) -> None:
         out: dict[str, bool] = {}
-        for mt, enabled in cls._original_config.items():
-            out[mt.name] = cls._pending_changes.get(mt, enabled)
+        if cls._original_config:
+            for mt, enabled in cls._original_config.items():
+                out[mt.name] = cls._pending_changes.get(mt, enabled)
+        else:
+            # Startup apply path can run without _original_config.
+            for mt, enabled in cls._pending_changes.items():
+                out[mt.name] = enabled
         app_info_cache.set_meta("file_type_configuration", out)
+        app_info_cache.store()
 
     @staticmethod
     def get_geometry() -> str:

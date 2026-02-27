@@ -61,12 +61,17 @@ class TypeConfigurationWindow:
     @classmethod
     def save_pending_changes(cls):
         pending_changes = {}
-        for media_type, enabled in cls._original_config.items():
-            if media_type in cls._pending_changes:
-                pending_changes[media_type.name] = cls._pending_changes[media_type]
-            else:
+        if cls._original_config:
+            for media_type, enabled in cls._original_config.items():
+                if media_type in cls._pending_changes:
+                    pending_changes[media_type.name] = cls._pending_changes[media_type]
+                else:
+                    pending_changes[media_type.name] = enabled
+        else:
+            for media_type, enabled in cls._pending_changes.items():
                 pending_changes[media_type.name] = enabled
         app_info_cache.set_meta("file_type_configuration", pending_changes)
+        app_info_cache.store()
 
     @staticmethod
     def get_geometry():
