@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Optional
 
 from PySide6.QtCore import QTimer
 
-from utils.app_info_cache_qt import app_info_cache
+from utils.app_info_cache import app_info_cache
 from utils.logging_setup import get_logger
 from utils.translations import I18N
 

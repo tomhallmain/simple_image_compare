@@ -6,7 +6,7 @@ import sys
 import threading
 from typing import Any, Dict, List
 
-from lib.position_data import PositionData
+from lib.position_data import PositionData as TkPositionData
 from utils.constants import AppInfo
 from utils.encryptor import encrypt_data_to_file, decrypt_data_from_file
 from utils.logging_setup import get_logger
@@ -208,6 +208,25 @@ class AppInfoCache(InflationMonitor):
         self.load()
         self.validate()
 
+    @staticmethod
+    def _is_qt_runtime_active() -> bool:
+        try:
+            from PySide6.QtWidgets import QApplication
+            return QApplication.instance() is not None
+        except Exception:
+            return False
+
+    @staticmethod
+    def _get_position_data_class():
+        # Prefer Qt in active Qt runtime, fallback to Tk implementation.
+        if AppInfoCache._is_qt_runtime_active():
+            try:
+                from lib.position_data_qt import PositionData as QtPositionData
+                return QtPositionData
+            except Exception:
+                pass
+        return TkPositionData
+
     def get_cache_dict(self, scope_key: str = "info") -> Dict:
         """Get the cache dictionary to monitor (required by InflationMonitor)."""
         with self._lock:
@@ -333,12 +352,21 @@ class AppInfoCache(InflationMonitor):
 
     def set_display_position(self, master):
         """Store the main window's display position and size."""
-        self.set_meta("display_position", PositionData.from_master(master).to_dict())
+        try:
+            pd_cls = AppInfoCache._get_position_data_class()
+            self.set_meta("display_position", pd_cls.from_master(master).to_dict())
+            return
+        except Exception:
+            # Fallback to Tk-style extraction when Qt probing fails.
+            self.set_meta("display_position", TkPositionData.from_master(master).to_dict())
 
     def set_virtual_screen_info(self, master):
         """Store the virtual screen information."""
         try:
-            self.set_meta("virtual_screen_info", PositionData.from_master_virtual_screen(master).to_dict())
+            pd_cls = AppInfoCache._get_position_data_class()
+            pd = pd_cls.from_master_virtual_screen(master)
+            if pd is not None:
+                self.set_meta("virtual_screen_info", pd.to_dict())
         except Exception as e:
             logger.warning(f"Failed to store virtual screen info: {e}")
 
@@ -347,14 +375,30 @@ class AppInfoCache(InflationMonitor):
         virtual_screen_data = self.get_meta("virtual_screen_info")
         if not virtual_screen_data:
             return None
-        return PositionData.from_dict(virtual_screen_data)
+        pd_cls = AppInfoCache._get_position_data_class()
+        try:
+            return pd_cls.from_dict(virtual_screen_data)
+        except Exception:
+            return TkPositionData.from_dict(virtual_screen_data)
 
     def get_display_position(self):
         """Get the cached display position, returns None if not set or invalid."""
         position_data = self.get_meta("display_position")
         if not position_data:
             return None
-        return PositionData.from_dict(position_data)
+        pd_cls = AppInfoCache._get_position_data_class()
+        try:
+            return pd_cls.from_dict(position_data)
+        except Exception:
+            return TkPositionData.from_dict(position_data)
+
+    def get_directory_color(self, directory: str):
+        """Return the stored custom title-bar color for *directory*, or None."""
+        return self.get(directory, "title_bar_color")
+
+    def set_directory_color(self, directory: str, color_hex: str | None):
+        """Persist/clear custom title-bar color for *directory*."""
+        self.set(directory, "title_bar_color", color_hex)
 
     def set(self, directory, key, value):
         with self._lock:

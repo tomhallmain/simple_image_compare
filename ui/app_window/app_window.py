@@ -365,7 +365,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
 
     def _restore_secondary_windows(self) -> None:
         """Re-open secondary windows that were open in the previous session."""
-        from utils.app_info_cache_qt import app_info_cache
+        from utils.app_info_cache import app_info_cache
         for _dir in app_info_cache.get_meta("secondary_base_dirs", default_val=[]):
             WindowManager.add_secondary_window(_dir)
         # Re-focus the primary after all secondaries have been opened
@@ -482,7 +482,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
     # ------------------------------------------------------------------
     def _apply_directory_title_bar_color(self, directory: str) -> None:
         """Apply any stored custom title bar color for the given directory."""
-        from utils.app_info_cache_qt import app_info_cache
+        from utils.app_info_cache import app_info_cache
         title_bar = self.get_title_bar()
         if not title_bar:
             return
@@ -503,7 +503,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         )
 
         # Only show the clear option if a custom color is currently set
-        from utils.app_info_cache_qt import app_info_cache
+        from utils.app_info_cache import app_info_cache
         current_color = app_info_cache.get_directory_color(self.base_dir) if self.base_dir else None
         if current_color:
             menu.addAction(
@@ -517,7 +517,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         """Open a color picker and set the title bar color for the current directory."""
         from PySide6.QtWidgets import QColorDialog
         from PySide6.QtGui import QColor
-        from utils.app_info_cache_qt import app_info_cache
+        from utils.app_info_cache import app_info_cache
 
         if not self.base_dir:
             self.notification_ctrl.toast(_("No directory loaded."))
@@ -540,7 +540,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
 
     def _clear_title_bar_color_for_directory(self) -> None:
         """Clear the custom title bar color for the current directory."""
-        from utils.app_info_cache_qt import app_info_cache
+        from utils.app_info_cache import app_info_cache
 
         if not self.base_dir:
             return
