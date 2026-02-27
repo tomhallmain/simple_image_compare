@@ -245,6 +245,49 @@ class HelpAndConfig(SmartDialog):
             _("Escape Backslash Filepaths"), config.escape_backslash_filepaths,
         )
 
+        # Large-image behavior (static image loading path)
+        self._le_large_dim_threshold = self._add_entry_row(
+            _("Large Image Threshold (px)"), str(config.large_image_dim_threshold_px),
+        )
+        self._le_large_preview_overscan = self._add_entry_row(
+            _("Large Preview Overscan"), str(config.large_image_preview_overscan),
+        )
+        self._le_large_preview_max_dim = self._add_entry_row(
+            _("Large Preview Max Dimension"), str(config.large_image_preview_max_dim),
+        )
+        self._cb_large_hq_downscale = self._add_checkbox_row(
+            _("Large Image HQ Idle Downscale"), config.large_image_enable_hq_idle_downscale,
+        )
+        self._cb_large_full_promotion = self._add_checkbox_row(
+            _("Large Image Full-Res Promotion"), config.large_image_enable_full_res_promotion,
+        )
+        self._le_large_hq_ratio_threshold = self._add_entry_row(
+            _("Large HQ Downscale Ratio Threshold"), str(config.large_image_hq_downscale_ratio_threshold),
+        )
+        self._le_large_promotion_min_ram = self._add_entry_row(
+            _("Large Promotion Min Free RAM (GB)"), str(config.large_image_promotion_min_free_ram_gb),
+        )
+        self._le_large_promotion_max_mb = self._add_entry_row(
+            _("Large Promotion Max Estimated (MB)"), str(config.large_image_promotion_max_estimated_mb),
+        )
+        self._le_large_promotion_ram_fraction = self._add_entry_row(
+            _("Large Promotion RAM Fraction"), str(config.large_image_promotion_available_ram_fraction),
+        )
+
+        # File-scan and scale guardrails
+        self._le_skip_file_check_over = self._add_entry_row(
+            _("Skip File Check If Files Over"), str(config.file_check_skip_if_n_files_over),
+        )
+        self._le_screenshot_directory = self._add_entry_row(
+            _("Screenshot Directory"), str(config.screenshot_directory),
+        )
+        self._cb_save_screenshot_same_dir = self._add_checkbox_row(
+            _("Save Screenshot To Same Dir"), config.save_screenshot_to_same_dir,
+        )
+
+        # TODO: Config editing/persistence for this dialog is intentionally
+        # not enabled yet. Fields are display-only for now.
+
         # -- Escape to close ---------------------------------------------
         shortcut = QShortcut(QKeySequence(Qt.Key_Escape), self)
         shortcut.activated.connect(self.close)

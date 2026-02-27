@@ -48,6 +48,15 @@ class Config:
         self.slideshow_interval_seconds = 7
         self.file_check_interval_seconds = 10
         self.file_check_skip_if_n_files_over = 5000
+        self.large_image_dim_threshold_px = 5000
+        self.large_image_preview_overscan = 1.5
+        self.large_image_preview_max_dim = 4096
+        self.large_image_enable_hq_idle_downscale = True
+        self.large_image_enable_full_res_promotion = True
+        self.large_image_hq_downscale_ratio_threshold = 1.8
+        self.large_image_promotion_min_free_ram_gb = 1.0
+        self.large_image_promotion_max_estimated_mb = 512
+        self.large_image_promotion_available_ram_fraction = 0.25
         self.default_main_window_size = "1400x950"
         self.default_secondary_window_size = "600x700"
         self.sort_by = SortBy.NAME
@@ -179,7 +188,9 @@ class Config:
                             "sidebar_visible",
                             "always_open_new_windows",
                             "enable_prevalidations",
-                            "show_negative_prompt")
+                            "show_negative_prompt",
+                            "large_image_enable_hq_idle_downscale",
+                            "large_image_enable_full_res_promotion")
             self.set_values(int,
                             "max_search_results",
                             "file_actions_history_max",
@@ -189,6 +200,9 @@ class Config:
                             "slideshow_interval_seconds",
                             "file_check_interval_seconds",
                             "file_check_skip_if_n_files_over",
+                            "large_image_dim_threshold_px",
+                            "large_image_preview_max_dim",
+                            "large_image_promotion_max_estimated_mb",
                             "toasts_persist_seconds",
                             "title_notify_persist_seconds",
                             "font_size",
@@ -197,7 +211,11 @@ class Config:
                             "refacdir_client_port")
             self.set_values(float,
                             "embedding_similarity_threshold",
-                            "threshold_potential_duplicate_embedding")
+                            "threshold_potential_duplicate_embedding",
+                            "large_image_preview_overscan",
+                            "large_image_hq_downscale_ratio_threshold",
+                            "large_image_promotion_min_free_ram_gb",
+                            "large_image_promotion_available_ram_fraction")
 
             self.file_types = list(self.image_types)
             if self.enable_videos:

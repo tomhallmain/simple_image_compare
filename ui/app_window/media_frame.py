@@ -19,15 +19,18 @@ from PySide6.QtWidgets import (
     QApplication,
     QDialog,
 )
-from PySide6.QtCore import Qt, QRectF, QSize, QPoint, QRect, QEvent, QTimer, Signal
+from PySide6.QtCore import Qt, QRectF, QSize, QPoint, QRect, QEvent, QTimer, Signal, QObject, QThread, Slot
 from PySide6.QtGui import QImage, QPixmap, QImageReader, QPainter, QCursor, QMovie
 
 from ui.app_style import AppStyle
 from ui.app_window.media_controls_overlay import MediaControlsOverlay, OVERLAY_HEIGHT
 from utils.config import config
+from utils.logging_setup import get_logger
+from utils.utils import Utils
 from utils.translations import I18N
 
 _ = I18N._
+logger = get_logger("media_frame_qt")
 
 # Optional: Pillow for formats Qt may not support (HEIC, AVIF, etc.)
 try:
@@ -168,6 +171,32 @@ class ZoomableGraphicsView(QGraphicsView):
         event.accept()
 
 
+class _ImageDecodeWorkerSignals(QObject):
+    decoded = Signal(int, str, object)  # request_id, path, QImage
+    failed = Signal(int, str, str)  # request_id, path, message
+
+
+class _ImageDecodeWorker(QThread):
+    """Decode a full-resolution image in background for progressive promotion."""
+
+    def __init__(self, request_id: int, path: str):
+        super().__init__()
+        self.request_id = int(request_id)
+        self.path = path
+        self.signals = _ImageDecodeWorkerSignals()
+
+    def run(self):
+        try:
+            reader = QImageReader(self.path)
+            img = reader.read()
+            if img.isNull():
+                self.signals.failed.emit(self.request_id, self.path, reader.errorString())
+                return
+            self.signals.decoded.emit(self.request_id, self.path, img)
+        except Exception as e:
+            self.signals.failed.emit(self.request_id, self.path, str(e))
+
+
 class MediaFrame(QFrame):
     """
     Display image (with pan/zoom via QGraphicsView) and optional in-window video via VLC.
@@ -261,6 +290,8 @@ class MediaFrame(QFrame):
         self._playback_timer.setInterval(250)
         self._playback_timer.timeout.connect(self._update_vlc_playback_progress)
         self._vlc_disposed = False
+        self._image_request_id = 0
+        self._decode_worker = None
 
     def set_background_color(self, background_color):
         color = background_color or AppStyle.MEDIA_BG
@@ -278,6 +309,242 @@ class MediaFrame(QFrame):
 
     def _is_gif_path(self, path):
         return bool(path and path.lower().endswith(".gif"))
+
+    def _large_image_dim_threshold(self) -> int:
+        return max(1, int(getattr(config, "large_image_dim_threshold_px", 5000)))
+
+    def _large_preview_overscan(self) -> float:
+        return max(1.0, float(getattr(config, "large_image_preview_overscan", 1.5)))
+
+    def _large_preview_max_dim(self) -> int:
+        return max(512, int(getattr(config, "large_image_preview_max_dim", 4096)))
+
+    def _large_hq_downscale_enabled(self) -> bool:
+        return bool(getattr(config, "large_image_enable_hq_idle_downscale", True))
+
+    def _large_hq_ratio_threshold(self) -> float:
+        return max(1.1, float(getattr(config, "large_image_hq_downscale_ratio_threshold", 1.8)))
+
+    def _large_enable_full_res_promotion(self) -> bool:
+        return bool(getattr(config, "large_image_enable_full_res_promotion", True))
+
+    def _promotion_min_free_ram_gb(self) -> float:
+        return max(0.0, float(getattr(config, "large_image_promotion_min_free_ram_gb", 1.0)))
+
+    def _promotion_max_estimated_mb(self) -> int:
+        return max(64, int(getattr(config, "large_image_promotion_max_estimated_mb", 512)))
+
+    def _promotion_available_ram_fraction(self) -> float:
+        value = float(getattr(config, "large_image_promotion_available_ram_fraction", 0.25))
+        return min(max(value, 0.05), 0.9)
+
+    def _next_request_id(self) -> int:
+        self._image_request_id += 1
+        return self._image_request_id
+
+    def _cancel_decode_worker(self) -> None:
+        worker = self._decode_worker
+        self._decode_worker = None
+        if worker is None:
+            return
+        try:
+            if worker.isRunning():
+                worker.requestInterruption()
+                worker.wait(10)
+        except Exception:
+            pass
+
+    def _invalidate_pending_image_promotion(self) -> None:
+        self._next_request_id()
+        self._cancel_decode_worker()
+
+    def _probe_image_size(self, path: str) -> tuple[int, int]:
+        reader = QImageReader(path)
+        size = reader.size()
+        if size.width() > 0 and size.height() > 0:
+            return int(size.width()), int(size.height())
+        if _PIL_AVAILABLE:
+            try:
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    with Image.open(path) as pil_img:
+                        return int(pil_img.width), int(pil_img.height)
+            except Exception:
+                pass
+        return 0, 0
+
+    def _is_large_image_dims(self, dims: tuple[int, int]) -> bool:
+        w, h = dims
+        if w <= 0 or h <= 0:
+            return False
+        threshold = self._large_image_dim_threshold()
+        return w > threshold or h > threshold
+
+    def _preview_target_size(self, source_dims: tuple[int, int]) -> QSize:
+        src_w, src_h = source_dims
+        if src_w <= 0 or src_h <= 0:
+            return QSize()
+        viewport_size = self._graphics_view.viewport().size()
+        view_w = max(1, viewport_size.width())
+        view_h = max(1, viewport_size.height())
+        overscan = self._large_preview_overscan()
+        max_dim = self._large_preview_max_dim()
+        target_w = min(int(view_w * overscan), max_dim, src_w)
+        target_h = min(int(view_h * overscan), max_dim, src_h)
+        return QSize(max(1, target_w), max(1, target_h))
+
+    def _should_use_hq_downscale(self, source_dims: tuple[int, int], target_size: QSize | None) -> bool:
+        if not self._large_hq_downscale_enabled() or target_size is None:
+            return False
+        src_w, src_h = source_dims
+        if src_w <= 0 or src_h <= 0:
+            return False
+        target_w = max(1, int(target_size.width()))
+        target_h = max(1, int(target_size.height()))
+        ratio = min(src_w / target_w, src_h / target_h)
+        return ratio >= self._large_hq_ratio_threshold()
+
+    def _qimage_from_pillow(self, pil_img: "Image.Image") -> QImage:
+        rgb = pil_img.convert("RGB")
+        data = rgb.tobytes("raw", "RGB")
+        # RGB888 rows are not guaranteed to be 32-bit aligned, so pass
+        # explicit bytes-per-line to avoid sheared/corrupted rendering.
+        bytes_per_line = int(rgb.width) * 3
+        qimg = QImage(data, rgb.width, rgb.height, bytes_per_line, QImage.Format.Format_RGB888)
+        return qimg.copy()
+
+    def _qt_image_allocation_limit_mb(self) -> int:
+        getter = getattr(QImageReader, "allocationLimit", None)
+        if callable(getter):
+            try:
+                limit_mb = int(getter())
+                if limit_mb > 0:
+                    return limit_mb
+            except Exception:
+                pass
+        # Qt default allocation guard is typically 256MB.
+        return 256
+
+    def _load_image_to_qimage(self, path, target_size: QSize | None = None, prefer_hq_downscale: bool = False, source_dims: tuple[int, int] | None = None):
+        """Load path to QImage; support optional preview scaling and HQ downscale fallback."""
+        reader = QImageReader(path)
+        if target_size is not None and target_size.width() > 0 and target_size.height() > 0:
+            reader.setScaledSize(target_size)
+        img = reader.read()
+        if not img.isNull():
+            if not (_PIL_AVAILABLE and prefer_hq_downscale and source_dims and self._should_use_hq_downscale(source_dims, target_size)):
+                return img
+        if _PIL_AVAILABLE:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                try:
+                    with Image.open(path) as pil_img:
+                        if target_size is not None and target_size.width() > 0 and target_size.height() > 0:
+                            if prefer_hq_downscale and source_dims and self._should_use_hq_downscale(source_dims, target_size):
+                                resampling = getattr(Image, "Resampling", Image).LANCZOS
+                                pil_img = pil_img.convert("RGB").resize((int(target_size.width()), int(target_size.height())), resampling)
+                                logger.debug(
+                                    "Large-image HQ preview decode via PIL Lanczos: path=%s target=%sx%s",
+                                    path,
+                                    target_size.width(),
+                                    target_size.height(),
+                                )
+                                return self._qimage_from_pillow(pil_img)
+                            pil_img.thumbnail((int(target_size.width()), int(target_size.height())))
+                        return self._qimage_from_pillow(pil_img)
+                except Exception as e:
+                    if "truncated" in str(e):
+                        time.sleep(0.25)
+                        with Image.open(path) as pil_img:
+                            if target_size is not None and target_size.width() > 0 and target_size.height() > 0:
+                                resampling = getattr(Image, "Resampling", Image).LANCZOS
+                                pil_img = pil_img.convert("RGB").resize((int(target_size.width()), int(target_size.height())), resampling)
+                                logger.debug(
+                                    "Large-image truncated retry via PIL Lanczos: path=%s target=%sx%s",
+                                    path,
+                                    target_size.width(),
+                                    target_size.height(),
+                                )
+                            return self._qimage_from_pillow(pil_img)
+                    if not img.isNull():
+                        return img
+                    raise
+        return img if not img.isNull() else QImage()
+
+    def _display_qimage(self, qimg: QImage, source_dims: tuple[int, int], preserve_view: bool = False):
+        if qimg.isNull():
+            return
+        previous_center = None
+        previous_transform = None
+        if preserve_view and self._current_pixmap is not None and not self._current_pixmap.isNull():
+            viewport_center = self._graphics_view.viewport().rect().center()
+            previous_center = self._graphics_view.mapToScene(viewport_center)
+            previous_transform = self._graphics_view.transform()
+        pix = QPixmap.fromImage(qimg)
+        self._current_pixmap = pix
+        self._pixmap_item.setPixmap(pix)
+        self._scene.setSceneRect(QRectF(pix.rect()))
+        if source_dims[0] > 0 and source_dims[1] > 0:
+            self.imwidth, self.imheight = int(source_dims[0]), int(source_dims[1])
+        else:
+            self.imwidth, self.imheight = qimg.width(), qimg.height()
+        self._image = qimg
+        self._graphics_view.set_interaction_enabled(True)
+        if preserve_view and previous_center is not None and previous_transform is not None:
+            self._graphics_view.setTransform(previous_transform)
+            self._graphics_view.centerOn(previous_center)
+        else:
+            self._apply_image_scale_mode()
+        self._graphics_view.show()
+        self._gif_label.hide()
+        self._placeholder_label.hide()
+        self._controls_overlay.set_audio_controls_visible(True)
+        self.image_displayed = True
+
+    def _can_promote_large_image(self, source_dims: tuple[int, int]) -> bool:
+        if not self._large_enable_full_res_promotion():
+            return False
+        src_w, src_h = source_dims
+        if src_w <= 0 or src_h <= 0:
+            return False
+        available_ram_gb = Utils.calculate_available_ram()
+        if available_ram_gb < self._promotion_min_free_ram_gb():
+            return False
+        estimated_bytes = int(src_w) * int(src_h) * 4
+        max_estimated_bytes = self._promotion_max_estimated_mb() * 1024 * 1024
+        available_budget_bytes = int(available_ram_gb * (1024 ** 3) * self._promotion_available_ram_fraction())
+        qt_limit_bytes = int(self._qt_image_allocation_limit_mb() * 1024 * 1024 * 0.9)
+        allowed = min(max_estimated_bytes, available_budget_bytes, qt_limit_bytes)
+        return estimated_bytes <= allowed
+
+    def _start_large_image_promotion(self, path: str, request_id: int, source_dims: tuple[int, int]) -> None:
+        self._cancel_decode_worker()
+        if not self._can_promote_large_image(source_dims):
+            return
+        worker = _ImageDecodeWorker(request_id=request_id, path=path)
+        worker.signals.decoded.connect(self._on_promotion_decoded)
+        worker.signals.failed.connect(self._on_promotion_failed)
+        self._decode_worker = worker
+        worker.start()
+
+    @Slot(int, str, object)
+    def _on_promotion_decoded(self, request_id: int, path: str, image_obj: object) -> None:
+        if request_id != self._image_request_id:
+            return
+        if path != self.path:
+            return
+        if isinstance(self._video_ui, VideoUI) or self._gif_movie is not None:
+            return
+        if not isinstance(image_obj, QImage) or image_obj.isNull():
+            return
+        self._display_qimage(image_obj, (image_obj.width(), image_obj.height()), preserve_view=True)
+        self._decode_worker = None
+
+    @Slot(int, str, str)
+    def _on_promotion_failed(self, request_id: int, path: str, _message: str) -> None:
+        if request_id == self._image_request_id and path == self.path:
+            logger.warning("Large-image promotion decode failed: path=%s request_id=%s message=%s", path, request_id, _message)
+            self._decode_worker = None
 
     def _has_active_overlay_media(self):
         return isinstance(self._video_ui, VideoUI) or (self._gif_movie is not None and self._gif_is_animated)
@@ -390,30 +657,6 @@ class MediaFrame(QFrame):
         self.update_playback_progress(current_ms, self._gif_total_duration_ms)
         self.set_playback_paused(self._gif_movie.state() != QMovie.MovieState.Running)
 
-    def _load_image_to_qimage(self, path):
-        """Load path to QImage; use QImageReader first, fallback to Pillow if available."""
-        reader = QImageReader(path)
-        img = reader.read()
-        if not img.isNull():
-            return img
-        if _PIL_AVAILABLE:
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                try:
-                    pil_img = Image.open(path)
-                    pil_img = pil_img.convert("RGB")
-                    data = pil_img.tobytes("raw", "RGB")
-                    return QImage(data, pil_img.width, pil_img.height, QImage.Format.Format_RGB888)
-                except Exception as e:
-                    if "truncated" in str(e):
-                        time.sleep(0.25)
-                        pil_img = Image.open(path)
-                        pil_img = pil_img.convert("RGB")
-                        data = pil_img.tobytes("raw", "RGB")
-                        return QImage(data, pil_img.width, pil_img.height, QImage.Format.Format_RGB888)
-                    raise
-        return QImage()
-
     def _show_image_in_view(self, path):
         """Load image from path, display at full resolution in QGraphicsView.
 
@@ -423,24 +666,30 @@ class MediaFrame(QFrame):
         """
         if not path or path == "." or not os.path.exists(path):
             return
+        request_id = self._next_request_id()
+        self._cancel_decode_worker()
+        source_dims = self._probe_image_size(path)
+        if self._is_large_image_dims(source_dims):
+            preview_target = self._preview_target_size(source_dims)
+            qimg = self._load_image_to_qimage(
+                path,
+                target_size=preview_target,
+                prefer_hq_downscale=True,
+                source_dims=source_dims,
+            )
+            if qimg.isNull():
+                qimg = self._load_image_to_qimage(path)
+            if qimg.isNull():
+                logger.warning("Large-image load failed (both preview and fallback decode): path=%s", path)
+                return
+            self._display_qimage(qimg, source_dims)
+            self._start_large_image_promotion(path, request_id, source_dims)
+            return
+
         qimg = self._load_image_to_qimage(path)
         if qimg.isNull():
             return
-        self._image = qimg
-        self.imwidth = qimg.width()
-        self.imheight = qimg.height()
-
-        pix = QPixmap.fromImage(qimg)
-        self._current_pixmap = pix
-        self._pixmap_item.setPixmap(pix)
-        self._scene.setSceneRect(QRectF(pix.rect()))
-        self._graphics_view.set_interaction_enabled(True)
-        self._apply_image_scale_mode()
-        self._graphics_view.show()
-        self._gif_label.hide()
-        self._placeholder_label.hide()
-        self._controls_overlay.set_audio_controls_visible(True)
-        self.image_displayed = True
+        self._display_qimage(qimg, source_dims)
 
     def _show_gif(self, path):
         if not path or path == "." or not os.path.exists(path):
@@ -491,6 +740,7 @@ class MediaFrame(QFrame):
 
     def show_image(self, path):
         """Show image or video at path. Dispatches to show_video when appropriate."""
+        self._invalidate_pending_image_promotion()
         if isinstance(self._video_ui, VideoUI):
             self.video_stop()
         if self._gif_movie is not None:
@@ -779,6 +1029,7 @@ class MediaFrame(QFrame):
         return self._last_known_muted
 
     def clear(self):
+        self._invalidate_pending_image_promotion()
         if isinstance(self._video_ui, VideoUI):
             self.video_stop()
         self._teardown_gif_movie()
@@ -803,6 +1054,7 @@ class MediaFrame(QFrame):
         self._placeholder_label.setText(text)
 
     def release_media(self):
+        self._invalidate_pending_image_promotion()
         if isinstance(self._video_ui, VideoUI):
             self.video_stop()
         self._teardown_gif_movie()
