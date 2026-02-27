@@ -436,7 +436,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             "delete": ts(self.file_ops_ctrl.handle_delete),
             "hide_current_media": ts(self.file_ops_ctrl.hide_current_media),
             "copy_media_path": ts(self.file_ops_ctrl.copy_media_path),
-            "release_media_canvas": ts(lambda: self.media_frame.release_media()),
+            "release_media_canvas": ts(self.release_media_canvas),
             # Persistence
             "store_info_cache": self.cache_ctrl.store_info_cache,
             # Internal (prefixed with _)
@@ -879,6 +879,13 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         else:
             out_dir = os.path.join(os.path.expanduser("~"), "Pictures", "Screenshots")
         return os.path.normpath(out_dir)
+
+    def release_media_canvas(self) -> None:
+        """Release media resources and flush deferred Qt cleanup work."""
+        self.media_frame.release_media()
+        app = QApplication.instance()
+        if app is not None:
+            app.processEvents()
 
     def take_media_screenshot(self, event=None) -> None:
         """Save screenshot for active time-based media and alert the user."""

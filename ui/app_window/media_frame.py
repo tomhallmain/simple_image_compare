@@ -42,6 +42,12 @@ try:
 except ImportError:
     _VLC_AVAILABLE = False
 
+try:
+    import shiboken6
+    _SHIBOKEN_AVAILABLE = True
+except ImportError:
+    _SHIBOKEN_AVAILABLE = False
+
 
 # Default video extensions if config.video_types is not set
 DEFAULT_VIDEO_TYPES = (".mp4", ".mkv", ".avi", ".webm", ".mov", ".m4v", ".ogv")
@@ -256,6 +262,40 @@ class MediaFrame(QFrame):
             timeline.append(elapsed)
         return timeline, elapsed
 
+    def _teardown_gif_movie(self):
+        """Fully detach and release QMovie so GIF files are not locked on Windows."""
+        movie = self._gif_movie or self._gif_label.movie()
+        if movie is not None:
+            try:
+                movie.stop()
+            except Exception:
+                pass
+            try:
+                self._gif_label.setMovie(None)
+            except Exception:
+                pass
+            if _SHIBOKEN_AVAILABLE:
+                try:
+                    shiboken6.delete(movie)
+                except Exception:
+                    try:
+                        movie.deleteLater()
+                    except Exception:
+                        pass
+            else:
+                try:
+                    movie.deleteLater()
+                except Exception:
+                    pass
+        self._gif_movie = None
+        self._reset_gif_state()
+        self._gif_label.clear()
+        self._gif_label.hide()
+        app = QApplication.instance()
+        if app is not None:
+            # Flush deferred-delete events so file handles are dropped immediately.
+            app.processEvents()
+
     def _update_gif_overlay_progress(self):
         if self._gif_movie is None or not self._gif_is_animated or self._gif_total_duration_ms <= 0:
             return
@@ -367,7 +407,7 @@ class MediaFrame(QFrame):
         if isinstance(self._video_ui, VideoUI):
             self.video_stop()
         if self._gif_movie is not None:
-            self.gif_stop()
+            self._teardown_gif_movie()
         self.path = path or "."
         if not path or path == "." or path.strip() == "" or not os.path.exists(path):
             self.clear()
@@ -458,16 +498,6 @@ class MediaFrame(QFrame):
         self._video_ui = None
         self.on_playback_stopped()
         self._playback_timer.stop()
-
-    def gif_stop(self):
-        try:
-            self._gif_movie.stop()
-            self._gif_movie = None
-            self._reset_gif_state()
-            self._gif_label.clear()
-            self._gif_label.hide()
-        except Exception:
-            pass
 
     def dispose_vlc(self):
         """Fully tear down VLC resources for this widget instance."""
@@ -662,12 +692,7 @@ class MediaFrame(QFrame):
     def clear(self):
         if isinstance(self._video_ui, VideoUI):
             self.video_stop()
-        if self._gif_movie is not None:
-            self._gif_movie.stop()
-            self._gif_movie = None
-        self._reset_gif_state()
-        self._gif_label.clear()
-        self._gif_label.hide()
+        self._teardown_gif_movie()
         self._video_ui = None
         self._scene.clear()
         self._pixmap_item = QGraphicsPixmapItem()
@@ -689,12 +714,7 @@ class MediaFrame(QFrame):
     def release_media(self):
         if isinstance(self._video_ui, VideoUI):
             self.video_stop()
-        if self._gif_movie is not None:
-            self._gif_movie.stop()
-            self._gif_movie = None
-            self._gif_label.clear()
-            self._gif_label.hide()
-        self._reset_gif_state()
+        self._teardown_gif_movie()
         if self._image is not None:
             self._image = None
         self._current_pixmap = None

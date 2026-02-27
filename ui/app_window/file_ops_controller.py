@@ -119,7 +119,7 @@ class FileOpsController:
             self._fb.checking_files = False
             filepath = self._fb.current_file()
             if filepath:
-                self._app.media_frame.release_media()
+                self._app.release_media_canvas()
                 self._handle_delete(filepath)
                 MarkedFiles.handle_file_removal(filepath)
                 self._fb.refresh(
@@ -150,7 +150,7 @@ class FileOpsController:
             MarkedFiles.handle_file_removal(filepath)
             if filepath == self._cm.search_image_full_path:
                 self._cm.search_image_full_path = None
-            self._app.media_frame.release_media()
+            self._app.release_media_canvas()
             self._handle_delete(filepath)
             if self._cm.has_compare():
                 self._cm.compare().remove_from_groups([filepath])

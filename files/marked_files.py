@@ -78,6 +78,19 @@ class MarkedFiles():
         toast_callback(_("Marks cleared."))
 
     @staticmethod
+    def _paths_match(path_a: Optional[str], path_b: Optional[str]) -> bool:
+        if not path_a or not path_b:
+            return False
+        try:
+            if os.path.exists(path_a) and os.path.exists(path_b):
+                return os.path.samefile(path_a, path_b)
+        except Exception:
+            pass
+        norm_a = os.path.normcase(os.path.normpath(path_a))
+        norm_b = os.path.normcase(os.path.normpath(path_b))
+        return norm_a == norm_b
+
+    @staticmethod
     def set_current_marks_from_previous(toast_callback):
         for f in MarkedFiles.previous_marks:
             if f not in MarkedFiles.file_marks and os.path.exists(f):
@@ -198,13 +211,13 @@ class MarkedFiles():
                 cached_png = FrameCache.get_cached_path(marked_file)
                 if cached_png and os.path.isfile(cached_png):
                     if config.marked_file_svg_move_type == "png":
-                        if is_moving and current_image == marked_file and app_actions:
+                        if is_moving and MarkedFiles._paths_match(current_image, marked_file) and app_actions:
                             app_actions.release_media_canvas()
                         source_path = cached_png
                         moved_svg_as_png = True
                     elif is_moving:
                         # Move SVG: release media and remove temp PNG so we don't hold handles
-                        if current_image == marked_file and app_actions:
+                        if MarkedFiles._paths_match(current_image, marked_file) and app_actions:
                             app_actions.release_media_canvas()
                         FrameCache.remove_from_cache(marked_file, delete_temp_file=True)
             new_filename = os.path.join(target_dir, os.path.basename(source_path))
@@ -547,7 +560,7 @@ class MarkedFiles():
         This simulates what would have happened if the move had succeeded.
         """
         try:
-            if current_image is not None and current_image == marked_file:
+            if MarkedFiles._paths_match(current_image, marked_file):
                 app_actions.release_media_canvas()
             app_actions.delete(marked_file)
             if marked_file in MarkedFiles.file_marks:
