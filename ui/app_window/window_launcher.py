@@ -220,6 +220,7 @@ class WindowLauncher:
     # ------------------------------------------------------------------
     # Info windows
     # ------------------------------------------------------------------
+    @require_password(ProtectedActions.VIEW_MEDIA_DETAILS)
     def open_media_details(
         self,
         event=None,
