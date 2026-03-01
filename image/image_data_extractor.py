@@ -9,8 +9,10 @@ from PIL import Image
 
 from utils.config import config
 from utils.logging_setup import get_logger
+from utils.translations import I18N
 from utils.utils import Utils
 
+_ = I18N._
 logger = get_logger("image_data_extractor")
 
 has_imported_sd_prompt_reader = False
@@ -425,7 +427,7 @@ class ImageDataExtractor:
         negative_extraction_failed = False
 
         if positive is None or (isinstance(positive, str) and positive.strip() == ""):
-            positive = "(Unable to parse image prompt information for this file.)"
+            positive = _("(Unable to parse image prompt information for this file.)")
             positive_extraction_failed = True
         if negative is None or (isinstance(negative, str) and negative.strip() == ""):
             negative = ""

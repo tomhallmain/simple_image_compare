@@ -341,6 +341,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
 
         # Restore window geometry (SmartMainWindow feature)
         self.restore_window_geometry()
+        QTimer.singleShot(0, self._apply_default_sidebar_width)
 
         # ------------------------------------------------------------------
         # Start periodic timers (replaces start_thread + async)
@@ -476,6 +477,37 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             AppStyle.MEDIA_BG if is_dark else AppStyle.LIGHT_MEDIA_BG
         )
         self.apply_frameless_theme(is_dark)
+
+    def _apply_default_sidebar_width(self) -> None:
+        """
+        Apply a smaller default sidebar width.
+
+        Uses DPI scaling and config.font_size as a fallback user scaling
+        preference so translated labels still fit at larger UI scales.
+        """
+        if not self.sidebar_panel.isVisible():
+            return
+
+        total_width = self.splitter.width()
+        if total_width <= 1:
+            total_width = self.width()
+        if total_width <= 1:
+            return
+
+        dpi_scale = max(1.0, float(self.logicalDpiX()) / 96.0)
+        font_scale = max(1.0, float(getattr(config, "font_size", 8)) / 8.0)
+        ui_scale = max(dpi_scale, font_scale)
+
+        preferred_sidebar_width = int(round(280 * ui_scale))
+        min_sidebar_width = int(round(180 * ui_scale))
+        max_sidebar_width = int(total_width * 0.45)
+
+        sidebar_width = max(
+            min_sidebar_width,
+            min(preferred_sidebar_width, max_sidebar_width),
+        )
+        media_width = max(1, total_width - sidebar_width)
+        self.splitter.setSizes([sidebar_width, media_width])
 
     # ------------------------------------------------------------------
     # Title bar directory color

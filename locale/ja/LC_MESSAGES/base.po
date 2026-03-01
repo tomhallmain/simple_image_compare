@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2026-01-16 02:50-0500\n"
-"PO-Revision-Date: 2026-01-16 02:50-0500\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2026-02-28 20:35-0500\n"
+"PO-Revision-Date: 2026-02-28 20:35-0500\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ja Team <<EMAIL>>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -12,59 +12,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:113 app.py:1022 app.py:2506
+#: app.py:117 app.py:1044 app.py:2535 ui/app_window/app_window.py:133
+#: ui/app_window/app_window.py:187 ui/app_window/app_window.py:707
 msgid " Simple Image Compare "
 msgstr " シンプルな画像比較 "
 
-#: app.py:128
+#: app.py:132 ui/app_window/window_manager.py:76
 msgid "(Main Window)"
 msgstr "（メインウィンドウ）"
 
-#: app.py:191
+#: app.py:195 ui/app_window/app_window.py:989
 msgid "Theme switched to {0}."
 msgstr "テーマを{0}に切り替えます。"
 
-#: app.py:282 app.py:503 app.py:1052 compare/compare_wrapper.py:508
+#: app.py:287 app.py:509 app.py:1074 compare/compare_wrapper.py:507
+#: ui/app_window/sidebar_panel.py:76
 msgid "Set a directory to run comparison."
 msgstr "比較を実行するディレクトリを設定します。"
 
-#: app.py:289
+#: app.py:294 ui/app_window/sidebar_panel.py:84
 msgid "Toggle theme"
 msgstr "トグルテーマ"
 
-#: app.py:290
+#: app.py:295 ui/app_window/sidebar_panel.py:89
 msgid "Set directory"
 msgstr "ディレクトリを設定する"
 
-#: app.py:291
+#: app.py:296
 msgid "Add dirpath..."
 msgstr "ディレクトリパスの追加..."
 
-#: app.py:295
+#: app.py:300 ui/app_window/sidebar_panel.py:98
 msgid "Filter files by glob pattern"
 msgstr "グロブパターンによるファイルのフィルタリング"
 
-#: app.py:302
+#: app.py:307 ui/app_window/sidebar_panel.py:104
 msgid "Browsing mode - Sort by"
 msgstr "閲覧モード - 並べ替え"
 
-#: app.py:309
+#: app.py:314 ui/app_window/sidebar_panel.py:113
 msgid "Recurse subdirectories"
 msgstr "サブディレクトリを再帰する"
 
-#: app.py:314
+#: app.py:319 ui/app_window/sidebar_panel.py:118
 msgid "Image resize to full window"
 msgstr "フルウィンドウに画像のサイズを変更"
 
-#: app.py:318 compare/compare_settings_window.py:277
+#: app.py:323 ui/app_window/sidebar_panel.py:123
+#: ui/compare/compare_settings_window_qt.py:249
+#: ui_tk/compare/compare_settings_window.py:277
 msgid "Search only return closest"
 msgstr "一番近い順に検索"
 
-#: app.py:323
+#: app.py:328 ui/app_window/sidebar_panel.py:132
 msgid "Set search file"
 msgstr "検索ファイルを設定する"
 
-#: app.py:327
+#: app.py:332 ui/app_window/sidebar_panel.py:136
 msgid ""
 "Set an image file to search for similar images.\n"
 "Uses embedding similarity to find visually similar images."
@@ -72,11 +76,11 @@ msgstr ""
 "類似画像を検索するための画像ファイルを設定します。\n"
 "埋め込み類似性を使用して視覚的に類似した画像を見つけます。"
 
-#: app.py:336
+#: app.py:341 ui/app_window/sidebar_panel.py:149
 msgid "Search text (embedding mode)"
 msgstr "検索テキスト (埋め込みモード)"
 
-#: app.py:340
+#: app.py:345 ui/app_window/sidebar_panel.py:154
 msgid ""
 "Positive text: Find images similar to this text.\n"
 "Negative text: Exclude images similar to this text.\n"
@@ -86,42 +90,50 @@ msgstr ""
 "否定的なテキスト：このテキストに類似した画像を除外する。\n"
 "どちらも埋め込み類似性マッチングを使用する。"
 
-#: app.py:344
+#: app.py:349 ui/app_window/sidebar_panel.py:160
 msgid "Positive text:"
 msgstr "肯定的なテキスト："
 
-#: app.py:352
+#: app.py:357 ui/app_window/sidebar_panel.py:168
 msgid "Negative text:"
 msgstr "否定的なテキスト："
 
-#: app.py:360 compare/classifier_actions_tab.py:100
-#: compare/classifier_management_window.py:618
+#: app.py:365 ui/app_window/sidebar_panel.py:177
+#: ui/compare/classifier_actions_tab_qt.py:96
+#: ui/compare/classifier_management_window_qt.py:534
+#: ui_tk/compare/classifier_actions_tab.py:103
+#: ui_tk/compare/classifier_management_window.py:619
 msgid "Classifier Actions"
 msgstr "分類器アクション"
 
-#: app.py:364 compare/compare_settings_window.py:38
-#: compare/compare_settings_window.py:53
-#: compare/compare_settings_window.py:161
+#: app.py:369 ui/app_window/sidebar_panel.py:181
+#: ui/compare/compare_settings_window_qt.py:88
+#: ui/compare/compare_settings_window_qt.py:115
+#: ui/compare/compare_settings_window_qt.py:184
+#: ui_tk/compare/compare_settings_window.py:38
+#: ui_tk/compare/compare_settings_window.py:53
+#: ui_tk/compare/compare_settings_window.py:161
 msgid "Compare Settings"
 msgstr "比較の設定"
 
-#: app.py:369
+#: app.py:375 ui/app_window/sidebar_panel.py:195
 msgid "Run image compare"
 msgstr "画像比較の実行"
 
-#: app.py:371
+#: app.py:377 ui/app_window/sidebar_panel.py:199
 msgid "Find duplicates"
 msgstr "重複を見つける"
 
-#: app.py:373 image/image_details.py:69
+#: app.py:379 ui/app_window/sidebar_panel.py:203
+#: ui/image/image_details_qt.py:127 ui_tk/image/image_details.py:75
 msgid "Image details"
 msgstr "画像詳細"
 
-#: app.py:385
+#: app.py:391 ui/app_window/sidebar_panel.py:209
 msgid "Search current image"
 msgstr "現在の画像を検索"
 
-#: app.py:389
+#: app.py:395 ui/app_window/sidebar_panel.py:214
 msgid ""
 "Search for images similar to the currently displayed image.\n"
 "Uses embedding similarity matching."
@@ -129,141 +141,154 @@ msgstr ""
 "現在表示されている画像と類似した画像を検索します。\n"
 "埋め込み類似度マッチングを使用します。"
 
-#: app.py:390 utils/help_and_config.py:87
+#: app.py:396 ui/app_window/sidebar_panel.py:220 ui/help_and_config_qt.py:121
+#: utils/help_and_config.py:87
 msgid "Open media location"
 msgstr "メディアの保存場所を開く"
 
-#: app.py:391
+#: app.py:397 ui/app_window/sidebar_panel.py:224
 msgid "Copy image path"
 msgstr "コピーイメージパス"
 
-#: app.py:392
+#: app.py:398 ui/app_window/sidebar_panel.py:228
 msgid "Copy media basename"
 msgstr "メディアのベース名をコピーする"
 
-#: app.py:393
+#: app.py:399 ui/app_window/sidebar_panel.py:232
 msgid "---- DELETE ----"
 msgstr "---- 染料 ----"
 
-#: app.py:560
+#: app.py:568 ui/app_window/app_window.py:1095
 msgid "Confirm Quit"
 msgstr "終了を確認する"
 
-#: app.py:560
+#: app.py:568 ui/app_window/app_window.py:1095
 msgid "Would you like to quit the application?"
 msgstr "応募をお願いしたいですか?"
 
-#: app.py:684
+#: app.py:692 ui/app_window/sidebar_panel.py:373
 msgid "Ended slideshows"
 msgstr "終了したスライドショー"
 
-#: app.py:737 app.py:2166 app.py:2173 app.py:2177 app.py:2181 app.py:2187
-#: app.py:2294 app.py:2310 app.py:2327
+#: app.py:745 app.py:2192 app.py:2199 app.py:2203 app.py:2207 app.py:2213
+#: app.py:2320 app.py:2336 app.py:2353 ui/app_window/app_window.py:852
+#: ui/app_window/file_ops_controller.py:210
+#: ui/app_window/file_ops_controller.py:216
+#: ui/app_window/file_ops_controller.py:220
+#: ui/app_window/file_ops_controller.py:227
+#: ui/app_window/file_ops_controller.py:235
+#: ui/app_window/search_controller.py:541
+#: ui/app_window/search_controller.py:581
+#: ui/app_window/search_controller.py:643
 msgid "Warning"
 msgstr "警告"
 
-#: app.py:737
+#: app.py:745 ui/app_window/app_window.py:852
 msgid "No files found in directory after refresh."
 msgstr "更新後、ディレクトリにファイルが見つかりません。"
 
-#: app.py:775
+#: app.py:797 ui/app_window/media_navigator.py:432
 msgid "Slideshow for new images started"
 msgstr "新しい画像のスライドショー開始"
 
-#: app.py:777
+#: app.py:799 ui/app_window/media_navigator.py:434
 msgid "Slideshow started"
 msgstr "スライドショー開始"
 
-#: app.py:780
+#: app.py:802 ui/app_window/media_navigator.py:441
 msgid "Slideshows ended"
 msgstr "スライドショー終了"
 
-#: app.py:793
+#: app.py:815 ui/app_window/app_window.py:770
 msgid "Browsing mode set."
 msgstr "ブラウジングモードセット。"
 
-#: app.py:838 utils/constants.py:331
+#: app.py:860 ui/app_window/context_menu_builder.py:64 utils/constants.py:434
 msgid "View Media Details"
 msgstr "メディア詳細を見る"
 
-#: app.py:839
+#: app.py:861 ui/app_window/context_menu_builder.py:69
 msgid "Hide Media"
 msgstr "メディアを非表示にする"
 
-#: app.py:840
+#: app.py:862 ui/app_window/context_menu_builder.py:78
 msgid "Remove from Marks"
 msgstr "マークから削除する"
 
-#: app.py:840
+#: app.py:862 ui/app_window/context_menu_builder.py:78
 msgid "Add to Marks"
 msgstr "マークに追加"
 
-#: app.py:842
+#: app.py:864 ui/app_window/context_menu_builder.py:92
 msgid "Remove from Favorites"
 msgstr "お気に入りから削除する"
 
-#: app.py:842
+#: app.py:864 ui/app_window/context_menu_builder.py:92
 msgid "Add to Favorites"
 msgstr "お気に入りに追加"
 
-#: app.py:845
+#: app.py:867 ui/app_window/context_menu_builder.py:105
 msgid "Remove from Directory Notes"
 msgstr "ディレクトリのメモから削除"
 
-#: app.py:845
+#: app.py:867 ui/app_window/context_menu_builder.py:105
 msgid "Add to Directory Notes"
 msgstr "ディレクトリのメモに追加"
 
-#: app.py:847
+#: app.py:869 ui/app_window/context_menu_builder.py:109
 msgid "Edit File Note"
 msgstr "ファイル編集の注意"
 
-#: app.py:849
+#: app.py:871 ui/app_window/context_menu_builder.py:119
 msgid "Open in GIMP"
 msgstr "GIMPで開く"
 
-#: app.py:850 image/image_details.py:201 utils/constants.py:337
+#: app.py:872 ui/app_window/context_menu_builder.py:123
+#: ui/help_and_config_qt.py:156 ui/image/image_details_qt.py:352
+#: ui/image/temp_image_window_qt.py:263 ui_tk/image/image_details.py:213
+#: ui_tk/image/temp_image_canvas.py:195 utils/constants.py:440
 #: utils/help_and_config.py:138
 msgid "Run Image Generation"
 msgstr "映像生成の実行"
 
-#: app.py:851
+#: app.py:873 ui/app_window/context_menu_builder.py:127
 msgid "Run Image Generation on Directory"
 msgstr "ディレクトリで画像生成を実行する"
 
-#: app.py:852
+#: app.py:874 ui/app_window/context_menu_builder.py:135
 msgid "Show Source Image"
 msgstr "ソース画像を表示"
 
-#: app.py:853
+#: app.py:875 ui/app_window/context_menu_builder.py:139
 msgid "Find Related Images"
 msgstr "関連する画像を探す"
 
-#: app.py:854
+#: app.py:876 ui/app_window/context_menu_builder.py:143
 msgid "Set Marks from Downstream Related Images"
 msgstr "下流に関連する画像からマークを設定する"
 
-#: app.py:856
+#: app.py:878 ui/app_window/context_menu_builder.py:153
 msgid "Set Current Image as Search Image"
 msgstr "現在の画像を検索結果の画像として設定する"
 
-#: app.py:857
+#: app.py:879 ui/app_window/context_menu_builder.py:157
 msgid "Add Current Image to Negative Search"
 msgstr "現在の画像をネガティブ検索に追加する"
 
-#: app.py:858
+#: app.py:880 ui/app_window/context_menu_builder.py:182
 msgid "Run Refacdir"
 msgstr "RefacDirを実行してください。"
 
-#: app.py:876
+#: app.py:898 ui/app_window/window_launcher.py:255
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(インデックスの詳細を見るには、この画像をディレクトリの一部として開いてください）。"
 
-#: app.py:913 app.py:1655
+#: app.py:935 app.py:1681 ui/app_window/app_window.py:786
+#: ui/app_window/window_launcher.py:347
 msgid "Many Files"
 msgstr "多くのファイル"
 
-#: app.py:941
+#: app.py:963 ui/app_window/app_window.py:731
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
@@ -271,230 +296,259 @@ msgid ""
 msgstr ""
 "外部ストレージに大量のファイルを含むディレクトリまたは相当数のファイルを含むディレクトリが検出されました。これにより、読み込み時間が遅くなる可能性があります。フルディレクトリを読み込むことを確認してください。"
 
-#: app.py:942
+#: app.py:964 ui/app_window/app_window.py:730
 msgid "Large Directory Detected: {0}"
 msgstr "大規模なディレクトリが検出されました: {0}"
 
-#: app.py:972
+#: app.py:994 ui/app_window/search_controller.py:629
 msgid "No downstream related image(s) found in {0}"
 msgstr "{0} に下流関連の画像は見つかりませんでした。"
 
-#: app.py:994
+#: app.py:1016 ui/app_window/file_marks_controller.py:371
 msgid "{0} file marks set"
 msgstr "{0} ファイル マーク セット"
 
-#: app.py:1000
+#: app.py:1022 ui/help_and_config_qt.py:40
 msgid "Help and Config"
 msgstr "ヘルプと設定"
 
-#: app.py:1112
+#: app.py:1134 ui/files/recent_directory_window_qt.py:108
 msgid "Set Image Comparison Directory"
 msgstr "画像比較ディレクトリの設定"
 
-#: app.py:1166
+#: app.py:1188 ui/app_window/search_controller.py:139
 msgid "No image selected."
 msgstr "選択した画像はありません。"
 
-#: app.py:1166
+#: app.py:1188 ui/app_window/search_controller.py:139
 msgid "Invalid Setting"
 msgstr "無効な設定"
 
-#: app.py:1205
+#: app.py:1227 ui/app_window/search_controller.py:187
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "テキスト埋め込みを検索するには、比較モードを埋め込みモードに設定する必要があります。"
 
-#: app.py:1210
+#: app.py:1232 ui/app_window/search_controller.py:193
 msgid "Select image file"
 msgstr "画像ファイルの選択"
 
-#: app.py:1239
+#: app.py:1261 ui/app_window/media_navigator.py:395
 msgid "Somehow, the search file is invalid"
 msgstr "どういうわけか、検索ファイルが無効です"
 
-#: app.py:1325 app.py:1350
+#: app.py:1347 app.py:1372 ui/app_window/search_controller.py:409
+#: ui/app_window/search_controller.py:448
 msgid "Failed to get active image filepath"
 msgstr "アクティブなイメージファイルパスを取得する失敗"
 
-#: app.py:1435
+#: app.py:1457 ui/app_window/search_controller.py:275
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% 完了"
 
-#: app.py:1441
+#: app.py:1463 ui/app_window/search_controller.py:314
 msgid "Confirm comparison"
 msgstr "比較確認"
 
-#: app.py:1442
+#: app.py:1464 ui/app_window/search_controller.py:315
 msgid "No base directory has been set, will use current base directory of "
 msgstr "ベースディレクトリが設定されていないので、現在のベースディレクトリを使用する： "
 
-#: app.py:1443
+#: app.py:1465 ui/app_window/search_controller.py:316
 msgid "Are you sure you want to proceed?"
 msgstr "続行したいですか?"
 
-#: app.py:1466
+#: app.py:1492 ui/app_window/search_controller.py:267
 msgid "Error running compare"
 msgstr "エラー実行比較"
 
-#: app.py:1501
+#: app.py:1527 ui/app_window/file_marks_controller.py:70
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションでマークが付かない"
 
-#: app.py:1512
+#: app.py:1538 ui/app_window/file_marks_controller.py:84
 msgid "Mark removed. Remaining: {0}"
 msgstr "マーク削除 残っている {0}"
 
-#: app.py:1516
+#: app.py:1542 ui/app_window/file_marks_controller.py:90
 msgid "Mark added. Total set: {0}"
 msgstr "マークが付け加えた。合計セット： {0}"
 
-#: app.py:1533
+#: app.py:1559 ui/app_window/file_marks_controller.py:127
 msgid "Marks added. Total set: {0}"
 msgstr "マークが追加された。合計セット： {0}"
 
-#: app.py:1542
+#: app.py:1568 ui/app_window/file_marks_controller.py:147
 msgid "First sorted mark"
 msgstr "ファーストソートマーク"
 
-#: app.py:1549
+#: app.py:1575 ui/app_window/file_marks_controller.py:155
 msgid "Only one marked file set."
 msgstr "1つのマーク付きファイルセットのみ。"
 
-#: app.py:1562
+#: app.py:1588 ui/app_window/file_marks_controller.py:192
 msgid "Invalid file path"
 msgstr "無効なファイルパス"
 
-#: app.py:1562
+#: app.py:1588 ui/app_window/file_marks_controller.py:193
 msgid "The file path {0} is invalid."
 msgstr "ファイルパス {0} は無効です。"
 
-#: app.py:1568
+#: app.py:1594 ui/app_window/file_marks_controller.py:202
 msgid "Including marks: {0}"
 msgstr "マークを含む：{0}"
 
-#: app.py:1610
+#: app.py:1636 ui/app_window/file_marks_controller.py:308
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0}マークが設定された(>={1}の予定)。\n"
 "マークを設定するには Shift+M を使用します。"
 
-#: app.py:1655
+#: app.py:1681 ui/app_window/window_launcher.py:348
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "本当にディレクトリ{0}ですべての事前検証を実行したいのですか？時間がかかるかもしれません。"
 
-#: app.py:1670
+#: app.py:1696 ui/app_window/window_launcher.py:380
 msgid "Prevalidations now running"
 msgstr "今すぐ実行する準備"
 
-#: app.py:1670
+#: app.py:1696 ui/app_window/window_launcher.py:381
 msgid "Prevalidations turned off"
 msgstr "無効化がオフ"
 
-#: app.py:1695
+#: app.py:1700 ui/app_window/window_launcher.py:389
+msgid "Extra debug logging enabled"
+msgstr "追加デバッグログ記録を有効化"
+
+#: app.py:1700 ui/app_window/window_launcher.py:390
+msgid "Extra debug logging disabled"
+msgstr "追加デバッグログ記録を無効化"
+
+#: app.py:1721 ui/app_window/window_launcher.py:124
 msgid "Please set a base directory first"
 msgstr "まずベースディレクトリを設定してください"
 
-#: app.py:1724
+#: app.py:1750 ui/app_window/window_launcher.py:408
 msgid "Removed from directory notes: {0}"
 msgstr "ディレクトリのメモから削除されました: {0}"
 
-#: app.py:1727
+#: app.py:1753 ui/app_window/window_launcher.py:413
 msgid "Added to directory notes: {0}"
 msgstr "ディレクトリのメモへ追加: {0}"
 
-#: app.py:1750 files/directory_notes_window.py:242
+#: app.py:1776 ui/app_window/window_launcher.py:441
+#: ui/files/directory_notes_window_qt.py:248
+#: ui_tk/files/directory_notes_window.py:242
 msgid "Edit Note - {0}"
 msgstr "編集注 - {0}"
 
-#: app.py:1774 files/directory_notes_window.py:266
+#: app.py:1800 ui/app_window/window_launcher.py:465
+#: ui/files/directory_notes_window_qt.py:278
+#: ui_tk/files/directory_notes_window.py:266
 msgid "Note saved for: {0}"
 msgstr "メモを保存しました：{0}"
 
-#: app.py:1787 files/directory_notes_window.py:273
+#: app.py:1813 ui/app_window/window_launcher.py:454
+#: ui/files/directory_notes_window_qt.py:271
+#: ui_tk/files/directory_notes_window.py:273
 msgid "Save"
 msgstr "保存"
 
-#: app.py:1790 auth/app_startup_auth.py:127 auth/password_admin_window.py:462
-#: auth/password_dialog.py:152 auth/password_dialog.py:221
-#: auth/password_dialog.py:238 compare/compare_settings_window.py:373
-#: files/directory_notes_window.py:276 files/pdf_options_window.py:77
-#: files/target_directory_window.py:176 files/type_configuration_window.py:178
-#: lib/custom_dialogs.py:75
+#: app.py:1816 lib/custom_dialogs.py:75 lib/custom_dialogs_qt.py:122
+#: lib/qt_alert.py:28 ui/app_window/window_launcher.py:455
+#: ui/auth/app_startup_auth_qt.py:76 ui/auth/password_admin_window.py:83
+#: ui/auth/password_dialog.py:197 ui/auth/password_dialog.py:267
+#: ui/auth/password_dialog.py:288
+#: ui/compare/classifier_action_copy_window_qt.py:174
+#: ui/compare/compare_settings_window_qt.py:295
+#: ui/files/directory_notes_window_qt.py:272
+#: ui/files/pdf_options_window_qt.py:113
+#: ui/files/type_configuration_window_qt.py:221
+#: ui_tk/auth/app_startup_auth.py:127 ui_tk/auth/password_admin_window.py:461
+#: ui_tk/auth/password_dialog.py:152 ui_tk/auth/password_dialog.py:221
+#: ui_tk/auth/password_dialog.py:238
+#: ui_tk/compare/classifier_action_copy_window.py:158
+#: ui_tk/compare/compare_settings_window.py:373
+#: ui_tk/files/directory_notes_window.py:276
+#: ui_tk/files/pdf_options_window.py:77
+#: ui_tk/files/target_directory_window.py:152
+#: ui_tk/files/type_configuration_window.py:183 utils/constants.py:227
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: app.py:1904
+#: app.py:1930 ui/app_window/media_navigator.py:303
 msgid "File not found"
 msgstr "ファイルが見つかりません"
 
-#: app.py:1904
+#: app.py:1930 ui/app_window/media_navigator.py:304
 msgid "No file was found for the search text: \"{0}\""
 msgstr "検索テキストに該当するファイルが見つかりませんでした： \"{0}\""
 
-#: app.py:1913
+#: app.py:1939 ui/app_window/media_navigator.py:316
 msgid "Index navigation not available"
 msgstr "インデックスナビゲーションは利用できません"
 
-#: app.py:1913
+#: app.py:1939 ui/app_window/media_navigator.py:317
 msgid "Index navigation is only available in BROWSE mode."
 msgstr "インデックスナビゲーションは閲覧モードでのみ利用可能です。"
 
-#: app.py:1924
+#: app.py:1950 ui/app_window/media_navigator.py:328
 msgid "Invalid index"
 msgstr "無効なインデックス"
 
-#: app.py:1940
+#: app.py:1966 ui/app_window/window_launcher.py:330
 msgid "No image selected"
 msgstr "選択した画像なし"
 
-#: app.py:1940
+#: app.py:1966 ui/app_window/window_launcher.py:331
 msgid "No image was selected for comparison"
 msgstr "比較のために画像が選択されていない"
 
-#: app.py:1954
+#: app.py:1980 ui/app_window/search_controller.py:471
 msgid "No Text Search Presets Found"
 msgstr "テキスト検索プリセットが見つかりません"
 
-#: app.py:1955
+#: app.py:1981 ui/app_window/search_controller.py:472
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "テキスト埋め込み検索プリセットが見つかりません。config.jsonファイルに設定してください。"
 
-#: app.py:2052
+#: app.py:2078 ui/app_window/file_ops_controller.py:430
 msgid "Opening media file: {0}"
 msgstr "メディアファイルを開く: {0}"
 
-#: app.py:2055
+#: app.py:2081 ui/app_window/file_ops_controller.py:434
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr "現在のメディアファイルを開くことができませんでした。有効なファイルパスを取得できませんでした。"
 
-#: app.py:2060
+#: app.py:2086 ui/app_window/file_ops_controller.py:446
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
 msgstr "GIMPの統合設定が有効になっていません。config.jsonファイルで『gimp_exe_loc』を設定してください。"
 
-#: app.py:2060
+#: app.py:2086 ui/app_window/file_ops_controller.py:447
 msgid "GIMP Integration Error"
 msgstr "GIMP 統合エラー"
 
-#: app.py:2072
+#: app.py:2098 ui/app_window/file_ops_controller.py:468
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "GIMPで現在のファイルを開くのに失敗しました。"
 
-#: app.py:2083 image/temp_image_canvas.py:167
+#: app.py:2109 ui/app_window/file_ops_controller.py:349
+#: ui/image/temp_image_window_qt.py:222 ui_tk/image/temp_image_canvas.py:167
 msgid "Copied filepath to clipboard"
 msgstr "ファイルパスをクリップボードにコピーしました"
 
-#: app.py:2091
+#: app.py:2117 ui/app_window/file_ops_controller.py:364
 msgid "Copied filename to clipboard"
 msgstr "ファイル名をクリップボードにコピーしました"
 
-#: app.py:2098
+#: app.py:2124 ui/app_window/file_ops_controller.py:322
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -502,53 +556,54 @@ msgstr ""
 "現在の画像を隠す。\n"
 "非表示を解除するには、Shift+Bキーを押します。"
 
-#: app.py:2103
+#: app.py:2129 ui/app_window/file_ops_controller.py:328
 msgid "Cleared all hidden images."
 msgstr "すべての隠し画像を消去。"
 
-#: app.py:2111
+#: app.py:2137 ui/app_window/file_ops_controller.py:115
 msgid "DELETE_LOCK"
 msgstr ""
 "スライドショーの後にロックを削除\n"
 "トランジションが削除を阻止"
 
-#: app.py:2129
+#: app.py:2155 ui/app_window/file_ops_controller.py:138
 msgid "Invalid action, no files found to delete"
 msgstr "無効なアクションです。"
 
-#: app.py:2132
+#: app.py:2158 ui/app_window/file_ops_controller.py:144
 msgid "Invalid action, search image not found"
 msgstr "無効なアクションです。"
 
-#: app.py:2147
+#: app.py:2173 ui/app_window/file_ops_controller.py:165
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "有効なファイルパスが取得できず、現在のファイルの削除に失敗しました。"
 
-#: app.py:2154
+#: app.py:2180 ui/app_window/file_ops_controller.py:188
 msgid "Removing directory: {0}"
 msgstr "ディレクトリを削除中: {0}"
 
-#: app.py:2156
+#: app.py:2182 ui/app_window/file_ops_controller.py:193
 msgid "Removing file: {0}"
 msgstr "ファイルを削除しています： {0}"
 
-#: app.py:2166 app.py:2187
+#: app.py:2192 app.py:2213 ui/app_window/file_ops_controller.py:210
+#: ui/app_window/file_ops_controller.py:235
 msgid "Failed to delete item: {0}"
 msgstr "アイテムの削除に失敗しました: {0}"
 
-#: app.py:2170
+#: app.py:2196 ui/app_window/file_ops_controller.py:213
 msgid ""
 "Failed to move directory to {0}. Double check the trash folder is set "
 "properly in config.json."
 msgstr "ディレクトリを{0}に移動できませんでした。config.jsonでゴミ箱フォルダーが正しく設定されているか確認してください。"
 
-#: app.py:2172
+#: app.py:2198 ui/app_window/file_ops_controller.py:215
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
 msgstr "ファイルを{0}に送信できませんでした。config.jsonでゴミ箱フォルダーが正しく設定されているか確認してください。"
 
-#: app.py:2178
+#: app.py:2204 ui/app_window/file_ops_controller.py:221
 msgid ""
 "Failed to move directory to the trash. Either pip install send2trash or set "
 "a specific trash folder in config.json."
@@ -556,354 +611,110 @@ msgstr ""
 "ディレクトリをゴミ箱に移動できませんでしたので。pip install send2trash を実行するか、config.json "
 "で特定のゴミ箱フォルダーを設定してください。"
 
-#: app.py:2182
+#: app.py:2208 ui/app_window/file_ops_controller.py:228
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "ゴミ箱へのファイル送信に失敗しました。pipでsend2trashをインストールするか、config.jsonでゴミ箱フォルダを指定してください。"
 
-#: app.py:2192
+#: app.py:2218 ui/app_window/file_ops_controller.py:254
 msgid "Invalid directory"
 msgstr "無効なディレクトリ"
 
-#: app.py:2192
+#: app.py:2218 ui/app_window/file_ops_controller.py:254
 msgid "No valid base directory to delete"
 msgstr "削除可能な有効なベースディレクトリがありません。"
 
-#: app.py:2203
+#: app.py:2229 ui/app_window/file_ops_controller.py:267
 msgid "Cannot Delete Directory"
 msgstr "ディレクトリを削除できません"
 
-#: app.py:2207
+#: app.py:2233 ui/app_window/file_ops_controller.py:272
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "ディレクトリとすべてのコンテンツを削除してもよろしいですか？"
 
-#: app.py:2209
+#: app.py:2235 ui/app_window/file_ops_controller.py:274
 msgid "Contents to be deleted:"
 msgstr "削除対象の内容："
 
-#: app.py:2211
+#: app.py:2237 ui/app_window/file_ops_controller.py:278
 msgid "Confirm Delete Directory"
 msgstr "ディレクトリの削除を確認してください"
 
-#: app.py:2242
+#: app.py:2268 ui/app_window/file_ops_controller.py:303
 msgid "Delete Directory Error"
 msgstr "ディレクトリ削除エラー"
 
-#: app.py:2244
+#: app.py:2270 ui/app_window/file_ops_controller.py:306
 msgid "Directory {0} deleted."
 msgstr "ディレクトリ {0} が削除されました。"
 
-#: app.py:2260
+#: app.py:2286 ui/app_window/file_ops_controller.py:387
 msgid "Invalid target filepath for replacement: "
 msgstr "置換対象のファイルパスが無効です： "
 
-#: app.py:2264
+#: app.py:2290 ui/app_window/file_ops_controller.py:392
 msgid "Moved search image to "
 msgstr "検索画像を： "
 
-#: app.py:2294
+#: app.py:2320 ui/app_window/search_controller.py:643
 msgid "Failed to get active media filepath"
 msgstr "アクティブなメディアファイルパスを取得できませんでした"
 
-#: app.py:2308
+#: app.py:2334 ui/app_window/search_controller.py:537
 msgid "Running image gen: "
 msgstr "イメージ・ジェネレーションの実行： "
 
-#: app.py:2310 app.py:2327
+#: app.py:2336 app.py:2353 ui/app_window/search_controller.py:541
+#: ui/app_window/search_controller.py:581
 msgid "Error running image generation:"
 msgstr "画像生成の実行エラー："
 
-#: app.py:2325
+#: app.py:2351 ui/app_window/search_controller.py:576
 msgid "Running image gen on directory: "
 msgstr "ディレクトリで画像生成を実行中: "
 
-#: app.py:2334
+#: app.py:2360 ui/app_window/file_ops_controller.py:481
 msgid "Running refacdir"
 msgstr "ランニング refacdir"
 
-#: app.py:2339 auth/app_startup_auth.py:141 auth/password_dialog.py:249
-#: extensions/gimp/gimp_wrapper.py:689 extensions/gimp/gimp_wrapper.py:718
-#: files/pdf_creator.py:133 files/pdf_creator.py:137 files/pdf_creator.py:140
+#: app.py:2365 extensions/gimp/gimp_wrapper.py:689
+#: extensions/gimp/gimp_wrapper.py:718 files/pdf_creator.py:132
+#: files/pdf_creator.py:136 files/pdf_creator.py:139
+#: ui/app_window/notification_controller.py:182
+#: ui/auth/app_startup_auth_qt.py:124 ui/auth/password_admin_window.py:130
+#: ui/auth/password_admin_window.py:537 ui/auth/password_dialog.py:305
+#: ui/compare/classifier_action_copy_window_qt.py:227
+#: ui/compare/classifier_action_copy_window_qt.py:235
+#: ui/files/marked_file_mover_qt.py:497 ui_tk/auth/app_startup_auth.py:141
+#: ui_tk/auth/password_dialog.py:249
+#: ui_tk/compare/classifier_action_copy_window.py:227
+#: ui_tk/compare/classifier_action_copy_window.py:241
 msgid "Error"
 msgstr "エラー"
 
-#: app.py:2441
+#: app.py:2470 ui/app_window/notification_controller.py:209
 msgid "GROUP_DETAILS"
 msgstr ""
 "グループ{0}/{1}\n"
 "サイズ：{2}"
 
-#: app.py:2445
+#: app.py:2474 ui/app_window/notification_controller.py:217
 msgid "No image files found"
 msgstr "画像ファイルが見つかりません"
 
-#: app.py:2447
+#: app.py:2476 ui/app_window/notification_controller.py:219
 msgid "1 image file found"
 msgstr "1 見つかった画像ファイル"
 
-#: app.py:2448
+#: app.py:2477 ui/app_window/notification_controller.py:221
 msgid "{0} image files found"
 msgstr "{0} イメージファイルが見つかりました"
 
-#: app.py:2450
+#: app.py:2479 ui/app_window/notification_controller.py:226
 msgid "(filtered)"
 msgstr "(フィルタリング)"
-
-#: auth/app_startup_auth.py:32 auth/app_startup_auth.py:92
-msgid "Application Password Required"
-msgstr "ソフトウェア・アプリケーションのパスワードが必要"
-
-#: auth/app_startup_auth.py:99
-msgid "A password is required to open this application."
-msgstr "このアプリケーションを開くにはパスワードが必要です。"
-
-#: auth/app_startup_auth.py:108 auth/password_dialog.py:133
-msgid "Password:"
-msgstr "パスワード :"
-
-#: auth/app_startup_auth.py:124 auth/password_dialog.py:149
-#: lib/custom_dialogs.py:69
-msgid "OK"
-msgstr "オーケー"
-
-#: auth/app_startup_auth.py:141 auth/password_dialog.py:249
-msgid "Incorrect password"
-msgstr "パスワードの誤り"
-
-#: auth/password_admin_window.py:35
-msgid "Password Administration"
-msgstr "パスワード管理"
-
-#: auth/password_admin_window.py:85
-msgid "Password Protection Settings"
-msgstr "パスワード保護設定"
-
-#: auth/password_admin_window.py:97
-msgid "Protected Actions"
-msgstr "保護された行為"
-
-#: auth/password_admin_window.py:103
-msgid "Select which actions require password authentication:"
-msgstr "パスワード認証が必要なアクションを選択します："
-
-#: auth/password_admin_window.py:119
-msgid "(Always protected if a password is set)"
-msgstr "(パスワードが設定されている場合は常に保護されます）"
-
-#: auth/password_admin_window.py:138
-msgid "Session Timeout Settings"
-msgstr "セッションタイムアウトの設定"
-
-#: auth/password_admin_window.py:144
-msgid "Enable session timeout (remember password for a period)"
-msgstr "セッションタイムアウトを有効にする（一定期間パスワードを記憶する）"
-
-#: auth/password_admin_window.py:156
-msgid "Session timeout duration (minutes):"
-msgstr "セッションのタイムアウト時間（分）："
-
-#: auth/password_admin_window.py:165
-msgid "Security Advice Settings"
-msgstr "セキュリティ アドバイス設定"
-
-#: auth/password_admin_window.py:171
-msgid "Show security advice when no password is configured"
-msgstr "パスワードが設定されていない場合にセキュリティに関するアドバイスを表示する"
-
-#: auth/password_admin_window.py:179
-msgid "Password Setup"
-msgstr "パスワード設定"
-
-#: auth/password_admin_window.py:189
-msgid "Password is configured"
-msgstr "パスワードが設定されている"
-
-#: auth/password_admin_window.py:195 auth/password_admin_window.py:384
-#: auth/password_admin_window.py:399 auth/password_admin_window.py:459
-msgid "Change Password"
-msgstr "パスワードの変更"
-
-#: auth/password_admin_window.py:200 auth/password_admin_window.py:472
-msgid "Remove Password"
-msgstr "パスワードの削除"
-
-#: auth/password_admin_window.py:205
-msgid "Set up a password to enable protection:"
-msgstr "パスワードを設定して保護を有効にする："
-
-#: auth/password_admin_window.py:215 auth/password_admin_window.py:415
-msgid "New Password:"
-msgstr "新しいパスワード"
-
-#: auth/password_admin_window.py:228
-msgid "Confirm Password:"
-msgstr "パスワードの確認:"
-
-#: auth/password_admin_window.py:237
-msgid "Set Password"
-msgstr "パスワードの設定"
-
-#: auth/password_admin_window.py:247 auth/password_admin_window.py:306
-msgid "Reset to Defaults"
-msgstr "デフォルトにリセット"
-
-#: auth/password_admin_window.py:251 auth/password_admin_window.py:331
-msgid "Set to Current"
-msgstr "カレントに設定"
-
-#: auth/password_admin_window.py:255
-msgid "Export Cache as JSON"
-msgstr "キャッシュをJSONとしてエクスポートする"
-
-#: auth/password_admin_window.py:259
-msgid "Save Settings"
-msgstr "設定を保存する"
-
-#: auth/password_admin_window.py:263
-msgid "Close"
-msgstr "閉じる"
-
-#: auth/password_admin_window.py:300
-msgid "Password protection settings saved."
-msgstr "パスワード保護設定を保存。"
-
-#: auth/password_admin_window.py:307
-msgid ""
-"Are you sure you want to reset all password protection settings to their "
-"default values?"
-msgstr "すべてのパスワード保護設定をデフォルト値にリセットしてもよろしいですか？"
-
-#: auth/password_admin_window.py:326
-msgid "Settings reset to defaults."
-msgstr "設定がデフォルトにリセットされる。"
-
-#: auth/password_admin_window.py:332
-msgid ""
-"Are you sure you want to restore all settings to their current saved state? "
-"This will discard any unsaved changes."
-msgstr "すべての設定を現在の保存状態に戻してもよろしいですか？これで保存されていない変更は破棄されます。"
-
-#: auth/password_admin_window.py:350
-msgid "Settings restored to current saved state."
-msgstr "設定を現在の保存状態に戻す。"
-
-#: auth/password_admin_window.py:359
-msgid "Please enter a password."
-msgstr "パスワードを入力してください。"
-
-#: auth/password_admin_window.py:363
-msgid "Passwords do not match."
-msgstr "パスワードが一致しない。"
-
-#: auth/password_admin_window.py:367 auth/password_admin_window.py:449
-msgid "Password must be at least 6 characters long."
-msgstr "パスワードは6文字以上でなければなりません。"
-
-#: auth/password_admin_window.py:372
-msgid "Password set successfully."
-msgstr "パスワードの設定に成功しました。"
-
-#: auth/password_admin_window.py:379
-msgid "Failed to set password."
-msgstr "パスワードの設定に失敗しました。"
-
-#: auth/password_admin_window.py:406
-msgid "Current Password:"
-msgstr "現在のパスワード："
-
-#: auth/password_admin_window.py:424
-msgid "Confirm New Password:"
-msgstr "新しいパスワードを確認する："
-
-#: auth/password_admin_window.py:441
-msgid "Current password is incorrect."
-msgstr "現在のパスワードが間違っています。"
-
-#: auth/password_admin_window.py:445
-msgid "New passwords do not match."
-msgstr "新しいパスワードが一致しない。"
-
-#: auth/password_admin_window.py:454
-msgid "Password changed successfully."
-msgstr "パスワードの変更に成功しました。"
-
-#: auth/password_admin_window.py:457
-msgid "Failed to change password."
-msgstr "パスワードの変更に失敗しました。"
-
-#: auth/password_admin_window.py:473
-msgid ""
-"Are you sure you want to remove password protection? This will disable all "
-"password requirements."
-msgstr "本当にパスワード保護を解除しますか？これにより、すべてのパスワード要件が無効になります。"
-
-#: auth/password_admin_window.py:479
-msgid "Password removed successfully."
-msgstr "パスワードは正常に削除されました。"
-
-#: auth/password_admin_window.py:483
-msgid "Failed to remove password."
-msgstr "パスワードの削除に失敗しました。"
-
-#: auth/password_admin_window.py:518
-msgid "Cache exported as JSON to:"
-msgstr "キャッシュはJSONとしてエクスポートされる："
-
-#: auth/password_admin_window.py:520
-msgid "Failed to export cache as JSON:"
-msgstr "キャッシュを JSON としてエクスポートできませんでした："
-
-#: auth/password_dialog.py:45 auth/password_dialog.py:103
-msgid "Password Required"
-msgstr "パスワードが必要"
-
-#: auth/password_dialog.py:45
-msgid "Password Protection"
-msgstr "パスワード保護"
-
-#: auth/password_dialog.py:110
-msgid "Password required for: {0}"
-msgstr "パスワードが必要です： {0}"
-
-#: auth/password_dialog.py:158
-msgid "Password Protection Available"
-msgstr "パスワード保護あり"
-
-#: auth/password_dialog.py:165
-msgid "This action requires password protection: {0}"
-msgstr "このアクションにはパスワード保護が必要です： {0}"
-
-#: auth/password_dialog.py:181
-msgid "Password protection is not currently configured. You can:"
-msgstr "パスワード保護は現在設定されていません。できます："
-
-#: auth/password_dialog.py:191
-msgid "• Configure password protection for sensitive actions"
-msgstr "• 重要なアクションのパスワード保護を設定する"
-
-#: auth/password_dialog.py:196
-msgid "• Continue without password protection (less secure)"
-msgstr "• パスワード保護なしで続ける（安全性が低い）"
-
-#: auth/password_dialog.py:203
-msgid "Don't show this security advice again"
-msgstr "このセキュリティに関するアドバイスを再び表示しない"
-
-#: auth/password_dialog.py:213 auth/password_dialog.py:234
-msgid "Configure Protection"
-msgstr "プロテクションの設定"
-
-#: auth/password_dialog.py:217
-msgid "Continue Without Protection"
-msgstr "保護なしで続ける"
-
-#: auth/password_dialog.py:225
-msgid ""
-"Password protection is required for this action but is not currently "
-"configured."
-msgstr "このアクションにはパスワード保護が必要だが、現在は設定されていない。"
 
 #: compare/base_compare.py:249
 msgid "Image data collection"
@@ -931,378 +742,123 @@ msgstr "チェックポイント・データに無効なインデックスが含
 msgid "Restarting Comparison"
 msgstr "再開比較"
 
-#: compare/classifier_actions_manager.py:43
+#: compare/classifier_actions_manager.py:42
 msgid "(no positives set)"
 msgstr "(ポジなし）"
 
-#: compare/classifier_actions_manager.py:44
+#: compare/classifier_actions_manager.py:43
 msgid "(no negatives set)"
 msgstr "(ネガなし）"
 
-#: compare/classifier_actions_manager.py:46
-#: compare/classifier_management_window.py:60
+#: compare/classifier_actions_manager.py:45
+#: ui/compare/classifier_management_window_qt.py:83
+#: ui_tk/compare/classifier_management_window.py:59
 msgid "New Classifier Action"
 msgstr "新分類器アクション"
 
-#: compare/classifier_actions_manager.py:120
+#: compare/classifier_actions_manager.py:119
 msgid "Loading image classifier <{0}> ..."
 msgstr "画像分類器<{0}>をロード中 ..."
 
-#: compare/classifier_actions_manager.py:215
+#: compare/classifier_actions_manager.py:214
 msgid "Loading embedding prototype from {0}..."
 msgstr "{0}から埋め込みプロトタイプを読み込み中..."
 
-#: compare/classifier_actions_manager.py:231
+#: compare/classifier_actions_manager.py:230
 msgid "Loading negative embedding prototype from {0}..."
 msgstr "{0}からネガティブ埋め込みプロトタイプを読み込み中..."
 
-#: compare/classifier_actions_manager.py:386
+#: compare/classifier_actions_manager.py:385
 msgid " detected"
 msgstr " 検出する"
 
-#: compare/classifier_actions_manager.py:388
+#: compare/classifier_actions_manager.py:387
 msgid " - skipped"
 msgstr " - スキップ"
 
-#: compare/classifier_actions_manager.py:391
+#: compare/classifier_actions_manager.py:390
 msgid " - hidden"
 msgstr " - 隠し"
 
-#: compare/classifier_actions_manager.py:396
+#: compare/classifier_actions_manager.py:395
 msgid " - marked"
 msgstr " - マーク"
 
-#: compare/classifier_actions_manager.py:404
+#: compare/classifier_actions_manager.py:403
 msgid "Moving file: "
 msgstr "ファイルの移動: "
 
-#: compare/classifier_actions_manager.py:450
+#: compare/classifier_actions_manager.py:449
 msgid "Deleting file: "
 msgstr "ファイルの削除: "
 
-#: compare/classifier_actions_manager.py:506
+#: compare/classifier_actions_manager.py:505
 msgid "Action modifier is not a valid directory: "
 msgstr "アクション修飾子は有効なディレクトリではありません : "
 
-#: compare/classifier_actions_manager.py:508
+#: compare/classifier_actions_manager.py:507
 msgid "Invalid classifier action {0}, may cause errors or be unable to run!"
 msgstr "無効な分類器アクション {0} は、エラーを引き起こすか、実行できない可能性があります！"
 
-#: compare/classifier_actions_manager.py:615
+#: compare/classifier_actions_manager.py:614
 msgid "embedding"
 msgstr "埋め込み"
 
-#: compare/classifier_actions_manager.py:617
+#: compare/classifier_actions_manager.py:616
 msgid "classifier {0}"
 msgstr "クラシファイア {0}"
 
-#: compare/classifier_actions_manager.py:619
+#: compare/classifier_actions_manager.py:618
 msgid "prompts"
 msgstr "プロンプト"
 
-#: compare/classifier_actions_manager.py:621
+#: compare/classifier_actions_manager.py:620
 msgid "prototype"
 msgstr "試作品"
 
-#: compare/classifier_actions_manager.py:629
+#: compare/classifier_actions_manager.py:628
 msgid "categories: {0}"
 msgstr "カテゴリに分類されます： {0}"
 
-#: compare/classifier_actions_manager.py:633
+#: compare/classifier_actions_manager.py:632
 msgid "{0} positives, {1} negatives"
 msgstr "{0} 陽性、{1} 陰性"
 
-#: compare/classifier_actions_manager.py:637
+#: compare/classifier_actions_manager.py:636
 msgid " using {0} ({1})"
 msgstr " {0} ({1})"
 
-#: compare/classifier_actions_manager.py:639
+#: compare/classifier_actions_manager.py:638
 msgid " using {0}"
 msgstr " {0}"
 
-#: compare/classifier_actions_manager.py:641
+#: compare/classifier_actions_manager.py:640
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} 陽性、{1} 陰性)"
 
-#: compare/classifier_actions_manager.py:644
+#: compare/classifier_actions_manager.py:643
 msgid "disabled"
 msgstr "無効化"
 
-#: compare/classifier_actions_manager.py:651
-#: compare/classifier_management_window.py:56 compare/prevalidations_tab.py:29
+#: compare/classifier_actions_manager.py:650
+#: ui/compare/classifier_management_window_qt.py:79
+#: ui/compare/prevalidations_tab_qt.py:69
+#: ui_tk/compare/classifier_management_window.py:55
+#: ui_tk/compare/prevalidations_tab.py:31
 msgid "New Prevalidation"
 msgstr "新規登録"
 
-#: compare/classifier_actions_manager.py:731
+#: compare/classifier_actions_manager.py:730
 msgid "Profile directory is not a valid directory: "
 msgstr "プロファイルディレクトリが無効なディレクトリです: "
 
-#: compare/classifier_actions_manager.py:733
+#: compare/classifier_actions_manager.py:732
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr "無効な優先値 {0} は、エラーや実行できません。"
 
-#: compare/classifier_actions_manager.py:813
+#: compare/classifier_actions_manager.py:812
 msgid "lookaheads: {0}"
 msgstr "先読み: {0}"
-
-#: compare/classifier_actions_tab.py:106
-msgid "Add Classifier Action"
-msgstr "分類器アクションを追加"
-
-#: compare/classifier_actions_tab.py:108
-msgid "Clear Classifier Actions"
-msgstr "分類器アクションをクリア"
-
-#: compare/classifier_actions_tab.py:110
-msgid "Run All"
-msgstr "すべて実行"
-
-#: compare/classifier_actions_tab.py:114
-msgid "Run on Profile:"
-msgstr "プロファイル上で実行:"
-
-#: compare/classifier_actions_tab.py:149 compare/prevalidations_tab.py:454
-msgid "Active"
-msgstr "アクティブ"
-
-#: compare/classifier_actions_tab.py:153 compare/prevalidations_tab.py:445
-#: utils/constants.py:133 utils/constants.py:148
-msgid "Name"
-msgstr "お名前 (必須)"
-
-#: compare/classifier_actions_tab.py:157
-#: compare/classifier_management_window.py:164
-#: compare/prevalidations_tab.py:448
-msgid "Action"
-msgstr "アクション"
-
-#: compare/classifier_actions_tab.py:178
-msgid "Run"
-msgstr "実行"
-
-#: compare/classifier_actions_tab.py:207 compare/prevalidations_tab.py:500
-#: files/file_actions_window.py:497 files/file_actions_window.py:548
-msgid "Modify"
-msgstr "変更する"
-
-#: compare/classifier_actions_tab.py:215 compare/prevalidations_tab.py:507
-#: image/classifier_action_type.py:34
-msgid "Delete"
-msgstr "削除"
-
-#: compare/classifier_actions_tab.py:223 compare/prevalidations_tab.py:514
-msgid "Move down"
-msgstr "移動する"
-
-#: compare/classifier_actions_tab.py:283 compare/classifier_actions_tab.py:349
-#: compare/prevalidations_tab.py:387
-msgid "directories"
-msgstr "ディレクトリ"
-
-#: compare/classifier_actions_tab.py:289
-msgid "Run classifier action '{0}' on the following directories?"
-msgstr "以下のディレクトリで分類器アクション 『{0}』 を実行しますか？"
-
-#: compare/classifier_actions_tab.py:293
-msgid "Run Classifier Action"
-msgstr "分類器アクションを実行"
-
-#: compare/classifier_actions_tab.py:333
-msgid "No active classifier actions to run"
-msgstr "実行中の分類器アクションはありません"
-
-#: compare/classifier_actions_tab.py:357
-msgid "Run {0} active classifier action(s) on the following directories?"
-msgstr "以下のディレクトリで {0} 個のアクティブな分類器アクションを実行しますか？"
-
-#: compare/classifier_actions_tab.py:361
-msgid "Run All Classifier Actions"
-msgstr "すべての分類器アクションを実行"
-
-#: compare/classifier_management_window.py:54 compare/prevalidations_tab.py:28
-msgid "Modify Prevalidation"
-msgstr "無効化の修正"
-
-#: compare/classifier_management_window.py:55 compare/prevalidations_tab.py:28
-msgid "Prevalidation Name"
-msgstr "バリデーション名"
-
-#: compare/classifier_management_window.py:58
-msgid "Modify Classifier Action"
-msgstr "分類器アクションの変更"
-
-#: compare/classifier_management_window.py:59
-msgid "Classifier Action Name"
-msgstr "分類器アクション名"
-
-#: compare/classifier_management_window.py:97
-msgid "Positives"
-msgstr "ポジティブ"
-
-#: compare/classifier_management_window.py:105
-msgid "Negatives"
-msgstr "ネガティブ"
-
-#: compare/classifier_management_window.py:113
-msgid "Validation Types"
-msgstr "バリデーション・タイプ"
-
-#: compare/classifier_management_window.py:117
-msgid "Use Embedding"
-msgstr "埋め込みを使用する"
-
-#: compare/classifier_management_window.py:123
-msgid "Use Image Classifier"
-msgstr "画像分類器を使う"
-
-#: compare/classifier_management_window.py:130
-msgid "Use Prompts"
-msgstr "プロンプトの使用"
-
-#: compare/classifier_management_window.py:139
-msgid "Use Embedding Prototype"
-msgstr "埋め込みプロトタイプを使用する"
-
-#: compare/compare_settings_window.py:183 compare/lookahead.py:163
-msgid "Threshold"
-msgstr "しきい値"
-
-#: compare/classifier_management_window.py:176
-msgid "Action Modifier"
-msgstr "アクション修飾子"
-
-#: compare/classifier_management_window.py:184
-msgid "Image Classifier Name"
-msgstr "画像分類器名"
-
-#: compare/classifier_management_window.py:197
-msgid "Image Classifier Selected Category"
-msgstr "画像分類器 選択されたカテゴリー"
-
-#: compare/classifier_management_window.py:202
-msgid "Select Categories..."
-msgstr "カテゴリーを選択..."
-
-#: compare/classifier_management_window.py:216
-msgid "Should Run"
-msgstr "実行すべき"
-
-#: compare/classifier_management_window.py:219
-msgid "Enable this classifier action"
-msgstr "この分類器アクションを有効にする"
-
-#: compare/classifier_management_window.py:228
-#: compare/directory_profile.py:195 compare/lookahead.py:170
-msgid "Done"
-msgstr "完了"
-
-#: compare/classifier_management_window.py:243
-msgid "Prototype Directory"
-msgstr "プロトタイプ用ディレクトリ"
-
-#: compare/classifier_management_window.py:258
-#: compare/classifier_management_window.py:296 files/go_to_file.py:137
-#: files/go_to_file.py:378
-msgid "Browse..."
-msgstr "閲覧..."
-
-#: compare/classifier_management_window.py:266
-msgid "Force Recalculate Prototype"
-msgstr "プロトタイプの再計算を強制"
-
-#: compare/classifier_management_window.py:276
-msgid "Negative Prototype Directory (Optional)"
-msgstr "ネガティブプロトタイプ用ディレクトリ（オプション）"
-
-#: compare/classifier_management_window.py:306
-msgid "Negative Prototype Weight (λ)"
-msgstr "負の原型の重み（λ）"
-
-#: compare/classifier_management_window.py:489
-msgid "Select Prototype Directory"
-msgstr "プロトタイプ用ディレクトリを選択"
-
-#: compare/classifier_management_window.py:500
-msgid "Select Negative Prototype Directory"
-msgstr "ネガティブプロトタイプ用ディレクトリを選択"
-
-#: compare/classifier_management_window.py:561
-msgid "Prototypes recalculated successfully"
-msgstr "プロトタイプが正常に再計算されました"
-
-#: compare/classifier_management_window.py:592
-msgid "Classifier Management"
-msgstr "分類器管理"
-
-#: compare/classifier_management_window.py:619
-#: compare/prevalidations_tab.py:217
-msgid "Prevalidations"
-msgstr "事前検証"
-
-#: compare/classifier_management_window.py:638
-msgid ""
-"Prevalidations are disabled. Enable them in the Prevalidations tab settings."
-msgstr "事前検証は無効になっています。事前検証タブの設定で有効にしてください。"
-
-#: compare/compare_settings_window.py:70
-msgid "Comparison Modes"
-msgstr "比較モード"
-
-#: compare/compare_settings_window.py:102
-msgid "Add Instance"
-msgstr "インスタンスを追加"
-
-#: compare/compare_settings_window.py:122
-msgid "Combination Logic:"
-msgstr "組み合わせ論理："
-
-#: compare/compare_settings_window.py:223
-msgid "Max files to compare"
-msgstr "比較する最大ファイル"
-
-#: compare/compare_settings_window.py:247
-msgid "Compare faces"
-msgstr "顔の比較"
-
-#: compare/compare_settings_window.py:257
-msgid "Overwrite cache"
-msgstr "キャッシュを上書き"
-
-#: compare/compare_settings_window.py:267
-msgid "Store checkpoints"
-msgstr "ストアチェックポイント"
-
-#: compare/compare_settings_window.py:296
-msgid "Filters (Applied Before Comparison)"
-msgstr "フィルター（比較前に適用）"
-
-#: compare/compare_settings_window.py:310
-msgid "Size Filter:"
-msgstr "サイズフィルター:"
-
-#: compare/compare_settings_window.py:319
-msgid "(Size filtering UI to be implemented)"
-msgstr "(サイズ フィルタリング UI を実装する予定です)"
-
-#: compare/compare_settings_window.py:333
-msgid "Model Filter:"
-msgstr "モデルフィルター:"
-
-#: compare/compare_settings_window.py:342
-msgid "(Model filtering UI to be implemented)"
-msgstr "(モデル フィルター インターフェース 未実装)"
-
-#: compare/compare_settings_window.py:366
-msgid "Apply"
-msgstr "適用する"
-
-#: compare/compare_settings_window.py:403
-msgid "Threshold:"
-msgstr "閾値："
-
-#: compare/compare_settings_window.py:473
-msgid "Instance Weights:"
-msgstr "インスタンス重み:"
 
 #: compare/compare_wrapper.py:77 compare/compare_wrapper.py:80
 msgid "Invalid mode"
@@ -1328,7 +884,7 @@ msgstr "非関連画像なし"
 msgid "No unrelated images found."
 msgstr "関係のない画像が見つかりません。"
 
-#: compare/compare_wrapper.py:232 compare/compare_wrapper.py:405
+#: compare/compare_wrapper.py:232 compare/compare_wrapper.py:404
 msgid "No Groups Found"
 msgstr "グループが見つかりません"
 
@@ -1349,248 +905,108 @@ msgid ""
 msgstr ""
 "検索モードが検出されたため、実行前にグループモードへの切り替えを確認してください。グループモードでは、ベースディレクトリ内のすべての画像を比較するため、時間がかかります。"
 
-#: compare/compare_wrapper.py:333
+#: compare/compare_wrapper.py:332
 msgid "Gathering image data for comparison"
 msgstr "比較のための画像データ収集"
 
-#: compare/compare_wrapper.py:371
+#: compare/compare_wrapper.py:370
 msgid "Searching images..."
 msgstr "画像検索..."
 
-#: compare/compare_wrapper.py:377
+#: compare/compare_wrapper.py:376
 msgid "Set a directory and search file or search text."
 msgstr "ディレクトリと検索ファイルまたは検索テキストを設定します。"
 
-#: compare/compare_wrapper.py:378
+#: compare/compare_wrapper.py:377
 msgid "No Match Found"
 msgstr "マッチが見つかりません"
 
-#: compare/compare_wrapper.py:378
+#: compare/compare_wrapper.py:377
 msgid "None of the files match the search filters with current settings."
 msgstr "現在の設定では、検索フィルターに一致するファイルはありません。"
 
-#: compare/compare_wrapper.py:391
+#: compare/compare_wrapper.py:390
 msgid "%s possibly related images found."
 msgstr "{0} 関連の画像が見つかる可能性があります。"
 
-#: compare/compare_wrapper.py:399
+#: compare/compare_wrapper.py:398
 msgid "Running image comparisons..."
 msgstr "実行イメージの比較..."
 
-#: compare/compare_wrapper.py:404 compare/compare_wrapper.py:419
+#: compare/compare_wrapper.py:403 compare/compare_wrapper.py:418
 msgid "Set a directory and search file."
 msgstr "ディレクトリと検索ファイルを設定します。"
 
-#: compare/compare_wrapper.py:405
+#: compare/compare_wrapper.py:404
 msgid "None of the files can be grouped with current settings."
 msgstr "現在の設定では、どのファイルもグループ化できない。"
 
-#: compare/compare_wrapper.py:420
+#: compare/compare_wrapper.py:419
 msgid "No Duplicates Found"
 msgstr "重複が見つかりません"
 
-#: compare/compare_wrapper.py:420
+#: compare/compare_wrapper.py:419
 msgid ""
 "None of the files appear to be duplicates based on the current settings."
 msgstr "現在の設定では、どのファイルも重複していないようです。"
 
-#: compare/compare_wrapper.py:444
+#: compare/compare_wrapper.py:443
 msgid "Stranded Group Members Found"
 msgstr "取り残されたグループメンバー発見"
 
-#: compare/compare_wrapper.py:444
+#: compare/compare_wrapper.py:443
 msgid "Some group members were left stranded by the grouping process."
 msgstr "グループ分けの過程で取り残されたメンバーもいた。"
 
-#: compare/compare_wrapper.py:499
+#: compare/compare_wrapper.py:498
 msgid "No More Groups"
 msgstr "グループなし"
 
-#: compare/compare_wrapper.py:500
+#: compare/compare_wrapper.py:499
 msgid ""
 "There are no more image groups remaining for this directory and current "
 "filter settings."
 msgstr "このディレクトリと現在のフィルター設定に対応する画像グループはもう残っていません。"
 
-#: compare/directory_profile.py:133 compare/prevalidations_tab.py:370
-msgid "Edit Profile"
-msgstr "ディレクトリプロファイルを編集する"
-
-#: compare/directory_profile.py:133
-msgid "Create Profile"
-msgstr "ディレクトリの作成プロファイル"
-
-#: compare/directory_profile.py:145
-msgid "Profile Name"
-msgstr "ディレクトリプロファイル名"
-
-#: compare/directory_profile.py:155
-msgid "Directories"
-msgstr "ディレクトリ"
-
-#: compare/directory_profile.py:175
-msgid "Add"
-msgstr "追加"
-
-#: compare/directory_profile.py:178
-msgid "Edit"
-msgstr "編集"
-
-#: compare/directory_profile.py:181 files/directory_notes_window.py:137
-msgid "Remove"
-msgstr "削除"
-
-#: compare/directory_profile.py:184
-msgid "Add dirs from subdirs"
-msgstr "サブディレクトリからディレクトリを追加する"
-
-#: compare/directory_profile.py:187
-msgid "Clear all"
-msgstr "すべてクリア"
-
-#: compare/directory_profile.py:206
-msgid "Select directory"
-msgstr "ディレクトリを選択"
-
-#: compare/directory_profile.py:236
-msgid "Add Directory"
-msgstr "ディレクトリを追加"
-
-#: compare/directory_profile.py:261
-msgid "Edit Directory"
-msgstr "ディレクトリを編集"
-
-#: compare/directory_profile.py:295
-msgid "Select directory to add subdirectories from"
-msgstr "サブディレクトリを追加するディレクトリを選択してください"
-
-#: compare/embedding_prototype.py:92
+#: compare/embedding_prototype.py:95
 msgid "Gathering image files from directory..."
 msgstr "ディレクトリから画像ファイルを集めています..."
 
-#: compare/embedding_prototype.py:126
+#: compare/embedding_prototype.py:129
 msgid "Calculating embeddings for {0} images..."
 msgstr "{0}枚の画像の埋め込みを計算中..."
 
-#: compare/embedding_prototype.py:150
+#: compare/embedding_prototype.py:153
 msgid "Processed {0}/{1} images..."
 msgstr "{0}/{1}枚の画像を処理しました..."
 
-#: compare/embedding_prototype.py:165
+#: compare/embedding_prototype.py:168
 msgid "Calculating average embedding..."
 msgstr "平均埋め込みを計算中..."
 
-#: compare/embedding_prototype.py:331
+#: compare/embedding_prototype.py:317
 msgid "Computed embeddings for {0}/{1} images..."
 msgstr "{0}/{1}画像の計算埋め込み..."
 
-#: compare/embedding_prototype.py:502
+#: compare/embedding_prototype.py:488
 msgid "Gathering image files from directories..."
 msgstr "ディレクトリから画像ファイルを集めています..."
 
-#: compare/embedding_prototype.py:537
+#: compare/embedding_prototype.py:523
 msgid "Processing {0} images in {1} batches of up to {2} images..."
 msgstr "{0}枚の画像を、最大{2}枚ずつ{1}バッチに分けて処理中..."
 
-#: compare/embedding_prototype.py:544
+#: compare/embedding_prototype.py:530
 msgid "Computing embeddings for batch prototype validation..."
 msgstr "バッチプロトタイプ検証のための埋め込みの計算..."
 
-#: compare/embedding_prototype.py:553
+#: compare/embedding_prototype.py:539
 msgid "Processing batch {0}/{1} ({2} images)..."
 msgstr "バッチ {0}/{1} の処理中（{2} 枚の画像）..."
 
-#: compare/embedding_prototype.py:599
+#: compare/embedding_prototype.py:585
 msgid "Found {0} images that meet the threshold..."
 msgstr "閾値を満たす画像を{0}枚見つけました..."
-
-#: compare/lookahead.py:98 compare/prevalidations_tab.py:275
-msgid "Edit Lookahead"
-msgstr "編集先読み"
-
-#: compare/lookahead.py:98
-msgid "Create Lookahead"
-msgstr "先読みを作成する"
-
-#: compare/lookahead.py:110
-msgid "Lookahead Name"
-msgstr "先読み名"
-
-#: compare/lookahead.py:121
-msgid "Reference existing prevalidation name"
-msgstr "既存の事前検証名を参照"
-
-#: compare/lookahead.py:134
-msgid "Prevalidation Name or Custom Text"
-msgstr "事前検証名またはカスタムテキスト"
-
-#: compare/prevalidations_tab.py:40
-msgid "Lookaheads (select from shared list)"
-msgstr "先読み（共有リストから選択）"
-
-#: compare/prevalidations_tab.py:49
-msgid "Select Lookaheads..."
-msgstr "先読みを選択..."
-
-#: compare/prevalidations_tab.py:59
-msgid "Directory Profile"
-msgstr "ディレクトリプロファイル"
-
-#: compare/prevalidations_tab.py:223
-msgid "Add prevalidation"
-msgstr "優先権を追加"
-
-#: compare/prevalidations_tab.py:225
-msgid "Clear prevalidations"
-msgstr "明確な優先順位"
-
-#: compare/prevalidations_tab.py:232 utils/help_and_config.py:254
-msgid "Enable Prevalidations"
-msgstr "プレバリデーションを有効にする"
-
-#: compare/prevalidations_tab.py:245
-msgid "Lookaheads"
-msgstr "先読み"
-
-#: compare/prevalidations_tab.py:272
-msgid "Add Lookahead"
-msgstr "先読みを追加"
-
-#: compare/prevalidations_tab.py:278
-msgid "Remove Lookahead"
-msgstr "先読みを削除"
-
-#: compare/prevalidations_tab.py:291
-msgid "{name} ({name_or_text}, threshold: {threshold:.2f})"
-msgstr "{name} ({name_or_text}, 閾値: {threshold:.2f})"
-
-#: compare/prevalidations_tab.py:340
-msgid "Directory Profiles"
-msgstr "ディレクトリプロファイル"
-
-#: compare/prevalidations_tab.py:367
-msgid "Add Profile"
-msgstr "プロフィールを追加"
-
-#: compare/prevalidations_tab.py:373
-msgid "Remove Profile"
-msgstr "プロフィールを削除"
-
-#: compare/prevalidations_tab.py:387
-msgid "directory"
-msgstr "ディレクトリ"
-
-#: compare/prevalidations_tab.py:451
-msgid "Profile"
-msgstr "ディレクトリプロファイル"
-
-#: compare/prevalidations_tab.py:476
-msgid "(Global)"
-msgstr "(グローバル)"
-
-#: compare/prevalidations_tab.py:492 files/hotkey_actions_window.py:96
-msgid "Set"
-msgstr "セット"
 
 #: extensions/sd_runner_client.py:67
 msgid "Image does not contain a prompt to redo!"
@@ -1700,277 +1116,6 @@ msgstr "上書きを確認"
 msgid "File overwrite cancelled"
 msgstr "ファイルの上書きがキャンセルされました"
 
-#: files/directory_notes_window.py:38
-msgid "Directory Notes - {0}"
-msgstr "ディレクトリのメモ - {0}"
-
-#: files/directory_notes_window.py:57
-msgid "Directory: {0}"
-msgstr "ディレクトリ: {0}"
-
-#: files/directory_notes_window.py:66
-msgid "Export to Text File"
-msgstr "テキストファイルにエクスポート"
-
-#: files/directory_notes_window.py:70
-msgid "Import from Text File"
-msgstr "テキストファイルからインポート"
-
-#: files/directory_notes_window.py:73
-msgid "Import from JSON File"
-msgstr "JSONファイルからのインポート"
-
-#: files/directory_notes_window.py:85
-msgid "MARKED FILES"
-msgstr "マーク付きファイル"
-
-#: files/directory_notes_window.py:95
-msgid "(No marked files)"
-msgstr "(マークされたファイルはありません)"
-
-#: files/directory_notes_window.py:105
-msgid "FILE NOTES"
-msgstr "ファイルノート"
-
-#: files/directory_notes_window.py:115
-msgid "(No file notes)"
-msgstr "(ファイルに関する注記なし)"
-
-#: files/directory_notes_window.py:142
-msgid "Removed marked file: {0}"
-msgstr "マークされたファイルを削除しました: {0}"
-
-#: files/directory_notes_window.py:148 files/directory_notes_window.py:217
-#: files/favorites_window.py:142
-msgid "Open"
-msgstr "オープンメディア"
-
-#: files/directory_notes_window.py:157 files/directory_notes_window.py:226
-msgid "Opened file: {0}"
-msgstr "ファイルを開きました：{0}"
-
-#: files/directory_notes_window.py:162 files/directory_notes_window.py:231
-msgid "Opened file in new window: {0}"
-msgstr "ファイルを新しいウィンドウで開きました: {0}"
-
-#: files/directory_notes_window.py:197
-msgid "Edit Note"
-msgstr "ノートを編集する"
-
-#: files/directory_notes_window.py:206
-msgid "Remove Note"
-msgstr "ノートを削除する"
-
-#: files/directory_notes_window.py:211
-msgid "Removed note for: {0}"
-msgstr "以下のメモを削除しました: {0}"
-
-#: files/directory_notes_window.py:320
-msgid "Export Directory Notes"
-msgstr "エクスポートディレクトリの注記"
-
-#: files/directory_notes_window.py:328
-msgid "Exported notes to: {0}"
-msgstr "エクスポートしたノート先: {0}"
-
-#: files/directory_notes_window.py:331
-msgid "Export Error"
-msgstr "エクスポートエラー"
-
-#: files/directory_notes_window.py:331
-msgid "Failed to export notes: {0}"
-msgstr "ノートをエクスポートできませんでした: {0}"
-
-#: files/directory_notes_window.py:338
-msgid "Import Marked Files from Text File"
-msgstr "テキストファイルからマーク付きファイルをインポートする"
-
-#: files/directory_notes_window.py:339
-msgid "Text files"
-msgstr "テキストファイル"
-
-#: files/directory_notes_window.py:339 files/directory_notes_window.py:377
-#: files/go_to_file.py:242
-msgid "All files"
-msgstr "すべてのファイル"
-
-#: files/directory_notes_window.py:348
-msgid "Import Options"
-msgstr "インポートのオプション"
-
-#: files/directory_notes_window.py:349
-msgid "Search recursively in subdirectories for matching filenames?"
-msgstr "サブディレクトリ内で一致するファイル名を再帰的に検索しますか？"
-
-#: files/directory_notes_window.py:356 files/directory_notes_window.py:388
-msgid "Imported {0} files."
-msgstr "{0}ファイルをインポートしました。"
-
-#: files/directory_notes_window.py:358
-msgid "{0} filenames not found:"
-msgstr "{0} ファイル名が見つかりません:"
-
-#: files/directory_notes_window.py:363 files/directory_notes_window.py:395
-#: files/file_actions_window.py:429
-msgid "... and {0} more"
-msgstr "...および{0}件以上"
-
-#: files/directory_notes_window.py:365 files/directory_notes_window.py:397
-msgid "Import Complete"
-msgstr "インポート完了"
-
-#: files/directory_notes_window.py:366 files/directory_notes_window.py:398
-msgid "Imported {0} marked files"
-msgstr "インポートされた {0} 個のマーク付きファイル"
-
-#: files/directory_notes_window.py:369 files/directory_notes_window.py:401
-msgid "Import Error"
-msgstr "インポートエラー"
-
-#: files/directory_notes_window.py:369
-msgid "Failed to import from text file: {0}"
-msgstr "テキストファイルからのインポートに失敗しました: {0}"
-
-#: files/directory_notes_window.py:376
-msgid "Import Marked Files from JSON File"
-msgstr "マークされたファイルをJSONファイルからインポートする"
-
-#: files/directory_notes_window.py:377
-msgid "JSON files"
-msgstr "JSONファイル"
-
-#: files/directory_notes_window.py:390
-msgid "{0} invalid or missing file paths:"
-msgstr "{0}つの無効または欠落しているファイルパス:"
-
-#: files/directory_notes_window.py:401
-msgid "Failed to import from JSON file: {0}"
-msgstr "JSONファイルからのインポートに失敗しました: {0}"
-
-#: files/favorites_window.py:51
-msgid "Added favorite: "
-msgstr "お気に入りに追加しました: "
-
-#: files/favorites_window.py:70
-msgid "Favorites"
-msgstr "お気に入り"
-
-#: files/favorites_window.py:125
-msgid ""
-"No favorites set.\n"
-"\n"
-"To add a favorite, right-click an image and select 'Add to Favorites'."
-msgstr ""
-"お気に入りが設定されていません。\n"
-"\n"
-"お気に入りに追加するには、画像の上で右クリックし、『お気に入りに追加』を選択してください。"
-
-#: files/favorites_window.py:148
-msgid "Remove Favorite"
-msgstr "お気に入りを削除する"
-
-#: files/favorites_window.py:174
-msgid "Opened favorite: "
-msgstr "お気に入りとして開いた: "
-
-#: files/favorites_window.py:179
-msgid "Opened favorite in new window: "
-msgstr "お気に入りを新しいウィンドウで開く: "
-
-#: files/favorites_window.py:187
-msgid "Removed favorite: "
-msgstr "お気に入りを削除しました: "
-
-#: files/file_actions_window.py:280
-msgid "File Actions"
-msgstr "ファイル操作"
-
-#: files/file_actions_window.py:308
-msgid "File Action History"
-msgstr "ファイル操作履歴"
-
-#: files/file_actions_window.py:310
-msgid "Search Image"
-msgstr "画像検索"
-
-#: files/file_actions_window.py:312
-msgid "Clear History"
-msgstr "明確な歴史"
-
-#: files/file_actions_window.py:346
-msgid "Today's File Actions"
-msgstr "本日のファイル操作"
-
-#: files/file_actions_window.py:346
-msgid "File Action Statistics"
-msgstr "ファイル操作統計"
-
-#: files/file_actions_window.py:353 files/file_actions_window.py:785
-msgid "All Time"
-msgstr "全時代"
-
-#: files/file_actions_window.py:353 files/file_actions_window.py:787
-msgid "Today Only"
-msgstr "本日限定"
-
-#: files/file_actions_window.py:360
-msgid "Target Directory"
-msgstr "ターゲットディレクトリ"
-
-#: files/file_actions_window.py:366 files/marked_file_mover.py:1148
-msgid "Moved"
-msgstr "移動する"
-
-#: files/file_actions_window.py:372 files/marked_file_mover.py:1148
-msgid "Copied"
-msgstr "コピッド"
-
-#: files/file_actions_window.py:378
-msgid "Total"
-msgstr "合計"
-
-#: files/file_actions_window.py:479
-msgid " ({0} files)"
-msgstr " ({0} ファイル)"
-
-#: files/file_actions_window.py:481
-msgid "(auto)"
-msgstr "(自動)"
-
-#: files/file_actions_window.py:486 files/marked_file_mover.py:322
-#: image/classifier_action_type.py:30
-msgid "Move"
-msgstr "交通アクセス"
-
-#: files/file_actions_window.py:486 files/marked_file_mover.py:329
-#: image/classifier_action_type.py:32
-msgid "Copy"
-msgstr "コピー"
-
-#: files/file_actions_window.py:489 files/file_actions_window.py:540
-msgid "Undo"
-msgstr "ログイン"
-
-#: files/file_actions_window.py:524
-msgid "View"
-msgstr "ニュース"
-
-#: files/file_actions_window.py:532
-msgid "Copy Filename"
-msgstr "ファイル名コピー"
-
-#: files/file_actions_window.py:565
-msgid "Image does not exist: "
-msgstr "画像が存在しません。 "
-
-#: files/file_actions_window.py:566 files/file_actions_window.py:577
-msgid "File Action Error"
-msgstr "ファイルアクションエラー"
-
-#: files/file_actions_window.py:576
-msgid "Images not found"
-msgstr "見つからない画像"
-
 #: files/file_browser.py:155 files/file_browser.py:167
 #: files/file_browser.py:179
 msgid " (try setting recursive to True)"
@@ -2001,412 +1146,123 @@ msgstr "file_browser.find() に指定された検索テキストが無効でし�
 msgid "No files found"
 msgstr "ファイルが見つかりませんでした"
 
-#: files/go_to_file.py:99 files/go_to_file.py:118
-msgid "Go To File"
-msgstr "ファイルに移動"
-
-#: files/go_to_file.py:134
-msgid "Go To"
-msgstr "行け"
-
-#: files/go_to_file.py:141 utils/help_and_config.py:177
-msgid "Go To Last Moved"
-msgstr "最後移動箇所へ移動"
-
-#: files/go_to_file.py:148
-msgid "Go to closest file if exact match not found"
-msgstr "完全一致が見つからない場合は、最も近いファイルに移動する"
-
-#: files/go_to_file.py:159
-msgid "Go to file by index (1-based)"
-msgstr "インデックス（1ベース）でファイルに移動"
-
-#: files/go_to_file.py:188
-msgid "Invalid search string, please enter some text."
-msgstr "検索文字列が無効です。"
-
-#: files/go_to_file.py:204
-msgid "Index navigation enabled but input is not a valid number."
-msgstr "インデックスナビゲーションは有効ですが、入力された数値は無効です。"
-
-#: files/go_to_file.py:224
-msgid "Supported files"
-msgstr "対応ファイル"
-
-#: files/go_to_file.py:228
-msgid "Image files"
-msgstr "画像ファイル"
-
-#: files/go_to_file.py:231
-msgid "Video files"
-msgstr "動画ファイル"
-
-#: files/go_to_file.py:233
-msgid "GIF files"
-msgstr "GIFファイル"
-
-#: files/go_to_file.py:235
-msgid "PDF files"
-msgstr "PDFファイル"
-
-#: files/go_to_file.py:237
-msgid "SVG files"
-msgstr "SVGファイル"
-
-#: files/go_to_file.py:239
-msgid "HTML files"
-msgstr "HTMLファイル"
-
-#: files/go_to_file.py:246
-msgid "Select file to go to"
-msgstr "移動先のファイルを選択してください"
-
-#: files/go_to_file.py:265
-msgid "No last moved image found."
-msgstr "最後に移動したメディアファイルが見つかりませんでした。"
-
-#: files/go_to_file.py:300
-msgid "Sort by for closest search:"
-msgstr "最も近い検索で並べ替え:"
-
-#: files/go_to_file.py:335
-msgid "Find Related Filenames"
-msgstr "関連ファイル名を探す"
-
-#: files/go_to_file.py:340
-msgid ""
-"Enter a base ID manually or click 'Extract from filename' to auto-extract "
-"from the filename above."
-msgstr "ベースIDを手動で入力するか、「ファイル名から抽出」をクリックして上記のファイル名から自動抽出してください。"
-
-#: files/go_to_file.py:350
-msgid "Base ID:"
-msgstr "ベースID:"
-
-#: files/go_to_file.py:362
-msgid "Extract from filename"
-msgstr "ファイル名からの抽出"
-
-#: files/go_to_file.py:370
-msgid "Target Directory:"
-msgstr "対象ディレクトリ："
-
-#: files/go_to_file.py:385 utils/help_and_config.py:179
-msgid "Current Media"
-msgstr "現在のメディア"
-
-#: files/go_to_file.py:388
-msgid "Find Related"
-msgstr "関連するものを検索"
-
-#: files/go_to_file.py:448
-msgid "Loading current media and searching..."
-msgstr "現在のメディアを読み込んで検索中..."
-
-#: files/go_to_file.py:460
-msgid ""
-"Current media filename loaded. Select a target directory to find related "
-"filenames."
-msgstr "現在読み込まれたメディアファイル名。関連ファイル名を探す対象ディレクトリを選択してください。"
-
-#: files/go_to_file.py:462
-msgid "No active media file found in the current window."
-msgstr "現在のウィンドウにアクティブなメディアファイルが見つかりません。"
-
-#: files/go_to_file.py:464
-msgid "Error getting current media filename: {}"
-msgstr "現在のメディアファイル名の取得中にエラーが発生しました: {}"
-
-#: files/go_to_file.py:518
-msgid "Please enter a filename first."
-msgstr "まずファイル名を入力してください。"
-
-#: files/go_to_file.py:524
-msgid "Base ID extracted: {}"
-msgstr "抽出されたベースID: {}"
-
-#: files/go_to_file.py:526
-msgid "Could not extract base ID from filename. Please enter it manually."
-msgstr "ファイル名からベースIDを抽出できませんでした。手動で入力してください。"
-
-#: files/go_to_file.py:527
-msgid "Could not extract base ID. Please enter it manually."
-msgstr "基本IDを抽出できませんでした。手動で入力してください。"
-
-#: files/go_to_file.py:535
-msgid "Please enter a base ID or extract it from a filename."
-msgstr "ベースIDを入力するか、ファイル名から抽出してください。"
-
-#: files/go_to_file.py:539
-msgid "Please select a target directory to search in."
-msgstr "検索対象のディレクトリを選択してください。"
-
-#: files/go_to_file.py:543
-msgid "Target directory does not exist."
-msgstr "ターゲットディレクトリが存在しません。"
-
-#: files/go_to_file.py:563
-msgid "Found {} related filenames"
-msgstr "{}に関連するファイル名を検出しました"
-
-#: files/go_to_file.py:566
-msgid "No related filenames found with base ID \"{0}\" in {1}"
-msgstr "ベースID 「{0}」 に関連するファイル名が {1} で見つかりませんでした"
-
-#: files/go_to_file.py:683
-msgid ""
-"The directory '{0}' contains many files ({1} files found so far). Searching "
-"may take a while. Do you want to proceed?"
-msgstr ""
-"ディレクトリ 『{0}』 には多数のファイルが含まれています（これまでに {1} "
-"個のファイルが見つかりました）。検索には時間がかかる場合があります。続行しますか？"
-
-#: files/go_to_file.py:684
-msgid "Large Directory"
-msgstr "大規模ディレクトリ"
-
-#: files/go_to_file.py:693
-msgid "Search cancelled by user."
-msgstr "ユーザーにより検索がキャンセルされました。"
-
-#: files/go_to_file.py:729
-msgid "Error searching directory: {}"
-msgstr "ディレクトリ検索エラー: {}"
-
-#: files/go_to_file.py:741
-msgid "Opening file: {}"
-msgstr "ファイルを開きます: {}"
-
-#: files/hotkey_actions_window.py:27
-msgid "Hotkey Actions"
-msgstr "ホットキーアクション"
-
-#: files/hotkey_actions_window.py:50
-msgid "Key name"
-msgstr "キー名"
-
-#: files/hotkey_actions_window.py:54
-msgid "Target directory"
-msgstr "対象ディレクトリ"
-
-#: files/hotkey_actions_window.py:86 files/hotkey_actions_window.py:91
-msgid "(unset)"
-msgstr "(未設定)"
-
-#: files/marked_file_mover.py:96 files/marked_file_mover.py:1039
+#: files/marked_files.py:78 files/marked_files.py:497
 msgid "Marks cleared."
 msgstr "マークはクリア。"
 
-#: files/marked_file_mover.py:103
+#: files/marked_files.py:98
 msgid "Set current marks from previous."
 msgstr "前のマークから現在のマークを設定する。"
 
-#: files/marked_file_mover.py:103
+#: files/marked_files.py:98
 msgid "Total set: {0}"
 msgstr "合計セット {0}"
 
-#: files/marked_file_mover.py:130
+#: files/marked_files.py:148
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "パーマネントマークターゲットが設定されていない！\n"
 "MarksウィンドウのCtrl+Tで設定します。"
 
-#: files/marked_file_mover.py:142
+#: files/marked_files.py:164
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "{0}にホットキーアクションが設定されていません。\n"
 "マークスウィンドウの {1} で設定します。"
 
-#: files/marked_file_mover.py:187 files/marked_file_mover.py:198
-msgid "Move {0} Marked File(s)"
-msgstr "{0} つのマークされたファイルを移動しますか？"
-
-#: files/marked_file_mover.py:267 files/recent_directory_window.py:230
-msgid "Set a new target directory"
-msgstr "新しいターゲットディレクトリを設定する"
-
-#: files/marked_file_mover.py:269
-msgid "MOVE"
-msgstr "ムーヴ"
-
-#: files/marked_file_mover.py:273
-msgid "COPY"
-msgstr "コピー"
-
-#: files/marked_file_mover.py:275
-msgid "DELETE"
-msgstr "削除"
-
-#: files/marked_file_mover.py:277 files/recent_directory_window.py:234
-msgid "Add directories from parent"
-msgstr "親からディレクトリを追加する"
-
-#: files/marked_file_mover.py:280 files/recent_directory_window.py:236
-msgid "Clear targets"
-msgstr "明確な目標"
-
-#: files/marked_file_mover.py:282 files/pdf_options_window.py:80
-msgid "Create PDF"
-msgstr "PDFを作成する"
-
-#: files/marked_file_mover.py:349
-msgid ""
-"WARNING: This action sets hotkey actions that will be used for future file "
-"operations. You may have accidentally triggered this shortcut due to a "
-"sticky Control key. Please confirm you want to proceed."
-msgstr ""
-"警告: "
-"この操作は、今後のファイル操作に使用されるホットキーアクションを設定します。Controlキーが粘着状態になっているため、誤ってこのショートカットを起動した可能性があります。続行することを確認してください。"
-
-#: files/marked_file_mover.py:355 files/marked_file_mover.py:361
-msgid "Recording next mark target and action."
-msgstr "记录下一个标记目标和行动。"
-
-#: files/marked_file_mover.py:374 files/recent_directory_window.py:280
-msgid "Invalid directory: %s"
-msgstr "無効なディレクトリです： {0}"
-
-#: files/marked_file_mover.py:377
-msgid "Select target directory for marked files"
-msgstr "マークされたファイルのターゲットディレクトリを選択"
-
-#: files/marked_file_mover.py:432
+#: files/marked_files.py:195
 msgid "Moving"
 msgstr "アクセス"
 
-#: files/marked_file_mover.py:432
+#: files/marked_files.py:195
 msgid "Copying"
 msgstr "コピー"
 
-#: files/marked_file_mover.py:472
+#: files/marked_files.py:259
 msgid "Moved {0} files to {1}"
 msgstr ""
 "{0}ファイルを\n"
 "{1}に移動"
 
-#: files/marked_file_mover.py:474
+#: files/marked_files.py:261
 msgid "Copied {0} files to {1}"
 msgstr ""
 "{0}つのファイルを\n"
 "{1}にコピー"
 
-#: files/marked_file_mover.py:545
+#: files/marked_files.py:332
 msgid "Existing filenames match!"
 msgstr "既存のファイル名が一致する！"
 
-#: files/marked_file_mover.py:547
+#: files/marked_files.py:334
 msgid "WARNING: Exact file match."
 msgstr "警告：ファイルの完全一致。"
 
-#: files/marked_file_mover.py:549
+#: files/marked_files.py:336
 msgid "INFO: Target files with different EXIF data replaced."
 msgstr "INFO: 異なるEXIFデータを持つ対象ファイルが置換されました。"
 
-#: files/marked_file_mover.py:551 files/marked_file_mover.py:949
+#: files/marked_files.py:338 files/marked_files.py:461
 msgid "WARNING: Short filenames."
 msgstr "警告:短いファイル名。"
 
-#: files/marked_file_mover.py:575
+#: files/marked_files.py:362
 msgid "Moving back"
 msgstr "移動バック"
 
-#: files/marked_file_mover.py:575
+#: files/marked_files.py:362
 msgid "Removing"
 msgstr "リムーブ"
 
-#: files/marked_file_mover.py:576
+#: files/marked_files.py:363
 msgid "Moved back"
 msgstr "戻る"
 
-#: files/marked_file_mover.py:576
+#: files/marked_files.py:363
 msgid "Removed"
 msgstr "削除"
 
-#: files/marked_file_mover.py:583
-msgid "Where should the marked files have gone?"
-msgstr "マークされたファイルはどこに行くべきだったのか？"
-
-#: files/marked_file_mover.py:608
+#: files/marked_files.py:406
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "{1}\n"
 "から{0}ファイル戻し"
 
-#: files/marked_file_mover.py:610
+#: files/marked_files.py:408
 msgid "Removed {0} files from {1}"
 msgstr ""
 "{1}\n"
 "から{0}つのファイルを削除"
 
-#: files/marked_file_mover.py:628 files/recent_directory_window.py:332
-msgid "Select parent directory for target directories"
-msgstr "対象ディレクトリの親ディレクトリを選択"
-
-#: files/marked_file_mover.py:820
-msgid "Sorted directories by embedding comparison."
-msgstr "比較を埋め込むことでソートされたディレクトリ。"
-
-#: files/marked_file_mover.py:842
-msgid "Confirm Delete"
-msgstr "削除を確認する"
-
-#: files/marked_file_mover.py:843
-msgid "Deleting %s marked files - Are you sure you want to proceed?"
-msgstr "{0}マークされたファイルを削除する - 続行したいですか?"
-
-#: files/marked_file_mover.py:864
-msgid "Delete Failed"
-msgstr "失敗した削除"
-
-#: files/marked_file_mover.py:865
-msgid "Failed to delete %s files - check log for details."
-msgstr "{0}ファイルを削除する失敗 - 詳細はログを確認してください。"
-
-#: files/marked_file_mover.py:868
-msgid "Deleted %s marked files."
-msgstr "削除された {0} マークされたファイル。"
-
-#: files/marked_file_mover.py:939
+#: files/marked_files.py:451
 msgid "Existing filenames found!"
 msgstr "既存のファイル名が見つかります!"
 
-#: files/marked_file_mover.py:941
+#: files/marked_files.py:453
 msgid "WARNING: All file hashes match."
 msgstr "警告:すべてのファイルハッシュマッチ。"
 
-#: files/marked_file_mover.py:943
+#: files/marked_files.py:455
 msgid "WARNING: %s of %s file hashes match."
 msgstr "警告: {1} ファイルのハッシュマッチの {0}。"
 
-#: files/marked_file_mover.py:945
+#: files/marked_files.py:457
 msgid "INFO: %s files have identical content but different EXIF data."
 msgstr "INFO: %s 個のファイルが同一の内容を持ちながら、異なる EXIF データを持っています。"
 
-#: files/marked_file_mover.py:947
+#: files/marked_files.py:459
 msgid "WARNING: All files are either identical or have matching content."
 msgstr "警告：すべてのファイルは同一であるか、内容が一致しています。"
 
-#: files/marked_file_mover.py:953
+#: files/marked_files.py:465
 msgid "No existing filenames found."
 msgstr "既存のファイル名が見つかりません。"
 
-#: files/marked_file_mover.py:981
-msgid "Found %s downstream related images"
-msgstr "{0}下流関連画像が見つかりました"
-
-#: files/marked_file_mover.py:983
-msgid "No downstream related images found"
-msgstr "下流関連画像が見つかりません"
-
-#: files/marked_file_mover.py:997
-msgid "Cleared marked file"
-msgstr "マークされたファイルをクリア"
-
-#: files/marked_file_mover.py:1041
+#: files/marked_files.py:499
 msgid "Removed {0} marks"
 msgstr "{0}マークを削除"
 
-#: files/marked_file_mover.py:1084
+#: files/marked_files.py:532
 msgid ""
 "WARNING: You just copied this file to this directory, and now you're trying to move it here.\n"
 "\n"
@@ -2426,59 +1282,2200 @@ msgstr ""
 "\n"
 "続行して元のファイルを削除しますか？"
 
-#: files/marked_file_mover.py:1091
+#: files/marked_files.py:538
 msgid "Potential Mistake Detected"
 msgstr "潜在的な誤りを検出した"
 
-#: files/marked_file_mover.py:1118
+#: files/marked_files.py:568
 msgid "Removed marked file from source: {0}"
 msgstr "ソースからマークされたファイルを削除しました: {0}"
 
-#: files/pdf_creator.py:41
+#: files/marked_files.py:612 ui/files/file_actions_window_qt.py:222
+#: ui_tk/files/file_actions_window.py:130
+msgid "Moved"
+msgstr "移動する"
+
+#: files/marked_files.py:612 ui/files/file_actions_window_qt.py:222
+#: ui_tk/files/file_actions_window.py:136
+msgid "Copied"
+msgstr "コピッド"
+
+#: files/pdf_creator.py:44
 msgid "No files to create PDF"
 msgstr "PDFを作成するファイルはありません"
 
-#: files/pdf_creator.py:49 files/pdf_options_window.py:52
+#: files/pdf_creator.py:52 ui/files/pdf_options_window_qt.py:86
+#: ui_tk/files/pdf_options_window.py:52
 msgid "combined_images"
 msgstr "合成画像"
 
-#: files/pdf_creator.py:58
-msgid "Save PDF as"
-msgstr "PDF形式で保存"
-
-#: files/pdf_creator.py:129
+#: files/pdf_creator.py:128
 msgid "compressed"
 msgstr "圧縮"
 
-#: files/pdf_creator.py:129
+#: files/pdf_creator.py:128
 msgid "high quality"
 msgstr "高品質"
 
-#: files/pdf_creator.py:130
+#: files/pdf_creator.py:129
 msgid "Created {0} PDF with {1} pages"
 msgstr "{1}ページの{0}PDFを作成"
 
-#: files/pdf_creator.py:133
+#: files/pdf_creator.py:132
 msgid "No pages could be added to the PDF"
 msgstr "PDFにページが追加できなかった"
 
-#: files/pdf_creator.py:137
+#: files/pdf_creator.py:136
 msgid "PDF creation requires pypdfium2 package"
 msgstr "PDF作成にはpypdfium2パッケージが必要です"
 
-#: files/pdf_options_window.py:31 files/pdf_options_window.py:42
+#: image/image_data_extractor.py:430
+msgid "(Unable to parse image prompt information for this file.)"
+msgstr "(このファイルの画像プロンプト情報の解析に失敗しました。)"
+
+#: lib/caps_lock_mixin.py:64 ui/auth/password_dialog.py:61
+msgid "⚠ Caps Lock is ON"
+msgstr "⚠ キャプスロックがオンになっています"
+
+#: lib/custom_dialogs.py:69 lib/custom_dialogs_qt.py:128 lib/qt_alert.py:27
+#: ui/auth/app_startup_auth_qt.py:79 ui/auth/password_dialog.py:200
+#: ui_tk/auth/app_startup_auth.py:124 ui_tk/auth/password_dialog.py:149
+msgid "OK"
+msgstr "オーケー"
+
+#: lib/qt_alert.py:29
+msgid "Yes"
+msgstr "はい"
+
+#: lib/qt_alert.py:30
+msgid "No"
+msgstr "ノー"
+
+#: ui/help_and_config_qt.py:71 utils/help_and_config.py:35
+msgid "Main Window Shortcuts"
+msgstr "メインウィンドウのショートカット"
+
+#: ui/help_and_config_qt.py:74 ui/help_and_config_qt.py:143
+#: ui/help_and_config_qt.py:187 utils/help_and_config.py:42
+#: utils/help_and_config.py:125 utils/help_and_config.py:176
+msgid "Command"
+msgstr "コマンド"
+
+#: ui/help_and_config_qt.py:74 ui/help_and_config_qt.py:143
+#: ui/help_and_config_qt.py:187 utils/help_and_config.py:42
+#: utils/help_and_config.py:125 utils/help_and_config.py:176
+msgid "Description"
+msgstr "コンテンツ"
+
+#: ui/help_and_config_qt.py:75 utils/help_and_config.py:43
+msgid "Search current image in new window"
+msgstr "新しいウィンドウで現在の画像を検索"
+
+#: ui/help_and_config_qt.py:76 utils/help_and_config.py:44
+msgid "Return to Browsing mode"
+msgstr "ブラウジングモードに戻る"
+
+#: ui/help_and_config_qt.py:77 utils/help_and_config.py:45
+msgid "Copy marks list"
+msgstr "マークリストのコピー"
+
+#: ui/help_and_config_qt.py:78 utils/help_and_config.py:46
+msgid "Set current marks from previous marks list"
+msgstr "前のマークリストから現在のマークを設定する"
+
+#: ui/help_and_config_qt.py:79 utils/help_and_config.py:48
+msgid "Open Favorites window"
+msgstr "お気に入りウィンドウを開く"
+
+#: ui/help_and_config_qt.py:80 utils/help_and_config.py:49
+msgid "Open Go to file window"
+msgstr "オープン ファイルウィンドウに移動"
+
+#: ui/help_and_config_qt.py:81 utils/help_and_config.py:50
+msgid "Hide/show sidebar"
+msgstr "サイドバーを非表示/表示"
+
+#: ui/help_and_config_qt.py:82 utils/help_and_config.py:51
+msgid "Open hotkeys window (*when marks window open)"
+msgstr "ホットキーウィンドウを開きます(*マークウィンドウが開きます)"
+
+#: ui/help_and_config_qt.py:83 utils/help_and_config.py:52
+msgid "Open content filters window"
+msgstr "コンテンツフィルターウィンドウを開く"
+
+#: ui/help_and_config_qt.py:84 utils/help_and_config.py:53
+msgid "Open marks window (no GUI)"
+msgstr "マークウィンドウを開く(GUIなし)"
+
+#: ui/help_and_config_qt.py:85 utils/help_and_config.py:54
+msgid "Open marks window"
+msgstr "マークウィンドウを開く"
+
+#: ui/help_and_config_qt.py:86 utils/help_and_config.py:55
+msgid "Open marks action history window"
+msgstr "マークアクション履歴ウィンドウを開く"
+
+#: ui/help_and_config_qt.py:87 utils/help_and_config.py:56
+msgid "Quit"
+msgstr "ログイン"
+
+#: ui/help_and_config_qt.py:88 utils/help_and_config.py:57
+msgid "Open security configuration window"
+msgstr "セキュリティ設定ウィンドウを開く"
+
+#: ui/help_and_config_qt.py:89 utils/help_and_config.py:58
+msgid "Run previous marks action"
+msgstr "前のマークアクションを実行する"
+
+#: ui/help_and_config_qt.py:90 utils/help_and_config.py:47
+msgid "Run penultimate marks action"
+msgstr "貫通マークアクションを実行"
+
+#: ui/help_and_config_qt.py:91
+msgid "Run third-most-recent marks action"
+msgstr "実行 第三最新 素番号アクション。"
+
+#: ui/help_and_config_qt.py:92 utils/help_and_config.py:59
+msgid "Continue image generation"
+msgstr "画像生成の継続"
+
+#: ui/help_and_config_qt.py:93 utils/help_and_config.py:60
+msgid "Cancel image generation"
+msgstr "画像生成をキャンセル"
+
+#: ui/help_and_config_qt.py:94 utils/help_and_config.py:91
+msgid "Toggle slideshow"
+msgstr "トグルスライドショー"
+
+#: ui/help_and_config_qt.py:95 utils/help_and_config.py:61
+msgid "Run next text embedding search preset"
+msgstr "次のテキスト埋め込み検索プリセットを実行します"
+
+#: ui/help_and_config_qt.py:96 utils/help_and_config.py:62
+msgid "Run permanent marks action"
+msgstr "永久的な印の行為を実行して下さい"
+
+#: ui/help_and_config_qt.py:97 utils/help_and_config.py:63
+msgid "Open type configuration window"
+msgstr "タイプ構成ウィンドウを開く"
+
+#: ui/help_and_config_qt.py:98 utils/help_and_config.py:64
+msgid "Open new compare window"
+msgstr "新しい比較ウィンドウを開く"
+
+#: ui/help_and_config_qt.py:99 utils/help_and_config.py:65
+msgid "Move previous marks to a different directory"
+msgstr "前のマークを別のディレクトリに移動する"
+
+#: ui/help_and_config_qt.py:100 ui/help_and_config_qt.py:130
+#: utils/help_and_config.py:66 utils/help_and_config.py:96
+msgid "Undo previous marks changes"
+msgstr "前のマークが変更されない"
+
+#: ui/help_and_config_qt.py:101 utils/help_and_config.py:67
+msgid "Toggle fullscreen"
+msgstr "フルスクリーンをトグル"
+
+#: ui/help_and_config_qt.py:102 utils/help_and_config.py:68
+msgid "Go to first sorted image"
+msgstr "最初にソートされた画像に移動"
+
+#: ui/help_and_config_qt.py:103 utils/help_and_config.py:69
+msgid "Go to last sorted image"
+msgstr "最後の並べ替え画像に移動"
+
+#: ui/help_and_config_qt.py:104 utils/help_and_config.py:70
+msgid "Show previous/next image"
+msgstr "前の画像/次の画像を表示"
+
+#: ui/help_and_config_qt.py:105 utils/help_and_config.py:71
+msgid "Page through images"
+msgstr "サイトマップ"
+
+#: ui/help_and_config_qt.py:106 utils/help_and_config.py:72
+msgid "Search current image in current window"
+msgstr "現在のウィンドウで現在の画像を検索"
+
+#: ui/help_and_config_qt.py:107 utils/help_and_config.py:73
+msgid "Clear all hidden images"
+msgstr "すべての隠された画像をクリア"
+
+#: ui/help_and_config_qt.py:108 utils/help_and_config.py:74
+msgid "Clear marks list"
+msgstr "クリアマークリスト"
+
+#: ui/help_and_config_qt.py:109 utils/help_and_config.py:75
+msgid "Show image details"
+msgstr "画像の詳細を表示"
+
+#: ui/help_and_config_qt.py:110 utils/help_and_config.py:76
+msgid "Delete image (or marked file group if marks window selected)"
+msgstr "削除イメージ(またはマークされたファイルグループを選択した場合)"
+
+#: ui/help_and_config_qt.py:111 utils/help_and_config.py:77
+msgid "Delete current base directory and all contents"
+msgstr "現在のベースディレクトリとすべてのコンテンツを削除します"
+
+#: ui/help_and_config_qt.py:112 utils/help_and_config.py:78
+msgid "Go to next mark"
+msgstr "次のマークへ"
+
+#: ui/help_and_config_qt.py:113 utils/help_and_config.py:79
+msgid "Show help window"
+msgstr "ヘルプウィンドウを表示"
+
+#: ui/help_and_config_qt.py:114 utils/help_and_config.py:80
+msgid "Run image generation"
+msgstr "画像生成を実行"
+
+#: ui/help_and_config_qt.py:115 utils/help_and_config.py:81
+msgid "Open context menu"
+msgstr "コンテキストメニューを開く"
+
+#: ui/help_and_config_qt.py:116 utils/help_and_config.py:82
+msgid "Run content filters for all files in the current directory"
+msgstr "現在のディレクトリ内のすべてのファイルに対してコンテンツフィルタを実行する"
+
+#: ui/help_and_config_qt.py:117 utils/help_and_config.py:83
+msgid "View last moved image mark"
+msgstr "最終移動イメージマークを見る"
+
+#: ui/help_and_config_qt.py:118 utils/help_and_config.py:84
+msgid "Toggle content filters"
+msgstr "コンテンツフィルタの切り替え"
+
+#: ui/help_and_config_qt.py:119 utils/help_and_config.py:85
+msgid "Add or remove a mark for current image"
+msgstr "現在の画像のマークの追加または削除"
+
+#: ui/help_and_config_qt.py:120 utils/help_and_config.py:86
+msgid ""
+"Add all marks between most recently set and current selected inclusive, or "
+"all marks in current group"
+msgstr "最近設定したすべてのマークと、現在のグループで選択したすべてのマークを追加します。"
+
+#: ui/help_and_config_qt.py:122 utils/help_and_config.py:88
+msgid "Open image in GIMP"
+msgstr "GIMPで画像を開く"
+
+#: ui/help_and_config_qt.py:123 utils/help_and_config.py:89
+msgid "Randomly modify image"
+msgstr "ランダムに画像を変更"
+
+#: ui/help_and_config_qt.py:124 utils/help_and_config.py:90
+msgid "View related image (controlnet, etc.)"
+msgstr "関連画像(コントロールネットなど)を見る"
+
+#: ui/help_and_config_qt.py:125
+msgid "Capture screenshot"
+msgstr "画面をキャプチャーする"
+
+#: ui/help_and_config_qt.py:126 utils/help_and_config.py:92
+msgid "Find related images in open window"
+msgstr "開いたウィンドウで関連画像を探す"
+
+#: ui/help_and_config_qt.py:127 utils/help_and_config.py:93
+msgid "Run refacdir"
+msgstr "refacdir を実行"
+
+#: ui/help_and_config_qt.py:128 utils/help_and_config.py:94
+msgid "Hide current image"
+msgstr "現在のイメージを隠す"
+
+#: ui/help_and_config_qt.py:129 utils/help_and_config.py:95
+msgid "Set marks from downstream related images"
+msgstr "下流関連画像からマークを設定する"
+
+#: ui/help_and_config_qt.py:131 utils/help_and_config.py:97
+msgid "Show previous/next group"
+msgstr "前のグループを表示"
+
+#: ui/help_and_config_qt.py:140 utils/help_and_config.py:118
+msgid "Image Details Shortcuts"
+msgstr "画像詳細ショートカット"
+
+#: ui/help_and_config_qt.py:144 ui/image/image_details_qt.py:310
+#: ui_tk/image/image_details.py:171 utils/help_and_config.py:126
+msgid "Crop Image (Smart Detect)"
+msgstr "作物のイメージ(スマートな検出)"
+
+#: ui/help_and_config_qt.py:145 ui/image/image_details_qt.py:306
+#: ui_tk/image/image_details.py:166 utils/help_and_config.py:127
+msgid "Rotate Image Left"
+msgstr "左にイメージを回転させる"
+
+#: ui/help_and_config_qt.py:146 ui/image/image_details_qt.py:307
+#: ui_tk/image/image_details.py:167 utils/help_and_config.py:128
+msgid "Rotate Image Right"
+msgstr "画像を右に回転させる"
+
+#: ui/help_and_config_qt.py:147 ui/image/image_details_qt.py:311
+#: ui_tk/image/image_details.py:172 utils/help_and_config.py:129
+msgid "Enhance Image"
+msgstr "イメージの強化"
+
+#: ui/help_and_config_qt.py:148 ui/image/image_details_qt.py:314
+#: ui_tk/image/image_details.py:176 utils/help_and_config.py:130
+msgid "Random Crop"
+msgstr "ランダムクロップ"
+
+#: ui/help_and_config_qt.py:149 utils/help_and_config.py:131
+msgid "Randomly Modify Image"
+msgstr "画像をランダムに変更する"
+
+#: ui/help_and_config_qt.py:150 ui/image/image_details_qt.py:318
+#: ui_tk/image/image_details.py:181 utils/help_and_config.py:132
+msgid "Flip Image Horizontally"
+msgstr "横のフリップ イメージ"
+
+#: ui/help_and_config_qt.py:151 ui/image/image_details_qt.py:319
+#: ui_tk/image/image_details.py:182 utils/help_and_config.py:133
+msgid "Flip Image Vertically"
+msgstr "縦にフリップ イメージ"
+
+#: ui/help_and_config_qt.py:152 ui/image/image_details_qt.py:326
+#: ui_tk/image/image_details.py:185 utils/help_and_config.py:134
+msgid "Copy Without EXIF"
+msgstr "EXIFなしコピー"
+
+#: ui/help_and_config_qt.py:153 ui/image/image_details_qt.py:327
+#: ui_tk/image/image_details.py:187 utils/help_and_config.py:135
+msgid "Convert to JPG"
+msgstr "JPGに変換"
+
+#: ui/help_and_config_qt.py:154 ui/image/image_details_qt.py:330
+#: ui_tk/image/image_details.py:190 utils/help_and_config.py:136
+msgid "Show Metadata"
+msgstr "メタデータを表示する"
+
+#: ui/help_and_config_qt.py:155 ui/image/image_details_qt.py:334
+#: ui_tk/image/image_details.py:196 utils/help_and_config.py:137
+msgid "Open Related Image"
+msgstr "関連する画像を開く"
+
+#: ui/help_and_config_qt.py:157 ui/image/image_details_qt.py:356
+#: ui_tk/image/image_details.py:218 utils/constants.py:215
+#: utils/help_and_config.py:139
+msgid "Redo Prompt"
+msgstr "Redoのプロンプト"
+
+#: ui/help_and_config_qt.py:164 utils/help_and_config.py:152
+msgid ""
+"Note: Using Ctrl instead of Shift marks the created file and opens the marks"
+" window without GUI."
+msgstr "注：Shiftキーの代わりにCtrlキーを使用すると、作成されたファイルにマークを付け、GUIなしでマークウィンドウを開きます。"
+
+#: ui/help_and_config_qt.py:184 utils/help_and_config.py:169
+msgid "Go To File Shortcuts"
+msgstr "ファイルへのショートカット"
+
+#: ui/files/go_to_file_qt.py:277 ui/help_and_config_qt.py:188
+#: ui_tk/files/go_to_file.py:141 utils/help_and_config.py:177
+msgid "Go To Last Moved"
+msgstr "最後移動箇所へ移動"
+
+#: ui/help_and_config_qt.py:189 utils/help_and_config.py:178
+msgid "Browse File"
+msgstr "ファイルを参照"
+
+#: ui/files/go_to_file_qt.py:388 ui/help_and_config_qt.py:190
+#: ui_tk/files/go_to_file.py:385 utils/help_and_config.py:179
+msgid "Current Media"
+msgstr "現在のメディア"
+
+#: ui/help_and_config_qt.py:191 utils/help_and_config.py:180
+msgid "Find Related Files"
+msgstr "関連ファイルを検索する"
+
+#: ui/help_and_config_qt.py:192 utils/help_and_config.py:181
+msgid "Extract Base ID"
+msgstr "ベースIDの抽出"
+
+#: ui/help_and_config_qt.py:193 utils/help_and_config.py:182
+msgid "Browse Directory"
+msgstr "ディレクトリを閲覧する"
+
+#: ui/help_and_config_qt.py:202
+msgid "Config Settings"
+msgstr "設定"
+
+#: ui/help_and_config_qt.py:206 utils/help_and_config.py:244
+msgid "Show Toasts"
+msgstr "トーストショー"
+
+#: ui/help_and_config_qt.py:209 utils/help_and_config.py:246
+msgid "Slideshow Interval (sec)"
+msgstr "スライドショーインターバル(秒)"
+
+#: ui/help_and_config_qt.py:212 utils/help_and_config.py:248
+msgid "File Check Interval (sec)"
+msgstr "ファイル更新間隔 (秒)"
+
+#: ui/help_and_config_qt.py:215 utils/help_and_config.py:250
+msgid "Max Search Results"
+msgstr "最高の検索結果"
+
+#: ui/help_and_config_qt.py:219 utils/help_and_config.py:252
+msgid "Sort By"
+msgstr "並び替え"
+
+#: ui/compare/prevalidations_tab_qt.py:279 ui/help_and_config_qt.py:227
+#: ui_tk/compare/prevalidations_tab.py:236 utils/help_and_config.py:254
+msgid "Enable Prevalidations"
+msgstr "プレバリデーションを有効にする"
+
+#: ui/help_and_config_qt.py:230 utils/help_and_config.py:256
+msgid "Toasts Persist (sec)"
+msgstr "トースト・ペルシスト(秒)"
+
+#: ui/help_and_config_qt.py:233 utils/help_and_config.py:258
+msgid "Title Notify Persist (sec)"
+msgstr "タイトル ペルシストを通知 (秒)"
+
+#: ui/help_and_config_qt.py:236 utils/help_and_config.py:260
+msgid "Delete Instantly"
+msgstr "即時削除"
+
+#: ui/help_and_config_qt.py:239 utils/help_and_config.py:262
+msgid "Trash Folder"
+msgstr "ゴミ箱フォルダ"
+
+#: ui/help_and_config_qt.py:242 utils/help_and_config.py:264
+msgid "Image Tagging Enabled"
+msgstr "画像タグ有効"
+
+#: ui/help_and_config_qt.py:245 utils/help_and_config.py:266
+msgid "Escape Backslash Filepaths"
+msgstr "ファイルパスのバックスラッシュをエスケープする"
+
+#: ui/help_and_config_qt.py:250
+msgid "Large Image Threshold (px)"
+msgstr "大型画像閾値（ピクセル）"
+
+#: ui/help_and_config_qt.py:253
+msgid "Large Preview Overscan"
+msgstr "大 プレビュー オーバースキャン"
+
+#: ui/help_and_config_qt.py:256
+msgid "Large Preview Max Dimension"
+msgstr "大型プレビュー 最大次元"
+
+#: ui/help_and_config_qt.py:259
+msgid "Large Image HQ Idle Downscale"
+msgstr "大画像 HQ アイドル ダウンスケール"
+
+#: ui/help_and_config_qt.py:262
+msgid "Large Image Full-Res Promotion"
+msgstr "大型画像フルレゾリューションプロモーション"
+
+#: ui/help_and_config_qt.py:265
+msgid "Large HQ Downscale Ratio Threshold"
+msgstr "大型本社ダウンスケールレートしきい値"
+
+#: ui/help_and_config_qt.py:268
+msgid "Large Promotion Min Free RAM (GB)"
+msgstr "大型キャンペ〖］ 最小無料RDRAM (GB)"
+
+#: ui/help_and_config_qt.py:271
+msgid "Large Promotion Max Estimated (MB)"
+msgstr "大型広告 最大見積 (MB)"
+
+#: ui/help_and_config_qt.py:274
+msgid "Large Promotion RAM Fraction"
+msgstr "大型キャンペ〖eon〗R.A.M.のパーツ"
+
+#: ui/help_and_config_qt.py:279
+msgid "Skip File Check If Files Over"
+msgstr "ファイルが超過した場合にファイルチェックをスキップします。"
+
+#: ui/help_and_config_qt.py:282
+msgid "Screenshot Directory"
+msgstr "スクリーンショット ディレクトリ"
+
+#: ui/help_and_config_qt.py:285
+msgid "Save Screenshot To Same Dir"
+msgstr "スクリーンショットを同じディレクトリに保存する"
+
+#: ui/app_window/app_window.py:533
+msgid "Set Title Bar Color..."
+msgstr "SetTitleBarColor..."
+
+#: ui/app_window/app_window.py:542
+msgid "Clear Title Bar Color"
+msgstr "透明にするタイトルバーの色"
+
+#: ui/app_window/app_window.py:555
+msgid "No directory loaded."
+msgstr "ディレクトリがロードされていません。"
+
+#: ui/app_window/app_window.py:562
+msgid "Choose Title Bar Color"
+msgstr "タイトルバーの色を選択する"
+
+#: ui/app_window/app_window.py:570
+msgid "Title bar color set for this directory."
+msgstr "このディレクトリのタイトルバーのカラー設定。"
+
+#: ui/app_window/app_window.py:585
+msgid "Title bar color cleared for this directory."
+msgstr "このディレクトリのタイトルバーclrされました。"
+
+#: ui/app_window/app_window.py:626 ui/app_window/sidebar_panel.py:93
+msgid "Enter base directory..."
+msgstr "基本ディレクトリ... を入力してください。"
+
+#: ui/app_window/app_window.py:630 ui/files/recent_directory_window_qt.py:163
+#: ui_tk/files/recent_directory_window.py:178
+msgid "Set image comparison directory"
+msgstr "画像比較ディレクトリの設定"
+
+#: ui/app_window/app_window.py:926
+msgid "Screenshots are available for videos and animated GIF files."
+msgstr "スクリーンショットは、動画とアニメーションGIFファイルに対応しています。"
+
+#: ui/app_window/app_window.py:936 ui/app_window/app_window.py:951
+msgid "Screenshot Failed"
+msgstr "スクリーンショット失敗しました。"
+
+#: ui/app_window/app_window.py:937
+msgid ""
+"Unable to create screenshot directory:\n"
+"{0}\n"
+"\n"
+"{1}"
+msgstr ""
+"スクリーンショットディレクトリを作成できません：\n"
+"{0}\n"
+"\n"
+"{1}"
+
+#: ui/app_window/app_window.py:952
+msgid ""
+"Unable to save screenshot.\n"
+"\n"
+"{0}"
+msgstr ""
+"スクリーンショットを保存できません。\n"
+"\n"
+"{0}"
+
+#: ui/app_window/app_window.py:958
+msgid ""
+"Screenshot saved to:\n"
+"{0}"
+msgstr ""
+"スクリーンショットが保存されました:\n"
+"{0}"
+
+#: ui/app_window/context_menu_builder.py:167
+msgid "Copy file path"
+msgstr "ファイルパスをコピーする"
+
+#: ui/app_window/context_menu_builder.py:171
+msgid "Copy file name"
+msgstr "ファイル名コピー"
+
+#: ui/app_window/context_menu_builder.py:175
+msgid "Open file location"
+msgstr "ファイルの場所を開く"
+
+#: ui/app_window/context_menu_builder.py:190
+#: ui/compare/classifier_actions_tab_qt.py:204
+#: ui/compare/prevalidations_tab_qt.py:498
+#: ui_tk/compare/classifier_actions_tab.py:227
+#: ui_tk/compare/prevalidations_tab.py:518 utils/constants.py:387
+msgid "Delete"
+msgstr "削除"
+
+#: ui/app_window/media_frame.py:246 ui/app_window/media_frame.py:1046
+msgid "Album art"
+msgstr "アルバム アート"
+
+#: ui/app_window/media_frame.py:757
+msgid "Video: "
+msgstr "ビデオ： "
+
+#: ui/app_window/media_frame.py:918
+msgid "No output path provided."
+msgstr "出力パスが指定されていませんでした。"
+
+#: ui/app_window/media_frame.py:922
+msgid "VLC player is unavailable."
+msgstr "vlcプレーヤーはご利用いただけません。"
+
+#: ui/app_window/media_frame.py:926
+msgid "VLC snapshot operation failed."
+msgstr "VLCのスナップショット操作が失敗しました。"
+
+#: ui/app_window/media_frame.py:931
+msgid "Snapshot file was not created."
+msgstr "スナップショットファイルが作成されませんでした。"
+
+#: ui/app_window/media_frame.py:942
+msgid "No GIF frame available for screenshot."
+msgstr "スクリーンショットにGIFフレームが利用できません。"
+
+#: ui/app_window/media_frame.py:948
+msgid "Failed to save GIF frame image."
+msgstr "GIF フレーム画像の保存に失敗しました。"
+
+#: ui/app_window/media_frame.py:951
+msgid "No time-based media is currently active."
+msgstr "現在、タイムベースメディアがありません。"
+
+#: ui/app_window/search_controller.py:195 ui_tk/files/go_to_file.py:228
+msgid "Image files"
+msgstr "画像ファイル"
+
+#: ui/app_window/sidebar_panel.py:141
+msgid "Search image path..."
+msgstr "画像パスを検索する..."
+
+#: ui/auth/app_startup_auth_qt.py:28 ui/auth/app_startup_auth_qt.py:41
+#: ui_tk/auth/app_startup_auth.py:32 ui_tk/auth/app_startup_auth.py:92
+msgid "Application Password Required"
+msgstr "ソフトウェア・アプリケーションのパスワードが必要"
+
+#: ui/auth/app_startup_auth_qt.py:49 ui_tk/auth/app_startup_auth.py:99
+msgid "A password is required to open this application."
+msgstr "このアプリケーションを開くにはパスワードが必要です。"
+
+#: ui/auth/app_startup_auth_qt.py:56 ui/auth/password_dialog.py:178
+#: ui_tk/auth/app_startup_auth.py:108 ui_tk/auth/password_dialog.py:133
+msgid "Password:"
+msgstr "パスワード :"
+
+#: ui/auth/app_startup_auth_qt.py:124 ui/auth/password_dialog.py:306
+#: ui_tk/auth/app_startup_auth.py:141 ui_tk/auth/password_dialog.py:249
+msgid "Incorrect password"
+msgstr "パスワードの誤り"
+
+#: ui/auth/password_admin_window.py:38 ui/auth/password_admin_window.py:53
+#: ui/auth/password_admin_window.py:86 ui/auth/password_admin_window.py:290
+#: ui_tk/auth/password_admin_window.py:194
+#: ui_tk/auth/password_admin_window.py:383
+#: ui_tk/auth/password_admin_window.py:398
+#: ui_tk/auth/password_admin_window.py:458
+msgid "Change Password"
+msgstr "パスワードの変更"
+
+#: ui/auth/password_admin_window.py:60 ui_tk/auth/password_admin_window.py:405
+msgid "Current Password:"
+msgstr "現在のパスワード："
+
+#: ui/auth/password_admin_window.py:67 ui/auth/password_admin_window.py:306
+#: ui_tk/auth/password_admin_window.py:214
+#: ui_tk/auth/password_admin_window.py:414
+msgid "New Password:"
+msgstr "新しいパスワード"
+
+#: ui/auth/password_admin_window.py:74 ui_tk/auth/password_admin_window.py:423
+msgid "Confirm New Password:"
+msgstr "新しいパスワードを確認する："
+
+#: ui/auth/password_admin_window.py:99 ui_tk/auth/password_admin_window.py:440
+msgid "Current password is incorrect."
+msgstr "現在のパスワードが間違っています。"
+
+#: ui/auth/password_admin_window.py:103
+#: ui_tk/auth/password_admin_window.py:444
+msgid "New passwords do not match."
+msgstr "新しいパスワードが一致しない。"
+
+#: ui/auth/password_admin_window.py:107 ui/auth/password_admin_window.py:471
+#: ui_tk/auth/password_admin_window.py:366
+#: ui_tk/auth/password_admin_window.py:448
+msgid "Password must be at least 6 characters long."
+msgstr "パスワードは6文字以上でなければなりません。"
+
+#: ui/auth/password_admin_window.py:115 ui/auth/password_admin_window.py:118
+#: ui_tk/auth/password_admin_window.py:453
+msgid "Password changed successfully."
+msgstr "パスワードの変更に成功しました。"
+
+#: ui/auth/password_admin_window.py:118 ui/auth/password_admin_window.py:539
+msgid "Info"
+msgstr "情報"
+
+#: ui/auth/password_admin_window.py:122
+#: ui_tk/auth/password_admin_window.py:456
+msgid "Failed to change password."
+msgstr "パスワードの変更に失敗しました。"
+
+#: ui/auth/password_admin_window.py:127 ui/auth/password_admin_window.py:531
+msgid "Administration Error"
+msgstr "管理エラー"
+
+#: ui/auth/password_admin_window.py:144 ui_tk/auth/password_admin_window.py:34
+msgid "Password Administration"
+msgstr "パスワード管理"
+
+#: ui/auth/password_admin_window.py:189 ui_tk/auth/password_admin_window.py:84
+msgid "Password Protection Settings"
+msgstr "パスワード保護設定"
+
+#: ui/auth/password_admin_window.py:201 ui_tk/auth/password_admin_window.py:96
+msgid "Protected Actions"
+msgstr "保護された行為"
+
+#: ui/auth/password_admin_window.py:209
+#: ui_tk/auth/password_admin_window.py:102
+msgid "Select which actions require password authentication:"
+msgstr "パスワード認証が必要なアクションを選択します："
+
+#: ui/auth/password_admin_window.py:225
+#: ui_tk/auth/password_admin_window.py:118
+msgid "(Always protected if a password is set)"
+msgstr "(パスワードが設定されている場合は常に保護されます）"
+
+#: ui/auth/password_admin_window.py:241
+#: ui_tk/auth/password_admin_window.py:137
+msgid "Session Timeout Settings"
+msgstr "セッションタイムアウトの設定"
+
+#: ui/auth/password_admin_window.py:249
+#: ui_tk/auth/password_admin_window.py:143
+msgid "Enable session timeout (remember password for a period)"
+msgstr "セッションタイムアウトを有効にする（一定期間パスワードを記憶する）"
+
+#: ui/auth/password_admin_window.py:258
+#: ui_tk/auth/password_admin_window.py:155
+msgid "Session timeout duration (minutes):"
+msgstr "セッションのタイムアウト時間（分）："
+
+#: ui/auth/password_admin_window.py:268
+#: ui_tk/auth/password_admin_window.py:164
+msgid "Security Advice Settings"
+msgstr "セキュリティ アドバイス設定"
+
+#: ui/auth/password_admin_window.py:273
+#: ui_tk/auth/password_admin_window.py:170
+msgid "Show security advice when no password is configured"
+msgstr "パスワードが設定されていない場合にセキュリティに関するアドバイスを表示する"
+
+#: ui/auth/password_admin_window.py:279
+#: ui_tk/auth/password_admin_window.py:178
+msgid "Password Setup"
+msgstr "パスワード設定"
+
+#: ui/auth/password_admin_window.py:286
+#: ui_tk/auth/password_admin_window.py:188
+msgid "Password is configured"
+msgstr "パスワードが設定されている"
+
+#: ui/auth/password_admin_window.py:294 ui/auth/password_admin_window.py:497
+#: ui_tk/auth/password_admin_window.py:199
+#: ui_tk/auth/password_admin_window.py:471
+msgid "Remove Password"
+msgstr "パスワードの削除"
+
+#: ui/auth/password_admin_window.py:298
+#: ui_tk/auth/password_admin_window.py:204
+msgid "Set up a password to enable protection:"
+msgstr "パスワードを設定して保護を有効にする："
+
+#: ui/auth/password_admin_window.py:317
+#: ui_tk/auth/password_admin_window.py:227
+msgid "Confirm Password:"
+msgstr "パスワードの確認:"
+
+#: ui/auth/password_admin_window.py:325
+#: ui_tk/auth/password_admin_window.py:236
+msgid "Set Password"
+msgstr "パスワードの設定"
+
+#: ui/auth/password_admin_window.py:338 ui/auth/password_admin_window.py:404
+#: ui_tk/auth/password_admin_window.py:246
+#: ui_tk/auth/password_admin_window.py:305
+msgid "Reset to Defaults"
+msgstr "デフォルトにリセット"
+
+#: ui/auth/password_admin_window.py:342 ui/auth/password_admin_window.py:430
+#: ui_tk/auth/password_admin_window.py:250
+#: ui_tk/auth/password_admin_window.py:330
+msgid "Set to Current"
+msgstr "カレントに設定"
+
+#: ui/auth/password_admin_window.py:346
+#: ui_tk/auth/password_admin_window.py:254
+msgid "Export Cache as JSON"
+msgstr "キャッシュをJSONとしてエクスポートする"
+
+#: ui/auth/password_admin_window.py:350
+#: ui_tk/auth/password_admin_window.py:258
+msgid "Save Settings"
+msgstr "設定を保存する"
+
+#: ui/auth/password_admin_window.py:354 ui/files/directory_picker_dialog.py:62
+#: ui_tk/auth/password_admin_window.py:262
+msgid "Close"
+msgstr "閉じる"
+
+#: ui/auth/password_admin_window.py:396
+#: ui_tk/auth/password_admin_window.py:299
+msgid "Password protection settings saved."
+msgstr "パスワード保護設定を保存。"
+
+#: ui/auth/password_admin_window.py:405
+#: ui_tk/auth/password_admin_window.py:306
+msgid ""
+"Are you sure you want to reset all password protection settings to their "
+"default values?"
+msgstr "すべてのパスワード保護設定をデフォルト値にリセットしてもよろしいですか？"
+
+#: ui/auth/password_admin_window.py:423
+#: ui_tk/auth/password_admin_window.py:325
+msgid "Settings reset to defaults."
+msgstr "設定がデフォルトにリセットされる。"
+
+#: ui/auth/password_admin_window.py:431
+#: ui_tk/auth/password_admin_window.py:331
+msgid ""
+"Are you sure you want to restore all settings to their current saved state? "
+"This will discard any unsaved changes."
+msgstr "すべての設定を現在の保存状態に戻してもよろしいですか？これで保存されていない変更は破棄されます。"
+
+#: ui/auth/password_admin_window.py:448
+#: ui_tk/auth/password_admin_window.py:349
+msgid "Settings restored to current saved state."
+msgstr "設定を現在の保存状態に戻す。"
+
+#: ui/auth/password_admin_window.py:459
+#: ui_tk/auth/password_admin_window.py:358
+msgid "Please enter a password."
+msgstr "パスワードを入力してください。"
+
+#: ui/auth/password_admin_window.py:465
+#: ui_tk/auth/password_admin_window.py:362
+msgid "Passwords do not match."
+msgstr "パスワードが一致しない。"
+
+#: ui/auth/password_admin_window.py:477
+#: ui_tk/auth/password_admin_window.py:371
+msgid "Password set successfully."
+msgstr "パスワードの設定に成功しました。"
+
+#: ui/auth/password_admin_window.py:483
+#: ui_tk/auth/password_admin_window.py:378
+msgid "Failed to set password."
+msgstr "パスワードの設定に失敗しました。"
+
+#: ui/auth/password_admin_window.py:498
+#: ui_tk/auth/password_admin_window.py:472
+msgid ""
+"Are you sure you want to remove password protection? This will disable all "
+"password requirements."
+msgstr "本当にパスワード保護を解除しますか？これにより、すべてのパスワード要件が無効になります。"
+
+#: ui/auth/password_admin_window.py:505
+#: ui_tk/auth/password_admin_window.py:478
+msgid "Password removed successfully."
+msgstr "パスワードは正常に削除されました。"
+
+#: ui/auth/password_admin_window.py:509
+#: ui_tk/auth/password_admin_window.py:482
+msgid "Failed to remove password."
+msgstr "パスワードの削除に失敗しました。"
+
+#: ui/auth/password_admin_window.py:549
+#: ui_tk/auth/password_admin_window.py:517
+msgid "Cache exported as JSON to:"
+msgstr "キャッシュはJSONとしてエクスポートされる："
+
+#: ui/auth/password_admin_window.py:553
+#: ui_tk/auth/password_admin_window.py:519
+msgid "Failed to export cache as JSON:"
+msgstr "キャッシュを JSON としてエクスポートできませんでした："
+
+#: ui/auth/password_dialog.py:97 ui/auth/password_dialog.py:152
+#: ui_tk/auth/password_dialog.py:45 ui_tk/auth/password_dialog.py:103
+msgid "Password Required"
+msgstr "パスワードが必要"
+
+#: ui/auth/password_dialog.py:99 ui_tk/auth/password_dialog.py:45
+msgid "Password Protection"
+msgstr "パスワード保護"
+
+#: ui/auth/password_dialog.py:160 ui_tk/auth/password_dialog.py:110
+msgid "Password required for: {0}"
+msgstr "パスワードが必要です： {0}"
+
+#: ui/auth/password_dialog.py:207 ui_tk/auth/password_dialog.py:158
+msgid "Password Protection Available"
+msgstr "パスワード保護あり"
+
+#: ui/auth/password_dialog.py:215 ui_tk/auth/password_dialog.py:165
+msgid "This action requires password protection: {0}"
+msgstr "このアクションにはパスワード保護が必要です： {0}"
+
+#: ui/auth/password_dialog.py:234 ui_tk/auth/password_dialog.py:181
+msgid "Password protection is not currently configured. You can:"
+msgstr "パスワード保護は現在設定されていません。できます："
+
+#: ui/auth/password_dialog.py:243 ui_tk/auth/password_dialog.py:191
+msgid "• Configure password protection for sensitive actions"
+msgstr "• 重要なアクションのパスワード保護を設定する"
+
+#: ui/auth/password_dialog.py:251 ui_tk/auth/password_dialog.py:196
+msgid "• Continue without password protection (less secure)"
+msgstr "• パスワード保護なしで続ける（安全性が低い）"
+
+#: ui/auth/password_dialog.py:258 ui_tk/auth/password_dialog.py:203
+msgid "Don't show this security advice again"
+msgstr "このセキュリティに関するアドバイスを再び表示しない"
+
+#: ui/auth/password_dialog.py:270 ui_tk/auth/password_dialog.py:217
+msgid "Continue Without Protection"
+msgstr "保護なしで続ける"
+
+#: ui/auth/password_dialog.py:273 ui/auth/password_dialog.py:291
+#: ui_tk/auth/password_dialog.py:213 ui_tk/auth/password_dialog.py:234
+msgid "Configure Protection"
+msgstr "プロテクションの設定"
+
+#: ui/auth/password_dialog.py:279 ui_tk/auth/password_dialog.py:225
+msgid ""
+"Password protection is required for this action but is not currently "
+"configured."
+msgstr "このアクションにはパスワード保護が必要だが、現在は設定されていない。"
+
+#: ui/compare/classifier_action_copy_window_qt.py:64
+#: ui_tk/compare/classifier_action_copy_window.py:51
+msgid "Copy Classifier Action / Prevalidation"
+msgstr "コピー 分類器 アクション / 事前検証"
+
+#: ui/compare/classifier_action_copy_window_qt.py:111
+#: ui_tk/compare/classifier_action_copy_window.py:82
+msgid "Copying from:"
+msgstr "コピー元："
+
+#: ui/compare/classifier_action_copy_window_qt.py:134
+#: ui_tk/compare/classifier_action_copy_window.py:109
+msgid "Copy to:"
+msgstr "コピーへ:"
+
+#: ui/compare/classifier_action_copy_window_qt.py:140
+#: ui_tk/compare/classifier_action_copy_window.py:114
+msgid "Target Type:"
+msgstr "ターゲットタイプ："
+
+#: ui/compare/classifier_action_copy_window_qt.py:156
+#: ui_tk/compare/classifier_action_copy_window.py:137
+msgid "New Name:"
+msgstr "新しい名前："
+
+#: ui/compare/classifier_action_copy_window_qt.py:170
+#: ui/compare/classifier_actions_tab_qt.py:200
+#: ui/compare/prevalidations_tab_qt.py:492
+#: ui/files/file_actions_window_qt.py:316 ui/files/marked_file_mover_qt.py:307
+#: ui_tk/compare/classifier_action_copy_window.py:156
+#: ui_tk/compare/classifier_actions_tab.py:219
+#: ui_tk/compare/prevalidations_tab.py:511
+#: ui_tk/files/file_actions_window.py:250 ui_tk/files/marked_file_mover.py:215
+#: utils/constants.py:385
+msgid "Copy"
+msgstr "コピー"
+
+#: ui/compare/classifier_action_copy_window_qt.py:227
+#: ui_tk/compare/classifier_action_copy_window.py:227
+msgid "Name cannot be empty"
+msgstr "名前は空けておくことができません。"
+
+#: ui/compare/classifier_action_copy_window_qt.py:236
+#: ui_tk/compare/classifier_action_copy_window.py:242
+msgid "A {0} with this name already exists"
+msgstr "{0}はすでにこの名称で存在しています。"
+
+#: ui/compare/classifier_actions_tab_qt.py:102
+#: ui_tk/compare/classifier_actions_tab.py:109
+msgid "Add Classifier Action"
+msgstr "分類器アクションを追加"
+
+#: ui/compare/classifier_actions_tab_qt.py:106
+#: ui_tk/compare/classifier_actions_tab.py:111
+msgid "Clear Classifier Actions"
+msgstr "分類器アクションをクリア"
+
+#: ui/compare/classifier_actions_tab_qt.py:110
+#: ui_tk/compare/classifier_actions_tab.py:113
+msgid "Run All"
+msgstr "すべて実行"
+
+#: ui/compare/classifier_actions_tab_qt.py:119
+#: ui_tk/compare/classifier_actions_tab.py:117
+msgid "Run on Profile:"
+msgstr "プロファイル上で実行:"
+
+#: ui/compare/classifier_actions_tab_qt.py:167
+#: ui/compare/prevalidations_tab_qt.py:449
+#: ui_tk/compare/classifier_actions_tab.py:152
+#: ui_tk/compare/prevalidations_tab.py:458
+msgid "Active"
+msgstr "アクティブ"
+
+#: ui/compare/classifier_actions_tab_qt.py:167
+#: ui/compare/classifier_management_window_qt.py:100
+#: ui/compare/prevalidations_tab_qt.py:448
+#: ui_tk/compare/classifier_actions_tab.py:156
+#: ui_tk/compare/prevalidations_tab.py:449 utils/constants.py:133
+#: utils/constants.py:148
+msgid "Name"
+msgstr "お名前 (必須)"
+
+#: ui/compare/classifier_actions_tab_qt.py:167
+#: ui/compare/classifier_management_window_qt.py:204
+#: ui/compare/prevalidations_tab_qt.py:448
+#: ui_tk/compare/classifier_actions_tab.py:160
+#: ui_tk/compare/classifier_management_window.py:163
+#: ui_tk/compare/prevalidations_tab.py:452
+msgid "Action"
+msgstr "アクション"
+
+#: ui/compare/classifier_actions_tab_qt.py:178
+#: ui_tk/compare/classifier_actions_tab.py:182
+msgid "Run"
+msgstr "実行"
+
+#: ui/compare/classifier_actions_tab_qt.py:196
+#: ui/compare/prevalidations_tab_qt.py:486
+#: ui/files/file_actions_window_qt.py:331
+#: ui/files/file_actions_window_qt.py:377
+#: ui_tk/compare/classifier_actions_tab.py:211
+#: ui_tk/compare/prevalidations_tab.py:504
+#: ui_tk/files/file_actions_window.py:261
+#: ui_tk/files/file_actions_window.py:312
+msgid "Modify"
+msgstr "変更する"
+
+#: ui/compare/classifier_actions_tab_qt.py:208
+#: ui/compare/prevalidations_tab_qt.py:504
+#: ui_tk/compare/classifier_actions_tab.py:235
+#: ui_tk/compare/prevalidations_tab.py:525
+msgid "Move down"
+msgstr "移動する"
+
+#: ui/compare/classifier_actions_tab_qt.py:297
+#: ui/compare/prevalidations_tab_qt.py:379
+#: ui_tk/compare/classifier_actions_tab.py:304
+#: ui_tk/compare/classifier_actions_tab.py:370
+#: ui_tk/compare/prevalidations_tab.py:391
+msgid "directories"
+msgstr "ディレクトリ"
+
+#: ui/compare/classifier_actions_tab_qt.py:305
+#: ui_tk/compare/classifier_actions_tab.py:310
+msgid "Run classifier action '{0}' on the following directories?"
+msgstr "以下のディレクトリで分類器アクション 『{0}』 を実行しますか？"
+
+#: ui/compare/classifier_actions_tab_qt.py:310
+#: ui_tk/compare/classifier_actions_tab.py:314
+msgid "Run Classifier Action"
+msgstr "分類器アクションを実行"
+
+#: ui/compare/classifier_actions_tab_qt.py:338
+#: ui_tk/compare/classifier_actions_tab.py:354
+msgid "No active classifier actions to run"
+msgstr "実行中の分類器アクションはありません"
+
+#: ui/compare/classifier_actions_tab_qt.py:343
+#: ui_tk/compare/classifier_actions_tab.py:378
+msgid "Run {0} active classifier action(s) on the following directories?"
+msgstr "以下のディレクトリで {0} 個のアクティブな分類器アクションを実行しますか？"
+
+#: ui/compare/classifier_actions_tab_qt.py:351
+#: ui_tk/compare/classifier_actions_tab.py:382
+msgid "Run All Classifier Actions"
+msgstr "すべての分類器アクションを実行"
+
+#: ui/compare/classifier_management_window_qt.py:77
+#: ui/compare/prevalidations_tab_qt.py:67
+#: ui_tk/compare/classifier_management_window.py:53
+#: ui_tk/compare/prevalidations_tab.py:30
+msgid "Modify Prevalidation"
+msgstr "無効化の修正"
+
+#: ui/compare/classifier_management_window_qt.py:78
+#: ui/compare/prevalidations_tab_qt.py:68
+#: ui_tk/compare/classifier_management_window.py:54
+#: ui_tk/compare/prevalidations_tab.py:30
+msgid "Prevalidation Name"
+msgstr "バリデーション名"
+
+#: ui/compare/classifier_management_window_qt.py:81
+#: ui_tk/compare/classifier_management_window.py:57
+msgid "Modify Classifier Action"
+msgstr "分類器アクションの変更"
+
+#: ui/compare/classifier_management_window_qt.py:82
+#: ui_tk/compare/classifier_management_window.py:58
+msgid "Classifier Action Name"
+msgstr "分類器アクション名"
+
+#: ui/compare/classifier_management_window_qt.py:101
+msgid "New"
+msgstr "ニュー"
+
+#: ui/compare/classifier_management_window_qt.py:146
+#: ui_tk/compare/classifier_management_window.py:96
+msgid "Positives"
+msgstr "ポジティブ"
+
+#: ui/compare/classifier_management_window_qt.py:153
+#: ui_tk/compare/classifier_management_window.py:104
+msgid "Negatives"
+msgstr "ネガティブ"
+
+#: ui/compare/classifier_management_window_qt.py:160
+#: ui_tk/compare/classifier_management_window.py:112
+msgid "Validation Types"
+msgstr "バリデーション・タイプ"
+
+#: ui/compare/classifier_management_window_qt.py:161
+#: ui_tk/compare/classifier_management_window.py:115
+msgid "Use Text Embeddings"
+msgstr "テキスト埋め込みを使用する"
+
+#: ui/compare/classifier_management_window_qt.py:167
+#: ui_tk/compare/classifier_management_window.py:122
+msgid "Use Image Classifier"
+msgstr "画像分類器を使う"
+
+#: ui/compare/classifier_management_window_qt.py:173
+#: ui_tk/compare/classifier_management_window.py:129
+msgid "Use Prompts"
+msgstr "プロンプトの使用"
+
+#: ui/compare/classifier_management_window_qt.py:179
+#: ui_tk/compare/classifier_management_window.py:138
+msgid "Use Embedding Prototype"
+msgstr "埋め込みプロトタイプを使用する"
+
+#: ui/compare/classifier_management_window_qt.py:186
+#: ui_tk/compare/classifier_management_window.py:147
+msgid "Text Embedding Threshold"
+msgstr "テキスト埋め込みの閾値"
+
+#: ui/compare/classifier_management_window_qt.py:195
+#: ui_tk/compare/classifier_management_window.py:155
+msgid "Embedding Prototype Threshold"
+msgstr "埋め込みプロトタイプの閾値"
+
+#: ui/compare/classifier_management_window_qt.py:213
+#: ui_tk/compare/classifier_management_window.py:175
+msgid "Action Modifier"
+msgstr "アクション修飾子"
+
+#: ui/compare/classifier_management_window_qt.py:219
+#: ui_tk/compare/classifier_management_window.py:183
+msgid "Image Classifier Name"
+msgstr "画像分類器名"
+
+#: ui/compare/classifier_management_window_qt.py:231
+#: ui_tk/compare/classifier_management_window.py:196
+msgid "Image Classifier Selected Category"
+msgstr "画像分類器 選択されたカテゴリー"
+
+#: ui/compare/classifier_management_window_qt.py:241
+#: ui_tk/compare/classifier_management_window.py:242
+msgid "Prototype Directory"
+msgstr "プロトタイプ用ディレクトリ"
+
+#: ui/compare/classifier_management_window_qt.py:246
+#: ui/compare/classifier_management_window_qt.py:264
+#: ui/files/go_to_file_qt.py:273 ui/files/go_to_file_qt.py:381
+#: ui_tk/compare/classifier_management_window.py:257
+#: ui_tk/compare/classifier_management_window.py:295
+#: ui_tk/files/go_to_file.py:137 ui_tk/files/go_to_file.py:378
+msgid "Browse..."
+msgstr "閲覧..."
+
+#: ui/compare/classifier_management_window_qt.py:253
+#: ui_tk/compare/classifier_management_window.py:265
+msgid "Force Recalculate Prototype"
+msgstr "プロトタイプの再計算を強制"
+
+#: ui/compare/classifier_management_window_qt.py:259
+#: ui_tk/compare/classifier_management_window.py:275
+msgid "Negative Prototype Directory (Optional)"
+msgstr "ネガティブプロトタイプ用ディレクトリ（オプション）"
+
+#: ui/compare/classifier_management_window_qt.py:271
+#: ui_tk/compare/classifier_management_window.py:305
+msgid "Negative Prototype Weight (λ)"
+msgstr "負の原型の重み（λ）"
+
+#: ui/compare/classifier_management_window_qt.py:285
+#: ui_tk/compare/classifier_management_window.py:215
+msgid "Should Run"
+msgstr "実行すべき"
+
+#: ui/compare/classifier_management_window_qt.py:286
+#: ui_tk/compare/classifier_management_window.py:218
+msgid "Enable this classifier action"
+msgstr "この分類器アクションを有効にする"
+
+#: ui/compare/classifier_management_window_qt.py:292
+#: ui/compare/directory_profile_window_qt.py:135
+#: ui/compare/lookahead_window_qt.py:153
+#: ui_tk/compare/classifier_management_window.py:227
+#: ui_tk/compare/lookahead_window.py:102
+#: ui_tk/files/directory_profile_window.py:99
+msgid "Done"
+msgstr "完了"
+
+#: ui/compare/classifier_management_window_qt.py:377
+#: ui_tk/compare/classifier_management_window.py:488
+msgid "Select Prototype Directory"
+msgstr "プロトタイプ用ディレクトリを選択"
+
+#: ui/compare/classifier_management_window_qt.py:384
+#: ui_tk/compare/classifier_management_window.py:499
+msgid "Select Negative Prototype Directory"
+msgstr "ネガティブプロトタイプ用ディレクトリを選択"
+
+#: ui/compare/classifier_management_window_qt.py:434
+#: ui_tk/compare/classifier_management_window.py:560
+msgid "Prototypes recalculated successfully"
+msgstr "プロトタイプが正常に再計算されました"
+
+#: ui/compare/classifier_management_window_qt.py:511
+#: ui_tk/compare/classifier_management_window.py:592
+msgid "Classifier Management"
+msgstr "分類器管理"
+
+#: ui/compare/classifier_management_window_qt.py:536
+#: ui/compare/prevalidations_tab_qt.py:268
+#: ui_tk/compare/classifier_management_window.py:620
+#: ui_tk/compare/prevalidations_tab.py:221
+msgid "Prevalidations"
+msgstr "事前検証"
+
+#: ui/compare/classifier_management_window_qt.py:542
+#: ui_tk/compare/classifier_management_window.py:635
+msgid ""
+"Prevalidations are disabled. Enable them in the Prevalidations tab settings."
+msgstr "事前検証は無効になっています。事前検証タブの設定で有効にしてください。"
+
+#: ui/compare/compare_settings_window_qt.py:134
+#: ui_tk/compare/compare_settings_window.py:70
+msgid "Comparison Modes"
+msgstr "比較モード"
+
+#: ui/compare/compare_settings_window_qt.py:149
+#: ui_tk/compare/compare_settings_window.py:102
+msgid "Add Instance"
+msgstr "インスタンスを追加"
+
+#: ui/compare/compare_settings_window_qt.py:157
+#: ui_tk/compare/compare_settings_window.py:122
+msgid "Combination Logic:"
+msgstr "組み合わせ論理："
+
+#: ui/compare/compare_settings_window_qt.py:194
+#: ui/compare/lookahead_window_qt.py:131
+#: ui_tk/compare/compare_settings_window.py:183
+#: ui_tk/compare/lookahead_window.py:95
+msgid "Threshold"
+msgstr "しきい値"
+
+#: ui/compare/compare_settings_window_qt.py:207
+#: ui_tk/compare/compare_settings_window.py:223
+msgid "Max files to compare"
+msgstr "比較する最大ファイル"
+
+#: ui/compare/compare_settings_window_qt.py:225
+#: ui_tk/compare/compare_settings_window.py:247
+msgid "Compare faces"
+msgstr "顔の比較"
+
+#: ui/compare/compare_settings_window_qt.py:233
+#: ui_tk/compare/compare_settings_window.py:257
+msgid "Overwrite cache"
+msgstr "キャッシュを上書き"
+
+#: ui/compare/compare_settings_window_qt.py:241
+#: ui_tk/compare/compare_settings_window.py:267
+msgid "Store checkpoints"
+msgstr "ストアチェックポイント"
+
+#: ui/compare/compare_settings_window_qt.py:256
+#: ui_tk/compare/compare_settings_window.py:296
+msgid "Filters (Applied Before Comparison)"
+msgstr "フィルター（比較前に適用）"
+
+#: ui/compare/compare_settings_window_qt.py:262
+#: ui_tk/compare/compare_settings_window.py:310
+msgid "Size Filter:"
+msgstr "サイズフィルター:"
+
+#: ui/compare/compare_settings_window_qt.py:265
+#: ui_tk/compare/compare_settings_window.py:319
+msgid "(Size filtering UI to be implemented)"
+msgstr "(サイズ フィルタリング UI を実装する予定です)"
+
+#: ui/compare/compare_settings_window_qt.py:272
+#: ui_tk/compare/compare_settings_window.py:333
+msgid "Model Filter:"
+msgstr "モデルフィルター:"
+
+#: ui/compare/compare_settings_window_qt.py:275
+#: ui_tk/compare/compare_settings_window.py:342
+msgid "(Model filtering UI to be implemented)"
+msgstr "(モデル フィルター インターフェース 未実装)"
+
+#: ui/compare/compare_settings_window_qt.py:291
+#: ui_tk/compare/compare_settings_window.py:366
+msgid "Apply"
+msgstr "適用する"
+
+#: ui/compare/compare_settings_window_qt.py:398
+#: ui_tk/compare/compare_settings_window.py:473
+msgid "Instance Weights:"
+msgstr "インスタンス重み:"
+
+#: ui/compare/directory_profile_window_qt.py:61
+#: ui/compare/prevalidations_tab_qt.py:256
+#: ui_tk/compare/prevalidations_tab.py:374
+#: ui_tk/files/directory_profile_window.py:37
+msgid "Edit Profile"
+msgstr "ディレクトリプロファイルを編集する"
+
+#: ui/compare/directory_profile_window_qt.py:61
+#: ui_tk/files/directory_profile_window.py:37
+msgid "Create Profile"
+msgstr "ディレクトリの作成プロファイル"
+
+#: ui/compare/directory_profile_window_qt.py:84
+#: ui_tk/files/directory_profile_window.py:49
+msgid "Profile Name"
+msgstr "ディレクトリプロファイル名"
+
+#: ui/compare/directory_profile_window_qt.py:93
+#: ui_tk/files/directory_profile_window.py:59
+msgid "Directories"
+msgstr "ディレクトリ"
+
+#: ui/compare/directory_profile_window_qt.py:110
+#: ui_tk/files/directory_profile_window.py:79
+msgid "Add"
+msgstr "追加"
+
+#: ui/compare/directory_profile_window_qt.py:114
+#: ui_tk/files/directory_profile_window.py:82
+msgid "Edit"
+msgstr "編集"
+
+#: ui/compare/directory_profile_window_qt.py:118
+#: ui/files/directory_notes_window_qt.py:145
+#: ui_tk/files/directory_notes_window.py:137
+#: ui_tk/files/directory_profile_window.py:85
+msgid "Remove"
+msgstr "削除"
+
+#: ui/compare/directory_profile_window_qt.py:122
+#: ui_tk/files/directory_profile_window.py:88
+msgid "Add dirs from subdirs"
+msgstr "サブディレクトリからディレクトリを追加する"
+
+#: ui/compare/directory_profile_window_qt.py:126
+#: ui_tk/files/directory_profile_window.py:91
+msgid "Clear all"
+msgstr "すべてクリア"
+
+#: ui/compare/directory_profile_window_qt.py:148
+#: ui/files/directory_picker_dialog.py:208
+#: ui_tk/files/directory_profile_window.py:110
+msgid "Select directory"
+msgstr "ディレクトリを選択"
+
+#: ui/compare/directory_profile_window_qt.py:159
+#: ui_tk/files/directory_profile_window.py:140
+msgid "Add Directory"
+msgstr "ディレクトリを追加"
+
+#: ui/compare/directory_profile_window_qt.py:181
+#: ui_tk/files/directory_profile_window.py:165
+msgid "Edit Directory"
+msgstr "ディレクトリを編集"
+
+#: ui/compare/directory_profile_window_qt.py:210
+#: ui_tk/files/directory_profile_window.py:199
+msgid "Select directory to add subdirectories from"
+msgstr "サブディレクトリを追加するディレクトリを選択してください"
+
+#: ui/compare/lookahead_window_qt.py:62
+#: ui/compare/prevalidations_tab_qt.py:229
+#: ui_tk/compare/lookahead_window.py:30
+#: ui_tk/compare/prevalidations_tab.py:279
+msgid "Edit Lookahead"
+msgstr "編集先読み"
+
+#: ui/compare/lookahead_window_qt.py:62 ui_tk/compare/lookahead_window.py:30
+msgid "Create Lookahead"
+msgstr "先読みを作成する"
+
+#: ui/compare/lookahead_window_qt.py:94 ui_tk/compare/lookahead_window.py:42
+msgid "Lookahead Name"
+msgstr "先読み名"
+
+#: ui/compare/lookahead_window_qt.py:104 ui_tk/compare/lookahead_window.py:53
+msgid "Reference existing prevalidation name"
+msgstr "既存の事前検証名を参照"
+
+#: ui/compare/lookahead_window_qt.py:112 ui_tk/compare/lookahead_window.py:66
+msgid "Prevalidation Name or Custom Text"
+msgstr "事前検証名またはカスタムテキスト"
+
+#: ui/compare/prevalidations_tab_qt.py:83
+#: ui_tk/compare/prevalidations_tab.py:42
+msgid "Lookaheads (select from shared list)"
+msgstr "先読み（共有リストから選択）"
+
+#: ui/compare/prevalidations_tab_qt.py:97
+#: ui_tk/compare/prevalidations_tab.py:61
+msgid "Directory Profile"
+msgstr "ディレクトリプロファイル"
+
+#: ui/compare/prevalidations_tab_qt.py:213
+#: ui_tk/compare/prevalidations_tab.py:249
+msgid "Lookaheads"
+msgstr "先読み"
+
+#: ui/compare/prevalidations_tab_qt.py:226
+#: ui_tk/compare/prevalidations_tab.py:276
+msgid "Add Lookahead"
+msgstr "先読みを追加"
+
+#: ui/compare/prevalidations_tab_qt.py:232
+#: ui_tk/compare/prevalidations_tab.py:282
+msgid "Remove Lookahead"
+msgstr "先読みを削除"
+
+#: ui/compare/prevalidations_tab_qt.py:240
+#: ui_tk/compare/prevalidations_tab.py:344
+msgid "Directory Profiles"
+msgstr "ディレクトリプロファイル"
+
+#: ui/compare/prevalidations_tab_qt.py:253
+#: ui_tk/compare/prevalidations_tab.py:371
+msgid "Add Profile"
+msgstr "プロフィールを追加"
+
+#: ui/compare/prevalidations_tab_qt.py:259
+#: ui_tk/compare/prevalidations_tab.py:377
+msgid "Remove Profile"
+msgstr "プロフィールを削除"
+
+#: ui/compare/prevalidations_tab_qt.py:269
+#: ui_tk/compare/prevalidations_tab.py:227
+msgid "Add prevalidation"
+msgstr "優先権を追加"
+
+#: ui/compare/prevalidations_tab_qt.py:272
+#: ui_tk/compare/prevalidations_tab.py:229
+msgid "Clear prevalidations"
+msgstr "明確な優先順位"
+
+#: ui/compare/prevalidations_tab_qt.py:310
+#: ui_tk/compare/prevalidations_tab.py:295
+msgid "{name} ({name_or_text}, threshold: {threshold:.2f})"
+msgstr "{name} ({name_or_text}, 閾値: {threshold:.2f})"
+
+#: ui/compare/prevalidations_tab_qt.py:379
+#: ui_tk/compare/prevalidations_tab.py:391
+msgid "directory"
+msgstr "ディレクトリ"
+
+#: ui/compare/prevalidations_tab_qt.py:448
+#: ui_tk/compare/prevalidations_tab.py:455
+msgid "Profile"
+msgstr "ディレクトリプロファイル"
+
+#: ui/compare/prevalidations_tab_qt.py:474
+#: ui_tk/compare/prevalidations_tab.py:480
+msgid "(Global)"
+msgstr "(グローバル)"
+
+#: ui/files/directory_notes_window_qt.py:49
+#: ui_tk/files/directory_notes_window.py:38
+msgid "Directory Notes - {0}"
+msgstr "ディレクトリのメモ - {0}"
+
+#: ui/files/directory_notes_window_qt.py:90
+#: ui_tk/files/directory_notes_window.py:57
+msgid "Directory: {0}"
+msgstr "ディレクトリ: {0}"
+
+#: ui/files/directory_notes_window_qt.py:95
+#: ui_tk/files/directory_notes_window.py:66
+msgid "Export to Text File"
+msgstr "テキストファイルにエクスポート"
+
+#: ui/files/directory_notes_window_qt.py:96
+#: ui_tk/files/directory_notes_window.py:70
+msgid "Import from Text File"
+msgstr "テキストファイルからインポート"
+
+#: ui/files/directory_notes_window_qt.py:97
+#: ui_tk/files/directory_notes_window.py:73
+msgid "Import from JSON File"
+msgstr "JSONファイルからのインポート"
+
+#: ui/files/directory_notes_window_qt.py:112
+#: ui_tk/files/directory_notes_window.py:85
+msgid "MARKED FILES"
+msgstr "マーク付きファイル"
+
+#: ui/files/directory_notes_window_qt.py:119
+#: ui_tk/files/directory_notes_window.py:95
+msgid "(No marked files)"
+msgstr "(マークされたファイルはありません)"
+
+#: ui/files/directory_notes_window_qt.py:124
+#: ui_tk/files/directory_notes_window.py:105
+msgid "FILE NOTES"
+msgstr "ファイルノート"
+
+#: ui/files/directory_notes_window_qt.py:131
+#: ui_tk/files/directory_notes_window.py:115
+msgid "(No file notes)"
+msgstr "(ファイルに関する注記なし)"
+
+#: ui/files/directory_notes_window_qt.py:149
+#: ui/files/directory_notes_window_qt.py:194
+#: ui/files/favorites_window_qt.py:200
+#: ui_tk/files/directory_notes_window.py:148
+#: ui_tk/files/directory_notes_window.py:217
+#: ui_tk/files/favorites_window.py:142
+msgid "Open"
+msgstr "オープンメディア"
+
+#: ui/files/directory_notes_window_qt.py:175
+#: ui_tk/files/directory_notes_window.py:197
+msgid "Edit Note"
+msgstr "ノートを編集する"
+
+#: ui/files/directory_notes_window_qt.py:181
+#: ui_tk/files/directory_notes_window.py:206
+msgid "Remove Note"
+msgstr "ノートを削除する"
+
+#: ui/files/directory_notes_window_qt.py:216
+#: ui_tk/files/directory_notes_window.py:142
+msgid "Removed marked file: {0}"
+msgstr "マークされたファイルを削除しました: {0}"
+
+#: ui/files/directory_notes_window_qt.py:223
+#: ui_tk/files/directory_notes_window.py:211
+msgid "Removed note for: {0}"
+msgstr "以下のメモを削除しました: {0}"
+
+#: ui/files/directory_notes_window_qt.py:234
+#: ui_tk/files/directory_notes_window.py:157
+#: ui_tk/files/directory_notes_window.py:226
+msgid "Opened file: {0}"
+msgstr "ファイルを開きました：{0}"
+
+#: ui/files/directory_notes_window_qt.py:239
+#: ui_tk/files/directory_notes_window.py:162
+#: ui_tk/files/directory_notes_window.py:231
+msgid "Opened file in new window: {0}"
+msgstr "ファイルを新しいウィンドウで開きました: {0}"
+
+#: ui/files/directory_notes_window_qt.py:303
+#: ui_tk/files/directory_notes_window.py:320
+msgid "Export Directory Notes"
+msgstr "エクスポートディレクトリの注記"
+
+#: ui/files/directory_notes_window_qt.py:305
+#: ui/files/directory_notes_window_qt.py:320
+msgid "Text files (*.txt);;All files (*)"
+msgstr "テキスト ファイル (* .txt);;すべてのファイル (* )"
+
+#: ui/files/directory_notes_window_qt.py:310
+#: ui_tk/files/directory_notes_window.py:328
+msgid "Exported notes to: {0}"
+msgstr "エクスポートしたノート先: {0}"
+
+#: ui/files/directory_notes_window_qt.py:312
+#: ui_tk/files/directory_notes_window.py:331
+msgid "Export Error"
+msgstr "エクスポートエラー"
+
+#: ui/files/directory_notes_window_qt.py:313
+#: ui_tk/files/directory_notes_window.py:331
+msgid "Failed to export notes: {0}"
+msgstr "ノートをエクスポートできませんでした: {0}"
+
+#: ui/files/directory_notes_window_qt.py:318
+#: ui_tk/files/directory_notes_window.py:338
+msgid "Import Marked Files from Text File"
+msgstr "テキストファイルからマーク付きファイルをインポートする"
+
+#: ui/files/directory_notes_window_qt.py:328
+#: ui_tk/files/directory_notes_window.py:348
+msgid "Import Options"
+msgstr "インポートのオプション"
+
+#: ui/files/directory_notes_window_qt.py:329
+#: ui_tk/files/directory_notes_window.py:349
+msgid "Search recursively in subdirectories for matching filenames?"
+msgstr "サブディレクトリ内で一致するファイル名を再帰的に検索しますか？"
+
+#: ui/files/directory_notes_window_qt.py:337
+#: ui/files/directory_notes_window_qt.py:367
+#: ui_tk/files/directory_notes_window.py:356
+#: ui_tk/files/directory_notes_window.py:388
+msgid "Imported {0} files."
+msgstr "{0}ファイルをインポートしました。"
+
+#: ui/files/directory_notes_window_qt.py:339
+#: ui_tk/files/directory_notes_window.py:358
+msgid "{0} filenames not found:"
+msgstr "{0} ファイル名が見つかりません:"
+
+#: ui/files/directory_notes_window_qt.py:342
+#: ui/files/directory_notes_window_qt.py:372
+#: ui/files/file_actions_window_qt.py:250
+#: ui_tk/files/directory_notes_window.py:363
+#: ui_tk/files/directory_notes_window.py:395
+#: ui_tk/files/file_actions_window.py:193
+msgid "... and {0} more"
+msgstr "...および{0}件以上"
+
+#: ui/files/directory_notes_window_qt.py:344
+#: ui/files/directory_notes_window_qt.py:374
+#: ui_tk/files/directory_notes_window.py:365
+#: ui_tk/files/directory_notes_window.py:397
+msgid "Import Complete"
+msgstr "インポート完了"
+
+#: ui/files/directory_notes_window_qt.py:345
+#: ui/files/directory_notes_window_qt.py:375
+#: ui_tk/files/directory_notes_window.py:366
+#: ui_tk/files/directory_notes_window.py:398
+msgid "Imported {0} marked files"
+msgstr "インポートされた {0} 個のマーク付きファイル"
+
+#: ui/files/directory_notes_window_qt.py:349
+#: ui/files/directory_notes_window_qt.py:379
+#: ui_tk/files/directory_notes_window.py:369
+#: ui_tk/files/directory_notes_window.py:401
+msgid "Import Error"
+msgstr "インポートエラー"
+
+#: ui/files/directory_notes_window_qt.py:350
+#: ui_tk/files/directory_notes_window.py:369
+msgid "Failed to import from text file: {0}"
+msgstr "テキストファイルからのインポートに失敗しました: {0}"
+
+#: ui/files/directory_notes_window_qt.py:356
+#: ui_tk/files/directory_notes_window.py:376
+msgid "Import Marked Files from JSON File"
+msgstr "マークされたファイルをJSONファイルからインポートする"
+
+#: ui/files/directory_notes_window_qt.py:358
+msgid "JSON files (*.json);;All files (*)"
+msgstr "JSON形式のファイル (*.json);;すべてのファイル (*.*)"
+
+#: ui/files/directory_notes_window_qt.py:369
+#: ui_tk/files/directory_notes_window.py:390
+msgid "{0} invalid or missing file paths:"
+msgstr "{0}つの無効または欠落しているファイルパス:"
+
+#: ui/files/directory_notes_window_qt.py:380
+#: ui_tk/files/directory_notes_window.py:401
+msgid "Failed to import from JSON file: {0}"
+msgstr "JSONファイルからのインポートに失敗しました: {0}"
+
+#: ui/files/directory_picker_dialog.py:98
+msgid "Select Directory"
+msgstr "選択 ディレクトリ"
+
+#: ui/files/directory_picker_dialog.py:121
+#: ui_tk/files/recent_directory_window.py:127
+msgid "Add directory"
+msgstr "ディレクトリの追加"
+
+#: ui/files/directory_picker_dialog.py:126
+#: ui_tk/files/marked_file_mover.py:163
+#: ui_tk/files/recent_directory_window.py:129
+msgid "Add directories from parent"
+msgstr "親からディレクトリを追加する"
+
+#: ui/files/directory_picker_dialog.py:131
+#: ui/files/marked_file_mover_qt.py:253 ui_tk/files/marked_file_mover.py:166
+#: ui_tk/files/recent_directory_window.py:131
+msgid "Clear targets"
+msgstr "明確な目標"
+
+#: ui/files/directory_picker_dialog.py:241
+#: ui/files/hotkey_actions_window_qt.py:111
+#: ui_tk/compare/prevalidations_tab.py:496
+#: ui_tk/files/hotkey_actions_window.py:94
+msgid "Set"
+msgstr "セット"
+
+#: ui/files/directory_picker_dialog.py:248
+msgid "Clear"
+msgstr "クリアしてください"
+
+#: ui/files/directory_picker_dialog.py:330
+msgid "Filter: "
+msgstr "フィルター： "
+
+#: ui/files/directory_picker_dialog.py:368
+msgid "Select parent directory"
+msgstr "親ディレクトリを選択してください"
+
+#: ui/files/directory_picker_dialog.py:416
+msgid ""
+"No alphabet letters are currently used as the first character of any "
+"directory name in this list."
+msgstr "このリストにあるディレクトリ名の最初の文字には、現在はいずれもアルファベットの文字が使用されていません。"
+
+#: ui/files/directory_picker_dialog.py:421
+msgid ""
+"All letters A-Z are already used as the first character of at least one "
+"directory in this list."
+msgstr "このリスト内の少なくとも1つのディレクトリの最初の文字としてA-Zのすべての文字はすでに使用されています。"
+
+#: ui/files/directory_picker_dialog.py:426
+msgid "Unused starting letters:"
+msgstr "未使用の始まり文字"
+
+#: ui/files/directory_picker_dialog.py:430
+msgid "Alphabet Availability"
+msgstr "アルファベットの可用性"
+
+#: ui/files/favorites_window_qt.py:74 ui_tk/files/favorites_window.py:51
+msgid "Added favorite: "
+msgstr "お気に入りに追加しました: "
+
+#: ui/files/favorites_window_qt.py:89 ui_tk/files/favorites_window.py:70
+msgid "Favorites"
+msgstr "お気に入り"
+
+#: ui/files/favorites_window_qt.py:175 ui_tk/files/favorites_window.py:125
+msgid ""
+"No favorites set.\n"
+"\n"
+"To add a favorite, right-click an image and select 'Add to Favorites'."
+msgstr ""
+"お気に入りが設定されていません。\n"
+"\n"
+"お気に入りに追加するには、画像の上で右クリックし、『お気に入りに追加』を選択してください。"
+
+#: ui/files/favorites_window_qt.py:206 ui_tk/files/favorites_window.py:148
+msgid "Remove Favorite"
+msgstr "お気に入りを削除する"
+
+#: ui/files/favorites_window_qt.py:232 ui/files/file_actions_window_qt.py:392
+msgid "File not found: "
+msgstr "ファイルが見つかりませんでした： "
+
+#: ui/files/favorites_window_qt.py:246 ui/files/file_actions_window_qt.py:403
+msgid "Error opening image: "
+msgstr "画像を開くエラー: "
+
+#: ui/files/favorites_window_qt.py:255 ui_tk/files/favorites_window.py:187
+msgid "Removed favorite: "
+msgstr "お気に入りを削除しました: "
+
+#: ui/files/file_actions_window_qt.py:75 ui_tk/files/file_actions_window.py:44
+msgid "File Actions"
+msgstr "ファイル操作"
+
+#: ui/files/file_actions_window_qt.py:95 ui_tk/files/file_actions_window.py:72
+msgid "File Action History"
+msgstr "ファイル操作履歴"
+
+#: ui/files/file_actions_window_qt.py:102
+#: ui_tk/files/file_actions_window.py:74
+msgid "Search Image"
+msgstr "画像検索"
+
+#: ui/files/file_actions_window_qt.py:106
+#: ui_tk/files/file_actions_window.py:76
+msgid "Clear History"
+msgstr "明確な歴史"
+
+#: ui/files/file_actions_window_qt.py:167
+msgid "Load More ({0} remaining)"
+msgstr "(次々読む ( {0} あと ))"
+
+#: ui/files/file_actions_window_qt.py:205
+#: ui_tk/files/file_actions_window.py:110
+msgid "Today's File Actions"
+msgstr "本日のファイル操作"
+
+#: ui/files/file_actions_window_qt.py:207
+#: ui_tk/files/file_actions_window.py:110
+msgid "File Action Statistics"
+msgstr "ファイル操作統計"
+
+#: ui/files/file_actions_window_qt.py:215
+#: ui_tk/files/file_actions_window.py:117
+#: ui_tk/files/file_actions_window.py:549
+msgid "All Time"
+msgstr "全時代"
+
+#: ui/files/file_actions_window_qt.py:215
+#: ui_tk/files/file_actions_window.py:117
+#: ui_tk/files/file_actions_window.py:551
+msgid "Today Only"
+msgstr "本日限定"
+
+#: ui/files/file_actions_window_qt.py:222
+#: ui_tk/files/file_actions_window.py:124
+msgid "Target Directory"
+msgstr "ターゲットディレクトリ"
+
+#: ui/files/file_actions_window_qt.py:222
+#: ui_tk/files/file_actions_window.py:142
+msgid "Total"
+msgstr "合計"
+
+#: ui/files/file_actions_window_qt.py:306
+#: ui_tk/files/file_actions_window.py:243
+msgid " ({0} files)"
+msgstr " ({0} ファイル)"
+
+#: ui/files/file_actions_window_qt.py:308
+#: ui_tk/files/file_actions_window.py:245
+msgid "(auto)"
+msgstr "(自動)"
+
+#: ui/files/file_actions_window_qt.py:316 ui/files/marked_file_mover_qt.py:300
+#: ui_tk/files/file_actions_window.py:250 ui_tk/files/marked_file_mover.py:208
+#: utils/constants.py:383
+msgid "Move"
+msgstr "交通アクセス"
+
+#: ui/files/file_actions_window_qt.py:325
+#: ui/files/file_actions_window_qt.py:369
+#: ui_tk/files/file_actions_window.py:253
+#: ui_tk/files/file_actions_window.py:304
+msgid "Undo"
+msgstr "ログイン"
+
+#: ui/files/file_actions_window_qt.py:357
+#: ui_tk/files/file_actions_window.py:288
+msgid "View"
+msgstr "ニュース"
+
+#: ui/files/file_actions_window_qt.py:363
+#: ui_tk/files/file_actions_window.py:296
+msgid "Copy Filename"
+msgstr "ファイル名コピー"
+
+#: ui/files/file_actions_window_qt.py:409
+#: ui_tk/files/file_actions_window.py:329
+msgid "Image does not exist: "
+msgstr "画像が存在しません。 "
+
+#: ui/files/file_actions_window_qt.py:411
+#: ui/files/file_actions_window_qt.py:429
+#: ui_tk/files/file_actions_window.py:330
+#: ui_tk/files/file_actions_window.py:341
+msgid "File Action Error"
+msgstr "ファイルアクションエラー"
+
+#: ui/files/file_actions_window_qt.py:427
+#: ui_tk/files/file_actions_window.py:340
+msgid "Images not found"
+msgstr "見つからない画像"
+
+#: ui/files/file_actions_window_qt.py:522
+msgid "Filter: {}"
+msgstr "フィルター: {}"
+
+#: ui/files/go_to_file_qt.py:236 ui/files/go_to_file_qt.py:250
+#: ui_tk/files/go_to_file.py:99 ui_tk/files/go_to_file.py:118
+msgid "Go To File"
+msgstr "ファイルに移動"
+
+#: ui/files/go_to_file_qt.py:269 ui_tk/files/go_to_file.py:134
+msgid "Go To"
+msgstr "行け"
+
+#: ui/files/go_to_file_qt.py:285 ui_tk/files/go_to_file.py:148
+msgid "Go to closest file if exact match not found"
+msgstr "完全一致が見つからない場合は、最も近いファイルに移動する"
+
+#: ui/files/go_to_file_qt.py:292 ui_tk/files/go_to_file.py:159
+msgid "Go to file by index (1-based)"
+msgstr "インデックス（1ベース）でファイルに移動"
+
+#: ui/files/go_to_file_qt.py:301 ui_tk/files/go_to_file.py:300
+msgid "Sort by for closest search:"
+msgstr "最も近い検索で並べ替え:"
+
+#: ui/files/go_to_file_qt.py:325 ui_tk/files/go_to_file.py:335
+msgid "Find Related Filenames"
+msgstr "関連ファイル名を探す"
+
+#: ui/files/go_to_file_qt.py:334 ui_tk/files/go_to_file.py:340
+msgid ""
+"Enter a base ID manually or click 'Extract from filename' to auto-extract "
+"from the filename above."
+msgstr "ベースIDを手動で入力するか、「ファイル名から抽出」をクリックして上記のファイル名から自動抽出してください。"
+
+#: ui/files/go_to_file_qt.py:344 ui_tk/files/go_to_file.py:350
+msgid "Base ID:"
+msgstr "ベースID:"
+
+#: ui/files/go_to_file_qt.py:362 ui_tk/files/go_to_file.py:362
+msgid "Extract from filename"
+msgstr "ファイル名からの抽出"
+
+#: ui/files/go_to_file_qt.py:370 ui_tk/files/go_to_file.py:370
+msgid "Target Directory:"
+msgstr "対象ディレクトリ："
+
+#: ui/files/go_to_file_qt.py:392 ui_tk/files/go_to_file.py:388
+msgid "Find Related"
+msgstr "関連するものを検索"
+
+#: ui/files/go_to_file_qt.py:442 ui_tk/files/go_to_file.py:188
+msgid "Invalid search string, please enter some text."
+msgstr "検索文字列が無効です。"
+
+#: ui/files/go_to_file_qt.py:460 ui_tk/files/go_to_file.py:204
+msgid "Index navigation enabled but input is not a valid number."
+msgstr "インデックスナビゲーションは有効ですが、入力された数値は無効です。"
+
+#: ui/files/go_to_file_qt.py:503 ui_tk/files/go_to_file.py:246
+msgid "Select file to go to"
+msgstr "移動先のファイルを選択してください"
+
+#: ui/files/go_to_file_qt.py:525 ui_tk/files/go_to_file.py:265
+msgid "No last moved image found."
+msgstr "最後に移動したメディアファイルが見つかりませんでした。"
+
+#: ui/files/go_to_file_qt.py:554 ui_tk/files/go_to_file.py:518
+msgid "Please enter a filename first."
+msgstr "まずファイル名を入力してください。"
+
+#: ui/files/go_to_file_qt.py:560 ui_tk/files/go_to_file.py:524
+msgid "Base ID extracted: {}"
+msgstr "抽出されたベースID: {}"
+
+#: ui/files/go_to_file_qt.py:564 ui_tk/files/go_to_file.py:526
+msgid "Could not extract base ID from filename. Please enter it manually."
+msgstr "ファイル名からベースIDを抽出できませんでした。手動で入力してください。"
+
+#: ui/files/go_to_file_qt.py:569 ui_tk/files/go_to_file.py:527
+msgid "Could not extract base ID. Please enter it manually."
+msgstr "基本IDを抽出できませんでした。手動で入力してください。"
+
+#: ui/files/go_to_file_qt.py:603 ui_tk/files/go_to_file.py:448
+msgid "Loading current media and searching..."
+msgstr "現在のメディアを読み込んで検索中..."
+
+#: ui/files/go_to_file_qt.py:615 ui_tk/files/go_to_file.py:460
+msgid ""
+"Current media filename loaded. Select a target directory to find related "
+"filenames."
+msgstr "現在読み込まれたメディアファイル名。関連ファイル名を探す対象ディレクトリを選択してください。"
+
+#: ui/files/go_to_file_qt.py:621 ui_tk/files/go_to_file.py:462
+msgid "No active media file found in the current window."
+msgstr "現在のウィンドウにアクティブなメディアファイルが見つかりません。"
+
+#: ui/files/go_to_file_qt.py:625 ui_tk/files/go_to_file.py:464
+msgid "Error getting current media filename: {}"
+msgstr "現在のメディアファイル名の取得中にエラーが発生しました: {}"
+
+#: ui/files/go_to_file_qt.py:636 ui_tk/files/go_to_file.py:535
+msgid "Please enter a base ID or extract it from a filename."
+msgstr "ベースIDを入力するか、ファイル名から抽出してください。"
+
+#: ui/files/go_to_file_qt.py:641 ui_tk/files/go_to_file.py:539
+msgid "Please select a target directory to search in."
+msgstr "検索対象のディレクトリを選択してください。"
+
+#: ui/files/go_to_file_qt.py:645 ui_tk/files/go_to_file.py:543
+msgid "Target directory does not exist."
+msgstr "ターゲットディレクトリが存在しません。"
+
+#: ui/files/go_to_file_qt.py:665 ui_tk/files/go_to_file.py:563
+msgid "Found {} related filenames"
+msgstr "{}に関連するファイル名を検出しました"
+
+#: ui/files/go_to_file_qt.py:669 ui_tk/files/go_to_file.py:566
+msgid "No related filenames found with base ID \"{0}\" in {1}"
+msgstr "ベースID 「{0}」 に関連するファイル名が {1} で見つかりませんでした"
+
+#: ui/files/go_to_file_qt.py:679 ui_tk/files/go_to_file.py:741
+msgid "Opening file: {}"
+msgstr "ファイルを開きます: {}"
+
+#: ui/files/go_to_file_qt.py:711 ui_tk/files/go_to_file.py:683
+msgid ""
+"The directory '{0}' contains many files ({1} files found so far). Searching "
+"may take a while. Do you want to proceed?"
+msgstr ""
+"ディレクトリ 『{0}』 には多数のファイルが含まれています（これまでに {1} "
+"個のファイルが見つかりました）。検索には時間がかかる場合があります。続行しますか？"
+
+#: ui/files/go_to_file_qt.py:716 ui_tk/files/go_to_file.py:684
+msgid "Large Directory"
+msgstr "大規模ディレクトリ"
+
+#: ui/files/go_to_file_qt.py:724 ui_tk/files/go_to_file.py:693
+msgid "Search cancelled by user."
+msgstr "ユーザーにより検索がキャンセルされました。"
+
+#: ui/files/go_to_file_qt.py:753 ui_tk/files/go_to_file.py:729
+msgid "Error searching directory: {}"
+msgstr "ディレクトリ検索エラー: {}"
+
+#: ui/files/hotkey_actions_window_qt.py:56
+#: ui_tk/files/hotkey_actions_window.py:25
+msgid "Hotkey Actions"
+msgstr "ホットキーアクション"
+
+#: ui/files/hotkey_actions_window_qt.py:72
+#: ui_tk/files/hotkey_actions_window.py:48
+msgid "Key name"
+msgstr "キー名"
+
+#: ui/files/hotkey_actions_window_qt.py:73
+#: ui_tk/files/hotkey_actions_window.py:52
+msgid "Target directory"
+msgstr "対象ディレクトリ"
+
+#: ui/files/hotkey_actions_window_qt.py:105
+#: ui/files/hotkey_actions_window_qt.py:107
+#: ui_tk/files/hotkey_actions_window.py:84
+#: ui_tk/files/hotkey_actions_window.py:89
+msgid "(unset)"
+msgstr "(未設定)"
+
+#: ui/files/marked_file_mover_qt.py:79
+msgid "Invalid directory: {0}"
+msgstr "無効なディレクトリです： {0}"
+
+#: ui/files/marked_file_mover_qt.py:83 ui_tk/files/marked_file_mover.py:263
+msgid "Select target directory for marked files"
+msgstr "マークされたファイルのターゲットディレクトリを選択"
+
+#: ui/files/marked_file_mover_qt.py:94 ui_tk/files/marked_file_mover.py:316
+msgid "Where should the marked files have gone?"
+msgstr "マークされたファイルはどこに行くべきだったのか？"
+
+#: ui/files/marked_file_mover_qt.py:122 ui/files/marked_file_mover_qt.py:159
+#: ui_tk/files/marked_file_mover.py:73 ui_tk/files/marked_file_mover.py:84
+msgid "Move {0} Marked File(s)"
+msgstr "{0} つのマークされたファイルを移動しますか？"
+
+#: ui/files/marked_file_mover_qt.py:225
+msgid "New target:"
+msgstr "新規ターゲット："
+
+#: ui/files/marked_file_mover_qt.py:229 ui_tk/files/marked_file_mover.py:155
+msgid "MOVE"
+msgstr "ムーヴ"
+
+#: ui/files/marked_file_mover_qt.py:236 ui_tk/files/marked_file_mover.py:159
+msgid "COPY"
+msgstr "コピー"
+
+#: ui/files/marked_file_mover_qt.py:243 ui_tk/files/marked_file_mover.py:161
+msgid "DELETE"
+msgstr "削除"
+
+#: ui/files/marked_file_mover_qt.py:248
+msgid "Add from parent"
+msgstr "親から追加する"
+
+#: ui/files/marked_file_mover_qt.py:258 ui/files/pdf_options_window_qt.py:117
+#: ui_tk/files/marked_file_mover.py:168 ui_tk/files/pdf_options_window.py:80
+msgid "Create PDF"
+msgstr "PDFを作成する"
+
+#: ui/files/marked_file_mover_qt.py:319
+msgid "Remove this target directory"
+msgstr "「このターゲット・ディレクトリを削除してください」"
+
+#: ui/files/marked_file_mover_qt.py:398 ui_tk/files/marked_file_mover.py:545
+msgid "Confirm Delete"
+msgstr "削除を確認する"
+
+#: ui/files/marked_file_mover_qt.py:399
+msgid "Deleting {0} marked files - Are you sure you want to proceed?"
+msgstr "{0}マークされたファイルを削除する - 続行したいですか?"
+
+#: ui/files/marked_file_mover_qt.py:431 ui_tk/files/marked_file_mover.py:573
+msgid "Delete Failed"
+msgstr "失敗した削除"
+
+#: ui/files/marked_file_mover_qt.py:432
+msgid "Failed to delete {0} files - check log for details."
+msgstr "{0}ファイルを削除する失敗 - 詳細はログを確認してください。"
+
+#: ui/files/marked_file_mover_qt.py:437
+msgid "Deleted {0} marked files."
+msgstr "削除された {0} マークされたファイル。"
+
+#: ui/files/marked_file_mover_qt.py:464 ui_tk/files/marked_file_mover.py:331
+#: ui_tk/files/recent_directory_window.py:227
+msgid "Select parent directory for target directories"
+msgstr "対象ディレクトリの親ディレクトリを選択"
+
+#: ui/files/marked_file_mover_qt.py:505 ui_tk/files/marked_file_mover.py:235
+msgid ""
+"WARNING: This action sets hotkey actions that will be used for future file "
+"operations. You may have accidentally triggered this shortcut due to a "
+"sticky Control key. Please confirm you want to proceed."
+msgstr ""
+"警告: "
+"この操作は、今後のファイル操作に使用されるホットキーアクションを設定します。Controlキーが粘着状態になっているため、誤ってこのショートカットを起動した可能性があります。続行することを確認してください。"
+
+#: ui/files/marked_file_mover_qt.py:515 ui/files/marked_file_mover_qt.py:521
+#: ui_tk/files/marked_file_mover.py:241 ui_tk/files/marked_file_mover.py:247
+msgid "Recording next mark target and action."
+msgstr "记录下一个标记目标和行动。"
+
+#: ui/files/marked_file_mover_qt.py:543 ui_tk/files/marked_file_mover.py:523
+msgid "Sorted directories by embedding comparison."
+msgstr "比較を埋め込むことでソートされたディレクトリ。"
+
+#: ui/files/marked_file_mover_qt.py:562 ui_tk/files/marked_file_mover.py:683
+msgid "Save PDF as"
+msgstr "PDF形式で保存"
+
+#: ui/files/marked_file_mover_qt.py:662
+msgid "Found {0} downstream related images"
+msgstr "{0}下流関連画像が見つかりました"
+
+#: ui/files/marked_file_mover_qt.py:667 ui_tk/files/marked_file_mover.py:642
+msgid "No downstream related images found"
+msgstr "下流関連画像が見つかりません"
+
+#: ui/files/marked_file_mover_qt.py:697
+msgid "Filter: {0}"
+msgstr "フィルター: {0}"
+
+#: ui/files/marked_file_mover_qt.py:868 ui_tk/files/marked_file_mover.py:656
+msgid "Cleared marked file"
+msgstr "マークされたファイルをクリア"
+
+#: ui/files/pdf_options_window_qt.py:63 ui/files/pdf_options_window_qt.py:73
+#: ui_tk/files/pdf_options_window.py:31 ui_tk/files/pdf_options_window.py:42
 msgid "PDF Creation Options"
 msgstr "PDF作成オプション"
 
-#: files/pdf_options_window.py:48
+#: ui/files/pdf_options_window_qt.py:82 ui_tk/files/pdf_options_window.py:48
 msgid "PDF Filename:"
 msgstr "PDFファイル名："
 
-#: files/pdf_options_window.py:60
+#: ui/files/pdf_options_window_qt.py:95 ui_tk/files/pdf_options_window.py:60
 msgid "Preserve original image quality and format"
 msgstr "オリジナルの画質とフォーマットを保持"
 
-#: files/pdf_options_window.py:67
+#: ui/files/pdf_options_window_qt.py:101 ui_tk/files/pdf_options_window.py:67
 msgid ""
 "If enabled, images will maintain their original quality and format.\n"
 "If disabled, images will be compressed to reduce PDF size."
@@ -2486,83 +3483,79 @@ msgstr ""
 "有効にする と 、 画像は元の品質 と 形式を保ち ます。\n"
 "無効にす る と 、 画像は圧縮 さ れて PDF サ イ ズ を縮小 し ます。"
 
-#: files/recent_directory_window.py:232
-msgid "Add directory"
-msgstr "ディレクトリの追加"
+#: ui/files/recent_directory_window_qt.py:183
+#: ui_tk/files/marked_file_mover.py:260
+#: ui_tk/files/recent_directory_window.py:175
+msgid "Invalid directory: %s"
+msgstr "無効なディレクトリです： {0}"
 
-#: files/recent_directory_window.py:283
-msgid "Set image comparison directory"
-msgstr "画像比較ディレクトリの設定"
-
-#: files/target_directory_window.py:93
+#: ui/files/target_directory_window_qt.py:74
+#: ui_tk/files/target_directory_window.py:69
 msgid "Select Target Directory"
 msgstr "対象ディレクトリを選択"
 
-#: files/target_directory_window.py:107
-msgid "Select Target Directory for Related Files Search"
-msgstr "関連ファイル検索の対象ディレクトリを選択"
-
-#: files/target_directory_window.py:151
-msgid "Select"
-msgstr "選択"
-
-#: files/target_directory_window.py:166
-msgid "Browse for Directory..."
-msgstr "ディレクトリを参照..."
-
-#: files/target_directory_window.py:171
-msgid "Clear Recent"
-msgstr "最近の履歴を消去"
-
-#: files/target_directory_window.py:186
+#: ui/files/target_directory_window_qt.py:106
+#: ui_tk/files/target_directory_window.py:162
 msgid "Select directory to search for related files"
 msgstr "関連ファイルを検索するディレクトリを選択してください"
 
-#: files/type_configuration_window.py:27
+#: ui/files/type_configuration_window_qt.py:48
+#: ui_tk/files/type_configuration_window.py:27
 msgid "Basic image files (PNG, JPG, etc.)"
 msgstr "基本的な画像ファイル (PNG、JPGなど)"
 
-#: files/type_configuration_window.py:28
+#: ui/files/type_configuration_window_qt.py:49
+#: ui_tk/files/type_configuration_window.py:28
 msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
 msgstr "動画ファイル (MP4、AVIなど) - 1番目のフレームが抽出されます。"
 
-#: files/type_configuration_window.py:29
+#: ui/files/type_configuration_window_qt.py:50
+#: ui_tk/files/type_configuration_window.py:29
 msgid "Animated GIF files - First frame will be extracted"
 msgstr "アニメーションGIFファイル - 最初のフレームが抽出されます"
 
-#: files/type_configuration_window.py:30
+#: ui/files/type_configuration_window_qt.py:51
+#: ui_tk/files/type_configuration_window.py:30
 msgid "PDF documents - First page will be extracted"
 msgstr "PDF ドキュメント - 最初のページが抽出されます"
 
-#: files/type_configuration_window.py:31
+#: ui/files/type_configuration_window_qt.py:52
+#: ui_tk/files/type_configuration_window.py:31
 msgid "Vector graphics - Will be converted to raster image"
 msgstr "ベクトルグラフィックス - ラスターイメージに変換されます。"
 
-#: files/type_configuration_window.py:32
+#: ui/files/type_configuration_window_qt.py:53
+#: ui_tk/files/type_configuration_window.py:32
 msgid "HTML files - Will be rendered and converted to image"
 msgstr "HTMLファイル - レンダリングされ、画像に変換されます"
 
-#: files/type_configuration_window.py:40
+#: ui/files/type_configuration_window_qt.py:60
+#: ui_tk/files/type_configuration_window.py:40
 msgid "PDF support requires pypdfium2 package"
 msgstr "PDFサポートはpypdfium2パッケージを必要とします"
 
-#: files/type_configuration_window.py:45
+#: ui/files/type_configuration_window_qt.py:65
+#: ui_tk/files/type_configuration_window.py:45
 msgid "SVG support requires cairosvg package"
 msgstr "SVG サポートは cairosvg パッケージを要求します"
 
-#: files/type_configuration_window.py:50
+#: ui/files/type_configuration_window_qt.py:70
+#: ui_tk/files/type_configuration_window.py:50
 msgid "HTML support requires pyppeteer package"
 msgstr "HTMLサポートは、pyppeteerパッケージが必要です"
 
-#: files/type_configuration_window.py:96
+#: ui/files/type_configuration_window_qt.py:143
+#: ui_tk/files/type_configuration_window.py:101
 msgid "Media Type Configuration"
 msgstr "媒体のタイプ構成"
 
-#: files/type_configuration_window.py:112 utils/constants.py:340
+#: ui/files/type_configuration_window_qt.py:154
+#: ui_tk/files/type_configuration_window.py:117 utils/constants.py:443
 msgid "Configure Media Types"
 msgstr "メディアタイプの設定"
 
-#: files/type_configuration_window.py:117
+#: ui/files/type_configuration_window_qt.py:161
+#: ui_tk/files/type_configuration_window.py:122
 msgid ""
 "Select which types of media files you want to compare. Changes will require "
 "a refresh of open comparisons but files in browsing mode should update "
@@ -2570,300 +3563,446 @@ msgid ""
 msgstr ""
 "どの種類のメディアファイルを比較したいですか？変更は、オープンな比較をリフレッシュする必要がありますが、ブラウジングモードにあるファイルは自動的に更新されるはずです。"
 
-#: files/type_configuration_window.py:183
+#: ui/files/type_configuration_window_qt.py:225
+#: ui_tk/files/type_configuration_window.py:188
 msgid "Apply Changes"
 msgstr "変更を加える"
 
-#: files/type_configuration_window.py:225
+#: ui/files/type_configuration_window_qt.py:267
+#: ui_tk/files/type_configuration_window.py:230
 msgid "Confirm Changes"
 msgstr "変更を確認する"
 
-#: files/type_configuration_window.py:226
+#: ui/files/type_configuration_window_qt.py:268
+#: ui_tk/files/type_configuration_window.py:231
 msgid "This will clear all existing compares in open windows. Continue?"
 msgstr "これは、オープンウィンドウのすべての既存の比較をクリアします。 お問い合わせ"
 
-#: files/type_configuration_window.py:286
+#: ui/files/type_configuration_window_qt.py:324
+#: ui_tk/files/type_configuration_window.py:291
 msgid "Media type configuration updated"
 msgstr "メディアタイプ構成更新"
 
-#: image/classifier_action_type.py:24
-msgid "Hide"
-msgstr "隠す"
-
-#: image/classifier_action_type.py:26
-msgid "Notify"
-msgstr "通知する"
-
-#: image/classifier_action_type.py:28
-msgid "Skip"
-msgstr "スキップ"
-
-#: image/classifier_action_type.py:36
-msgid "Add Mark"
-msgstr "マークを追加する"
-
-#: image/image_details.py:127
+#: ui/image/image_details_qt.py:245 ui_tk/image/image_details.py:133
 msgid "Image Path"
 msgstr "イメージパス"
 
-#: image/image_details.py:129
+#: ui/image/image_details_qt.py:249 ui_tk/image/image_details.py:135
 msgid "File Index"
 msgstr "ファイルインデックス"
 
-#: image/image_details.py:131
+#: ui/image/image_details_qt.py:253 ui_tk/image/image_details.py:137
 msgid "Color Mode"
 msgstr "色モード"
 
-#: image/image_details.py:133
+#: ui/image/image_details_qt.py:257 ui_tk/image/image_details.py:139
 msgid "Dimensions"
 msgstr "サイズ:"
 
-#: image/image_details.py:135 utils/constants.py:45 utils/constants.py:68
-#: utils/constants.py:138 utils/constants.py:158
+#: ui/image/image_details_qt.py:261 ui_tk/image/image_details.py:141
+#: utils/constants.py:45 utils/constants.py:68 utils/constants.py:138
+#: utils/constants.py:158
 msgid "Size"
 msgstr "サイズ:"
 
-#: image/image_details.py:137
+#: ui/image/image_details_qt.py:265 ui_tk/image/image_details.py:143
 msgid "Modification Time"
 msgstr "変更の時間"
 
-#: image/image_details.py:140
+#: ui/image/image_details_qt.py:269 ui_tk/image/image_details.py:145
 msgid "Positive"
 msgstr "ポジティブ"
 
-#: image/image_details.py:142
-msgid "Negative"
-msgstr "ログイン"
-
-#: image/image_details.py:143
+#: ui/image/image_details_qt.py:282 ui_tk/image/image_details.py:151
 msgid "(negative prompt not shown by config setting)"
 msgstr "(コンフィグ設定で示さないネガティブプロンプト)"
 
-#: image/image_details.py:144 utils/constants.py:46 utils/constants.py:70
+#: ui/image/image_details_qt.py:284 ui_tk/image/image_details.py:149
+msgid "Negative"
+msgstr "ログイン"
+
+#: ui/image/image_details_qt.py:293 ui_tk/image/image_details.py:154
+#: utils/constants.py:46 utils/constants.py:70
 msgid "Models"
 msgstr "モデル"
 
-#: image/image_details.py:146
+#: ui/image/image_details_qt.py:297 ui_tk/image/image_details.py:156
 msgid "LoRAs"
 msgstr "LoRA"
 
-#: image/image_details.py:151
+#: ui/image/image_details_qt.py:302 ui_tk/image/image_details.py:161
 msgid "Copy Prompt"
 msgstr "コピープロンプト"
 
-#: image/image_details.py:152
+#: ui/image/image_details_qt.py:303 ui_tk/image/image_details.py:162
 msgid "Copy Prompt No BREAK"
 msgstr "コピー プロンプト いいえ ブレイク"
 
-#: image/image_details.py:156 utils/help_and_config.py:127
-msgid "Rotate Image Left"
-msgstr "左にイメージを回転させる"
-
-#: image/image_details.py:157 utils/help_and_config.py:128
-msgid "Rotate Image Right"
-msgstr "画像を右に回転させる"
-
-#: image/image_details.py:161 utils/help_and_config.py:126
-msgid "Crop Image (Smart Detect)"
-msgstr "作物のイメージ(スマートな検出)"
-
-#: image/image_details.py:162 utils/help_and_config.py:129
-msgid "Enhance Image"
-msgstr "イメージの強化"
-
-#: image/image_details.py:166 utils/help_and_config.py:130
-msgid "Random Crop"
-msgstr "ランダムクロップ"
-
-#: image/image_details.py:167
+#: ui/image/image_details_qt.py:315 ui_tk/image/image_details.py:177
 msgid "Randomly Modify"
 msgstr "ランダム修正"
 
-#: image/image_details.py:171 utils/help_and_config.py:132
-msgid "Flip Image Horizontally"
-msgstr "横のフリップ イメージ"
+#: ui/image/image_details_qt.py:322 ui/image/image_details_qt.py:791
+msgid "Change Aspect Ratio"
+msgstr "アスペクトレシオを変更する"
 
-#: image/image_details.py:172 utils/help_and_config.py:133
-msgid "Flip Image Vertically"
-msgstr "縦にフリップ イメージ"
+#: ui/image/image_details_qt.py:323
+msgid "Flip Aspect Ratio"
+msgstr "フリップ アスペクト レシオ"
 
-#: image/image_details.py:175 utils/help_and_config.py:134
-msgid "Copy Without EXIF"
-msgstr "EXIFなしコピー"
+#: ui/image/image_details_qt.py:331 ui_tk/image/image_details.py:192
+msgid "Run OCR"
+msgstr "OCRを実行"
 
-#: image/image_details.py:177 utils/help_and_config.py:135
-msgid "Convert to JPG"
-msgstr "JPGに変換"
-
-#: image/image_details.py:180 utils/help_and_config.py:136
-msgid "Show Metadata"
-msgstr "メタデータを表示する"
-
-#: image/image_details.py:184 utils/help_and_config.py:137
-msgid "Open Related Image"
-msgstr "関連する画像を開く"
-
-#: image/image_details.py:193
+#: ui/image/image_details_qt.py:339 ui_tk/image/image_details.py:205
 msgid "Image Generation"
 msgstr "画像生成"
 
-#: image/image_details.py:203
+#: ui/image/image_details_qt.py:353 ui_tk/image/image_details.py:215
 msgid "Press Shift+I on a main app window to run this"
 msgstr "プレスシフト+ 私はメインアプリウィンドウでこれを実行します"
 
-#: image/image_details.py:206 utils/help_and_config.py:139
-msgid "Redo Prompt"
-msgstr "Redoのプロンプト"
-
-#: image/image_details.py:210
+#: ui/image/image_details_qt.py:361 ui_tk/image/image_details.py:222
 msgid "Tags"
 msgstr "ニュース"
 
-#: image/image_details.py:220
+#: ui/image/image_details_qt.py:369 ui_tk/image/image_details.py:232
 msgid "Update Tags"
 msgstr "更新タグ"
 
-#: image/image_details.py:322
+#: ui/image/image_details_qt.py:547 ui_tk/image/image_details.py:343
 msgid "No prompt found"
 msgstr "プロンプトが見つかりません"
 
-#: image/image_details.py:330
+#: ui/image/image_details_qt.py:554 ui_tk/image/image_details.py:351
 msgid "Copied prompt without BREAK"
 msgstr "BREAKなしでコピーされたプロンプト"
 
-#: image/image_details.py:351
+#: ui/image/image_details_qt.py:573 ui_tk/image/image_details.py:372
 msgid "No files found in current directory"
 msgstr "現在のディレクトリにファイルが見つかりません"
 
-#: image/image_details.py:356
+#: ui/image/image_details_qt.py:578 ui_tk/image/image_details.py:377
 msgid "No files available"
 msgstr "利用可能なファイルはありません"
 
-#: image/image_details.py:382
+#: ui/image/image_details_qt.py:603 ui_tk/image/image_details.py:403
 msgid "Copied prompt from {0}"
 msgstr "{0}からプロンプトをコピーしました"
 
-#: image/image_details.py:389
+#: ui/image/image_details_qt.py:610 ui_tk/image/image_details.py:410
 msgid "No files with prompts found in current directory"
 msgstr "現在のディレクトリにプロンプト付きのファイルが見つかりません"
 
-#: image/image_details.py:395 image/image_details.py:491
+#: ui/image/image_details_qt.py:657 ui/image/image_details_qt.py:844
+#: ui_tk/image/image_details.py:416 ui_tk/image/image_details.py:512
 msgid "Rotated image right"
 msgstr "右に回転した画像"
 
-#: image/image_details.py:395 image/image_details.py:491
+#: ui/image/image_details_qt.py:657 ui/image/image_details_qt.py:844
+#: ui_tk/image/image_details.py:416 ui_tk/image/image_details.py:512
 msgid "Rotated image left"
 msgstr "左に回転した画像"
 
-#: image/image_details.py:406 image/image_details.py:502
+#: ui/image/image_details_qt.py:666 ui/image/image_details_qt.py:852
+#: ui_tk/image/image_details.py:427 ui_tk/image/image_details.py:523
 msgid "Cropped image"
 msgstr "Croppedイメージ"
 
-#: image/image_details.py:410 image/image_details.py:506
+#: ui/image/image_details_qt.py:673 ui/image/image_details_qt.py:857
+#: ui_tk/image/image_details.py:431 ui_tk/image/image_details.py:527
 msgid "No crops found"
 msgstr "作物が見つかりません"
 
-#: image/image_details.py:417 image/image_details.py:513
+#: ui/image/image_details_qt.py:677 ui/image/image_details_qt.py:864
+#: ui_tk/image/image_details.py:438 ui_tk/image/image_details.py:534
 msgid "Enhanced image"
 msgstr "高められたイメージ"
 
-#: image/image_details.py:425 image/image_details.py:522
+#: ui/image/image_details_qt.py:681 ui/image/image_details_qt.py:873
+#: ui_tk/image/image_details.py:446 ui_tk/image/image_details.py:543
 msgid "Randomly cropped image"
 msgstr "ランダムにクロップされた画像"
 
-#: image/image_details.py:437 image/image_details.py:532
+#: ui/image/image_details_qt.py:695 ui/image/image_details_qt.py:881
+#: ui_tk/image/image_details.py:458 ui_tk/image/image_details.py:553
 msgid "Randomly modified image"
 msgstr "ランダムに修正された画像"
 
-#: image/image_details.py:442 image/image_details.py:535
+#: ui/image/image_details_qt.py:703 ui/image/image_details_qt.py:886
+#: ui_tk/image/image_details.py:463 ui_tk/image/image_details.py:556
 msgid "No new image created"
 msgstr "新しい画像が作成されませんでした"
 
-#: image/image_details.py:448
+#: ui/image/image_details_qt.py:710 ui_tk/image/image_details.py:469
 msgid "Confirm Vertical Flip"
 msgstr "垂直反転を確認"
 
-#: image/image_details.py:449
+#: ui/image/image_details_qt.py:712 ui_tk/image/image_details.py:470
 msgid ""
 "Are you sure you want to flip this image vertically? This is an uncommon "
 "operation and may have been clicked by accident."
 msgstr "この画像を縦方向に反転させてもよろしいですか？これはあまり行われない操作であり、誤ってクリックされた可能性があります。"
 
-#: image/image_details.py:459 image/image_details.py:542
+#: ui/image/image_details_qt.py:722 ui/image/image_details_qt.py:890
+#: ui_tk/image/image_details.py:480 ui_tk/image/image_details.py:563
 msgid "Flipped image"
 msgstr "フリップイメージ"
 
-#: image/image_details.py:467 image/image_details.py:551
+#: ui/image/image_details_qt.py:755
+msgid "Please enter a target ratio"
+msgstr "お願(ねが)いします。ターゲット比率を入力してください。"
+
+#: ui/image/image_details_qt.py:765
+msgid "Changed image aspect ratio"
+msgstr "画像の aspect 比 を 変更 しました。"
+
+#: ui/image/image_details_qt.py:770
+msgid "Error changing image aspect ratio"
+msgstr "画像のアスペクトレートを変更するエラー"
+
+#: ui/image/image_details_qt.py:775 ui/image/image_details_qt.py:782
+msgid "Aspect ratio changes are only available for images"
+msgstr "画像に対してのみ、アスペクトレートの変更が可能です。"
+
+#: ui/image/image_details_qt.py:796
+msgid "Current ratio: {0}"
+msgstr "流動比率：{0}"
+
+#: ui/image/image_details_qt.py:798
+msgid "Target ratio (e.g. 16:9 or 1.777):"
+msgstr "ターゲット アスペクトレート (例：16:9 または 1.777)："
+
+#: ui/image/image_details_qt.py:825 ui/image/image_details_qt.py:897
+#: ui_tk/image/image_details.py:488 ui_tk/image/image_details.py:572
 msgid "Copied image without EXIF data"
 msgstr "EXIFデータのないコピー画像"
 
-#: image/image_details.py:472 image/image_details.py:556
+#: ui/image/image_details_qt.py:830 ui/image/image_details_qt.py:903
+#: ui_tk/image/image_details.py:493 ui_tk/image/image_details.py:577
 msgid "Error copying image without EXIF"
 msgstr "EXIFのない画像のコピーエラー"
 
-#: image/image_details.py:479 image/image_details.py:564
+#: ui/image/image_details_qt.py:835 ui/image/image_details_qt.py:908
+#: ui_tk/image/image_details.py:500 ui_tk/image/image_details.py:585
 msgid "Converted image to JPG"
 msgstr "画像をJPGに変換"
 
-#: image/image_details.py:484 image/image_details.py:569
+#: ui/image/image_details_qt.py:838 ui/image/image_details_qt.py:911
+#: ui_tk/image/image_details.py:505 ui_tk/image/image_details.py:590
 msgid "Error converting image to JPG"
 msgstr "画像をJPGに変換する際のエラー"
 
-#: image/image_details.py:574
+#: ui/image/image_details_qt.py:918 ui_tk/image/image_details.py:595
 msgid "No metadata found"
 msgstr "メタデータが見つかりません"
 
-#: image/image_details.py:588 image/image_details.py:646
+#: ui/image/image_details_qt.py:937 ui_tk/image/image_details.py:608
+msgid "OCR is only available for images"
+msgstr "OCR は画像のみで利用可能です。"
+
+#: ui/image/image_details_qt.py:940 ui_tk/image/image_details.py:611
+msgid "Surya OCR is not installed"
+msgstr "スルヤ OCR はインストールされていません。"
+
+#: ui/image/image_details_qt.py:945 ui_tk/image/image_details.py:616
+msgid "No text found in image"
+msgstr "画像中にテキストがありませんでした。"
+
+#: ui/image/image_details_qt.py:952 ui_tk/image/image_details.py:623
+msgid "OCR failed: "
+msgstr "OCR失敗しました： "
+
+#: ui/image/image_details_qt.py:977 ui/image/image_details_qt.py:1051
+#: ui_tk/image/image_details.py:639 ui_tk/image/image_details.py:697
 msgid " (Exact Match Not Found)"
 msgstr " (正確なマッチが見つかりません)"
 
-#: image/image_details.py:590 image/image_details.py:643
+#: ui/image/image_details_qt.py:979 ui/image/image_details_qt.py:1048
+#: ui_tk/image/image_details.py:641 ui_tk/image/image_details.py:694
 msgid "(No related image found)"
 msgstr "(関連画像が見つかりません)"
 
-#: image/image_details.py:706 image/image_details.py:713
-msgid "%s downstream image(s) found."
+#: ui/image/image_details_qt.py:1162 ui/image/image_details_qt.py:1171
+msgid "{0} downstream image(s) found."
 msgstr "{0} 下流画像(s)が見つかります。"
 
-#: image/image_details.py:709
-msgid "%s (cached) downstream image(s) found."
+#: ui/image/image_details_qt.py:1165
+msgid "{0} (cached) downstream image(s) found."
 msgstr "{0} (キャッシュ済み) ダウンストリーム画像が見つかりました。"
 
-#: image/image_details.py:715
+#: ui/image/image_details_qt.py:1175 ui_tk/image/image_details.py:766
 msgid "No downstream related images found in"
 msgstr "下流関連の画像が見つかりません"
 
-#: image/image_details.py:775
-msgid "Updated tags for %s"
+#: ui/image/image_details_qt.py:1262
+msgid "Updated tags for {0}"
 msgstr "{0} のタグを更新"
 
-#: image/metadata_viewer_window.py:32
-msgid "Copy Metadata"
-msgstr "メタデータをコピー"
-
-#: image/metadata_viewer_window.py:35
-msgid "Raw Image Metadata"
-msgstr "生画像メタデータ"
-
-#: image/metadata_viewer_window.py:59
-msgid "Copied metadata to clipboard"
-msgstr "メタデータをクリップボードにコピーしました"
-
-#: image/metadata_viewer_window.py:62
-msgid "Error copying metadata to clipboard: "
-msgstr "メタデータをクリップボードにコピー中にエラーが発生しました: "
-
-#: image/metadata_viewer_window.py:66
+#: ui/image/metadata_viewer_window_qt.py:46
+#: ui/image/metadata_viewer_window_qt.py:123
+#: ui_tk/image/metadata_viewer_window.py:66
 msgid "Metadata Viewer"
 msgstr "メタデータビューア"
 
-#: image/temp_image_canvas.py:116
+#: ui/image/metadata_viewer_window_qt.py:70
+#: ui_tk/image/metadata_viewer_window.py:32
+msgid "Copy Metadata"
+msgstr "メタデータをコピー"
+
+#: ui/image/metadata_viewer_window_qt.py:74
+#: ui_tk/image/metadata_viewer_window.py:35
+msgid "Raw Image Metadata"
+msgstr "生画像メタデータ"
+
+#: ui/image/metadata_viewer_window_qt.py:131
+#: ui_tk/image/metadata_viewer_window.py:59
+msgid "Copied metadata to clipboard"
+msgstr "メタデータをクリップボードにコピーしました"
+
+#: ui/image/metadata_viewer_window_qt.py:135
+#: ui_tk/image/metadata_viewer_window.py:62
+msgid "Error copying metadata to clipboard: "
+msgstr "メタデータをクリップボードにコピー中にエラーが発生しました: "
+
+#: ui/image/ocr_text_window_qt.py:44 ui/image/ocr_text_window_qt.py:122
+#: ui_tk/image/ocr_text_window.py:102
+msgid "OCR Text"
+msgstr "OCRテキスト"
+
+#: ui/image/ocr_text_window_qt.py:68 ui_tk/image/ocr_text_window.py:37
+msgid "Copy All Text"
+msgstr "コピー 全てのテキスト"
+
+#: ui/image/ocr_text_window_qt.py:72 ui_tk/image/ocr_text_window.py:40
+msgid "OCR Result"
+msgstr "OCR 結果"
+
+#: ui/image/ocr_text_window_qt.py:133 ui_tk/image/ocr_text_window.py:93
+msgid "Copied OCR text to clipboard"
+msgstr "OCR テキストをクリップボードにコピーしました。"
+
+#: ui/image/ocr_text_window_qt.py:137 ui_tk/image/ocr_text_window.py:97
+msgid "Error copying OCR text: "
+msgstr "OCRテキストのコピーに失敗しました。 "
+
+#: ui/image/temp_image_window_qt.py:137 ui_tk/image/temp_image_canvas.py:116
 msgid "Open a new related image with Shift+R on main window"
 msgstr "メインウィンドウでShift+Rで新しい関連画像を開きます"
 
-#: lib/caps_lock_mixin.py:64
-msgid "⚠ Caps Lock is ON"
-msgstr "⚠ キャプスロックがオンになっています"
+#: ui/image/temp_image_window_qt.py:259 ui_tk/image/temp_image_canvas.py:191
+msgid "Open in Full Window"
+msgstr "完全にウィンドウを開く"
+
+#: ui/image/temp_image_window_qt.py:270 ui_tk/image/temp_image_canvas.py:202
+msgid "Copy File Path"
+msgstr "ファイルパスの複製"
+
+#: ui_tk/compare/classifier_management_window.py:201
+msgid "Select Categories..."
+msgstr "カテゴリーを選択..."
+
+#: ui_tk/compare/compare_settings_window.py:403
+msgid "Threshold:"
+msgstr "閾値："
+
+#: ui_tk/compare/prevalidations_tab.py:51
+msgid "Select Lookaheads..."
+msgstr "先読みを選択..."
+
+#: ui_tk/files/directory_notes_window.py:339
+msgid "Text files"
+msgstr "テキストファイル"
+
+#: ui_tk/files/directory_notes_window.py:339
+#: ui_tk/files/directory_notes_window.py:377 ui_tk/files/go_to_file.py:242
+msgid "All files"
+msgstr "すべてのファイル"
+
+#: ui_tk/files/directory_notes_window.py:377
+msgid "JSON files"
+msgstr "JSONファイル"
+
+#: ui_tk/files/favorites_window.py:174
+msgid "Opened favorite: "
+msgstr "お気に入りとして開いた: "
+
+#: ui_tk/files/favorites_window.py:179
+msgid "Opened favorite in new window: "
+msgstr "お気に入りを新しいウィンドウで開く: "
+
+#: ui_tk/files/go_to_file.py:224
+msgid "Supported files"
+msgstr "対応ファイル"
+
+#: ui_tk/files/go_to_file.py:231
+msgid "Video files"
+msgstr "動画ファイル"
+
+#: ui_tk/files/go_to_file.py:233
+msgid "GIF files"
+msgstr "GIFファイル"
+
+#: ui_tk/files/go_to_file.py:235
+msgid "PDF files"
+msgstr "PDFファイル"
+
+#: ui_tk/files/go_to_file.py:237
+msgid "SVG files"
+msgstr "SVGファイル"
+
+#: ui_tk/files/go_to_file.py:239
+msgid "HTML files"
+msgstr "HTMLファイル"
+
+#: ui_tk/files/marked_file_mover.py:153
+#: ui_tk/files/recent_directory_window.py:125
+msgid "Set a new target directory"
+msgstr "新しいターゲットディレクトリを設定する"
+
+#: ui_tk/files/marked_file_mover.py:546
+msgid "Deleting %s marked files - Are you sure you want to proceed?"
+msgstr "{0}マークされたファイルを削除する - 続行したいですか?"
+
+#: ui_tk/files/marked_file_mover.py:574
+msgid "Failed to delete %s files - check log for details."
+msgstr "{0}ファイルを削除する失敗 - 詳細はログを確認してください。"
+
+#: ui_tk/files/marked_file_mover.py:577
+msgid "Deleted %s marked files."
+msgstr "削除された {0} マークされたファイル。"
+
+#: ui_tk/files/marked_file_mover.py:640
+msgid "Found %s downstream related images"
+msgstr "{0}下流関連画像が見つかりました"
+
+#: ui_tk/files/target_directory_window.py:83
+msgid "Select Target Directory for Related Files Search"
+msgstr "関連ファイル検索の対象ディレクトリを選択"
+
+#: ui_tk/files/target_directory_window.py:127
+msgid "Select"
+msgstr "選択"
+
+#: ui_tk/files/target_directory_window.py:142
+msgid "Browse for Directory..."
+msgstr "ディレクトリを参照..."
+
+#: ui_tk/files/target_directory_window.py:147
+msgid "Clear Recent"
+msgstr "最近の履歴を消去"
+
+#: ui_tk/image/image_details.py:757 ui_tk/image/image_details.py:764
+msgid "%s downstream image(s) found."
+msgstr "{0} 下流画像(s)が見つかります。"
+
+#: ui_tk/image/image_details.py:760
+msgid "%s (cached) downstream image(s) found."
+msgstr "{0} (キャッシュ済み) ダウンストリーム画像が見つかりました。"
+
+#: ui_tk/image/image_details.py:826
+msgid "Updated tags for %s"
+msgstr "{0} のタグを更新"
 
 #: utils/constants.py:13 utils/constants.py:22
 msgid "Browsing Mode"
@@ -2985,448 +4124,170 @@ msgstr "降下降下"
 msgid "random"
 msgstr "ランダム"
 
-#: utils/constants.py:245
+#: utils/constants.py:271
 msgid "Image"
 msgstr "サイトマップ"
 
-#: utils/constants.py:247
+#: utils/constants.py:273
 msgid "GIF"
 msgstr "ギフト"
 
-#: utils/constants.py:249
+#: utils/constants.py:275
 msgid "Video"
 msgstr "ビデオ"
 
-#: utils/constants.py:251
+#: utils/constants.py:277
 msgid "PDF"
 msgstr "サイトマップ"
 
-#: utils/constants.py:253
+#: utils/constants.py:279
 msgid "SVG"
 msgstr "SVG"
 
-#: utils/constants.py:255
+#: utils/constants.py:281
 msgid "HTML"
 msgstr "HTML"
 
-#: utils/constants.py:275
+#: utils/constants.py:301
 msgid "Moved files"
 msgstr "ファイルの移動"
 
-#: utils/constants.py:277
+#: utils/constants.py:303
 msgid "Copied files"
 msgstr "コピーされたファイル"
 
-#: utils/constants.py:279
+#: utils/constants.py:305
 msgid "Removed files"
 msgstr "削除されたファイル"
 
-#: utils/constants.py:281
+#: utils/constants.py:307
 msgid "Marked files"
 msgstr "マークされたファイル"
 
-#: utils/constants.py:283
+#: utils/constants.py:309
 msgid "Unmarked files"
 msgstr "注目のファイル"
 
-#: utils/constants.py:285
+#: utils/constants.py:311
 msgid "Searched files"
 msgstr "ファイル検索"
 
-#: utils/constants.py:287
+#: utils/constants.py:313
 msgid "Compared files"
 msgstr "比較ファイル"
 
-#: utils/constants.py:289
+#: utils/constants.py:315
 msgid "Generated images"
 msgstr "生成された画像"
 
-#: utils/constants.py:291
+#: utils/constants.py:317
 msgid "Changed directory"
 msgstr "変更ディレクトリ"
 
-#: utils/constants.py:293
+#: utils/constants.py:319
 msgid "System"
 msgstr "システム"
 
-#: utils/constants.py:327
+#: utils/constants.py:331
+msgid "Classifier Action"
+msgstr "分類器動作"
+
+#: utils/constants.py:333
+msgid "Prevalidation"
+msgstr "事前検証"
+
+#: utils/constants.py:377
+msgid "Hide"
+msgstr "隠す"
+
+#: utils/constants.py:379
+msgid "Notify"
+msgstr "通知する"
+
+#: utils/constants.py:381
+msgid "Skip"
+msgstr "スキップ"
+
+#: utils/constants.py:389
+msgid "Add Mark"
+msgstr "マークを追加する"
+
+#: utils/constants.py:430
 msgid "Start Application"
 msgstr "スタート・ソフトウェア"
 
-#: utils/constants.py:328
+#: utils/constants.py:431
 msgid "Run Compares"
 msgstr "比較実行"
 
-#: utils/constants.py:329
+#: utils/constants.py:432
 msgid "Run Search"
 msgstr "検索を実行する"
 
-#: utils/constants.py:330
+#: utils/constants.py:433
 msgid "Run Search Preset"
 msgstr "検索プリセットの実行"
 
-#: utils/constants.py:332
+#: utils/constants.py:435
 msgid "View Recent Directories"
 msgstr "最近のディレクトリを見る"
 
-#: utils/constants.py:333
+#: utils/constants.py:436
 msgid "View File Actions"
 msgstr "ファイルアクションを見る"
 
-#: utils/constants.py:334
+#: utils/constants.py:437
 msgid "Run File Actions"
 msgstr "ファイルアクションの実行"
 
-#: utils/constants.py:335
+#: utils/constants.py:438
 msgid "Edit Prevalidations"
 msgstr "プリヴァリッドを編集する"
 
-#: utils/constants.py:336
+#: utils/constants.py:439
 msgid "Run Prevalidations"
 msgstr "ラン・プレバリデーション"
 
-#: utils/constants.py:338
+#: utils/constants.py:441
 msgid "Run RefacDir"
 msgstr "RefacDirの実行"
 
-#: utils/constants.py:339
+#: utils/constants.py:442
 msgid "Delete Media"
 msgstr "メディア削除"
 
-#: utils/constants.py:341
+#: utils/constants.py:444
 msgid "Set Hotkey Actions"
 msgstr "ホットキーアクションの設定"
 
-#: utils/constants.py:342
+#: utils/constants.py:445
 msgid "Access Password Administration"
 msgstr "アクセスパスワードの管理"
-
-#: utils/help_and_config.py:35
-msgid "Main Window Shortcuts"
-msgstr "メインウィンドウのショートカット"
-
-#: utils/help_and_config.py:42 utils/help_and_config.py:125
-#: utils/help_and_config.py:176
-msgid "Command"
-msgstr "コマンド"
-
-#: utils/help_and_config.py:42 utils/help_and_config.py:125
-#: utils/help_and_config.py:176
-msgid "Description"
-msgstr "コンテンツ"
-
-#: utils/help_and_config.py:43
-msgid "Search current image in new window"
-msgstr "新しいウィンドウで現在の画像を検索"
-
-#: utils/help_and_config.py:44
-msgid "Return to Browsing mode"
-msgstr "ブラウジングモードに戻る"
-
-#: utils/help_and_config.py:45
-msgid "Copy marks list"
-msgstr "マークリストのコピー"
-
-#: utils/help_and_config.py:46
-msgid "Set current marks from previous marks list"
-msgstr "前のマークリストから現在のマークを設定する"
-
-#: utils/help_and_config.py:47
-msgid "Run penultimate marks action"
-msgstr "貫通マークアクションを実行"
-
-#: utils/help_and_config.py:48
-msgid "Open Favorites window"
-msgstr "お気に入りウィンドウを開く"
-
-#: utils/help_and_config.py:49
-msgid "Open Go to file window"
-msgstr "オープン ファイルウィンドウに移動"
-
-#: utils/help_and_config.py:50
-msgid "Hide/show sidebar"
-msgstr "サイドバーを非表示/表示"
-
-#: utils/help_and_config.py:51
-msgid "Open hotkeys window (*when marks window open)"
-msgstr "ホットキーウィンドウを開きます(*マークウィンドウが開きます)"
-
-#: utils/help_and_config.py:52
-msgid "Open content filters window"
-msgstr "コンテンツフィルターウィンドウを開く"
-
-#: utils/help_and_config.py:53
-msgid "Open marks window (no GUI)"
-msgstr "マークウィンドウを開く(GUIなし)"
-
-#: utils/help_and_config.py:54
-msgid "Open marks window"
-msgstr "マークウィンドウを開く"
-
-#: utils/help_and_config.py:55
-msgid "Open marks action history window"
-msgstr "マークアクション履歴ウィンドウを開く"
-
-#: utils/help_and_config.py:56
-msgid "Quit"
-msgstr "ログイン"
-
-#: utils/help_and_config.py:57
-msgid "Open security configuration window"
-msgstr "セキュリティ設定ウィンドウを開く"
-
-#: utils/help_and_config.py:58
-msgid "Run previous marks action"
-msgstr "前のマークアクションを実行する"
-
-#: utils/help_and_config.py:59
-msgid "Continue image generation"
-msgstr "画像生成の継続"
-
-#: utils/help_and_config.py:60
-msgid "Cancel image generation"
-msgstr "画像生成をキャンセル"
-
-#: utils/help_and_config.py:61
-msgid "Run next text embedding search preset"
-msgstr "次のテキスト埋め込み検索プリセットを実行します"
-
-#: utils/help_and_config.py:62
-msgid "Run permanent marks action"
-msgstr "永久的な印の行為を実行して下さい"
-
-#: utils/help_and_config.py:63
-msgid "Open type configuration window"
-msgstr "タイプ構成ウィンドウを開く"
-
-#: utils/help_and_config.py:64
-msgid "Open new compare window"
-msgstr "新しい比較ウィンドウを開く"
-
-#: utils/help_and_config.py:65
-msgid "Move previous marks to a different directory"
-msgstr "前のマークを別のディレクトリに移動する"
-
-#: utils/help_and_config.py:66 utils/help_and_config.py:96
-msgid "Undo previous marks changes"
-msgstr "前のマークが変更されない"
-
-#: utils/help_and_config.py:67
-msgid "Toggle fullscreen"
-msgstr "フルスクリーンをトグル"
-
-#: utils/help_and_config.py:68
-msgid "Go to first sorted image"
-msgstr "最初にソートされた画像に移動"
-
-#: utils/help_and_config.py:69
-msgid "Go to last sorted image"
-msgstr "最後の並べ替え画像に移動"
-
-#: utils/help_and_config.py:70
-msgid "Show previous/next image"
-msgstr "前の画像/次の画像を表示"
-
-#: utils/help_and_config.py:71
-msgid "Page through images"
-msgstr "サイトマップ"
-
-#: utils/help_and_config.py:72
-msgid "Search current image in current window"
-msgstr "現在のウィンドウで現在の画像を検索"
-
-#: utils/help_and_config.py:73
-msgid "Clear all hidden images"
-msgstr "すべての隠された画像をクリア"
-
-#: utils/help_and_config.py:74
-msgid "Clear marks list"
-msgstr "クリアマークリスト"
-
-#: utils/help_and_config.py:75
-msgid "Show image details"
-msgstr "画像の詳細を表示"
-
-#: utils/help_and_config.py:76
-msgid "Delete image (or marked file group if marks window selected)"
-msgstr "削除イメージ(またはマークされたファイルグループを選択した場合)"
-
-#: utils/help_and_config.py:77
-msgid "Delete current base directory and all contents"
-msgstr "現在のベースディレクトリとすべてのコンテンツを削除します"
-
-#: utils/help_and_config.py:78
-msgid "Go to next mark"
-msgstr "次のマークへ"
-
-#: utils/help_and_config.py:79
-msgid "Show help window"
-msgstr "ヘルプウィンドウを表示"
-
-#: utils/help_and_config.py:80
-msgid "Run image generation"
-msgstr "画像生成を実行"
-
-#: utils/help_and_config.py:81
-msgid "Open context menu"
-msgstr "コンテキストメニューを開く"
-
-#: utils/help_and_config.py:82
-msgid "Run content filters for all files in the current directory"
-msgstr "現在のディレクトリ内のすべてのファイルに対してコンテンツフィルタを実行する"
-
-#: utils/help_and_config.py:83
-msgid "View last moved image mark"
-msgstr "最終移動イメージマークを見る"
-
-#: utils/help_and_config.py:84
-msgid "Toggle content filters"
-msgstr "コンテンツフィルタの切り替え"
-
-#: utils/help_and_config.py:85
-msgid "Add or remove a mark for current image"
-msgstr "現在の画像のマークの追加または削除"
-
-#: utils/help_and_config.py:86
-msgid ""
-"Add all marks between most recently set and current selected inclusive, or "
-"all marks in current group"
-msgstr "最近設定したすべてのマークと、現在のグループで選択したすべてのマークを追加します。"
-
-#: utils/help_and_config.py:88
-msgid "Open image in GIMP"
-msgstr "GIMPで画像を開く"
-
-#: utils/help_and_config.py:89
-msgid "Randomly modify image"
-msgstr "ランダムに画像を変更"
-
-#: utils/help_and_config.py:90
-msgid "View related image (controlnet, etc.)"
-msgstr "関連画像(コントロールネットなど)を見る"
-
-#: utils/help_and_config.py:91
-msgid "Toggle slideshow"
-msgstr "トグルスライドショー"
-
-#: utils/help_and_config.py:92
-msgid "Find related images in open window"
-msgstr "開いたウィンドウで関連画像を探す"
-
-#: utils/help_and_config.py:93
-msgid "Run refacdir"
-msgstr "refacdir を実行"
-
-#: utils/help_and_config.py:94
-msgid "Hide current image"
-msgstr "現在のイメージを隠す"
-
-#: utils/help_and_config.py:95
-msgid "Set marks from downstream related images"
-msgstr "下流関連画像からマークを設定する"
-
-#: utils/help_and_config.py:97
-msgid "Show previous/next group"
-msgstr "前のグループを表示"
-
-#: utils/help_and_config.py:118
-msgid "Image Details Shortcuts"
-msgstr "画像詳細ショートカット"
-
-#: utils/help_and_config.py:131
-msgid "Randomly Modify Image"
-msgstr "画像をランダムに変更する"
-
-#: utils/help_and_config.py:152
-msgid ""
-"Note: Using Ctrl instead of Shift marks the created file and opens the marks"
-" window without GUI."
-msgstr "注：Shiftキーの代わりにCtrlキーを使用すると、作成されたファイルにマークを付け、GUIなしでマークウィンドウを開きます。"
-
-#: utils/help_and_config.py:169
-msgid "Go To File Shortcuts"
-msgstr "ファイルへのショートカット"
-
-#: utils/help_and_config.py:178
-msgid "Browse File"
-msgstr "ファイルを参照"
-
-#: utils/help_and_config.py:180
-msgid "Find Related Files"
-msgstr "関連ファイルを検索する"
-
-#: utils/help_and_config.py:181
-msgid "Extract Base ID"
-msgstr "ベースIDの抽出"
-
-#: utils/help_and_config.py:182
-msgid "Browse Directory"
-msgstr "ディレクトリを閲覧する"
-
-#: utils/help_and_config.py:244
-msgid "Show Toasts"
-msgstr "トーストショー"
-
-#: utils/help_and_config.py:246
-msgid "Slideshow Interval (sec)"
-msgstr "スライドショーインターバル(秒)"
-
-#: utils/help_and_config.py:248
-msgid "File Check Interval (sec)"
-msgstr "ファイル更新間隔 (秒)"
-
-#: utils/help_and_config.py:250
-msgid "Max Search Results"
-msgstr "最高の検索結果"
-
-#: utils/help_and_config.py:252
-msgid "Sort By"
-msgstr "並び替え"
-
-#: utils/help_and_config.py:256
-msgid "Toasts Persist (sec)"
-msgstr "トースト・ペルシスト(秒)"
-
-#: utils/help_and_config.py:258
-msgid "Title Notify Persist (sec)"
-msgstr "タイトル ペルシストを通知 (秒)"
-
-#: utils/help_and_config.py:260
-msgid "Delete Instantly"
-msgstr "即時削除"
-
-#: utils/help_and_config.py:262
-msgid "Trash Folder"
-msgstr "ゴミ箱フォルダ"
-
-#: utils/help_and_config.py:264
-msgid "Image Tagging Enabled"
-msgstr "画像タグ有効"
-
-#: utils/help_and_config.py:266
-msgid "Escape Backslash Filepaths"
-msgstr "ファイルパスのバックスラッシュをエスケープする"
 
 #: utils/notification_manager.py:26
 msgid " etc."
 msgstr " その他"
 
-#: app.py:1674
-msgid "Extra debug logging enabled"
-msgstr "追加デバッグログ記録を有効化"
+#: utils/constants.py:217
+msgid "Control Net"
+msgstr "制御ネット"
 
-#: app.py:1674
-msgid "Extra debug logging disabled"
-msgstr "追加デバッグログ記録を無効化"
+#: utils/constants.py:219
+msgid "IP Adapter"
+msgstr "IP アダプタ"
 
-#: compare/classifier_management_window.py:116
-msgid "Use Text Embeddings"
-msgstr "テキスト埋め込みを使用する"
+#: utils/constants.py:221
+msgid "Renoiser"
+msgstr "Renoiser"
 
-#: compare/classifier_management_window.py:148
-msgid "Text Embedding Threshold"
-msgstr "テキスト埋め込みの閾値"
+#: utils/constants.py:223
+msgid "Image to Image"
+msgstr "画像から画像へ"
 
-#: compare/classifier_management_window.py:156
-msgid "Embedding Prototype Threshold"
-msgstr "埋め込みプロトタイプの閾値"
+#: utils/constants.py:225
+msgid "Last Settings"
+msgstr "最後の設定"
+
+#: utils/constants.py:229
+msgid "Revert to Simple Generation"
+msgstr "シンプルジェネレーションに復帰する"

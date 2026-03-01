@@ -176,7 +176,6 @@ class ClassifierActionsTab(QWidget):
             row = QHBoxLayout()
 
             run_btn = QPushButton(_("Run"))
-            run_btn.setFixedWidth(45)
             run_btn.clicked.connect(lambda _=False, c=ca: self._run_single(c))
             row.addWidget(run_btn)
 
@@ -195,22 +194,18 @@ class ClassifierActionsTab(QWidget):
             row.addWidget(action_lbl)
 
             mod_btn = QPushButton(_("Modify"))
-            mod_btn.setFixedWidth(55)
             mod_btn.clicked.connect(lambda _=False, c=ca: self._open_modify_window(c))
             row.addWidget(mod_btn)
 
             copy_btn = QPushButton(_("Copy"))
-            copy_btn.setFixedWidth(45)
             copy_btn.clicked.connect(lambda _=False, c=ca: self._open_copy_window(c))
             row.addWidget(copy_btn)
 
             del_btn = QPushButton(_("Delete"))
-            del_btn.setFixedWidth(52)
             del_btn.clicked.connect(lambda _=False, c=ca: self._delete(c))
             row.addWidget(del_btn)
 
             down_btn = QPushButton(_("Move down"))
-            down_btn.setFixedWidth(75)
             down_btn.clicked.connect(lambda _=False, i=idx, c=ca: self._move_down(i, c))
             row.addWidget(down_btn)
 

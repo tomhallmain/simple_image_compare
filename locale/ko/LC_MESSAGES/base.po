@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2026-01-16 02:50-0500\n"
-"PO-Revision-Date: 2026-01-16 02:50-0500\n"
-"Last-Translator: Translator Name <translator@example.com>\n"
+"POT-Creation-Date: 2026-02-28 20:35-0500\n"
+"PO-Revision-Date: 2026-02-28 20:35-0500\n"
+"Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: ko Team <<EMAIL>>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -12,59 +12,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:113 app.py:1022 app.py:2506
+#: app.py:117 app.py:1044 app.py:2535 ui/app_window/app_window.py:133
+#: ui/app_window/app_window.py:187 ui/app_window/app_window.py:707
 msgid " Simple Image Compare "
 msgstr " 간단한 이미지 비교 "
 
-#: app.py:128
+#: app.py:132 ui/app_window/window_manager.py:76
 msgid "(Main Window)"
 msgstr "(주 창)"
 
-#: app.py:191
+#: app.py:195 ui/app_window/app_window.py:989
 msgid "Theme switched to {0}."
 msgstr "테마는 {0}에 전환."
 
-#: app.py:282 app.py:503 app.py:1052 compare/compare_wrapper.py:508
+#: app.py:287 app.py:509 app.py:1074 compare/compare_wrapper.py:507
+#: ui/app_window/sidebar_panel.py:76
 msgid "Set a directory to run comparison."
 msgstr "비교를 실행하려면 디렉토리를 설정합니다."
 
-#: app.py:289
+#: app.py:294 ui/app_window/sidebar_panel.py:84
 msgid "Toggle theme"
 msgstr "관련 기사"
 
-#: app.py:290
+#: app.py:295 ui/app_window/sidebar_panel.py:89
 msgid "Set directory"
 msgstr "설정 디렉토리"
 
-#: app.py:291
+#: app.py:296
 msgid "Add dirpath..."
 msgstr "디렉토리 경로 추가..."
 
-#: app.py:295
+#: app.py:300 ui/app_window/sidebar_panel.py:98
 msgid "Filter files by glob pattern"
 msgstr "글로브 패턴으로 파일 필터링"
 
-#: app.py:302
+#: app.py:307 ui/app_window/sidebar_panel.py:104
 msgid "Browsing mode - Sort by"
 msgstr "브라우징 모드 - 정렬 기준"
 
-#: app.py:309
+#: app.py:314 ui/app_window/sidebar_panel.py:113
 msgid "Recurse subdirectories"
 msgstr "하위 디렉터리 재귀"
 
-#: app.py:314
+#: app.py:319 ui/app_window/sidebar_panel.py:118
 msgid "Image resize to full window"
 msgstr "전체 창에 이미지 크기"
 
-#: app.py:318 compare/compare_settings_window.py:277
+#: app.py:323 ui/app_window/sidebar_panel.py:123
+#: ui/compare/compare_settings_window_qt.py:249
+#: ui_tk/compare/compare_settings_window.py:277
 msgid "Search only return closest"
 msgstr "자주 묻는 질문"
 
-#: app.py:323
+#: app.py:328 ui/app_window/sidebar_panel.py:132
 msgid "Set search file"
 msgstr "연락처"
 
-#: app.py:327
+#: app.py:332 ui/app_window/sidebar_panel.py:136
 msgid ""
 "Set an image file to search for similar images.\n"
 "Uses embedding similarity to find visually similar images."
@@ -72,11 +76,11 @@ msgstr ""
 "이미지 파일을 설정하여 유사한 이미지를 검색합니다.\n"
 "임베딩 유사성을 사용하여 시각적으로 유사한 이미지를 찾습니다."
 
-#: app.py:336
+#: app.py:341 ui/app_window/sidebar_panel.py:149
 msgid "Search text (embedding mode)"
 msgstr "텍스트 검색(임베딩 모드)"
 
-#: app.py:340
+#: app.py:345 ui/app_window/sidebar_panel.py:154
 msgid ""
 "Positive text: Find images similar to this text.\n"
 "Negative text: Exclude images similar to this text.\n"
@@ -86,42 +90,50 @@ msgstr ""
 "부정 텍스트: 이 텍스트와 유사한 이미지를 제외합니다.\n"
 "둘 다 임베딩 유사도 매칭을 사용합니다."
 
-#: app.py:344
+#: app.py:349 ui/app_window/sidebar_panel.py:160
 msgid "Positive text:"
 msgstr "긍정적인 텍스트:"
 
-#: app.py:352
+#: app.py:357 ui/app_window/sidebar_panel.py:168
 msgid "Negative text:"
 msgstr "부정적인 텍스트:"
 
-#: app.py:360 compare/classifier_actions_tab.py:100
-#: compare/classifier_management_window.py:618
+#: app.py:365 ui/app_window/sidebar_panel.py:177
+#: ui/compare/classifier_actions_tab_qt.py:96
+#: ui/compare/classifier_management_window_qt.py:534
+#: ui_tk/compare/classifier_actions_tab.py:103
+#: ui_tk/compare/classifier_management_window.py:619
 msgid "Classifier Actions"
 msgstr "분류기 동작"
 
-#: app.py:364 compare/compare_settings_window.py:38
-#: compare/compare_settings_window.py:53
-#: compare/compare_settings_window.py:161
+#: app.py:369 ui/app_window/sidebar_panel.py:181
+#: ui/compare/compare_settings_window_qt.py:88
+#: ui/compare/compare_settings_window_qt.py:115
+#: ui/compare/compare_settings_window_qt.py:184
+#: ui_tk/compare/compare_settings_window.py:38
+#: ui_tk/compare/compare_settings_window.py:53
+#: ui_tk/compare/compare_settings_window.py:161
 msgid "Compare Settings"
 msgstr "비교 설정"
 
-#: app.py:369
+#: app.py:375 ui/app_window/sidebar_panel.py:195
 msgid "Run image compare"
 msgstr "이미지 비교 실행"
 
-#: app.py:371
+#: app.py:377 ui/app_window/sidebar_panel.py:199
 msgid "Find duplicates"
 msgstr "중복 찾기"
 
-#: app.py:373 image/image_details.py:69
+#: app.py:379 ui/app_window/sidebar_panel.py:203
+#: ui/image/image_details_qt.py:127 ui_tk/image/image_details.py:75
 msgid "Image details"
 msgstr "이미지 세부 정보"
 
-#: app.py:385
+#: app.py:391 ui/app_window/sidebar_panel.py:209
 msgid "Search current image"
 msgstr "현재 이미지 검색"
 
-#: app.py:389
+#: app.py:395 ui/app_window/sidebar_panel.py:214
 msgid ""
 "Search for images similar to the currently displayed image.\n"
 "Uses embedding similarity matching."
@@ -129,141 +141,154 @@ msgstr ""
 "현재 표시된 이미지와 유사한 이미지를 검색합니다.\n"
 "임베딩 유사도 매칭을 사용합니다."
 
-#: app.py:390 utils/help_and_config.py:87
+#: app.py:396 ui/app_window/sidebar_panel.py:220 ui/help_and_config_qt.py:121
+#: utils/help_and_config.py:87
 msgid "Open media location"
 msgstr "미디어 위치 열기"
 
-#: app.py:391
+#: app.py:397 ui/app_window/sidebar_panel.py:224
 msgid "Copy image path"
 msgstr "본문 바로가기"
 
-#: app.py:392
+#: app.py:398 ui/app_window/sidebar_panel.py:228
 msgid "Copy media basename"
 msgstr "미디어 기본 이름을 복사하십시오"
 
-#: app.py:393
+#: app.py:399 ui/app_window/sidebar_panel.py:232
 msgid "---- DELETE ----"
 msgstr "---- 종료 ----"
 
-#: app.py:560
+#: app.py:568 ui/app_window/app_window.py:1095
 msgid "Confirm Quit"
 msgstr "자주 묻는 질문"
 
-#: app.py:560
+#: app.py:568 ui/app_window/app_window.py:1095
 msgid "Would you like to quit the application?"
 msgstr "응용 프로그램을 종료하시겠습니까?"
 
-#: app.py:684
+#: app.py:692 ui/app_window/sidebar_panel.py:373
 msgid "Ended slideshows"
 msgstr "슬라이드 쇼 종료"
 
-#: app.py:737 app.py:2166 app.py:2173 app.py:2177 app.py:2181 app.py:2187
-#: app.py:2294 app.py:2310 app.py:2327
+#: app.py:745 app.py:2192 app.py:2199 app.py:2203 app.py:2207 app.py:2213
+#: app.py:2320 app.py:2336 app.py:2353 ui/app_window/app_window.py:852
+#: ui/app_window/file_ops_controller.py:210
+#: ui/app_window/file_ops_controller.py:216
+#: ui/app_window/file_ops_controller.py:220
+#: ui/app_window/file_ops_controller.py:227
+#: ui/app_window/file_ops_controller.py:235
+#: ui/app_window/search_controller.py:541
+#: ui/app_window/search_controller.py:581
+#: ui/app_window/search_controller.py:643
 msgid "Warning"
 msgstr "경고"
 
-#: app.py:737
+#: app.py:745 ui/app_window/app_window.py:852
 msgid "No files found in directory after refresh."
 msgstr "새로 고침 후 디렉토리에 파일을 찾을 수 없습니다."
 
-#: app.py:775
+#: app.py:797 ui/app_window/media_navigator.py:432
 msgid "Slideshow for new images started"
 msgstr "새 이미지 슬라이드쇼 시작"
 
-#: app.py:777
+#: app.py:799 ui/app_window/media_navigator.py:434
 msgid "Slideshow started"
 msgstr "슬라이드쇼 시작"
 
-#: app.py:780
+#: app.py:802 ui/app_window/media_navigator.py:441
 msgid "Slideshows ended"
 msgstr "슬라이드 쇼 종료"
 
-#: app.py:793
+#: app.py:815 ui/app_window/app_window.py:770
 msgid "Browsing mode set."
 msgstr "검색 모드 설정."
 
-#: app.py:838 utils/constants.py:331
+#: app.py:860 ui/app_window/context_menu_builder.py:64 utils/constants.py:434
 msgid "View Media Details"
 msgstr "미디어 세부 정보 보기"
 
-#: app.py:839
+#: app.py:861 ui/app_window/context_menu_builder.py:69
 msgid "Hide Media"
 msgstr "미디어 숨기기"
 
-#: app.py:840
+#: app.py:862 ui/app_window/context_menu_builder.py:78
 msgid "Remove from Marks"
 msgstr "마크에서 제거"
 
-#: app.py:840
+#: app.py:862 ui/app_window/context_menu_builder.py:78
 msgid "Add to Marks"
 msgstr "마크에 추가하기"
 
-#: app.py:842
+#: app.py:864 ui/app_window/context_menu_builder.py:92
 msgid "Remove from Favorites"
 msgstr "즐겨찾기에서 제거"
 
-#: app.py:842
+#: app.py:864 ui/app_window/context_menu_builder.py:92
 msgid "Add to Favorites"
 msgstr "즐겨찾기에 추가"
 
-#: app.py:845
+#: app.py:867 ui/app_window/context_menu_builder.py:105
 msgid "Remove from Directory Notes"
 msgstr "디렉토리의 메모에서 제거"
 
-#: app.py:845
+#: app.py:867 ui/app_window/context_menu_builder.py:105
 msgid "Add to Directory Notes"
 msgstr "디렉토리의 메모에 추가"
 
-#: app.py:847
+#: app.py:869 ui/app_window/context_menu_builder.py:109
 msgid "Edit File Note"
 msgstr "파일 노트 편집"
 
-#: app.py:849
+#: app.py:871 ui/app_window/context_menu_builder.py:119
 msgid "Open in GIMP"
 msgstr "GIMP에서 열기"
 
-#: app.py:850 image/image_details.py:201 utils/constants.py:337
+#: app.py:872 ui/app_window/context_menu_builder.py:123
+#: ui/help_and_config_qt.py:156 ui/image/image_details_qt.py:352
+#: ui/image/temp_image_window_qt.py:263 ui_tk/image/image_details.py:213
+#: ui_tk/image/temp_image_canvas.py:195 utils/constants.py:440
 #: utils/help_and_config.py:138
 msgid "Run Image Generation"
 msgstr "이미지 생성"
 
-#: app.py:851
+#: app.py:873 ui/app_window/context_menu_builder.py:127
 msgid "Run Image Generation on Directory"
 msgstr "디렉터리에서 이미지 생성 실행"
 
-#: app.py:852
+#: app.py:874 ui/app_window/context_menu_builder.py:135
 msgid "Show Source Image"
 msgstr "원본 이미지 표시"
 
-#: app.py:853
+#: app.py:875 ui/app_window/context_menu_builder.py:139
 msgid "Find Related Images"
 msgstr "관련 이미지 찾기"
 
-#: app.py:854
+#: app.py:876 ui/app_window/context_menu_builder.py:143
 msgid "Set Marks from Downstream Related Images"
 msgstr "하류 관련 이미지에서 표시 설정"
 
-#: app.py:856
+#: app.py:878 ui/app_window/context_menu_builder.py:153
 msgid "Set Current Image as Search Image"
 msgstr "현재 이미지를 검색 이미지로 설정"
 
-#: app.py:857
+#: app.py:879 ui/app_window/context_menu_builder.py:157
 msgid "Add Current Image to Negative Search"
 msgstr "현재 이미지를 음수 검색에 추가하기"
 
-#: app.py:858
+#: app.py:880 ui/app_window/context_menu_builder.py:182
 msgid "Run Refacdir"
 msgstr "RefacDir 실행"
 
-#: app.py:876
+#: app.py:898 ui/app_window/window_launcher.py:255
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(인덱스 세부 정보를 보려면 이 이미지를 디렉토리의 일부로 엽니다.)"
 
-#: app.py:913 app.py:1655
+#: app.py:935 app.py:1681 ui/app_window/app_window.py:786
+#: ui/app_window/window_launcher.py:347
 msgid "Many Files"
 msgstr "많은 파일"
 
-#: app.py:941
+#: app.py:963 ui/app_window/app_window.py:731
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
@@ -272,230 +297,259 @@ msgstr ""
 "외부 저장 장치에 파일 수가 많은 디렉토리 또는 중간 규모의 파일 수를 가진 디렉토리가 감지되었습니다. 이 경우 로드 시간이 느려질 수 "
 "있습니다. 전체 디렉토리를 로드하시겠습니까?"
 
-#: app.py:942
+#: app.py:964 ui/app_window/app_window.py:730
 msgid "Large Directory Detected: {0}"
 msgstr "대용량 디렉토리 감지: {0}"
 
-#: app.py:972
+#: app.py:994 ui/app_window/search_controller.py:629
 msgid "No downstream related image(s) found in {0}"
 msgstr "{0} 에서 다운스트림 관련 이미지를 찾을 수 없습니다."
 
-#: app.py:994
+#: app.py:1016 ui/app_window/file_marks_controller.py:371
 msgid "{0} file marks set"
 msgstr "{0} 파일 표시 세트"
 
-#: app.py:1000
+#: app.py:1022 ui/help_and_config_qt.py:40
 msgid "Help and Config"
 msgstr "도움말 및 불만"
 
-#: app.py:1112
+#: app.py:1134 ui/files/recent_directory_window_qt.py:108
 msgid "Set Image Comparison Directory"
 msgstr "이미지 비교 디렉토리 설정"
 
-#: app.py:1166
+#: app.py:1188 ui/app_window/search_controller.py:139
 msgid "No image selected."
 msgstr "선택된 이미지 없음."
 
-#: app.py:1166
+#: app.py:1188 ui/app_window/search_controller.py:139
 msgid "Invalid Setting"
 msgstr "잘못된 설정"
 
-#: app.py:1205
+#: app.py:1227 ui/app_window/search_controller.py:187
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "텍스트 임베딩을 검색하려면 비교 모드를 임베딩 모드로 설정해야 합니다."
 
-#: app.py:1210
+#: app.py:1232 ui/app_window/search_controller.py:193
 msgid "Select image file"
 msgstr "이미지 파일 선택"
 
-#: app.py:1239
+#: app.py:1261 ui/app_window/media_navigator.py:395
 msgid "Somehow, the search file is invalid"
 msgstr "Somehow, 검색 파일이 잘못되었습니다."
 
-#: app.py:1325 app.py:1350
+#: app.py:1347 app.py:1372 ui/app_window/search_controller.py:409
+#: ui/app_window/search_controller.py:448
 msgid "Failed to get active image filepath"
 msgstr "Active image filepath를 얻는 실패"
 
-#: app.py:1435
+#: app.py:1457 ui/app_window/search_controller.py:275
 msgid "{0}: {1}% complete"
 msgstr "{0}: {1}% 완료"
 
-#: app.py:1441
+#: app.py:1463 ui/app_window/search_controller.py:314
 msgid "Confirm comparison"
 msgstr "자주 묻는 질문"
 
-#: app.py:1442
+#: app.py:1464 ui/app_window/search_controller.py:315
 msgid "No base directory has been set, will use current base directory of "
 msgstr "기본 디렉터리가 설정되지 않은 경우 현재 기본 디렉터리를 사용합니다: "
 
-#: app.py:1443
+#: app.py:1465 ui/app_window/search_controller.py:316
 msgid "Are you sure you want to proceed?"
 msgstr "진행하시겠습니까?"
 
-#: app.py:1466
+#: app.py:1492 ui/app_window/search_controller.py:267
 msgid "Error running compare"
 msgstr "오류 실행 비교"
 
-#: app.py:1501
+#: app.py:1527 ui/app_window/file_marks_controller.py:70
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "슬라이드쇼 후 잠금 삭제\n"
 "전환으로 마크 추가 방지"
 
-#: app.py:1512
+#: app.py:1538 ui/app_window/file_marks_controller.py:84
 msgid "Mark removed. Remaining: {0}"
 msgstr "마크가 제거되었습니다. 남아있음: {0}"
 
-#: app.py:1516
+#: app.py:1542 ui/app_window/file_marks_controller.py:90
 msgid "Mark added. Total set: {0}"
 msgstr "마크가 추가되었습니다. 총 집합입니다: {0}"
 
-#: app.py:1533
+#: app.py:1559 ui/app_window/file_marks_controller.py:127
 msgid "Marks added. Total set: {0}"
 msgstr "마크가 추가되었습니다. 총 집합입니다: {0}"
 
-#: app.py:1542
+#: app.py:1568 ui/app_window/file_marks_controller.py:147
 msgid "First sorted mark"
 msgstr "첫 번째 정렬 마크"
 
-#: app.py:1549
+#: app.py:1575 ui/app_window/file_marks_controller.py:155
 msgid "Only one marked file set."
 msgstr "1개의 표시된 파일 세트만."
 
-#: app.py:1562
+#: app.py:1588 ui/app_window/file_marks_controller.py:192
 msgid "Invalid file path"
 msgstr "잘못된 파일 경로"
 
-#: app.py:1562
+#: app.py:1588 ui/app_window/file_marks_controller.py:193
 msgid "The file path {0} is invalid."
 msgstr "파일 경로 {0}이(가) 잘못되었습니다."
 
-#: app.py:1568
+#: app.py:1594 ui/app_window/file_marks_controller.py:202
 msgid "Including marks: {0}"
 msgstr "마크 포함: {0}"
 
-#: app.py:1610
+#: app.py:1636 ui/app_window/file_marks_controller.py:308
 msgid "NO_MARKS_SET"
 msgstr ""
 "{0} 마크가 설정되었습니다(>={1} 예상).\n"
 "Shift+M을 사용하여 마크를 설정합니다."
 
-#: app.py:1655
+#: app.py:1681 ui/app_window/window_launcher.py:348
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "디렉터리 {0}에서 모든 사전 유효성 검사를 실행하시겠습니까? 시간이 걸릴 수 있습니다."
 
-#: app.py:1670
+#: app.py:1696 ui/app_window/window_launcher.py:380
 msgid "Prevalidations now running"
 msgstr "지금 실행"
 
-#: app.py:1670
+#: app.py:1696 ui/app_window/window_launcher.py:381
 msgid "Prevalidations turned off"
 msgstr "사전 검증"
 
-#: app.py:1695
+#: app.py:1700 ui/app_window/window_launcher.py:389
+msgid "Extra debug logging enabled"
+msgstr "추가 디버그 로깅 활성화됨"
+
+#: app.py:1700 ui/app_window/window_launcher.py:390
+msgid "Extra debug logging disabled"
+msgstr "추가 디버그 로깅 비활성화됨"
+
+#: app.py:1721 ui/app_window/window_launcher.py:124
 msgid "Please set a base directory first"
 msgstr "먼저 기본 디렉터리를 설정해 주세요"
 
-#: app.py:1724
+#: app.py:1750 ui/app_window/window_launcher.py:408
 msgid "Removed from directory notes: {0}"
 msgstr "디렉토리의 메모에서 제거됨: {0}"
 
-#: app.py:1727
+#: app.py:1753 ui/app_window/window_launcher.py:413
 msgid "Added to directory notes: {0}"
 msgstr "디렉토리의 메모에 추가됨: {0}"
 
-#: app.py:1750 files/directory_notes_window.py:242
+#: app.py:1776 ui/app_window/window_launcher.py:441
+#: ui/files/directory_notes_window_qt.py:248
+#: ui_tk/files/directory_notes_window.py:242
 msgid "Edit Note - {0}"
 msgstr "편집 노트 - {0}"
 
-#: app.py:1774 files/directory_notes_window.py:266
+#: app.py:1800 ui/app_window/window_launcher.py:465
+#: ui/files/directory_notes_window_qt.py:278
+#: ui_tk/files/directory_notes_window.py:266
 msgid "Note saved for: {0}"
 msgstr "{0}을 위한 메모 저장됨"
 
-#: app.py:1787 files/directory_notes_window.py:273
+#: app.py:1813 ui/app_window/window_launcher.py:454
+#: ui/files/directory_notes_window_qt.py:271
+#: ui_tk/files/directory_notes_window.py:273
 msgid "Save"
 msgstr "저장"
 
-#: app.py:1790 auth/app_startup_auth.py:127 auth/password_admin_window.py:462
-#: auth/password_dialog.py:152 auth/password_dialog.py:221
-#: auth/password_dialog.py:238 compare/compare_settings_window.py:373
-#: files/directory_notes_window.py:276 files/pdf_options_window.py:77
-#: files/target_directory_window.py:176 files/type_configuration_window.py:178
-#: lib/custom_dialogs.py:75
+#: app.py:1816 lib/custom_dialogs.py:75 lib/custom_dialogs_qt.py:122
+#: lib/qt_alert.py:28 ui/app_window/window_launcher.py:455
+#: ui/auth/app_startup_auth_qt.py:76 ui/auth/password_admin_window.py:83
+#: ui/auth/password_dialog.py:197 ui/auth/password_dialog.py:267
+#: ui/auth/password_dialog.py:288
+#: ui/compare/classifier_action_copy_window_qt.py:174
+#: ui/compare/compare_settings_window_qt.py:295
+#: ui/files/directory_notes_window_qt.py:272
+#: ui/files/pdf_options_window_qt.py:113
+#: ui/files/type_configuration_window_qt.py:221
+#: ui_tk/auth/app_startup_auth.py:127 ui_tk/auth/password_admin_window.py:461
+#: ui_tk/auth/password_dialog.py:152 ui_tk/auth/password_dialog.py:221
+#: ui_tk/auth/password_dialog.py:238
+#: ui_tk/compare/classifier_action_copy_window.py:158
+#: ui_tk/compare/compare_settings_window.py:373
+#: ui_tk/files/directory_notes_window.py:276
+#: ui_tk/files/pdf_options_window.py:77
+#: ui_tk/files/target_directory_window.py:152
+#: ui_tk/files/type_configuration_window.py:183 utils/constants.py:227
 msgid "Cancel"
 msgstr "취소"
 
-#: app.py:1904
+#: app.py:1930 ui/app_window/media_navigator.py:303
 msgid "File not found"
 msgstr "찾을 수 없음"
 
-#: app.py:1904
+#: app.py:1930 ui/app_window/media_navigator.py:304
 msgid "No file was found for the search text: \"{0}\""
 msgstr "검색 텍스트에 대한 파일을 찾을 수 없습니다: \"{0}”"
 
-#: app.py:1913
+#: app.py:1939 ui/app_window/media_navigator.py:316
 msgid "Index navigation not available"
 msgstr "인덱스 탐색이 불가능합니다"
 
-#: app.py:1913
+#: app.py:1939 ui/app_window/media_navigator.py:317
 msgid "Index navigation is only available in BROWSE mode."
 msgstr "인덱스 탐색은 탐색 모드에서만 사용할 수 있습니다."
 
-#: app.py:1924
+#: app.py:1950 ui/app_window/media_navigator.py:328
 msgid "Invalid index"
 msgstr "잘못된 인덱스"
 
-#: app.py:1940
+#: app.py:1966 ui/app_window/window_launcher.py:330
 msgid "No image selected"
 msgstr "선택 없음"
 
-#: app.py:1940
+#: app.py:1966 ui/app_window/window_launcher.py:331
 msgid "No image was selected for comparison"
 msgstr "이미지는 비교를 위해 선정되었습니다"
 
-#: app.py:1954
+#: app.py:1980 ui/app_window/search_controller.py:471
 msgid "No Text Search Presets Found"
 msgstr "텍스트 검색 사전 설정을 찾을 수 없음"
 
-#: app.py:1955
+#: app.py:1981 ui/app_window/search_controller.py:472
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "텍스트 임베딩 검색 사전 설정을 찾을 수 없습니다. config.json 파일에서 설정하세요."
 
-#: app.py:2052
+#: app.py:2078 ui/app_window/file_ops_controller.py:430
 msgid "Opening media file: {0}"
 msgstr "미디어 파일 열기: {0}"
 
-#: app.py:2055
+#: app.py:2081 ui/app_window/file_ops_controller.py:434
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr "현재 미디어 파일을 열 수 없습니다. 유효한 파일 경로를 얻을 수 없습니다."
 
-#: app.py:2060
+#: app.py:2086 ui/app_window/file_ops_controller.py:446
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
 msgstr "GIMP 통합이 구성되지 않았습니다. config.json 파일에서 'gimp_exe_loc'을 설정해 주세요."
 
-#: app.py:2060
+#: app.py:2086 ui/app_window/file_ops_controller.py:447
 msgid "GIMP Integration Error"
 msgstr "GIMP 통합 오류"
 
-#: app.py:2072
+#: app.py:2098 ui/app_window/file_ops_controller.py:468
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "김프에서 현재 파일을 열지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:2083 image/temp_image_canvas.py:167
+#: app.py:2109 ui/app_window/file_ops_controller.py:349
+#: ui/image/temp_image_window_qt.py:222 ui_tk/image/temp_image_canvas.py:167
 msgid "Copied filepath to clipboard"
 msgstr "파일 경로를 클립보드에 복사했습니다"
 
-#: app.py:2091
+#: app.py:2117 ui/app_window/file_ops_controller.py:364
 msgid "Copied filename to clipboard"
 msgstr "파일 이름을 클립보드에 복사했습니다"
 
-#: app.py:2098
+#: app.py:2124 ui/app_window/file_ops_controller.py:322
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -503,41 +557,42 @@ msgstr ""
 "현재 이미지를 숨겼습니다.\n"
 "숨기기를 해제하려면 Shift+B를 누릅니다."
 
-#: app.py:2103
+#: app.py:2129 ui/app_window/file_ops_controller.py:328
 msgid "Cleared all hidden images."
 msgstr "숨겨진 이미지를 모두 지웠습니다."
 
-#: app.py:2111
+#: app.py:2137 ui/app_window/file_ops_controller.py:115
 msgid "DELETE_LOCK"
 msgstr ""
 "슬라이드쇼 후 잠금 삭제\n"
 "전환 후 삭제 방지"
 
-#: app.py:2129
+#: app.py:2155 ui/app_window/file_ops_controller.py:138
 msgid "Invalid action, no files found to delete"
 msgstr "잘못된 작업, 삭제할 파일을 찾을 수 없음"
 
-#: app.py:2132
+#: app.py:2158 ui/app_window/file_ops_controller.py:144
 msgid "Invalid action, search image not found"
 msgstr "잘못된 작업, 검색 이미지를 찾을 수 없음"
 
-#: app.py:2147
+#: app.py:2173 ui/app_window/file_ops_controller.py:165
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "현재 파일을 삭제하지 못했습니다. 유효한 파일 경로를 가져올 수 없습니다."
 
-#: app.py:2154
+#: app.py:2180 ui/app_window/file_ops_controller.py:188
 msgid "Removing directory: {0}"
 msgstr "디렉토리 제거: {0}"
 
-#: app.py:2156
+#: app.py:2182 ui/app_window/file_ops_controller.py:193
 msgid "Removing file: {0}"
 msgstr "파일을 제거 중입니다: {0}"
 
-#: app.py:2166 app.py:2187
+#: app.py:2192 app.py:2213 ui/app_window/file_ops_controller.py:210
+#: ui/app_window/file_ops_controller.py:235
 msgid "Failed to delete item: {0}"
 msgstr "항목을 삭제하지 못했습니다: {0}"
 
-#: app.py:2170
+#: app.py:2196 ui/app_window/file_ops_controller.py:213
 msgid ""
 "Failed to move directory to {0}. Double check the trash folder is set "
 "properly in config.json."
@@ -545,7 +600,7 @@ msgstr ""
 "{0}로 디렉토리를 이동하는 데 실패했습니다. config.json 파일에서 휴지통 폴더가 제대로 설정되어 있는지 다시 한 번 "
 "확인하세요."
 
-#: app.py:2172
+#: app.py:2198 ui/app_window/file_ops_controller.py:215
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
@@ -553,7 +608,7 @@ msgstr ""
 "{0}로 파일을 전송하는 데 실패했습니다. config.json 파일에서 휴지통 폴더가 제대로 설정되어 있는지 다시 한 번 확인해 "
 "주세요."
 
-#: app.py:2178
+#: app.py:2204 ui/app_window/file_ops_controller.py:221
 msgid ""
 "Failed to move directory to the trash. Either pip install send2trash or set "
 "a specific trash folder in config.json."
@@ -561,7 +616,7 @@ msgstr ""
 "디렉토리를 휴지통으로 이동하는 데 실패했습니다. pip install send2trash를 실행하거나 config.json에서 특정 "
 "휴지통 폴더를 설정하세요."
 
-#: app.py:2182
+#: app.py:2208 ui/app_window/file_ops_controller.py:228
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
@@ -569,347 +624,103 @@ msgstr ""
 "파일을 휴지통으로 보내지 못했으므로 삭제됩니다. pip에서 send2trash를 설치하거나 config.json에서 특정 휴지통 폴더를 "
 "설정하세요."
 
-#: app.py:2192
+#: app.py:2218 ui/app_window/file_ops_controller.py:254
 msgid "Invalid directory"
 msgstr "무효한 디렉토리"
 
-#: app.py:2192
+#: app.py:2218 ui/app_window/file_ops_controller.py:254
 msgid "No valid base directory to delete"
 msgstr "삭제할 유효한 기본 디렉토리가 없습니다."
 
-#: app.py:2203
+#: app.py:2229 ui/app_window/file_ops_controller.py:267
 msgid "Cannot Delete Directory"
 msgstr "디렉토리를 삭제할 수 없습니다."
 
-#: app.py:2207
+#: app.py:2233 ui/app_window/file_ops_controller.py:272
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "이 디렉토리와 모든 내용을 삭제하시겠습니까?"
 
-#: app.py:2209
+#: app.py:2235 ui/app_window/file_ops_controller.py:274
 msgid "Contents to be deleted:"
 msgstr "삭제할 내용:"
 
-#: app.py:2211
+#: app.py:2237 ui/app_window/file_ops_controller.py:278
 msgid "Confirm Delete Directory"
 msgstr "디렉토리 삭제 확인"
 
-#: app.py:2242
+#: app.py:2268 ui/app_window/file_ops_controller.py:303
 msgid "Delete Directory Error"
 msgstr "디렉토리 삭제 오류"
 
-#: app.py:2244
+#: app.py:2270 ui/app_window/file_ops_controller.py:306
 msgid "Directory {0} deleted."
 msgstr "디렉토리 {0}이 삭제되었습니다."
 
-#: app.py:2260
+#: app.py:2286 ui/app_window/file_ops_controller.py:387
 msgid "Invalid target filepath for replacement: "
 msgstr "교체할 대상 파일 경로가 잘못되었습니다: "
 
-#: app.py:2264
+#: app.py:2290 ui/app_window/file_ops_controller.py:392
 msgid "Moved search image to "
 msgstr "로 검색 이미지를 이동했습니다: "
 
-#: app.py:2294
+#: app.py:2320 ui/app_window/search_controller.py:643
 msgid "Failed to get active media filepath"
 msgstr "활성 미디어 파일 경로를 가져오는 데 실패했습니다"
 
-#: app.py:2308
+#: app.py:2334 ui/app_window/search_controller.py:537
 msgid "Running image gen: "
 msgstr "이미지 생성 실행 : "
 
-#: app.py:2310 app.py:2327
+#: app.py:2336 app.py:2353 ui/app_window/search_controller.py:541
+#: ui/app_window/search_controller.py:581
 msgid "Error running image generation:"
 msgstr "이미지 생성 실행 중 오류 발생:"
 
-#: app.py:2325
+#: app.py:2351 ui/app_window/search_controller.py:576
 msgid "Running image gen on directory: "
 msgstr "디렉터리에 이미지 생성 실행 중: "
 
-#: app.py:2334
+#: app.py:2360 ui/app_window/file_ops_controller.py:481
 msgid "Running refacdir"
 msgstr "refacdir 실행"
 
-#: app.py:2339 auth/app_startup_auth.py:141 auth/password_dialog.py:249
-#: extensions/gimp/gimp_wrapper.py:689 extensions/gimp/gimp_wrapper.py:718
-#: files/pdf_creator.py:133 files/pdf_creator.py:137 files/pdf_creator.py:140
+#: app.py:2365 extensions/gimp/gimp_wrapper.py:689
+#: extensions/gimp/gimp_wrapper.py:718 files/pdf_creator.py:132
+#: files/pdf_creator.py:136 files/pdf_creator.py:139
+#: ui/app_window/notification_controller.py:182
+#: ui/auth/app_startup_auth_qt.py:124 ui/auth/password_admin_window.py:130
+#: ui/auth/password_admin_window.py:537 ui/auth/password_dialog.py:305
+#: ui/compare/classifier_action_copy_window_qt.py:227
+#: ui/compare/classifier_action_copy_window_qt.py:235
+#: ui/files/marked_file_mover_qt.py:497 ui_tk/auth/app_startup_auth.py:141
+#: ui_tk/auth/password_dialog.py:249
+#: ui_tk/compare/classifier_action_copy_window.py:227
+#: ui_tk/compare/classifier_action_copy_window.py:241
 msgid "Error"
 msgstr "계정 정보"
 
-#: app.py:2441
+#: app.py:2470 ui/app_window/notification_controller.py:209
 msgid "GROUP_DETAILS"
 msgstr ""
 "그룹 {0} 중 {1}\n"
 "크기: {2}"
 
-#: app.py:2445
+#: app.py:2474 ui/app_window/notification_controller.py:217
 msgid "No image files found"
 msgstr "이미지 파일 없음"
 
-#: app.py:2447
+#: app.py:2476 ui/app_window/notification_controller.py:219
 msgid "1 image file found"
 msgstr "1 이미지 파일"
 
-#: app.py:2448
+#: app.py:2477 ui/app_window/notification_controller.py:221
 msgid "{0} image files found"
 msgstr "{0} 이미지 파일 찾았습니다"
 
-#: app.py:2450
+#: app.py:2479 ui/app_window/notification_controller.py:226
 msgid "(filtered)"
 msgstr "(필터)"
-
-#: auth/app_startup_auth.py:32 auth/app_startup_auth.py:92
-msgid "Application Password Required"
-msgstr "소프트웨어 애플리케이션 암호 필요"
-
-#: auth/app_startup_auth.py:99
-msgid "A password is required to open this application."
-msgstr "이 소프트웨어 애플리케이션을 열려면 비밀번호가 필요합니다."
-
-#: auth/app_startup_auth.py:108 auth/password_dialog.py:133
-msgid "Password:"
-msgstr "비밀번호:"
-
-#: auth/app_startup_auth.py:124 auth/password_dialog.py:149
-#: lib/custom_dialogs.py:69
-msgid "OK"
-msgstr "확인"
-
-#: auth/app_startup_auth.py:141 auth/password_dialog.py:249
-msgid "Incorrect password"
-msgstr "잘못된 비밀번호"
-
-#: auth/password_admin_window.py:35
-msgid "Password Administration"
-msgstr "비밀번호 관리"
-
-#: auth/password_admin_window.py:85
-msgid "Password Protection Settings"
-msgstr "비밀번호 보호 설정"
-
-#: auth/password_admin_window.py:97
-msgid "Protected Actions"
-msgstr "보호되는 작업"
-
-#: auth/password_admin_window.py:103
-msgid "Select which actions require password authentication:"
-msgstr "비밀번호 인증이 필요한 작업을 선택합니다:"
-
-#: auth/password_admin_window.py:119
-msgid "(Always protected if a password is set)"
-msgstr "(비밀번호가 설정된 경우 항상 보호됨)"
-
-#: auth/password_admin_window.py:138
-msgid "Session Timeout Settings"
-msgstr "세션 시간 초과 설정"
-
-#: auth/password_admin_window.py:144
-msgid "Enable session timeout (remember password for a period)"
-msgstr "세션 시간 초과 사용(일정 기간 동안 비밀번호 기억)"
-
-#: auth/password_admin_window.py:156
-msgid "Session timeout duration (minutes):"
-msgstr "세션 시간 초과 기간(분):"
-
-#: auth/password_admin_window.py:165
-msgid "Security Advice Settings"
-msgstr "보안 설정 안내"
-
-#: auth/password_admin_window.py:171
-msgid "Show security advice when no password is configured"
-msgstr "비밀번호가 설정되지 않았을 때 보안 안내 메시지를 표시합니다."
-
-#: auth/password_admin_window.py:179
-msgid "Password Setup"
-msgstr "비밀번호 설정"
-
-#: auth/password_admin_window.py:189
-msgid "Password is configured"
-msgstr "비밀번호가 구성되었습니다."
-
-#: auth/password_admin_window.py:195 auth/password_admin_window.py:384
-#: auth/password_admin_window.py:399 auth/password_admin_window.py:459
-msgid "Change Password"
-msgstr "비밀번호 변경"
-
-#: auth/password_admin_window.py:200 auth/password_admin_window.py:472
-msgid "Remove Password"
-msgstr "비밀번호 제거"
-
-#: auth/password_admin_window.py:205
-msgid "Set up a password to enable protection:"
-msgstr "보호 기능을 사용하려면 비밀번호를 설정하세요:"
-
-#: auth/password_admin_window.py:215 auth/password_admin_window.py:415
-msgid "New Password:"
-msgstr "새 비밀번호:"
-
-#: auth/password_admin_window.py:228
-msgid "Confirm Password:"
-msgstr "비밀번호를 확인합니다:"
-
-#: auth/password_admin_window.py:237
-msgid "Set Password"
-msgstr "비밀번호 설정"
-
-#: auth/password_admin_window.py:247 auth/password_admin_window.py:306
-msgid "Reset to Defaults"
-msgstr "기본값으로 재설정"
-
-#: auth/password_admin_window.py:251 auth/password_admin_window.py:331
-msgid "Set to Current"
-msgstr "현재로 설정"
-
-#: auth/password_admin_window.py:255
-msgid "Export Cache as JSON"
-msgstr "캐시를 JSON으로 내보내기"
-
-#: auth/password_admin_window.py:259
-msgid "Save Settings"
-msgstr "설정 저장"
-
-#: auth/password_admin_window.py:263
-msgid "Close"
-msgstr "닫기"
-
-#: auth/password_admin_window.py:300
-msgid "Password protection settings saved."
-msgstr "비밀번호 보호 설정이 저장되었습니다."
-
-#: auth/password_admin_window.py:307
-msgid ""
-"Are you sure you want to reset all password protection settings to their "
-"default values?"
-msgstr "모든 비밀번호 보호 설정을 기본값으로 초기화하시겠습니까?"
-
-#: auth/password_admin_window.py:326
-msgid "Settings reset to defaults."
-msgstr "설정이 기본값으로 초기화됩니다."
-
-#: auth/password_admin_window.py:332
-msgid ""
-"Are you sure you want to restore all settings to their current saved state? "
-"This will discard any unsaved changes."
-msgstr "모든 설정을 현재 저장된 상태로 복원하시겠습니까? 이렇게 하면 저장되지 않은 변경 사항이 모두 삭제됩니다."
-
-#: auth/password_admin_window.py:350
-msgid "Settings restored to current saved state."
-msgstr "설정이 현재 저장된 상태로 복원되었습니다."
-
-#: auth/password_admin_window.py:359
-msgid "Please enter a password."
-msgstr "비밀번호를 입력하세요."
-
-#: auth/password_admin_window.py:363
-msgid "Passwords do not match."
-msgstr "비밀번호가 일치하지 않습니다."
-
-#: auth/password_admin_window.py:367 auth/password_admin_window.py:449
-msgid "Password must be at least 6 characters long."
-msgstr "비밀번호는 6자 이상이어야 합니다."
-
-#: auth/password_admin_window.py:372
-msgid "Password set successfully."
-msgstr "비밀번호가 성공적으로 설정되었습니다."
-
-#: auth/password_admin_window.py:379
-msgid "Failed to set password."
-msgstr "비밀번호를 설정하지 못했습니다."
-
-#: auth/password_admin_window.py:406
-msgid "Current Password:"
-msgstr "현재 비밀번호:"
-
-#: auth/password_admin_window.py:424
-msgid "Confirm New Password:"
-msgstr "새 비밀번호를 확인합니다:"
-
-#: auth/password_admin_window.py:441
-msgid "Current password is incorrect."
-msgstr "현재 비밀번호가 올바르지 않습니다."
-
-#: auth/password_admin_window.py:445
-msgid "New passwords do not match."
-msgstr "새 비밀번호가 일치하지 않습니다."
-
-#: auth/password_admin_window.py:454
-msgid "Password changed successfully."
-msgstr "비밀번호가 성공적으로 변경되었습니다."
-
-#: auth/password_admin_window.py:457
-msgid "Failed to change password."
-msgstr "비밀번호를 변경하지 못했습니다."
-
-#: auth/password_admin_window.py:473
-msgid ""
-"Are you sure you want to remove password protection? This will disable all "
-"password requirements."
-msgstr "비밀번호 보호를 제거하시겠습니까? 그러면 모든 비밀번호 요구 사항이 비활성화됩니다."
-
-#: auth/password_admin_window.py:479
-msgid "Password removed successfully."
-msgstr "비밀번호가 성공적으로 제거되었습니다."
-
-#: auth/password_admin_window.py:483
-msgid "Failed to remove password."
-msgstr "비밀번호를 제거하지 못했습니다."
-
-#: auth/password_admin_window.py:518
-msgid "Cache exported as JSON to:"
-msgstr "캐시를 JSON으로 내보냅니다:"
-
-#: auth/password_admin_window.py:520
-msgid "Failed to export cache as JSON:"
-msgstr "캐시를 JSON으로 내보내지 못했습니다:"
-
-#: auth/password_dialog.py:45 auth/password_dialog.py:103
-msgid "Password Required"
-msgstr "비밀번호 필요"
-
-#: auth/password_dialog.py:45
-msgid "Password Protection"
-msgstr "비밀번호 보호"
-
-#: auth/password_dialog.py:110
-msgid "Password required for: {0}"
-msgstr "암호가 필요합니다: {0}"
-
-#: auth/password_dialog.py:158
-msgid "Password Protection Available"
-msgstr "비밀번호 보호 사용 가능"
-
-#: auth/password_dialog.py:165
-msgid "This action requires password protection: {0}"
-msgstr "이 작업에는 암호 보호가 필요합니다: {0}"
-
-#: auth/password_dialog.py:181
-msgid "Password protection is not currently configured. You can:"
-msgstr "현재 비밀번호 보호가 구성되어 있지 않습니다. 설정할 수 있습니다:"
-
-#: auth/password_dialog.py:191
-msgid "• Configure password protection for sensitive actions"
-msgstr "• 민감한 작업에 대한 비밀번호 보호 구성"
-
-#: auth/password_dialog.py:196
-msgid "• Continue without password protection (less secure)"
-msgstr "• 비밀번호 보호 없이 계속 진행(보안 취약)"
-
-#: auth/password_dialog.py:203
-msgid "Don't show this security advice again"
-msgstr "이 보안 안내를 다시 표시하지 마세요."
-
-#: auth/password_dialog.py:213 auth/password_dialog.py:234
-msgid "Configure Protection"
-msgstr "보호 구성"
-
-#: auth/password_dialog.py:217
-msgid "Continue Without Protection"
-msgstr "보호 없이 계속 진행"
-
-#: auth/password_dialog.py:225
-msgid ""
-"Password protection is required for this action but is not currently "
-"configured."
-msgstr "이 작업에는 비밀번호 보호가 필요하지만 현재 구성되어 있지 않습니다."
 
 #: compare/base_compare.py:249
 msgid "Image data collection"
@@ -937,378 +748,123 @@ msgstr "체크포인트 데이터에 잘못된 인덱스가 포함되어 있습�
 msgid "Restarting Comparison"
 msgstr "재개 대비"
 
-#: compare/classifier_actions_manager.py:43
+#: compare/classifier_actions_manager.py:42
 msgid "(no positives set)"
 msgstr "(포지티브 설정 없음)"
 
-#: compare/classifier_actions_manager.py:44
+#: compare/classifier_actions_manager.py:43
 msgid "(no negatives set)"
 msgstr "(네거티브 설정 없음)"
 
-#: compare/classifier_actions_manager.py:46
-#: compare/classifier_management_window.py:60
+#: compare/classifier_actions_manager.py:45
+#: ui/compare/classifier_management_window_qt.py:83
+#: ui_tk/compare/classifier_management_window.py:59
 msgid "New Classifier Action"
 msgstr "새로운 분류기 조치"
 
-#: compare/classifier_actions_manager.py:120
+#: compare/classifier_actions_manager.py:119
 msgid "Loading image classifier <{0}> ..."
 msgstr "이미지 분류기 <{0}> 로드 중 ..."
 
-#: compare/classifier_actions_manager.py:215
+#: compare/classifier_actions_manager.py:214
 msgid "Loading embedding prototype from {0}..."
 msgstr "{0}에서 임베딩 프로토타입을 불러오는 중..."
 
-#: compare/classifier_actions_manager.py:231
+#: compare/classifier_actions_manager.py:230
 msgid "Loading negative embedding prototype from {0}..."
 msgstr "{0}에서 음수 임베딩 프로토타입을 불러오는 중..."
 
-#: compare/classifier_actions_manager.py:386
+#: compare/classifier_actions_manager.py:385
 msgid " detected"
 msgstr " 관련 기사"
 
-#: compare/classifier_actions_manager.py:388
+#: compare/classifier_actions_manager.py:387
 msgid " - skipped"
 msgstr " - 건너뛰기"
 
-#: compare/classifier_actions_manager.py:391
+#: compare/classifier_actions_manager.py:390
 msgid " - hidden"
 msgstr " - 숨겨진"
 
-#: compare/classifier_actions_manager.py:396
+#: compare/classifier_actions_manager.py:395
 msgid " - marked"
 msgstr " - 표시"
 
-#: compare/classifier_actions_manager.py:404
+#: compare/classifier_actions_manager.py:403
 msgid "Moving file: "
 msgstr "파일 이동: "
 
-#: compare/classifier_actions_manager.py:450
+#: compare/classifier_actions_manager.py:449
 msgid "Deleting file: "
 msgstr "파일 삭제: "
 
-#: compare/classifier_actions_manager.py:506
+#: compare/classifier_actions_manager.py:505
 msgid "Action modifier is not a valid directory: "
 msgstr "작업 수정자가 유효한 디렉터리가 아닙니다 : "
 
-#: compare/classifier_actions_manager.py:508
+#: compare/classifier_actions_manager.py:507
 msgid "Invalid classifier action {0}, may cause errors or be unable to run!"
 msgstr "잘못된 분류기 작업 {0}, 오류가 발생하거나 실행되지 않을 수 있습니다!"
 
-#: compare/classifier_actions_manager.py:615
+#: compare/classifier_actions_manager.py:614
 msgid "embedding"
 msgstr "임베딩"
 
-#: compare/classifier_actions_manager.py:617
+#: compare/classifier_actions_manager.py:616
 msgid "classifier {0}"
 msgstr "분류자 {0}"
 
-#: compare/classifier_actions_manager.py:619
+#: compare/classifier_actions_manager.py:618
 msgid "prompts"
 msgstr "프롬프트"
 
-#: compare/classifier_actions_manager.py:621
+#: compare/classifier_actions_manager.py:620
 msgid "prototype"
 msgstr "프로토타입"
 
-#: compare/classifier_actions_manager.py:629
+#: compare/classifier_actions_manager.py:628
 msgid "categories: {0}"
 msgstr "카테고리: {0}"
 
-#: compare/classifier_actions_manager.py:633
+#: compare/classifier_actions_manager.py:632
 msgid "{0} positives, {1} negatives"
 msgstr "{0} 포지티브, {1} 네거티브"
 
-#: compare/classifier_actions_manager.py:637
+#: compare/classifier_actions_manager.py:636
 msgid " using {0} ({1})"
 msgstr " {0} ({1})"
 
-#: compare/classifier_actions_manager.py:639
+#: compare/classifier_actions_manager.py:638
 msgid " using {0}"
 msgstr " {0}"
 
-#: compare/classifier_actions_manager.py:641
+#: compare/classifier_actions_manager.py:640
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} 포지티브, {1} 네거티브)"
 
-#: compare/classifier_actions_manager.py:644
+#: compare/classifier_actions_manager.py:643
 msgid "disabled"
 msgstr "비활성화됨"
 
-#: compare/classifier_actions_manager.py:651
-#: compare/classifier_management_window.py:56 compare/prevalidations_tab.py:29
+#: compare/classifier_actions_manager.py:650
+#: ui/compare/classifier_management_window_qt.py:79
+#: ui/compare/prevalidations_tab_qt.py:69
+#: ui_tk/compare/classifier_management_window.py:55
+#: ui_tk/compare/prevalidations_tab.py:31
 msgid "New Prevalidation"
 msgstr "새로운 유효성"
 
-#: compare/classifier_actions_manager.py:731
+#: compare/classifier_actions_manager.py:730
 msgid "Profile directory is not a valid directory: "
 msgstr "프로필 디렉터리가 유효한 디렉터리가 아닙니다: "
 
-#: compare/classifier_actions_manager.py:733
+#: compare/classifier_actions_manager.py:732
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr "유효성 검사 {0}이(가) 잘못되어 오류가 발생하거나 실행할 수 없습니다!"
 
-#: compare/classifier_actions_manager.py:813
+#: compare/classifier_actions_manager.py:812
 msgid "lookaheads: {0}"
 msgstr "앞을 내다보기: {0}"
-
-#: compare/classifier_actions_tab.py:106
-msgid "Add Classifier Action"
-msgstr "분류기 작업 추가"
-
-#: compare/classifier_actions_tab.py:108
-msgid "Clear Classifier Actions"
-msgstr "분류기 작업 지우기"
-
-#: compare/classifier_actions_tab.py:110
-msgid "Run All"
-msgstr "모두 실행"
-
-#: compare/classifier_actions_tab.py:114
-msgid "Run on Profile:"
-msgstr "프로필 실행:"
-
-#: compare/classifier_actions_tab.py:149 compare/prevalidations_tab.py:454
-msgid "Active"
-msgstr "활성"
-
-#: compare/classifier_actions_tab.py:153 compare/prevalidations_tab.py:445
-#: utils/constants.py:133 utils/constants.py:148
-msgid "Name"
-msgstr "이름 *"
-
-#: compare/classifier_actions_tab.py:157
-#: compare/classifier_management_window.py:164
-#: compare/prevalidations_tab.py:448
-msgid "Action"
-msgstr "액션"
-
-#: compare/classifier_actions_tab.py:178
-msgid "Run"
-msgstr "실행"
-
-#: compare/classifier_actions_tab.py:207 compare/prevalidations_tab.py:500
-#: files/file_actions_window.py:497 files/file_actions_window.py:548
-msgid "Modify"
-msgstr "수정하기"
-
-#: compare/classifier_actions_tab.py:215 compare/prevalidations_tab.py:507
-#: image/classifier_action_type.py:34
-msgid "Delete"
-msgstr "삭제"
-
-#: compare/classifier_actions_tab.py:223 compare/prevalidations_tab.py:514
-msgid "Move down"
-msgstr "맨 위로"
-
-#: compare/classifier_actions_tab.py:283 compare/classifier_actions_tab.py:349
-#: compare/prevalidations_tab.py:387
-msgid "directories"
-msgstr "디렉터리"
-
-#: compare/classifier_actions_tab.py:289
-msgid "Run classifier action '{0}' on the following directories?"
-msgstr "다음 디렉터리에서 분류기 작업 '{0}'을 실행하시겠습니까?"
-
-#: compare/classifier_actions_tab.py:293
-msgid "Run Classifier Action"
-msgstr "분류기 작업 실행"
-
-#: compare/classifier_actions_tab.py:333
-msgid "No active classifier actions to run"
-msgstr "실행할 활성 분류기 작업이 없습니다"
-
-#: compare/classifier_actions_tab.py:357
-msgid "Run {0} active classifier action(s) on the following directories?"
-msgstr "다음 디렉터리에서 {0}개의 활성 분류기 작업을 실행하시겠습니까?"
-
-#: compare/classifier_actions_tab.py:361
-msgid "Run All Classifier Actions"
-msgstr "모든 분류기 작업 실행"
-
-#: compare/classifier_management_window.py:54 compare/prevalidations_tab.py:28
-msgid "Modify Prevalidation"
-msgstr "수정하기"
-
-#: compare/classifier_management_window.py:55 compare/prevalidations_tab.py:28
-msgid "Prevalidation Name"
-msgstr "유효성 검사 이름"
-
-#: compare/classifier_management_window.py:58
-msgid "Modify Classifier Action"
-msgstr "분류기 작업 수정"
-
-#: compare/classifier_management_window.py:59
-msgid "Classifier Action Name"
-msgstr "분류기 작업명"
-
-#: compare/classifier_management_window.py:97
-msgid "Positives"
-msgstr "긍정적"
-
-#: compare/classifier_management_window.py:105
-msgid "Negatives"
-msgstr "네거티브"
-
-#: compare/classifier_management_window.py:113
-msgid "Validation Types"
-msgstr "유효성 검사 유형"
-
-#: compare/classifier_management_window.py:117
-msgid "Use Embedding"
-msgstr "임베딩 사용"
-
-#: compare/classifier_management_window.py:123
-msgid "Use Image Classifier"
-msgstr "이미지 분류기 사용"
-
-#: compare/classifier_management_window.py:130
-msgid "Use Prompts"
-msgstr "프롬프트 사용"
-
-#: compare/classifier_management_window.py:139
-msgid "Use Embedding Prototype"
-msgstr "임베딩 프로토타입 사용"
-
-#: compare/compare_settings_window.py:183 compare/lookahead.py:163
-msgid "Threshold"
-msgstr "임계값"
-
-#: compare/classifier_management_window.py:176
-msgid "Action Modifier"
-msgstr "액션 수정자"
-
-#: compare/classifier_management_window.py:184
-msgid "Image Classifier Name"
-msgstr "이미지 분류기 이름"
-
-#: compare/classifier_management_window.py:197
-msgid "Image Classifier Selected Category"
-msgstr "이미지 분류기 선택 카테고리"
-
-#: compare/classifier_management_window.py:202
-msgid "Select Categories..."
-msgstr "카테고리 선택..."
-
-#: compare/classifier_management_window.py:216
-msgid "Should Run"
-msgstr "실행해야 함"
-
-#: compare/classifier_management_window.py:219
-msgid "Enable this classifier action"
-msgstr "이 분류기 동작을 활성화하십시오"
-
-#: compare/classifier_management_window.py:228
-#: compare/directory_profile.py:195 compare/lookahead.py:170
-msgid "Done"
-msgstr "완료"
-
-#: compare/classifier_management_window.py:243
-msgid "Prototype Directory"
-msgstr "프로토타입 디렉터리"
-
-#: compare/classifier_management_window.py:258
-#: compare/classifier_management_window.py:296 files/go_to_file.py:137
-#: files/go_to_file.py:378
-msgid "Browse..."
-msgstr "찾아보기..."
-
-#: compare/classifier_management_window.py:266
-msgid "Force Recalculate Prototype"
-msgstr "프로토타입 강제 재계산"
-
-#: compare/classifier_management_window.py:276
-msgid "Negative Prototype Directory (Optional)"
-msgstr "부정 프로토타입 디렉터리 (선택 사항)"
-
-#: compare/classifier_management_window.py:306
-msgid "Negative Prototype Weight (λ)"
-msgstr "부정적 원형의 무게 (λ)"
-
-#: compare/classifier_management_window.py:489
-msgid "Select Prototype Directory"
-msgstr "프로토타입용 디렉터리 선택"
-
-#: compare/classifier_management_window.py:500
-msgid "Select Negative Prototype Directory"
-msgstr "네거티브 프로토타입용 디렉터리 선택"
-
-#: compare/classifier_management_window.py:561
-msgid "Prototypes recalculated successfully"
-msgstr "프로토타입이 성공적으로 재계산되었습니다"
-
-#: compare/classifier_management_window.py:592
-msgid "Classifier Management"
-msgstr "분류기 관리"
-
-#: compare/classifier_management_window.py:619
-#: compare/prevalidations_tab.py:217
-msgid "Prevalidations"
-msgstr "법적고지"
-
-#: compare/classifier_management_window.py:638
-msgid ""
-"Prevalidations are disabled. Enable them in the Prevalidations tab settings."
-msgstr "사전 유효성 검사가 비활성화되었습니다. 사전 유효성 검사 탭 설정에서 활성화하십시오."
-
-#: compare/compare_settings_window.py:70
-msgid "Comparison Modes"
-msgstr "비교 모드"
-
-#: compare/compare_settings_window.py:102
-msgid "Add Instance"
-msgstr "인스턴스 추가"
-
-#: compare/compare_settings_window.py:122
-msgid "Combination Logic:"
-msgstr "조합 논리:"
-
-#: compare/compare_settings_window.py:223
-msgid "Max files to compare"
-msgstr "최대 파일 비교"
-
-#: compare/compare_settings_window.py:247
-msgid "Compare faces"
-msgstr "자주 묻는 질문"
-
-#: compare/compare_settings_window.py:257
-msgid "Overwrite cache"
-msgstr "캐시를 덮어"
-
-#: compare/compare_settings_window.py:267
-msgid "Store checkpoints"
-msgstr "매장 찾기"
-
-#: compare/compare_settings_window.py:296
-msgid "Filters (Applied Before Comparison)"
-msgstr "필터 (비교 전에 적용됨)"
-
-#: compare/compare_settings_window.py:310
-msgid "Size Filter:"
-msgstr "크기 필터:"
-
-#: compare/compare_settings_window.py:319
-msgid "(Size filtering UI to be implemented)"
-msgstr "(사이즈 필터링 UI 구현 예정)"
-
-#: compare/compare_settings_window.py:333
-msgid "Model Filter:"
-msgstr "모델 필터:"
-
-#: compare/compare_settings_window.py:342
-msgid "(Model filtering UI to be implemented)"
-msgstr "(모델 필터링 UI 구현 예정)"
-
-#: compare/compare_settings_window.py:366
-msgid "Apply"
-msgstr "신청"
-
-#: compare/compare_settings_window.py:403
-msgid "Threshold:"
-msgstr "임계값:"
-
-#: compare/compare_settings_window.py:473
-msgid "Instance Weights:"
-msgstr "인스턴스 가중치:"
 
 #: compare/compare_wrapper.py:77 compare/compare_wrapper.py:80
 msgid "Invalid mode"
@@ -1334,7 +890,7 @@ msgstr "관련 이미지 없음"
 msgid "No unrelated images found."
 msgstr "관련 이미지가 없습니다."
 
-#: compare/compare_wrapper.py:232 compare/compare_wrapper.py:405
+#: compare/compare_wrapper.py:232 compare/compare_wrapper.py:404
 msgid "No Groups Found"
 msgstr "그룹 없음"
 
@@ -1356,248 +912,108 @@ msgstr ""
 "검색 모드가 감지되었습니다. 실행하기 전에 그룹 모드로 전환을 확인하세요. 그룹 모드는 기본 디렉터리의 모든 이미지를 비교하므로 시간이 "
 "더 오래 걸립니다."
 
-#: compare/compare_wrapper.py:333
+#: compare/compare_wrapper.py:332
 msgid "Gathering image data for comparison"
 msgstr "비교를 위한 이미지 데이터 수집"
 
-#: compare/compare_wrapper.py:371
+#: compare/compare_wrapper.py:370
 msgid "Searching images..."
 msgstr "이미지 검색..."
 
-#: compare/compare_wrapper.py:377
+#: compare/compare_wrapper.py:376
 msgid "Set a directory and search file or search text."
 msgstr "디렉터리를 설정하고 파일 또는 검색 텍스트를 검색합니다."
 
-#: compare/compare_wrapper.py:378
+#: compare/compare_wrapper.py:377
 msgid "No Match Found"
 msgstr "인기 상품"
 
-#: compare/compare_wrapper.py:378
+#: compare/compare_wrapper.py:377
 msgid "None of the files match the search filters with current settings."
 msgstr "현재 설정으로 검색 필터와 일치하는 파일이 없습니다."
 
-#: compare/compare_wrapper.py:391
+#: compare/compare_wrapper.py:390
 msgid "%s possibly related images found."
 msgstr "{0} 아마도 관련 이미지가 발견되었습니다."
 
-#: compare/compare_wrapper.py:399
+#: compare/compare_wrapper.py:398
 msgid "Running image comparisons..."
 msgstr "이미지 비교 실행 중..."
 
-#: compare/compare_wrapper.py:404 compare/compare_wrapper.py:419
+#: compare/compare_wrapper.py:403 compare/compare_wrapper.py:418
 msgid "Set a directory and search file."
 msgstr "디렉토리 및 검색 파일을 설정합니다."
 
-#: compare/compare_wrapper.py:405
+#: compare/compare_wrapper.py:404
 msgid "None of the files can be grouped with current settings."
 msgstr "현재 설정으로는 어떤 파일도 그룹화할 수 없습니다."
 
-#: compare/compare_wrapper.py:420
+#: compare/compare_wrapper.py:419
 msgid "No Duplicates Found"
 msgstr "발견 없음"
 
-#: compare/compare_wrapper.py:420
+#: compare/compare_wrapper.py:419
 msgid ""
 "None of the files appear to be duplicates based on the current settings."
 msgstr "현재 설정에 따르면 중복된 파일은 없는 것으로 보입니다."
 
-#: compare/compare_wrapper.py:444
+#: compare/compare_wrapper.py:443
 msgid "Stranded Group Members Found"
 msgstr "좌초된 그룹 구성원 발견"
 
-#: compare/compare_wrapper.py:444
+#: compare/compare_wrapper.py:443
 msgid "Some group members were left stranded by the grouping process."
 msgstr "일부 그룹 구성원은 그룹화 과정에서 발이 묶였습니다."
 
-#: compare/compare_wrapper.py:499
+#: compare/compare_wrapper.py:498
 msgid "No More Groups"
 msgstr "더 많은 그룹 없음"
 
-#: compare/compare_wrapper.py:500
+#: compare/compare_wrapper.py:499
 msgid ""
 "There are no more image groups remaining for this directory and current "
 "filter settings."
 msgstr "이 디렉터리 및 현재 필터 설정에 더 이상 이미지 그룹이 남아 있지 않습니다."
 
-#: compare/directory_profile.py:133 compare/prevalidations_tab.py:370
-msgid "Edit Profile"
-msgstr "디렉터리 프로필 편집"
-
-#: compare/directory_profile.py:133
-msgid "Create Profile"
-msgstr "디렉터리 프로필 생성"
-
-#: compare/directory_profile.py:145
-msgid "Profile Name"
-msgstr "디렉터리 프로필 이름"
-
-#: compare/directory_profile.py:155
-msgid "Directories"
-msgstr "디렉토리"
-
-#: compare/directory_profile.py:175
-msgid "Add"
-msgstr "추가"
-
-#: compare/directory_profile.py:178
-msgid "Edit"
-msgstr "편집"
-
-#: compare/directory_profile.py:181 files/directory_notes_window.py:137
-msgid "Remove"
-msgstr "제거"
-
-#: compare/directory_profile.py:184
-msgid "Add dirs from subdirs"
-msgstr "하위 디렉터리에서 디렉터리 추가"
-
-#: compare/directory_profile.py:187
-msgid "Clear all"
-msgstr "모두 지우기"
-
-#: compare/directory_profile.py:206
-msgid "Select directory"
-msgstr "디렉터리 선택"
-
-#: compare/directory_profile.py:236
-msgid "Add Directory"
-msgstr "디렉터리 추가"
-
-#: compare/directory_profile.py:261
-msgid "Edit Directory"
-msgstr "디렉터리 편집"
-
-#: compare/directory_profile.py:295
-msgid "Select directory to add subdirectories from"
-msgstr "하위 디렉터리를 추가할 디렉터리를 선택하세요"
-
-#: compare/embedding_prototype.py:92
+#: compare/embedding_prototype.py:95
 msgid "Gathering image files from directory..."
 msgstr "디렉터리에서 이미지 파일 수집 중..."
 
-#: compare/embedding_prototype.py:126
+#: compare/embedding_prototype.py:129
 msgid "Calculating embeddings for {0} images..."
 msgstr "{0}개의 이미지에 대한 임베딩 계산 중..."
 
-#: compare/embedding_prototype.py:150
+#: compare/embedding_prototype.py:153
 msgid "Processed {0}/{1} images..."
 msgstr "{0}/{1}개의 이미지를 처리했습니다..."
 
-#: compare/embedding_prototype.py:165
+#: compare/embedding_prototype.py:168
 msgid "Calculating average embedding..."
 msgstr "평균 임베딩 계산 중..."
 
-#: compare/embedding_prototype.py:331
+#: compare/embedding_prototype.py:317
 msgid "Computed embeddings for {0}/{1} images..."
 msgstr "{0}/{1} 이미지에 대한 계산된 임베딩..."
 
-#: compare/embedding_prototype.py:502
+#: compare/embedding_prototype.py:488
 msgid "Gathering image files from directories..."
 msgstr "디렉터리에서 이미지 파일을 수집 중..."
 
-#: compare/embedding_prototype.py:537
+#: compare/embedding_prototype.py:523
 msgid "Processing {0} images in {1} batches of up to {2} images..."
 msgstr "{0}개의 이미지를 {1}개의 배치로 나누어 처리 중입니다. 각 배치당 최대 {2}개의 이미지까지 처리됩니다..."
 
-#: compare/embedding_prototype.py:544
+#: compare/embedding_prototype.py:530
 msgid "Computing embeddings for batch prototype validation..."
 msgstr "배치 프로토타입 검증을 위한 임베딩 계산..."
 
-#: compare/embedding_prototype.py:553
+#: compare/embedding_prototype.py:539
 msgid "Processing batch {0}/{1} ({2} images)..."
 msgstr "배치 {0}/{1} 처리 중 ({2} 이미지)..."
 
-#: compare/embedding_prototype.py:599
+#: compare/embedding_prototype.py:585
 msgid "Found {0} images that meet the threshold..."
 msgstr "임계값을 충족하는 {0}개의 이미지를 찾았습니다..."
-
-#: compare/lookahead.py:98 compare/prevalidations_tab.py:275
-msgid "Edit Lookahead"
-msgstr "앞으로 보기 편집"
-
-#: compare/lookahead.py:98
-msgid "Create Lookahead"
-msgstr "룩어헤드 생성"
-
-#: compare/lookahead.py:110
-msgid "Lookahead Name"
-msgstr "룩어헤드 이름"
-
-#: compare/lookahead.py:121
-msgid "Reference existing prevalidation name"
-msgstr "기존 사전 검증된 이름 참조"
-
-#: compare/lookahead.py:134
-msgid "Prevalidation Name or Custom Text"
-msgstr "사전 검증 이름 또는 사용자 정의 텍스트"
-
-#: compare/prevalidations_tab.py:40
-msgid "Lookaheads (select from shared list)"
-msgstr "룩어헤드 (공유 목록에서 선택)"
-
-#: compare/prevalidations_tab.py:49
-msgid "Select Lookaheads..."
-msgstr "선행 검색 선택..."
-
-#: compare/prevalidations_tab.py:59
-msgid "Directory Profile"
-msgstr "디렉토리 프로필"
-
-#: compare/prevalidations_tab.py:223
-msgid "Add prevalidation"
-msgstr "사전 검증"
-
-#: compare/prevalidations_tab.py:225
-msgid "Clear prevalidations"
-msgstr "취소 정책"
-
-#: compare/prevalidations_tab.py:232 utils/help_and_config.py:254
-msgid "Enable Prevalidations"
-msgstr "사전 유효성 검사 사용"
-
-#: compare/prevalidations_tab.py:245
-msgid "Lookaheads"
-msgstr "선행 검사"
-
-#: compare/prevalidations_tab.py:272
-msgid "Add Lookahead"
-msgstr "앞을 내다보기 추가"
-
-#: compare/prevalidations_tab.py:278
-msgid "Remove Lookahead"
-msgstr "앞을 내다보기 제거"
-
-#: compare/prevalidations_tab.py:291
-msgid "{name} ({name_or_text}, threshold: {threshold:.2f})"
-msgstr "{name} ({name_or_text}, 임계값: {threshold:.2f})"
-
-#: compare/prevalidations_tab.py:340
-msgid "Directory Profiles"
-msgstr "디렉토리 프로필"
-
-#: compare/prevalidations_tab.py:367
-msgid "Add Profile"
-msgstr "프로필 추가"
-
-#: compare/prevalidations_tab.py:373
-msgid "Remove Profile"
-msgstr "프로필 삭제"
-
-#: compare/prevalidations_tab.py:387
-msgid "directory"
-msgstr "디렉터리"
-
-#: compare/prevalidations_tab.py:451
-msgid "Profile"
-msgstr "디렉토리 프로필"
-
-#: compare/prevalidations_tab.py:476
-msgid "(Global)"
-msgstr "(글로벌)"
-
-#: compare/prevalidations_tab.py:492 files/hotkey_actions_window.py:96
-msgid "Set"
-msgstr "설치하기"
 
 #: extensions/sd_runner_client.py:67
 msgid "Image does not contain a prompt to redo!"
@@ -1707,277 +1123,6 @@ msgstr "덮어쓰기 확인"
 msgid "File overwrite cancelled"
 msgstr "파일 덮어쓰기 취소됨"
 
-#: files/directory_notes_window.py:38
-msgid "Directory Notes - {0}"
-msgstr "디렉토리 노트 - {0}"
-
-#: files/directory_notes_window.py:57
-msgid "Directory: {0}"
-msgstr "디렉터리: {0}"
-
-#: files/directory_notes_window.py:66
-msgid "Export to Text File"
-msgstr "텍스트 파일로 내보내기"
-
-#: files/directory_notes_window.py:70
-msgid "Import from Text File"
-msgstr "텍스트 파일에서 가져오기"
-
-#: files/directory_notes_window.py:73
-msgid "Import from JSON File"
-msgstr "JSON 파일에서 가져오기"
-
-#: files/directory_notes_window.py:85
-msgid "MARKED FILES"
-msgstr "표시된 파일"
-
-#: files/directory_notes_window.py:95
-msgid "(No marked files)"
-msgstr "(표시된 파일 없음)"
-
-#: files/directory_notes_window.py:105
-msgid "FILE NOTES"
-msgstr "파일 노트"
-
-#: files/directory_notes_window.py:115
-msgid "(No file notes)"
-msgstr "(파일 노트 없음)"
-
-#: files/directory_notes_window.py:142
-msgid "Removed marked file: {0}"
-msgstr "표시된 파일 제거됨: {0}"
-
-#: files/directory_notes_window.py:148 files/directory_notes_window.py:217
-#: files/favorites_window.py:142
-msgid "Open"
-msgstr "개방형 미디어"
-
-#: files/directory_notes_window.py:157 files/directory_notes_window.py:226
-msgid "Opened file: {0}"
-msgstr "파일을 열었습니다: {0}"
-
-#: files/directory_notes_window.py:162 files/directory_notes_window.py:231
-msgid "Opened file in new window: {0}"
-msgstr "새 창에서 파일 열기: {0}"
-
-#: files/directory_notes_window.py:197
-msgid "Edit Note"
-msgstr "메모 편집"
-
-#: files/directory_notes_window.py:206
-msgid "Remove Note"
-msgstr "메모를 제거하세요"
-
-#: files/directory_notes_window.py:211
-msgid "Removed note for: {0}"
-msgstr "다음 항목에 대한 메모를 삭제했습니다: {0}"
-
-#: files/directory_notes_window.py:320
-msgid "Export Directory Notes"
-msgstr "수출 디렉토리의 메모"
-
-#: files/directory_notes_window.py:328
-msgid "Exported notes to: {0}"
-msgstr "수출된 노트: {0}"
-
-#: files/directory_notes_window.py:331
-msgid "Export Error"
-msgstr "수출된 오류"
-
-#: files/directory_notes_window.py:331
-msgid "Failed to export notes: {0}"
-msgstr "노트 내보내기에 실패했습니다: {0}"
-
-#: files/directory_notes_window.py:338
-msgid "Import Marked Files from Text File"
-msgstr "텍스트 파일에서 표시된 파일 가져오기"
-
-#: files/directory_notes_window.py:339
-msgid "Text files"
-msgstr "텍스트 파일"
-
-#: files/directory_notes_window.py:339 files/directory_notes_window.py:377
-#: files/go_to_file.py:242
-msgid "All files"
-msgstr "모든 파일"
-
-#: files/directory_notes_window.py:348
-msgid "Import Options"
-msgstr "가져오기 옵션"
-
-#: files/directory_notes_window.py:349
-msgid "Search recursively in subdirectories for matching filenames?"
-msgstr "하위 디렉터리에서 일치하는 파일명을 재귀적으로 검색할까요?"
-
-#: files/directory_notes_window.py:356 files/directory_notes_window.py:388
-msgid "Imported {0} files."
-msgstr "{0} 파일을 가져왔습니다."
-
-#: files/directory_notes_window.py:358
-msgid "{0} filenames not found:"
-msgstr "{0} 파일 이름을 찾을 수 없습니다:"
-
-#: files/directory_notes_window.py:363 files/directory_notes_window.py:395
-#: files/file_actions_window.py:429
-msgid "... and {0} more"
-msgstr "... 및 {0}개 더"
-
-#: files/directory_notes_window.py:365 files/directory_notes_window.py:397
-msgid "Import Complete"
-msgstr "수입 완료"
-
-#: files/directory_notes_window.py:366 files/directory_notes_window.py:398
-msgid "Imported {0} marked files"
-msgstr "{0}개 표시된 파일 가져옴"
-
-#: files/directory_notes_window.py:369 files/directory_notes_window.py:401
-msgid "Import Error"
-msgstr "가져오기 오류"
-
-#: files/directory_notes_window.py:369
-msgid "Failed to import from text file: {0}"
-msgstr "텍스트 파일에서 가져오기 실패: {0}"
-
-#: files/directory_notes_window.py:376
-msgid "Import Marked Files from JSON File"
-msgstr "JSON 파일에서 표시된 파일 가져오기"
-
-#: files/directory_notes_window.py:377
-msgid "JSON files"
-msgstr "JSON 파일"
-
-#: files/directory_notes_window.py:390
-msgid "{0} invalid or missing file paths:"
-msgstr "{0}개의 잘못되었거나 누락된 파일 경로:"
-
-#: files/directory_notes_window.py:401
-msgid "Failed to import from JSON file: {0}"
-msgstr "JSON 파일에서 가져오기 실패: {0}"
-
-#: files/favorites_window.py:51
-msgid "Added favorite: "
-msgstr "즐겨찾기에 추가됨: "
-
-#: files/favorites_window.py:70
-msgid "Favorites"
-msgstr "즐겨찾기"
-
-#: files/favorites_window.py:125
-msgid ""
-"No favorites set.\n"
-"\n"
-"To add a favorite, right-click an image and select 'Add to Favorites'."
-msgstr ""
-"즐겨찾기가 설정되어 있지 않습니다.\n"
-"\n"
-"즐겨찾기에 추가하려면 이미지를 마우스 오른쪽 버튼으로 클릭하고 '즐겨찾기에 추가'를 선택하세요."
-
-#: files/favorites_window.py:148
-msgid "Remove Favorite"
-msgstr "즐겨찾기 제거"
-
-#: files/favorites_window.py:174
-msgid "Opened favorite: "
-msgstr "즐겨찾기에 추가됨: "
-
-#: files/favorites_window.py:179
-msgid "Opened favorite in new window: "
-msgstr "새 창에서 즐겨찾기 열기: "
-
-#: files/favorites_window.py:187
-msgid "Removed favorite: "
-msgstr "즐겨찾기에서 제거됨: "
-
-#: files/file_actions_window.py:280
-msgid "File Actions"
-msgstr "파일 작업"
-
-#: files/file_actions_window.py:308
-msgid "File Action History"
-msgstr "파일 작업 기록"
-
-#: files/file_actions_window.py:310
-msgid "Search Image"
-msgstr "이미지 검색"
-
-#: files/file_actions_window.py:312
-msgid "Clear History"
-msgstr "기록 지우기"
-
-#: files/file_actions_window.py:346
-msgid "Today's File Actions"
-msgstr "오늘의 파일 작업"
-
-#: files/file_actions_window.py:346
-msgid "File Action Statistics"
-msgstr "파일 작업 통계"
-
-#: files/file_actions_window.py:353 files/file_actions_window.py:785
-msgid "All Time"
-msgstr "모든 시간"
-
-#: files/file_actions_window.py:353 files/file_actions_window.py:787
-msgid "Today Only"
-msgstr "오늘만"
-
-#: files/file_actions_window.py:360
-msgid "Target Directory"
-msgstr "대상 디렉토리"
-
-#: files/file_actions_window.py:366 files/marked_file_mover.py:1148
-msgid "Moved"
-msgstr "지원하다"
-
-#: files/file_actions_window.py:372 files/marked_file_mover.py:1148
-msgid "Copied"
-msgstr "뚱 베어"
-
-#: files/file_actions_window.py:378
-msgid "Total"
-msgstr "총계"
-
-#: files/file_actions_window.py:479
-msgid " ({0} files)"
-msgstr " ({0} 파일)"
-
-#: files/file_actions_window.py:481
-msgid "(auto)"
-msgstr "(자동)"
-
-#: files/file_actions_window.py:486 files/marked_file_mover.py:322
-#: image/classifier_action_type.py:30
-msgid "Move"
-msgstr "이동"
-
-#: files/file_actions_window.py:486 files/marked_file_mover.py:329
-#: image/classifier_action_type.py:32
-msgid "Copy"
-msgstr "복사"
-
-#: files/file_actions_window.py:489 files/file_actions_window.py:540
-msgid "Undo"
-msgstr "실행 취소"
-
-#: files/file_actions_window.py:524
-msgid "View"
-msgstr "보기"
-
-#: files/file_actions_window.py:532
-msgid "Copy Filename"
-msgstr "파일 이름 복사"
-
-#: files/file_actions_window.py:565
-msgid "Image does not exist: "
-msgstr "이미지가 존재하지 않습니다: "
-
-#: files/file_actions_window.py:566 files/file_actions_window.py:577
-msgid "File Action Error"
-msgstr "파일 작업 오류"
-
-#: files/file_actions_window.py:576
-msgid "Images not found"
-msgstr "이미지를 찾을 수 없습니다"
-
 #: files/file_browser.py:155 files/file_browser.py:167
 #: files/file_browser.py:179
 msgid " (try setting recursive to True)"
@@ -2008,412 +1153,123 @@ msgstr "file_browser.find()에 제공된 검색 텍스트가 유효하지 않습
 msgid "No files found"
 msgstr "파일が見つかりません"
 
-#: files/go_to_file.py:99 files/go_to_file.py:118
-msgid "Go To File"
-msgstr "파일로 이동"
-
-#: files/go_to_file.py:134
-msgid "Go To"
-msgstr "가다"
-
-#: files/go_to_file.py:141 utils/help_and_config.py:177
-msgid "Go To Last Moved"
-msgstr "마지막으로 이동한 곳으로 가기"
-
-#: files/go_to_file.py:148
-msgid "Go to closest file if exact match not found"
-msgstr "정확한 일치 항목이 발견되지 않을 경우 가장 가까운 파일로 이동"
-
-#: files/go_to_file.py:159
-msgid "Go to file by index (1-based)"
-msgstr "인덱스(1부터 시작)로 파일 이동"
-
-#: files/go_to_file.py:188
-msgid "Invalid search string, please enter some text."
-msgstr "잘못된 검색 문자열입니다. 텍스트를 입력하세요."
-
-#: files/go_to_file.py:204
-msgid "Index navigation enabled but input is not a valid number."
-msgstr "인덱스 탐색이 활성화되었으나 입력값이 유효한 숫자가 아닙니다."
-
-#: files/go_to_file.py:224
-msgid "Supported files"
-msgstr "지원되는 파일"
-
-#: files/go_to_file.py:228
-msgid "Image files"
-msgstr "이미지 파일"
-
-#: files/go_to_file.py:231
-msgid "Video files"
-msgstr "비디오 파일"
-
-#: files/go_to_file.py:233
-msgid "GIF files"
-msgstr "GIF 파일"
-
-#: files/go_to_file.py:235
-msgid "PDF files"
-msgstr "PDF 파일"
-
-#: files/go_to_file.py:237
-msgid "SVG files"
-msgstr "SVG 파일"
-
-#: files/go_to_file.py:239
-msgid "HTML files"
-msgstr "HTML 파일"
-
-#: files/go_to_file.py:246
-msgid "Select file to go to"
-msgstr "파일 선택"
-
-#: files/go_to_file.py:265
-msgid "No last moved image found."
-msgstr "마지막으로 이동된 미디어 파일을 찾을 수 없습니다."
-
-#: files/go_to_file.py:300
-msgid "Sort by for closest search:"
-msgstr "가장 가까운 검색을 위해 정렬 기준:"
-
-#: files/go_to_file.py:335
-msgid "Find Related Filenames"
-msgstr "관련 파일 이름 찾기"
-
-#: files/go_to_file.py:340
-msgid ""
-"Enter a base ID manually or click 'Extract from filename' to auto-extract "
-"from the filename above."
-msgstr "기본 ID를 수동으로 입력하거나 '파일 이름에서 추출'을 클릭하여 위의 파일 이름에서 자동 추출하십시오."
-
-#: files/go_to_file.py:350
-msgid "Base ID:"
-msgstr "기본 ID:"
-
-#: files/go_to_file.py:362
-msgid "Extract from filename"
-msgstr "파일명에서 추출"
-
-#: files/go_to_file.py:370
-msgid "Target Directory:"
-msgstr "대상 디렉터리:"
-
-#: files/go_to_file.py:385 utils/help_and_config.py:179
-msgid "Current Media"
-msgstr "현재 미디어"
-
-#: files/go_to_file.py:388
-msgid "Find Related"
-msgstr "관련 항목 찾기"
-
-#: files/go_to_file.py:448
-msgid "Loading current media and searching..."
-msgstr "현재 미디어를 불러오고 검색 중..."
-
-#: files/go_to_file.py:460
-msgid ""
-"Current media filename loaded. Select a target directory to find related "
-"filenames."
-msgstr "현재 로드된 미디어 파일 이름입니다. 관련 파일 이름을 찾으려면 대상 디렉터리를 선택하십시오."
-
-#: files/go_to_file.py:462
-msgid "No active media file found in the current window."
-msgstr "현재 창에서 활성 미디어 파일을 찾을 수 없습니다."
-
-#: files/go_to_file.py:464
-msgid "Error getting current media filename: {}"
-msgstr "현재 미디어 파일 이름 가져오기 중 오류: {}"
-
-#: files/go_to_file.py:518
-msgid "Please enter a filename first."
-msgstr "먼저 파일 이름을 입력하십시오."
-
-#: files/go_to_file.py:524
-msgid "Base ID extracted: {}"
-msgstr "추출된 기본 ID: {}"
-
-#: files/go_to_file.py:526
-msgid "Could not extract base ID from filename. Please enter it manually."
-msgstr "파일 이름에서 기본 ID를 추출할 수 없습니다. 수동으로 입력해 주세요."
-
-#: files/go_to_file.py:527
-msgid "Could not extract base ID. Please enter it manually."
-msgstr "기본 ID를 추출할 수 없습니다. 수동으로 입력해 주세요."
-
-#: files/go_to_file.py:535
-msgid "Please enter a base ID or extract it from a filename."
-msgstr "기본 ID를 입력하거나 파일 이름에서 추출하십시오."
-
-#: files/go_to_file.py:539
-msgid "Please select a target directory to search in."
-msgstr "검색할 대상 디렉터리를 선택하십시오."
-
-#: files/go_to_file.py:543
-msgid "Target directory does not exist."
-msgstr "대상 디렉터리가 존재하지 않습니다."
-
-#: files/go_to_file.py:563
-msgid "Found {} related filenames"
-msgstr "{} 관련 파일명을 찾았습니다"
-
-#: files/go_to_file.py:566
-msgid "No related filenames found with base ID \"{0}\" in {1}"
-msgstr "{1}에서 기본 ID “{0}”과 관련된 파일명을 찾을 수 없습니다."
-
-#: files/go_to_file.py:683
-msgid ""
-"The directory '{0}' contains many files ({1} files found so far). Searching "
-"may take a while. Do you want to proceed?"
-msgstr ""
-"디렉터리 '{0}'에는 많은 파일들이 포함되어 있습니다 (지금까지 {1}개의 파일을 찾았습니다). 검색에 시간이 다소 걸릴 수 있습니다."
-" 계속하시겠습니까?"
-
-#: files/go_to_file.py:684
-msgid "Large Directory"
-msgstr "대형 디렉토리"
-
-#: files/go_to_file.py:693
-msgid "Search cancelled by user."
-msgstr "사용자에 의해 검색이 취소되었습니다."
-
-#: files/go_to_file.py:729
-msgid "Error searching directory: {}"
-msgstr "디렉터리 검색 오류: {}"
-
-#: files/go_to_file.py:741
-msgid "Opening file: {}"
-msgstr "파일 열기: {}"
-
-#: files/hotkey_actions_window.py:27
-msgid "Hotkey Actions"
-msgstr "단축키 작업"
-
-#: files/hotkey_actions_window.py:50
-msgid "Key name"
-msgstr "키 이름"
-
-#: files/hotkey_actions_window.py:54
-msgid "Target directory"
-msgstr "대상 디렉터리"
-
-#: files/hotkey_actions_window.py:86 files/hotkey_actions_window.py:91
-msgid "(unset)"
-msgstr "(미설정)"
-
-#: files/marked_file_mover.py:96 files/marked_file_mover.py:1039
+#: files/marked_files.py:78 files/marked_files.py:497
 msgid "Marks cleared."
 msgstr "표시가 지워졌습니다."
 
-#: files/marked_file_mover.py:103
+#: files/marked_files.py:98
 msgid "Set current marks from previous."
 msgstr "이전 마크에서 현재 마크를 설정합니다."
 
-#: files/marked_file_mover.py:103
+#: files/marked_files.py:98
 msgid "Total set: {0}"
 msgstr "총 집합입니다: {0}"
 
-#: files/marked_file_mover.py:130
+#: files/marked_files.py:148
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "영구 마크 대상이 설정되지 않았습니다!\n"
 "마크 창에서 Ctrl+T로 설정합니다."
 
-#: files/marked_file_mover.py:142
+#: files/marked_files.py:164
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "{0}에 대해 설정된 단축키 동작이 없습니다.\n"
 "마크 창에서 {1}로 설정합니다."
 
-#: files/marked_file_mover.py:187 files/marked_file_mover.py:198
-msgid "Move {0} Marked File(s)"
-msgstr "{0} 개의 표시된 파일을 이동하시겠습니까?"
-
-#: files/marked_file_mover.py:267 files/recent_directory_window.py:230
-msgid "Set a new target directory"
-msgstr "새 대상 디렉터리 설정"
-
-#: files/marked_file_mover.py:269
-msgid "MOVE"
-msgstr "이동"
-
-#: files/marked_file_mover.py:273
-msgid "COPY"
-msgstr "복사"
-
-#: files/marked_file_mover.py:275
-msgid "DELETE"
-msgstr "삭제"
-
-#: files/marked_file_mover.py:277 files/recent_directory_window.py:234
-msgid "Add directories from parent"
-msgstr "상위 디렉터리에서 디렉터리 추가"
-
-#: files/marked_file_mover.py:280 files/recent_directory_window.py:236
-msgid "Clear targets"
-msgstr "목표 지우기"
-
-#: files/marked_file_mover.py:282 files/pdf_options_window.py:80
-msgid "Create PDF"
-msgstr "PDF 만들기"
-
-#: files/marked_file_mover.py:349
-msgid ""
-"WARNING: This action sets hotkey actions that will be used for future file "
-"operations. You may have accidentally triggered this shortcut due to a "
-"sticky Control key. Please confirm you want to proceed."
-msgstr ""
-"경고: 이 작업은 향후 파일 작업에 사용될 단축키 동작을 설정합니다. Control 키가 눌린 상태로 인해 실수로 이 단축키를 실행했을 "
-"수 있습니다. 계속 진행할 것인지 확인하십시오."
-
-#: files/marked_file_mover.py:355 files/marked_file_mover.py:361
-msgid "Recording next mark target and action."
-msgstr "다음 마크 대상 및 작업을 기록합니다."
-
-#: files/marked_file_mover.py:374 files/recent_directory_window.py:280
-msgid "Invalid directory: %s"
-msgstr "잘못된 디렉터리입니다: {0}"
-
-#: files/marked_file_mover.py:377
-msgid "Select target directory for marked files"
-msgstr "표시된 파일의 대상 디렉터리 선택"
-
-#: files/marked_file_mover.py:432
+#: files/marked_files.py:195
 msgid "Moving"
 msgstr "기타"
 
-#: files/marked_file_mover.py:432
+#: files/marked_files.py:195
 msgid "Copying"
 msgstr "관련 기사"
 
-#: files/marked_file_mover.py:472
+#: files/marked_files.py:259
 msgid "Moved {0} files to {1}"
 msgstr ""
 "파일 {0}개를\n"
 "{1}로 옮겼습니다."
 
-#: files/marked_file_mover.py:474
+#: files/marked_files.py:261
 msgid "Copied {0} files to {1}"
 msgstr ""
 "{1}\n"
 "에 파일 {0}개를 복사했습니다."
 
-#: files/marked_file_mover.py:545
+#: files/marked_files.py:332
 msgid "Existing filenames match!"
 msgstr "기존 파일 이름이 일치합니다!"
 
-#: files/marked_file_mover.py:547
+#: files/marked_files.py:334
 msgid "WARNING: Exact file match."
 msgstr "경고: 정확한 파일 일치."
 
-#: files/marked_file_mover.py:549
+#: files/marked_files.py:336
 msgid "INFO: Target files with different EXIF data replaced."
 msgstr "INFO: 다른 EXIF 데이터를 가진 대상 파일 교체됨."
 
-#: files/marked_file_mover.py:551 files/marked_file_mover.py:949
+#: files/marked_files.py:338 files/marked_files.py:461
 msgid "WARNING: Short filenames."
 msgstr "경고: 짧은 파일명."
 
-#: files/marked_file_mover.py:575
+#: files/marked_files.py:362
 msgid "Moving back"
 msgstr "뒤로 이동"
 
-#: files/marked_file_mover.py:575
+#: files/marked_files.py:362
 msgid "Removing"
 msgstr "뚱 베어"
 
-#: files/marked_file_mover.py:576
+#: files/marked_files.py:363
 msgid "Moved back"
 msgstr "뒤로 이동"
 
-#: files/marked_file_mover.py:576
+#: files/marked_files.py:363
 msgid "Removed"
 msgstr "기타 제품"
 
-#: files/marked_file_mover.py:583
-msgid "Where should the marked files have gone?"
-msgstr "표시된 파일은 어디로 갔을까요?"
-
-#: files/marked_file_mover.py:608
+#: files/marked_files.py:406
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "{1}\n"
 "에서 파일 {0}개 다시 옮기기"
 
-#: files/marked_file_mover.py:610
+#: files/marked_files.py:408
 msgid "Removed {0} files from {1}"
 msgstr ""
 "{1}\n"
 "에서 파일 {0}개 제거"
 
-#: files/marked_file_mover.py:628 files/recent_directory_window.py:332
-msgid "Select parent directory for target directories"
-msgstr "대상 디렉토리 선택"
-
-#: files/marked_file_mover.py:820
-msgid "Sorted directories by embedding comparison."
-msgstr "분류 된 감독 by embedding 비교."
-
-#: files/marked_file_mover.py:842
-msgid "Confirm Delete"
-msgstr "자주 묻는 질문"
-
-#: files/marked_file_mover.py:843
-msgid "Deleting %s marked files - Are you sure you want to proceed?"
-msgstr "삭제 {0} 표시된 파일 - 진행하시겠습니까?"
-
-#: files/marked_file_mover.py:864
-msgid "Delete Failed"
-msgstr "실패 삭제"
-
-#: files/marked_file_mover.py:865
-msgid "Failed to delete %s files - check log for details."
-msgstr "{0} 파일을 삭제 취소 - 세부 사항에 대한 로그 확인."
-
-#: files/marked_file_mover.py:868
-msgid "Deleted %s marked files."
-msgstr "표시된 파일 {0}개를 삭제했습니다."
-
-#: files/marked_file_mover.py:939
+#: files/marked_files.py:451
 msgid "Existing filenames found!"
 msgstr "발견 된 파일 이름!"
 
-#: files/marked_file_mover.py:941
+#: files/marked_files.py:453
 msgid "WARNING: All file hashes match."
 msgstr "경고: 모든 파일 해시가 일치합니다."
 
-#: files/marked_file_mover.py:943
+#: files/marked_files.py:455
 msgid "WARNING: %s of %s file hashes match."
 msgstr "경고: {1} 파일 해시 중 {0}개가 일치합니다."
 
-#: files/marked_file_mover.py:945
+#: files/marked_files.py:457
 msgid "INFO: %s files have identical content but different EXIF data."
 msgstr "INFO: 동일한 내용을 가진 %s 개의 파일이 EXIF 정보는 다릅니다."
 
-#: files/marked_file_mover.py:947
+#: files/marked_files.py:459
 msgid "WARNING: All files are either identical or have matching content."
 msgstr "경고: 모든 파일은 동일하거나 내용이 일치합니다."
 
-#: files/marked_file_mover.py:953
+#: files/marked_files.py:465
 msgid "No existing filenames found."
 msgstr "찾을 수 없음."
 
-#: files/marked_file_mover.py:981
-msgid "Found %s downstream related images"
-msgstr "Found {0} downstream 관련 이미지"
-
-#: files/marked_file_mover.py:983
-msgid "No downstream related images found"
-msgstr "찾을 수 없음 downstream 관련 이미지"
-
-#: files/marked_file_mover.py:997
-msgid "Cleared marked file"
-msgstr "표시된 파일"
-
-#: files/marked_file_mover.py:1041
+#: files/marked_files.py:499
 msgid "Removed {0} marks"
 msgstr "제거 {0} 표"
 
-#: files/marked_file_mover.py:1084
+#: files/marked_files.py:532
 msgid ""
 "WARNING: You just copied this file to this directory, and now you're trying to move it here.\n"
 "\n"
@@ -2433,59 +1289,2200 @@ msgstr ""
 "\n"
 "소스 파일을 삭제하고 계속하시겠습니까?"
 
-#: files/marked_file_mover.py:1091
+#: files/marked_files.py:538
 msgid "Potential Mistake Detected"
 msgstr "잠재적 오류 감지됨"
 
-#: files/marked_file_mover.py:1118
+#: files/marked_files.py:568
 msgid "Removed marked file from source: {0}"
 msgstr "소스에서 표시된 파일 제거됨: {0}"
 
-#: files/pdf_creator.py:41
+#: files/marked_files.py:612 ui/files/file_actions_window_qt.py:222
+#: ui_tk/files/file_actions_window.py:130
+msgid "Moved"
+msgstr "지원하다"
+
+#: files/marked_files.py:612 ui/files/file_actions_window_qt.py:222
+#: ui_tk/files/file_actions_window.py:136
+msgid "Copied"
+msgstr "뚱 베어"
+
+#: files/pdf_creator.py:44
 msgid "No files to create PDF"
 msgstr "PDF 만들 파일 없음"
 
-#: files/pdf_creator.py:49 files/pdf_options_window.py:52
+#: files/pdf_creator.py:52 ui/files/pdf_options_window_qt.py:86
+#: ui_tk/files/pdf_options_window.py:52
 msgid "combined_images"
 msgstr "결합_이미지"
 
-#: files/pdf_creator.py:58
-msgid "Save PDF as"
-msgstr "PDF를 다른 이름으로 저장"
-
-#: files/pdf_creator.py:129
+#: files/pdf_creator.py:128
 msgid "compressed"
 msgstr "압축"
 
-#: files/pdf_creator.py:129
+#: files/pdf_creator.py:128
 msgid "high quality"
 msgstr "고품질"
 
-#: files/pdf_creator.py:130
+#: files/pdf_creator.py:129
 msgid "Created {0} PDF with {1} pages"
 msgstr "{1} 페이지로 {0} PDF를 만들었습니다."
 
-#: files/pdf_creator.py:133
+#: files/pdf_creator.py:132
 msgid "No pages could be added to the PDF"
 msgstr "PDF에 페이지를 추가할 수 없습니다"
 
-#: files/pdf_creator.py:137
+#: files/pdf_creator.py:136
 msgid "PDF creation requires pypdfium2 package"
 msgstr "PDF 생성에는 pypdfium2 패키지가 필요합니다"
 
-#: files/pdf_options_window.py:31 files/pdf_options_window.py:42
+#: image/image_data_extractor.py:430
+msgid "(Unable to parse image prompt information for this file.)"
+msgstr "(해당 파일의 이미지 프롬프트 정보를 분석할 수 없습니다.)"
+
+#: lib/caps_lock_mixin.py:64 ui/auth/password_dialog.py:61
+msgid "⚠ Caps Lock is ON"
+msgstr "⚠ 대문자 잠금 상태입니다"
+
+#: lib/custom_dialogs.py:69 lib/custom_dialogs_qt.py:128 lib/qt_alert.py:27
+#: ui/auth/app_startup_auth_qt.py:79 ui/auth/password_dialog.py:200
+#: ui_tk/auth/app_startup_auth.py:124 ui_tk/auth/password_dialog.py:149
+msgid "OK"
+msgstr "확인"
+
+#: lib/qt_alert.py:29
+msgid "Yes"
+msgstr "네"
+
+#: lib/qt_alert.py:30
+msgid "No"
+msgstr "아니요"
+
+#: ui/help_and_config_qt.py:71 utils/help_and_config.py:35
+msgid "Main Window Shortcuts"
+msgstr "메인 창 단축키"
+
+#: ui/help_and_config_qt.py:74 ui/help_and_config_qt.py:143
+#: ui/help_and_config_qt.py:187 utils/help_and_config.py:42
+#: utils/help_and_config.py:125 utils/help_and_config.py:176
+msgid "Command"
+msgstr "이름 *"
+
+#: ui/help_and_config_qt.py:74 ui/help_and_config_qt.py:143
+#: ui/help_and_config_qt.py:187 utils/help_and_config.py:42
+#: utils/help_and_config.py:125 utils/help_and_config.py:176
+msgid "Description"
+msgstr "이름 *"
+
+#: ui/help_and_config_qt.py:75 utils/help_and_config.py:43
+msgid "Search current image in new window"
+msgstr "새 창에서 현재 이미지를 검색"
+
+#: ui/help_and_config_qt.py:76 utils/help_and_config.py:44
+msgid "Return to Browsing mode"
+msgstr "검색 모드로 돌아가기"
+
+#: ui/help_and_config_qt.py:77 utils/help_and_config.py:45
+msgid "Copy marks list"
+msgstr "본문 바로가기"
+
+#: ui/help_and_config_qt.py:78 utils/help_and_config.py:46
+msgid "Set current marks from previous marks list"
+msgstr "이전 표시 목록에서 현재 표시 설정"
+
+#: ui/help_and_config_qt.py:79 utils/help_and_config.py:48
+msgid "Open Favorites window"
+msgstr "즐겨찾기 창 열기"
+
+#: ui/help_and_config_qt.py:80 utils/help_and_config.py:49
+msgid "Open Go to file window"
+msgstr "기타 파일 창으로 이동"
+
+#: ui/help_and_config_qt.py:81 utils/help_and_config.py:50
+msgid "Hide/show sidebar"
+msgstr "숨기기 / 쇼 sidebar"
+
+#: ui/help_and_config_qt.py:82 utils/help_and_config.py:51
+msgid "Open hotkeys window (*when marks window open)"
+msgstr "열기 단축키 창 (*when 마크 창이 열립니다)"
+
+#: ui/help_and_config_qt.py:83 utils/help_and_config.py:52
+msgid "Open content filters window"
+msgstr "콘텐츠 필터 창 열기"
+
+#: ui/help_and_config_qt.py:84 utils/help_and_config.py:53
+msgid "Open marks window (no GUI)"
+msgstr "마크 창 열기 ( GUI 없음)"
+
+#: ui/help_and_config_qt.py:85 utils/help_and_config.py:54
+msgid "Open marks window"
+msgstr "열린 표 창"
+
+#: ui/help_and_config_qt.py:86 utils/help_and_config.py:55
+msgid "Open marks action history window"
+msgstr "열린 표 활동 기록 창"
+
+#: ui/help_and_config_qt.py:87 utils/help_and_config.py:56
+msgid "Quit"
+msgstr "뚱 베어"
+
+#: ui/help_and_config_qt.py:88 utils/help_and_config.py:57
+msgid "Open security configuration window"
+msgstr "보안 구성 창 열기"
+
+#: ui/help_and_config_qt.py:89 utils/help_and_config.py:58
+msgid "Run previous marks action"
+msgstr "이전 표시 동작을 실행"
+
+#: ui/help_and_config_qt.py:90 utils/help_and_config.py:47
+msgid "Run penultimate marks action"
+msgstr "실행 penultimate 표 활동"
+
+#: ui/help_and_config_qt.py:91
+msgid "Run third-most-recent marks action"
+msgstr "가장최근의세번째마크액션실행"
+
+#: ui/help_and_config_qt.py:92 utils/help_and_config.py:59
+msgid "Continue image generation"
+msgstr "이미지 생성 계속"
+
+#: ui/help_and_config_qt.py:93 utils/help_and_config.py:60
+msgid "Cancel image generation"
+msgstr "이미지 생성"
+
+#: ui/help_and_config_qt.py:94 utils/help_and_config.py:91
+msgid "Toggle slideshow"
+msgstr "슬라이드 쇼"
+
+#: ui/help_and_config_qt.py:95 utils/help_and_config.py:61
+msgid "Run next text embedding search preset"
+msgstr "다음 텍스트 embedding 검색 preset"
+
+#: ui/help_and_config_qt.py:96 utils/help_and_config.py:62
+msgid "Run permanent marks action"
+msgstr "영구 마크 동작"
+
+#: ui/help_and_config_qt.py:97 utils/help_and_config.py:63
+msgid "Open type configuration window"
+msgstr "열린 유형 설정 창"
+
+#: ui/help_and_config_qt.py:98 utils/help_and_config.py:64
+msgid "Open new compare window"
+msgstr "새 비교 창 열기"
+
+#: ui/help_and_config_qt.py:99 utils/help_and_config.py:65
+msgid "Move previous marks to a different directory"
+msgstr "다른 디렉토리에 이전 표시를 이동"
+
+#: ui/help_and_config_qt.py:100 ui/help_and_config_qt.py:130
+#: utils/help_and_config.py:66 utils/help_and_config.py:96
+msgid "Undo previous marks changes"
+msgstr "이전 표 변경"
+
+#: ui/help_and_config_qt.py:101 utils/help_and_config.py:67
+msgid "Toggle fullscreen"
+msgstr "전체 화면"
+
+#: ui/help_and_config_qt.py:102 utils/help_and_config.py:68
+msgid "Go to first sorted image"
+msgstr "첫 번째 정렬 이미지"
+
+#: ui/help_and_config_qt.py:103 utils/help_and_config.py:69
+msgid "Go to last sorted image"
+msgstr "본문 바로가기"
+
+#: ui/help_and_config_qt.py:104 utils/help_and_config.py:70
+msgid "Show previous/next image"
+msgstr "이전/다음 이미지보기"
+
+#: ui/help_and_config_qt.py:105 utils/help_and_config.py:71
+msgid "Page through images"
+msgstr "본문 바로가기"
+
+#: ui/help_and_config_qt.py:106 utils/help_and_config.py:72
+msgid "Search current image in current window"
+msgstr "현재 창에서 현재 이미지 검색"
+
+#: ui/help_and_config_qt.py:107 utils/help_and_config.py:73
+msgid "Clear all hidden images"
+msgstr "모든 숨겨진 이미지"
+
+#: ui/help_and_config_qt.py:108 utils/help_and_config.py:74
+msgid "Clear marks list"
+msgstr "명확한 표 명부"
+
+#: ui/help_and_config_qt.py:109 utils/help_and_config.py:75
+msgid "Show image details"
+msgstr "본문 바로가기"
+
+#: ui/help_and_config_qt.py:110 utils/help_and_config.py:76
+msgid "Delete image (or marked file group if marks window selected)"
+msgstr "이미지 삭제 (또는 표시된 파일 그룹 표시 창 선택)"
+
+#: ui/help_and_config_qt.py:111 utils/help_and_config.py:77
+msgid "Delete current base directory and all contents"
+msgstr "현재 기본 디렉토리와 모든 내용을 삭제합니다"
+
+#: ui/help_and_config_qt.py:112 utils/help_and_config.py:78
+msgid "Go to next mark"
+msgstr "본문 바로가기"
+
+#: ui/help_and_config_qt.py:113 utils/help_and_config.py:79
+msgid "Show help window"
+msgstr "공지사항"
+
+#: ui/help_and_config_qt.py:114 utils/help_and_config.py:80
+msgid "Run image generation"
+msgstr "이미지 생성"
+
+#: ui/help_and_config_qt.py:115 utils/help_and_config.py:81
+msgid "Open context menu"
+msgstr "컨텍스트 메뉴 열기"
+
+#: ui/help_and_config_qt.py:116 utils/help_and_config.py:82
+msgid "Run content filters for all files in the current directory"
+msgstr "현재 디렉토리의 모든 파일에 대한 콘텐츠 필터 실행"
+
+#: ui/help_and_config_qt.py:117 utils/help_and_config.py:83
+msgid "View last moved image mark"
+msgstr "마지막 이동 이미지 표시"
+
+#: ui/help_and_config_qt.py:118 utils/help_and_config.py:84
+msgid "Toggle content filters"
+msgstr "콘텐츠 필터"
+
+#: ui/help_and_config_qt.py:119 utils/help_and_config.py:85
+msgid "Add or remove a mark for current image"
+msgstr "현재 이미지의 표시 또는 제거"
+
+#: ui/help_and_config_qt.py:120 utils/help_and_config.py:86
+msgid ""
+"Add all marks between most recently set and current selected inclusive, or "
+"all marks in current group"
+msgstr "가장 최근 설정 및 현재 선택된 포괄적 인 사이 모든 표시, 또는 현재 그룹의 모든 표시"
+
+#: ui/help_and_config_qt.py:122 utils/help_and_config.py:88
+msgid "Open image in GIMP"
+msgstr "GIMP에서 이미지 열기"
+
+#: ui/help_and_config_qt.py:123 utils/help_and_config.py:89
+msgid "Randomly modify image"
+msgstr "무작위 이미지 수정"
+
+#: ui/help_and_config_qt.py:124 utils/help_and_config.py:90
+msgid "View related image (controlnet, etc.)"
+msgstr "관련 이미지 보기 (controlnet, 등)"
+
+#: ui/help_and_config_qt.py:125
+msgid "Capture screenshot"
+msgstr "캡처 스크린샷"
+
+#: ui/help_and_config_qt.py:126 utils/help_and_config.py:92
+msgid "Find related images in open window"
+msgstr "열린 창에서 관련 이미지 찾기"
+
+#: ui/help_and_config_qt.py:127 utils/help_and_config.py:93
+msgid "Run refacdir"
+msgstr "파일 형식"
+
+#: ui/help_and_config_qt.py:128 utils/help_and_config.py:94
+msgid "Hide current image"
+msgstr "현재 이미지 숨기기"
+
+#: ui/help_and_config_qt.py:129 utils/help_and_config.py:95
+msgid "Set marks from downstream related images"
+msgstr "downstream 관련 이미지 설정"
+
+#: ui/help_and_config_qt.py:131 utils/help_and_config.py:97
+msgid "Show previous/next group"
+msgstr "이전/다음 그룹보기"
+
+#: ui/help_and_config_qt.py:140 utils/help_and_config.py:118
+msgid "Image Details Shortcuts"
+msgstr "이미지 세부 정보 바로가기"
+
+#: ui/help_and_config_qt.py:144 ui/image/image_details_qt.py:310
+#: ui_tk/image/image_details.py:171 utils/help_and_config.py:126
+msgid "Crop Image (Smart Detect)"
+msgstr "자르기 이미지 (Smart Detect)"
+
+#: ui/help_and_config_qt.py:145 ui/image/image_details_qt.py:306
+#: ui_tk/image/image_details.py:166 utils/help_and_config.py:127
+msgid "Rotate Image Left"
+msgstr "자전 이미지 왼쪽"
+
+#: ui/help_and_config_qt.py:146 ui/image/image_details_qt.py:307
+#: ui_tk/image/image_details.py:167 utils/help_and_config.py:128
+msgid "Rotate Image Right"
+msgstr "Rotate 이미지 권리"
+
+#: ui/help_and_config_qt.py:147 ui/image/image_details_qt.py:311
+#: ui_tk/image/image_details.py:172 utils/help_and_config.py:129
+msgid "Enhance Image"
+msgstr "향상된 이미지"
+
+#: ui/help_and_config_qt.py:148 ui/image/image_details_qt.py:314
+#: ui_tk/image/image_details.py:176 utils/help_and_config.py:130
+msgid "Random Crop"
+msgstr "무작위 Crop"
+
+#: ui/help_and_config_qt.py:149 utils/help_and_config.py:131
+msgid "Randomly Modify Image"
+msgstr "이미지를 무작위로 수정하기"
+
+#: ui/help_and_config_qt.py:150 ui/image/image_details_qt.py:318
+#: ui_tk/image/image_details.py:181 utils/help_and_config.py:132
+msgid "Flip Image Horizontally"
+msgstr "플립 이미지 수평으로"
+
+#: ui/help_and_config_qt.py:151 ui/image/image_details_qt.py:319
+#: ui_tk/image/image_details.py:182 utils/help_and_config.py:133
+msgid "Flip Image Vertically"
+msgstr "Flip 이미지 수직으로"
+
+#: ui/help_and_config_qt.py:152 ui/image/image_details_qt.py:326
+#: ui_tk/image/image_details.py:185 utils/help_and_config.py:134
+msgid "Copy Without EXIF"
+msgstr "EXIF 없이 복사"
+
+#: ui/help_and_config_qt.py:153 ui/image/image_details_qt.py:327
+#: ui_tk/image/image_details.py:187 utils/help_and_config.py:135
+msgid "Convert to JPG"
+msgstr "JPG로 변환"
+
+#: ui/help_and_config_qt.py:154 ui/image/image_details_qt.py:330
+#: ui_tk/image/image_details.py:190 utils/help_and_config.py:136
+msgid "Show Metadata"
+msgstr "Metadata 보기"
+
+#: ui/help_and_config_qt.py:155 ui/image/image_details_qt.py:334
+#: ui_tk/image/image_details.py:196 utils/help_and_config.py:137
+msgid "Open Related Image"
+msgstr "관련 이미지"
+
+#: ui/help_and_config_qt.py:157 ui/image/image_details_qt.py:356
+#: ui_tk/image/image_details.py:218 utils/constants.py:215
+#: utils/help_and_config.py:139
+msgid "Redo Prompt"
+msgstr "레드오 Prompt"
+
+#: ui/help_and_config_qt.py:164 utils/help_and_config.py:152
+msgid ""
+"Note: Using Ctrl instead of Shift marks the created file and opens the marks"
+" window without GUI."
+msgstr "참고: Shift 대신 Ctrl 키를 사용하면 생성된 파일에 표시를 하고 GUI 없이 표시 창을 엽니다."
+
+#: ui/help_and_config_qt.py:184 utils/help_and_config.py:169
+msgid "Go To File Shortcuts"
+msgstr "파일 바로 가기로 이동"
+
+#: ui/files/go_to_file_qt.py:277 ui/help_and_config_qt.py:188
+#: ui_tk/files/go_to_file.py:141 utils/help_and_config.py:177
+msgid "Go To Last Moved"
+msgstr "마지막으로 이동한 곳으로 가기"
+
+#: ui/help_and_config_qt.py:189 utils/help_and_config.py:178
+msgid "Browse File"
+msgstr "파일 찾아보기"
+
+#: ui/files/go_to_file_qt.py:388 ui/help_and_config_qt.py:190
+#: ui_tk/files/go_to_file.py:385 utils/help_and_config.py:179
+msgid "Current Media"
+msgstr "현재 미디어"
+
+#: ui/help_and_config_qt.py:191 utils/help_and_config.py:180
+msgid "Find Related Files"
+msgstr "관련 파일 찾기"
+
+#: ui/help_and_config_qt.py:192 utils/help_and_config.py:181
+msgid "Extract Base ID"
+msgstr "추출 기반 ID"
+
+#: ui/help_and_config_qt.py:193 utils/help_and_config.py:182
+msgid "Browse Directory"
+msgstr "디렉터리 탐색"
+
+#: ui/help_and_config_qt.py:202
+msgid "Config Settings"
+msgstr "설정"
+
+#: ui/help_and_config_qt.py:206 utils/help_and_config.py:244
+msgid "Show Toasts"
+msgstr "Toasts 소개"
+
+#: ui/help_and_config_qt.py:209 utils/help_and_config.py:246
+msgid "Slideshow Interval (sec)"
+msgstr "슬라이드쇼 간격(초)"
+
+#: ui/help_and_config_qt.py:212 utils/help_and_config.py:248
+msgid "File Check Interval (sec)"
+msgstr "파일 새로 고침 간격(초)"
+
+#: ui/help_and_config_qt.py:215 utils/help_and_config.py:250
+msgid "Max Search Results"
+msgstr "Max 검색 결과"
+
+#: ui/help_and_config_qt.py:219 utils/help_and_config.py:252
+msgid "Sort By"
+msgstr "정렬 기준"
+
+#: ui/compare/prevalidations_tab_qt.py:279 ui/help_and_config_qt.py:227
+#: ui_tk/compare/prevalidations_tab.py:236 utils/help_and_config.py:254
+msgid "Enable Prevalidations"
+msgstr "사전 유효성 검사 사용"
+
+#: ui/help_and_config_qt.py:230 utils/help_and_config.py:256
+msgid "Toasts Persist (sec)"
+msgstr "토스트 지속 시간(초)"
+
+#: ui/help_and_config_qt.py:233 utils/help_and_config.py:258
+msgid "Title Notify Persist (sec)"
+msgstr "제목 알림 지속 (초)"
+
+#: ui/help_and_config_qt.py:236 utils/help_and_config.py:260
+msgid "Delete Instantly"
+msgstr "즉시 삭제"
+
+#: ui/help_and_config_qt.py:239 utils/help_and_config.py:262
+msgid "Trash Folder"
+msgstr "쓰레기 폴더"
+
+#: ui/help_and_config_qt.py:242 utils/help_and_config.py:264
+msgid "Image Tagging Enabled"
+msgstr "이미지 태그 사용"
+
+#: ui/help_and_config_qt.py:245 utils/help_and_config.py:266
+msgid "Escape Backslash Filepaths"
+msgstr "파일 경로의 백슬래시 이스케이프"
+
+#: ui/help_and_config_qt.py:250
+msgid "Large Image Threshold (px)"
+msgstr "대형 이미지閾값 (픽셀)"
+
+#: ui/help_and_config_qt.py:253
+msgid "Large Preview Overscan"
+msgstr "큰 미리 보기 초과 스캔"
+
+#: ui/help_and_config_qt.py:256
+msgid "Large Preview Max Dimension"
+msgstr "큰 미리보기 최대 크기"
+
+#: ui/help_and_config_qt.py:259
+msgid "Large Image HQ Idle Downscale"
+msgstr "큰 이미지 고화질 대기 중 downskeul"
+
+#: ui/help_and_config_qt.py:262
+msgid "Large Image Full-Res Promotion"
+msgstr "대형 이미지 고해상도 프로모션"
+
+#: ui/help_and_config_qt.py:265
+msgid "Large HQ Downscale Ratio Threshold"
+msgstr "대형 고화질 축소 비율閾값"
+
+#: ui/help_and_config_qt.py:268
+msgid "Large Promotion Min Free RAM (GB)"
+msgstr "대형 프로모션 최소 무료 RAM (GB)"
+
+#: ui/help_and_config_qt.py:271
+msgid "Large Promotion Max Estimated (MB)"
+msgstr "큰 프로모션 최대예상 (MB)"
+
+#: ui/help_and_config_qt.py:274
+msgid "Large Promotion RAM Fraction"
+msgstr "대형 프로모션 램 할부금"
+
+#: ui/help_and_config_qt.py:279
+msgid "Skip File Check If Files Over"
+msgstr "파일이 넘었을 경우 파일 체크를 건너뛰기."
+
+#: ui/help_and_config_qt.py:282
+msgid "Screenshot Directory"
+msgstr "스크린샷 디렉터리"
+
+#: ui/help_and_config_qt.py:285
+msgid "Save Screenshot To Same Dir"
+msgstr "스크린샷을 같은 디렉터리에 저장합니다."
+
+#: ui/app_window/app_window.py:533
+msgid "Set Title Bar Color..."
+msgstr "제목 바 색상 설정..."
+
+#: ui/app_window/app_window.py:542
+msgid "Clear Title Bar Color"
+msgstr "clr 제목 바 컬러"
+
+#: ui/app_window/app_window.py:555
+msgid "No directory loaded."
+msgstr "디렉터리가 로드되지 않았습니다."
+
+#: ui/app_window/app_window.py:562
+msgid "Choose Title Bar Color"
+msgstr "제목 바 색상 선택"
+
+#: ui/app_window/app_window.py:570
+msgid "Title bar color set for this directory."
+msgstr "이 디렉토리를 위한 타이틀 바 색상 설정"
+
+#: ui/app_window/app_window.py:585
+msgid "Title bar color cleared for this directory."
+msgstr "이 디렉터리의 제목줄 색상이 지워졌습니다."
+
+#: ui/app_window/app_window.py:626 ui/app_window/sidebar_panel.py:93
+msgid "Enter base directory..."
+msgstr "기본 디렉터리 입력..."
+
+#: ui/app_window/app_window.py:630 ui/files/recent_directory_window_qt.py:163
+#: ui_tk/files/recent_directory_window.py:178
+msgid "Set image comparison directory"
+msgstr "설정 이미지 비교 디렉토리"
+
+#: ui/app_window/app_window.py:926
+msgid "Screenshots are available for videos and animated GIF files."
+msgstr "스크린샷은 비디오와 움직이는 GIF 파일에 대해 제공 가능합니다."
+
+#: ui/app_window/app_window.py:936 ui/app_window/app_window.py:951
+msgid "Screenshot Failed"
+msgstr "스크린샷 실패했습니다"
+
+#: ui/app_window/app_window.py:937
+msgid ""
+"Unable to create screenshot directory:\n"
+"{0}\n"
+"\n"
+"{1}"
+msgstr ""
+"스크린샷 디렉터리를 생성할 수 없습니다:\n"
+"{0}\n"
+"\n"
+"{1}"
+
+#: ui/app_window/app_window.py:952
+msgid ""
+"Unable to save screenshot.\n"
+"\n"
+"{0}"
+msgstr ""
+"화면 캡처를 저장할 수 없습니다.\n"
+"\n"
+"{0}"
+
+#: ui/app_window/app_window.py:958
+msgid ""
+"Screenshot saved to:\n"
+"{0}"
+msgstr ""
+"스크린샷이 저장되었습니다:\n"
+"{0}"
+
+#: ui/app_window/context_menu_builder.py:167
+msgid "Copy file path"
+msgstr "파일 경로 복사"
+
+#: ui/app_window/context_menu_builder.py:171
+msgid "Copy file name"
+msgstr "파일 이름 복사"
+
+#: ui/app_window/context_menu_builder.py:175
+msgid "Open file location"
+msgstr "파일위치 열기"
+
+#: ui/app_window/context_menu_builder.py:190
+#: ui/compare/classifier_actions_tab_qt.py:204
+#: ui/compare/prevalidations_tab_qt.py:498
+#: ui_tk/compare/classifier_actions_tab.py:227
+#: ui_tk/compare/prevalidations_tab.py:518 utils/constants.py:387
+msgid "Delete"
+msgstr "삭제"
+
+#: ui/app_window/media_frame.py:246 ui/app_window/media_frame.py:1046
+msgid "Album art"
+msgstr "앨범 아트"
+
+#: ui/app_window/media_frame.py:757
+msgid "Video: "
+msgstr "비디오: "
+
+#: ui/app_window/media_frame.py:918
+msgid "No output path provided."
+msgstr "출력 경로가 제공되지 않았습니다."
+
+#: ui/app_window/media_frame.py:922
+msgid "VLC player is unavailable."
+msgstr "비에이엘씨 플레이어가 사용할 수 없습니다."
+
+#: ui/app_window/media_frame.py:926
+msgid "VLC snapshot operation failed."
+msgstr "VLC 캡처 이미지 작업이 실패했습니다."
+
+#: ui/app_window/media_frame.py:931
+msgid "Snapshot file was not created."
+msgstr "스냅샷 파일이 생성되지 않았습니다."
+
+#: ui/app_window/media_frame.py:942
+msgid "No GIF frame available for screenshot."
+msgstr "GIF 프레임 없음 화면 캡처에 사용할 수 없습니다."
+
+#: ui/app_window/media_frame.py:948
+msgid "Failed to save GIF frame image."
+msgstr "GIF 프레임 이미지를 저장하지 못했습니다."
+
+#: ui/app_window/media_frame.py:951
+msgid "No time-based media is currently active."
+msgstr "현재 시간 기반의 미디어가 없습니다."
+
+#: ui/app_window/search_controller.py:195 ui_tk/files/go_to_file.py:228
+msgid "Image files"
+msgstr "이미지 파일"
+
+#: ui/app_window/sidebar_panel.py:141
+msgid "Search image path..."
+msgstr "검색 이미지 경로..."
+
+#: ui/auth/app_startup_auth_qt.py:28 ui/auth/app_startup_auth_qt.py:41
+#: ui_tk/auth/app_startup_auth.py:32 ui_tk/auth/app_startup_auth.py:92
+msgid "Application Password Required"
+msgstr "소프트웨어 애플리케이션 암호 필요"
+
+#: ui/auth/app_startup_auth_qt.py:49 ui_tk/auth/app_startup_auth.py:99
+msgid "A password is required to open this application."
+msgstr "이 소프트웨어 애플리케이션을 열려면 비밀번호가 필요합니다."
+
+#: ui/auth/app_startup_auth_qt.py:56 ui/auth/password_dialog.py:178
+#: ui_tk/auth/app_startup_auth.py:108 ui_tk/auth/password_dialog.py:133
+msgid "Password:"
+msgstr "비밀번호:"
+
+#: ui/auth/app_startup_auth_qt.py:124 ui/auth/password_dialog.py:306
+#: ui_tk/auth/app_startup_auth.py:141 ui_tk/auth/password_dialog.py:249
+msgid "Incorrect password"
+msgstr "잘못된 비밀번호"
+
+#: ui/auth/password_admin_window.py:38 ui/auth/password_admin_window.py:53
+#: ui/auth/password_admin_window.py:86 ui/auth/password_admin_window.py:290
+#: ui_tk/auth/password_admin_window.py:194
+#: ui_tk/auth/password_admin_window.py:383
+#: ui_tk/auth/password_admin_window.py:398
+#: ui_tk/auth/password_admin_window.py:458
+msgid "Change Password"
+msgstr "비밀번호 변경"
+
+#: ui/auth/password_admin_window.py:60 ui_tk/auth/password_admin_window.py:405
+msgid "Current Password:"
+msgstr "현재 비밀번호:"
+
+#: ui/auth/password_admin_window.py:67 ui/auth/password_admin_window.py:306
+#: ui_tk/auth/password_admin_window.py:214
+#: ui_tk/auth/password_admin_window.py:414
+msgid "New Password:"
+msgstr "새 비밀번호:"
+
+#: ui/auth/password_admin_window.py:74 ui_tk/auth/password_admin_window.py:423
+msgid "Confirm New Password:"
+msgstr "새 비밀번호를 확인합니다:"
+
+#: ui/auth/password_admin_window.py:99 ui_tk/auth/password_admin_window.py:440
+msgid "Current password is incorrect."
+msgstr "현재 비밀번호가 올바르지 않습니다."
+
+#: ui/auth/password_admin_window.py:103
+#: ui_tk/auth/password_admin_window.py:444
+msgid "New passwords do not match."
+msgstr "새 비밀번호가 일치하지 않습니다."
+
+#: ui/auth/password_admin_window.py:107 ui/auth/password_admin_window.py:471
+#: ui_tk/auth/password_admin_window.py:366
+#: ui_tk/auth/password_admin_window.py:448
+msgid "Password must be at least 6 characters long."
+msgstr "비밀번호는 6자 이상이어야 합니다."
+
+#: ui/auth/password_admin_window.py:115 ui/auth/password_admin_window.py:118
+#: ui_tk/auth/password_admin_window.py:453
+msgid "Password changed successfully."
+msgstr "비밀번호가 성공적으로 변경되었습니다."
+
+#: ui/auth/password_admin_window.py:118 ui/auth/password_admin_window.py:539
+msgid "Info"
+msgstr "정보"
+
+#: ui/auth/password_admin_window.py:122
+#: ui_tk/auth/password_admin_window.py:456
+msgid "Failed to change password."
+msgstr "비밀번호를 변경하지 못했습니다."
+
+#: ui/auth/password_admin_window.py:127 ui/auth/password_admin_window.py:531
+msgid "Administration Error"
+msgstr "관리자 오류"
+
+#: ui/auth/password_admin_window.py:144 ui_tk/auth/password_admin_window.py:34
+msgid "Password Administration"
+msgstr "비밀번호 관리"
+
+#: ui/auth/password_admin_window.py:189 ui_tk/auth/password_admin_window.py:84
+msgid "Password Protection Settings"
+msgstr "비밀번호 보호 설정"
+
+#: ui/auth/password_admin_window.py:201 ui_tk/auth/password_admin_window.py:96
+msgid "Protected Actions"
+msgstr "보호되는 작업"
+
+#: ui/auth/password_admin_window.py:209
+#: ui_tk/auth/password_admin_window.py:102
+msgid "Select which actions require password authentication:"
+msgstr "비밀번호 인증이 필요한 작업을 선택합니다:"
+
+#: ui/auth/password_admin_window.py:225
+#: ui_tk/auth/password_admin_window.py:118
+msgid "(Always protected if a password is set)"
+msgstr "(비밀번호가 설정된 경우 항상 보호됨)"
+
+#: ui/auth/password_admin_window.py:241
+#: ui_tk/auth/password_admin_window.py:137
+msgid "Session Timeout Settings"
+msgstr "세션 시간 초과 설정"
+
+#: ui/auth/password_admin_window.py:249
+#: ui_tk/auth/password_admin_window.py:143
+msgid "Enable session timeout (remember password for a period)"
+msgstr "세션 시간 초과 사용(일정 기간 동안 비밀번호 기억)"
+
+#: ui/auth/password_admin_window.py:258
+#: ui_tk/auth/password_admin_window.py:155
+msgid "Session timeout duration (minutes):"
+msgstr "세션 시간 초과 기간(분):"
+
+#: ui/auth/password_admin_window.py:268
+#: ui_tk/auth/password_admin_window.py:164
+msgid "Security Advice Settings"
+msgstr "보안 설정 안내"
+
+#: ui/auth/password_admin_window.py:273
+#: ui_tk/auth/password_admin_window.py:170
+msgid "Show security advice when no password is configured"
+msgstr "비밀번호가 설정되지 않았을 때 보안 안내 메시지를 표시합니다."
+
+#: ui/auth/password_admin_window.py:279
+#: ui_tk/auth/password_admin_window.py:178
+msgid "Password Setup"
+msgstr "비밀번호 설정"
+
+#: ui/auth/password_admin_window.py:286
+#: ui_tk/auth/password_admin_window.py:188
+msgid "Password is configured"
+msgstr "비밀번호가 구성되었습니다."
+
+#: ui/auth/password_admin_window.py:294 ui/auth/password_admin_window.py:497
+#: ui_tk/auth/password_admin_window.py:199
+#: ui_tk/auth/password_admin_window.py:471
+msgid "Remove Password"
+msgstr "비밀번호 제거"
+
+#: ui/auth/password_admin_window.py:298
+#: ui_tk/auth/password_admin_window.py:204
+msgid "Set up a password to enable protection:"
+msgstr "보호 기능을 사용하려면 비밀번호를 설정하세요:"
+
+#: ui/auth/password_admin_window.py:317
+#: ui_tk/auth/password_admin_window.py:227
+msgid "Confirm Password:"
+msgstr "비밀번호를 확인합니다:"
+
+#: ui/auth/password_admin_window.py:325
+#: ui_tk/auth/password_admin_window.py:236
+msgid "Set Password"
+msgstr "비밀번호 설정"
+
+#: ui/auth/password_admin_window.py:338 ui/auth/password_admin_window.py:404
+#: ui_tk/auth/password_admin_window.py:246
+#: ui_tk/auth/password_admin_window.py:305
+msgid "Reset to Defaults"
+msgstr "기본값으로 재설정"
+
+#: ui/auth/password_admin_window.py:342 ui/auth/password_admin_window.py:430
+#: ui_tk/auth/password_admin_window.py:250
+#: ui_tk/auth/password_admin_window.py:330
+msgid "Set to Current"
+msgstr "현재로 설정"
+
+#: ui/auth/password_admin_window.py:346
+#: ui_tk/auth/password_admin_window.py:254
+msgid "Export Cache as JSON"
+msgstr "캐시를 JSON으로 내보내기"
+
+#: ui/auth/password_admin_window.py:350
+#: ui_tk/auth/password_admin_window.py:258
+msgid "Save Settings"
+msgstr "설정 저장"
+
+#: ui/auth/password_admin_window.py:354 ui/files/directory_picker_dialog.py:62
+#: ui_tk/auth/password_admin_window.py:262
+msgid "Close"
+msgstr "닫기"
+
+#: ui/auth/password_admin_window.py:396
+#: ui_tk/auth/password_admin_window.py:299
+msgid "Password protection settings saved."
+msgstr "비밀번호 보호 설정이 저장되었습니다."
+
+#: ui/auth/password_admin_window.py:405
+#: ui_tk/auth/password_admin_window.py:306
+msgid ""
+"Are you sure you want to reset all password protection settings to their "
+"default values?"
+msgstr "모든 비밀번호 보호 설정을 기본값으로 초기화하시겠습니까?"
+
+#: ui/auth/password_admin_window.py:423
+#: ui_tk/auth/password_admin_window.py:325
+msgid "Settings reset to defaults."
+msgstr "설정이 기본값으로 초기화됩니다."
+
+#: ui/auth/password_admin_window.py:431
+#: ui_tk/auth/password_admin_window.py:331
+msgid ""
+"Are you sure you want to restore all settings to their current saved state? "
+"This will discard any unsaved changes."
+msgstr "모든 설정을 현재 저장된 상태로 복원하시겠습니까? 이렇게 하면 저장되지 않은 변경 사항이 모두 삭제됩니다."
+
+#: ui/auth/password_admin_window.py:448
+#: ui_tk/auth/password_admin_window.py:349
+msgid "Settings restored to current saved state."
+msgstr "설정이 현재 저장된 상태로 복원되었습니다."
+
+#: ui/auth/password_admin_window.py:459
+#: ui_tk/auth/password_admin_window.py:358
+msgid "Please enter a password."
+msgstr "비밀번호를 입력하세요."
+
+#: ui/auth/password_admin_window.py:465
+#: ui_tk/auth/password_admin_window.py:362
+msgid "Passwords do not match."
+msgstr "비밀번호가 일치하지 않습니다."
+
+#: ui/auth/password_admin_window.py:477
+#: ui_tk/auth/password_admin_window.py:371
+msgid "Password set successfully."
+msgstr "비밀번호가 성공적으로 설정되었습니다."
+
+#: ui/auth/password_admin_window.py:483
+#: ui_tk/auth/password_admin_window.py:378
+msgid "Failed to set password."
+msgstr "비밀번호를 설정하지 못했습니다."
+
+#: ui/auth/password_admin_window.py:498
+#: ui_tk/auth/password_admin_window.py:472
+msgid ""
+"Are you sure you want to remove password protection? This will disable all "
+"password requirements."
+msgstr "비밀번호 보호를 제거하시겠습니까? 그러면 모든 비밀번호 요구 사항이 비활성화됩니다."
+
+#: ui/auth/password_admin_window.py:505
+#: ui_tk/auth/password_admin_window.py:478
+msgid "Password removed successfully."
+msgstr "비밀번호가 성공적으로 제거되었습니다."
+
+#: ui/auth/password_admin_window.py:509
+#: ui_tk/auth/password_admin_window.py:482
+msgid "Failed to remove password."
+msgstr "비밀번호를 제거하지 못했습니다."
+
+#: ui/auth/password_admin_window.py:549
+#: ui_tk/auth/password_admin_window.py:517
+msgid "Cache exported as JSON to:"
+msgstr "캐시를 JSON으로 내보냅니다:"
+
+#: ui/auth/password_admin_window.py:553
+#: ui_tk/auth/password_admin_window.py:519
+msgid "Failed to export cache as JSON:"
+msgstr "캐시를 JSON으로 내보내지 못했습니다:"
+
+#: ui/auth/password_dialog.py:97 ui/auth/password_dialog.py:152
+#: ui_tk/auth/password_dialog.py:45 ui_tk/auth/password_dialog.py:103
+msgid "Password Required"
+msgstr "비밀번호 필요"
+
+#: ui/auth/password_dialog.py:99 ui_tk/auth/password_dialog.py:45
+msgid "Password Protection"
+msgstr "비밀번호 보호"
+
+#: ui/auth/password_dialog.py:160 ui_tk/auth/password_dialog.py:110
+msgid "Password required for: {0}"
+msgstr "암호가 필요합니다: {0}"
+
+#: ui/auth/password_dialog.py:207 ui_tk/auth/password_dialog.py:158
+msgid "Password Protection Available"
+msgstr "비밀번호 보호 사용 가능"
+
+#: ui/auth/password_dialog.py:215 ui_tk/auth/password_dialog.py:165
+msgid "This action requires password protection: {0}"
+msgstr "이 작업에는 암호 보호가 필요합니다: {0}"
+
+#: ui/auth/password_dialog.py:234 ui_tk/auth/password_dialog.py:181
+msgid "Password protection is not currently configured. You can:"
+msgstr "현재 비밀번호 보호가 구성되어 있지 않습니다. 설정할 수 있습니다:"
+
+#: ui/auth/password_dialog.py:243 ui_tk/auth/password_dialog.py:191
+msgid "• Configure password protection for sensitive actions"
+msgstr "• 민감한 작업에 대한 비밀번호 보호 구성"
+
+#: ui/auth/password_dialog.py:251 ui_tk/auth/password_dialog.py:196
+msgid "• Continue without password protection (less secure)"
+msgstr "• 비밀번호 보호 없이 계속 진행(보안 취약)"
+
+#: ui/auth/password_dialog.py:258 ui_tk/auth/password_dialog.py:203
+msgid "Don't show this security advice again"
+msgstr "이 보안 안내를 다시 표시하지 마세요."
+
+#: ui/auth/password_dialog.py:270 ui_tk/auth/password_dialog.py:217
+msgid "Continue Without Protection"
+msgstr "보호 없이 계속 진행"
+
+#: ui/auth/password_dialog.py:273 ui/auth/password_dialog.py:291
+#: ui_tk/auth/password_dialog.py:213 ui_tk/auth/password_dialog.py:234
+msgid "Configure Protection"
+msgstr "보호 구성"
+
+#: ui/auth/password_dialog.py:279 ui_tk/auth/password_dialog.py:225
+msgid ""
+"Password protection is required for this action but is not currently "
+"configured."
+msgstr "이 작업에는 비밀번호 보호가 필요하지만 현재 구성되어 있지 않습니다."
+
+#: ui/compare/classifier_action_copy_window_qt.py:64
+#: ui_tk/compare/classifier_action_copy_window.py:51
+msgid "Copy Classifier Action / Prevalidation"
+msgstr "클래스 분류자 복사 액션 / 예검증"
+
+#: ui/compare/classifier_action_copy_window_qt.py:111
+#: ui_tk/compare/classifier_action_copy_window.py:82
+msgid "Copying from:"
+msgstr "복사渊/从:"
+
+#: ui/compare/classifier_action_copy_window_qt.py:134
+#: ui_tk/compare/classifier_action_copy_window.py:109
+msgid "Copy to:"
+msgstr "복사 하기:"
+
+#: ui/compare/classifier_action_copy_window_qt.py:140
+#: ui_tk/compare/classifier_action_copy_window.py:114
+msgid "Target Type:"
+msgstr "대상 유형:"
+
+#: ui/compare/classifier_action_copy_window_qt.py:156
+#: ui_tk/compare/classifier_action_copy_window.py:137
+msgid "New Name:"
+msgstr "새 이름"
+
+#: ui/compare/classifier_action_copy_window_qt.py:170
+#: ui/compare/classifier_actions_tab_qt.py:200
+#: ui/compare/prevalidations_tab_qt.py:492
+#: ui/files/file_actions_window_qt.py:316 ui/files/marked_file_mover_qt.py:307
+#: ui_tk/compare/classifier_action_copy_window.py:156
+#: ui_tk/compare/classifier_actions_tab.py:219
+#: ui_tk/compare/prevalidations_tab.py:511
+#: ui_tk/files/file_actions_window.py:250 ui_tk/files/marked_file_mover.py:215
+#: utils/constants.py:385
+msgid "Copy"
+msgstr "복사"
+
+#: ui/compare/classifier_action_copy_window_qt.py:227
+#: ui_tk/compare/classifier_action_copy_window.py:227
+msgid "Name cannot be empty"
+msgstr "이름은 비어있을 수 없습니다."
+
+#: ui/compare/classifier_action_copy_window_qt.py:236
+#: ui_tk/compare/classifier_action_copy_window.py:242
+msgid "A {0} with this name already exists"
+msgstr "이름이這樣的 {0}이 이미 있습니다."
+
+#: ui/compare/classifier_actions_tab_qt.py:102
+#: ui_tk/compare/classifier_actions_tab.py:109
+msgid "Add Classifier Action"
+msgstr "분류기 작업 추가"
+
+#: ui/compare/classifier_actions_tab_qt.py:106
+#: ui_tk/compare/classifier_actions_tab.py:111
+msgid "Clear Classifier Actions"
+msgstr "분류기 작업 지우기"
+
+#: ui/compare/classifier_actions_tab_qt.py:110
+#: ui_tk/compare/classifier_actions_tab.py:113
+msgid "Run All"
+msgstr "모두 실행"
+
+#: ui/compare/classifier_actions_tab_qt.py:119
+#: ui_tk/compare/classifier_actions_tab.py:117
+msgid "Run on Profile:"
+msgstr "프로필 실행:"
+
+#: ui/compare/classifier_actions_tab_qt.py:167
+#: ui/compare/prevalidations_tab_qt.py:449
+#: ui_tk/compare/classifier_actions_tab.py:152
+#: ui_tk/compare/prevalidations_tab.py:458
+msgid "Active"
+msgstr "활성"
+
+#: ui/compare/classifier_actions_tab_qt.py:167
+#: ui/compare/classifier_management_window_qt.py:100
+#: ui/compare/prevalidations_tab_qt.py:448
+#: ui_tk/compare/classifier_actions_tab.py:156
+#: ui_tk/compare/prevalidations_tab.py:449 utils/constants.py:133
+#: utils/constants.py:148
+msgid "Name"
+msgstr "이름 *"
+
+#: ui/compare/classifier_actions_tab_qt.py:167
+#: ui/compare/classifier_management_window_qt.py:204
+#: ui/compare/prevalidations_tab_qt.py:448
+#: ui_tk/compare/classifier_actions_tab.py:160
+#: ui_tk/compare/classifier_management_window.py:163
+#: ui_tk/compare/prevalidations_tab.py:452
+msgid "Action"
+msgstr "액션"
+
+#: ui/compare/classifier_actions_tab_qt.py:178
+#: ui_tk/compare/classifier_actions_tab.py:182
+msgid "Run"
+msgstr "실행"
+
+#: ui/compare/classifier_actions_tab_qt.py:196
+#: ui/compare/prevalidations_tab_qt.py:486
+#: ui/files/file_actions_window_qt.py:331
+#: ui/files/file_actions_window_qt.py:377
+#: ui_tk/compare/classifier_actions_tab.py:211
+#: ui_tk/compare/prevalidations_tab.py:504
+#: ui_tk/files/file_actions_window.py:261
+#: ui_tk/files/file_actions_window.py:312
+msgid "Modify"
+msgstr "수정하기"
+
+#: ui/compare/classifier_actions_tab_qt.py:208
+#: ui/compare/prevalidations_tab_qt.py:504
+#: ui_tk/compare/classifier_actions_tab.py:235
+#: ui_tk/compare/prevalidations_tab.py:525
+msgid "Move down"
+msgstr "맨 위로"
+
+#: ui/compare/classifier_actions_tab_qt.py:297
+#: ui/compare/prevalidations_tab_qt.py:379
+#: ui_tk/compare/classifier_actions_tab.py:304
+#: ui_tk/compare/classifier_actions_tab.py:370
+#: ui_tk/compare/prevalidations_tab.py:391
+msgid "directories"
+msgstr "디렉터리"
+
+#: ui/compare/classifier_actions_tab_qt.py:305
+#: ui_tk/compare/classifier_actions_tab.py:310
+msgid "Run classifier action '{0}' on the following directories?"
+msgstr "다음 디렉터리에서 분류기 작업 '{0}'을 실행하시겠습니까?"
+
+#: ui/compare/classifier_actions_tab_qt.py:310
+#: ui_tk/compare/classifier_actions_tab.py:314
+msgid "Run Classifier Action"
+msgstr "분류기 작업 실행"
+
+#: ui/compare/classifier_actions_tab_qt.py:338
+#: ui_tk/compare/classifier_actions_tab.py:354
+msgid "No active classifier actions to run"
+msgstr "실행할 활성 분류기 작업이 없습니다"
+
+#: ui/compare/classifier_actions_tab_qt.py:343
+#: ui_tk/compare/classifier_actions_tab.py:378
+msgid "Run {0} active classifier action(s) on the following directories?"
+msgstr "다음 디렉터리에서 {0}개의 활성 분류기 작업을 실행하시겠습니까?"
+
+#: ui/compare/classifier_actions_tab_qt.py:351
+#: ui_tk/compare/classifier_actions_tab.py:382
+msgid "Run All Classifier Actions"
+msgstr "모든 분류기 작업 실행"
+
+#: ui/compare/classifier_management_window_qt.py:77
+#: ui/compare/prevalidations_tab_qt.py:67
+#: ui_tk/compare/classifier_management_window.py:53
+#: ui_tk/compare/prevalidations_tab.py:30
+msgid "Modify Prevalidation"
+msgstr "수정하기"
+
+#: ui/compare/classifier_management_window_qt.py:78
+#: ui/compare/prevalidations_tab_qt.py:68
+#: ui_tk/compare/classifier_management_window.py:54
+#: ui_tk/compare/prevalidations_tab.py:30
+msgid "Prevalidation Name"
+msgstr "유효성 검사 이름"
+
+#: ui/compare/classifier_management_window_qt.py:81
+#: ui_tk/compare/classifier_management_window.py:57
+msgid "Modify Classifier Action"
+msgstr "분류기 작업 수정"
+
+#: ui/compare/classifier_management_window_qt.py:82
+#: ui_tk/compare/classifier_management_window.py:58
+msgid "Classifier Action Name"
+msgstr "분류기 작업명"
+
+#: ui/compare/classifier_management_window_qt.py:101
+msgid "New"
+msgstr "새로운"
+
+#: ui/compare/classifier_management_window_qt.py:146
+#: ui_tk/compare/classifier_management_window.py:96
+msgid "Positives"
+msgstr "긍정적"
+
+#: ui/compare/classifier_management_window_qt.py:153
+#: ui_tk/compare/classifier_management_window.py:104
+msgid "Negatives"
+msgstr "네거티브"
+
+#: ui/compare/classifier_management_window_qt.py:160
+#: ui_tk/compare/classifier_management_window.py:112
+msgid "Validation Types"
+msgstr "유효성 검사 유형"
+
+#: ui/compare/classifier_management_window_qt.py:161
+#: ui_tk/compare/classifier_management_window.py:115
+msgid "Use Text Embeddings"
+msgstr "텍스트 임베딩 사용"
+
+#: ui/compare/classifier_management_window_qt.py:167
+#: ui_tk/compare/classifier_management_window.py:122
+msgid "Use Image Classifier"
+msgstr "이미지 분류기 사용"
+
+#: ui/compare/classifier_management_window_qt.py:173
+#: ui_tk/compare/classifier_management_window.py:129
+msgid "Use Prompts"
+msgstr "프롬프트 사용"
+
+#: ui/compare/classifier_management_window_qt.py:179
+#: ui_tk/compare/classifier_management_window.py:138
+msgid "Use Embedding Prototype"
+msgstr "임베딩 프로토타입 사용"
+
+#: ui/compare/classifier_management_window_qt.py:186
+#: ui_tk/compare/classifier_management_window.py:147
+msgid "Text Embedding Threshold"
+msgstr "텍스트 임베딩의 임계값"
+
+#: ui/compare/classifier_management_window_qt.py:195
+#: ui_tk/compare/classifier_management_window.py:155
+msgid "Embedding Prototype Threshold"
+msgstr "임베딩 프로토타입의 임계값"
+
+#: ui/compare/classifier_management_window_qt.py:213
+#: ui_tk/compare/classifier_management_window.py:175
+msgid "Action Modifier"
+msgstr "액션 수정자"
+
+#: ui/compare/classifier_management_window_qt.py:219
+#: ui_tk/compare/classifier_management_window.py:183
+msgid "Image Classifier Name"
+msgstr "이미지 분류기 이름"
+
+#: ui/compare/classifier_management_window_qt.py:231
+#: ui_tk/compare/classifier_management_window.py:196
+msgid "Image Classifier Selected Category"
+msgstr "이미지 분류기 선택 카테고리"
+
+#: ui/compare/classifier_management_window_qt.py:241
+#: ui_tk/compare/classifier_management_window.py:242
+msgid "Prototype Directory"
+msgstr "프로토타입 디렉터리"
+
+#: ui/compare/classifier_management_window_qt.py:246
+#: ui/compare/classifier_management_window_qt.py:264
+#: ui/files/go_to_file_qt.py:273 ui/files/go_to_file_qt.py:381
+#: ui_tk/compare/classifier_management_window.py:257
+#: ui_tk/compare/classifier_management_window.py:295
+#: ui_tk/files/go_to_file.py:137 ui_tk/files/go_to_file.py:378
+msgid "Browse..."
+msgstr "찾아보기..."
+
+#: ui/compare/classifier_management_window_qt.py:253
+#: ui_tk/compare/classifier_management_window.py:265
+msgid "Force Recalculate Prototype"
+msgstr "프로토타입 강제 재계산"
+
+#: ui/compare/classifier_management_window_qt.py:259
+#: ui_tk/compare/classifier_management_window.py:275
+msgid "Negative Prototype Directory (Optional)"
+msgstr "부정 프로토타입 디렉터리 (선택 사항)"
+
+#: ui/compare/classifier_management_window_qt.py:271
+#: ui_tk/compare/classifier_management_window.py:305
+msgid "Negative Prototype Weight (λ)"
+msgstr "부정적 원형의 무게 (λ)"
+
+#: ui/compare/classifier_management_window_qt.py:285
+#: ui_tk/compare/classifier_management_window.py:215
+msgid "Should Run"
+msgstr "실행해야 함"
+
+#: ui/compare/classifier_management_window_qt.py:286
+#: ui_tk/compare/classifier_management_window.py:218
+msgid "Enable this classifier action"
+msgstr "이 분류기 동작을 활성화하십시오"
+
+#: ui/compare/classifier_management_window_qt.py:292
+#: ui/compare/directory_profile_window_qt.py:135
+#: ui/compare/lookahead_window_qt.py:153
+#: ui_tk/compare/classifier_management_window.py:227
+#: ui_tk/compare/lookahead_window.py:102
+#: ui_tk/files/directory_profile_window.py:99
+msgid "Done"
+msgstr "완료"
+
+#: ui/compare/classifier_management_window_qt.py:377
+#: ui_tk/compare/classifier_management_window.py:488
+msgid "Select Prototype Directory"
+msgstr "프로토타입용 디렉터리 선택"
+
+#: ui/compare/classifier_management_window_qt.py:384
+#: ui_tk/compare/classifier_management_window.py:499
+msgid "Select Negative Prototype Directory"
+msgstr "네거티브 프로토타입용 디렉터리 선택"
+
+#: ui/compare/classifier_management_window_qt.py:434
+#: ui_tk/compare/classifier_management_window.py:560
+msgid "Prototypes recalculated successfully"
+msgstr "프로토타입이 성공적으로 재계산되었습니다"
+
+#: ui/compare/classifier_management_window_qt.py:511
+#: ui_tk/compare/classifier_management_window.py:592
+msgid "Classifier Management"
+msgstr "분류기 관리"
+
+#: ui/compare/classifier_management_window_qt.py:536
+#: ui/compare/prevalidations_tab_qt.py:268
+#: ui_tk/compare/classifier_management_window.py:620
+#: ui_tk/compare/prevalidations_tab.py:221
+msgid "Prevalidations"
+msgstr "법적고지"
+
+#: ui/compare/classifier_management_window_qt.py:542
+#: ui_tk/compare/classifier_management_window.py:635
+msgid ""
+"Prevalidations are disabled. Enable them in the Prevalidations tab settings."
+msgstr "사전 유효성 검사가 비활성화되었습니다. 사전 유효성 검사 탭 설정에서 활성화하십시오."
+
+#: ui/compare/compare_settings_window_qt.py:134
+#: ui_tk/compare/compare_settings_window.py:70
+msgid "Comparison Modes"
+msgstr "비교 모드"
+
+#: ui/compare/compare_settings_window_qt.py:149
+#: ui_tk/compare/compare_settings_window.py:102
+msgid "Add Instance"
+msgstr "인스턴스 추가"
+
+#: ui/compare/compare_settings_window_qt.py:157
+#: ui_tk/compare/compare_settings_window.py:122
+msgid "Combination Logic:"
+msgstr "조합 논리:"
+
+#: ui/compare/compare_settings_window_qt.py:194
+#: ui/compare/lookahead_window_qt.py:131
+#: ui_tk/compare/compare_settings_window.py:183
+#: ui_tk/compare/lookahead_window.py:95
+msgid "Threshold"
+msgstr "임계값"
+
+#: ui/compare/compare_settings_window_qt.py:207
+#: ui_tk/compare/compare_settings_window.py:223
+msgid "Max files to compare"
+msgstr "최대 파일 비교"
+
+#: ui/compare/compare_settings_window_qt.py:225
+#: ui_tk/compare/compare_settings_window.py:247
+msgid "Compare faces"
+msgstr "자주 묻는 질문"
+
+#: ui/compare/compare_settings_window_qt.py:233
+#: ui_tk/compare/compare_settings_window.py:257
+msgid "Overwrite cache"
+msgstr "캐시를 덮어"
+
+#: ui/compare/compare_settings_window_qt.py:241
+#: ui_tk/compare/compare_settings_window.py:267
+msgid "Store checkpoints"
+msgstr "매장 찾기"
+
+#: ui/compare/compare_settings_window_qt.py:256
+#: ui_tk/compare/compare_settings_window.py:296
+msgid "Filters (Applied Before Comparison)"
+msgstr "필터 (비교 전에 적용됨)"
+
+#: ui/compare/compare_settings_window_qt.py:262
+#: ui_tk/compare/compare_settings_window.py:310
+msgid "Size Filter:"
+msgstr "크기 필터:"
+
+#: ui/compare/compare_settings_window_qt.py:265
+#: ui_tk/compare/compare_settings_window.py:319
+msgid "(Size filtering UI to be implemented)"
+msgstr "(사이즈 필터링 UI 구현 예정)"
+
+#: ui/compare/compare_settings_window_qt.py:272
+#: ui_tk/compare/compare_settings_window.py:333
+msgid "Model Filter:"
+msgstr "모델 필터:"
+
+#: ui/compare/compare_settings_window_qt.py:275
+#: ui_tk/compare/compare_settings_window.py:342
+msgid "(Model filtering UI to be implemented)"
+msgstr "(모델 필터링 UI 구현 예정)"
+
+#: ui/compare/compare_settings_window_qt.py:291
+#: ui_tk/compare/compare_settings_window.py:366
+msgid "Apply"
+msgstr "신청"
+
+#: ui/compare/compare_settings_window_qt.py:398
+#: ui_tk/compare/compare_settings_window.py:473
+msgid "Instance Weights:"
+msgstr "인스턴스 가중치:"
+
+#: ui/compare/directory_profile_window_qt.py:61
+#: ui/compare/prevalidations_tab_qt.py:256
+#: ui_tk/compare/prevalidations_tab.py:374
+#: ui_tk/files/directory_profile_window.py:37
+msgid "Edit Profile"
+msgstr "디렉터리 프로필 편집"
+
+#: ui/compare/directory_profile_window_qt.py:61
+#: ui_tk/files/directory_profile_window.py:37
+msgid "Create Profile"
+msgstr "디렉터리 프로필 생성"
+
+#: ui/compare/directory_profile_window_qt.py:84
+#: ui_tk/files/directory_profile_window.py:49
+msgid "Profile Name"
+msgstr "디렉터리 프로필 이름"
+
+#: ui/compare/directory_profile_window_qt.py:93
+#: ui_tk/files/directory_profile_window.py:59
+msgid "Directories"
+msgstr "디렉토리"
+
+#: ui/compare/directory_profile_window_qt.py:110
+#: ui_tk/files/directory_profile_window.py:79
+msgid "Add"
+msgstr "추가"
+
+#: ui/compare/directory_profile_window_qt.py:114
+#: ui_tk/files/directory_profile_window.py:82
+msgid "Edit"
+msgstr "편집"
+
+#: ui/compare/directory_profile_window_qt.py:118
+#: ui/files/directory_notes_window_qt.py:145
+#: ui_tk/files/directory_notes_window.py:137
+#: ui_tk/files/directory_profile_window.py:85
+msgid "Remove"
+msgstr "제거"
+
+#: ui/compare/directory_profile_window_qt.py:122
+#: ui_tk/files/directory_profile_window.py:88
+msgid "Add dirs from subdirs"
+msgstr "하위 디렉터리에서 디렉터리 추가"
+
+#: ui/compare/directory_profile_window_qt.py:126
+#: ui_tk/files/directory_profile_window.py:91
+msgid "Clear all"
+msgstr "모두 지우기"
+
+#: ui/compare/directory_profile_window_qt.py:148
+#: ui/files/directory_picker_dialog.py:208
+#: ui_tk/files/directory_profile_window.py:110
+msgid "Select directory"
+msgstr "디렉터리 선택"
+
+#: ui/compare/directory_profile_window_qt.py:159
+#: ui_tk/files/directory_profile_window.py:140
+msgid "Add Directory"
+msgstr "디렉터리 추가"
+
+#: ui/compare/directory_profile_window_qt.py:181
+#: ui_tk/files/directory_profile_window.py:165
+msgid "Edit Directory"
+msgstr "디렉터리 편집"
+
+#: ui/compare/directory_profile_window_qt.py:210
+#: ui_tk/files/directory_profile_window.py:199
+msgid "Select directory to add subdirectories from"
+msgstr "하위 디렉터리를 추가할 디렉터리를 선택하세요"
+
+#: ui/compare/lookahead_window_qt.py:62
+#: ui/compare/prevalidations_tab_qt.py:229
+#: ui_tk/compare/lookahead_window.py:30
+#: ui_tk/compare/prevalidations_tab.py:279
+msgid "Edit Lookahead"
+msgstr "앞으로 보기 편집"
+
+#: ui/compare/lookahead_window_qt.py:62 ui_tk/compare/lookahead_window.py:30
+msgid "Create Lookahead"
+msgstr "룩어헤드 생성"
+
+#: ui/compare/lookahead_window_qt.py:94 ui_tk/compare/lookahead_window.py:42
+msgid "Lookahead Name"
+msgstr "룩어헤드 이름"
+
+#: ui/compare/lookahead_window_qt.py:104 ui_tk/compare/lookahead_window.py:53
+msgid "Reference existing prevalidation name"
+msgstr "기존 사전 검증된 이름 참조"
+
+#: ui/compare/lookahead_window_qt.py:112 ui_tk/compare/lookahead_window.py:66
+msgid "Prevalidation Name or Custom Text"
+msgstr "사전 검증 이름 또는 사용자 정의 텍스트"
+
+#: ui/compare/prevalidations_tab_qt.py:83
+#: ui_tk/compare/prevalidations_tab.py:42
+msgid "Lookaheads (select from shared list)"
+msgstr "룩어헤드 (공유 목록에서 선택)"
+
+#: ui/compare/prevalidations_tab_qt.py:97
+#: ui_tk/compare/prevalidations_tab.py:61
+msgid "Directory Profile"
+msgstr "디렉토리 프로필"
+
+#: ui/compare/prevalidations_tab_qt.py:213
+#: ui_tk/compare/prevalidations_tab.py:249
+msgid "Lookaheads"
+msgstr "선행 검사"
+
+#: ui/compare/prevalidations_tab_qt.py:226
+#: ui_tk/compare/prevalidations_tab.py:276
+msgid "Add Lookahead"
+msgstr "앞을 내다보기 추가"
+
+#: ui/compare/prevalidations_tab_qt.py:232
+#: ui_tk/compare/prevalidations_tab.py:282
+msgid "Remove Lookahead"
+msgstr "앞을 내다보기 제거"
+
+#: ui/compare/prevalidations_tab_qt.py:240
+#: ui_tk/compare/prevalidations_tab.py:344
+msgid "Directory Profiles"
+msgstr "디렉토리 프로필"
+
+#: ui/compare/prevalidations_tab_qt.py:253
+#: ui_tk/compare/prevalidations_tab.py:371
+msgid "Add Profile"
+msgstr "프로필 추가"
+
+#: ui/compare/prevalidations_tab_qt.py:259
+#: ui_tk/compare/prevalidations_tab.py:377
+msgid "Remove Profile"
+msgstr "프로필 삭제"
+
+#: ui/compare/prevalidations_tab_qt.py:269
+#: ui_tk/compare/prevalidations_tab.py:227
+msgid "Add prevalidation"
+msgstr "사전 검증"
+
+#: ui/compare/prevalidations_tab_qt.py:272
+#: ui_tk/compare/prevalidations_tab.py:229
+msgid "Clear prevalidations"
+msgstr "취소 정책"
+
+#: ui/compare/prevalidations_tab_qt.py:310
+#: ui_tk/compare/prevalidations_tab.py:295
+msgid "{name} ({name_or_text}, threshold: {threshold:.2f})"
+msgstr "{name} ({name_or_text}, 임계값: {threshold:.2f})"
+
+#: ui/compare/prevalidations_tab_qt.py:379
+#: ui_tk/compare/prevalidations_tab.py:391
+msgid "directory"
+msgstr "디렉터리"
+
+#: ui/compare/prevalidations_tab_qt.py:448
+#: ui_tk/compare/prevalidations_tab.py:455
+msgid "Profile"
+msgstr "디렉토리 프로필"
+
+#: ui/compare/prevalidations_tab_qt.py:474
+#: ui_tk/compare/prevalidations_tab.py:480
+msgid "(Global)"
+msgstr "(글로벌)"
+
+#: ui/files/directory_notes_window_qt.py:49
+#: ui_tk/files/directory_notes_window.py:38
+msgid "Directory Notes - {0}"
+msgstr "디렉토리 노트 - {0}"
+
+#: ui/files/directory_notes_window_qt.py:90
+#: ui_tk/files/directory_notes_window.py:57
+msgid "Directory: {0}"
+msgstr "디렉터리: {0}"
+
+#: ui/files/directory_notes_window_qt.py:95
+#: ui_tk/files/directory_notes_window.py:66
+msgid "Export to Text File"
+msgstr "텍스트 파일로 내보내기"
+
+#: ui/files/directory_notes_window_qt.py:96
+#: ui_tk/files/directory_notes_window.py:70
+msgid "Import from Text File"
+msgstr "텍스트 파일에서 가져오기"
+
+#: ui/files/directory_notes_window_qt.py:97
+#: ui_tk/files/directory_notes_window.py:73
+msgid "Import from JSON File"
+msgstr "JSON 파일에서 가져오기"
+
+#: ui/files/directory_notes_window_qt.py:112
+#: ui_tk/files/directory_notes_window.py:85
+msgid "MARKED FILES"
+msgstr "표시된 파일"
+
+#: ui/files/directory_notes_window_qt.py:119
+#: ui_tk/files/directory_notes_window.py:95
+msgid "(No marked files)"
+msgstr "(표시된 파일 없음)"
+
+#: ui/files/directory_notes_window_qt.py:124
+#: ui_tk/files/directory_notes_window.py:105
+msgid "FILE NOTES"
+msgstr "파일 노트"
+
+#: ui/files/directory_notes_window_qt.py:131
+#: ui_tk/files/directory_notes_window.py:115
+msgid "(No file notes)"
+msgstr "(파일 노트 없음)"
+
+#: ui/files/directory_notes_window_qt.py:149
+#: ui/files/directory_notes_window_qt.py:194
+#: ui/files/favorites_window_qt.py:200
+#: ui_tk/files/directory_notes_window.py:148
+#: ui_tk/files/directory_notes_window.py:217
+#: ui_tk/files/favorites_window.py:142
+msgid "Open"
+msgstr "개방형 미디어"
+
+#: ui/files/directory_notes_window_qt.py:175
+#: ui_tk/files/directory_notes_window.py:197
+msgid "Edit Note"
+msgstr "메모 편집"
+
+#: ui/files/directory_notes_window_qt.py:181
+#: ui_tk/files/directory_notes_window.py:206
+msgid "Remove Note"
+msgstr "메모를 제거하세요"
+
+#: ui/files/directory_notes_window_qt.py:216
+#: ui_tk/files/directory_notes_window.py:142
+msgid "Removed marked file: {0}"
+msgstr "표시된 파일 제거됨: {0}"
+
+#: ui/files/directory_notes_window_qt.py:223
+#: ui_tk/files/directory_notes_window.py:211
+msgid "Removed note for: {0}"
+msgstr "다음 항목에 대한 메모를 삭제했습니다: {0}"
+
+#: ui/files/directory_notes_window_qt.py:234
+#: ui_tk/files/directory_notes_window.py:157
+#: ui_tk/files/directory_notes_window.py:226
+msgid "Opened file: {0}"
+msgstr "파일을 열었습니다: {0}"
+
+#: ui/files/directory_notes_window_qt.py:239
+#: ui_tk/files/directory_notes_window.py:162
+#: ui_tk/files/directory_notes_window.py:231
+msgid "Opened file in new window: {0}"
+msgstr "새 창에서 파일 열기: {0}"
+
+#: ui/files/directory_notes_window_qt.py:303
+#: ui_tk/files/directory_notes_window.py:320
+msgid "Export Directory Notes"
+msgstr "수출 디렉토리의 메모"
+
+#: ui/files/directory_notes_window_qt.py:305
+#: ui/files/directory_notes_window_qt.py:320
+msgid "Text files (*.txt);;All files (*)"
+msgstr "텍스트 파일 (*.txt);;모든 파일 (*)"
+
+#: ui/files/directory_notes_window_qt.py:310
+#: ui_tk/files/directory_notes_window.py:328
+msgid "Exported notes to: {0}"
+msgstr "수출된 노트: {0}"
+
+#: ui/files/directory_notes_window_qt.py:312
+#: ui_tk/files/directory_notes_window.py:331
+msgid "Export Error"
+msgstr "수출된 오류"
+
+#: ui/files/directory_notes_window_qt.py:313
+#: ui_tk/files/directory_notes_window.py:331
+msgid "Failed to export notes: {0}"
+msgstr "노트 내보내기에 실패했습니다: {0}"
+
+#: ui/files/directory_notes_window_qt.py:318
+#: ui_tk/files/directory_notes_window.py:338
+msgid "Import Marked Files from Text File"
+msgstr "텍스트 파일에서 표시된 파일 가져오기"
+
+#: ui/files/directory_notes_window_qt.py:328
+#: ui_tk/files/directory_notes_window.py:348
+msgid "Import Options"
+msgstr "가져오기 옵션"
+
+#: ui/files/directory_notes_window_qt.py:329
+#: ui_tk/files/directory_notes_window.py:349
+msgid "Search recursively in subdirectories for matching filenames?"
+msgstr "하위 디렉터리에서 일치하는 파일명을 재귀적으로 검색할까요?"
+
+#: ui/files/directory_notes_window_qt.py:337
+#: ui/files/directory_notes_window_qt.py:367
+#: ui_tk/files/directory_notes_window.py:356
+#: ui_tk/files/directory_notes_window.py:388
+msgid "Imported {0} files."
+msgstr "{0} 파일을 가져왔습니다."
+
+#: ui/files/directory_notes_window_qt.py:339
+#: ui_tk/files/directory_notes_window.py:358
+msgid "{0} filenames not found:"
+msgstr "{0} 파일 이름을 찾을 수 없습니다:"
+
+#: ui/files/directory_notes_window_qt.py:342
+#: ui/files/directory_notes_window_qt.py:372
+#: ui/files/file_actions_window_qt.py:250
+#: ui_tk/files/directory_notes_window.py:363
+#: ui_tk/files/directory_notes_window.py:395
+#: ui_tk/files/file_actions_window.py:193
+msgid "... and {0} more"
+msgstr "... 및 {0}개 더"
+
+#: ui/files/directory_notes_window_qt.py:344
+#: ui/files/directory_notes_window_qt.py:374
+#: ui_tk/files/directory_notes_window.py:365
+#: ui_tk/files/directory_notes_window.py:397
+msgid "Import Complete"
+msgstr "수입 완료"
+
+#: ui/files/directory_notes_window_qt.py:345
+#: ui/files/directory_notes_window_qt.py:375
+#: ui_tk/files/directory_notes_window.py:366
+#: ui_tk/files/directory_notes_window.py:398
+msgid "Imported {0} marked files"
+msgstr "{0}개 표시된 파일 가져옴"
+
+#: ui/files/directory_notes_window_qt.py:349
+#: ui/files/directory_notes_window_qt.py:379
+#: ui_tk/files/directory_notes_window.py:369
+#: ui_tk/files/directory_notes_window.py:401
+msgid "Import Error"
+msgstr "가져오기 오류"
+
+#: ui/files/directory_notes_window_qt.py:350
+#: ui_tk/files/directory_notes_window.py:369
+msgid "Failed to import from text file: {0}"
+msgstr "텍스트 파일에서 가져오기 실패: {0}"
+
+#: ui/files/directory_notes_window_qt.py:356
+#: ui_tk/files/directory_notes_window.py:376
+msgid "Import Marked Files from JSON File"
+msgstr "JSON 파일에서 표시된 파일 가져오기"
+
+#: ui/files/directory_notes_window_qt.py:358
+msgid "JSON files (*.json);;All files (*)"
+msgstr "JSON 파일 (*.json);;모든 파일 (*.*)"
+
+#: ui/files/directory_notes_window_qt.py:369
+#: ui_tk/files/directory_notes_window.py:390
+msgid "{0} invalid or missing file paths:"
+msgstr "{0}개의 잘못되었거나 누락된 파일 경로:"
+
+#: ui/files/directory_notes_window_qt.py:380
+#: ui_tk/files/directory_notes_window.py:401
+msgid "Failed to import from JSON file: {0}"
+msgstr "JSON 파일에서 가져오기 실패: {0}"
+
+#: ui/files/directory_picker_dialog.py:98
+msgid "Select Directory"
+msgstr "선택 디렉토리"
+
+#: ui/files/directory_picker_dialog.py:121
+#: ui_tk/files/recent_directory_window.py:127
+msgid "Add directory"
+msgstr "디렉토리"
+
+#: ui/files/directory_picker_dialog.py:126
+#: ui_tk/files/marked_file_mover.py:163
+#: ui_tk/files/recent_directory_window.py:129
+msgid "Add directories from parent"
+msgstr "상위 디렉터리에서 디렉터리 추가"
+
+#: ui/files/directory_picker_dialog.py:131
+#: ui/files/marked_file_mover_qt.py:253 ui_tk/files/marked_file_mover.py:166
+#: ui_tk/files/recent_directory_window.py:131
+msgid "Clear targets"
+msgstr "목표 지우기"
+
+#: ui/files/directory_picker_dialog.py:241
+#: ui/files/hotkey_actions_window_qt.py:111
+#: ui_tk/compare/prevalidations_tab.py:496
+#: ui_tk/files/hotkey_actions_window.py:94
+msgid "Set"
+msgstr "설치하기"
+
+#: ui/files/directory_picker_dialog.py:248
+msgid "Clear"
+msgstr "지우세요"
+
+#: ui/files/directory_picker_dialog.py:330
+msgid "Filter: "
+msgstr "필터: "
+
+#: ui/files/directory_picker_dialog.py:368
+msgid "Select parent directory"
+msgstr "상위 폴더 선택"
+
+#: ui/files/directory_picker_dialog.py:416
+msgid ""
+"No alphabet letters are currently used as the first character of any "
+"directory name in this list."
+msgstr "이 목록에서 현재 디렉터리 이름의 첫 번째 문자로는 알파벳 문자가 사용되고 있지 않습니다."
+
+#: ui/files/directory_picker_dialog.py:421
+msgid ""
+"All letters A-Z are already used as the first character of at least one "
+"directory in this list."
+msgstr "모든 글자 A-Z는 이미 이 목록에서 최소한 하나의 디렉터리의 첫 글자로 사용되고 있습니다."
+
+#: ui/files/directory_picker_dialog.py:426
+msgid "Unused starting letters:"
+msgstr "미사용 시작 문자"
+
+#: ui/files/directory_picker_dialog.py:430
+msgid "Alphabet Availability"
+msgstr "알파벳 사용 가능 여부"
+
+#: ui/files/favorites_window_qt.py:74 ui_tk/files/favorites_window.py:51
+msgid "Added favorite: "
+msgstr "즐겨찾기에 추가됨: "
+
+#: ui/files/favorites_window_qt.py:89 ui_tk/files/favorites_window.py:70
+msgid "Favorites"
+msgstr "즐겨찾기"
+
+#: ui/files/favorites_window_qt.py:175 ui_tk/files/favorites_window.py:125
+msgid ""
+"No favorites set.\n"
+"\n"
+"To add a favorite, right-click an image and select 'Add to Favorites'."
+msgstr ""
+"즐겨찾기가 설정되어 있지 않습니다.\n"
+"\n"
+"즐겨찾기에 추가하려면 이미지를 마우스 오른쪽 버튼으로 클릭하고 '즐겨찾기에 추가'를 선택하세요."
+
+#: ui/files/favorites_window_qt.py:206 ui_tk/files/favorites_window.py:148
+msgid "Remove Favorite"
+msgstr "즐겨찾기 제거"
+
+#: ui/files/favorites_window_qt.py:232 ui/files/file_actions_window_qt.py:392
+msgid "File not found: "
+msgstr "파일을 찾을 수 없습니다: "
+
+#: ui/files/favorites_window_qt.py:246 ui/files/file_actions_window_qt.py:403
+msgid "Error opening image: "
+msgstr "이미지 열기 오류: "
+
+#: ui/files/favorites_window_qt.py:255 ui_tk/files/favorites_window.py:187
+msgid "Removed favorite: "
+msgstr "즐겨찾기에서 제거됨: "
+
+#: ui/files/file_actions_window_qt.py:75 ui_tk/files/file_actions_window.py:44
+msgid "File Actions"
+msgstr "파일 작업"
+
+#: ui/files/file_actions_window_qt.py:95 ui_tk/files/file_actions_window.py:72
+msgid "File Action History"
+msgstr "파일 작업 기록"
+
+#: ui/files/file_actions_window_qt.py:102
+#: ui_tk/files/file_actions_window.py:74
+msgid "Search Image"
+msgstr "이미지 검색"
+
+#: ui/files/file_actions_window_qt.py:106
+#: ui_tk/files/file_actions_window.py:76
+msgid "Clear History"
+msgstr "기록 지우기"
+
+#: ui/files/file_actions_window_qt.py:167
+msgid "Load More ({0} remaining)"
+msgstr "더 불러오기 ({0}개 남음)"
+
+#: ui/files/file_actions_window_qt.py:205
+#: ui_tk/files/file_actions_window.py:110
+msgid "Today's File Actions"
+msgstr "오늘의 파일 작업"
+
+#: ui/files/file_actions_window_qt.py:207
+#: ui_tk/files/file_actions_window.py:110
+msgid "File Action Statistics"
+msgstr "파일 작업 통계"
+
+#: ui/files/file_actions_window_qt.py:215
+#: ui_tk/files/file_actions_window.py:117
+#: ui_tk/files/file_actions_window.py:549
+msgid "All Time"
+msgstr "모든 시간"
+
+#: ui/files/file_actions_window_qt.py:215
+#: ui_tk/files/file_actions_window.py:117
+#: ui_tk/files/file_actions_window.py:551
+msgid "Today Only"
+msgstr "오늘만"
+
+#: ui/files/file_actions_window_qt.py:222
+#: ui_tk/files/file_actions_window.py:124
+msgid "Target Directory"
+msgstr "대상 디렉토리"
+
+#: ui/files/file_actions_window_qt.py:222
+#: ui_tk/files/file_actions_window.py:142
+msgid "Total"
+msgstr "총계"
+
+#: ui/files/file_actions_window_qt.py:306
+#: ui_tk/files/file_actions_window.py:243
+msgid " ({0} files)"
+msgstr " ({0} 파일)"
+
+#: ui/files/file_actions_window_qt.py:308
+#: ui_tk/files/file_actions_window.py:245
+msgid "(auto)"
+msgstr "(자동)"
+
+#: ui/files/file_actions_window_qt.py:316 ui/files/marked_file_mover_qt.py:300
+#: ui_tk/files/file_actions_window.py:250 ui_tk/files/marked_file_mover.py:208
+#: utils/constants.py:383
+msgid "Move"
+msgstr "이동"
+
+#: ui/files/file_actions_window_qt.py:325
+#: ui/files/file_actions_window_qt.py:369
+#: ui_tk/files/file_actions_window.py:253
+#: ui_tk/files/file_actions_window.py:304
+msgid "Undo"
+msgstr "실행 취소"
+
+#: ui/files/file_actions_window_qt.py:357
+#: ui_tk/files/file_actions_window.py:288
+msgid "View"
+msgstr "보기"
+
+#: ui/files/file_actions_window_qt.py:363
+#: ui_tk/files/file_actions_window.py:296
+msgid "Copy Filename"
+msgstr "파일 이름 복사"
+
+#: ui/files/file_actions_window_qt.py:409
+#: ui_tk/files/file_actions_window.py:329
+msgid "Image does not exist: "
+msgstr "이미지가 존재하지 않습니다: "
+
+#: ui/files/file_actions_window_qt.py:411
+#: ui/files/file_actions_window_qt.py:429
+#: ui_tk/files/file_actions_window.py:330
+#: ui_tk/files/file_actions_window.py:341
+msgid "File Action Error"
+msgstr "파일 작업 오류"
+
+#: ui/files/file_actions_window_qt.py:427
+#: ui_tk/files/file_actions_window.py:340
+msgid "Images not found"
+msgstr "이미지를 찾을 수 없습니다"
+
+#: ui/files/file_actions_window_qt.py:522
+msgid "Filter: {}"
+msgstr "필터: {}"
+
+#: ui/files/go_to_file_qt.py:236 ui/files/go_to_file_qt.py:250
+#: ui_tk/files/go_to_file.py:99 ui_tk/files/go_to_file.py:118
+msgid "Go To File"
+msgstr "파일로 이동"
+
+#: ui/files/go_to_file_qt.py:269 ui_tk/files/go_to_file.py:134
+msgid "Go To"
+msgstr "가다"
+
+#: ui/files/go_to_file_qt.py:285 ui_tk/files/go_to_file.py:148
+msgid "Go to closest file if exact match not found"
+msgstr "정확한 일치 항목이 발견되지 않을 경우 가장 가까운 파일로 이동"
+
+#: ui/files/go_to_file_qt.py:292 ui_tk/files/go_to_file.py:159
+msgid "Go to file by index (1-based)"
+msgstr "인덱스(1부터 시작)로 파일 이동"
+
+#: ui/files/go_to_file_qt.py:301 ui_tk/files/go_to_file.py:300
+msgid "Sort by for closest search:"
+msgstr "가장 가까운 검색을 위해 정렬 기준:"
+
+#: ui/files/go_to_file_qt.py:325 ui_tk/files/go_to_file.py:335
+msgid "Find Related Filenames"
+msgstr "관련 파일 이름 찾기"
+
+#: ui/files/go_to_file_qt.py:334 ui_tk/files/go_to_file.py:340
+msgid ""
+"Enter a base ID manually or click 'Extract from filename' to auto-extract "
+"from the filename above."
+msgstr "기본 ID를 수동으로 입력하거나 '파일 이름에서 추출'을 클릭하여 위의 파일 이름에서 자동 추출하십시오."
+
+#: ui/files/go_to_file_qt.py:344 ui_tk/files/go_to_file.py:350
+msgid "Base ID:"
+msgstr "기본 ID:"
+
+#: ui/files/go_to_file_qt.py:362 ui_tk/files/go_to_file.py:362
+msgid "Extract from filename"
+msgstr "파일명에서 추출"
+
+#: ui/files/go_to_file_qt.py:370 ui_tk/files/go_to_file.py:370
+msgid "Target Directory:"
+msgstr "대상 디렉터리:"
+
+#: ui/files/go_to_file_qt.py:392 ui_tk/files/go_to_file.py:388
+msgid "Find Related"
+msgstr "관련 항목 찾기"
+
+#: ui/files/go_to_file_qt.py:442 ui_tk/files/go_to_file.py:188
+msgid "Invalid search string, please enter some text."
+msgstr "잘못된 검색 문자열입니다. 텍스트를 입력하세요."
+
+#: ui/files/go_to_file_qt.py:460 ui_tk/files/go_to_file.py:204
+msgid "Index navigation enabled but input is not a valid number."
+msgstr "인덱스 탐색이 활성화되었으나 입력값이 유효한 숫자가 아닙니다."
+
+#: ui/files/go_to_file_qt.py:503 ui_tk/files/go_to_file.py:246
+msgid "Select file to go to"
+msgstr "파일 선택"
+
+#: ui/files/go_to_file_qt.py:525 ui_tk/files/go_to_file.py:265
+msgid "No last moved image found."
+msgstr "마지막으로 이동된 미디어 파일을 찾을 수 없습니다."
+
+#: ui/files/go_to_file_qt.py:554 ui_tk/files/go_to_file.py:518
+msgid "Please enter a filename first."
+msgstr "먼저 파일 이름을 입력하십시오."
+
+#: ui/files/go_to_file_qt.py:560 ui_tk/files/go_to_file.py:524
+msgid "Base ID extracted: {}"
+msgstr "추출된 기본 ID: {}"
+
+#: ui/files/go_to_file_qt.py:564 ui_tk/files/go_to_file.py:526
+msgid "Could not extract base ID from filename. Please enter it manually."
+msgstr "파일 이름에서 기본 ID를 추출할 수 없습니다. 수동으로 입력해 주세요."
+
+#: ui/files/go_to_file_qt.py:569 ui_tk/files/go_to_file.py:527
+msgid "Could not extract base ID. Please enter it manually."
+msgstr "기본 ID를 추출할 수 없습니다. 수동으로 입력해 주세요."
+
+#: ui/files/go_to_file_qt.py:603 ui_tk/files/go_to_file.py:448
+msgid "Loading current media and searching..."
+msgstr "현재 미디어를 불러오고 검색 중..."
+
+#: ui/files/go_to_file_qt.py:615 ui_tk/files/go_to_file.py:460
+msgid ""
+"Current media filename loaded. Select a target directory to find related "
+"filenames."
+msgstr "현재 로드된 미디어 파일 이름입니다. 관련 파일 이름을 찾으려면 대상 디렉터리를 선택하십시오."
+
+#: ui/files/go_to_file_qt.py:621 ui_tk/files/go_to_file.py:462
+msgid "No active media file found in the current window."
+msgstr "현재 창에서 활성 미디어 파일을 찾을 수 없습니다."
+
+#: ui/files/go_to_file_qt.py:625 ui_tk/files/go_to_file.py:464
+msgid "Error getting current media filename: {}"
+msgstr "현재 미디어 파일 이름 가져오기 중 오류: {}"
+
+#: ui/files/go_to_file_qt.py:636 ui_tk/files/go_to_file.py:535
+msgid "Please enter a base ID or extract it from a filename."
+msgstr "기본 ID를 입력하거나 파일 이름에서 추출하십시오."
+
+#: ui/files/go_to_file_qt.py:641 ui_tk/files/go_to_file.py:539
+msgid "Please select a target directory to search in."
+msgstr "검색할 대상 디렉터리를 선택하십시오."
+
+#: ui/files/go_to_file_qt.py:645 ui_tk/files/go_to_file.py:543
+msgid "Target directory does not exist."
+msgstr "대상 디렉터리가 존재하지 않습니다."
+
+#: ui/files/go_to_file_qt.py:665 ui_tk/files/go_to_file.py:563
+msgid "Found {} related filenames"
+msgstr "{} 관련 파일명을 찾았습니다"
+
+#: ui/files/go_to_file_qt.py:669 ui_tk/files/go_to_file.py:566
+msgid "No related filenames found with base ID \"{0}\" in {1}"
+msgstr "{1}에서 기본 ID “{0}”과 관련된 파일명을 찾을 수 없습니다."
+
+#: ui/files/go_to_file_qt.py:679 ui_tk/files/go_to_file.py:741
+msgid "Opening file: {}"
+msgstr "파일 열기: {}"
+
+#: ui/files/go_to_file_qt.py:711 ui_tk/files/go_to_file.py:683
+msgid ""
+"The directory '{0}' contains many files ({1} files found so far). Searching "
+"may take a while. Do you want to proceed?"
+msgstr ""
+"디렉터리 '{0}'에는 많은 파일들이 포함되어 있습니다 (지금까지 {1}개의 파일을 찾았습니다). 검색에 시간이 다소 걸릴 수 있습니다."
+" 계속하시겠습니까?"
+
+#: ui/files/go_to_file_qt.py:716 ui_tk/files/go_to_file.py:684
+msgid "Large Directory"
+msgstr "대형 디렉토리"
+
+#: ui/files/go_to_file_qt.py:724 ui_tk/files/go_to_file.py:693
+msgid "Search cancelled by user."
+msgstr "사용자에 의해 검색이 취소되었습니다."
+
+#: ui/files/go_to_file_qt.py:753 ui_tk/files/go_to_file.py:729
+msgid "Error searching directory: {}"
+msgstr "디렉터리 검색 오류: {}"
+
+#: ui/files/hotkey_actions_window_qt.py:56
+#: ui_tk/files/hotkey_actions_window.py:25
+msgid "Hotkey Actions"
+msgstr "단축키 작업"
+
+#: ui/files/hotkey_actions_window_qt.py:72
+#: ui_tk/files/hotkey_actions_window.py:48
+msgid "Key name"
+msgstr "키 이름"
+
+#: ui/files/hotkey_actions_window_qt.py:73
+#: ui_tk/files/hotkey_actions_window.py:52
+msgid "Target directory"
+msgstr "대상 디렉터리"
+
+#: ui/files/hotkey_actions_window_qt.py:105
+#: ui/files/hotkey_actions_window_qt.py:107
+#: ui_tk/files/hotkey_actions_window.py:84
+#: ui_tk/files/hotkey_actions_window.py:89
+msgid "(unset)"
+msgstr "(미설정)"
+
+#: ui/files/marked_file_mover_qt.py:79
+msgid "Invalid directory: {0}"
+msgstr "잘못된 디렉터리입니다: {0}"
+
+#: ui/files/marked_file_mover_qt.py:83 ui_tk/files/marked_file_mover.py:263
+msgid "Select target directory for marked files"
+msgstr "표시된 파일의 대상 디렉터리 선택"
+
+#: ui/files/marked_file_mover_qt.py:94 ui_tk/files/marked_file_mover.py:316
+msgid "Where should the marked files have gone?"
+msgstr "표시된 파일은 어디로 갔을까요?"
+
+#: ui/files/marked_file_mover_qt.py:122 ui/files/marked_file_mover_qt.py:159
+#: ui_tk/files/marked_file_mover.py:73 ui_tk/files/marked_file_mover.py:84
+msgid "Move {0} Marked File(s)"
+msgstr "{0} 개의 표시된 파일을 이동하시겠습니까?"
+
+#: ui/files/marked_file_mover_qt.py:225
+msgid "New target:"
+msgstr "새로운 목표:"
+
+#: ui/files/marked_file_mover_qt.py:229 ui_tk/files/marked_file_mover.py:155
+msgid "MOVE"
+msgstr "이동"
+
+#: ui/files/marked_file_mover_qt.py:236 ui_tk/files/marked_file_mover.py:159
+msgid "COPY"
+msgstr "복사"
+
+#: ui/files/marked_file_mover_qt.py:243 ui_tk/files/marked_file_mover.py:161
+msgid "DELETE"
+msgstr "삭제"
+
+#: ui/files/marked_file_mover_qt.py:248
+msgid "Add from parent"
+msgstr "부모에서 추가"
+
+#: ui/files/marked_file_mover_qt.py:258 ui/files/pdf_options_window_qt.py:117
+#: ui_tk/files/marked_file_mover.py:168 ui_tk/files/pdf_options_window.py:80
+msgid "Create PDF"
+msgstr "PDF 만들기"
+
+#: ui/files/marked_file_mover_qt.py:319
+msgid "Remove this target directory"
+msgstr "이 대상 디렉터리를 삭제하십시오."
+
+#: ui/files/marked_file_mover_qt.py:398 ui_tk/files/marked_file_mover.py:545
+msgid "Confirm Delete"
+msgstr "자주 묻는 질문"
+
+#: ui/files/marked_file_mover_qt.py:399
+msgid "Deleting {0} marked files - Are you sure you want to proceed?"
+msgstr "삭제 {0} 표시된 파일 - 진행하시겠습니까?"
+
+#: ui/files/marked_file_mover_qt.py:431 ui_tk/files/marked_file_mover.py:573
+msgid "Delete Failed"
+msgstr "실패 삭제"
+
+#: ui/files/marked_file_mover_qt.py:432
+msgid "Failed to delete {0} files - check log for details."
+msgstr "{0} 파일을 삭제 취소 - 세부 사항에 대한 로그 확인."
+
+#: ui/files/marked_file_mover_qt.py:437
+msgid "Deleted {0} marked files."
+msgstr "표시된 파일 {0}개를 삭제했습니다."
+
+#: ui/files/marked_file_mover_qt.py:464 ui_tk/files/marked_file_mover.py:331
+#: ui_tk/files/recent_directory_window.py:227
+msgid "Select parent directory for target directories"
+msgstr "대상 디렉토리 선택"
+
+#: ui/files/marked_file_mover_qt.py:505 ui_tk/files/marked_file_mover.py:235
+msgid ""
+"WARNING: This action sets hotkey actions that will be used for future file "
+"operations. You may have accidentally triggered this shortcut due to a "
+"sticky Control key. Please confirm you want to proceed."
+msgstr ""
+"경고: 이 작업은 향후 파일 작업에 사용될 단축키 동작을 설정합니다. Control 키가 눌린 상태로 인해 실수로 이 단축키를 실행했을 "
+"수 있습니다. 계속 진행할 것인지 확인하십시오."
+
+#: ui/files/marked_file_mover_qt.py:515 ui/files/marked_file_mover_qt.py:521
+#: ui_tk/files/marked_file_mover.py:241 ui_tk/files/marked_file_mover.py:247
+msgid "Recording next mark target and action."
+msgstr "다음 마크 대상 및 작업을 기록합니다."
+
+#: ui/files/marked_file_mover_qt.py:543 ui_tk/files/marked_file_mover.py:523
+msgid "Sorted directories by embedding comparison."
+msgstr "분류 된 감독 by embedding 비교."
+
+#: ui/files/marked_file_mover_qt.py:562 ui_tk/files/marked_file_mover.py:683
+msgid "Save PDF as"
+msgstr "PDF를 다른 이름으로 저장"
+
+#: ui/files/marked_file_mover_qt.py:662
+msgid "Found {0} downstream related images"
+msgstr "Found {0} downstream 관련 이미지"
+
+#: ui/files/marked_file_mover_qt.py:667 ui_tk/files/marked_file_mover.py:642
+msgid "No downstream related images found"
+msgstr "찾을 수 없음 downstream 관련 이미지"
+
+#: ui/files/marked_file_mover_qt.py:697
+msgid "Filter: {0}"
+msgstr "필터: {0}"
+
+#: ui/files/marked_file_mover_qt.py:868 ui_tk/files/marked_file_mover.py:656
+msgid "Cleared marked file"
+msgstr "표시된 파일"
+
+#: ui/files/pdf_options_window_qt.py:63 ui/files/pdf_options_window_qt.py:73
+#: ui_tk/files/pdf_options_window.py:31 ui_tk/files/pdf_options_window.py:42
 msgid "PDF Creation Options"
 msgstr "PDF 생성 옵션"
 
-#: files/pdf_options_window.py:48
+#: ui/files/pdf_options_window_qt.py:82 ui_tk/files/pdf_options_window.py:48
 msgid "PDF Filename:"
 msgstr "PDF 파일 이름:"
 
-#: files/pdf_options_window.py:60
+#: ui/files/pdf_options_window_qt.py:95 ui_tk/files/pdf_options_window.py:60
 msgid "Preserve original image quality and format"
 msgstr "원본 이미지 품질 및 형식 유지"
 
-#: files/pdf_options_window.py:67
+#: ui/files/pdf_options_window_qt.py:101 ui_tk/files/pdf_options_window.py:67
 msgid ""
 "If enabled, images will maintain their original quality and format.\n"
 "If disabled, images will be compressed to reduce PDF size."
@@ -2493,83 +3490,79 @@ msgstr ""
 "활성화하면 이미지가 원래 품질과 형식을 유지합니다.\n"
 "비활성화하면 이미지가 압축되어 PDF 크기가 줄어듭니다."
 
-#: files/recent_directory_window.py:232
-msgid "Add directory"
-msgstr "디렉토리"
+#: ui/files/recent_directory_window_qt.py:183
+#: ui_tk/files/marked_file_mover.py:260
+#: ui_tk/files/recent_directory_window.py:175
+msgid "Invalid directory: %s"
+msgstr "잘못된 디렉터리입니다: {0}"
 
-#: files/recent_directory_window.py:283
-msgid "Set image comparison directory"
-msgstr "설정 이미지 비교 디렉토리"
-
-#: files/target_directory_window.py:93
+#: ui/files/target_directory_window_qt.py:74
+#: ui_tk/files/target_directory_window.py:69
 msgid "Select Target Directory"
 msgstr "대상 디렉터리 선택"
 
-#: files/target_directory_window.py:107
-msgid "Select Target Directory for Related Files Search"
-msgstr "관련 파일 검색 대상 디렉터리 선택"
-
-#: files/target_directory_window.py:151
-msgid "Select"
-msgstr "선택"
-
-#: files/target_directory_window.py:166
-msgid "Browse for Directory..."
-msgstr "디렉터리 찾아보기..."
-
-#: files/target_directory_window.py:171
-msgid "Clear Recent"
-msgstr "최근 기록 지우기"
-
-#: files/target_directory_window.py:186
+#: ui/files/target_directory_window_qt.py:106
+#: ui_tk/files/target_directory_window.py:162
 msgid "Select directory to search for related files"
 msgstr "관련 파일을 검색할 디렉터리를 선택하세요"
 
-#: files/type_configuration_window.py:27
+#: ui/files/type_configuration_window_qt.py:48
+#: ui_tk/files/type_configuration_window.py:27
 msgid "Basic image files (PNG, JPG, etc.)"
 msgstr "기본 이미지 파일 (PNG, JPG 등)"
 
-#: files/type_configuration_window.py:28
+#: ui/files/type_configuration_window_qt.py:49
+#: ui_tk/files/type_configuration_window.py:28
 msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
 msgstr "비디오 파일 (MP4, AVI 등) - 첫 번째 프레임은 추출 될 것이다"
 
-#: files/type_configuration_window.py:29
+#: ui/files/type_configuration_window_qt.py:50
+#: ui_tk/files/type_configuration_window.py:29
 msgid "Animated GIF files - First frame will be extracted"
 msgstr "애니메이션 GIF 파일 - 첫 번째 프레임은 추출 될 것이다"
 
-#: files/type_configuration_window.py:30
+#: ui/files/type_configuration_window_qt.py:51
+#: ui_tk/files/type_configuration_window.py:30
 msgid "PDF documents - First page will be extracted"
 msgstr "PDF 문서 - 첫 페이지는 추출됩니다"
 
-#: files/type_configuration_window.py:31
+#: ui/files/type_configuration_window_qt.py:52
+#: ui_tk/files/type_configuration_window.py:31
 msgid "Vector graphics - Will be converted to raster image"
 msgstr "벡터 그래픽 - 래스터 이미지로 변환 될 것입니다"
 
-#: files/type_configuration_window.py:32
+#: ui/files/type_configuration_window_qt.py:53
+#: ui_tk/files/type_configuration_window.py:32
 msgid "HTML files - Will be rendered and converted to image"
 msgstr "HTML 파일 - 렌더링되고 이미지로 변환됩니다"
 
-#: files/type_configuration_window.py:40
+#: ui/files/type_configuration_window_qt.py:60
+#: ui_tk/files/type_configuration_window.py:40
 msgid "PDF support requires pypdfium2 package"
 msgstr "PDF 지원은 pypdfium2 포장을 요구합니다"
 
-#: files/type_configuration_window.py:45
+#: ui/files/type_configuration_window_qt.py:65
+#: ui_tk/files/type_configuration_window.py:45
 msgid "SVG support requires cairosvg package"
 msgstr "SVG 지원은 cairosvg 포장을 요구합니다"
 
-#: files/type_configuration_window.py:50
+#: ui/files/type_configuration_window_qt.py:70
+#: ui_tk/files/type_configuration_window.py:50
 msgid "HTML support requires pyppeteer package"
 msgstr "HTML 지원은 pyppeteer 패키지를 요구합니다"
 
-#: files/type_configuration_window.py:96
+#: ui/files/type_configuration_window_qt.py:143
+#: ui_tk/files/type_configuration_window.py:101
 msgid "Media Type Configuration"
 msgstr "Media Type 구성"
 
-#: files/type_configuration_window.py:112 utils/constants.py:340
+#: ui/files/type_configuration_window_qt.py:154
+#: ui_tk/files/type_configuration_window.py:117 utils/constants.py:443
 msgid "Configure Media Types"
 msgstr "미디어 유형 구성"
 
-#: files/type_configuration_window.py:117
+#: ui/files/type_configuration_window_qt.py:161
+#: ui_tk/files/type_configuration_window.py:122
 msgid ""
 "Select which types of media files you want to compare. Changes will require "
 "a refresh of open comparisons but files in browsing mode should update "
@@ -2577,300 +3570,446 @@ msgid ""
 msgstr ""
 "어떤 유형의 미디어 파일을 선택하여 비교합니다. 변경은 오픈 비교의 새로이 필요하지만 검색 모드에서 파일이 자동으로 업데이트되어야합니다."
 
-#: files/type_configuration_window.py:183
+#: ui/files/type_configuration_window_qt.py:225
+#: ui_tk/files/type_configuration_window.py:188
 msgid "Apply Changes"
 msgstr "변경 사항"
 
-#: files/type_configuration_window.py:225
+#: ui/files/type_configuration_window_qt.py:267
+#: ui_tk/files/type_configuration_window.py:230
 msgid "Confirm Changes"
 msgstr "자주 묻는 질문"
 
-#: files/type_configuration_window.py:226
+#: ui/files/type_configuration_window_qt.py:268
+#: ui_tk/files/type_configuration_window.py:231
 msgid "This will clear all existing compares in open windows. Continue?"
 msgstr "이 창에서 모든 기존 비교를 명확하게합니다. 계속?"
 
-#: files/type_configuration_window.py:286
+#: ui/files/type_configuration_window_qt.py:324
+#: ui_tk/files/type_configuration_window.py:291
 msgid "Media type configuration updated"
 msgstr "Media Type 설정 업데이트"
 
-#: image/classifier_action_type.py:24
-msgid "Hide"
-msgstr "숨기세요"
-
-#: image/classifier_action_type.py:26
-msgid "Notify"
-msgstr "알림"
-
-#: image/classifier_action_type.py:28
-msgid "Skip"
-msgstr "건너뛰기"
-
-#: image/classifier_action_type.py:36
-msgid "Add Mark"
-msgstr "마크 추가"
-
-#: image/image_details.py:127
+#: ui/image/image_details_qt.py:245 ui_tk/image/image_details.py:133
 msgid "Image Path"
 msgstr "이미지 경로"
 
-#: image/image_details.py:129
+#: ui/image/image_details_qt.py:249 ui_tk/image/image_details.py:135
 msgid "File Index"
 msgstr "파일 색인"
 
-#: image/image_details.py:131
+#: ui/image/image_details_qt.py:253 ui_tk/image/image_details.py:137
 msgid "Color Mode"
 msgstr "색깔 형태"
 
-#: image/image_details.py:133
+#: ui/image/image_details_qt.py:257 ui_tk/image/image_details.py:139
 msgid "Dimensions"
 msgstr "크기 (mm)"
 
-#: image/image_details.py:135 utils/constants.py:45 utils/constants.py:68
-#: utils/constants.py:138 utils/constants.py:158
+#: ui/image/image_details_qt.py:261 ui_tk/image/image_details.py:141
+#: utils/constants.py:45 utils/constants.py:68 utils/constants.py:138
+#: utils/constants.py:158
 msgid "Size"
 msgstr "크기 (mm)"
 
-#: image/image_details.py:137
+#: ui/image/image_details_qt.py:265 ui_tk/image/image_details.py:143
 msgid "Modification Time"
 msgstr "수정 시간"
 
-#: image/image_details.py:140
+#: ui/image/image_details_qt.py:269 ui_tk/image/image_details.py:145
 msgid "Positive"
 msgstr "지원하다"
 
-#: image/image_details.py:142
-msgid "Negative"
-msgstr "이름 *"
-
-#: image/image_details.py:143
+#: ui/image/image_details_qt.py:282 ui_tk/image/image_details.py:151
 msgid "(negative prompt not shown by config setting)"
 msgstr "(config 설정에 의해 표시되지 않는 네거티브 프롬프트)"
 
-#: image/image_details.py:144 utils/constants.py:46 utils/constants.py:70
+#: ui/image/image_details_qt.py:284 ui_tk/image/image_details.py:149
+msgid "Negative"
+msgstr "이름 *"
+
+#: ui/image/image_details_qt.py:293 ui_tk/image/image_details.py:154
+#: utils/constants.py:46 utils/constants.py:70
 msgid "Models"
 msgstr "모델 번호:"
 
-#: image/image_details.py:146
+#: ui/image/image_details_qt.py:297 ui_tk/image/image_details.py:156
 msgid "LoRAs"
 msgstr "LoRA"
 
-#: image/image_details.py:151
+#: ui/image/image_details_qt.py:302 ui_tk/image/image_details.py:161
 msgid "Copy Prompt"
 msgstr "복사 Prompt"
 
-#: image/image_details.py:152
+#: ui/image/image_details_qt.py:303 ui_tk/image/image_details.py:162
 msgid "Copy Prompt No BREAK"
 msgstr "복사 금지 없음 BREAK"
 
-#: image/image_details.py:156 utils/help_and_config.py:127
-msgid "Rotate Image Left"
-msgstr "자전 이미지 왼쪽"
-
-#: image/image_details.py:157 utils/help_and_config.py:128
-msgid "Rotate Image Right"
-msgstr "Rotate 이미지 권리"
-
-#: image/image_details.py:161 utils/help_and_config.py:126
-msgid "Crop Image (Smart Detect)"
-msgstr "자르기 이미지 (Smart Detect)"
-
-#: image/image_details.py:162 utils/help_and_config.py:129
-msgid "Enhance Image"
-msgstr "향상된 이미지"
-
-#: image/image_details.py:166 utils/help_and_config.py:130
-msgid "Random Crop"
-msgstr "무작위 Crop"
-
-#: image/image_details.py:167
+#: ui/image/image_details_qt.py:315 ui_tk/image/image_details.py:177
 msgid "Randomly Modify"
 msgstr "무작위 수정"
 
-#: image/image_details.py:171 utils/help_and_config.py:132
-msgid "Flip Image Horizontally"
-msgstr "플립 이미지 수평으로"
+#: ui/image/image_details_qt.py:322 ui/image/image_details_qt.py:791
+msgid "Change Aspect Ratio"
+msgstr "화면비율 변경"
 
-#: image/image_details.py:172 utils/help_and_config.py:133
-msgid "Flip Image Vertically"
-msgstr "Flip 이미지 수직으로"
+#: ui/image/image_details_qt.py:323
+msgid "Flip Aspect Ratio"
+msgstr "비율 반전"
 
-#: image/image_details.py:175 utils/help_and_config.py:134
-msgid "Copy Without EXIF"
-msgstr "EXIF 없이 복사"
+#: ui/image/image_details_qt.py:331 ui_tk/image/image_details.py:192
+msgid "Run OCR"
+msgstr "OCR 실행"
 
-#: image/image_details.py:177 utils/help_and_config.py:135
-msgid "Convert to JPG"
-msgstr "JPG로 변환"
-
-#: image/image_details.py:180 utils/help_and_config.py:136
-msgid "Show Metadata"
-msgstr "Metadata 보기"
-
-#: image/image_details.py:184 utils/help_and_config.py:137
-msgid "Open Related Image"
-msgstr "관련 이미지"
-
-#: image/image_details.py:193
+#: ui/image/image_details_qt.py:339 ui_tk/image/image_details.py:205
 msgid "Image Generation"
 msgstr "이미지 생성"
 
-#: image/image_details.py:203
+#: ui/image/image_details_qt.py:353 ui_tk/image/image_details.py:215
 msgid "Press Shift+I on a main app window to run this"
 msgstr "프레스 Shift+ 나는 메인 앱 창에서 이것을 실행"
 
-#: image/image_details.py:206 utils/help_and_config.py:139
-msgid "Redo Prompt"
-msgstr "레드오 Prompt"
-
-#: image/image_details.py:210
+#: ui/image/image_details_qt.py:361 ui_tk/image/image_details.py:222
 msgid "Tags"
 msgstr "이름 *"
 
-#: image/image_details.py:220
+#: ui/image/image_details_qt.py:369 ui_tk/image/image_details.py:232
 msgid "Update Tags"
 msgstr "업데이트"
 
-#: image/image_details.py:322
+#: ui/image/image_details_qt.py:547 ui_tk/image/image_details.py:343
 msgid "No prompt found"
 msgstr "프롬프트를 찾을 수 없습니다"
 
-#: image/image_details.py:330
+#: ui/image/image_details_qt.py:554 ui_tk/image/image_details.py:351
 msgid "Copied prompt without BREAK"
 msgstr "BREAK없이 복사 된 프롬프트"
 
-#: image/image_details.py:351
+#: ui/image/image_details_qt.py:573 ui_tk/image/image_details.py:372
 msgid "No files found in current directory"
 msgstr "현재 디렉터리에서 파일을 찾을 수 없습니다"
 
-#: image/image_details.py:356
+#: ui/image/image_details_qt.py:578 ui_tk/image/image_details.py:377
 msgid "No files available"
 msgstr "사용 가능한 파일이 없습니다"
 
-#: image/image_details.py:382
+#: ui/image/image_details_qt.py:603 ui_tk/image/image_details.py:403
 msgid "Copied prompt from {0}"
 msgstr "{0}에서 복사한 프롬프트"
 
-#: image/image_details.py:389
+#: ui/image/image_details_qt.py:610 ui_tk/image/image_details.py:410
 msgid "No files with prompts found in current directory"
 msgstr "현재 디렉터리에서 프롬프트가 포함된 파일을 찾을 수 없습니다"
 
-#: image/image_details.py:395 image/image_details.py:491
+#: ui/image/image_details_qt.py:657 ui/image/image_details_qt.py:844
+#: ui_tk/image/image_details.py:416 ui_tk/image/image_details.py:512
 msgid "Rotated image right"
 msgstr "연락처"
 
-#: image/image_details.py:395 image/image_details.py:491
+#: ui/image/image_details_qt.py:657 ui/image/image_details_qt.py:844
+#: ui_tk/image/image_details.py:416 ui_tk/image/image_details.py:512
 msgid "Rotated image left"
 msgstr "왼쪽된 이미지"
 
-#: image/image_details.py:406 image/image_details.py:502
+#: ui/image/image_details_qt.py:666 ui/image/image_details_qt.py:852
+#: ui_tk/image/image_details.py:427 ui_tk/image/image_details.py:523
 msgid "Cropped image"
 msgstr "Cropped 이미지"
 
-#: image/image_details.py:410 image/image_details.py:506
+#: ui/image/image_details_qt.py:673 ui/image/image_details_qt.py:857
+#: ui_tk/image/image_details.py:431 ui_tk/image/image_details.py:527
 msgid "No crops found"
 msgstr "발견되지 않은 작물"
 
-#: image/image_details.py:417 image/image_details.py:513
+#: ui/image/image_details_qt.py:677 ui/image/image_details_qt.py:864
+#: ui_tk/image/image_details.py:438 ui_tk/image/image_details.py:534
 msgid "Enhanced image"
 msgstr "향상된 이미지"
 
-#: image/image_details.py:425 image/image_details.py:522
+#: ui/image/image_details_qt.py:681 ui/image/image_details_qt.py:873
+#: ui_tk/image/image_details.py:446 ui_tk/image/image_details.py:543
 msgid "Randomly cropped image"
 msgstr "무작위 이미지"
 
-#: image/image_details.py:437 image/image_details.py:532
+#: ui/image/image_details_qt.py:695 ui/image/image_details_qt.py:881
+#: ui_tk/image/image_details.py:458 ui_tk/image/image_details.py:553
 msgid "Randomly modified image"
 msgstr "무작위 이미지"
 
-#: image/image_details.py:442 image/image_details.py:535
+#: ui/image/image_details_qt.py:703 ui/image/image_details_qt.py:886
+#: ui_tk/image/image_details.py:463 ui_tk/image/image_details.py:556
 msgid "No new image created"
 msgstr "새로운 이미지가 생성되지 않았습니다"
 
-#: image/image_details.py:448
+#: ui/image/image_details_qt.py:710 ui_tk/image/image_details.py:469
 msgid "Confirm Vertical Flip"
 msgstr "수직 반전 확인"
 
-#: image/image_details.py:449
+#: ui/image/image_details_qt.py:712 ui_tk/image/image_details.py:470
 msgid ""
 "Are you sure you want to flip this image vertically? This is an uncommon "
 "operation and may have been clicked by accident."
 msgstr "이 이미지를 세로로 뒤집으시겠습니까? 이는 흔하지 않은 작업이며 실수로 클릭했을 수 있습니다."
 
-#: image/image_details.py:459 image/image_details.py:542
+#: ui/image/image_details_qt.py:722 ui/image/image_details_qt.py:890
+#: ui_tk/image/image_details.py:480 ui_tk/image/image_details.py:563
 msgid "Flipped image"
 msgstr "좋은 이미지"
 
-#: image/image_details.py:467 image/image_details.py:551
+#: ui/image/image_details_qt.py:755
+msgid "Please enter a target ratio"
+msgstr "대상 비율을 입력해 주세요"
+
+#: ui/image/image_details_qt.py:765
+msgid "Changed image aspect ratio"
+msgstr "이미지 화면비가 바뀌었습니다."
+
+#: ui/image/image_details_qt.py:770
+msgid "Error changing image aspect ratio"
+msgstr "이미지 비율을 변경하는 중에 오류가 발생했습니다."
+
+#: ui/image/image_details_qt.py:775 ui/image/image_details_qt.py:782
+msgid "Aspect ratio changes are only available for images"
+msgstr "아спект 비율 변경은 이미지에만 사용可能です."
+
+#: ui/image/image_details_qt.py:796
+msgid "Current ratio: {0}"
+msgstr "流动比率: {0}"
+
+#: ui/image/image_details_qt.py:798
+msgid "Target ratio (e.g. 16:9 or 1.777):"
+msgstr "타겟 비율 (예: 16:9 또는 1.777):"
+
+#: ui/image/image_details_qt.py:825 ui/image/image_details_qt.py:897
+#: ui_tk/image/image_details.py:488 ui_tk/image/image_details.py:572
 msgid "Copied image without EXIF data"
 msgstr "EXIF 데이터 없이 복사된 이미지"
 
-#: image/image_details.py:472 image/image_details.py:556
+#: ui/image/image_details_qt.py:830 ui/image/image_details_qt.py:903
+#: ui_tk/image/image_details.py:493 ui_tk/image/image_details.py:577
 msgid "Error copying image without EXIF"
 msgstr "EXIF가 없는 이미지 복사 오류"
 
-#: image/image_details.py:479 image/image_details.py:564
+#: ui/image/image_details_qt.py:835 ui/image/image_details_qt.py:908
+#: ui_tk/image/image_details.py:500 ui_tk/image/image_details.py:585
 msgid "Converted image to JPG"
 msgstr "이미지를 JPG로 변환"
 
-#: image/image_details.py:484 image/image_details.py:569
+#: ui/image/image_details_qt.py:838 ui/image/image_details_qt.py:911
+#: ui_tk/image/image_details.py:505 ui_tk/image/image_details.py:590
 msgid "Error converting image to JPG"
 msgstr "이미지를 JPG로 변환하는 중 오류 발생"
 
-#: image/image_details.py:574
+#: ui/image/image_details_qt.py:918 ui_tk/image/image_details.py:595
 msgid "No metadata found"
 msgstr "메타데이터 없음"
 
-#: image/image_details.py:588 image/image_details.py:646
+#: ui/image/image_details_qt.py:937 ui_tk/image/image_details.py:608
+msgid "OCR is only available for images"
+msgstr "OCR는 이미지에만 사용할 수 있습니다."
+
+#: ui/image/image_details_qt.py:940 ui_tk/image/image_details.py:611
+msgid "Surya OCR is not installed"
+msgstr "Surya OCR은 설치되지 않았습니다."
+
+#: ui/image/image_details_qt.py:945 ui_tk/image/image_details.py:616
+msgid "No text found in image"
+msgstr "이미지에 텍스트 없음"
+
+#: ui/image/image_details_qt.py:952 ui_tk/image/image_details.py:623
+msgid "OCR failed: "
+msgstr "OCR 오류로 인해: "
+
+#: ui/image/image_details_qt.py:977 ui/image/image_details_qt.py:1051
+#: ui_tk/image/image_details.py:639 ui_tk/image/image_details.py:697
 msgid " (Exact Match Not Found)"
 msgstr " (Exact Match 찾을 수 없음)"
 
-#: image/image_details.py:590 image/image_details.py:643
+#: ui/image/image_details_qt.py:979 ui/image/image_details_qt.py:1048
+#: ui_tk/image/image_details.py:641 ui_tk/image/image_details.py:694
 msgid "(No related image found)"
 msgstr "(찾은 관련 이미지 없음)"
 
-#: image/image_details.py:706 image/image_details.py:713
-msgid "%s downstream image(s) found."
+#: ui/image/image_details_qt.py:1162 ui/image/image_details_qt.py:1171
+msgid "{0} downstream image(s) found."
 msgstr "{0} 다운스트림 이미지(s)가 있습니다."
 
-#: image/image_details.py:709
-msgid "%s (cached) downstream image(s) found."
+#: ui/image/image_details_qt.py:1165
+msgid "{0} (cached) downstream image(s) found."
 msgstr "{0} (예정) 다운스트림 이미지(s) 발견."
 
-#: image/image_details.py:715
+#: ui/image/image_details_qt.py:1175 ui_tk/image/image_details.py:766
 msgid "No downstream related images found in"
 msgstr "downstream 관련 이미지가 없습니다."
 
-#: image/image_details.py:775
-msgid "Updated tags for %s"
+#: ui/image/image_details_qt.py:1262
+msgid "Updated tags for {0}"
 msgstr "{0}에 대한 업데이트 된 태그"
 
-#: image/metadata_viewer_window.py:32
-msgid "Copy Metadata"
-msgstr "메타데이터 복사"
-
-#: image/metadata_viewer_window.py:35
-msgid "Raw Image Metadata"
-msgstr "좋은 이미지 Metadata"
-
-#: image/metadata_viewer_window.py:59
-msgid "Copied metadata to clipboard"
-msgstr "메타데이터를 클립보드에 복사했습니다"
-
-#: image/metadata_viewer_window.py:62
-msgid "Error copying metadata to clipboard: "
-msgstr "메타데이터를 클립보드에 복사하는 중 오류가 발생했습니다: "
-
-#: image/metadata_viewer_window.py:66
+#: ui/image/metadata_viewer_window_qt.py:46
+#: ui/image/metadata_viewer_window_qt.py:123
+#: ui_tk/image/metadata_viewer_window.py:66
 msgid "Metadata Viewer"
 msgstr "Metadata 뷰어"
 
-#: image/temp_image_canvas.py:116
+#: ui/image/metadata_viewer_window_qt.py:70
+#: ui_tk/image/metadata_viewer_window.py:32
+msgid "Copy Metadata"
+msgstr "메타데이터 복사"
+
+#: ui/image/metadata_viewer_window_qt.py:74
+#: ui_tk/image/metadata_viewer_window.py:35
+msgid "Raw Image Metadata"
+msgstr "좋은 이미지 Metadata"
+
+#: ui/image/metadata_viewer_window_qt.py:131
+#: ui_tk/image/metadata_viewer_window.py:59
+msgid "Copied metadata to clipboard"
+msgstr "메타데이터를 클립보드에 복사했습니다"
+
+#: ui/image/metadata_viewer_window_qt.py:135
+#: ui_tk/image/metadata_viewer_window.py:62
+msgid "Error copying metadata to clipboard: "
+msgstr "메타데이터를 클립보드에 복사하는 중 오류가 발생했습니다: "
+
+#: ui/image/ocr_text_window_qt.py:44 ui/image/ocr_text_window_qt.py:122
+#: ui_tk/image/ocr_text_window.py:102
+msgid "OCR Text"
+msgstr "광자인식 텍스트"
+
+#: ui/image/ocr_text_window_qt.py:68 ui_tk/image/ocr_text_window.py:37
+msgid "Copy All Text"
+msgstr "모든 텍스트 복사"
+
+#: ui/image/ocr_text_window_qt.py:72 ui_tk/image/ocr_text_window.py:40
+msgid "OCR Result"
+msgstr "OCR 결과"
+
+#: ui/image/ocr_text_window_qt.py:133 ui_tk/image/ocr_text_window.py:93
+msgid "Copied OCR text to clipboard"
+msgstr "OCR 텍스트를 클리프 보드에 붙여넣음 완료되었습니다."
+
+#: ui/image/ocr_text_window_qt.py:137 ui_tk/image/ocr_text_window.py:97
+msgid "Error copying OCR text: "
+msgstr "OCR 텍스트 복사 오류: "
+
+#: ui/image/temp_image_window_qt.py:137 ui_tk/image/temp_image_canvas.py:116
 msgid "Open a new related image with Shift+R on main window"
 msgstr "메인 창에서 Shift+R로 새로운 관련 이미지를 엽니다."
 
-#: lib/caps_lock_mixin.py:64
-msgid "⚠ Caps Lock is ON"
-msgstr "⚠ 대문자 잠금 상태입니다"
+#: ui/image/temp_image_window_qt.py:259 ui_tk/image/temp_image_canvas.py:191
+msgid "Open in Full Window"
+msgstr "전체 화면으로 보기"
+
+#: ui/image/temp_image_window_qt.py:270 ui_tk/image/temp_image_canvas.py:202
+msgid "Copy File Path"
+msgstr "파일 경로 복사"
+
+#: ui_tk/compare/classifier_management_window.py:201
+msgid "Select Categories..."
+msgstr "카테고리 선택..."
+
+#: ui_tk/compare/compare_settings_window.py:403
+msgid "Threshold:"
+msgstr "임계값:"
+
+#: ui_tk/compare/prevalidations_tab.py:51
+msgid "Select Lookaheads..."
+msgstr "선행 검색 선택..."
+
+#: ui_tk/files/directory_notes_window.py:339
+msgid "Text files"
+msgstr "텍스트 파일"
+
+#: ui_tk/files/directory_notes_window.py:339
+#: ui_tk/files/directory_notes_window.py:377 ui_tk/files/go_to_file.py:242
+msgid "All files"
+msgstr "모든 파일"
+
+#: ui_tk/files/directory_notes_window.py:377
+msgid "JSON files"
+msgstr "JSON 파일"
+
+#: ui_tk/files/favorites_window.py:174
+msgid "Opened favorite: "
+msgstr "즐겨찾기에 추가됨: "
+
+#: ui_tk/files/favorites_window.py:179
+msgid "Opened favorite in new window: "
+msgstr "새 창에서 즐겨찾기 열기: "
+
+#: ui_tk/files/go_to_file.py:224
+msgid "Supported files"
+msgstr "지원되는 파일"
+
+#: ui_tk/files/go_to_file.py:231
+msgid "Video files"
+msgstr "비디오 파일"
+
+#: ui_tk/files/go_to_file.py:233
+msgid "GIF files"
+msgstr "GIF 파일"
+
+#: ui_tk/files/go_to_file.py:235
+msgid "PDF files"
+msgstr "PDF 파일"
+
+#: ui_tk/files/go_to_file.py:237
+msgid "SVG files"
+msgstr "SVG 파일"
+
+#: ui_tk/files/go_to_file.py:239
+msgid "HTML files"
+msgstr "HTML 파일"
+
+#: ui_tk/files/marked_file_mover.py:153
+#: ui_tk/files/recent_directory_window.py:125
+msgid "Set a new target directory"
+msgstr "새 대상 디렉터리 설정"
+
+#: ui_tk/files/marked_file_mover.py:546
+msgid "Deleting %s marked files - Are you sure you want to proceed?"
+msgstr "삭제 {0} 표시된 파일 - 진행하시겠습니까?"
+
+#: ui_tk/files/marked_file_mover.py:574
+msgid "Failed to delete %s files - check log for details."
+msgstr "{0} 파일을 삭제 취소 - 세부 사항에 대한 로그 확인."
+
+#: ui_tk/files/marked_file_mover.py:577
+msgid "Deleted %s marked files."
+msgstr "표시된 파일 {0}개를 삭제했습니다."
+
+#: ui_tk/files/marked_file_mover.py:640
+msgid "Found %s downstream related images"
+msgstr "Found {0} downstream 관련 이미지"
+
+#: ui_tk/files/target_directory_window.py:83
+msgid "Select Target Directory for Related Files Search"
+msgstr "관련 파일 검색 대상 디렉터리 선택"
+
+#: ui_tk/files/target_directory_window.py:127
+msgid "Select"
+msgstr "선택"
+
+#: ui_tk/files/target_directory_window.py:142
+msgid "Browse for Directory..."
+msgstr "디렉터리 찾아보기..."
+
+#: ui_tk/files/target_directory_window.py:147
+msgid "Clear Recent"
+msgstr "최근 기록 지우기"
+
+#: ui_tk/image/image_details.py:757 ui_tk/image/image_details.py:764
+msgid "%s downstream image(s) found."
+msgstr "{0} 다운스트림 이미지(s)가 있습니다."
+
+#: ui_tk/image/image_details.py:760
+msgid "%s (cached) downstream image(s) found."
+msgstr "{0} (예정) 다운스트림 이미지(s) 발견."
+
+#: ui_tk/image/image_details.py:826
+msgid "Updated tags for %s"
+msgstr "{0}에 대한 업데이트 된 태그"
 
 #: utils/constants.py:13 utils/constants.py:22
 msgid "Browsing Mode"
@@ -2992,448 +4131,170 @@ msgstr "뚱 베어"
 msgid "random"
 msgstr "한국어"
 
-#: utils/constants.py:245
+#: utils/constants.py:271
 msgid "Image"
 msgstr "이름 *"
 
-#: utils/constants.py:247
+#: utils/constants.py:273
 msgid "GIF"
 msgstr "무료 배송"
 
-#: utils/constants.py:249
+#: utils/constants.py:275
 msgid "Video"
 msgstr "비디오"
 
-#: utils/constants.py:251
+#: utils/constants.py:277
 msgid "PDF"
 msgstr "PDF 파일"
 
-#: utils/constants.py:253
+#: utils/constants.py:279
 msgid "SVG"
 msgstr "SVG"
 
-#: utils/constants.py:255
+#: utils/constants.py:281
 msgid "HTML"
 msgstr "HTML"
 
-#: utils/constants.py:275
+#: utils/constants.py:301
 msgid "Moved files"
 msgstr "파일 이동"
 
-#: utils/constants.py:277
+#: utils/constants.py:303
 msgid "Copied files"
 msgstr "Copied 파일"
 
-#: utils/constants.py:279
+#: utils/constants.py:305
 msgid "Removed files"
 msgstr "제거된 파일"
 
-#: utils/constants.py:281
+#: utils/constants.py:307
 msgid "Marked files"
 msgstr "표시된 파일"
 
-#: utils/constants.py:283
+#: utils/constants.py:309
 msgid "Unmarked files"
 msgstr "미표시된 파일들"
 
-#: utils/constants.py:285
+#: utils/constants.py:311
 msgid "Searched files"
 msgstr "관련 파일"
 
-#: utils/constants.py:287
+#: utils/constants.py:313
 msgid "Compared files"
 msgstr "관련 파일"
 
-#: utils/constants.py:289
+#: utils/constants.py:315
 msgid "Generated images"
 msgstr "생성된 이미지"
 
-#: utils/constants.py:291
+#: utils/constants.py:317
 msgid "Changed directory"
 msgstr "관련 링크"
 
-#: utils/constants.py:293
+#: utils/constants.py:319
 msgid "System"
 msgstr "시스템"
 
-#: utils/constants.py:327
+#: utils/constants.py:331
+msgid "Classifier Action"
+msgstr "분류기 작업"
+
+#: utils/constants.py:333
+msgid "Prevalidation"
+msgstr "예초검증"
+
+#: utils/constants.py:377
+msgid "Hide"
+msgstr "숨기세요"
+
+#: utils/constants.py:379
+msgid "Notify"
+msgstr "알림"
+
+#: utils/constants.py:381
+msgid "Skip"
+msgstr "건너뛰기"
+
+#: utils/constants.py:389
+msgid "Add Mark"
+msgstr "마크 추가"
+
+#: utils/constants.py:430
 msgid "Start Application"
 msgstr "소프트웨어 시작"
 
-#: utils/constants.py:328
+#: utils/constants.py:431
 msgid "Run Compares"
 msgstr "비교 실행"
 
-#: utils/constants.py:329
+#: utils/constants.py:432
 msgid "Run Search"
 msgstr "검색 실행"
 
-#: utils/constants.py:330
+#: utils/constants.py:433
 msgid "Run Search Preset"
 msgstr "검색 사전 설정 실행"
 
-#: utils/constants.py:332
+#: utils/constants.py:435
 msgid "View Recent Directories"
 msgstr "최근 디렉터리 보기"
 
-#: utils/constants.py:333
+#: utils/constants.py:436
 msgid "View File Actions"
 msgstr "파일 작업 보기"
 
-#: utils/constants.py:334
+#: utils/constants.py:437
 msgid "Run File Actions"
 msgstr "파일 작업 실행"
 
-#: utils/constants.py:335
+#: utils/constants.py:438
 msgid "Edit Prevalidations"
 msgstr "유효성 검사 편집"
 
-#: utils/constants.py:336
+#: utils/constants.py:439
 msgid "Run Prevalidations"
 msgstr "사전 유효성 검사 실행"
 
-#: utils/constants.py:338
+#: utils/constants.py:441
 msgid "Run RefacDir"
 msgstr "RefacDir 실행"
 
-#: utils/constants.py:339
+#: utils/constants.py:442
 msgid "Delete Media"
 msgstr "미디어 삭제"
 
-#: utils/constants.py:341
+#: utils/constants.py:444
 msgid "Set Hotkey Actions"
 msgstr "핫키 동작 설정"
 
-#: utils/constants.py:342
+#: utils/constants.py:445
 msgid "Access Password Administration"
 msgstr "액세스 비밀번호 관리"
-
-#: utils/help_and_config.py:35
-msgid "Main Window Shortcuts"
-msgstr "메인 창 단축키"
-
-#: utils/help_and_config.py:42 utils/help_and_config.py:125
-#: utils/help_and_config.py:176
-msgid "Command"
-msgstr "이름 *"
-
-#: utils/help_and_config.py:42 utils/help_and_config.py:125
-#: utils/help_and_config.py:176
-msgid "Description"
-msgstr "이름 *"
-
-#: utils/help_and_config.py:43
-msgid "Search current image in new window"
-msgstr "새 창에서 현재 이미지를 검색"
-
-#: utils/help_and_config.py:44
-msgid "Return to Browsing mode"
-msgstr "검색 모드로 돌아가기"
-
-#: utils/help_and_config.py:45
-msgid "Copy marks list"
-msgstr "본문 바로가기"
-
-#: utils/help_and_config.py:46
-msgid "Set current marks from previous marks list"
-msgstr "이전 표시 목록에서 현재 표시 설정"
-
-#: utils/help_and_config.py:47
-msgid "Run penultimate marks action"
-msgstr "실행 penultimate 표 활동"
-
-#: utils/help_and_config.py:48
-msgid "Open Favorites window"
-msgstr "즐겨찾기 창 열기"
-
-#: utils/help_and_config.py:49
-msgid "Open Go to file window"
-msgstr "기타 파일 창으로 이동"
-
-#: utils/help_and_config.py:50
-msgid "Hide/show sidebar"
-msgstr "숨기기 / 쇼 sidebar"
-
-#: utils/help_and_config.py:51
-msgid "Open hotkeys window (*when marks window open)"
-msgstr "열기 단축키 창 (*when 마크 창이 열립니다)"
-
-#: utils/help_and_config.py:52
-msgid "Open content filters window"
-msgstr "콘텐츠 필터 창 열기"
-
-#: utils/help_and_config.py:53
-msgid "Open marks window (no GUI)"
-msgstr "마크 창 열기 ( GUI 없음)"
-
-#: utils/help_and_config.py:54
-msgid "Open marks window"
-msgstr "열린 표 창"
-
-#: utils/help_and_config.py:55
-msgid "Open marks action history window"
-msgstr "열린 표 활동 기록 창"
-
-#: utils/help_and_config.py:56
-msgid "Quit"
-msgstr "뚱 베어"
-
-#: utils/help_and_config.py:57
-msgid "Open security configuration window"
-msgstr "보안 구성 창 열기"
-
-#: utils/help_and_config.py:58
-msgid "Run previous marks action"
-msgstr "이전 표시 동작을 실행"
-
-#: utils/help_and_config.py:59
-msgid "Continue image generation"
-msgstr "이미지 생성 계속"
-
-#: utils/help_and_config.py:60
-msgid "Cancel image generation"
-msgstr "이미지 생성"
-
-#: utils/help_and_config.py:61
-msgid "Run next text embedding search preset"
-msgstr "다음 텍스트 embedding 검색 preset"
-
-#: utils/help_and_config.py:62
-msgid "Run permanent marks action"
-msgstr "영구 마크 동작"
-
-#: utils/help_and_config.py:63
-msgid "Open type configuration window"
-msgstr "열린 유형 설정 창"
-
-#: utils/help_and_config.py:64
-msgid "Open new compare window"
-msgstr "새 비교 창 열기"
-
-#: utils/help_and_config.py:65
-msgid "Move previous marks to a different directory"
-msgstr "다른 디렉토리에 이전 표시를 이동"
-
-#: utils/help_and_config.py:66 utils/help_and_config.py:96
-msgid "Undo previous marks changes"
-msgstr "이전 표 변경"
-
-#: utils/help_and_config.py:67
-msgid "Toggle fullscreen"
-msgstr "전체 화면"
-
-#: utils/help_and_config.py:68
-msgid "Go to first sorted image"
-msgstr "첫 번째 정렬 이미지"
-
-#: utils/help_and_config.py:69
-msgid "Go to last sorted image"
-msgstr "본문 바로가기"
-
-#: utils/help_and_config.py:70
-msgid "Show previous/next image"
-msgstr "이전/다음 이미지보기"
-
-#: utils/help_and_config.py:71
-msgid "Page through images"
-msgstr "본문 바로가기"
-
-#: utils/help_and_config.py:72
-msgid "Search current image in current window"
-msgstr "현재 창에서 현재 이미지 검색"
-
-#: utils/help_and_config.py:73
-msgid "Clear all hidden images"
-msgstr "모든 숨겨진 이미지"
-
-#: utils/help_and_config.py:74
-msgid "Clear marks list"
-msgstr "명확한 표 명부"
-
-#: utils/help_and_config.py:75
-msgid "Show image details"
-msgstr "본문 바로가기"
-
-#: utils/help_and_config.py:76
-msgid "Delete image (or marked file group if marks window selected)"
-msgstr "이미지 삭제 (또는 표시된 파일 그룹 표시 창 선택)"
-
-#: utils/help_and_config.py:77
-msgid "Delete current base directory and all contents"
-msgstr "현재 기본 디렉토리와 모든 내용을 삭제합니다"
-
-#: utils/help_and_config.py:78
-msgid "Go to next mark"
-msgstr "본문 바로가기"
-
-#: utils/help_and_config.py:79
-msgid "Show help window"
-msgstr "공지사항"
-
-#: utils/help_and_config.py:80
-msgid "Run image generation"
-msgstr "이미지 생성"
-
-#: utils/help_and_config.py:81
-msgid "Open context menu"
-msgstr "컨텍스트 메뉴 열기"
-
-#: utils/help_and_config.py:82
-msgid "Run content filters for all files in the current directory"
-msgstr "현재 디렉토리의 모든 파일에 대한 콘텐츠 필터 실행"
-
-#: utils/help_and_config.py:83
-msgid "View last moved image mark"
-msgstr "마지막 이동 이미지 표시"
-
-#: utils/help_and_config.py:84
-msgid "Toggle content filters"
-msgstr "콘텐츠 필터"
-
-#: utils/help_and_config.py:85
-msgid "Add or remove a mark for current image"
-msgstr "현재 이미지의 표시 또는 제거"
-
-#: utils/help_and_config.py:86
-msgid ""
-"Add all marks between most recently set and current selected inclusive, or "
-"all marks in current group"
-msgstr "가장 최근 설정 및 현재 선택된 포괄적 인 사이 모든 표시, 또는 현재 그룹의 모든 표시"
-
-#: utils/help_and_config.py:88
-msgid "Open image in GIMP"
-msgstr "GIMP에서 이미지 열기"
-
-#: utils/help_and_config.py:89
-msgid "Randomly modify image"
-msgstr "무작위 이미지 수정"
-
-#: utils/help_and_config.py:90
-msgid "View related image (controlnet, etc.)"
-msgstr "관련 이미지 보기 (controlnet, 등)"
-
-#: utils/help_and_config.py:91
-msgid "Toggle slideshow"
-msgstr "슬라이드 쇼"
-
-#: utils/help_and_config.py:92
-msgid "Find related images in open window"
-msgstr "열린 창에서 관련 이미지 찾기"
-
-#: utils/help_and_config.py:93
-msgid "Run refacdir"
-msgstr "파일 형식"
-
-#: utils/help_and_config.py:94
-msgid "Hide current image"
-msgstr "현재 이미지 숨기기"
-
-#: utils/help_and_config.py:95
-msgid "Set marks from downstream related images"
-msgstr "downstream 관련 이미지 설정"
-
-#: utils/help_and_config.py:97
-msgid "Show previous/next group"
-msgstr "이전/다음 그룹보기"
-
-#: utils/help_and_config.py:118
-msgid "Image Details Shortcuts"
-msgstr "이미지 세부 정보 바로가기"
-
-#: utils/help_and_config.py:131
-msgid "Randomly Modify Image"
-msgstr "이미지를 무작위로 수정하기"
-
-#: utils/help_and_config.py:152
-msgid ""
-"Note: Using Ctrl instead of Shift marks the created file and opens the marks"
-" window without GUI."
-msgstr "참고: Shift 대신 Ctrl 키를 사용하면 생성된 파일에 표시를 하고 GUI 없이 표시 창을 엽니다."
-
-#: utils/help_and_config.py:169
-msgid "Go To File Shortcuts"
-msgstr "파일 바로 가기로 이동"
-
-#: utils/help_and_config.py:178
-msgid "Browse File"
-msgstr "파일 찾아보기"
-
-#: utils/help_and_config.py:180
-msgid "Find Related Files"
-msgstr "관련 파일 찾기"
-
-#: utils/help_and_config.py:181
-msgid "Extract Base ID"
-msgstr "추출 기반 ID"
-
-#: utils/help_and_config.py:182
-msgid "Browse Directory"
-msgstr "디렉터리 탐색"
-
-#: utils/help_and_config.py:244
-msgid "Show Toasts"
-msgstr "Toasts 소개"
-
-#: utils/help_and_config.py:246
-msgid "Slideshow Interval (sec)"
-msgstr "슬라이드쇼 간격(초)"
-
-#: utils/help_and_config.py:248
-msgid "File Check Interval (sec)"
-msgstr "파일 새로 고침 간격(초)"
-
-#: utils/help_and_config.py:250
-msgid "Max Search Results"
-msgstr "Max 검색 결과"
-
-#: utils/help_and_config.py:252
-msgid "Sort By"
-msgstr "정렬 기준"
-
-#: utils/help_and_config.py:256
-msgid "Toasts Persist (sec)"
-msgstr "토스트 지속 시간(초)"
-
-#: utils/help_and_config.py:258
-msgid "Title Notify Persist (sec)"
-msgstr "제목 알림 지속 (초)"
-
-#: utils/help_and_config.py:260
-msgid "Delete Instantly"
-msgstr "즉시 삭제"
-
-#: utils/help_and_config.py:262
-msgid "Trash Folder"
-msgstr "쓰레기 폴더"
-
-#: utils/help_and_config.py:264
-msgid "Image Tagging Enabled"
-msgstr "이미지 태그 사용"
-
-#: utils/help_and_config.py:266
-msgid "Escape Backslash Filepaths"
-msgstr "파일 경로의 백슬래시 이스케이프"
 
 #: utils/notification_manager.py:26
 msgid " etc."
 msgstr " 등"
 
-#: app.py:1674
-msgid "Extra debug logging enabled"
-msgstr "추가 디버그 로깅 활성화됨"
+#: utils/constants.py:217
+msgid "Control Net"
+msgstr "컨트롤 네트"
 
-#: app.py:1674
-msgid "Extra debug logging disabled"
-msgstr "추가 디버그 로깅 비활성화됨"
+#: utils/constants.py:219
+msgid "IP Adapter"
+msgstr "아이피 어댑터"
 
-#: compare/classifier_management_window.py:116
-msgid "Use Text Embeddings"
-msgstr "텍스트 임베딩 사용"
+#: utils/constants.py:221
+msgid "Renoiser"
+msgstr "Renoiser"
 
-#: compare/classifier_management_window.py:148
-msgid "Text Embedding Threshold"
-msgstr "텍스트 임베딩의 임계값"
+#: utils/constants.py:223
+msgid "Image to Image"
+msgstr "이미지에서 이미지로"
 
-#: compare/classifier_management_window.py:156
-msgid "Embedding Prototype Threshold"
-msgstr "임베딩 프로토타입의 임계값"
+#: utils/constants.py:225
+msgid "Last Settings"
+msgstr "최근 설정"
+
+#: utils/constants.py:229
+msgid "Revert to Simple Generation"
+msgstr "간단한 생성으로 돌아가기"

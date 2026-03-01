@@ -210,16 +210,42 @@ class ImageGenerationType(Enum):
     def __str__(self):
         return self.value
 
+    def get_text(self):
+        if self == ImageGenerationType.REDO_PROMPT:
+            return _("Redo Prompt")
+        elif self == ImageGenerationType.CONTROL_NET:
+            return _("Control Net")
+        elif self == ImageGenerationType.IP_ADAPTER:
+            return _("IP Adapter")
+        elif self == ImageGenerationType.RENOISER:
+            return _("Renoiser")
+        elif self == ImageGenerationType.IMG2IMG:
+            return _("Image to Image")
+        elif self == ImageGenerationType.LAST_SETTINGS:
+            return _("Last Settings")
+        elif self == ImageGenerationType.CANCEL:
+            return _("Cancel")
+        elif self == ImageGenerationType.REVERT_TO_SIMPLE_GEN:
+            return _("Revert to Simple Generation")
+        raise Exception("Unhandled image generation type text: " + str(self))
+
     @staticmethod
     def get(name):
+        if isinstance(name, ImageGenerationType):
+            return name
+
         for key, value in ImageGenerationType.__members__.items():
-            if value.name == name or value.value == name:
+            if value.name == name or value.value == name or value.get_text() == name:
                 return value
         raise Exception(f"Not a valid prompt mode: {name}")
 
     @staticmethod
     def members():
         return [value.name for key, value in ImageGenerationType.__members__.items()]
+
+    @staticmethod
+    def translated_members():
+        return [value.get_text() for key, value in ImageGenerationType.__members__.items()]
 
 
 class Direction(Enum):

@@ -97,7 +97,8 @@ class ImageDetails(SmartDialog):
         try:
             ImageDetails.image_generation_mode = ImageGenerationType.get(
                 app_info_cache.get_meta(
-                    "image_generation_mode", default_val="CONTROL_NET"
+                    "image_generation_mode",
+                    default_val=ImageGenerationType.CONTROL_NET.value,
                 )
             )
         except Exception as e:
@@ -107,7 +108,7 @@ class ImageDetails(SmartDialog):
     def store_image_generation_mode() -> None:
         app_info_cache.set_meta(
             "image_generation_mode",
-            ImageDetails.image_generation_mode.name,
+            ImageDetails.image_generation_mode.value,
         )
 
     # -- Construction ----------------------------------------------
@@ -124,7 +125,7 @@ class ImageDetails(SmartDialog):
             parent=parent,
             position_parent=parent,
             title=_("Image details"),
-            geometry="700x600",
+            geometry="700x900",
         )
         self._parent_ref = parent
         self._image_path = FrameCache.get_image_path(media_path)
@@ -337,10 +338,14 @@ class ImageDetails(SmartDialog):
         # -- Image generation section ------------------------------
         _header(_("Image Generation"), row)
         self._gen_mode_combo = QComboBox()
-        for member in ImageGenerationType.members():
-            self._gen_mode_combo.addItem(member)
-        self._gen_mode_combo.setCurrentText(ImageDetails.image_generation_mode.name)
-        self._gen_mode_combo.currentTextChanged.connect(self._on_gen_mode_changed)
+        for member in ImageGenerationType:
+            self._gen_mode_combo.addItem(member.get_text(), member.value)
+        selected_index = self._gen_mode_combo.findData(
+            ImageDetails.image_generation_mode.value
+        )
+        if selected_index >= 0:
+            self._gen_mode_combo.setCurrentIndex(selected_index)
+        self._gen_mode_combo.currentIndexChanged.connect(self._on_gen_mode_changed)
         grid.addWidget(self._gen_mode_combo, row, 1)
         row += 1
 
@@ -1192,13 +1197,15 @@ class ImageDetails(SmartDialog):
 
     # ── Image generation ─────────────────────────────────────────
 
-    def _on_gen_mode_changed(self, text: str) -> None:
-        ImageDetails.image_generation_mode = ImageGenerationType.get(text)
+    def _on_gen_mode_changed(self, _index: int) -> None:
+        mode_value = self._gen_mode_combo.currentData()
+        if mode_value is not None:
+            ImageDetails.image_generation_mode = ImageGenerationType.get(mode_value)
 
     def set_image_generation_mode(self, event=None) -> None:
-        ImageDetails.image_generation_mode = ImageGenerationType.get(
-            self._gen_mode_combo.currentText()
-        )
+        mode_value = self._gen_mode_combo.currentData()
+        if mode_value is not None:
+            ImageDetails.image_generation_mode = ImageGenerationType.get(mode_value)
 
     def run_image_generation(self, event=None) -> None:
         ImageDetails.run_image_generation_static(self._app_actions)
