@@ -150,7 +150,15 @@ class KeyBindingManager:
         # ==============================================================
         # Search / compare
         # ==============================================================
-        self._bind("Shift+A", app.search_ctrl.set_current_image_run_search)
+        self._bind(
+            "Shift+A",
+            lambda: app.search_ctrl.set_current_image_run_search(base_dir=app.base_dir),
+        )
+        # Keep Shift+Z on the generic resolver flow. Unlike Shift+A, there is no
+        # complementary Ctrl+<key> path available for explicit cross-window targeting
+        # because Ctrl+Z is reserved for undo.
+        # TODO: Consider adding Ctrl+Shift+Z for explicit current-window negative
+        # search binding if shortcut conflicts remain acceptable.
         self._bind("Shift+Z", app.search_ctrl.add_current_image_to_negative_search)
         self._bind(
             "Shift+I",
