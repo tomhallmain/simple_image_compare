@@ -2,8 +2,6 @@ import time
 from threading import Lock, Timer
 from typing import List, Optional
 
-from tkinter import TclError
-
 from utils.config import config
 from utils.constants import ActionType
 from utils.logging_setup import get_logger
@@ -172,8 +170,18 @@ class NotificationManager:
                         app_actions.title(current_titles[window_id])
                     except Exception as e:
                         debug_log(f"Failed to update title for window {window_id}: {e}")
-                        # Only remove callbacks for Tkinter-specific errors as window may have been closed
-                        if isinstance(e, TclError) and "bad window path name" in str(e):
+                        # Qt window/widget callbacks can fail after disposal with
+                        # runtime/reference errors (e.g. wrapped C/C++ object deleted).
+                        error_text = str(e).lower()
+                        is_disposed_window_error = (
+                            isinstance(e, (RuntimeError, ReferenceError))
+                            and (
+                                "deleted" in error_text
+                                or "invalid" in error_text
+                                or "c/c++ object" in error_text
+                            )
+                        )
+                        if is_disposed_window_error:
                             self._app_actions.pop(window_id, None)
                             self._current_titles.pop(window_id, None)
                         else:
