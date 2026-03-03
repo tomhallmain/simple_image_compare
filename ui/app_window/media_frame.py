@@ -572,7 +572,15 @@ class MediaFrame(QFrame):
         frame_size = self._gif_movie.frameRect().size()
         if frame_size.width() <= 0 or frame_size.height() <= 0:
             return
-        max_dims = (max(1, self._gif_label.width()), max(1, self._gif_label.height()))
+        # On the first-ever GIF load the label can still report a tiny default
+        # size before layout settles, which would lock QMovie scaling too small.
+        label_w = self._gif_label.width()
+        label_h = self._gif_label.height()
+        if label_w <= 1 or label_h <= 1:
+            content_rect = self.contentsRect()
+            label_w = max(label_w, content_rect.width(), self.width())
+            label_h = max(label_h, content_rect.height(), self.height())
+        max_dims = (max(1, label_w), max(1, label_h))
         target_w, target_h = scale_dims(
             (frame_size.width(), frame_size.height()),
             max_dims,
@@ -713,11 +721,13 @@ class MediaFrame(QFrame):
         self._gif_label.setMovie(self._gif_movie)
         self._gif_movie.jumpToFrame(0)
         self._gif_movie.frameChanged.connect(lambda _idx: self._update_gif_overlay_progress())
-        self._update_gif_scale_mode()
-        self._gif_movie.start()
         self._graphics_view.hide()
         self._placeholder_label.hide()
         self._gif_label.show()
+        self._update_gif_scale_mode()
+        self._gif_movie.start()
+        # Re-apply scaling once the event loop processes layout updates.
+        QTimer.singleShot(0, self._update_gif_scale_mode)
         self._controls_overlay.set_audio_controls_visible(False)
         self._image = None
         self._video_ui = None
