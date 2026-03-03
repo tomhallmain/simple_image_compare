@@ -257,7 +257,9 @@ class MarkedFileMover(SmartDialog):
 
         pdf_btn = QPushButton(_("Create PDF"))
         pdf_btn.setFocusPolicy(Qt.NoFocus)
-        pdf_btn.clicked.connect(self._create_pdf_from_marks)
+        # QPushButton.clicked emits a bool(checked) argument; ignore it so the
+        # PDF API never mistakes it for an output path.
+        pdf_btn.clicked.connect(lambda _checked=False: self._create_pdf_from_marks())
         bar.addWidget(pdf_btn)
 
         root.addLayout(bar)
@@ -556,20 +558,37 @@ class MarkedFileMover(SmartDialog):
         from ui.files.pdf_options_window_qt import PDFOptionsWindow
         from PySide6.QtWidgets import QFileDialog
 
+        # Defensive guard for any direct signal wiring that might pass a bool.
+        if isinstance(output_path, bool):
+            output_path = None
+        save_cancelled = False
+
         def _save_file_dialog(default_dir, default_name):
+            nonlocal save_cancelled
             path, _filter = QFileDialog.getSaveFileName(
                 self,
                 _("Save PDF as"),
                 os.path.join(default_dir, default_name + ".pdf"),
                 "PDF files (*.pdf)",
             )
-            return path or None
+            if not path:
+                save_cancelled = True
+                return None
+            return path
 
         def pdf_callback(options):
-            PDFCreator.create_pdf_from_files(
+            ok = PDFCreator.create_pdf_from_files(
                 MarkedFiles.file_marks, self._app_actions, output_path, options,
                 save_file_callback=_save_file_dialog,
             )
+            if not ok and not save_cancelled:
+                # Ensure failures are visible even if lower-level code only logs.
+                self._app_actions.alert(
+                    _("Error"),
+                    _("Failed to create PDF from marked files."),
+                    kind="error",
+                    master=self,
+                )
 
         PDFOptionsWindow.show(self, self._app_actions, pdf_callback)
 
