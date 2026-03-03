@@ -19,7 +19,7 @@ from PySide6.QtGui import QGuiApplication, QKeySequence, QPixmap, QShortcut
 from PySide6.QtWidgets import QLabel, QMenu, QSizePolicy, QVBoxLayout, QWidget
 
 from image.frame_cache import FrameCache
-from lib.multi_display_qt import SmartDialog
+from lib.multi_display_qt import SmartWindow
 from ui.app_style import AppStyle
 from ui.files.marked_file_mover_qt import MarkedFiles
 from utils.config import config
@@ -29,7 +29,7 @@ from utils.utils import Utils
 _ = I18N._
 
 
-class TempImageWindow(SmartDialog):
+class TempImageWindow(SmartWindow):
     """Lightweight image viewer window.  Qt replacement for TempImageCanvas."""
 
     _instance: Optional[TempImageWindow] = None
@@ -46,12 +46,12 @@ class TempImageWindow(SmartDialog):
         parent_x = parent.pos().x() if parent is not None else 0
         geo = f"{dimensions}+{parent_x + 50}+0"
         super().__init__(
-            parent=parent,
+            persistent_parent=parent,
             position_parent=parent,
             title=title,
             geometry=geo,
             auto_position=False,
-            respect_title_bar=True,
+            window_flags=Qt.WindowType.Window,
         )
         TempImageWindow._instance = self
         self._app_actions = app_actions
