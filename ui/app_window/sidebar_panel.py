@@ -381,6 +381,8 @@ class SidebarPanel(QWidget):
         self._app.file_browser.set_recursive(is_recursive)
         if self._app.mode == Mode.BROWSE and self._app.img_path:
             self._app.media_navigator.show_next_media()
+        if self._app.mode == Mode.BROWSE:
+            self._app.notification_ctrl.set_label_state()
 
     def _on_toggle_fill_canvas(self, state: int) -> None:
         """Handle fill-canvas checkbox toggle."""
