@@ -144,6 +144,18 @@ class SidebarPanel(QWidget):
         )
         self._scroll.add_widget(self.search_img_path_box)
 
+        # Negative search image
+        self.set_negative_search_btn = self._make_button(
+            _("Set negative search file"),
+            lambda: self._app.search_ctrl.set_negative_search_for_image(),
+        )
+        self.search_img_negative_path_box = AwareEntry(self)
+        self.search_img_negative_path_box.setPlaceholderText(_("Negative search image path..."))
+        self.search_img_negative_path_box.returnPressed.connect(
+            lambda: self._app.search_ctrl.set_negative_search_for_image()
+        )
+        self._scroll.add_widget(self.search_img_negative_path_box)
+
         # Search text (embedding)
         self.search_text_btn = self._make_button(
             _("Search text (embedding mode)"),

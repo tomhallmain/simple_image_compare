@@ -463,6 +463,10 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         Calls processEvents() so that the title-bar repaint happens
         immediately, even when the main thread is about to block on a
         long-running operation (e.g. TensorFlow model loading).
+
+        WARNING: this method must never be called directly from a worker thread.
+        Always route title updates via ``_sig_set_title.emit(...)`` so Qt can
+        marshal execution to the main thread safely.
         """
         self.setWindowTitle(title)
         from PySide6.QtWidgets import QApplication

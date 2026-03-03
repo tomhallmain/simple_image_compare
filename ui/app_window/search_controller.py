@@ -155,6 +155,23 @@ class SearchController:
             self._sidebar.search_text_box.setText("cat")
         self.set_search()
 
+    @require_password(ProtectedActions.RUN_SEARCH)
+    def set_negative_search_for_image(self, event=None) -> None:
+        """
+        Set search mode to include a negative search image.
+
+        Mirrors ``set_search_for_image`` behavior for the negative image input.
+        """
+        image_path = self.get_negative_search_file_path()
+        if image_path is None or image_path == "":
+            if self._app.img_path is None:
+                self._app.notification_ctrl.handle_error(
+                    _("No image selected."), title=_("Invalid Setting")
+                )
+            self._sidebar.search_img_negative_path_box.clear()
+            self._sidebar.search_img_negative_path_box.setText(str(self._app.img_path))
+        self.set_search()
+
     def set_search(self, event=None) -> None:
         """
         Set the search image or text using the provided UI values.
@@ -164,6 +181,7 @@ class SearchController:
         """
         args = CompareArgs()
         image_path = self.get_search_file_path()
+        negative_image_path = self.get_negative_search_file_path()
         search_text = self._sidebar.search_text_box.text()
         search_text_negative = self._sidebar.search_text_negative_box.text()
 
@@ -172,16 +190,14 @@ class SearchController:
         if search_text_negative.strip() == "":
             search_text_negative = None
         args.search_text = search_text
+        args.search_text_negative = search_text_negative
+        args.negative_search_file_path = negative_image_path
 
-        # Negative search: file path vs text
-        if search_text_negative and os.path.isfile(search_text_negative.strip()):
-            args.negative_search_file_path = search_text_negative.strip()
-            args.search_text_negative = None
-        else:
-            args.search_text_negative = search_text_negative
-            args.negative_search_file_path = None
-
-        if args.search_text is not None or args.search_text_negative is not None:
+        if (
+            args.search_text is not None
+            or args.search_text_negative is not None
+            or args.negative_search_file_path is not None
+        ):
             self._cm.validate_compare_mode(
                 CompareMode.text_search_modes(),
                 _("Compare mode must be set to an embedding mode to search text embeddings"),
@@ -358,6 +374,24 @@ class SearchController:
                 raise AssertionError("Search file is not a valid file.")
         return search_file
 
+    def get_negative_search_file_path(self) -> Optional[str]:
+        """
+        Read the negative-search image path from the dedicated sidebar entry.
+        """
+        image_path = self._sidebar.search_img_negative_path_box.text().strip()
+        if not image_path:
+            return None
+        search_file = Utils.get_valid_file(self._app.get_base_dir(), image_path)
+        if search_file is None:
+            search_file = Utils.get_valid_file(self._app.get_search_dir(), image_path)
+            if search_file is None:
+                self._app.notification_ctrl.handle_error(
+                    "Negative search file is not a valid file for base dir.",
+                    title="Invalid negative search file",
+                )
+                raise AssertionError("Negative search file is not a valid file.")
+        return search_file
+
     def get_compare_threshold(self) -> float:
         """Get compare threshold from CompareManager, with fallback to config."""
         threshold = self._cm.get_threshold()
@@ -453,10 +487,12 @@ class SearchController:
 
         Ported from App.negative_image_search.
         """
-        args = self._cm.get_args()
-        args.negative_search_file_path = filepath
-        self._sidebar.search_text_negative_box.clear()
-        self._sidebar.search_text_negative_box.setText(filepath)
+        base_dir = self._app.get_base_dir()
+        display_path = filepath
+        if filepath.startswith(base_dir):
+            display_path = filepath[len(base_dir) + 1 :]
+        self._sidebar.search_img_negative_path_box.clear()
+        self._sidebar.search_img_negative_path_box.setText(display_path)
         self.set_search()
 
     def next_text_embedding_preset(self, event=None) -> None:
@@ -474,6 +510,7 @@ class SearchController:
             return
 
         self._sidebar.search_img_path_box.clear()
+        self._sidebar.search_img_negative_path_box.clear()
         self._sidebar.search_text_box.clear()
         self._sidebar.search_text_negative_box.clear()
 
