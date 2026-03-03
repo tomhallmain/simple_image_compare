@@ -558,6 +558,13 @@ class WindowResizeHandler(QObject):
         """Handle mouse move for resize cursor and resizing."""
         global_pos = event.globalPos()
 
+        # Once a resize drag starts, keep resizing regardless of which widget is
+        # currently under the cursor. This avoids edge-resize being interrupted
+        # by transient tool windows (e.g. media overlay controls).
+        if self._is_resizing:
+            self._perform_resize(global_pos)
+            return True  # Consume the event during resize
+
         # Don't show resize cursors while hovering independent tool windows
         # (e.g. media overlay controls) that are not this main window.
         widget_at_pos = QApplication.widgetAt(global_pos)
@@ -566,10 +573,6 @@ class WindowResizeHandler(QObject):
                 QApplication.restoreOverrideCursor()
                 self._current_cursor_edge = ResizeGrip.EDGE_NONE
             return False
-        
-        if self._is_resizing:
-            self._perform_resize(global_pos)
-            return True  # Consume the event during resize
         
         # Check if cursor is on window edge
         edge = self._get_edge_from_global_pos(global_pos)
@@ -623,7 +626,7 @@ class WindowResizeHandler(QObject):
     
     def _handle_mouse_release(self, event: QMouseEvent) -> bool:
         """Handle mouse release."""
-        if self._is_resizing:
+        if self._is_resizing and event.button() == Qt.LeftButton:
             self._is_resizing = False
             self._resize_edge = ResizeGrip.EDGE_NONE
             # Restore cursor if one was set
