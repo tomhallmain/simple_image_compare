@@ -978,7 +978,12 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         return True
 
     def toggle_sidebar(self, event=None) -> None:
-        self.sidebar_panel.setVisible(not self.sidebar_panel.isVisible())
+        showing_sidebar = not self.sidebar_panel.isVisible()
+        self.sidebar_panel.setVisible(showing_sidebar)
+        if showing_sidebar:
+            # Re-apply startup sizing when restoring sidebar visibility so
+            # Ctrl+H does not reopen it at an oversized width.
+            QTimer.singleShot(0, self._apply_default_sidebar_width)
 
     def toggle_theme(self, to_theme: Optional[str] = None, do_toast: bool = True) -> None:
         """Switch between dark and light themes."""
