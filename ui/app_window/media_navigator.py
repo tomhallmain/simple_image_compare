@@ -14,6 +14,8 @@ import os
 import traceback
 from typing import TYPE_CHECKING, Optional
 
+from PySide6.QtCore import QTimer
+
 from utils.config import config
 from utils.constants import Direction, Mode
 from utils.logging_setup import get_logger
@@ -47,6 +49,8 @@ class MediaNavigator:
         self._fb = file_browser
         self._cm = compare_manager
         self._mf = media_frame
+        self._slideshow_timer = QTimer(self._app)
+        self._slideshow_timer.timeout.connect(self._on_slideshow_tick)
 
     # ==================================================================
     # Navigation
@@ -422,24 +426,30 @@ class MediaNavigator:
         """
         Toggle the slideshow on or off.
 
-        Ported from App.toggle_slideshow. Uses QTimer via the cache
-        controller's file-check timer rather than a dedicated async thread.
+        Ported from App.toggle_slideshow. Uses an internal QTimer for the
+        classic slideshow mode and the file-check timer for "new images" mode.
         """
-        from utils.running_tasks_registry import start_thread
-
         self._app.slideshow_config.toggle_slideshow()
         if self._app.slideshow_config.show_new_images:
             message = _("Slideshow for new images started")
+            self._slideshow_timer.stop()
         elif self._app.slideshow_config.slideshow_running:
             message = _("Slideshow started")
-            # The do_slideshow periodic is driven by the slideshow_config
-            # which is already checked inside the file-check timer.
-            # For a dedicated slideshow timer we would need a separate QTimer,
-            # but the original code just starts a thread. For now, keep the
-            # same pattern by delegating to the existing periodic mechanism.
+            interval_ms = max(1, int(self._app.slideshow_config.interval_seconds * 1000))
+            self._slideshow_timer.start(interval_ms)
         else:
             message = _("Slideshows ended")
+            self._slideshow_timer.stop()
         self._app.notification_ctrl.toast(message)
+
+    def _on_slideshow_tick(self) -> None:
+        """Advance slideshow when classic slideshow mode is active."""
+        if not self._app.slideshow_config.slideshow_running:
+            self._slideshow_timer.stop()
+            return
+        base_dir = self._app.get_base_dir()
+        if base_dir and base_dir != "":
+            self.show_next_media()
 
     # ==================================================================
     # Queries
