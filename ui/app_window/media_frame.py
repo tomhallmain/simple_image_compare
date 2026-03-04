@@ -1,5 +1,5 @@
 """
-Media frame (PySide6): album art and optional in-window video.
+Media frame (PySide6): images and videos.
 Port of ui/media_frame.py. Uses QGraphicsView for images (pan/zoom), VLC for video.
 """
 
@@ -243,7 +243,7 @@ class MediaFrame(QFrame):
         self._scene.addItem(self._pixmap_item)
         layout.addWidget(self._graphics_view)
 
-        self._placeholder_label = QLabel(_("Album art"), self)
+        self._placeholder_label = QLabel("", self)
         self._placeholder_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._placeholder_label.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
         layout.addWidget(self._placeholder_label)
@@ -1053,7 +1053,7 @@ class MediaFrame(QFrame):
         self._image = None
         self.image_displayed = False
         self._graphics_view.show()
-        self._placeholder_label.setText(_("Album art"))
+        self._placeholder_label.setText("")
         self._placeholder_label.show()
         self._controls_overlay.set_audio_controls_visible(True)
         self._controls_overlay.dismiss()
