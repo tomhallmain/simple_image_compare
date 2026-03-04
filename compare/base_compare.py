@@ -62,6 +62,9 @@ class BaseCompare:
         self.files = []
         self.set_base_dir(self.args.base_dir)
         self.set_search_file_path(self.args.search_file_path)
+        # Keep search-mode state centralized from full args (positive/negative
+        # image and text inputs), not just positive search image path.
+        self.sync_search_state()
         self.compare_faces = self.args.compare_faces
         # self.args.match_dims = match_dims
         self.verbose = self.args.verbose
@@ -188,8 +191,38 @@ class BaseCompare:
         reference to it to the first index in the list.
         '''
         self.search_file_path = search_file_path
-        self.is_run_search = search_file_path is not None
-        if self.is_run_search and self.files is not None:
+        self.args.search_file_path = search_file_path
+        self.sync_search_state()
+
+    def _has_search_inputs(self) -> bool:
+        def _non_empty(value):
+            if value is None:
+                return False
+            if isinstance(value, str):
+                return value.strip() != ""
+            return True
+
+        return any(
+            _non_empty(v)
+            for v in (
+                self.args.search_file_path,
+                self.args.search_text,
+                self.args.search_text_negative,
+                self.args.negative_search_file_path,
+            )
+        )
+
+    def sync_search_state(self) -> None:
+        """
+        Recompute and apply search-mode state from current ``self.args``.
+        """
+        self.search_file_path = self.args.search_file_path
+        self.is_run_search = self._has_search_inputs()
+        if (
+            self.search_file_path is not None
+            and self.files is not None
+            and self.is_run_search
+        ):
             if self.search_file_path in self.files:
                 self.files.remove(self.search_file_path)
             self.search_file_index = 0

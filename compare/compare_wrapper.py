@@ -305,7 +305,7 @@ class CompareWrapper:
             assert self._compare is not None
             get_new_data = self._compare.args._is_new_data_request_required(args)
             self._compare.args = args
-            self._compare.set_search_file_path(args.search_file_path)
+            self._compare.sync_search_state()
             self._compare.compare_faces = args.compare_faces
             self._compare.set_similarity_threshold(args.threshold)
             self._compare.print_settings()
@@ -316,7 +316,7 @@ class CompareWrapper:
         if not self._compare.is_runnable():
             raise Exception(f"Compare object of type {type(self._compare)} is not runnable, please see log and validate configuration.")
 
-        if self._compare.is_run_search or args.search_text is not None:
+        if self._compare.is_run_search:
             self._app_actions.set_mode(Mode.SEARCH, do_update=False)
             self._app_actions._set_toggled_view_matches()
         else:
