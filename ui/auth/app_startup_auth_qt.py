@@ -1,8 +1,8 @@
 """
 Application startup authentication (PySide6).
 
-Port of auth/app_startup_auth.py.  Uses the existing Qt PasswordDialog
-infrastructure rather than a custom Tkinter dialog.  The public entry
+Port of auth/app_startup_auth.py. Uses the existing Qt PasswordDialog
+infrastructure. The public entry
 point is ``check_startup_password_required(callback)``.
 """
 

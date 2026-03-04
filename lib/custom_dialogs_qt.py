@@ -1,9 +1,9 @@
 """
 Custom dialog implementations for PySide6.
 
-Port of lib/custom_dialogs.py. Provides a high-severity confirmation dialog
-with red warning styling. Standard dialogs (info, error, askokcancel, etc.)
-are already covered by lib/qt_alert.py.
+Provides a high-severity confirmation dialog with red warning styling.
+Standard dialogs (info, error, askokcancel, etc.) are already covered
+by lib/qt_alert.py.
 """
 
 from typing import Optional

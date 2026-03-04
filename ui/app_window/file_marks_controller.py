@@ -284,7 +284,7 @@ class FileMarksController:
         Run the hotkey-bound marks action for the given digit.
 
         In the Qt port the digit and shift state are captured by the
-        ``KeyBindingManager`` closure rather than extracted from a Tkinter event.
+        ``KeyBindingManager`` closure rather than extracted from a legacy UI event.
 
         Ported from App.run_hotkey_marks_action.
         """

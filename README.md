@@ -20,7 +20,7 @@ Each model offers different tradeoffs between accuracy, speed, and resource usag
 
 Clone this repository and ensure Python 3 and the required packages are installed from requirements.txt. Optionally, run `pip install -r requirements-optional.txt` for platform-specific extras (e.g. keychain integration, EXIF tools). Note: some dependencies in requirements.txt (e.g. **torch**) may need to be installed from the provider’s site (e.g. [pytorch.org](https://pytorch.org)) for GPU support specific to your system.
 
-Run `app.py` to start the Tkinter UI, or `app_qt.py` for the PySide6 (Qt) UI. Both share the same backend and configuration. For more details, see [USAGE.md](https://www.github.com/tomhallmain/simple_image_compare/blob/master/USAGE.md).
+Run `app_qt.py` to start the PySide6 (Qt) UI. For more details, see [USAGE.md](https://www.github.com/tomhallmain/simple_image_compare/blob/master/USAGE.md).
 
 ---
 
@@ -125,3 +125,9 @@ You can find example classifier models that are known to work here:
 This is a simple app primarily meant for personal use but could be adapted for more intensive use cases.
 
 The face similarity measure in particular is very crude and only compares the number of faces in each image, so it is off by default. At a future time more complex face comparison logic may be added, but for now the embedding comparison is helpful in matching faces.
+
+---
+
+## Tkinter Support
+
+Tkinter is no longer supported in the latest version. The maintained UI is now PySide6/Qt only.

@@ -1,7 +1,7 @@
 """
 PySide6 port of files/go_to_file.py -- GoToFile window.
 
-All functionality ported directly (no delegation to the Tkinter original):
+All functionality ported directly (no delegation to legacy UI code):
   - Go-to-file by name, closest match, or index
   - File picker via QFileDialog
   - Go-to-last-moved shortcut

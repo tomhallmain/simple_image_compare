@@ -1020,7 +1020,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
     # Mouse scroll → navigate media
     # ------------------------------------------------------------------
     def wheelEvent(self, event):  # noqa: N802
-        """Scroll up/down navigates between images (matches Tkinter behaviour).
+        """Scroll up/down navigates between images.
 
         Ignored when Shift is held (reserved for future pan/zoom).
         """
@@ -1045,7 +1045,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
 
         Mirrors App.on_closing: secondary windows clean up their own
         resources; the primary window stores all caches, then destroys
-        the application (Qt equivalent of ``self.master.destroy()``).
+        the application.
         """
         # Stop periodic timers
         self.file_ops_ctrl.stop_file_check_timer()
@@ -1095,8 +1095,6 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
 
         Mirrors App.quit: finds the primary window, calls on_closing
         on it (which stores all caches), then terminates the app.
-        In Tkinter this was ``self.master.destroy()``; in Qt the
-        equivalent is ``QApplication.quit()``.
         """
         from PySide6.QtWidgets import QApplication
         from lib.qt_alert import qt_alert
@@ -1106,7 +1104,6 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             primary = WindowManager.get_primary()
             if primary:
                 primary.on_closing()
-            # Equivalent of self.master.destroy() — kills all windows and
-            # exits the event loop, matching the original Tkinter behaviour.
+            # Kills all windows and exits the event loop.
             QApplication.instance().quit()
 

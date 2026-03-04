@@ -1,9 +1,7 @@
 """
 ContextMenuBuilder -- builds the right-click QMenu.
 
-Extracted from: show_context_menu.
-Constructs a context menu from the current application state and
-controller methods, matching the full Tkinter context menu.
+Constructs a context menu from the current application state and controller methods.
 """
 
 from __future__ import annotations

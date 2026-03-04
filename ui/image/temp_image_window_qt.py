@@ -2,8 +2,8 @@
 PySide6 port of image/temp_image_canvas.py -- TempImageWindow.
 
 Lightweight image viewer window used to display temporary/generated images
-(rotated, cropped, enhanced, related, etc.).  Replaces the Tkinter
-``TempImageCanvas`` + ``ResizingCanvas``.
+(rotated, cropped, enhanced, related, etc.). Replaces the legacy
+temporary image canvas implementation.
 
 Extracted from ui/image/image_details_qt.py for clarity.
 """

@@ -675,9 +675,9 @@ class SmartDialog(QDialog):
     def keyPressEvent(self, event):  # noqa: N802
         """Shift+Escape closes subsidiary dialogs just like plain Escape.
 
-        In Tkinter, pressing Shift+Escape would fall through to the
-        Escape binding when no Shift+Escape binding existed.  Qt does
-        not do this, so we replicate the behaviour explicitly.
+        In the legacy UI, pressing Shift+Escape would fall through to the
+        Escape binding when no Shift+Escape binding existed. Qt does not
+        do this, so we replicate the behavior explicitly.
         """
         if (
             event.key() == Qt.Key.Key_Escape
