@@ -1,6 +1,6 @@
 from typing import Callable, Dict, Any, Optional
 
-from utils.app_style import AppStyle
+from ui.app_style import AppStyle
 
 class AppActions:
     REQUIRED_ACTIONS = {

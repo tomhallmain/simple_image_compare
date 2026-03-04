@@ -6,7 +6,6 @@ import sys
 import threading
 from typing import Any, Dict, List
 
-from lib.position_data import PositionData as TkPositionData
 from utils.constants import AppInfo
 from utils.encryptor import encrypt_data_to_file, decrypt_data_from_file
 from utils.logging_setup import get_logger
@@ -225,7 +224,7 @@ class AppInfoCache(InflationMonitor):
                 return QtPositionData
             except Exception:
                 pass
-        return TkPositionData
+        raise Exception("Invalid runtime environment: no Qt runtime active")
 
     def get_cache_dict(self, scope_key: str = "info") -> Dict:
         """Get the cache dictionary to monitor (required by InflationMonitor)."""
@@ -352,13 +351,8 @@ class AppInfoCache(InflationMonitor):
 
     def set_display_position(self, master):
         """Store the main window's display position and size."""
-        try:
-            pd_cls = AppInfoCache._get_position_data_class()
-            self.set_meta("display_position", pd_cls.from_master(master).to_dict())
-            return
-        except Exception:
-            # Fallback to Tk-style extraction when Qt probing fails.
-            self.set_meta("display_position", TkPositionData.from_master(master).to_dict())
+        pd_cls = AppInfoCache._get_position_data_class()
+        self.set_meta("display_position", pd_cls.from_master(master).to_dict())
 
     def set_virtual_screen_info(self, master):
         """Store the virtual screen information."""

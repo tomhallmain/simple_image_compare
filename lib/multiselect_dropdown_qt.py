@@ -1,9 +1,8 @@
 """
 Multi-select dropdown widget for PySide6.
 
-Port of lib/multiselect_dropdown.py. Provides a QPushButton that opens a popup
-QListWidget with multi-selection support. The button text shows the current
-selection summary.
+Provides a QPushButton that opens a popup QListWidget with multi-selection support.
+The button text shows the current selection summary.
 """
 
 from typing import Callable, List, Optional
@@ -23,8 +22,7 @@ class MultiSelectDropdown(QWidget):
     """
     A button that opens a popup list with multi-selection.
 
-    Mirrors the API of the tkinter ``MultiSelectDropdown``:
-    ``options``, ``selected``, ``get_selected()``, ``set_options_and_selection()``.
+    API: ``options``, ``selected``, ``get_selected()``, ``set_options_and_selection()``.
     """
 
     selection_changed = Signal()  # emitted whenever selection changes
@@ -130,7 +128,7 @@ class MultiSelectDropdown(QWidget):
         self._popup = None
 
     def destroy(self):
-        """Explicit cleanup (mirrors tkinter API)."""
+        """Explicit cleanup"""
         self._destroy_dropdown()
         self.setParent(None)
         self.deleteLater()

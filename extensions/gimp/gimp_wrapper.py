@@ -743,8 +743,7 @@ class GimpWrapper:
             
             # Use the app's alert method for consistency
             result = self.app_actions.alert(_("Confirm Overwrite"), message, kind="askokcancel")
-            from tkinter import messagebox
-            if result == messagebox.OK or result == True:
+            if result:
                 # User confirmed, proceed with moving files
                 self._handle_new_files_no_conflict(temp_files)
             else:
