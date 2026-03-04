@@ -68,6 +68,7 @@ class SidebarPanel(QWidget):
         # Scrollable area for sidebar content
         self._scroll = ScrollFrame(self)
         outer.addWidget(self._scroll)
+        self._add_spacer()
 
         # -- Mode & state labels -------------------------------------------
         self.label_mode = QLabel(Mode.BROWSE.get_text(), self)
@@ -76,6 +77,7 @@ class SidebarPanel(QWidget):
         self.label_state = QLabel(_("Set a directory to run comparison."), self)
         self.label_state.setWordWrap(True)
         self._scroll.add_widget(self.label_state)
+        self._add_spacer()
 
         # ========== Settings UI ===========================================
 
@@ -83,6 +85,7 @@ class SidebarPanel(QWidget):
         self.toggle_theme_btn = self._make_button(
             _("Toggle theme"), lambda: self._app.toggle_theme()
         )
+        self._add_spacer()
 
         # Set directory
         self.set_base_dir_btn = self._make_button(
@@ -93,6 +96,10 @@ class SidebarPanel(QWidget):
         self.set_base_dir_box.setPlaceholderText(_("Enter base directory..."))
         self.set_base_dir_box.returnPressed.connect(lambda: self._app.set_base_dir())
         self._scroll.add_widget(self.set_base_dir_box)
+        self._add_spacer()
+
+        # Browsing section
+        self._add_label(_("Browsing options"))
 
         # Inclusion pattern (file glob filter)
         self._add_label(_("Filter files by glob pattern"))
@@ -124,8 +131,10 @@ class SidebarPanel(QWidget):
         self.search_return_closest_check.setChecked(config.search_only_return_closest)
         self.search_return_closest_check.stateChanged.connect(self._on_toggle_search_return_closest)
         self._scroll.add_widget(self.search_return_closest_check)
+        self._add_spacer()
 
         # ========== Search UI =============================================
+        self._add_label(_("Search"))
 
         # Search image
         self.set_search_btn = self._make_button(
@@ -183,6 +192,7 @@ class SidebarPanel(QWidget):
             lambda: self._app.search_ctrl.set_search_for_text()
         )
         self._scroll.add_widget(self.search_text_negative_box)
+        self._add_spacer()
 
         # Classifier actions & compare settings buttons
         self.classifier_actions_btn = self._make_button(
@@ -193,8 +203,10 @@ class SidebarPanel(QWidget):
             _("Compare Settings"),
             lambda: self._app.window_launcher.open_compare_settings_window(),
         )
+        self._add_spacer()
 
         # ========== Run context-aware UI ==================================
+        self._add_label(_("Compare actions"))
 
         # Progress bar (hidden by default)
         self.progress_bar = QProgressBar(self)
@@ -226,7 +238,9 @@ class SidebarPanel(QWidget):
             _("Search for images similar to the currently displayed image.\n"
               "Uses embedding similarity matching."),
         )
+        self._add_spacer()
 
+        self._add_label(_("File actions"))
         # File action buttons
         self.open_media_location_btn = self._make_button(
             _("Open media location"),
@@ -244,6 +258,7 @@ class SidebarPanel(QWidget):
             _("---- DELETE ----"),
             lambda: self._app.file_ops_ctrl.delete_image(),
         )
+        self._add_spacer()
 
         # Current image name label (at the bottom)
         self.label_current_image_name = QLabel("", self)
@@ -256,6 +271,12 @@ class SidebarPanel(QWidget):
         mode_widget = QWidget(self)
         mode_widget.setLayout(self._mode_button_container)
         self._scroll.add_widget(mode_widget)
+
+    def _add_spacer(self, height: int = 15) -> None:
+        """Insert a simple vertical spacer in the sidebar content."""
+        spacer = QWidget(self)
+        spacer.setFixedHeight(max(0, int(height)))
+        self._scroll.add_widget(spacer)
 
     # ==================================================================
     # Widget factory helpers
