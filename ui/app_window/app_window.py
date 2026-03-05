@@ -699,6 +699,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             else:
                 self.media_navigator.show_next_media()
             self.notification_ctrl.set_label_state()
+            self._sync_media_empty_directory_message()
 
         self.setWindowTitle(self.get_title_from_base_dir(overwrite=True))
         self._apply_directory_title_bar_color(new_dir)
@@ -757,6 +758,18 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         if mode not in (Mode.GROUP, Mode.DUPLICATES):
             self.sidebar_panel.remove_group_mode_buttons()
 
+    def _sync_media_empty_directory_message(self) -> None:
+        """
+        Show an empty-directory message only when BROWSE has zero displayable files.
+        """
+        if self.mode != Mode.BROWSE:
+            self.media_frame.hide_empty_directory_message()
+            return
+        if self.file_browser.count() == 0:
+            self.media_frame.show_empty_directory_message()
+        else:
+            self.media_frame.hide_empty_directory_message()
+
     def return_to_browsing_mode(self, event=None, suppress_toast: bool = False) -> None:
         """
         Return to browsing mode, clearing compare state.
@@ -769,6 +782,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         if self.img_path is not None:
             if not self.media_navigator.go_to_file(search_text=self.img_path, retry_with_delay=1):
                 self.media_navigator.home()
+        self._sync_media_empty_directory_message()
         self.cache_ctrl.store_info_cache()
         if not suppress_toast:
             self.notification_ctrl.toast(_("Browsing mode set."))
@@ -835,6 +849,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
 
         if self.file_browser.has_files():
             if self.mode != Mode.BROWSE:
+                self._sync_media_empty_directory_message()
                 return
             has_new_images = False
             if show_new_images:
@@ -855,6 +870,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             self.notification_ctrl.alert(
                 _("Warning"), _("No files found in directory after refresh."), kind="warning"
             )
+        self._sync_media_empty_directory_message()
 
         if config.debug:
             logger.debug("Refreshed files")

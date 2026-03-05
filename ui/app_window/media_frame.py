@@ -292,6 +292,9 @@ class MediaFrame(QFrame):
         self._vlc_disposed = False
         self._image_request_id = 0
         self._decode_worker = None
+        self._empty_directory_message = _(
+            "No displayable files found in this directory for the current settings."
+        )
 
     def set_background_color(self, background_color):
         color = background_color or AppStyle.MEDIA_BG
@@ -1054,7 +1057,7 @@ class MediaFrame(QFrame):
         self.image_displayed = False
         self._graphics_view.show()
         self._placeholder_label.setText("")
-        self._placeholder_label.show()
+        self._placeholder_label.hide()
         self._controls_overlay.set_audio_controls_visible(True)
         self._controls_overlay.dismiss()
 
@@ -1062,6 +1065,19 @@ class MediaFrame(QFrame):
         """Clear the view and show a text placeholder (e.g. for unsupported video)."""
         self.clear()
         self._placeholder_label.setText(text)
+        self._placeholder_label.show()
+
+    def show_empty_directory_message(self) -> None:
+        """Show the empty-directory message in the main media frame."""
+        self.clear()
+        self._placeholder_label.setText(self._empty_directory_message)
+        self._placeholder_label.show()
+
+    def hide_empty_directory_message(self) -> None:
+        """Hide the empty-directory message when displayable files exist."""
+        if self._placeholder_label.text() == self._empty_directory_message:
+            self._placeholder_label.setText("")
+            self._placeholder_label.hide()
 
     def release_media(self):
         self._invalidate_pending_image_promotion()
