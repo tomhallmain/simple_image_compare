@@ -21,6 +21,8 @@ class AppStyle:
     _DARK_BORDER_COLOR = "#33303d"
     _DARK_PROGRESS_CHUNK = "#5c4f8a"
     _DARK_MEDIA_BG = "#1e1c26"
+    _DARK_TOAST_COLOR_WARNING = "#8B4513"
+    _DARK_TOAST_COLOR_SUCCESS = "#2d5016"
 
     # Light theme palette
     _LIGHT_BG_COLOR = "#f0f4f8"
@@ -32,6 +34,8 @@ class AppStyle:
     _LIGHT_BORDER_COLOR = "#c0c4c8"
     _LIGHT_PROGRESS_CHUNK = "#4a90d9"
     _LIGHT_MEDIA_BG = "#e8ecf0"
+    _LIGHT_TOAST_COLOR_WARNING = "#d08c3a"
+    _LIGHT_TOAST_COLOR_SUCCESS = "#4f8a3f"
 
     # Active palette — updated by _apply_palette()
     BG_COLOR = _DARK_BG_COLOR
@@ -43,6 +47,8 @@ class AppStyle:
     BORDER_COLOR = _DARK_BORDER_COLOR
     PROGRESS_CHUNK = _DARK_PROGRESS_CHUNK
     MEDIA_BG = _DARK_MEDIA_BG
+    TOAST_COLOR_WARNING = _DARK_TOAST_COLOR_WARNING
+    TOAST_COLOR_SUCCESS = _DARK_TOAST_COLOR_SUCCESS
 
     # Legacy aliases for code that still references LIGHT_* directly
     LIGHT_BG_COLOR = _LIGHT_BG_COLOR
@@ -91,6 +97,8 @@ class AppStyle:
         cls.BORDER_COLOR    = cls._DARK_BORDER_COLOR    if dark else cls._LIGHT_BORDER_COLOR
         cls.PROGRESS_CHUNK  = cls._DARK_PROGRESS_CHUNK  if dark else cls._LIGHT_PROGRESS_CHUNK
         cls.MEDIA_BG        = cls._DARK_MEDIA_BG        if dark else cls._LIGHT_MEDIA_BG
+        cls.TOAST_COLOR_WARNING = cls._DARK_TOAST_COLOR_WARNING if dark else cls._LIGHT_TOAST_COLOR_WARNING
+        cls.TOAST_COLOR_SUCCESS = cls._DARK_TOAST_COLOR_SUCCESS if dark else cls._LIGHT_TOAST_COLOR_SUCCESS
 
     @classmethod
     def set_corner_radius(cls, radius: int):
