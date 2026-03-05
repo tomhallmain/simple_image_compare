@@ -310,8 +310,56 @@ class MediaFrame(QFrame):
         path_lower = path.lower()
         return any(path_lower.endswith(ext) for ext in self._video_types())
 
-    def _is_gif_path(self, path):
-        return bool(path and path.lower().endswith(".gif"))
+    def _is_video_container_signature(self, path: str) -> bool:
+        """
+        Detect common video containers from file signatures, regardless of extension.
+        Useful for mislabeled files like MP4 content with a .jpeg suffix.
+        """
+        if not path or not os.path.isfile(path):
+            return False
+        try:
+            with open(path, "rb") as f:
+                head = f.read(64)
+        except Exception:
+            return False
+        if len(head) < 12:
+            return False
+
+        # ISO BMFF / MP4 family: [size:4][ftyp:4][major_brand:4]
+        if head[4:8] == b"ftyp":
+            major_brand = head[8:12].lower()
+            # Known still-image BMFF brands (do not treat as video containers).
+            image_brands = {
+                b"heic", b"heix", b"hevc", b"hevx",
+                b"mif1", b"msf1",
+                b"avif", b"avis",
+            }
+            if major_brand in image_brands:
+                return False
+
+            compatible = head[12:64].lower()
+            video_markers = (
+                b"isom", b"iso2", b"avc1", b"hvc1", b"hev1",
+                b"mp41", b"mp42", b"m4v ", b"3gp", b"qt  ",
+            )
+            return major_brand in video_markers or any(m in compatible for m in video_markers)
+
+        # WebM / Matroska (EBML)
+        if head.startswith(b"\x1A\x45\xDF\xA3"):
+            return True
+
+        # Ogg container
+        if head.startswith(b"OggS"):
+            return True
+
+        return False
+
+    def _is_animated_image_candidate(self, path: str) -> bool:
+        """Return True for formats that may carry animation frames."""
+        if not path:
+            return False
+        path_lower = path.lower()
+        return path_lower.endswith((".gif", ".webp", ".jpg", ".jpeg", ".jpe", ".jfif"))
 
     def _large_image_dim_threshold(self) -> int:
         return max(1, int(getattr(config, "large_image_dim_threshold_px", 5000)))
@@ -594,7 +642,7 @@ class MediaFrame(QFrame):
         else:
             self._gif_movie.setScaledSize(QSize(target_w, target_h))
 
-    def _analyze_gif(self, path):
+    def _analyze_animated_image(self, path):
         frame_count = 0
         delays = []
         reader = QImageReader(path)
@@ -702,20 +750,22 @@ class MediaFrame(QFrame):
             return
         self._display_qimage(qimg, source_dims)
 
-    def _show_gif(self, path):
+    def _show_animated_image(self, path) -> bool:
         if not path or path == "." or not os.path.exists(path):
-            return
+            return False
         self.clear()
-        frame_count, frame_delays = self._analyze_gif(path)
+        frame_count, frame_delays = self._analyze_animated_image(path)
         is_animated = frame_count > 1
         if not is_animated:
-            self._show_image_in_view(path)
-            return
+            return False
         self._gif_movie = QMovie(path)
         if not self._gif_movie.isValid():
             self._gif_movie = None
-            self._show_image_in_view(path)
-            return
+            self._show_placeholder(
+                _("Animated image format is not supported for playback: ")
+                + os.path.basename(path)
+            )
+            return True
         # Random-access seeking is unreliable without frame caching.
         self._gif_movie.setCacheMode(QMovie.CacheMode.CacheAll)
         self._gif_is_animated = True
@@ -739,6 +789,7 @@ class MediaFrame(QFrame):
         self.on_track_changed()
         self._update_gif_overlay_progress()
         self._playback_timer.start()
+        return True
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -763,18 +814,21 @@ class MediaFrame(QFrame):
             self.clear()
             return
         # Video dispatch: use VLC if available, otherwise show placeholder
-        if self._is_video_path(path):
+        if self._is_video_path(path) or self._is_video_container_signature(path):
             if _VLC_AVAILABLE and self.vlc_media_player:
                 self.show_video(path)
             else:
                 self._show_placeholder(_("Video: ") + os.path.basename(path))
             return
-        if self._is_gif_path(path):
-            self._show_gif(path)
+        if self._is_animated_image_candidate(path) and self._show_animated_image(path):
             return
         self._video_ui = None
         self.imscale = 1.0
-        self._show_image_in_view(self.path)
+        try:
+            self._show_image_in_view(self.path)
+        except Exception as e:
+            logger.warning("Failed to render image path=%s error=%s", self.path, e)
+            self._show_placeholder(_("Unable to display this file: ") + os.path.basename(path))
 
     def set_fill_canvas(self, fill_canvas: bool):
         self.fill_canvas = bool(fill_canvas)
@@ -790,7 +844,7 @@ class MediaFrame(QFrame):
         if not _VLC_AVAILABLE or not self.vlc_media_player:
             return
         path_lower = (path or "").lower()
-        if not any(path_lower.endswith(ext) for ext in self._video_types()):
+        if not any(path_lower.endswith(ext) for ext in self._video_types()) and not self._is_video_container_signature(path):
             return
         self.clear()
         self._graphics_view.set_interaction_enabled(False)
