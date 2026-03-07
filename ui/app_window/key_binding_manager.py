@@ -117,7 +117,6 @@ class KeyBindingManager:
         self._bind("Shift+V", app.file_ops_ctrl.hide_current_media)
         self._bind("Shift+B", app.file_ops_ctrl.clear_hidden_images)
         self._bind("Shift+U", app.file_ops_ctrl.run_refacdir)
-        self._bind("Delete", app.file_ops_ctrl.delete_image)
 
         # ==============================================================
         # View / mode
