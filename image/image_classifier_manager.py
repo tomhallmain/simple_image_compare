@@ -20,6 +20,18 @@ class ImageClassifierManager:
                 model_name = model_details['model_name']
                 self.classifier_metadata[model_name] = model_details
 
+    def set_classifier_metadata(self, model_details_list: List[Dict[str, Any]]) -> None:
+        """Replace all configured classifier metadata and trim stale runtime classifiers."""
+        self.classifier_metadata.clear()
+        if isinstance(model_details_list, list):
+            for model_details in model_details_list:
+                model_name = model_details.get("model_name")
+                if isinstance(model_name, str) and model_name.strip():
+                    self.classifier_metadata[model_name] = model_details
+        stale_names = [name for name in self.classifiers if name not in self.classifier_metadata]
+        for stale_name in stale_names:
+            self.classifiers.pop(stale_name, None)
+
     def can_classify(self) -> bool:
         return len(self.get_model_names()) > 0
 
@@ -55,6 +67,16 @@ class ImageClassifierManager:
 
     def get_model_names(self) -> List[str]:
         return list(self.classifier_metadata.keys())
+
+    def add_classifier_metadata(self, model_details: Dict[str, Any]) -> None:
+        model_name = model_details.get("model_name")
+        if not isinstance(model_name, str) or not model_name.strip():
+            raise ValueError("model_details must include a non-empty model_name")
+        self.classifier_metadata[model_name] = model_details
+
+    def remove_classifier_metadata(self, model_name: str) -> None:
+        self.classifier_metadata.pop(model_name, None)
+        self.classifiers.pop(model_name, None)
 
 
 image_classifier_manager = ImageClassifierManager()

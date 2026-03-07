@@ -199,6 +199,10 @@ class SidebarPanel(QWidget):
             _("Classifier Actions"),
             lambda: self._app.window_launcher.open_classifier_actions_window(),
         )
+        self.hf_model_manager_btn = self._make_button(
+            _("HF Hub Models"),
+            lambda: self._app.window_launcher.open_hf_model_manager_window(),
+        )
         self.compare_settings_btn = self._make_button(
             _("Compare Settings"),
             lambda: self._app.window_launcher.open_compare_settings_window(),

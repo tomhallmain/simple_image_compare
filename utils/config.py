@@ -16,6 +16,22 @@ logger = get_logger("config")
 class Config:
     CONFIGS_DIR_LOC = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), "configs")
 
+    @staticmethod
+    def resolve_config_path():
+        """Resolve the active config file path, preferring config.json."""
+        configs = [f.path for f in os.scandir(Config.CONFIGS_DIR_LOC) if f.is_file() and f.path.endswith(".json")]
+        config_path = None
+        for candidate in configs:
+            basename = os.path.basename(candidate)
+            if basename == "config.json":
+                config_path = candidate
+                break
+            if basename != "config_example.json":
+                config_path = candidate
+        if config_path is None:
+            config_path = os.path.join(Config.CONFIGS_DIR_LOC, "config_example.json")
+        return config_path
+
     def __init__(self):
         self.dict = {}
         self.locale = Utils.get_default_user_language()
@@ -106,18 +122,7 @@ class Config:
         self.image_edit_configuration = ImageEditConfiguration()
 
         dict_set = False
-        configs =  [ f.path for f in os.scandir(Config.CONFIGS_DIR_LOC) if f.is_file() and f.path.endswith(".json") ]
-        self.config_path = None
-
-        for c in configs:
-            if os.path.basename(c) == "config.json":
-                self.config_path = c
-                break
-            elif os.path.basename(c) != "config_example.json":
-                self.config_path = c
-
-        if self.config_path is None:
-            self.config_path = os.path.join(Config.CONFIGS_DIR_LOC, "config_example.json")
+        self.config_path = Config.resolve_config_path()
 
         try:
             self.dict = json.load(open(self.config_path, "r"))
@@ -489,6 +494,26 @@ class Config:
                 except Exception as e:
                     logger.error(e)
                     logger.warning(f"Failed to set {name} from config.json file. Ensure the key is set.")
+
+    def _build_persisted_config_dict(self):
+        """Build a config dict preserving unknown keys and updated runtime values."""
+        persisted = dict(self.dict) if isinstance(self.dict, dict) else {}
+        persisted["image_classifier_models"] = list(self.image_classifier_models)
+        persisted["enable_prevalidations"] = bool(self.enable_prevalidations)
+        return persisted
+
+    def persist(self):
+        """Write current config values back to the active config file."""
+        config_dict = self._build_persisted_config_dict()
+        with open(self.config_path, "w", encoding="utf-8") as config_file:
+            json.dump(config_dict, config_file, ensure_ascii=False, indent=2)
+        self.dict = config_dict
+
+    def set_image_classifier_models(self, model_details_list):
+        if not isinstance(model_details_list, list):
+            raise TypeError("model_details_list must be a list")
+        self.image_classifier_models = model_details_list
+        self.persist()
 
     def next_text_embedding_search_preset(self):
         self.text_embedding_search_preset_index += 1

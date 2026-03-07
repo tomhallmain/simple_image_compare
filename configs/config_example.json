@@ -90,10 +90,21 @@
       "model_name": "safetensors model name (be sure to change this)",
       "model_location": "path/to/my/model.safetensors",
       "model_categories": ["category1", "category2", "category3"],
+      "backend": "pytorch",
       "model_kwargs": {
         "architecture_module_name": "my_model_architecture_module",
         "architecture_class_path": "MyModelArchitectureClass (optional)",
         "architecture_location": "path/to/my/model_architecture.py (optional)"
+      }
+    },
+    {
+      "model_name": "hf repo model name (be sure to change this)",
+      "model_location": "path/to/hf/snapshot/model.safetensors",
+      "model_categories": ["neutral", "nsfw"],
+      "backend": "pytorch",
+      "model_kwargs": {
+        "use_transformers_auto_model": true,
+        "hf_pretrained_path": "path/to/hf/snapshot"
       }
     }
   ],

@@ -315,7 +315,9 @@ class PyTorchImageClassifier(BaseImageClassifier):
                  architecture_location: str = None,
                  weights_only: bool = False,  # Changed to False by default for converted models
                  safe_globals: List = None,
-                 load_full_model: bool = True):  # New parameter to load full model directly
+                 load_full_model: bool = True,  # New parameter to load full model directly
+                 use_transformers_auto_model: bool = False,
+                 hf_pretrained_path: Optional[str] = None):
         """PyTorch model classifier
         
         Args:
@@ -339,7 +341,10 @@ class PyTorchImageClassifier(BaseImageClassifier):
         self.weights_only = weights_only
         self.safe_globals = safe_globals or []
         self.load_full_model = load_full_model
+        self.use_transformers_auto_model = bool(use_transformers_auto_model)
+        self.hf_pretrained_path = hf_pretrained_path
         self.transform = None
+        self.processor = None
         
         # Handle model_architecture parameter - if using ImageClassifierWrapper, should already be imported and return early
         if model_architecture is not None:
@@ -451,6 +456,32 @@ class PyTorchImageClassifier(BaseImageClassifier):
         except ImportError:
             logger.error("PyTorch or torchvision not installed. Install with: pip install torch torchvision")
             return False
+
+        if self.use_transformers_auto_model:
+            try:
+                from transformers import AutoImageProcessor, AutoModelForImageClassification
+            except ImportError:
+                logger.error("transformers not installed. Install with: pip install transformers")
+                return False
+
+            model_root = self.hf_pretrained_path
+            if not model_root:
+                model_root = os.path.dirname(self.model_path) if os.path.isfile(self.model_path) else self.model_path
+            if not model_root or not os.path.exists(model_root):
+                logger.error(f"Invalid HF pretrained path for transformers auto model: {model_root}")
+                return False
+
+            try:
+                self.processor = AutoImageProcessor.from_pretrained(model_root)
+                self.model = AutoModelForImageClassification.from_pretrained(model_root).to(self.device)
+                self.model.eval()
+                self.is_loaded = True
+                self.input_shape = self._infer_transformers_input_shape()
+                logger.info(f"Transformers auto image classifier loaded from: {model_root}")
+                return True
+            except Exception as e:
+                logger.error(f"Failed to load transformers auto model from {model_root}: {e}")
+                return False
 
         # Safetensors handling
         if self.model_path.lower().endswith('.safetensors'):
@@ -605,6 +636,25 @@ class PyTorchImageClassifier(BaseImageClassifier):
             ])
         except ImportError:
             logger.error("torchvision not available for transforms")
+
+    def _infer_transformers_input_shape(self) -> Tuple[int, int]:
+        """Infer input shape from HF AutoImageProcessor metadata."""
+        try:
+            size = getattr(self.processor, "size", None)
+            if isinstance(size, dict):
+                if "shortest_edge" in size:
+                    edge = int(size["shortest_edge"])
+                    return (edge, edge)
+                if "height" in size and "width" in size:
+                    return (int(size["width"]), int(size["height"]))
+                if "longest_edge" in size:
+                    edge = int(size["longest_edge"])
+                    return (edge, edge)
+            if isinstance(size, int):
+                return (size, size)
+        except Exception:
+            pass
+        return (224, 224)
     
     def _infer_input_shape(self) -> Tuple[int, int]:
         """Try to infer input shape from model"""
@@ -652,6 +702,12 @@ class PyTorchImageClassifier(BaseImageClassifier):
         try:
             with Image.open(image_path) as img:
                 img = img.convert('RGB')
+                if self.use_transformers_auto_model:
+                    if self.processor is None:
+                        raise ValueError("Transformers processor is not initialized")
+                    inputs = self.processor(images=img, return_tensors="pt")
+                    import torch
+                    return {k: v.to(self.device) if isinstance(v, torch.Tensor) else v for k, v in inputs.items()}
                 tensor = self.transform(img)
                 # Add batch dimension
                 tensor = tensor.unsqueeze(0).to(self.device)
@@ -659,7 +715,7 @@ class PyTorchImageClassifier(BaseImageClassifier):
         except Exception as e:
             raise ValueError(f"Image processing failed: {str(e)}")
     
-    def predict(self, preprocessed_image: np.ndarray, batch_size: int = 32) -> np.ndarray:
+    def predict(self, preprocessed_image: Any, batch_size: int = 32) -> np.ndarray:
         """Run prediction with PyTorch model"""
         if not self.is_loaded or self.model is None:
             raise ValueError("Model not loaded")
@@ -668,6 +724,13 @@ class PyTorchImageClassifier(BaseImageClassifier):
             import torch
             
             with torch.no_grad():
+                if self.use_transformers_auto_model:
+                    if not isinstance(preprocessed_image, dict):
+                        raise ValueError("Expected dict model inputs for transformers auto model")
+                    output = self.model(**preprocessed_image)
+                    logits = output.logits if hasattr(output, "logits") else output[0]
+                    probabilities = torch.nn.functional.softmax(logits, dim=1)
+                    return probabilities.cpu().numpy()
                 output = self.model(preprocessed_image)
                 # Convert to probabilities if needed
                 if not torch.all(output >= 0) or not torch.all(output <= 1):
@@ -711,7 +774,7 @@ class ImageClassifierWrapper:
                 if not type(self.model_categories) == list or len(self.model_categories) == 0 \
                         or any([type(c) != str for c in self.model_categories]):
                     raise Exception(f"Invalid model categories: {self.model_categories}")
-                if not type(self.model_location) == str or not os.path.isfile(self.model_location):
+                if not type(self.model_location) == str or not (os.path.isfile(self.model_location) or os.path.isdir(self.model_location)):
                     raise Exception(f"Invalid model location: {self.model_location}")
                 if not type(self.use_hub_keras_layers) == bool:
                     raise Exception(f"Invalid use hub keras layers flag, must be boolean: {self.use_hub_keras_layers}")
@@ -754,7 +817,7 @@ class ImageClassifierWrapper:
 
         # Special handling for safetensors: require model_architecture
         if self.model_location.lower().endswith('.safetensors'):
-            if 'architecture_module_name' not in self.model_kwargs:
+            if not self.model_kwargs.get("use_transformers_auto_model", False) and 'architecture_module_name' not in self.model_kwargs:
                 message = "For safetensors files, architecture_module_name must be provided.\n"
                 message += f"Found model_kwargs: {self.model_kwargs}\n"
                 message += "Must include architecture_module_name in model_kwargs.\n"

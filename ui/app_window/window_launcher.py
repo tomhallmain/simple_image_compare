@@ -153,6 +153,15 @@ class WindowLauncher:
         except Exception as e:
             self._handle_error(e, "Compare Settings Window Error")
 
+    @require_password(ProtectedActions.EDIT_PREVALIDATIONS)
+    def open_hf_model_manager_window(self, event=None) -> None:
+        """Open the HF Hub model manager window."""
+        try:
+            from ui.compare.hf_model_manager_window_qt import HfModelManagerWindow
+            HfModelManagerWindow.show_window(self._app, self._app.app_actions)
+        except Exception as e:
+            self._handle_error(e, "HF Hub Model Manager Window Error")
+
     @require_password(ProtectedActions.CONFIGURE_MEDIA_TYPES)
     def open_type_configuration_window(self, event=None) -> None:
         """Open the file type configuration window."""
