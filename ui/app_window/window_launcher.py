@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING, Any, Optional
 
 from ui.auth.password_utils import require_password, check_session_expired
 from utils.constants import Mode, ProtectedActions
-from utils.logging_setup import get_logger
+from utils.logging_setup import get_logger, set_logger_level
 from utils.translations import I18N
 
 if TYPE_CHECKING:
@@ -394,7 +394,9 @@ class WindowLauncher:
     def toggle_extra_debug_logging(self, event=None) -> None:
         """Toggle the extra-verbose debug logging flag."""
         from utils.config import config as _config
+        _config.debug = not _config.debug
         _config.debug2 = not _config.debug2
+        set_logger_level(_config.debug)
         self._app.notification_ctrl.toast(
             _("Extra debug logging enabled") if _config.debug2
             else _("Extra debug logging disabled")
