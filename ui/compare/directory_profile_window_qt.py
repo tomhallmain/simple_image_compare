@@ -16,11 +16,12 @@ from typing import Callable, Optional
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (
-    QFileDialog, QGridLayout, QHBoxLayout, QLabel, QLineEdit,
+    QGridLayout, QHBoxLayout, QLabel, QLineEdit,
     QListWidget, QPushButton, QVBoxLayout, QWidget,
 )
 
 from files.directory_profile import DirectoryProfile
+from lib.fast_directory_picker_qt import get_existing_directory
 from lib.multi_display_qt import SmartDialog
 from ui.app_style import AppStyle
 from utils.translations import I18N
@@ -152,7 +153,7 @@ class DirectoryProfileWindow(SmartDialog):
         if not os.path.isdir(initial_dir):
             initial_dir = "."
 
-        directory = QFileDialog.getExistingDirectory(self, title, initial_dir)
+        directory = get_existing_directory(self, title, initial_dir)
         return directory if directory and directory.strip() else None
 
     def _add_directory(self) -> None:

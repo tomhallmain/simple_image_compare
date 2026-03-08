@@ -629,8 +629,9 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             entry_text = self.sidebar_panel.set_base_dir_box.text().strip()
             if not entry_text or entry_text == _("Enter base directory...") or entry_text == self.base_dir:
                 if len(RecentDirectories.directories) == 0:
-                    from PySide6.QtWidgets import QFileDialog
-                    chosen = QFileDialog.getExistingDirectory(
+                    from lib.fast_directory_picker_qt import get_existing_directory
+
+                    chosen = get_existing_directory(
                         self, _("Set image comparison directory"), self.get_base_dir()
                     )
                     if not chosen:

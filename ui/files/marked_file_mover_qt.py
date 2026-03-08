@@ -23,13 +23,14 @@ from typing import Optional
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (
-    QFileDialog, QHBoxLayout, QLabel, QPushButton,
+    QHBoxLayout, QLabel, QPushButton,
     QScrollArea, QVBoxLayout, QWidget,
 )
 
 from files.marked_files import MarkedFiles
 from files.file_action import FileAction
 from image.frame_cache import FrameCache
+from lib.fast_directory_picker_qt import get_existing_directory
 from lib.multi_display_qt import SmartDialog
 from ui.app_style import AppStyle
 from ui.auth.password_utils import require_password
@@ -78,7 +79,7 @@ class MarkedFileMover(SmartDialog):
                 app_actions.warn(
                     _("Invalid directory: {0}").format(target_dir)
                 )
-        target_dir = QFileDialog.getExistingDirectory(
+        target_dir = get_existing_directory(
             parent,
             _("Select target directory for marked files"),
             starting_target or "",
@@ -89,7 +90,7 @@ class MarkedFileMover(SmartDialog):
     def undo_move_marks(target_dir, app_actions) -> None:
         """Undo the previous move/copy operation."""
         def get_base_dir_callback():
-            base_dir = QFileDialog.getExistingDirectory(
+            base_dir = get_existing_directory(
                 None,
                 _("Where should the marked files have gone?"),
                 target_dir or "",
@@ -339,7 +340,9 @@ class MarkedFileMover(SmartDialog):
             target_dir, self._starting_target, self._app_actions, parent=self
         )
         if not target_dir or not os.path.isdir(target_dir):
-            self.close_windows()
+            # Keep this window open when directory picking is cancelled/invalid.
+            # Clear any typed filter so the full list is immediately visible.
+            self._clear_manual_filter()
             return None
 
         if target_was_valid:
@@ -355,6 +358,11 @@ class MarkedFileMover(SmartDialog):
         else:
             self._test_is_in_directory(target_dir=target_dir)
         return target_dir
+
+    def _clear_manual_filter(self) -> None:
+        """Clear typed filter text and refresh the current directory list."""
+        self._filter_text = ""
+        self._apply_filter()
 
     def _move_marks_to_dir(
         self, target_dir=None, move_func=Utils.move_file
@@ -461,7 +469,7 @@ class MarkedFileMover(SmartDialog):
             self._rebuild_directory_rows()
 
     def _set_target_dirs_from_dir(self) -> None:
-        parent_dir = QFileDialog.getExistingDirectory(
+        parent_dir = get_existing_directory(
             self,
             _("Select parent directory for target directories"),
             self._starting_target or "",

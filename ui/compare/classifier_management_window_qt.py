@@ -22,7 +22,7 @@ from typing import Callable, Optional
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (
-    QAbstractItemView, QCheckBox, QComboBox, QFileDialog, QGridLayout,
+    QAbstractItemView, QCheckBox, QComboBox, QGridLayout,
     QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem,
     QPushButton, QScrollArea, QSlider, QTabWidget, QVBoxLayout, QWidget,
 )
@@ -32,6 +32,7 @@ from compare.classifier_actions_manager import (
     ClassifierActionsManager,
 )
 from image.image_classifier_manager import image_classifier_manager
+from lib.fast_directory_picker_qt import get_existing_directory
 from lib.multi_display_qt import SmartDialog
 from ui.app_style import AppStyle
 from utils.config import config
@@ -373,14 +374,14 @@ class ClassifierActionModifyWindow(SmartDialog):
     # Browse helpers
     # ------------------------------------------------------------------
     def _browse_prototype_directory(self) -> None:
-        d = QFileDialog.getExistingDirectory(
+        d = get_existing_directory(
             self, _("Select Prototype Directory")
         )
         if d:
             self._proto_dir_edit.setText(d)
 
     def _browse_negative_prototype_directory(self) -> None:
-        d = QFileDialog.getExistingDirectory(
+        d = get_existing_directory(
             self, _("Select Negative Prototype Directory")
         )
         if d:

@@ -13,9 +13,10 @@ from typing import Any, Optional
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeySequence, QShortcut
-from PySide6.QtWidgets import QFileDialog, QHBoxLayout, QPushButton, QWidget
+from PySide6.QtWidgets import QHBoxLayout, QPushButton, QWidget
 
 from files.recent_directories import RecentDirectories
+from lib.fast_directory_picker_qt import get_existing_directory
 from ui.files.directory_picker_dialog import DirectoryPickerDialog
 from utils.app_actions import AppActions
 from utils.translations import I18N
@@ -182,7 +183,7 @@ class RecentDirectoryWindow(DirectoryPickerDialog):
             RecentDirectories.directories.remove(directory)
         self._app_actions.toast(_("Invalid directory: %s") % directory)
 
-        _dir = QFileDialog.getExistingDirectory(
+        _dir = get_existing_directory(
             self,
             self._browse_dialog_title(),
             self._get_initial_browse_dir(),

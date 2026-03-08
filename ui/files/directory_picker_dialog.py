@@ -24,10 +24,11 @@ from typing import Optional
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (
-    QFileDialog, QGridLayout, QHBoxLayout, QLabel,
+    QGridLayout, QHBoxLayout, QLabel,
     QPushButton, QScrollArea, QVBoxLayout, QWidget,
 )
 
+from lib.fast_directory_picker_qt import get_existing_directory
 from lib.multi_display_qt import SmartDialog
 from ui.app_style import AppStyle
 from utils.translations import I18N
@@ -349,7 +350,7 @@ class DirectoryPickerDialog(SmartDialog):
         self._apply_filter()
 
     def _browse_new_directory(self) -> None:
-        _dir = QFileDialog.getExistingDirectory(
+        _dir = get_existing_directory(
             self,
             self._browse_dialog_title(),
             self._get_initial_browse_dir(),
@@ -363,7 +364,7 @@ class DirectoryPickerDialog(SmartDialog):
             self._rebuild()
 
     def _add_dirs_from_parent(self) -> None:
-        parent_dir = QFileDialog.getExistingDirectory(
+        parent_dir = get_existing_directory(
             self,
             _("Select parent directory"),
             self._get_initial_browse_dir(),
