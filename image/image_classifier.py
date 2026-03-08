@@ -920,6 +920,11 @@ class ImageClassifierWrapper:
         keys = list(self.model_categories)
         keys.sort(key=lambda c: classed_predictions[c], reverse=True)
         classed_category = keys[0]
+        if config.debug2:
+            # Keep debug output to one line while showing full category-score mapping.
+            ordered_pairs = sorted(classed_predictions.items(), key=lambda kv: kv[1], reverse=True)
+            prediction_line = ", ".join([f"{name}={score:.6f}" for name, score in ordered_pairs])
+            logger.debug(f"Image classifier prediction map ({self.model_name}): {prediction_line}")
         return classed_category
 
     def test_image_for_categories(self, image_path, categories):

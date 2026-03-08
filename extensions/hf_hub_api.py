@@ -268,3 +268,56 @@ class HfHubApiBackend:
                 return f.read()
         except Exception as e:
             raise RuntimeError(f"Unable to fetch model card for {repo_id}: {e}") from e
+
+    def has_connection(self) -> bool:
+        """Best-effort online check against HF Hub."""
+        try:
+            _ = list(self._api.list_models(limit=1))
+            return True
+        except Exception:
+            return False
+
+    def is_repo_hosted(self, repo_id: str) -> tuple[bool, str]:
+        """Check whether a model repo currently exists on Hugging Face."""
+        try:
+            self._api.model_info(repo_id=repo_id)
+            return True, "repo exists"
+        except Exception as e:
+            return False, str(e)
+
+    @staticmethod
+    def get_default_cache_dir() -> str:
+        """Return HF cache directory used by huggingface_hub."""
+        try:
+            from huggingface_hub.constants import HUGGINGFACE_HUB_CACHE
+            return str(HUGGINGFACE_HUB_CACHE)
+        except Exception:
+            hf_home = os.environ.get("HF_HOME")
+            if hf_home:
+                return os.path.join(hf_home, "hub")
+            return os.path.join(os.path.expanduser("~"), ".cache", "huggingface", "hub")
+
+    def delete_cached_repo(self, repo_id: str) -> tuple[bool, str, str]:
+        """Delete cached revisions for a repo. Returns (deleted, cache_dir, message)."""
+        cache_dir = self.get_default_cache_dir()
+        try:
+            from huggingface_hub import scan_cache_dir
+            cache_info = scan_cache_dir()
+            matching_revisions: list[str] = []
+            for repo in list(getattr(cache_info, "repos", []) or []):
+                if str(getattr(repo, "repo_id", "")) != repo_id:
+                    continue
+                repo_type = str(getattr(repo, "repo_type", "model") or "model")
+                if repo_type != "model":
+                    continue
+                for revision in list(getattr(repo, "revisions", []) or []):
+                    commit_hash = str(getattr(revision, "commit_hash", "") or "").strip()
+                    if commit_hash:
+                        matching_revisions.append(commit_hash)
+            if not matching_revisions:
+                return False, cache_dir, f"No cached revisions found for {repo_id}"
+            strategy = cache_info.delete_revisions(*matching_revisions)
+            strategy.execute()
+            return True, cache_dir, f"Removed {len(matching_revisions)} cached revision(s) for {repo_id}"
+        except Exception as e:
+            return False, cache_dir, f"Failed deleting cached repo {repo_id}: {e}"

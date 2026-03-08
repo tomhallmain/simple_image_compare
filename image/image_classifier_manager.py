@@ -1,6 +1,7 @@
 from typing import Dict, Any, Optional, List
 
 from image.image_classifier import ImageClassifierWrapper
+from image.image_classifier_model_config import ImageClassifierModelConfig
 from utils.config import config
 from utils.logging_setup import get_logger
 
@@ -8,7 +9,7 @@ logger = get_logger("image_classifier_manager")
 
 
 class ImageClassifierManager:
-    classifier_metadata: Dict[str, Dict[str, Any]]
+    classifier_metadata: Dict[str, ImageClassifierModelConfig]
     classifiers: Dict[str, ImageClassifierWrapper]
 
     def __init__(self) -> None:
@@ -17,17 +18,22 @@ class ImageClassifierManager:
         models = getattr(config, 'image_classifier_models', [])
         if isinstance(models, list):
             for model_details in models:
-                model_name = model_details['model_name']
-                self.classifier_metadata[model_name] = model_details
+                try:
+                    model_config = ImageClassifierModelConfig.from_dict(model_details, logger=logger)
+                    self.classifier_metadata[model_config.model_name] = model_config
+                except Exception as e:
+                    logger.error(f"Skipping invalid image classifier model config: {e}")
 
     def set_classifier_metadata(self, model_details_list: List[Dict[str, Any]]) -> None:
         """Replace all configured classifier metadata and trim stale runtime classifiers."""
         self.classifier_metadata.clear()
         if isinstance(model_details_list, list):
             for model_details in model_details_list:
-                model_name = model_details.get("model_name")
-                if isinstance(model_name, str) and model_name.strip():
-                    self.classifier_metadata[model_name] = model_details
+                try:
+                    model_config = ImageClassifierModelConfig.from_dict(model_details, logger=logger)
+                    self.classifier_metadata[model_config.model_name] = model_config
+                except Exception as e:
+                    logger.error(f"Skipping invalid image classifier model config: {e}")
         stale_names = [name for name in self.classifiers if name not in self.classifier_metadata]
         for stale_name in stale_names:
             self.classifiers.pop(stale_name, None)
@@ -61,7 +67,8 @@ class ImageClassifierManager:
             return self.classifiers[model_name]
         if model_name not in self.classifier_metadata:
             raise Exception(f"Failed to find image classifier with model name: \"{model_name}\"")
-        classifier = ImageClassifierWrapper(**self.classifier_metadata[model_name])
+        model_config = self.classifier_metadata[model_name]
+        classifier = ImageClassifierWrapper(**model_config.to_wrapper_kwargs())
         self.classifiers[model_name] = classifier
         return classifier
 
@@ -69,14 +76,15 @@ class ImageClassifierManager:
         return list(self.classifier_metadata.keys())
 
     def add_classifier_metadata(self, model_details: Dict[str, Any]) -> None:
-        model_name = model_details.get("model_name")
-        if not isinstance(model_name, str) or not model_name.strip():
-            raise ValueError("model_details must include a non-empty model_name")
-        self.classifier_metadata[model_name] = model_details
+        model_config = ImageClassifierModelConfig.from_dict(model_details, logger=logger)
+        self.classifier_metadata[model_config.model_name] = model_config
 
     def remove_classifier_metadata(self, model_name: str) -> None:
         self.classifier_metadata.pop(model_name, None)
         self.classifiers.pop(model_name, None)
+
+    def get_model_configs(self) -> List[ImageClassifierModelConfig]:
+        return list(self.classifier_metadata.values())
 
 
 image_classifier_manager = ImageClassifierManager()

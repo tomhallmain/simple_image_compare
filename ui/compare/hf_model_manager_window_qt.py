@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import os
-from typing import Optional
+from typing import Any, Callable, Optional
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
+    QFileDialog,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -22,6 +23,7 @@ from PySide6.QtWidgets import (
 
 from extensions.hf_hub_api import HfHubApiBackend
 from image.image_classifier_manager import image_classifier_manager
+from image.image_classifier_model_config import ImageClassifierModelConfig
 from lib.multi_display_qt import SmartDialog
 from utils.config import config
 from utils.constants import HfHubSortDirection, HfHubSortOption, HfHubVisualMediaTask
@@ -46,6 +48,200 @@ class _TextPreviewDialog(SmartDialog):
         close_btn.clicked.connect(self.close)
         btn_row.addWidget(close_btn)
         layout.addLayout(btn_row)
+
+
+class _InstalledModelEditDialog(SmartDialog):
+    """Popup editor for local/HF installed model definitions."""
+
+    def __init__(
+        self,
+        parent: QWidget,
+        title: str,
+        initial_model: dict[str, Any],
+        api_getter: Callable[[], HfHubApiBackend],
+        save_callback: Callable[[dict[str, Any], str], None],
+        model_file_extensions: set[str],
+    ):
+        super().__init__(parent=parent, position_parent=parent, title=title, geometry="980x560")
+        self._api_getter = api_getter
+        self._save_callback = save_callback
+        self._model_file_extensions = model_file_extensions
+        self._initial_name = str(initial_model.get("model_name", ""))
+        self._repo_files_cache: dict[str, list[str]] = {}
+
+        model_kwargs = dict(initial_model.get("model_kwargs", {}))
+
+        layout = QVBoxLayout(self)
+
+        row1 = QHBoxLayout()
+        row1.addWidget(QLabel(_("Model name")))
+        self._model_name_edit = QLineEdit(str(initial_model.get("model_name", "")))
+        row1.addWidget(self._model_name_edit, stretch=1)
+        row1.addWidget(QLabel(_("Backend")))
+        self._backend_combo = QComboBox()
+        self._backend_combo.addItems(["auto", "pytorch", "hdf5"])
+        self._backend_combo.setCurrentText(str(initial_model.get("backend", "auto")))
+        row1.addWidget(self._backend_combo)
+        layout.addLayout(row1)
+
+        row2 = QHBoxLayout()
+        row2.addWidget(QLabel(_("Model location")))
+        self._model_location_edit = QLineEdit(str(initial_model.get("model_location", "")))
+        row2.addWidget(self._model_location_edit, stretch=1)
+        browse_btn = QPushButton(_("Browse..."))
+        browse_btn.clicked.connect(self._browse_model_location)
+        row2.addWidget(browse_btn)
+        layout.addLayout(row2)
+
+        row3 = QHBoxLayout()
+        row3.addWidget(QLabel(_("Categories")))
+        self._categories_edit = QLineEdit(",".join([str(c) for c in (initial_model.get("model_categories") or [])]))
+        self._categories_edit.setPlaceholderText(_("Comma-separated categories"))
+        row3.addWidget(self._categories_edit, stretch=1)
+        layout.addLayout(row3)
+
+        row4 = QHBoxLayout()
+        row4.addWidget(QLabel(_("HF repo id")))
+        self._hf_repo_id_edit = QLineEdit(str(initial_model.get("hf_repo_id", "")))
+        row4.addWidget(self._hf_repo_id_edit, stretch=1)
+        load_files_btn = QPushButton(_("Load Repo Files"))
+        load_files_btn.clicked.connect(self._load_repo_files)
+        row4.addWidget(load_files_btn)
+        view_card_btn = QPushButton(_("View Model Card"))
+        view_card_btn.clicked.connect(self._view_model_card)
+        row4.addWidget(view_card_btn)
+        layout.addLayout(row4)
+
+        row5 = QHBoxLayout()
+        row5.addWidget(QLabel(_("Repo file")))
+        self._repo_file_combo = QComboBox()
+        self._repo_file_combo.setEditable(True)
+        self._repo_file_combo.addItem(str(initial_model.get("hf_selected_filename", "")))
+        row5.addWidget(self._repo_file_combo, stretch=1)
+        row5.addWidget(QLabel(_("HF snapshot path")))
+        self._hf_pretrained_path_edit = QLineEdit(str(model_kwargs.get("hf_pretrained_path", "")))
+        row5.addWidget(self._hf_pretrained_path_edit, stretch=1)
+        use_file_btn = QPushButton(_("Use Repo File Path"))
+        use_file_btn.clicked.connect(self._apply_repo_file_to_model_location)
+        row5.addWidget(use_file_btn)
+        layout.addLayout(row5)
+
+        row6 = QHBoxLayout()
+        self._use_transformers_cb = QCheckBox(_("Use Transformers AutoModel"))
+        self._use_transformers_cb.setChecked(bool(model_kwargs.get("use_transformers_auto_model", False)))
+        row6.addWidget(self._use_transformers_cb)
+        row6.addWidget(QLabel(_("Arch module")))
+        self._arch_module_edit = QLineEdit(str(model_kwargs.get("architecture_module_name", "")))
+        row6.addWidget(self._arch_module_edit, stretch=1)
+        row6.addWidget(QLabel(_("Arch class")))
+        self._arch_class_edit = QLineEdit(str(model_kwargs.get("architecture_class_path", "")))
+        row6.addWidget(self._arch_class_edit, stretch=1)
+        layout.addLayout(row6)
+
+        btn_row = QHBoxLayout()
+        btn_row.addStretch()
+        cancel_btn = QPushButton(_("Cancel"))
+        cancel_btn.clicked.connect(self.close)
+        btn_row.addWidget(cancel_btn)
+        save_btn = QPushButton(_("Save"))
+        save_btn.clicked.connect(self._save)
+        btn_row.addWidget(save_btn)
+        layout.addLayout(btn_row)
+
+    def _browse_model_location(self) -> None:
+        path, _ = QFileDialog.getOpenFileName(self, _("Select model file"))
+        if path:
+            self._model_location_edit.setText(path)
+
+    def _load_repo_files(self) -> None:
+        repo_id = (self._hf_repo_id_edit.text() or "").strip()
+        if not repo_id:
+            return
+        try:
+            if repo_id in self._repo_files_cache:
+                files = self._repo_files_cache[repo_id]
+            else:
+                files = self._api_getter().list_model_files(repo_id)
+                self._repo_files_cache[repo_id] = files
+            preferred = [f for f in files if os.path.splitext(f)[1].lower() in self._model_file_extensions]
+            values = preferred if preferred else files
+            current = self._repo_file_combo.currentText().strip()
+            self._repo_file_combo.clear()
+            for f in values:
+                self._repo_file_combo.addItem(f)
+            if current and current in values:
+                self._repo_file_combo.setCurrentText(current)
+            elif values:
+                self._repo_file_combo.setCurrentText(values[0])
+        except Exception:
+            pass
+
+    def _view_model_card(self) -> None:
+        repo_id = (self._hf_repo_id_edit.text() or "").strip()
+        if not repo_id:
+            return
+        try:
+            card_text = self._api_getter().get_model_card_text(repo_id)
+            _TextPreviewDialog(
+                parent=self,
+                title=_("Model Card - {0}").format(repo_id),
+                text=card_text,
+            ).show()
+        except Exception:
+            pass
+
+    def _apply_repo_file_to_model_location(self) -> None:
+        selected_file = (self._repo_file_combo.currentText() or "").strip()
+        if not selected_file:
+            return
+        snapshot_path = (self._hf_pretrained_path_edit.text() or "").strip()
+        if snapshot_path:
+            candidate = os.path.join(snapshot_path, selected_file.replace("/", os.sep))
+            self._model_location_edit.setText(candidate)
+        else:
+            self._model_location_edit.setText(selected_file)
+
+    def _save(self) -> None:
+        model_name = (self._model_name_edit.text() or "").strip()
+        model_location = (self._model_location_edit.text() or "").strip()
+        categories = [c.strip() for c in (self._categories_edit.text() or "").split(",") if c.strip()]
+        backend = (self._backend_combo.currentText() or "auto").strip()
+        if not model_name or not model_location or not categories:
+            return
+        model_details: dict[str, Any] = {
+            "model_name": model_name,
+            "model_location": model_location,
+            "model_categories": categories,
+            "backend": backend,
+        }
+        repo_id = (self._hf_repo_id_edit.text() or "").strip()
+        selected_file = (self._repo_file_combo.currentText() or "").strip()
+        if repo_id:
+            model_details["hf_repo_id"] = repo_id
+        if selected_file:
+            model_details["hf_selected_filename"] = selected_file
+
+        model_kwargs: dict[str, Any] = {}
+        if self._use_transformers_cb.isChecked():
+            model_kwargs["use_transformers_auto_model"] = True
+            hf_pretrained_path = (self._hf_pretrained_path_edit.text() or "").strip()
+            if hf_pretrained_path:
+                model_kwargs["hf_pretrained_path"] = hf_pretrained_path
+        arch_module = (self._arch_module_edit.text() or "").strip()
+        arch_class = (self._arch_class_edit.text() or "").strip()
+        if arch_module:
+            model_kwargs["architecture_module_name"] = arch_module
+        if arch_class:
+            model_kwargs["architecture_class_path"] = arch_class
+        if model_kwargs:
+            model_details["model_kwargs"] = model_kwargs
+
+        try:
+            normalized = ImageClassifierModelConfig.from_dict(model_details)
+        except Exception:
+            return
+        self._save_callback(normalized.to_dict(), self._initial_name)
+        self.close()
 
 
 class _SearchResultTreeItem(QTreeWidgetItem):
@@ -94,7 +290,7 @@ class HfModelManagerWindow(SmartDialog):
         super().__init__(
             parent=parent,
             position_parent=parent,
-            title=_("HF Hub Model Manager"),
+            title=_("Model Manager"),
             geometry="1100x700",
         )
         HfModelManagerWindow._instance = self
@@ -115,6 +311,7 @@ class HfModelManagerWindow(SmartDialog):
         self._build_search_tab(search_page)
         self._build_installed_tab(installed_page)
         self._refresh_installed_models()
+        self._tabs.setCurrentIndex(1)
 
         QShortcut(QKeySequence(Qt.Key_Escape), self).activated.connect(self.close)
 
@@ -251,6 +448,10 @@ class HfModelManagerWindow(SmartDialog):
     def _build_installed_tab(self, page: QWidget) -> None:
         layout = QVBoxLayout(page)
 
+        self._installed_notice_label = QLabel("")
+        self._installed_notice_label.setWordWrap(True)
+        layout.addWidget(self._installed_notice_label)
+
         self._installed_tree = QTreeWidget()
         self._installed_tree.setHeaderLabels(
             [_("Model Name"), _("Backend"), _("Categories"), _("Model Location")]
@@ -263,6 +464,22 @@ class HfModelManagerWindow(SmartDialog):
         layout.addWidget(self._installed_tree)
 
         btn_row = QHBoxLayout()
+        add_btn = QPushButton(_("Add New"))
+        add_btn.clicked.connect(self._add_installed_model)
+        btn_row.addWidget(add_btn)
+
+        edit_btn = QPushButton(_("Edit Selected"))
+        edit_btn.clicked.connect(self._edit_selected_installed_model)
+        btn_row.addWidget(edit_btn)
+
+        load_files_btn = QPushButton(_("Load Repo Files"))
+        load_files_btn.clicked.connect(self._load_repo_files_for_installed_selection)
+        btn_row.addWidget(load_files_btn)
+
+        view_card_btn = QPushButton(_("View Model Card"))
+        view_card_btn.clicked.connect(self._view_model_card_for_installed_selection)
+        btn_row.addWidget(view_card_btn)
+
         refresh_btn = QPushButton(_("Refresh"))
         refresh_btn.clicked.connect(self._refresh_installed_models)
         btn_row.addWidget(refresh_btn)
@@ -475,9 +692,16 @@ class HfModelManagerWindow(SmartDialog):
             "model_location": downloaded_path,
             "model_categories": categories,
             "backend": effective_backend,
+            "hf_repo_id": repo_id,
+            "hf_selected_filename": filename,
         }
         if model_kwargs:
             model_details["model_kwargs"] = model_kwargs
+        try:
+            model_details = ImageClassifierModelConfig.from_dict(model_details, logger=logger).to_dict()
+        except Exception as e:
+            self._app_actions.alert(_("Invalid Model Configuration"), str(e), kind="error", master=self)
+            return
 
         existing_names = {m.get("model_name") for m in config.image_classifier_models}
         if model_name in existing_names:
@@ -539,26 +763,188 @@ class HfModelManagerWindow(SmartDialog):
 
     def _refresh_installed_models(self) -> None:
         self._installed_tree.clear()
+        valid_count = 0
+        total_count = 0
         for model in list(config.image_classifier_models):
-            categories = model.get("model_categories") or []
+            total_count += 1
+            normalized_model = self._normalize_model_dict(model)
+            if normalized_model is not None and self._is_valid_installed_model(normalized_model):
+                valid_count += 1
+            display_model = normalized_model if normalized_model is not None else model
+            categories = display_model.get("model_categories") or []
             categories_text = ", ".join(str(c) for c in categories)
-            backend = str(model.get("backend", "auto"))
-            QTreeWidgetItem(
+            backend = str(display_model.get("backend", "auto"))
+            item = QTreeWidgetItem(
                 self._installed_tree,
                 [
-                    str(model.get("model_name", "")),
+                    str(display_model.get("model_name", "")),
                     backend,
                     categories_text,
-                    str(model.get("model_location", "")),
+                    str(display_model.get("model_location", "")),
                 ],
             )
+            item.setData(0, Qt.ItemDataRole.UserRole, dict(display_model))
+        if valid_count == 0:
+            self._installed_notice_label.setText(
+                _("No valid installed models found. Use the HF Hub Search tab to discover and install models, or add one manually.")
+            )
+        else:
+            self._installed_notice_label.setText(
+                _("Installed models: {0} valid of {1} total").format(valid_count, total_count)
+            )
 
-    def _remove_selected_installed_model(self) -> None:
+    @staticmethod
+    def _is_valid_installed_model(model: dict[str, Any]) -> bool:
+        model_name = str(model.get("model_name", "") or "").strip()
+        model_location = str(model.get("model_location", "") or "").strip()
+        categories = model.get("model_categories") or []
+        return bool(model_name and model_location and os.path.exists(model_location) and isinstance(categories, list) and len(categories) > 0)
+
+    @staticmethod
+    def _normalize_model_dict(model: dict[str, Any]) -> Optional[dict[str, Any]]:
+        try:
+            return ImageClassifierModelConfig.from_dict(model, warn_unknown_keys=False).to_dict()
+        except Exception:
+            return None
+
+    def _selected_installed_model_name(self) -> Optional[str]:
         selected = self._installed_tree.selectedItems()
         if not selected:
+            return None
+        return selected[0].text(0)
+
+    def _selected_installed_model_details(self) -> Optional[dict[str, Any]]:
+        selected = self._installed_tree.selectedItems()
+        if not selected:
+            return None
+        model_data = selected[0].data(0, Qt.ItemDataRole.UserRole)
+        if isinstance(model_data, dict):
+            return dict(model_data)
+        model_name = selected[0].text(0)
+        for model in config.image_classifier_models:
+            if model.get("model_name") == model_name:
+                return dict(model)
+        return None
+
+    def _add_installed_model(self) -> None:
+        _InstalledModelEditDialog(
+            parent=self,
+            title=_("Add Installed Model"),
+            initial_model={},
+            api_getter=self._api,
+            save_callback=self._save_installed_model_details,
+            model_file_extensions=self._MODEL_FILE_EXTENSIONS,
+        ).show()
+
+    def _edit_selected_installed_model(self) -> None:
+        model = self._selected_installed_model_details()
+        if model is None:
             self._app_actions.warn(_("Please select an installed model first."))
             return
-        model_name = selected[0].text(0)
+        _InstalledModelEditDialog(
+            parent=self,
+            title=_("Edit Installed Model"),
+            initial_model=model,
+            api_getter=self._api,
+            save_callback=self._save_installed_model_details,
+            model_file_extensions=self._MODEL_FILE_EXTENSIONS,
+        ).show()
+
+    def _save_installed_model_details(self, model_details: dict[str, Any], original_name: str) -> None:
+        normalized_model = ImageClassifierModelConfig.from_dict(model_details, logger=logger).to_dict()
+        model_name = str(normalized_model.get("model_name", "")).strip()
+        updated_models = []
+        replaced = False
+        for existing in config.image_classifier_models:
+            existing_name = str(existing.get("model_name", "")).strip()
+            if existing_name == original_name and original_name:
+                updated_models.append(normalized_model)
+                replaced = True
+            elif existing_name == model_name and existing_name != original_name:
+                updated_models.append(normalized_model)
+                replaced = True
+            else:
+                updated_models.append(existing)
+        if not replaced:
+            updated_models.append(normalized_model)
+        try:
+            config.set_image_classifier_models(updated_models)
+            image_classifier_manager.set_classifier_metadata(config.image_classifier_models)
+            self._refresh_installed_models()
+            self._app_actions.success(_("Saved model '{0}'.").format(model_name))
+        except Exception as e:
+            logger.error(f"Failed saving installed model details: {e}")
+            self._app_actions.alert(_("Config Update Error"), str(e), kind="error", master=self)
+
+    def _infer_hf_repo_id_from_model(self, model: dict[str, Any]) -> Optional[str]:
+        explicit = str(model.get("hf_repo_id", "") or "").strip()
+        if explicit:
+            return explicit
+        model_kwargs = dict(model.get("model_kwargs", {}))
+        hf_path = str(model_kwargs.get("hf_pretrained_path", "") or "")
+        model_location = str(model.get("model_location", "") or "")
+        for candidate in (hf_path, model_location):
+            if "models--" not in candidate:
+                continue
+            marker = candidate.split("models--", 1)[1]
+            repo_part = marker.split(os.sep + "snapshots", 1)[0]
+            if not repo_part:
+                continue
+            repo_id = repo_part.replace("--", "/")
+            return repo_id.strip("/")
+        return None
+
+    def _load_repo_files_for_installed_selection(self) -> None:
+        model = self._selected_installed_model_details()
+        if model is None:
+            self._app_actions.warn(_("Please select an installed model first."))
+            return
+        repo_id = self._infer_hf_repo_id_from_model(model)
+        if not repo_id:
+            self._app_actions.warn(_("No HF repo id found for selected model."))
+            return
+        try:
+            self._set_repo_file_options(repo_id)
+            self._app_actions.toast(_("Loaded repo files for {0}.").format(repo_id))
+        except Exception as e:
+            self._app_actions.alert(_("HF Hub Error"), str(e), kind="error", master=self)
+
+    def _view_model_card_for_installed_selection(self) -> None:
+        model = self._selected_installed_model_details()
+        if model is None:
+            self._app_actions.warn(_("Please select an installed model first."))
+            return
+        repo_id = self._infer_hf_repo_id_from_model(model)
+        if not repo_id:
+            self._app_actions.warn(_("No HF repo id found for selected model."))
+            return
+        try:
+            card_text = self._api().get_model_card_text(repo_id)
+            _TextPreviewDialog(
+                parent=self,
+                title=_("Model Card - {0}").format(repo_id),
+                text=card_text,
+            ).show()
+        except Exception as e:
+            self._app_actions.alert(_("Model Card Error"), str(e), kind="error", master=self)
+
+    def _remove_selected_installed_model(self) -> None:
+        model = self._selected_installed_model_details()
+        if model is None:
+            self._app_actions.warn(_("Please select an installed model first."))
+            return
+        model_name = str(model.get("model_name", "")).strip()
+        model_kwargs = dict(model.get("model_kwargs", {}))
+        api_backend: Optional[HfHubApiBackend] = None
+        try:
+            api_backend = self._api()
+        except Exception:
+            api_backend = None
+        fallback_cache = HfHubApiBackend.get_default_cache_dir()
+        hf_cache_path = str(model_kwargs.get("hf_pretrained_path", "") or fallback_cache)
+        repo_id = self._infer_hf_repo_id_from_model(model)
+
+        # Confirmation #1 (always)
         should_remove = self._app_actions.alert(
             _("Remove Installed Model?"),
             _("Remove '{0}' from configured image classifier models?").format(model_name),
@@ -568,10 +954,33 @@ class HfModelManagerWindow(SmartDialog):
         if not should_remove:
             return
 
-        updated_models = [
-            m for m in config.image_classifier_models
-            if m.get("model_name") != model_name
-        ]
+        hf_connected = bool(api_backend and api_backend.has_connection())
+        repo_is_hosted = False
+        repo_hosted_message = ""
+        if api_backend and repo_id:
+            repo_is_hosted, repo_hosted_message = api_backend.is_repo_hosted(repo_id)
+
+        # Confirmation #2:
+        # - connected, but source can't be confirmed from model metadata
+        # - connected + repo id known, but repo is not currently hosted
+        if hf_connected and (not repo_id or (repo_id and not repo_is_hosted)):
+            if repo_id and not repo_is_hosted:
+                prompt = _(
+                    "Repo '{0}' is not currently available on Hugging Face.\n"
+                    "Remove config entry anyway?\n\nDetails: {1}"
+                ).format(repo_id, repo_hosted_message or _("Unknown error"))
+            else:
+                prompt = _("Unable to confirm this model came from Hugging Face. Remove config entry anyway?")
+            second_confirm = self._app_actions.alert(
+                _("Unable to Confirm HF Source"),
+                prompt,
+                kind="askokcancel",
+                master=self,
+            )
+            if not second_confirm:
+                return
+
+        updated_models = [m for m in config.image_classifier_models if m.get("model_name") != model_name]
         if len(updated_models) == len(config.image_classifier_models):
             self._app_actions.warn(_("No matching model named '{0}' was found.").format(model_name))
             return
@@ -584,5 +993,31 @@ class HfModelManagerWindow(SmartDialog):
             self._app_actions.alert(_("Config Update Error"), str(e), kind="error", master=self)
             return
 
+        if hf_connected and repo_id and api_backend:
+            deleted, cache_dir, message = api_backend.delete_cached_repo(repo_id)
+            if deleted:
+                self._app_actions.success(
+                    _("Removed model '{0}' and deleted HF cache for {1}.").format(model_name, repo_id)
+                )
+            else:
+                self._app_actions.alert(
+                    _("Model Removed; Cache Retained"),
+                    _("Removed '{0}', but cache was not deleted.\n{1}\nCache location: {2}").format(
+                        model_name, message, cache_dir
+                    ),
+                    kind="warning",
+                    master=self,
+                )
+        elif not hf_connected:
+            self._app_actions.alert(
+                _("Model Removed; Cache Retained"),
+                _("Removed '{0}'. Hugging Face could not be reached, so cache deletion was skipped.\nCache may still exist at:\n{1}").format(
+                    model_name, hf_cache_path or HfHubApiBackend.get_default_cache_dir()
+                ),
+                kind="warning",
+                master=self,
+            )
+        else:
+            self._app_actions.success(_("Removed model '{0}'.").format(model_name))
+
         self._refresh_installed_models()
-        self._app_actions.success(_("Removed model '{0}'.").format(model_name))

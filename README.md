@@ -51,6 +51,7 @@ The UI can be used as a media file browser. The following features are available
     <li>Sort files by related images and prompts</li>
     <li>View raw image metadata</li>
     <li>Content filtering of images and videos based on their text encoding similarity (automatically hide, move to dir, delete etc)</li>
+    <li>Search and install image classifier models from Hugging Face directly in-app</li>
     <li>Create PDFs from marked files with customizable quality and compression options</li>
     <li>Password protection system for sensitive operations with configurable session timeouts</li>
     <li>Extract text using OCR from images</li>
@@ -111,6 +112,8 @@ Prevalidation rules and classifier actions can be configured with:
 ---
 
 Prevalidations automatically run on media as you browse, while classifier actions can be executed manually on selected media directories when needed. These features are particularly useful for maintaining clean media collections and automating local content filtering, but can be disabled at any time if desired. The classifier action management window allows copying between types of classifier action to reduce the burden of action configuration.
+
+Classifier models can be added manually or discovered through the in-app model manager, which supports searching Hugging Face repositories, viewing model cards, and installing selected model files.
 
 You can find example classifier models that are known to work here:
 - [Coherence Detection](https://huggingface.co/reddesert/coherence_detection) - A PyTorch ResNet-34 model for classifying AI-generated images into coherent, incoherent, or semi-incoherent categories
