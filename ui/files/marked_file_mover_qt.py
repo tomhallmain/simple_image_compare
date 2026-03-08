@@ -61,6 +61,7 @@ class MarkedFileMover(SmartDialog):
 
     MAX_HEIGHT: int = 900
     COL_0_WIDTH: int = 600
+    LARGE_FILE_OP_CONFIRM_THRESHOLD: int = 25
 
     # ==================================================================
     # Static helper methods
@@ -372,6 +373,8 @@ class MarkedFileMover(SmartDialog):
         )
         if target_dir is None:
             return
+        if not self._confirm_large_file_operation(target_dir, move_func):
+            return
         if (
             config.debug
             and self._filter_text
@@ -402,6 +405,33 @@ class MarkedFileMover(SmartDialog):
             current_image=self._current_image,
         )
         self.close_windows()
+
+    def _confirm_large_file_operation(self, target_dir: str, move_func) -> bool:
+        """Ask for confirmation before very large move/copy operations."""
+        marked_count = len(MarkedFiles.file_marks)
+        if marked_count < self.LARGE_FILE_OP_CONFIRM_THRESHOLD:
+            return True
+
+        is_move = move_func == Utils.move_file
+        if is_move:
+            warning_text = _(
+                "You are about to move {0} marked files to:\n\n{1}\n\n"
+                "Please confirm this destination is correct."
+            ).format(marked_count, target_dir)
+        else:
+            warning_text = _(
+                "You are about to copy {0} marked files to:\n\n{1}\n\n"
+                "Please confirm this destination is correct."
+            ).format(marked_count, target_dir)
+        return bool(
+            self._app_actions.alert(
+                _("Confirm Large File Operation"),
+                warning_text,
+                kind="askokcancel",
+                severity="high",
+                master=self,
+            )
+        )
 
     def _delete_marked_files(self) -> None:
         if not self._app_actions.alert(
