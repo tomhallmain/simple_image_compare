@@ -68,8 +68,8 @@ def model_similarity(models1: List[str], loras1: List[str],
 
 class CompareModels(BaseCompare):
     COMPARE_MODE = CompareMode.MODELS
-    SEARCH_OUTPUT_FILE = "simple_image_compare_search_output.txt"
-    GROUPS_OUTPUT_FILE = "simple_image_compare_file_groups_output.txt"
+    SEARCH_OUTPUT_FILE = "weidr_search_output.txt"
+    GROUPS_OUTPUT_FILE = "weidr_file_groups_output.txt"
     MODELS_DATA = "image_models.pkl"
     THRESHOLD_MATCH = 0.7  # Default threshold for model matching
 

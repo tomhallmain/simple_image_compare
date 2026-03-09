@@ -3,7 +3,7 @@
 Test script for GIMP GEGL operations integration.
 
 This script demonstrates various GEGL operations available through the
-GIMP 3 integration in the simple_image_compare project.
+GIMP 3 integration in the Weidr project.
 
 Usage:
     python temp_test_gegl_operations.py <input_image_path>

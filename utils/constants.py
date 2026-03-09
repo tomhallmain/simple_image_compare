@@ -6,7 +6,7 @@ _ = I18N._
 
 class AppInfo:
     SERVICE_NAME = "MyPersonalApplicationsService"
-    APP_IDENTIFIER = "simple_image_compare"
+    APP_IDENTIFIER = "simple_image_compare"  # TODO update to new name
 
 
 class Mode(Enum):

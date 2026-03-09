@@ -1,18 +1,7 @@
-# Simple Image Compare Tool
+# Weidr - Advanced Visual Media Handler
 
-Simple visual media comparison tool that detects color and face similarities using embeddings (default) and color matching (separate optional mode). The tool supports multiple embedding models:
-
-<details>
-<summary>View Embedding Models</summary>
-- CLIP (default): 512D embeddings, high zero-shot performance
-- SigLIP: 768D or 1024D embeddings, excellent retrieval performance
-- ALIGN: 640D embeddings, high accuracy for retrieval
-- FLAVA: 768D embeddings, good for complex reasoning
-- X-VLM: 256D embeddings, efficient for region-text tasks - requires local copy of [X-VLM](https://github.com/zengyan-97/X-VLM)
-- LAION: 1024D embeddings, high-quality visual-language understanding - based on CLIP ViT-H/14 architecture
-
-Each model offers different tradeoffs between accuracy, speed, and resource usage. The default CLIP model provides a good balance for most use cases.
-</details>
+Media workflow application for browsing, comparing, analyzing, and transforming visual files at scale.
+Combines embedding-driven search/classification with batch file actions, format conversion, and tool integrations for practical library curation.
 
 ---
 
@@ -20,11 +9,11 @@ Each model offers different tradeoffs between accuracy, speed, and resource usag
 
 Clone this repository and ensure Python 3 and the required packages are installed from requirements.txt. Optionally, run `pip install -r requirements-optional.txt` for platform-specific extras (e.g. keychain integration, EXIF tools). Note: some dependencies in requirements.txt (e.g. **torch**) may need to be installed from the provider’s site (e.g. [pytorch.org](https://pytorch.org)) for GPU support specific to your system.
 
-Run `app_qt.py` to start the PySide6 (Qt) UI. For more details, see [USAGE.md](https://www.github.com/tomhallmain/simple_image_compare/blob/master/USAGE.md).
+Run `app_qt.py` to start the PySide6 (Qt) UI. For more details, see [USAGE.md](https://www.github.com/tomhallmain/Weidr/blob/master/USAGE.md).
 
 ---
 
-## Image and Video Browser
+## Media Browser
 
 The UI can be used as a media file browser. The following features are available that your OS default photo viewer application may not have:
 <details>
@@ -45,8 +34,8 @@ The UI can be used as a media file browser. The following features are available
     <li>Quickly find directories via recent directory picker window</li>
     <li>Stores session info about seen directories (useful for directories with many media files)</li>
     <li>Can be set up to run on user-defined list of files in place of a directory</li>
-    <li>Extension with <a href="https://github.com/tomhallmain/sd-runner" target="_blank">sd-runner</a> for image generation</li>
-    <li>Extension with <a href="https://github.com/tomhallmain/refacdir" target="_blank">refacdir</a> for file operations</li>
+    <li><a href="https://github.com/tomhallmain/sd-runner" target="_blank">sd-runner</a> integration for image generation</li>
+    <li><a href="https://github.com/tomhallmain/refacdir" target="_blank">refacdir</a> intgration for file operations</li>
     <li>Find related images and prompts from embedded Stable Diffusion workflows</li>
     <li>Sort files by related images and prompts</li>
     <li>View raw image metadata</li>
@@ -79,9 +68,27 @@ The Directory Notes feature allows you to maintain persistent notes and marked f
 
 ---
 
+## Performing Media Comparisons
+
+Group large media sets by visual similarity using both embedding and color-comparison modes, or search by similarity to an input image or text embedding, then refine analysis with classifier models (H5/PyTorch) and rule-driven actions. For fine-point document/image review workflows, marked files can also be compared with `diff-pdf` output to highlight precise differences. Multiple embedding models are supported:
+
+<details>
+<summary>View Embedding Models</summary>
+- CLIP (default): 512D embeddings, high zero-shot performance
+- SigLIP: 768D or 1024D embeddings, excellent retrieval performance
+- ALIGN: 640D embeddings, high accuracy for retrieval
+- FLAVA: 768D embeddings, good for complex reasoning
+- X-VLM: 256D embeddings, efficient for region-text tasks - requires local copy of [X-VLM](https://github.com/zengyan-97/X-VLM)
+- LAION: 1024D embeddings, high-quality visual-language understanding - based on CLIP ViT-H/14 architecture
+
+Each model offers different tradeoffs between accuracy, speed, and resource usage. The default CLIP model provides a good balance for most use cases.
+</details>
+
+---
+
 ## Prevalidation Rules and Classifier Actions
 
-The tool includes a flexible prevalidation system that can automatically process media before they're shown to the user, as well as classifier actions that can be run ad-hoc on selected directories. Both are managed through a unified window. This is useful for:
+The application includes a flexible prevalidation system that can automatically process media before they're shown to the user, as well as classifier actions that can be run ad-hoc on selected directories. Both are managed through a unified window. This is useful for:
 
 <details>
 <summary>View Use Cases</summary>
@@ -110,8 +117,6 @@ Prevalidation rules and classifier actions can be configured with:
 </ul>
 </details>
 
----
-
 Prevalidations automatically run on media as you browse, while classifier actions can be executed manually on selected media directories when needed. These features are particularly useful for maintaining clean media collections and automating local content filtering, but can be disabled at any time if desired. The classifier action management window allows copying between types of classifier action to reduce the burden of action configuration.
 
 Classifier models can be added manually or discovered through the in-app model manager, which supports searching Hugging Face repositories, viewing model cards, and installing selected model files.
@@ -126,12 +131,4 @@ You can find example classifier models that are known to work here:
 
 **NOTE** - It is not currently possible to undo or modify a delete action, however unless the delete folder is explicitly set to null in the config it is likely the deleted items will be saved in a trash folder before being fully removed.
 
-This is a simple app primarily meant for personal use but could be adapted for more intensive use cases.
-
-The face similarity measure in particular is very crude and only compares the number of faces in each image, so it is off by default. At a future time more complex face comparison logic may be added, but for now the embedding comparison is helpful in matching faces.
-
----
-
-## Tkinter Support
-
-Tkinter is no longer supported in the latest version. The maintained UI is now PySide6/Qt only.
+The face similarity measure used in comparisons is very crude and only compares the number of faces in each image, so it is off by default. At a future time more complex face comparison logic may be added, but for now the embedding comparison is helpful in matching faces.

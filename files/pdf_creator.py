@@ -212,7 +212,7 @@ class PDFCreator:
         if not output_path.lower().endswith(".pdf"):
             output_path += ".pdf"
 
-        with tempfile.TemporaryDirectory(prefix="simple_image_compare_diffpdf_") as tmp_dir:
+        with tempfile.TemporaryDirectory(prefix="weidr_diffpdf_") as tmp_dir:
             pdf_inputs = []
             for idx, path in enumerate((file_a, file_b), start=1):
                 if path.lower().endswith(".pdf"):

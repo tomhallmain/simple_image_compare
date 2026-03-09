@@ -1,4 +1,4 @@
-# simple_image_compare - Usage
+# Weidr - Usage
 
 Clone this repository and ensure Python 3 and the required packages are installed from requirements.txt.
 

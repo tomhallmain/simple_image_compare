@@ -746,8 +746,8 @@ def usage():
 
 def main(compare_class):
     base_dir = "."
-    search_output_path = "simple_image_compare_search_output.txt"
-    groups_output_path = "simple_image_compare_file_groups_output.txt"
+    search_output_path = "weidr_search_output.txt"
+    groups_output_path = "weidr_file_groups_output.txt"
     overwrite = False
     search_file_path = None
     verbose = False

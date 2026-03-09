@@ -46,7 +46,7 @@ class Utils:
         func_filename = co.co_filename
         func_line_no = frame.f_lineno
         caller = frame.f_back
-        app_name = "simple_image_compare"
+        app_name = "weidr"
         site_packages = "site-packages"
         lib = "\\Lib\\"
         if caller is None:
@@ -472,7 +472,7 @@ class Utils:
         return parts
 
     @staticmethod
-    def check_single_instance(app_name="SimpleImageCompare", mutex_name=None, lock_filename=None):
+    def check_single_instance(app_name="Weidr", mutex_name=None, lock_filename=None):
         """
         Check if another instance of the application is already running.
         

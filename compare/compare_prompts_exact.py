@@ -166,8 +166,8 @@ def compute_text_similarity(text1: str, text2: str) -> float:
 
 class ComparePromptsExact(BaseCompare):
     COMPARE_MODE = CompareMode.PROMPTS_EXACT
-    SEARCH_OUTPUT_FILE = "simple_image_compare_search_output.txt"
-    GROUPS_OUTPUT_FILE = "simple_image_compare_file_groups_output.txt"
+    SEARCH_OUTPUT_FILE = "weidr_search_output.txt"
+    GROUPS_OUTPUT_FILE = "weidr_file_groups_output.txt"
     PROMPTS_DATA = "image_prompts_exact.pkl"
     THRESHHOLD_POTENTIAL_DUPLICATE = 0.95  # High similarity threshold for exact matches
     THRESHHOLD_PROBABLE_MATCH = 0.85

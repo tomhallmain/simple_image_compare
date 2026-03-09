@@ -10,9 +10,9 @@ logger = get_logger("compare_result")
 
 
 class CompareResult:
-    SEARCH_OUTPUT_FILE = "simple_image_compare_search_output.txt"
-    GROUPS_OUTPUT_FILE = "simple_image_compare_file_groups_output.txt"
-    RESULT_FILENAME = "simple_image_compare_result.pkl"
+    SEARCH_OUTPUT_FILE = "weidr_search_output.txt"
+    GROUPS_OUTPUT_FILE = "weidr_file_groups_output.txt"
+    RESULT_FILENAME = "weidr_result.pkl"
 
     def __init__(self, base_dir=".", files=[]):
         self.base_dir = base_dir

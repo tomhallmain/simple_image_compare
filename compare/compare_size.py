@@ -87,8 +87,8 @@ def size_similarity(size1: Tuple[int, int], size2: Tuple[int, int], tolerance: i
 
 class CompareSize(BaseCompare):
     COMPARE_MODE = CompareMode.SIZE
-    SEARCH_OUTPUT_FILE = "simple_image_compare_search_output.txt"
-    GROUPS_OUTPUT_FILE = "simple_image_compare_file_groups_output.txt"
+    SEARCH_OUTPUT_FILE = "weidr_search_output.txt"
+    GROUPS_OUTPUT_FILE = "weidr_file_groups_output.txt"
     SIZE_DATA = "image_sizes.pkl"
     THRESHOLD_MATCH = 0.95  # For exact size matches
 

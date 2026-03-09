@@ -130,7 +130,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
 
         # Set up frameless window with custom title bar
         self.setup_frameless_window(
-            title=_(" Simple Image Compare "), corner_radius=10
+            title=_(" Weidr - Media Handler "), corner_radius=10
         )
 
         # Set icon in the custom title bar and connect context menu
@@ -184,7 +184,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         # ------------------------------------------------------------------
         # Window title
         # ------------------------------------------------------------------
-        self.setWindowTitle(_(" Simple Image Compare "))
+        self.setWindowTitle(_(" Weidr - Media Handler "))
 
         # ------------------------------------------------------------------
         # Central widget: frameless structure with custom title bar
@@ -710,7 +710,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         """Generate the window title from the current base directory."""
         if overwrite:
             relative_dirpath = Utils.get_relative_dirpath(self.base_dir, levels=2)
-            self.base_title = _(" Simple Image Compare ") + "- " + relative_dirpath
+            self.base_title = _(" Weidr - Media Handler ") + "- " + relative_dirpath
         return self.base_title
 
     def _check_large_directory_before_load(self, base_dir: str, threshold: int = 5000) -> bool:

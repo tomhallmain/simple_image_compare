@@ -1,5 +1,5 @@
 """
-Simple Image Compare -- PySide6 entry point.
+Weidr - Media Handler -- PySide6 entry point.
 
 Creates the QApplication, handles startup authentication, signal handlers,
 single-instance locking, and launches the main AppWindow.
@@ -25,13 +25,13 @@ logger = get_logger("app_qt")
 
 def main():
     # Single instance check -- prevent multiple instances from running
-    lock_file, cleanup_lock = Utils.check_single_instance("Simple Image Compare")
+    lock_file, cleanup_lock = Utils.check_single_instance("Weidr")
 
     I18N.install_locale(config.locale, verbose=config.print_settings)
 
     # Create QApplication (must exist before any widgets)
     qt_app = QApplication(sys.argv)
-    qt_app.setApplicationName("Simple Image Compare")
+    qt_app.setApplicationName("Weidr")
     qt_app.setStyleSheet(AppStyle.get_stylesheet())
 
     # Application icon

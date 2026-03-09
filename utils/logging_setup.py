@@ -16,7 +16,7 @@ def _cleanup_old_logs(log_dir: Path, logger: logging.Logger) -> None:
         logger: Logger instance to use for logging cleanup operations
     """
     try:
-        log_files: List[Path] = list(log_dir.glob('simple_image_compare_*.log'))
+        log_files: List[Path] = list(log_dir.glob('weidr_*.log'))
         if len(log_files) <= 10:
             return
 
@@ -25,7 +25,7 @@ def _cleanup_old_logs(log_dir: Path, logger: logging.Logger) -> None:
         
         for log_file in log_files:
             try:
-                # Extract date from filename (format: simple_image_compare_YYYY-MM-DD.log)
+                # Extract date from filename (format: weidr_YYYY-MM-DD.log)
                 date_str: str = log_file.stem.split('_')[-1]
                 file_date: datetime = datetime.strptime(date_str, '%Y-%m-%d')
             except (ValueError, IndexError):
@@ -49,7 +49,7 @@ def get_logger(module_name: str) -> logging.Logger:
         A configured logger instance for the module
     """
     # Create logger with module name
-    logger: logging.Logger = logging.getLogger(f"simple_image_compare.{module_name}")
+    logger: logging.Logger = logging.getLogger(f"weidr.{module_name}")
     logger.setLevel(logging.DEBUG)
     logger.propagate = False
 
@@ -65,14 +65,14 @@ def get_logger(module_name: str) -> logging.Logger:
 
     # Create log file in ApplicationData
     appdata_dir: str = os.getenv('APPDATA') if sys.platform == 'win32' else os.path.expanduser('~/.local/share')
-    log_dir: Path = Path(appdata_dir) / 'simple_image_compare' / 'logs'
+    log_dir: Path = Path(appdata_dir) / 'Weidr' / 'logs'
     log_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean up old logs before creating new one
     _cleanup_old_logs(log_dir, logger)
 
     date_str: str = datetime.now().strftime("%Y-%m-%d")
-    log_file: Path = log_dir / f'simple_image_compare_{date_str}.log'
+    log_file: Path = log_dir / f'weidr_{date_str}.log'
 
     # Add file handler
     fh: logging.FileHandler = logging.FileHandler(log_file, mode='a', encoding='utf-8')
@@ -85,13 +85,13 @@ def get_logger(module_name: str) -> logging.Logger:
 def set_logger_level(debug: bool) -> None:
     """
     Set the logger level to DEBUG if debug is True, otherwise set it to INFO.
-    This updates all existing loggers in the simple_image_compare hierarchy and their handlers.
+    This updates all existing loggers in the application hierarchy and their handlers.
     """
     level = logging.DEBUG if debug else logging.INFO
     
-    # Update all existing loggers in the simple_image_compare hierarchy
+    # Update all existing loggers in the application hierarchy
     for logger_name in logging.Logger.manager.loggerDict:
-        if logger_name.startswith('simple_image_compare'):
+        if logger_name.startswith('weidr'):
             logger = logging.getLogger(logger_name)
             logger.setLevel(level)
             # Also update all handlers for this logger

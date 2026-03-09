@@ -25,10 +25,10 @@ def test_embeddings_matrix():
     embedding_compare.run_comparison()
     embedding_compare_matrix.run_comparison()
 
-    with open(os.path.join(Utils.get_user_dir(), "simple_image_compare", "tests", "embeddings_output.json"), "r") as f:
+    with open(os.path.join(Utils.get_user_dir(), "Weidr", "tests", "embeddings_output.json"), "r") as f:
         embedding_compare_result = json.load(f)
 
-    with open(os.path.join(Utils.get_user_dir(), "simple_image_compare", "tests", "embeddings_matrix_output.json"), "r") as f:
+    with open(os.path.join(Utils.get_user_dir(), "Weidr", "tests", "embeddings_matrix_output.json"), "r") as f:
         embedding_compare_matrix_result = json.load(f)
 
     comparable_embedding_compare_matrix_reuslt = convert_matrix_to_roll_index_output(embedding_compare_matrix_result)

@@ -82,7 +82,7 @@ def main():
     # notification_manager.set_title_update_callback(mock_title_callback)
     
     # Set initial title
-    notification_manager.set_current_title("Simple Image Compare - C:/test/images")
+    notification_manager.set_current_title("Weidr - Media Handler - C:/test/images")
     print("\nInitial title set")
 
     test_1(notification_manager)
