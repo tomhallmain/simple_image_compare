@@ -61,16 +61,7 @@ If a search image is set simultaneously with search text, its embedding will be 
 
 `enable_prevalidations` enables the prevalidation system. When enabled, prevalidation rules will be applied to media before they are shown.
 
-`image_classifier_models` defines a list of image classifier models (H5 or PyTorch) that can be used for prevalidation rules. Each model should specify:
-
-- `model_name`: A unique name for the model
-- `model_location`: Path to the model file (.h5 for TensorFlow/Keras, or .pth/.pt/.safetensors/.bin for PyTorch)
-- `model_categories`: List of categories the model can classify
-- `backend`: "auto" (detected from file extension), "hdf5"/"tensorflow" for H5 models, or "pytorch" for PyTorch models
-- `use_hub_keras_layers`: Whether to use Keras hub layers (H5 models only)
-- Additional PyTorch-specific parameters: `architecture_module_name`, `weights_only`, `device`, `input_shape`, etc.
-
-**Note:** For `.safetensors` models, you must provide the model architecture configuration. See `config_example.json` for the required format. Only the `architecture_module_name` is required if the model architecture file is located in the same directory as the model.
+`image_classifier_models` defines a list of classifier model definitions used by prevalidations and classifier actions. These can now be managed directly in the UI (see the **Hugging Face Model Manager** section below), but manual config editing is still supported.
 
 If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [stable-diffusion-prompt-reader](https://github.com/receyuki/stable-diffusion-prompt-reader) then opening image details for an image with a stable diffusion prompt will give prompt information found in the image.
 
@@ -82,6 +73,26 @@ If the `sd_prompt_reader_loc` config setting is pointing to your local copy of [
 
 `store_checkpoints` will cache a group comparison process at certain checkpoints for later restart.
 </details>
+
+---
+
+## Hugging Face Model Manager
+
+Use the Hugging Face model manager window to search, install, edit, and remove classifier model entries from the UI (shortcut: `Ctrl+Shift+M`).
+
+It keeps `image_classifier_models` in config in sync with what you manage in the window.
+
+If editing manually, each `image_classifier_models` entry should include:
+
+- `model_name`: unique display name for the model
+- `model_location`: local model path (`.h5`, `.pth`, `.pt`, `.safetensors`, `.bin`, etc.)
+- `model_categories`: non-empty list of class/category names
+- `backend`: `auto`, `hdf5`/`tensorflow`, or `pytorch`
+- Optional: `use_hub_keras_layers` (H5 models)
+- Optional Hugging Face metadata: `hf_repo_id`, `hf_selected_filename`
+- Optional advanced backend args in `model_kwargs` (for example `architecture_module_name`, `architecture_class_path`, `weights_only`, `device`, `input_shape`, `use_transformers_auto_model`, `hf_pretrained_path`)
+
+For many `.safetensors` models, set architecture details in `model_kwargs` (at minimum `architecture_module_name` unless using transformers auto-model loading). See `configs/config_example.json` for examples.
 
 ---
 
@@ -112,6 +123,7 @@ This window helps with efficient filing of file marks.
 <p>Simply typing letters while the mark window is open will filter the list of mark target directories, even if the GUI is not present. The backspace key will delete letters from the filter. You can scroll through the list of saved target directories using arrow keys.</p>
 <p>To bypass the move marks window, use the Ctrl+R or Ctrl+E shortcuts to immediately run the previous and penultimate actions respectively on the current selection. You can also use number keys or Ctrl+T as hotkeys for persistent marks actions. To see the full list of file action hotkeys and their current settings open the hotkey actions window by pressing Ctrl+H on the marks window.</p>
 <p>Ctrl+Z will undo the previous file marks move or copy action. If an earlier action needs to be reversed or modified, open the file actions window to verify the action in the history list and reverse it via the UI.</p>
+<p>The same window includes a <code>Create PDF</code> action: it combines marked files into a single PDF and lets you choose quality/compression behavior.</p>
 <p>The same window also includes a <code>Diff PDFs</code> action: with exactly two marked files, it creates a visual diff PDF using <code>diff-pdf</code>. If the marked inputs are not PDFs, they are converted to temporary PDFs first.</p>
 </details>
 
