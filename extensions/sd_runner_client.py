@@ -113,8 +113,8 @@ class SDRunnerClient:
         self.validate_image_for_type(_type, base_image)
         self.validate_connection()
         try:
-            command  = {'command': 'run', 'type': _type.value,
-                        'args': {'image': base_image, 'append': append}}
+            args = {'image': base_image, 'append': append}
+            command  = {'command': 'run', 'type': _type.value, 'args': args}
             resp = self.send(command)
             if "error" in resp:
                 self.close()

@@ -567,7 +567,7 @@ class SearchController:
 
         def _do_run() -> None:
             sd_client.run(_type, image_path, append=modify_call)
-            ImageDetails.previous_image_generation_image = image_path
+            ImageDetails.previous_image_generation_adapter_path = image_path
 
         worker = _CompareWorker(_do_run, [])
         worker.signals.finished.connect(
@@ -606,6 +606,9 @@ class SearchController:
 
         def _do_run() -> None:
             sd_client.run_on_directory(_type, directory_path)
+            # Keep last-generation target path for Ctrl+Enter/Cancel/Revert flows.
+            # This may be either a single file path or a directory path.
+            ImageDetails.previous_image_generation_adapter_path = directory_path
 
         worker = _CompareWorker(_do_run, [])
         worker.signals.finished.connect(

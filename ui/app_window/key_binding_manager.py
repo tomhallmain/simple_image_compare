@@ -82,7 +82,7 @@ class KeyBindingManager:
         from ui.files.marked_file_mover_qt import MarkedFiles, MarkedFileMover
         from ui.image.image_details_qt import ImageDetails
         from ui.app_window.window_manager import WindowManager
-        from utils.constants import Mode
+        from utils.constants import ImageGenerationType, Mode
 
         # ==============================================================
         # Navigation (arrow keys, Home/End, PgUp/PgDown)
@@ -175,7 +175,26 @@ class KeyBindingManager:
         )
         self._bind(
             "Ctrl+Return",
-            lambda: ImageDetails.run_image_generation_static(app.app_actions),
+            lambda: app.search_ctrl.run_image_generation(
+                _type=ImageGenerationType.LAST_SETTINGS,
+                image_path=ImageDetails.previous_image_generation_adapter_path,
+            ),
+            guarded=False,
+        )
+        self._bind(
+            "Ctrl+Shift+Return",
+            lambda: app.search_ctrl.run_image_generation(
+                _type=ImageGenerationType.CANCEL,
+                image_path=ImageDetails.previous_image_generation_adapter_path,
+            ),
+            guarded=False,
+        )
+        self._bind(
+            "Ctrl+Alt+Return",
+            lambda: app.search_ctrl.run_image_generation(
+                _type=ImageGenerationType.REVERT_TO_SIMPLE_GEN,
+                image_path=ImageDetails.previous_image_generation_adapter_path,
+            ),
             guarded=False,
         )
         # Note: no global Return binding. The individual search QLineEdits

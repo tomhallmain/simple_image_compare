@@ -79,7 +79,8 @@ class ImageDetails(SmartDialog):
     downstream_related_images_cache: dict = {}
     downstream_related_image_browser: FileBrowser = FileBrowser()
     image_generation_mode = ImageGenerationType.CONTROL_NET
-    previous_image_generation_image: Optional[str] = None
+    # Stores the last generation adapter path (file or directory).
+    previous_image_generation_adapter_path: Optional[str] = None
     metadata_viewer_window: Optional[MetadataViewerWindow] = None
     ocr_text_window: Optional[OCRTextWindow] = None
 
@@ -1228,7 +1229,7 @@ class ImageDetails(SmartDialog):
                 _type = ImageGenerationType.LAST_SETTINGS
             app_actions.run_image_generation(
                 _type=_type,
-                image_path=ImageDetails.previous_image_generation_image,
+                image_path=ImageDetails.previous_image_generation_adapter_path,
                 modify_call=modify_call,
             )
         else:
@@ -1242,6 +1243,7 @@ class ImageDetails(SmartDialog):
     def get_image_specific_generation_mode():
         if ImageDetails.image_generation_mode in [
             ImageGenerationType.REDO_PROMPT,
+            ImageGenerationType.TAKE_PROMPT,
             ImageGenerationType.CONTROL_NET,
             ImageGenerationType.IP_ADAPTER,
         ]:

@@ -306,6 +306,7 @@ class HfHubSortDirection(Enum):
 
 class ImageGenerationType(Enum):
     REDO_PROMPT = "redo_prompt"
+    TAKE_PROMPT = "take_prompt"
     CONTROL_NET = "control_net"
     IP_ADAPTER = "ip_adapter"
     RENOISER = "renoiser"
@@ -320,6 +321,8 @@ class ImageGenerationType(Enum):
     def get_text(self):
         if self == ImageGenerationType.REDO_PROMPT:
             return _("Redo Prompt")
+        elif self == ImageGenerationType.TAKE_PROMPT:
+            return _("Take Prompt")
         elif self == ImageGenerationType.CONTROL_NET:
             return _("Control Net")
         elif self == ImageGenerationType.IP_ADAPTER:
