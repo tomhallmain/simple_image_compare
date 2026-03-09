@@ -264,6 +264,13 @@ class MarkedFileMover(SmartDialog):
         pdf_btn.clicked.connect(lambda _checked=False: self._create_pdf_from_marks())
         bar.addWidget(pdf_btn)
 
+        diff_pdf_btn = QPushButton(_("Diff PDFs"))
+        diff_pdf_btn.setFocusPolicy(Qt.NoFocus)
+        diff_pdf_btn.clicked.connect(
+            lambda _checked=False: self._create_diff_pdf_from_marks()
+        )
+        bar.addWidget(diff_pdf_btn)
+
         root.addLayout(bar)
 
         # -- scroll area for directory rows -------------------------------
@@ -629,6 +636,28 @@ class MarkedFileMover(SmartDialog):
                 )
 
         PDFOptionsWindow.show(self, self._app_actions, pdf_callback)
+
+    def _create_diff_pdf_from_marks(self) -> None:
+        from files.pdf_creator import PDFCreator
+        from ui.files.pdf_options_window_qt import PDFOptionsWindow
+
+        initial_filename = PDFCreator.get_default_diff_filename(
+            MarkedFiles.file_marks
+        )
+
+        def diff_callback(options):
+            PDFCreator.create_diff_pdf_from_files(
+                MarkedFiles.file_marks,
+                self._app_actions,
+                options=options,
+            )
+
+        PDFOptionsWindow.show(
+            self,
+            self._app_actions,
+            diff_callback,
+            initial_filename=initial_filename,
+        )
 
     def _test_is_in_directory(
         self, target_dir=None, shift: bool = False

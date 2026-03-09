@@ -22,3 +22,6 @@ pyobjc-framework-Cocoa; sys_platform == 'darwin'
 # Linux: D-Bus for optional Secret Service keyring lock (utils/encryptor.py).
 # Not required for basic keyring get/set.
 dbus-python; sys_platform == 'linux'
+
+# PDF visual diff helper (used by marked-file "Diff PDFs" action).
+# diff-pdf  -  Not a Python package, but a command-line tool

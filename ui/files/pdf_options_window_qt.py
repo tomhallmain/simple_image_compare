@@ -34,14 +34,24 @@ class PDFOptionsWindow(SmartDialog):
     # Singleton show / close
     # ------------------------------------------------------------------
     @classmethod
-    def show(cls, master: QWidget, app_actions: AppActions, callback: Callable) -> None:
+    def show(
+        cls,
+        master: QWidget,
+        app_actions: AppActions,
+        callback: Callable,
+        initial_filename: Optional[str] = None,
+    ) -> None:
         """Show the PDF options dialog (singleton)."""
         if cls._instance is not None:
             cls._instance.raise_()
             cls._instance.activateWindow()
             return
 
-        cls._instance = cls(parent=master, callback=callback)
+        cls._instance = cls(
+            parent=master,
+            callback=callback,
+            initial_filename=initial_filename,
+        )
         cls._instance.show_()
 
     def show_(self) -> None:
@@ -56,7 +66,12 @@ class PDFOptionsWindow(SmartDialog):
     # ------------------------------------------------------------------
     # Construction
     # ------------------------------------------------------------------
-    def __init__(self, parent: QWidget, callback: Callable) -> None:
+    def __init__(
+        self,
+        parent: QWidget,
+        callback: Callable,
+        initial_filename: Optional[str] = None,
+    ) -> None:
         super().__init__(
             parent=parent,
             position_parent=parent,
@@ -83,7 +98,12 @@ class PDFOptionsWindow(SmartDialog):
         fn_label.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
         layout.addWidget(fn_label)
 
-        self._filename_entry = QLineEdit(_("combined_images"))
+        filename_default = (
+            str(initial_filename).strip()
+            if initial_filename is not None and str(initial_filename).strip()
+            else _("combined_images")
+        )
+        self._filename_entry = QLineEdit(filename_default)
         self._filename_entry.setStyleSheet(
             f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_INPUT}; "
             f"border: 1px solid {AppStyle.BORDER_COLOR}; padding: 2px 4px;"
