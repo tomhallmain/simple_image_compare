@@ -14,6 +14,7 @@ All substantial logic lives in the controller modules:
 import os
 import functools
 import threading
+import time
 from datetime import datetime
 from typing import Optional
 
@@ -169,6 +170,11 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             Mode.SEARCH: False,
             Mode.DUPLICATES: False,
         }
+        # Refresh guards:
+        # - Prevent nested refresh execution.
+        # - Briefly suppress timer-driven file-check refresh after a move refresh.
+        self._is_refreshing = False
+        self._suppress_file_check_refresh_until = 0.0
 
         # ------------------------------------------------------------------
         # Backend (non-UI) objects -- shared across controllers
@@ -818,63 +824,77 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         refresh_cursor: bool = False,
         file_check: bool = True,
         removed_files: Optional[list] = None,
+        from_file_check: bool = False,
     ) -> None:
         """
         Refresh the file list and update the display.
 
         Ported from App.refresh.
         """
-        import time
-
         if removed_files is None:
             removed_files = []
 
+        now = time.monotonic()
+        if from_file_check and now < self._suppress_file_check_refresh_until:
+            if config.debug:
+                logger.debug("Skipped file-check refresh during post-move settle window")
+            return
+        if self._is_refreshing:
+            if config.debug:
+                logger.debug("Skipped re-entrant refresh call")
+            return
+
+        self._is_refreshing = True
         active_media_in_removed = (
             self.media_navigator.get_active_media_filepath() in removed_files
         )
-
-        self.file_browser.refresh(
-            refresh_cursor=refresh_cursor,
-            file_check=file_check,
-            removed_files=removed_files,
-            direction=self.direction,
-        )
-
-        if len(removed_files) > 0:
-            if self.mode == Mode.BROWSE:
-                self.notification_ctrl.set_label_state()
-            else:
-                self.file_ops_ctrl.handle_remove_files_from_groups(removed_files)
-            if self.compare_manager.has_compare():
-                self.compare_manager.compare().remove_from_groups(removed_files)
-
-        if self.file_browser.has_files():
-            if self.mode != Mode.BROWSE:
-                self._sync_media_empty_directory_message()
-                return
-            has_new_images = False
-            if show_new_images:
-                has_new_images = self.file_browser.update_cursor_to_new_images()
-                if has_new_images:
-                    self.media_navigator.show_next_media()
-            if active_media_in_removed:
-                self.media_navigator.last_chosen_direction_func()
-            self.notification_ctrl.set_label_state()
-            if show_new_images and has_new_images:
-                # Brief delete-lock to prevent misdeletion after automatic image change
-                self.delete_lock = True
-                time.sleep(1)
-                self.delete_lock = False
-        else:
-            self.media_navigator.clear_image()
-            self.notification_ctrl.set_label_state()
-            self.notification_ctrl.alert(
-                _("Warning"), _("No files found in directory after refresh."), kind="warning"
+        try:
+            self.file_browser.refresh(
+                refresh_cursor=refresh_cursor,
+                file_check=file_check,
+                removed_files=removed_files,
+                direction=self.direction,
             )
-        self._sync_media_empty_directory_message()
 
-        if config.debug:
-            logger.debug("Refreshed files")
+            if len(removed_files) > 0:
+                # Give the just-moved state time to settle before the next periodic file-check refresh.
+                self._suppress_file_check_refresh_until = time.monotonic() + 1.0
+                if self.mode == Mode.BROWSE:
+                    self.notification_ctrl.set_label_state()
+                else:
+                    self.file_ops_ctrl.handle_remove_files_from_groups(removed_files)
+                if self.compare_manager.has_compare():
+                    self.compare_manager.compare().remove_from_groups(removed_files)
+
+            if self.file_browser.has_files():
+                if self.mode != Mode.BROWSE:
+                    self._sync_media_empty_directory_message()
+                    return
+                has_new_images = False
+                if show_new_images:
+                    has_new_images = self.file_browser.update_cursor_to_new_images()
+                    if has_new_images:
+                        self.media_navigator.show_next_media()
+                if active_media_in_removed:
+                    self.media_navigator.last_chosen_direction_func()
+                self.notification_ctrl.set_label_state()
+                if show_new_images and has_new_images:
+                    # Brief delete-lock to prevent misdeletion after automatic image change
+                    self.delete_lock = True
+                    time.sleep(1)
+                    self.delete_lock = False
+            else:
+                self.media_navigator.clear_image()
+                self.notification_ctrl.set_label_state()
+                self.notification_ctrl.alert(
+                    _("Warning"), _("No files found in directory after refresh."), kind="warning"
+                )
+            self._sync_media_empty_directory_message()
+
+            if config.debug:
+                logger.debug("Refreshed files")
+        finally:
+            self._is_refreshing = False
 
     def refocus(self, event=None) -> None:
         """Return keyboard focus to the main window."""
