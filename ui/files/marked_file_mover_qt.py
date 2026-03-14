@@ -58,6 +58,9 @@ class MarkedFileMover(SmartDialog):
     """
 
     _current_window: Optional[MarkedFileMover] = None
+    # Runtime-only memory for recovering dropped first-letter filters.
+    # key: normalized user filter text, value: resolved target directory.
+    _session_filter_target_map: dict[str, str] = {}
 
     MAX_HEIGHT: int = 900
     COL_0_WIDTH: int = 600
@@ -174,6 +177,7 @@ class MarkedFileMover(SmartDialog):
             MarkedFiles.mark_target_dirs[:]
         )
         self._is_sorted_by_embedding = False
+        self._used_filter_fallback = False
 
         if MarkedFiles.last_set_target_dir and os.path.isdir(
             MarkedFiles.last_set_target_dir
@@ -324,6 +328,19 @@ class MarkedFileMover(SmartDialog):
             )
             row.addWidget(copy_btn)
 
+            toggle_lock_text = (
+                _("Unlock")
+                if MarkedFiles.is_target_dir_require_gui(target_dir)
+                else _("Lock")
+            )
+            lock_btn = QPushButton(toggle_lock_text)
+            lock_btn.setFocusPolicy(Qt.NoFocus)
+            lock_btn.setToolTip(_("Toggle GUI requirement for this target directory"))
+            lock_btn.clicked.connect(
+                lambda _=False, d=target_dir: self._toggle_target_require_gui(d)
+            )
+            row.addWidget(lock_btn)
+
             remove_btn = QPushButton("\u00d7")  # multiplication sign
             remove_btn.setFocusPolicy(Qt.NoFocus)
             remove_btn.setFixedWidth(28)
@@ -372,6 +389,50 @@ class MarkedFileMover(SmartDialog):
         self._filter_text = ""
         self._apply_filter()
 
+    def _record_filter_resolution_for_session(self, target_dir: Optional[str]) -> None:
+        """
+        Store filter->target mapping for this app session only.
+        Skip if filter is too short or if fallback logic was used.
+        """
+        if target_dir is None:
+            return
+        filter_key = self._filter_text.strip().lower()
+        if len(filter_key) < 2:
+            return
+        if self._used_filter_fallback:
+            return
+        if target_dir not in self._filtered_target_dirs:
+            return
+        MarkedFileMover._session_filter_target_map[filter_key] = target_dir
+
+    def _toggle_target_require_gui(self, target_dir: str) -> None:
+        require_gui = not MarkedFiles.is_target_dir_require_gui(target_dir)
+        MarkedFiles.set_single_target_require_gui(target_dir, require_gui)
+        if self._is_gui:
+            self._rebuild_directory_rows()
+        status_text = _("locked") if require_gui else _("unlocked")
+        self._app_actions.toast(
+            _("Target directory {0}: {1}").format(target_dir, status_text)
+        )
+
+    def _ensure_target_allowed_for_current_mode(self, target_dir: Optional[str]) -> bool:
+        if target_dir is None:
+            return False
+        if self._is_gui:
+            return True
+        if not MarkedFiles.is_target_dir_require_gui(target_dir):
+            return True
+        self._app_actions.alert(
+            _("Target is locked"),
+            _(
+                "This target requires the GUI Marked File Mover window.\n\n"
+                "Open the GUI mover (Ctrl+M) to confirm this destination."
+            ),
+            kind="warning",
+            master=self,
+        )
+        return False
+
     def _move_marks_to_dir(
         self, target_dir=None, move_func=Utils.move_file
     ) -> None:
@@ -380,6 +441,9 @@ class MarkedFileMover(SmartDialog):
         )
         if target_dir is None:
             return
+        if not self._ensure_target_allowed_for_current_mode(target_dir):
+            return
+        self._record_filter_resolution_for_session(target_dir)
         if not self._confirm_large_file_operation(target_dir, move_func):
             return
         if (
@@ -494,6 +558,7 @@ class MarkedFileMover(SmartDialog):
         """Remove a single directory from the target list."""
         if target_dir in MarkedFiles.mark_target_dirs:
             MarkedFiles.mark_target_dirs.remove(target_dir)
+        MarkedFiles.set_single_target_require_gui(target_dir, False)
         if target_dir in self._filtered_target_dirs:
             self._filtered_target_dirs.remove(target_dir)
         if self._is_gui:
@@ -501,6 +566,7 @@ class MarkedFileMover(SmartDialog):
 
     def _clear_target_dirs(self) -> None:
         MarkedFiles.mark_target_dirs.clear()
+        MarkedFiles.mark_target_require_gui.clear()
         self._filtered_target_dirs.clear()
         if self._is_gui:
             self._rebuild_directory_rows()
@@ -665,6 +731,9 @@ class MarkedFileMover(SmartDialog):
         target_dir = self._handle_target_directory(target_dir=target_dir, move_func=None)
         if target_dir is None:
             return
+        if not self._ensure_target_allowed_for_current_mode(target_dir):
+            return
+        self._record_filter_resolution_for_session(target_dir)
         if (
             config.debug
             and self._filter_text
@@ -791,9 +860,11 @@ class MarkedFileMover(SmartDialog):
         ft = self._filter_text.strip().lower()
         if not ft:
             self._filtered_target_dirs = MarkedFiles.mark_target_dirs[:]
+            self._used_filter_fallback = False
         else:
             temp: list[str] = []
             dirs = MarkedFiles.mark_target_dirs
+            self._used_filter_fallback = False
 
             # Pass 1: exact basename match
             for d in dirs:
@@ -826,6 +897,16 @@ class MarkedFileMover(SmartDialog):
                         or f"_{ft}" in basename.lower()
                     ):
                         temp.append(d)
+
+            # Lost-first-letter fallback:
+            # if no normal matches, compare against previous submitted filter keys.
+            if not temp:
+                for previous_filter, resolved_dir in MarkedFileMover._session_filter_target_map.items():
+                    if len(previous_filter) > 1 and previous_filter[1:] == ft:
+                        if resolved_dir in dirs and resolved_dir not in temp:
+                            temp.append(resolved_dir)
+                if temp:
+                    self._used_filter_fallback = True
 
             self._filtered_target_dirs = temp
 

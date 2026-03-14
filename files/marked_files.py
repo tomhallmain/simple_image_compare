@@ -35,10 +35,16 @@ class MarkedFiles():
 
     # Unable to undo a delete action.
     delete_lock = False
+    # Per-target preference: True means this target requires GUI mode
+    # (prevents accidental non-GUI quick targeting).
+    mark_target_require_gui = {}
 
     @staticmethod
     def load_target_dirs():
         MarkedFiles.set_target_dirs(app_info_cache.get_meta("marked_file_target_dirs", default_val=[]))
+        MarkedFiles.set_target_dir_require_gui(
+            app_info_cache.get_meta("marked_file_target_require_gui", default_val={})
+        )
 
     @staticmethod
     def set_target_dirs(target_dirs):
@@ -52,10 +58,62 @@ class MarkedFiles():
                         continue
                 MarkedFiles.mark_target_dirs.remove(d)
                 logger.warning(f"Removed stale target directory reference: {d}")
+        MarkedFiles._cleanup_target_dir_require_gui()
 
     @staticmethod
     def store_target_dirs():
         app_info_cache.set_meta("marked_file_target_dirs", MarkedFiles.mark_target_dirs)
+        app_info_cache.set_meta(
+            "marked_file_target_require_gui", MarkedFiles.mark_target_require_gui
+        )
+
+    @staticmethod
+    def _normalize_target_dir(dirpath: Optional[str]) -> str:
+        if not dirpath:
+            return ""
+        return os.path.normcase(os.path.normpath(dirpath))
+
+    @staticmethod
+    def set_target_dir_require_gui(target_require_gui) -> None:
+        """
+        Accept a raw cache payload and keep only valid/known target directories.
+        """
+        if not isinstance(target_require_gui, dict):
+            target_require_gui = {}
+        normalized_payload = {}
+        for dirpath, is_required in target_require_gui.items():
+            if not isinstance(dirpath, str):
+                continue
+            normalized_payload[MarkedFiles._normalize_target_dir(dirpath)] = bool(is_required)
+        MarkedFiles.mark_target_require_gui = normalized_payload
+        MarkedFiles._cleanup_target_dir_require_gui()
+
+    @staticmethod
+    def _cleanup_target_dir_require_gui() -> None:
+        valid_dirs = {
+            MarkedFiles._normalize_target_dir(d)
+            for d in MarkedFiles.mark_target_dirs
+        }
+        for dirpath in list(MarkedFiles.mark_target_require_gui.keys()):
+            if dirpath not in valid_dirs:
+                del MarkedFiles.mark_target_require_gui[dirpath]
+
+    @staticmethod
+    def is_target_dir_require_gui(dirpath: Optional[str]) -> bool:
+        normalized = MarkedFiles._normalize_target_dir(dirpath)
+        if normalized == "":
+            return False
+        return bool(MarkedFiles.mark_target_require_gui.get(normalized, False))
+
+    @staticmethod
+    def set_single_target_require_gui(dirpath: Optional[str], require_gui: bool) -> None:
+        normalized = MarkedFiles._normalize_target_dir(dirpath)
+        if normalized == "":
+            return
+        if require_gui:
+            MarkedFiles.mark_target_require_gui[normalized] = True
+        elif normalized in MarkedFiles.mark_target_require_gui:
+            del MarkedFiles.mark_target_require_gui[normalized]
 
     @staticmethod
     def add_mark_if_not_present(filepath):
