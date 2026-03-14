@@ -11,7 +11,7 @@ import traceback
 from typing import TYPE_CHECKING, Optional
 
 from PySide6.QtCore import QObject, QTimer, Signal, Qt
-from PySide6.QtWidgets import QLabel, QMessageBox, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QApplication, QLabel, QMessageBox, QVBoxLayout, QWidget
 
 from lib.qt_alert import qt_alert
 from ui.app_style import AppStyle
@@ -82,13 +82,18 @@ class NotificationController:
         x = parent_geo.x() + parent_geo.width() - width
         y = parent_geo.y()
 
+        previously_active = QApplication.activeWindow()
+
         # Create frameless overlay
         toast_widget = QWidget(
             None,
             Qt.WindowType.FramelessWindowHint
             | Qt.WindowType.WindowStaysOnTopHint
-            | Qt.WindowType.Tool,
+            | Qt.WindowType.Tool
+            | Qt.WindowType.WindowDoesNotAcceptFocus,
         )
+        # Explicitly avoid activation/focus stealing when showing toast.
+        toast_widget.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, True)
         toast_widget.setFixedSize(width, height)
         toast_widget.move(x, y)
         toast_widget.setStyleSheet(
@@ -103,6 +108,25 @@ class NotificationController:
         layout.addWidget(label)
 
         toast_widget.show()
+
+        # Defensive restoration for a narrow case: if a secondary window/dialog
+        # owned by this app was active (e.g. FileActionsWindow), restore it.
+        # Avoid broad re-activation of arbitrary windows.
+        should_restore_owned_secondary = (
+            previously_active is not None
+            and previously_active is not toast_widget
+            and previously_active is not self._app
+            and previously_active.isVisible()
+            and (
+                previously_active.parent() is self._app
+                or self._app.isAncestorOf(previously_active)
+            )
+        )
+        if should_restore_owned_secondary:
+            try:
+                previously_active.activateWindow()
+            except Exception:
+                pass
 
         # Auto-destruct after the specified time
         QTimer.singleShot(

@@ -404,6 +404,7 @@ class FileActionsWindow(SmartDialog):
             )
 
     def _undo(self, action: FileAction, specific_image: str | None = None) -> None:
+        invoked_move_callback = False
         if specific_image is not None:
             if not os.path.isfile(specific_image):
                 error_text = _("Image does not exist: ") + specific_image
@@ -420,6 +421,7 @@ class FileActionsWindow(SmartDialog):
                     files=[specific_image],
                     single_image=True,
                 )
+                invoked_move_callback = True
             else:
                 os.remove(specific_image)
         else:
@@ -438,8 +440,21 @@ class FileActionsWindow(SmartDialog):
                     files=action.new_files,
                     single_image=(len(action.new_files) == 1),
                 )
+                invoked_move_callback = True
             else:
                 action.remove_new_files()
+
+        if invoked_move_callback:
+            # MarkedFiles.move_marks_to_dir_static() can refocus the main window.
+            # Restore this dialog's keyboard focus for Esc/typing workflows.
+            QTimer.singleShot(0, self._restore_dialog_focus)
+
+    def _restore_dialog_focus(self) -> None:
+        if not self.isVisible():
+            return
+        self.raise_()
+        self.activateWindow()
+        self._scroll.setFocus()
 
     def _modify(self, image_path_or_action) -> None:
         # TODO: implement this (matches original stub)
