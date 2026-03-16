@@ -121,6 +121,7 @@ class ImageDetails(SmartDialog):
         index_text: str,
         app_actions,
         do_refresh: bool = True,
+        take_focus: bool = True,
     ) -> None:
         super().__init__(
             parent=parent,
@@ -133,6 +134,7 @@ class ImageDetails(SmartDialog):
         self._prompt_extraction_failed = True
         self._app_actions = app_actions
         self._do_refresh = do_refresh
+        self._take_focus = take_focus
         self._has_closed = False
         self._is_image = True
 
@@ -173,7 +175,8 @@ class ImageDetails(SmartDialog):
             related_image_text,
         )
         self._bind_shortcuts()
-        self.focus()
+        if self._take_focus:
+            self.focus()
 
     # -- UI construction -------------------------------------------
 

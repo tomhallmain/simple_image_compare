@@ -284,11 +284,15 @@ class WindowLauncher:
                 existing.update_image_details(media_path, index_text)
             if manually_keyed:
                 existing.focus()
+            else:
+                # Keep browsing focus in the main app while details auto-refreshes.
+                self._app.refocus()
         else:
             try:
                 details_win = ImageDetails(
                     self._app, media_path, index_text,
                     app_actions, do_refresh=not preset_image_path,
+                    take_focus=manually_keyed,
                 )
                 details_win.show()
                 app_actions.set_image_details_window(details_win)
