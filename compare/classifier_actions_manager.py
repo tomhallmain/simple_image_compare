@@ -396,7 +396,17 @@ class ClassifierAction:
         elif self.action == ClassifierActionType.MOVE or self.action == ClassifierActionType.COPY:
             if self.action_modifier is not None and len(self.action_modifier) > 0:
                 if not os.path.exists(self.action_modifier):
-                    raise Exception("Invalid move target directory for classifier action " + self.name + ": " + self.action_modifier)
+                    try:
+                        os.makedirs(self.action_modifier, exist_ok=True)
+                        logger.info(
+                            f"Created missing action target directory for classifier action "
+                            f"{self.name}: {self.action_modifier}"
+                        )
+                    except Exception as e:
+                        raise Exception(
+                            "Invalid move target directory for classifier action "
+                            + self.name + ": " + self.action_modifier + f" ({e})"
+                        )
                 if os.path.normpath(os.path.dirname(image_path)) != os.path.normpath(self.action_modifier):
                     action_modifier_name = Utils.get_relative_dirpath(self.action_modifier, levels=2)
                     action_type = ActionType.MOVE_FILE if self.action == ClassifierActionType.MOVE else ActionType.COPY_FILE

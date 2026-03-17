@@ -16,10 +16,11 @@ from typing import Callable, Optional
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (
-    QGridLayout, QHBoxLayout, QLabel, QLineEdit,
+    QCheckBox, QGridLayout, QHBoxLayout, QLabel, QLineEdit,
     QListWidget, QPushButton, QVBoxLayout, QWidget,
 )
 
+from compare.classifier_actions_manager import ClassifierActionsManager, Prevalidation
 from files.directory_profile import DirectoryProfile
 from lib.fast_directory_picker_qt import get_existing_directory
 from lib.multi_display_qt import SmartDialog
@@ -50,16 +51,52 @@ class DirectoryProfileWindow(SmartDialog):
         app_actions,
         refresh_callback: Callable,
         profile: Optional[DirectoryProfile] = None,
+        copy_from_profile: Optional[DirectoryProfile] = None,
         dimensions: str = "600x500",
     ) -> None:
-        self._is_edit = profile is not None
-        self._profile = profile if profile is not None else DirectoryProfile()
+        self._is_copy = copy_from_profile is not None
+        self._is_edit = profile is not None and not self._is_copy
+        self._copy_source_profile = copy_from_profile
+        if self._is_copy and copy_from_profile is not None:
+            self._profile = DirectoryProfile(
+                name=self._generate_profile_copy_name(copy_from_profile.name),
+                directories=list(copy_from_profile.directories),
+            )
+        else:
+            self._profile = profile if profile is not None else DirectoryProfile()
         self._original_name = self._profile.name if self._is_edit else None
+        self._source_prevalidations: list[Prevalidation] = (
+            self._get_associated_prevalidations(copy_from_profile.name)
+            if self._is_copy and copy_from_profile is not None
+            else []
+        )
+        self._source_prevalidations_by_name: dict[str, Prevalidation] = {
+            pv.name: pv for pv in self._source_prevalidations
+        }
+        self._prevalidation_copy_drafts: list[dict[str, str]] = []
+        if self._source_prevalidations:
+            taken_names = {pv.name for pv in ClassifierActionsManager.prevalidations}
+            for source_pv in self._source_prevalidations:
+                draft_name = self._generate_prevalidation_copy_name(source_pv.name, taken_names)
+                taken_names.add(draft_name)
+                self._prevalidation_copy_drafts.append(
+                    {
+                        "source_name": source_pv.name,
+                        "name": draft_name,
+                        "action_modifier": source_pv.action_modifier or "",
+                    }
+                )
+        self._prevalidation_modifier_inputs: dict[str, QLineEdit] = {}
+        self._prevalidation_name_inputs: dict[str, QLineEdit] = {}
 
         super().__init__(
             parent=parent,
             position_parent=parent,
-            title=_("Edit Profile") if self._is_edit else _("Create Profile"),
+            title=(
+                _("Copy Profile")
+                if self._is_copy
+                else (_("Edit Profile") if self._is_edit else _("Create Profile"))
+            ),
             geometry=dimensions,
         )
         DirectoryProfileWindow._instance = self
@@ -132,10 +169,42 @@ class DirectoryProfileWindow(SmartDialog):
         dir_area.addLayout(btn_col)
         root.addLayout(dir_area, 1)
 
+        if self._is_copy:
+            self._build_copy_prevalidations_section(root)
+
         # -- Done button --------------------------------------------------
         done_btn = QPushButton(_("Done"))
         done_btn.clicked.connect(self._finalize_profile)
         root.addWidget(done_btn, 0, Qt.AlignLeft)
+
+    def _build_copy_prevalidations_section(self, root: QVBoxLayout) -> None:
+        self._copy_prevalidations_cb = QCheckBox(_("Copy associated prevalidations"))
+        self._copy_prevalidations_cb.setChecked(True)
+        self._copy_prevalidations_cb.stateChanged.connect(
+            lambda _state: self._toggle_prevalidation_modifier_inputs()
+        )
+        root.addWidget(self._copy_prevalidations_cb)
+
+        if not self._source_prevalidations:
+            no_assoc_lbl = QLabel(_("No prevalidations are associated with this profile."))
+            no_assoc_lbl.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
+            root.addWidget(no_assoc_lbl)
+            return
+
+        self._pv_copy_hint_label = QLabel(
+            _("Optional: adjust action target directories for copied prevalidations.")
+        )
+        self._pv_copy_hint_label.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
+        self._pv_copy_hint_label.setWordWrap(True)
+        root.addWidget(self._pv_copy_hint_label)
+
+        self._pv_modifiers_container = QWidget()
+        self._pv_mod_layout = QVBoxLayout(self._pv_modifiers_container)
+        self._pv_mod_layout.setContentsMargins(0, 0, 0, 0)
+        self._pv_mod_layout.setSpacing(4)
+        self._rebuild_prevalidation_modifier_rows()
+        root.addWidget(self._pv_modifiers_container)
+        self._toggle_prevalidation_modifier_inputs()
 
     # ------------------------------------------------------------------
     # Directory list helpers
@@ -234,6 +303,191 @@ class DirectoryProfileWindow(SmartDialog):
         except Exception as e:
             logger.error(f"Error reading subdirectories from {parent_dir}: {e}")
 
+    def _get_associated_prevalidations(self, profile_name: str) -> list[Prevalidation]:
+        return [
+            pv
+            for pv in ClassifierActionsManager.prevalidations
+            if pv.profile_name == profile_name
+        ]
+
+    def _generate_profile_copy_name(self, source_name: str) -> str:
+        copy_token = _("Copy")
+        copy_suffix = f" {copy_token}"
+        fallback_suffix = " Copy"
+        split_suffix = copy_suffix if copy_suffix in source_name else fallback_suffix
+        if split_suffix in source_name:
+            base_name = source_name.rsplit(split_suffix, 1)[0]
+            copy_num = 2
+            while True:
+                candidate = f"{base_name}{copy_suffix} {copy_num}"
+                if DirectoryProfile.get_profile_by_name(candidate) is None:
+                    return candidate
+                copy_num += 1
+        candidate = f"{source_name}{copy_suffix}"
+        if DirectoryProfile.get_profile_by_name(candidate) is None:
+            return candidate
+        copy_num = 2
+        while True:
+            candidate = f"{source_name}{copy_suffix} {copy_num}"
+            if DirectoryProfile.get_profile_by_name(candidate) is None:
+                return candidate
+            copy_num += 1
+
+    def _generate_prevalidation_copy_name(self, source_name: str, taken_names: Optional[set[str]] = None) -> str:
+        existing = taken_names if taken_names is not None else {pv.name for pv in ClassifierActionsManager.prevalidations}
+        copy_token = _("Copy")
+        copy_suffix = f" {copy_token}"
+        fallback_suffix = " Copy"
+        split_suffix = copy_suffix if copy_suffix in source_name else fallback_suffix
+        if split_suffix in source_name:
+            base_name = source_name.rsplit(split_suffix, 1)[0]
+            copy_num = 2
+            while True:
+                candidate = f"{base_name}{copy_suffix} {copy_num}"
+                if candidate not in existing:
+                    return candidate
+                copy_num += 1
+        candidate = f"{source_name}{copy_suffix}"
+        if candidate not in existing:
+            return candidate
+        copy_num = 2
+        while True:
+            candidate = f"{source_name}{copy_suffix} {copy_num}"
+            if candidate not in existing:
+                return candidate
+            copy_num += 1
+
+    def _rebuild_prevalidation_modifier_rows(self) -> None:
+        while self._pv_mod_layout.count():
+            item = self._pv_mod_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
+            sub = item.layout()
+            if sub is not None:
+                while sub.count():
+                    sub_item = sub.takeAt(0)
+                    sub_widget = sub_item.widget()
+                    if sub_widget is not None:
+                        sub_widget.deleteLater()
+
+        self._sync_prevalidation_copy_drafts_from_inputs()
+        self._prevalidation_modifier_inputs = {}
+        self._prevalidation_name_inputs = {}
+
+        for draft in self._prevalidation_copy_drafts:
+            source_name = draft["source_name"]
+            row = QHBoxLayout()
+            name_entry = QLineEdit(draft["name"])
+            name_entry.setPlaceholderText(_("Copied prevalidation name"))
+            name_entry.setMinimumWidth(220)
+            name_entry.textChanged.connect(
+                lambda text, sn=source_name: self._set_draft_field(sn, "name", text)
+            )
+            name_entry.returnPressed.connect(
+                lambda sn=source_name: self._sync_single_prevalidation_draft(sn)
+            )
+            self._prevalidation_name_inputs[source_name] = name_entry
+            row.addWidget(name_entry)
+
+            modifier_entry = QLineEdit(draft["action_modifier"])
+            modifier_entry.setPlaceholderText(_("Action target directory (action_modifier)"))
+            modifier_entry.textChanged.connect(
+                lambda text, sn=source_name: self._set_draft_field(sn, "action_modifier", text)
+            )
+            modifier_entry.returnPressed.connect(
+                lambda sn=source_name: self._sync_single_prevalidation_draft(sn)
+            )
+            self._prevalidation_modifier_inputs[source_name] = modifier_entry
+            row.addWidget(modifier_entry, 1)
+
+            remove_btn = QPushButton(_("Remove"))
+            remove_btn.clicked.connect(
+                lambda _=False, sn=source_name: self._remove_associated_prevalidation(sn)
+            )
+            row.addWidget(remove_btn)
+
+            self._pv_mod_layout.addLayout(row)
+
+    def _set_draft_field(self, source_name: str, field: str, value: str) -> None:
+        for draft in self._prevalidation_copy_drafts:
+            if draft["source_name"] == source_name:
+                draft[field] = value.strip()
+                return
+
+    def _sync_single_prevalidation_draft(self, source_name: str) -> None:
+        name_entry = self._prevalidation_name_inputs.get(source_name)
+        modifier_entry = self._prevalidation_modifier_inputs.get(source_name)
+        if name_entry is None and modifier_entry is None:
+            return
+        for draft in self._prevalidation_copy_drafts:
+            if draft["source_name"] == source_name:
+                if name_entry is not None:
+                    draft["name"] = name_entry.text().strip()
+                if modifier_entry is not None:
+                    draft["action_modifier"] = modifier_entry.text().strip()
+                return
+
+    def _sync_prevalidation_copy_drafts_from_inputs(self) -> None:
+        for source_name in list(self._prevalidation_name_inputs.keys()):
+            self._sync_single_prevalidation_draft(source_name)
+        for source_name in list(self._prevalidation_modifier_inputs.keys()):
+            self._sync_single_prevalidation_draft(source_name)
+
+    def _remove_associated_prevalidation(self, source_name: str) -> None:
+        ok = self._app_actions.alert(
+            _("Remove Prevalidation"),
+            _("Remove prevalidation '{0}' from this copy operation?").format(source_name),
+            kind="askokcancel",
+        )
+        if not ok:
+            return
+        self._prevalidation_copy_drafts = [
+            draft
+            for draft in self._prevalidation_copy_drafts
+            if draft["source_name"] != source_name
+        ]
+        self._rebuild_prevalidation_modifier_rows()
+        self._toggle_prevalidation_modifier_inputs()
+
+    def _toggle_prevalidation_modifier_inputs(self) -> None:
+        if not hasattr(self, "_copy_prevalidations_cb"):
+            return
+        enabled = self._copy_prevalidations_cb.isChecked()
+        if hasattr(self, "_pv_modifiers_container"):
+            self._pv_modifiers_container.setVisible(enabled)
+        if hasattr(self, "_pv_copy_hint_label"):
+            self._pv_copy_hint_label.setVisible(enabled)
+        for entry in self._prevalidation_modifier_inputs.values():
+            entry.setEnabled(enabled)
+
+    def _copy_associated_prevalidations(self, new_profile_name: str) -> None:
+        if not hasattr(self, "_copy_prevalidations_cb") or not self._copy_prevalidations_cb.isChecked():
+            return
+        if len(self._prevalidation_copy_drafts) == 0:
+            return
+
+        self._sync_prevalidation_copy_drafts_from_inputs()
+        used_names = {pv.name for pv in ClassifierActionsManager.prevalidations}
+        for draft in self._prevalidation_copy_drafts:
+            source_pv = self._source_prevalidations_by_name.get(draft["source_name"])
+            if source_pv is None:
+                continue
+            source_dict = source_pv.to_dict()
+            requested_name = draft["name"].strip()
+            if requested_name and requested_name not in used_names:
+                new_name = requested_name
+            else:
+                new_name = self._generate_prevalidation_copy_name(source_pv.name, used_names)
+            used_names.add(new_name)
+            source_dict["name"] = new_name
+            source_dict["profile_name"] = new_profile_name
+            source_dict["action_modifier"] = draft["action_modifier"].strip()
+
+            copied_pv = Prevalidation.from_dict(source_dict)
+            copied_pv.update_profile_instance(profile_name=new_profile_name)
+            ClassifierActionsManager.prevalidations.insert(0, copied_pv)
+
     # ------------------------------------------------------------------
     # Finalize
     # ------------------------------------------------------------------
@@ -258,7 +512,12 @@ class DirectoryProfileWindow(SmartDialog):
         self._profile.name = name
 
         if not self._is_edit:
-            DirectoryProfile.add_profile(self._profile)
+            if not DirectoryProfile.add_profile(self._profile):
+                return
+            if self._is_copy:
+                # Create and register the copied profile before adding copied
+                # prevalidations so profile_name resolution succeeds.
+                self._copy_associated_prevalidations(self._profile.name)
         else:
             DirectoryProfile.update_profile(self._original_name, self._profile)
 

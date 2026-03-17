@@ -256,6 +256,9 @@ class PrevalidationsTab(QWidget):
         edit_prof = QPushButton(_("Edit Profile"))
         edit_prof.clicked.connect(self._edit_profile)
         prof_btns.addWidget(edit_prof)
+        copy_prof = QPushButton(_("Copy Profile"))
+        copy_prof.clicked.connect(self._copy_profile)
+        prof_btns.addWidget(copy_prof)
         rm_prof = QPushButton(_("Remove Profile"))
         rm_prof.clicked.connect(self._remove_profile)
         prof_btns.addWidget(rm_prof)
@@ -398,7 +401,7 @@ class PrevalidationsTab(QWidget):
         PrevalidationsTab._profile_window = DirectoryProfileWindow(
             self.window(),
             self._app_actions,
-            self._refresh_prof_listbox,
+            self.refresh_prevalidations,
         )
         PrevalidationsTab._profile_window.show()
 
@@ -418,7 +421,7 @@ class PrevalidationsTab(QWidget):
         PrevalidationsTab._profile_window = DirectoryProfileWindow(
             self.window(),
             self._app_actions,
-            self._refresh_prof_listbox,
+            self.refresh_prevalidations,
             DirectoryProfile.directory_profiles[idx],
         )
         PrevalidationsTab._profile_window.show()
@@ -429,12 +432,33 @@ class PrevalidationsTab(QWidget):
             return
         profile = DirectoryProfile.directory_profiles[idx]
         DirectoryProfile.remove_profile(profile.name)
-        self._refresh_prof_listbox()
+        self.refresh_prevalidations()
         if self._is_modify_window_valid():
             try:
                 PrevalidationsTab._modify_window.refresh_profile_options()
             except Exception:
                 PrevalidationsTab._modify_window = None
+
+    def _copy_profile(self) -> None:
+        from ui.compare.directory_profile_window_qt import (
+            DirectoryProfileWindow,
+        )
+
+        idx = self._prof_listbox.currentRow()
+        if idx < 0 or idx >= len(DirectoryProfile.directory_profiles):
+            return
+        if PrevalidationsTab._profile_window is not None:
+            try:
+                PrevalidationsTab._profile_window.close()
+            except Exception:
+                pass
+        PrevalidationsTab._profile_window = DirectoryProfileWindow(
+            self.window(),
+            self._app_actions,
+            self.refresh_prevalidations,
+            copy_from_profile=DirectoryProfile.directory_profiles[idx],
+        )
+        PrevalidationsTab._profile_window.show()
 
     # ------------------------------------------------------------------
     # Prevalidation rows
