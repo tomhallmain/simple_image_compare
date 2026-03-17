@@ -612,6 +612,29 @@ class FileBrowser:
             self.filepaths = self.get_sorted_files(self._files)
         return self.filepaths
 
+    def get_files_sorted_for_operation(
+        self, sort_by: SortBy, sort: Sort = Sort.ASC
+    ) -> List[str]:
+        """
+        Return files in a caller-requested sort order without changing the
+        browser's persistent sort settings.
+
+        Uses cached SortableFile instances, so time-based sorts can reuse
+        existing stat-derived metadata.
+        """
+        if len(self._files) == 0:
+            return []
+
+        original_sort_by = self.sort_by
+        original_sort = self.sort
+        try:
+            self.sort_by = sort_by
+            self.sort = sort
+            return list(self.get_sorted_files(list(self._files)))
+        finally:
+            self.sort_by = original_sort_by
+            self.sort = original_sort
+
     def get_files_with_retry(self, retry_with_delay: int = 0) -> List[str]:
         files = self.get_files()
         if len(files) == 0 and retry_with_delay > 0:

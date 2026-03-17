@@ -396,18 +396,41 @@ class ImageOps:
         return new_filepath
 
     @staticmethod
-    def convert_to_jpg(image_path, quality=85):
+    def convert_to_jpg(image_path, output_path=None, quality=85):
         """
         Convert lossless image formats to JPG to reduce file size.
         Preserves original dimensions and removes EXIF data.
         
         Args:
             image_path: Path to the source image
+            output_path: Optional explicit output JPG filepath
             quality: JPG quality (1-100, default 85)
         """
         try:
             # Open the image
             image = PIL.Image.open(image_path)
+            source_ext = os.path.splitext(image_path)[1].lower()
+
+            # Fast path: JPG/JPEG source with no special EXIF needs no conversion.
+            if source_ext in (".jpg", ".jpeg"):
+                has_exif = False
+                try:
+                    exif_data = image.getexif()
+                    has_exif = bool(exif_data) and len(exif_data) > 0
+                except Exception:
+                    has_exif = False
+                jfif_container_keys = {
+                    "jfif",
+                    "jfif_version",
+                    "jfif_unit",
+                    "jfif_density",
+                }
+                info_keys = set(image.info.keys())
+                has_non_jfif_info = len(info_keys - jfif_container_keys) > 0
+                if not has_exif and not has_non_jfif_info:
+                    image.close()
+                    logger.info(f"Skipped JPG conversion (no EXIF to strip): {image_path}")
+                    return image_path
             
             # Convert to RGB if necessary (JPG doesn't support alpha channel)
             if image.mode in ('RGBA', 'LA', 'P'):
@@ -420,11 +443,14 @@ class ImageOps:
             elif image.mode != 'RGB':
                 image = image.convert('RGB')
             
-            # Create new filepath with .jpg extension
-            new_filepath = ImageOps.new_filepath(image_path, append_part="")
-            # Ensure the extension is .jpg
-            base_path = os.path.splitext(new_filepath)[0]
-            new_filepath = base_path + ".jpg"
+            # Create new filepath with .jpg extension unless caller provided one.
+            if output_path is not None and str(output_path).strip() != "":
+                new_filepath = output_path
+            else:
+                new_filepath = ImageOps.new_filepath(image_path, append_part="")
+                base_path = os.path.splitext(new_filepath)[0]
+                target_ext = ".jpeg" if source_ext == ".jpeg" else ".jpg"
+                new_filepath = base_path + target_ext
             
             # Save as JPG without EXIF data
             image.save(new_filepath, 'JPEG', quality=quality, optimize=True)

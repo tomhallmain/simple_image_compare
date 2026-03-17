@@ -173,6 +173,10 @@ class ContextMenuBuilder:
             _("Open file location"),
             lambda: app.file_ops_ctrl.open_media_location(),
         )
+        menu.addAction(
+            _("Convert directory images to JPG"),
+            lambda: app.file_ops_ctrl.convert_directory_images_to_jpg(),
+        )
 
         menu.addSeparator()
 

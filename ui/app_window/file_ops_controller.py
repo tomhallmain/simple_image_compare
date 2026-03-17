@@ -13,15 +13,16 @@ for changes and refreshes the file list when needed.
 from __future__ import annotations
 
 import os
+import shutil
 import sys
 from typing import TYPE_CHECKING, Optional
 
 from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QMessageBox
 
 from ui.auth.password_utils import require_password
 from utils.config import config
-from utils.constants import ActionType, Mode, ProtectedActions
+from utils.constants import ActionType, Mode, ProtectedActions, Sort, SortBy
 from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils
@@ -363,6 +364,123 @@ class FileOpsController:
         clipboard = QApplication.clipboard()
         clipboard.setText(basename)
         self._app.notification_ctrl.toast(_("Copied filename to clipboard"))
+
+    def convert_directory_images_to_jpg(self, event=None) -> None:
+        """
+        Convert all non-JPG images in the current file-browser scope to JPG.
+        """
+        from image.frame_cache import FrameCache
+        from image.image_ops import ImageOps
+
+        base_dir = self._app.get_base_dir()
+        if not base_dir or not os.path.isdir(base_dir):
+            self._app.notification_ctrl.warn(_("No valid base directory to convert"))
+            return
+
+        # Force-refresh at the AppWindow layer to align with existing refresh
+        # guards/thread marshaling before collecting files for conversion.
+        self._app.app_actions.refresh(file_check=False)
+
+        # For conversion, process by creation-time using cached SortableFile metadata.
+        files = self._fb.get_files_sorted_for_operation(
+            sort_by=SortBy.CREATION_TIME,
+            sort=Sort.ASC,
+        )
+        if len(files) == 0:
+            self._app.notification_ctrl.toast(_("No files found to convert"))
+            return
+
+        existing_jpg_count = 0
+        existing_target_count = 0
+        convert_candidates = []
+        jpg_extensions = frozenset([".jpg", ".jpeg"])
+        def _target_jpg_path(filepath: str) -> str:
+            source_ext = os.path.splitext(filepath)[1].lower()
+            target_ext = ".jpeg" if source_ext == ".jpeg" else ".jpg"
+            return os.path.splitext(filepath)[0] + target_ext
+        for filepath in files:
+            ext = os.path.splitext(filepath)[1].lower()
+            if ext in jpg_extensions:
+                existing_jpg_count += 1
+            else:
+                convert_candidates.append(filepath)
+                if os.path.exists(_target_jpg_path(filepath)):
+                    existing_target_count += 1
+
+        if len(convert_candidates) == 0 and existing_jpg_count == 0:
+            self._app.notification_ctrl.toast(_("No image files found to convert"))
+            return
+
+        choice = self._app.app_actions.alert(
+            _("Convert Directory Images to JPG"),
+            _(
+                "Confirm convert images in current directory scope.\n\n{0}\n\n"
+                "How should existing JPG files be handled?\n"
+                "- Existing JPG/JPEG files in scope: {1}\n"
+                "- Non-JPG files with existing JPG targets: {2}\n\n"
+                "Yes = overwrite existing JPG files (with no-EXIF conversion output)\n"
+                "No = keep existing JPG files unchanged\n"
+                "Cancel = cancel conversion"
+            ).format(base_dir, existing_jpg_count, existing_target_count),
+            kind="askyesnocancel",
+        )
+        if choice == QMessageBox.StandardButton.Cancel:
+            return
+        overwrite_existing = choice == QMessageBox.StandardButton.Yes
+
+        converted_count = 0
+        failed_count = 0
+        skipped_existing_count = 0
+        standard_image_extensions = frozenset([
+            ".png", ".bmp", ".gif", ".webp", ".tif", ".tiff", ".ico",
+        ])
+        process_candidates = files if overwrite_existing else convert_candidates
+        for filepath in process_candidates:
+            try:
+                source_path = filepath
+                ext = os.path.splitext(filepath)[1].lower()
+
+                if ext in jpg_extensions:
+                    # User selected option so we overwrite the existing JPG file
+                    # with a new one to strip EXIF.
+                    ImageOps.convert_to_jpg(filepath, output_path=filepath)
+                    converted_count += 1
+                    continue
+
+                output_path = _target_jpg_path(filepath)
+                if os.path.exists(output_path) and not overwrite_existing:
+                    skipped_existing_count += 1
+                    continue
+
+                # Non-standard image-like media (video/pdf/svg/html, etc.) must
+                # convert from the cached frame while targeting a deterministic output path.
+                if ext not in standard_image_extensions:
+                    source_path = FrameCache.get_image_path(filepath)
+                    source_ext = os.path.splitext(source_path)[1].lower()
+                    if source_ext in jpg_extensions:
+                        shutil.copy2(source_path, output_path)
+                    else:
+                        ImageOps.convert_to_jpg(source_path, output_path=output_path)
+                else:
+                    ImageOps.convert_to_jpg(source_path, output_path=output_path)
+                converted_count += 1
+            except Exception as e:
+                failed_count += 1
+                logger.warning(f"Failed to convert to JPG: {filepath} - {e}")
+
+        if converted_count > 0:
+            self._app.refresh()
+
+        if failed_count == 0 and skipped_existing_count == 0:
+            self._app.notification_ctrl.toast(
+                _("Converted {0} files to JPG").format(converted_count)
+            )
+        else:
+            self._app.notification_ctrl.warn(
+                _(
+                    "Converted {0} files to JPG, {1} failed, {2} skipped existing"
+                ).format(converted_count, failed_count, skipped_existing_count)
+            )
 
     # ==================================================================
     # Replace / group operations
