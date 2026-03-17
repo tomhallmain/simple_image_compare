@@ -8,6 +8,7 @@ This module centralizes the management of:
 """
 
 from enum import Enum
+import math
 import os
 import threading
 from typing import List, Optional
@@ -65,6 +66,7 @@ class ClassifierAction:
         self.is_active = is_active  # Whether this action is enabled/active
         self.image_classifier_name = image_classifier_name
         self.image_classifier = None
+        self._missing_image_classifier_logged = False
         self.image_classifier_categories = []
         self.image_classifier_selected_categories = image_classifier_selected_categories
         self.lookahead_names = lookahead_names if lookahead_names else []  # List of lookahead names (strings)
@@ -121,6 +123,7 @@ class ClassifierAction:
     def set_image_classifier(self, classifier_name):
         self.image_classifier_name = classifier_name
         self.image_classifier = image_classifier_manager.get_classifier(classifier_name)
+        self._missing_image_classifier_logged = False
         self.image_classifier_categories = []
         if self.image_classifier is not None:
             self.image_classifier_categories.extend(list(self.image_classifier.model_categories))
@@ -164,7 +167,7 @@ class ClassifierAction:
             logger.error(f"Error checking prompt validation for {image_path}: {e}")
             return False
 
-    def _check_lookaheads(self, image_path):
+    def _check_lookaheads(self, image_path, lookahead_eval_cache=None):
         """Check if any lookahead prevalidations are triggered. Returns True if any lookahead passes."""
         if not self.lookahead_names:
             return False
@@ -174,14 +177,21 @@ class ClassifierAction:
             lookahead = Lookahead.get_lookahead_by_name(lookahead_name)
             if lookahead is None:
                 continue
-            
-            # Check if this lookahead has already been evaluated in this prevalidate call
-            if lookahead.run_result is not None:
-                # Use cached result
-                if lookahead.run_result:
-                    logger.info(f"Lookahead {lookahead_name} triggered for prevalidation {self.name} (cached)")
-                    return True
-                continue
+
+            if lookahead_eval_cache is not None:
+                eval_cache_key = Lookahead.eval_cache_key(lookahead_name, image_path)
+                if eval_cache_key in lookahead_eval_cache:
+                    if lookahead_eval_cache[eval_cache_key]:
+                        return True
+                    continue
+            else:
+                # Check if this lookahead has already been evaluated in this prevalidate call
+                if lookahead.run_result is not None:
+                    # Use cached result
+                    if lookahead.run_result:
+                        logger.info(f"Lookahead {lookahead_name} triggered for prevalidation {self.name} (cached)")
+                        return True
+                    continue
             
             name_or_text = lookahead.name_or_text
             threshold = lookahead.threshold
@@ -192,14 +202,20 @@ class ClassifierAction:
                 lookahead_prevalidation = ClassifierActionsManager.get_prevalidation_by_name(name_or_text)
                 if lookahead_prevalidation is None:
                     # Prevalidation not found, skip this lookahead
-                    lookahead.run_result = False  # Cache the result
+                    if lookahead_eval_cache is not None:
+                        lookahead_eval_cache[eval_cache_key] = False
+                    else:
+                        lookahead.run_result = False  # Cache the result
                     continue
                 # Use the lookahead prevalidation's positives/negatives
                 positives = lookahead_prevalidation.positives
                 negatives = lookahead_prevalidation.negatives
                 # Skip if the referenced prevalidation has no positives or negatives
                 if not positives and not negatives:
-                    lookahead.run_result = False  # Cache the result
+                    if lookahead_eval_cache is not None:
+                        lookahead_eval_cache[eval_cache_key] = False
+                    else:
+                        lookahead.run_result = False  # Cache the result
                     continue
             else:
                 # It's custom text, treat as a positive
@@ -208,7 +224,10 @@ class ClassifierAction:
             
             # Check if this lookahead passes
             result = CompareEmbeddingClip.multi_text_compare(image_path, positives, negatives, threshold)
-            lookahead.run_result = result  # Cache the result
+            if lookahead_eval_cache is not None:
+                lookahead_eval_cache[eval_cache_key] = result
+            else:
+                lookahead.run_result = result  # Cache the result
             
             if result:
                 # logger.info(f"Lookahead {lookahead_name} triggered for prevalidation {self.name}")
@@ -364,7 +383,7 @@ class ClassifierAction:
         if self.use_prototype:
             self._run_with_batch_prototype_validation(directory_paths, hide_callback, notify_callback, add_mark_callback, max_images_per_batch)
 
-    def matches_image_path(self, image_path) -> bool:
+    def matches_image_path(self, image_path, lookahead_eval_cache=None) -> bool:
         # Note: Image classifier and prototype should be loaded before calling this method
         # (see ClassifierActionsWindow.run_classifier_action for pre-loading)
         
@@ -374,7 +393,7 @@ class ClassifierAction:
                 return True
 
         # Check lookaheads first - if any pass, skip this prevalidation
-        if self._check_lookaheads(image_path):
+        if self._check_lookaheads(image_path, lookahead_eval_cache=lookahead_eval_cache):
             return False
 
         if self.use_embedding:
@@ -382,11 +401,16 @@ class ClassifierAction:
                 return True
         
         if self.use_image_classifier:
+            if self.image_classifier is None and self.image_classifier_name:
+                # Lazy attempt; no notify callback here.
+                self.ensure_image_classifier_loaded(None)
             if self.image_classifier is not None:
                 if self.image_classifier.test_image_for_categories(image_path, self.image_classifier_selected_categories):
                     return True
             else:
-                logger.error(f"Image classifier {self.image_classifier_name} not found for classifier action {self.name}")
+                if not self._missing_image_classifier_logged:
+                    logger.error(f"Image classifier {self.image_classifier_name} not found for classifier action {self.name}")
+                    self._missing_image_classifier_logged = True
         
         if self.use_prompts:
             if self._check_prompt_validation(image_path):
@@ -410,27 +434,28 @@ class ClassifierAction:
                 media_path, sample_ratio=self.dynamic_content_sample_ratio
             )
             if len(sampled_frames) > 0:
+                lookahead_eval_cache = {}
                 positive_count = 0
-                tested_count = 0
-                for sampled_path in sampled_frames:
-                    # Lookaheads cache results in a single pass. For sampled
-                    # frames of the same media, reset per frame to avoid stale
-                    # frame-level carryover.
-                    for lookahead in Lookahead.lookaheads:
-                        lookahead.run_result = None
+                total_samples = len(sampled_frames)
+                required_positive_count = math.ceil(
+                    total_samples * self.dynamic_content_positive_ratio
+                )
+                for idx, sampled_path in enumerate(sampled_frames):
                     try:
-                        tested_count += 1
-                        if self.matches_image_path(sampled_path):
+                        if self.matches_image_path(sampled_path, lookahead_eval_cache=lookahead_eval_cache):
                             positive_count += 1
+                            # Early success once the positive threshold is met.
+                            if positive_count >= required_positive_count:
+                                return self.run_action(media_path, hide_callback, notify_callback, add_mark_callback)
+                        # Early failure if even all remaining samples cannot meet threshold.
+                        remaining_samples = total_samples - (idx + 1)
+                        if positive_count + remaining_samples < required_positive_count:
+                            return None
                     except Exception as e:
                         logger.debug(
                             f"Sample frame prevalidation failed for {sampled_path}: {e}"
                         )
-                if tested_count > 0:
-                    positive_ratio = positive_count / tested_count
-                    if positive_ratio >= self.dynamic_content_positive_ratio:
-                        return self.run_action(media_path, hide_callback, notify_callback, add_mark_callback)
-                    return None
+                return None
 
         try:
             return self.run_on_image_path(media_path, hide_callback, notify_callback, add_mark_callback)
@@ -805,6 +830,11 @@ class Prevalidation(ClassifierAction):
         # Lazy load the image classifier if needed
         super().ensure_image_classifier_loaded(notify_callback)
         return super().run_on_image_path(image_path, hide_callback, notify_callback, add_mark_callback)
+
+    def run_on_media_path(self, media_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
+        # Keep lazy image-classifier loading behavior for sampled media paths too.
+        super().ensure_image_classifier_loaded(notify_callback)
+        return super().run_on_media_path(media_path, hide_callback, notify_callback, add_mark_callback)
 
     def validate_dirs(self):
         super().validate_dirs()

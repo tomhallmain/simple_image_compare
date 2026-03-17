@@ -20,6 +20,13 @@ class Lookahead:
         self.is_prevalidation_name = is_prevalidation_name
         self.run_result = None  # Cached result for the current prevalidate call (None = not run yet, True = triggered, False = not triggered)
 
+    @staticmethod
+    def eval_cache_key(lookahead_name: str, image_path: str) -> str:
+        """
+        Build a stable cache key for per-frame lookahead evaluation reuse.
+        """
+        return f"{lookahead_name}|{image_path}"
+
     def __eq__(self, other):
         """Check equality based on name, name_or_text, threshold, and is_prevalidation_name."""
         if not isinstance(other, Lookahead):
