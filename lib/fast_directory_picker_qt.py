@@ -20,6 +20,7 @@ from threading import RLock
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QHBoxLayout,
+    QInputDialog,
     QLabel,
     QLineEdit,
     QListWidget,
@@ -35,6 +36,10 @@ from utils.translations import I18N
 
 _ = I18N._
 logger = get_logger("fast_directory_picker_qt")
+
+# Session-only context memory for better default starting location.
+_session_last_directory_hint: str = ""
+_session_has_opened_picker: bool = False
 
 
 class _DirectoryPickerCache:
@@ -119,6 +124,14 @@ class _DirectoryPickerCache:
     @staticmethod
     def _compute_windows_roots() -> list[tuple[str, str]]:
         roots: list[tuple[str, str]] = []
+        seen_roots: set[str] = set()
+
+        home = os.path.expanduser("~")
+        if home and os.path.isdir(home):
+            normalized_home = os.path.normpath(home)
+            roots.append((normalized_home, _("Home")))
+            seen_roots.add(normalized_home.casefold())
+
         try:
             import ctypes
 
@@ -138,10 +151,14 @@ class _DirectoryPickerCache:
                     continue
                 letter = chr(ord("A") + index)
                 root = f"{letter}:\\"
+                normalized_root = os.path.normpath(root)
+                if normalized_root.casefold() in seen_roots:
+                    continue
                 drive_type = int(get_drive_type(root))
                 drive_type_text = drive_type_names.get(drive_type, _("Unknown"))
                 label = f"{root} ({drive_type_text})"
-                roots.append((root, label))
+                roots.append((normalized_root, label))
+                seen_roots.add(normalized_root.casefold())
         except Exception as e:
             logger.error(f"Failed to enumerate Windows drives: {e}")
 
@@ -227,6 +244,7 @@ class FastDirectoryPickerDialog(SmartDialog):
         *,
         title: str,
         initial_dir: str = "",
+        quick_access_locations: list[tuple[str, str]] | None = None,
     ) -> None:
         super().__init__(
             parent=parent,
@@ -240,6 +258,9 @@ class FastDirectoryPickerDialog(SmartDialog):
 
         self.selected_directory = ""
         self._current_directory = ""
+        self._quick_access_locations = (
+            list(quick_access_locations) if quick_access_locations else []
+        )
 
         outer = QVBoxLayout(self)
         outer.setContentsMargins(10, 10, 10, 10)
@@ -283,6 +304,10 @@ class FastDirectoryPickerDialog(SmartDialog):
         up_btn.clicked.connect(self._go_up)
         path_bar.addWidget(up_btn)
 
+        new_dir_btn = QPushButton(_("New Folder"))
+        new_dir_btn.clicked.connect(self._create_directory)
+        path_bar.addWidget(new_dir_btn)
+
         refresh_btn = QPushButton(_("Refresh"))
         refresh_btn.clicked.connect(self._refresh_current_directory)
         path_bar.addWidget(refresh_btn)
@@ -324,13 +349,32 @@ class FastDirectoryPickerDialog(SmartDialog):
 
     def _load_roots(self) -> None:
         self._roots_list.clear()
-        for root, label in _DirectoryPickerCache.get_roots():
+        seen: set[str] = set()
+        all_locations = list(self._quick_access_locations) + _DirectoryPickerCache.get_roots()
+        for root, label in all_locations:
+            normalized = os.path.normpath(str(root))
+            if not normalized:
+                continue
+            key = normalized.casefold()
+            if key in seen:
+                continue
+            seen.add(key)
             item = QListWidgetItem(label)
-            item.setData(Qt.ItemDataRole.UserRole, root)
+            item.setData(Qt.ItemDataRole.UserRole, normalized)
             self._roots_list.addItem(item)
 
     def _set_initial_directory(self, initial_dir: str) -> None:
         target = initial_dir.strip() if initial_dir else ""
+        if target:
+            # NOTE: We start at the previous selection's parent since
+            # it is common for specifically-selected directories to be
+            # leaves in the file hierarchy, and we want to present the
+            #  user with more options to branch off of on first load.
+            normalized = os.path.normpath(target)
+            if not os.path.isdir(normalized):
+                normalized = os.path.dirname(normalized)
+            parent = os.path.dirname(normalized)
+            target = parent if parent else normalized
         if not target:
             roots = _DirectoryPickerCache.get_roots()
             target = roots[0][0] if roots else os.path.expanduser("~")
@@ -345,6 +389,39 @@ class FastDirectoryPickerDialog(SmartDialog):
             return
         _DirectoryPickerCache.invalidate_subdirs(self._current_directory)
         self._populate_subdirs()
+
+    def _create_directory(self) -> None:
+        if not self._current_directory:
+            return
+        folder_name, ok = QInputDialog.getText(
+            self,
+            _("Create New Folder"),
+            _("Folder name:"),
+        )
+        if not ok:
+            return
+        folder_name = folder_name.strip()
+        if not folder_name:
+            self._status_label.setText(_("Folder name cannot be empty."))
+            self._status_label.setVisible(True)
+            return
+        target_path = os.path.normpath(
+            os.path.join(self._current_directory, folder_name)
+        )
+        try:
+            os.makedirs(target_path, exist_ok=False)
+            _DirectoryPickerCache.invalidate_subdirs(self._current_directory)
+            _DirectoryPickerCache.invalidate_subdirs(target_path)
+            self._navigate_to_directory(target_path)
+        except FileExistsError:
+            self._status_label.setText(_("A folder with that name already exists."))
+            self._status_label.setVisible(True)
+        except OSError as e:
+            logger.warning(f"Failed to create directory '{target_path}': {e}")
+            self._status_label.setText(
+                _("Failed to create folder (check permissions/path).")
+            )
+            self._status_label.setVisible(True)
 
     def _on_root_double_clicked(self, item: QListWidgetItem) -> None:
         root = str(item.data(Qt.ItemDataRole.UserRole) or "")
@@ -419,6 +496,7 @@ def get_existing_directory(
     parent: QWidget | None,
     title: str,
     initial_dir: str = "",
+    quick_access_locations: list[tuple[str, str]] | None = None,
 ) -> str:
     """
     Drop-in replacement for QFileDialog.getExistingDirectory.
@@ -426,11 +504,45 @@ def get_existing_directory(
     Returns:
         Selected directory path, or empty string if cancelled.
     """
+    global _session_last_directory_hint
+    global _session_has_opened_picker
+
+    effective_initial_dir = (initial_dir or "").strip()
+    if effective_initial_dir:
+        _session_last_directory_hint = effective_initial_dir
+    elif _session_last_directory_hint:
+        # Reuse last known context directory when caller doesn't provide one.
+        effective_initial_dir = _session_last_directory_hint
+    elif not _session_has_opened_picker:
+        # First open in process: use current working directory as broad context hint.
+        try:
+            cwd = os.getcwd()
+            if cwd and os.path.isdir(cwd):
+                effective_initial_dir = cwd
+        except OSError:
+            pass
+
+    resolved_quick_access = list(quick_access_locations) if quick_access_locations else []
+    if parent is not None and hasattr(parent, "get_base_dir"):
+        try:
+            base_dir = parent.get_base_dir()
+            if isinstance(base_dir, str) and base_dir.strip() != "" and os.path.isdir(base_dir):
+                resolved_quick_access.append(
+                    (os.path.normpath(base_dir), _("Current Base Directory"))
+                )
+        except Exception:
+            pass
+
     dialog = FastDirectoryPickerDialog(
         parent,
         title=title or _("Select Directory"),
-        initial_dir=initial_dir or "",
+        initial_dir=effective_initial_dir,
+        quick_access_locations=resolved_quick_access,
     )
+    _session_has_opened_picker = True
     if dialog.exec() == SmartDialog.DialogCode.Accepted:
-        return dialog.selected_directory or ""
+        selected = dialog.selected_directory or ""
+        if selected:
+            _session_last_directory_hint = selected
+        return selected
     return ""

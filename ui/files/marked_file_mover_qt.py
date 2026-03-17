@@ -87,6 +87,7 @@ class MarkedFileMover(SmartDialog):
             parent,
             _("Select target directory for marked files"),
             starting_target or "",
+            quick_access_locations=[(app_actions.get_base_dir(), _("Current Base Directory"))],
         )
         return target_dir, False
 
@@ -98,6 +99,7 @@ class MarkedFileMover(SmartDialog):
                 None,
                 _("Where should the marked files have gone?"),
                 target_dir or "",
+                quick_access_locations=[(app_actions.get_base_dir(), _("Current Base Directory"))],
             )
             return base_dir
         return MarkedFiles.undo_move_marks(
@@ -576,6 +578,7 @@ class MarkedFileMover(SmartDialog):
             self,
             _("Select parent directory for target directories"),
             self._starting_target or "",
+            quick_access_locations=[(self._base_dir, _("Current Base Directory"))],
         )
         if not parent_dir or not os.path.isdir(parent_dir):
             return
