@@ -45,6 +45,7 @@ class NotificationController:
         self._signals = _NotificationSignals()
         self._signals.toast_requested.connect(self._do_toast)
         self._signals.title_notify_requested.connect(self._do_title_notify)
+        self._status_title_override_active = False
 
     # ------------------------------------------------------------------
     # Toast
@@ -173,6 +174,22 @@ class NotificationController:
                 base_message or self._app.get_title_from_base_dir()
             ),
         )
+
+    def set_status_title(self, message: Optional[str]) -> None:
+        """
+        Set/clear a non-accumulating status title override.
+
+        This bypasses notification_manager grouping for transient progress states
+        where we want a direct, latest-only title update.
+        """
+        if message and message.strip() != "":
+            base_title = self._app.get_title_from_base_dir()
+            self._app.setWindowTitle(f"{base_title} - {message}")
+            self._status_title_override_active = True
+            return
+        if self._status_title_override_active:
+            self._app.setWindowTitle(self._app.get_title_from_base_dir())
+            self._status_title_override_active = False
 
     # ------------------------------------------------------------------
     # Alerts / errors

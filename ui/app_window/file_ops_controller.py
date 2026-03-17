@@ -578,7 +578,7 @@ class FileOpsController:
             open_image_in_gimp_wrapper(
                 filepath,
                 config.gimp_exe_loc,
-                self._fb.is_slow_total_files,
+                self._is_slow_total_files_for_gimp,
                 self._app.app_actions,
             )
             MarkedFiles.gimp_opened_in_last_action = True
@@ -586,6 +586,12 @@ class FileOpsController:
             self._app.notification_ctrl.handle_error(
                 _("Failed to open current file in GIMP, unable to get valid filepath")
             )
+
+    def _is_slow_total_files_for_gimp(self) -> bool:
+        """
+        Keep GIMP wrapper behavior tuned for earlier temp-dir fallback.
+        """
+        return self._fb.is_slow_total_files(threshold=1000)
 
     def run_refacdir(self, event=None) -> None:
         """

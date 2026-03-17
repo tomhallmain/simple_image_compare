@@ -36,6 +36,15 @@ class FileBrowser:
         self.cursor_lock = threading.Lock()
         self.checking_files = False
         self.use_file_paths_json = config.use_file_paths_json
+        self._preferred_initial_file: Optional[str] = None
+        self.is_incremental_loading = False
+        self._incremental_thread: Optional[threading.Thread] = None
+        self._incremental_stop_event = threading.Event()
+        self._incremental_scanned_dirs = 0
+        self._incremental_files_discovered = 0
+        self._incremental_batch_size = 200
+        self._use_incremental_on_full_refresh = False
+        self._is_external_drive_directory = Utils.is_external_drive(self.directory)
 
     def has_files(self) -> bool:
         return len(self._files) > 0
@@ -46,8 +55,8 @@ class FileBrowser:
     def count(self) -> int:
         return len(self._files)
 
-    def is_slow_total_files(self, threshold: int = 2000, use_sortable_files: bool = False) -> bool:
-        factor = 5 if Utils.is_external_drive(self.directory) else 1
+    def is_slow_total_files(self, threshold: int = 5000, use_sortable_files: bool = False) -> bool:
+        factor = 5 if self._is_external_drive_directory else 1
         file_count = len(self._files) if use_sortable_files else len(self.filepaths)
         return factor * file_count > threshold
 
@@ -67,6 +76,7 @@ class FileBrowser:
         if config.debug:
             logger.debug(f"File browser set recursive: {recursive}")
         self.recursive = recursive
+        self._recompute_incremental_decision()
         self.refresh()
 
     def is_recursive(self) -> bool:
@@ -86,7 +96,11 @@ class FileBrowser:
                 self.file_cursor = direction.get_correction(backward_value=1)
         current_file = self.current_file() if file_check else None
         self.filepaths = []
-        self._get_sortable_files()
+        self._stop_incremental_load()
+        if self._should_use_incremental_load(file_check=file_check, removed_files=removed_files):
+            self._start_incremental_load()
+        else:
+            self._get_sortable_files()
         files = self.get_files()
         self.checking_files = len(files) > 0 and len(files) < config.file_check_skip_if_n_files_over # Avoid rechecking in directories with many files
         if file_check and current_file and os.path.isfile(current_file):
@@ -113,8 +127,23 @@ class FileBrowser:
 
     def set_directory(self, directory: str) -> List[str]:
         self.directory = directory
+        self._update_drive_characteristics()
         self.checking_files = True
         self._files_cache = {}
+        self._preferred_initial_file = None
+        self._recompute_incremental_decision()
+        logger.info(f"Setting base directory: {directory}")
+        return self.refresh()
+
+    def set_directory_with_preferred_file(
+        self, directory: str, preferred_file: Optional[str] = None
+    ) -> List[str]:
+        self.directory = directory
+        self._update_drive_characteristics()
+        self.checking_files = True
+        self._files_cache = {}
+        self._preferred_initial_file = preferred_file
+        self._recompute_incremental_decision()
         logger.info(f"Setting base directory: {directory}")
         return self.refresh()
 
@@ -611,6 +640,125 @@ class FileBrowser:
         if self.filepaths is None or len(self.filepaths) == 0:
             self.filepaths = self.get_sorted_files(self._files)
         return self.filepaths
+
+    def get_incremental_progress_text(self) -> str:
+        if not self.is_incremental_loading:
+            return ""
+        return _(
+            "Loading directory... {0} files currently available (scanned {1} folders; total unknown)"
+        ).format(len(self.filepaths), self._incremental_scanned_dirs)
+
+    def _should_use_incremental_load(
+        self, *, file_check: bool, removed_files: List[str]
+    ) -> bool:
+        if file_check or len(removed_files) > 0:
+            return False
+        if self.use_file_paths_json:
+            return False
+        return self._use_incremental_on_full_refresh
+
+    def _recompute_incremental_decision(self, threshold: int = 5000) -> None:
+        if self.use_file_paths_json or not os.path.isdir(self.directory):
+            self._use_incremental_on_full_refresh = False
+            return
+        probe_files: List[str] = []
+        self._gather_files(probe_files)
+        # External drives are slower overall; keep incremental batches smaller
+        # so files appear earlier while scanning.
+        self._incremental_batch_size = 100 if self._is_external_drive_directory else 250
+        factor = 5 if self._is_external_drive_directory else 1
+        self._use_incremental_on_full_refresh = factor * len(probe_files) > threshold
+
+    def _update_drive_characteristics(self) -> None:
+        self._is_external_drive_directory = Utils.is_external_drive(self.directory)
+
+    def _stop_incremental_load(self) -> None:
+        if self._incremental_thread is not None and self._incremental_thread.is_alive():
+            self._incremental_stop_event.set()
+        self._incremental_thread = None
+        self._incremental_stop_event = threading.Event()
+        self.is_incremental_loading = False
+        self._incremental_scanned_dirs = 0
+        self._incremental_files_discovered = 0
+
+    def _start_incremental_load(self) -> None:
+        self.is_incremental_loading = True
+        self._incremental_scanned_dirs = 0
+        self._incremental_files_discovered = 0
+        self._files = []
+        self.filepaths = []
+
+        seed = self._preferred_initial_file
+        self._preferred_initial_file = None
+        if seed and os.path.isfile(seed):
+            ext = os.path.splitext(seed)[1].lower()
+            if ext in set(config.file_types):
+                sf = self._files_cache.get(seed) or SortableFile(seed)
+                self._files_cache[seed] = sf
+                self._files = [sf]
+                self.filepaths = self.get_sorted_files(list(self._files))
+
+        thread = threading.Thread(
+            target=self._incremental_load_worker,
+            name="file_browser_incremental_load",
+            daemon=True,
+        )
+        self._incremental_thread = thread
+        thread.start()
+
+    def _incremental_load_worker(self) -> None:
+        """
+        Scan and merge files in batches for large directories.
+
+        Important behavior note:
+        during incremental load, `get_files()` returns a sorted view of the
+        currently discovered subset, not the final complete directory set.
+        Until loading completes, "first/last" reflects that subset only.
+        """
+        allowed_extensions = set(config.file_types)
+        batch: List[str] = []
+        to_scan = [self.directory]
+        seen_paths = set(self.filepaths)
+        stop_event = self._incremental_stop_event
+        while to_scan and not stop_event.is_set():
+            current_dir = to_scan.pop()
+            self._incremental_scanned_dirs += 1
+            try:
+                with os.scandir(current_dir) as entries:
+                    for entry in entries:
+                        if stop_event.is_set():
+                            break
+                        if self.recursive and entry.is_dir(follow_symlinks=False):
+                            to_scan.append(entry.path)
+                        elif entry.is_file(follow_symlinks=False):
+                            ext = os.path.splitext(entry.name)[1].lower()
+                            if ext in allowed_extensions and entry.path not in seen_paths:
+                                batch.append(entry.path)
+                                seen_paths.add(entry.path)
+                                self._incremental_files_discovered += 1
+                                if len(batch) >= self._incremental_batch_size:
+                                    self._merge_incremental_batch(batch)
+                                    batch = []
+            except PermissionError:
+                continue
+            except OSError:
+                continue
+
+        if batch and not stop_event.is_set():
+            self._merge_incremental_batch(batch)
+        self.is_incremental_loading = False
+
+    def _merge_incremental_batch(self, batch: List[str]) -> None:
+        if len(batch) == 0:
+            return
+        for path in batch:
+            if path in self._files_cache:
+                sf = self._files_cache[path]
+            else:
+                sf = SortableFile(path)
+                self._files_cache[path] = sf
+            self._files.append(sf)
+        self.filepaths = self.get_sorted_files(list(self._files))
 
     def get_files_sorted_for_operation(
         self, sort_by: SortBy, sort: Sort = Sort.ASC

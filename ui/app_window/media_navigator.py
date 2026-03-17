@@ -131,24 +131,63 @@ class MediaNavigator:
 
         if self._app.mode == Mode.BROWSE:
             current_file = self.get_active_media_filepath()
-            self._fb.refresh()
+            if not self._fb.is_incremental_loading:
+                self._fb.refresh()
+            elif not self._fb.has_files():
+                if self._fb.is_incremental_loading:
+                    self._app.notification_ctrl.toast(
+                        _("Directory is still loading; no files available yet.")
+                    )
+                else:
+                    recursive_str = "" if self._fb.recursive else _(" (try setting recursive to True)")
+                    self._app.notification_ctrl.toast(
+                        _("No files found for current browsing settings.") + recursive_str
+                    )
+                return
             if current_file is None:
-                raise Exception("No active image file.")
+                if self._fb.has_files():
+                    if self._fb.is_incremental_loading:
+                        self.create_image(self._fb.get_files()[0])
+                        current_file = self.get_active_media_filepath()
+                        if current_file is None:
+                            self._app.notification_ctrl.toast(
+                                _("Directory is still loading; no files available yet.")
+                            )
+                            return
+                    else:
+                        raise Exception("No active media file found.")
+                else:
+                    raise Exception("No active media file found.")
 
-            if last_file:
-                target = self._fb.last_file()
-                while self._cm.skip_image(target) and target != current_file:
-                    target = self._fb.previous_file()
-                self.create_image(target)
-                if (len(MarkedFiles.file_marks) == 1
-                        and self._fb.has_file(MarkedFiles.file_marks[0])):
-                    self._app.file_marks_ctrl.add_all_marks_from_last_or_current_group()
-                self._app.direction = Direction.BACKWARD
-            else:
-                target = self._fb.next_file()
-                while self._cm.skip_image(target) and target != current_file:
+            try:
+                if last_file:
+                    target = self._fb.last_file()
+                    while self._cm.skip_image(target) and target != current_file:
+                        target = self._fb.previous_file()
+                    self.create_image(target)
+                    if (len(MarkedFiles.file_marks) == 1
+                            and self._fb.has_file(MarkedFiles.file_marks[0])):
+                        self._app.file_marks_ctrl.add_all_marks_from_last_or_current_group()
+                    self._app.direction = Direction.BACKWARD
+                else:
                     target = self._fb.next_file()
-                self.create_image(target)
+                    while self._cm.skip_image(target) and target != current_file:
+                        target = self._fb.next_file()
+                    self.create_image(target)
+            except Exception:
+                traceback.print_exc()
+                if self._fb.is_incremental_loading:
+                    self._app.notification_ctrl.toast(
+                        _("Directory is still loading; try again in a moment.")
+                    )
+                    return
+                if not self._fb.has_files():
+                    recursive_str = "" if self._fb.recursive else _(" (try setting recursive to True)")
+                    self._app.notification_ctrl.toast(
+                        _("No files found for current browsing settings.") + recursive_str
+                    )
+                    return
+                raise
 
         elif self._cm.has_compare():
             self._app.direction = Direction.FORWARD

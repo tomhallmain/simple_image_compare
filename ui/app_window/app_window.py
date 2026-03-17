@@ -175,6 +175,8 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         # - Briefly suppress timer-driven file-check refresh after a move refresh.
         self._is_refreshing = False
         self._suppress_file_check_refresh_until = 0.0
+        self._incremental_status_timer: Optional[QTimer] = None
+        self._startup_image_path: Optional[str] = image_path
 
         # ------------------------------------------------------------------
         # Backend (non-UI) objects -- shared across controllers
@@ -663,11 +665,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             self.notification_ctrl.set_label_state(group_number=None, size=0)
             self.sidebar_panel.remove_all_mode_buttons()
 
-        # Apply directory to file browser
-        self.sidebar_panel.update_base_dir_display(new_dir)
-        self.file_browser.set_directory(new_dir)
-
-        # Restore per-directory settings from cache
+        # Restore per-directory settings from cache before loading directory
         recursive = base_cache.get(new_dir, "recursive", default_val=False)
         sort_by_text = base_cache.get(new_dir, "sort_by", default_val=None)
         compare_mode_text = base_cache.get(new_dir, "compare_mode", default_val=None)
@@ -675,6 +673,30 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         if recursive != self.file_browser.recursive:
             self.file_browser.set_recursive(recursive)
             self.sidebar_panel.recursive_check.setChecked(recursive)
+
+        if sort_by_text:
+            try:
+                from files.file_browser import SortBy
+                sb = SortBy.get(sort_by_text) if isinstance(sort_by_text, str) else sort_by_text
+                self.file_browser.sort_by = sb
+                self.sidebar_panel.set_sort_by_value(sb.get_text())
+            except Exception as e:
+                logger.error(f"Error setting stored sort by: {e}")
+
+        # Apply directory to file browser
+        self.sidebar_panel.update_base_dir_display(new_dir)
+        preferred_initial_file = None
+        if (
+            self._startup_image_path
+            and isinstance(self._startup_image_path, str)
+            and os.path.isfile(self._startup_image_path)
+            and os.path.dirname(self._startup_image_path) == new_dir
+        ):
+            preferred_initial_file = self._startup_image_path
+        self.file_browser.set_directory_with_preferred_file(
+            new_dir, preferred_file=preferred_initial_file
+        )
+        self._start_incremental_status_updates()
 
         if compare_mode_text:
             try:
@@ -687,30 +709,56 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         if self.compare_manager.compare_mode is None:
             self.compare_manager.set_compare_mode(CompareMode.CLIP_EMBEDDING)
 
-        if sort_by_text:
-            try:
-                from files.file_browser import SortBy
-                sb = SortBy.get(sort_by_text) if isinstance(sort_by_text, str) else sort_by_text
-                self.file_browser.set_sort_by(sb)
-                self.sidebar_panel.set_sort_by_value(sb.get_text())
-            except Exception as e:
-                logger.error(f"Error setting stored sort by: {e}")
-
         # Navigate to the previously-viewed file, or show the first
         if not self.compare_manager.has_compare():
             self.set_mode(Mode.BROWSE)
-            previous_file = base_cache.get(new_dir, "image_cursor")
-            if previous_file and previous_file != "":
-                if not self.media_navigator.go_to_file(search_text=previous_file, retry_with_delay=1):
-                    self.media_navigator.show_next_media()
+            if self.file_browser.is_incremental_loading:
+                progress_text = self.file_browser.get_incremental_progress_text()
+                if progress_text:
+                    self.notification_ctrl.set_label_state(text=progress_text)
             else:
-                self.media_navigator.show_next_media()
-            self.notification_ctrl.set_label_state()
+                previous_file = base_cache.get(new_dir, "image_cursor")
+                if previous_file and previous_file != "":
+                    if not self.media_navigator.go_to_file(search_text=previous_file, retry_with_delay=1):
+                        self.media_navigator.show_next_media()
+                else:
+                    self.media_navigator.show_next_media()
+                self.notification_ctrl.set_label_state()
             self._sync_media_empty_directory_message()
 
         self.setWindowTitle(self.get_title_from_base_dir(overwrite=True))
         self._apply_directory_title_bar_color(new_dir)
         RecentDirectories.set_recent_directory(new_dir)
+
+    def _start_incremental_status_updates(self) -> None:
+        if not self.file_browser.is_incremental_loading:
+            return
+        if self._incremental_status_timer is not None:
+            self._incremental_status_timer.stop()
+        self._incremental_status_timer = QTimer(self)
+        self._incremental_status_timer.timeout.connect(self._on_incremental_status_tick)
+        self._incremental_status_timer.start(1000)
+        self._on_incremental_status_tick()
+
+    def _on_incremental_status_tick(self) -> None:
+        if not self.file_browser.is_incremental_loading:
+            if self._incremental_status_timer is not None:
+                self._incremental_status_timer.stop()
+                self._incremental_status_timer = None
+            self.notification_ctrl.set_status_title(None)
+            self.notification_ctrl.set_label_state()
+            if self.mode == Mode.BROWSE and self.img_path is None and self.file_browser.has_files():
+                self.media_navigator.show_next_media()
+            self._sync_media_empty_directory_message()
+            return
+        if self.mode == Mode.BROWSE and self.img_path is None and self.file_browser.has_files():
+            # Show the first available item as soon as batches arrive.
+            self.media_navigator.show_next_media()
+        progress_text = self.file_browser.get_incremental_progress_text()
+        if progress_text:
+            self.notification_ctrl.set_label_state(text=progress_text)
+            if not self.sidebar_panel.isVisible():
+                self.notification_ctrl.set_status_title(progress_text)
 
     def get_title_from_base_dir(self, overwrite: bool = False) -> str:
         """Generate the window title from the current base directory."""
@@ -833,6 +881,14 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         """
         if removed_files is None:
             removed_files = []
+
+        if self.file_browser.is_incremental_loading:
+            progress_text = self.file_browser.get_incremental_progress_text()
+            if progress_text:
+                self.notification_ctrl.set_label_state(text=progress_text)
+            # TODO: During incremental load we should explicitly disallow a
+            # subset of mutating actions instead of only returning early here.
+            return
 
         now = time.monotonic()
         if from_file_check and now < self._suppress_file_check_refresh_until:
