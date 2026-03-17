@@ -1,7 +1,7 @@
 import os
 import tempfile
 import asyncio
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 import cv2
 
@@ -41,6 +41,7 @@ class FrameCache:
     """
     temporary_directory = tempfile.TemporaryDirectory(prefix="tmp_comp_frames")
     cache: Dict[str, str] = {}  # Maps media_path to cached image path
+    sampled_cache: Dict[str, List[str]] = {}  # Maps media_path|sample_ratio to sampled frame paths
 
     @classmethod
     def get_image_path(cls, media_path: str) -> str:
@@ -260,6 +261,162 @@ class FrameCache:
             cap.release()
 
     @classmethod
+    def get_frame_samples(cls, media_path: str, sample_ratio: float = 0.1) -> List[str]:
+        """
+        Get sampled frame image paths for dynamic media (currently video/GIF/PDF).
+
+        Falls back to ``get_image_path`` when sampling is not applicable or fails.
+        """
+        media_path_lower = media_path.lower()
+        is_video = config.enable_videos and any(
+            media_path_lower.endswith(ext) for ext in config.video_types
+        )
+        is_pdf = media_path_lower.endswith(".pdf") and config.enable_pdfs and has_imported_pypdfium2
+        if not is_video and not is_pdf:
+            return [cls.get_image_path(media_path)]
+
+        try:
+            ratio = float(sample_ratio)
+        except Exception:
+            ratio = 0.1
+        ratio = max(0.0, min(1.0, ratio))
+        min_sample_count = config.dynamic_media_min_sample_count
+        max_sample_frames = config.dynamic_media_max_sample_frames
+        max_sample_pages = config.dynamic_media_max_sample_pages
+        cache_key = (
+            f"{media_path}|{ratio:.4f}|min:{min_sample_count}"
+            f"|maxf:{max_sample_frames}|maxp:{max_sample_pages}"
+        )
+
+        if cache_key in cls.sampled_cache:
+            return cls.sampled_cache[cache_key]
+
+        if is_video:
+            sampled_paths = cls._extract_video_sample_frames(
+                media_path,
+                ratio,
+                min_sample_count=min_sample_count,
+                max_sample_count=max_sample_frames,
+            )
+        else:
+            sampled_paths = cls._extract_pdf_sample_pages(
+                media_path,
+                ratio,
+                min_sample_count=min_sample_count,
+                max_sample_count=max_sample_pages,
+            )
+        if len(sampled_paths) == 0:
+            sampled_paths = [cls.get_image_path(media_path)]
+        cls.sampled_cache[cache_key] = sampled_paths
+        return sampled_paths
+
+    @classmethod
+    def _extract_video_sample_frames(
+        cls,
+        video_path: str,
+        sample_ratio: float,
+        min_sample_count: int = 1,
+        max_sample_count: int = 40,
+    ) -> List[str]:
+        """
+        Extract sampled frames from a video based on the configured ratio.
+        """
+        cap = cv2.VideoCapture(video_path)
+        sampled_paths: List[str] = []
+        try:
+            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            frame_indices = cls._compute_sample_indices(
+                total_items=total_frames,
+                sample_ratio=sample_ratio,
+                min_sample_count=min_sample_count,
+                max_sample_count=max_sample_count,
+            )
+            if len(frame_indices) == 0:
+                return sampled_paths
+
+            basename = os.path.splitext(os.path.basename(video_path))[0]
+            for frame_index in frame_indices:
+                cap.set(cv2.CAP_PROP_POS_FRAMES, frame_index)
+                ret, frame = cap.read()
+                if not ret:
+                    continue
+                frame_path = os.path.join(
+                    cls.temporary_directory.name,
+                    f"{basename}_sample_{frame_index}.jpg",
+                )
+                cv2.imwrite(frame_path, frame, [cv2.IMWRITE_JPEG_QUALITY, 95])
+                sampled_paths.append(frame_path)
+        except Exception as e:
+            logger.warning(f"Error extracting sampled frames from {video_path}: {e}")
+        finally:
+            cap.release()
+        return sampled_paths
+
+    @classmethod
+    def _extract_pdf_sample_pages(
+        cls,
+        pdf_path: str,
+        sample_ratio: float,
+        min_sample_count: int = 1,
+        max_sample_count: int = 40,
+    ) -> List[str]:
+        """
+        Extract sampled page renders from a PDF based on the configured ratio.
+        """
+        sampled_paths: List[str] = []
+        pdf = None
+        try:
+            pdf = pdfium.PdfDocument(pdf_path)
+            total_pages = len(pdf)
+            page_indices = cls._compute_sample_indices(
+                total_items=total_pages,
+                sample_ratio=sample_ratio,
+                min_sample_count=min_sample_count,
+                max_sample_count=max_sample_count,
+            )
+            if len(page_indices) == 0:
+                return sampled_paths
+
+            basename = os.path.splitext(os.path.basename(pdf_path))[0]
+            for page_index in page_indices:
+                page = pdf[page_index]
+                image = page.render(scale=4).to_pil()
+                page_path = os.path.join(
+                    cls.temporary_directory.name,
+                    f"{basename}_sample_page_{page_index}.jpg",
+                )
+                image.save(page_path, quality=95)
+                sampled_paths.append(page_path)
+        except Exception as e:
+            logger.warning(f"Error extracting sampled PDF pages from {pdf_path}: {e}")
+        finally:
+            if pdf is not None:
+                try:
+                    pdf.close()
+                except Exception:
+                    pass
+        return sampled_paths
+
+    @staticmethod
+    def _compute_sample_indices(
+        total_items: int,
+        sample_ratio: float,
+        min_sample_count: int,
+        max_sample_count: int,
+    ) -> List[int]:
+        if total_items <= 0:
+            return []
+        sample_count = max(1, int(total_items * sample_ratio))
+        sample_count = max(sample_count, max(1, min_sample_count))
+        sample_count = min(sample_count, max(1, max_sample_count))
+        sample_count = min(sample_count, total_items)
+        step = max(1, total_items // sample_count)
+        indices = list(range(0, total_items, step))[:sample_count]
+        if len(indices) == 0:
+            return [0]
+        return indices
+
+    @classmethod
     def get_cached_path(cls, media_path: str) -> Optional[str]:
         """
         Return the cached temp path for a media file (e.g. SVG -> PNG path), if any.
@@ -281,11 +438,22 @@ class FrameCache:
                 logger.debug(f"Removed cached temp file: {temp_path}")
             except OSError as e:
                 logger.warning(f"Could not remove cached temp file {temp_path}: {e}")
+        sampled_keys = [k for k in cls.sampled_cache.keys() if k.startswith(f"{media_path}|")]
+        for key in sampled_keys:
+            sampled_paths = cls.sampled_cache.pop(key, [])
+            if delete_temp_file:
+                for sampled_path in sampled_paths:
+                    if sampled_path and os.path.isfile(sampled_path):
+                        try:
+                            os.remove(sampled_path)
+                        except OSError as e:
+                            logger.warning(f"Could not remove sampled cache file {sampled_path}: {e}")
 
     @classmethod
     def clear(cls) -> None:
         """Clear the frame cache."""
         cls.cache.clear()
+        cls.sampled_cache.clear()
 
     @classmethod
     def cleanup(cls) -> None:

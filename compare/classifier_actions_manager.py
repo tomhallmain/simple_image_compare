@@ -19,6 +19,7 @@ from files.directory_profile import DirectoryProfile
 from files.file_action import FileAction
 from image.image_classifier_manager import image_classifier_manager
 from image.image_data_extractor import image_data_extractor
+from image.frame_cache import FrameCache
 from image.image_ops import ImageOps
 from utils.app_info_cache import app_info_cache
 from utils.config import config
@@ -49,6 +50,7 @@ class ClassifierAction:
                  use_embedding=True, use_image_classifier=False, use_prompts=False, use_blacklist=False,
                  is_active=True, use_prototype=False, prototype_directory="", 
                  negative_prototype_directory="", negative_prototype_lambda=0.5,
+                 dynamic_content_sample_ratio=0.1, dynamic_content_positive_ratio=0.1,
                  _last_used_profile=None, lookahead_names=[]):
         self.name = name
         self.positives = positives
@@ -77,6 +79,10 @@ class ClassifierAction:
         self._cached_prototype = None  # Cached positive prototype embedding
         self._cached_negative_prototype = None  # Cached negative prototype embedding
         self._last_used_profile = _last_used_profile  # Last used profile name or directory path (None for new actions)
+        # For dynamic media (video/GIF, etc.), sample this proportion of frames
+        # and require this proportion of positives before firing the action.
+        self.dynamic_content_sample_ratio = self._normalize_ratio(dynamic_content_sample_ratio, default_val=0.1)
+        self.dynamic_content_positive_ratio = self._normalize_ratio(dynamic_content_positive_ratio, default_val=0.1)
 
 
     def __eq__(self, other):
@@ -94,6 +100,14 @@ class ClassifierAction:
 
     def set_negatives(self, text):
         self.negatives = [x.strip() for x in Utils.split(text, ",") if len(x) > 0]
+
+    @staticmethod
+    def _normalize_ratio(value, default_val: float = 0.1) -> float:
+        try:
+            normalized = float(value)
+        except Exception:
+            normalized = default_val
+        return max(0.0, min(1.0, normalized))
 
     def get_positives_str(self):
         if len(self.positives) > 0:
@@ -350,35 +364,88 @@ class ClassifierAction:
         if self.use_prototype:
             self._run_with_batch_prototype_validation(directory_paths, hide_callback, notify_callback, add_mark_callback, max_images_per_batch)
 
-    def run_on_image_path(self, image_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
+    def matches_image_path(self, image_path) -> bool:
         # Note: Image classifier and prototype should be loaded before calling this method
         # (see ClassifierActionsWindow.run_classifier_action for pre-loading)
         
         # Check each enabled validation type with short-circuit OR logic        
         if self.use_prototype:
             if self._check_prototype_validation(image_path):
-                return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
+                return True
 
         # Check lookaheads first - if any pass, skip this prevalidation
         if self._check_lookaheads(image_path):
-            return None
+            return False
 
         if self.use_embedding:
             if CompareEmbeddingClip.multi_text_compare(image_path, self.positives, self.negatives, self.text_embedding_threshold):
-                return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
+                return True
         
         if self.use_image_classifier:
             if self.image_classifier is not None:
                 if self.image_classifier.test_image_for_categories(image_path, self.image_classifier_selected_categories):
-                    return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
+                    return True
             else:
                 logger.error(f"Image classifier {self.image_classifier_name} not found for classifier action {self.name}")
         
         if self.use_prompts:
             if self._check_prompt_validation(image_path):
-                return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
+                return True
         
         # No validation type passed
+        return False
+
+    def _is_dynamic_media_path(self, media_path: str) -> bool:
+        media_path_lower = media_path.lower()
+        is_video = (
+            config.enable_videos
+            and any(media_path_lower.endswith(ext) for ext in config.video_types)
+        )
+        is_pdf = config.enable_pdfs and media_path_lower.endswith(".pdf")
+        return is_video or is_pdf
+
+    def run_on_media_path(self, media_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
+        if self._is_dynamic_media_path(media_path):
+            sampled_frames = FrameCache.get_frame_samples(
+                media_path, sample_ratio=self.dynamic_content_sample_ratio
+            )
+            if len(sampled_frames) > 0:
+                positive_count = 0
+                tested_count = 0
+                for sampled_path in sampled_frames:
+                    # Lookaheads cache results in a single pass. For sampled
+                    # frames of the same media, reset per frame to avoid stale
+                    # frame-level carryover.
+                    for lookahead in Lookahead.lookaheads:
+                        lookahead.run_result = None
+                    try:
+                        tested_count += 1
+                        if self.matches_image_path(sampled_path):
+                            positive_count += 1
+                    except Exception as e:
+                        logger.debug(
+                            f"Sample frame prevalidation failed for {sampled_path}: {e}"
+                        )
+                if tested_count > 0:
+                    positive_ratio = positive_count / tested_count
+                    if positive_ratio >= self.dynamic_content_positive_ratio:
+                        return self.run_action(media_path, hide_callback, notify_callback, add_mark_callback)
+                    return None
+
+        try:
+            return self.run_on_image_path(media_path, hide_callback, notify_callback, add_mark_callback)
+        except Exception as e:
+            # For non-image media, fall back to first extracted frame.
+            # TODO: Extend dynamic multi-sample handling to additional media
+            # types (HTML/audio and others) instead of first-frame fallback.
+            actual_image_path = FrameCache.get_image_path(media_path)
+            if actual_image_path == media_path:
+                raise e
+            return self.run_on_image_path(actual_image_path, hide_callback, notify_callback, add_mark_callback)
+
+    def run_on_image_path(self, image_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
+        if self.matches_image_path(image_path):
+            return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
         return None
 
     def run_action(self, image_path, hide_callback, notify_callback, add_mark_callback=None):
@@ -571,6 +638,8 @@ class ClassifierAction:
             "prototype_directory": self.prototype_directory,
             "negative_prototype_directory": self.negative_prototype_directory,
             "negative_prototype_lambda": self.negative_prototype_lambda,
+            "dynamic_content_sample_ratio": self.dynamic_content_sample_ratio,
+            "dynamic_content_positive_ratio": self.dynamic_content_positive_ratio,
             "_last_used_profile": self._last_used_profile,
             "lookahead_names": self.lookahead_names,
             }
@@ -605,6 +674,10 @@ class ClassifierAction:
             d['negative_prototype_directory'] = ""
         if 'negative_prototype_lambda' not in d:
             d['negative_prototype_lambda'] = 0.5
+        if 'dynamic_content_sample_ratio' not in d:
+            d['dynamic_content_sample_ratio'] = 0.1
+        if 'dynamic_content_positive_ratio' not in d:
+            d['dynamic_content_positive_ratio'] = 0.1
         if '_last_used_profile' not in d:
             d['_last_used_profile'] = None
         # Handle threshold backward compatibility
@@ -663,7 +736,9 @@ class Prevalidation(ClassifierAction):
                  image_classifier_name="", image_classifier_selected_categories=[], 
                  use_embedding=True, use_image_classifier=False, use_prompts=False, use_blacklist=False,
                  lookahead_names=[], profile_name=None, use_prototype=False, prototype_directory="", 
-                 negative_prototype_directory="", negative_prototype_lambda=0.5, _last_used_profile=None):
+                 negative_prototype_directory="", negative_prototype_lambda=0.5,
+                 dynamic_content_sample_ratio=0.1, dynamic_content_positive_ratio=0.1,
+                 _last_used_profile=None):
         # Pass all parameters including prototype settings to parent ClassifierAction
         super().__init__(name, positives, negatives, threshold, 
                         text_embedding_threshold, prototype_threshold, action, action_modifier, 
@@ -671,6 +746,7 @@ class Prevalidation(ClassifierAction):
                         use_embedding, use_image_classifier, use_prompts, use_blacklist,
                         is_active, use_prototype, prototype_directory,
                         negative_prototype_directory, negative_prototype_lambda,
+                        dynamic_content_sample_ratio, dynamic_content_positive_ratio,
                         _last_used_profile, lookahead_names=lookahead_names)
         self.profile_name = profile_name  # Name of DirectoryProfile to use (None = global)
         self.profile = None  # Cached DirectoryProfile instance (set after loading, or temporary for backward compatibility)
@@ -790,6 +866,10 @@ class Prevalidation(ClassifierAction):
             d['negative_prototype_directory'] = ""
         if 'negative_prototype_lambda' not in d:
             d['negative_prototype_lambda'] = 0.5
+        if 'dynamic_content_sample_ratio' not in d:
+            d['dynamic_content_sample_ratio'] = 0.1
+        if 'dynamic_content_positive_ratio' not in d:
+            d['dynamic_content_positive_ratio'] = 0.1
         if 'lookahead_names' not in d:
             d['lookahead_names'] = []
         if 'profile_name' not in d:
@@ -852,7 +932,7 @@ class ClassifierActionsManager:
         ClassifierActionsManager._prevalidations_initialized = True
     
     @staticmethod
-    def prevalidate(image_path, get_base_dir_func, hide_callback, notify_callback, add_mark_callback) -> Optional[ClassifierActionType]:
+    def prevalidate_media(media_path, get_base_dir_func, hide_callback, notify_callback, add_mark_callback) -> Optional[ClassifierActionType]:
         # Lazy initialization - ensure prevalidations are initialized before first use
         if not ClassifierActionsManager._prevalidations_initialized:
             ClassifierActionsManager._prevalidations_post_init()
@@ -864,7 +944,7 @@ class ClassifierActionsManager:
         base_dir = get_base_dir_func()
         if len(ClassifierActionsManager.directories_to_exclude) > 0 and base_dir in ClassifierActionsManager.directories_to_exclude:
             return None
-        if image_path not in ClassifierActionsManager.prevalidated_cache:
+        if media_path not in ClassifierActionsManager.prevalidated_cache:
             prevalidation_action = None
             for prevalidation in ClassifierActionsManager.prevalidations:
                 if prevalidation.is_active:
@@ -873,13 +953,15 @@ class ClassifierActionsManager:
                     # Check if prevalidation should run on this directory
                     if prevalidation.profile is not None and base_dir not in prevalidation.profile.directories:
                         continue
-                    prevalidation_action = prevalidation.run_on_image_path(image_path, hide_callback, notify_callback, add_mark_callback)
+                    prevalidation_action = prevalidation.run_on_media_path(
+                        media_path, hide_callback, notify_callback, add_mark_callback
+                    )
                     if prevalidation_action is not None:
                         break
             if prevalidation_action is None or prevalidation_action.is_cache_type():
-                ClassifierActionsManager.prevalidated_cache[image_path] = prevalidation_action
+                ClassifierActionsManager.prevalidated_cache[media_path] = prevalidation_action
         else:
-            prevalidation_action = ClassifierActionsManager.prevalidated_cache[image_path]
+            prevalidation_action = ClassifierActionsManager.prevalidated_cache[media_path]
         return prevalidation_action
     
     @staticmethod

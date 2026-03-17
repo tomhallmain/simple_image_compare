@@ -108,6 +108,10 @@ class Config:
         self.text_embedding_search_preset_index = -1
         self.text_embedding_search_presets_exclusive = False
         self.enable_prevalidations = True
+        # Dynamic media prevalidation sampling bounds.
+        self.dynamic_media_min_sample_count = 5
+        self.dynamic_media_max_sample_frames = 40
+        self.dynamic_media_max_sample_pages = 40
         self.show_negative_prompt = True
         self.sd_runner_client_port = 6000
         self.sd_runner_client_password = "<PASSWORD>"
@@ -212,6 +216,9 @@ class Config:
                             "title_notify_persist_seconds",
                             "font_size",
                             "threshold_potential_duplicate_color",
+                            "dynamic_media_min_sample_count",
+                            "dynamic_media_max_sample_frames",
+                            "dynamic_media_max_sample_pages",
                             "sd_runner_client_port",
                             "refacdir_client_port")
             self.set_values(float,

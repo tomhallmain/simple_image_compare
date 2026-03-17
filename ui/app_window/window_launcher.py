@@ -371,10 +371,10 @@ class WindowLauncher:
         PrevalidationsTab.clear_prevalidated_cache()
         from PySide6.QtWidgets import QApplication
         from files.marked_files import MarkedFiles
-        for image_path in fb.get_files():
+        for media_path in fb.get_files():
             try:
                 PrevalidationsTab.prevalidate(
-                    image_path,
+                    media_path,
                     self._app.get_base_dir,
                     self._app.file_ops_ctrl.hide_current_media,
                     self._app.notification_ctrl.title_notify,

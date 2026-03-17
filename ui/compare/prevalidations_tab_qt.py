@@ -182,15 +182,15 @@ class PrevalidationsTab(QWidget):
 
     @staticmethod
     def prevalidate(
-        image_path,
+        media_path,
         get_base_dir_func,
         hide_callback,
         notify_callback,
         add_mark_callback,
     ):
         """Run prevalidations and return action type or None."""
-        return ClassifierActionsManager.prevalidate(
-            image_path,
+        return ClassifierActionsManager.prevalidate_media(
+            media_path,
             get_base_dir_func,
             hide_callback,
             notify_callback,
