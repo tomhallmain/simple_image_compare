@@ -486,7 +486,9 @@ class DirectoryProfileWindow(SmartDialog):
 
             copied_pv = Prevalidation.from_dict(source_dict)
             copied_pv.update_profile_instance(profile_name=new_profile_name)
-            ClassifierActionsManager.prevalidations.insert(0, copied_pv)
+            # For profile-copy workflows, preserve source order and place copied
+            # prevalidations after existing entries (append behavior).
+            ClassifierActionsManager.prevalidations.append(copied_pv)
 
     # ------------------------------------------------------------------
     # Finalize

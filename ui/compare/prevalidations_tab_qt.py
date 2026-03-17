@@ -179,6 +179,7 @@ class PrevalidationsTab(QWidget):
     @staticmethod
     def clear_prevalidated_cache() -> None:
         ClassifierActionsManager.prevalidated_cache.clear()
+        ClassifierActionsManager.directories_to_exclude.clear()
 
     @staticmethod
     def prevalidate(
@@ -588,10 +589,7 @@ class PrevalidationsTab(QWidget):
             and prevalidation in ClassifierActionsManager.prevalidations
         ):
             ClassifierActionsManager.prevalidations.remove(prevalidation)
-            ClassifierActionsManager._initialized_prevalidations.discard(
-                prevalidation
-            )
-        self.refresh()
+        self.refresh_prevalidations()
 
     def _move_down(self, idx: int, prevalidation) -> None:
         prevalidation.move_index(idx, 1)
@@ -600,7 +598,7 @@ class PrevalidationsTab(QWidget):
     def _clear_all(self) -> None:
         ClassifierActionsManager.prevalidations.clear()
         self._filtered.clear()
-        self.refresh()
+        self.refresh_prevalidations()
 
     def refresh(self) -> None:
         self._filtered = ClassifierActionsManager.prevalidations[:]
