@@ -38,6 +38,9 @@ class FrameCache:
     This helps improve performance by avoiding repeated frame extraction operations.
 
     TODO support getting an "average" frame from a video, or at least an average embedding
+    TODO(GC): Implement bounded cache eviction / periodic cleanup for sampled
+    dynamic-media frames. Current sampled cache can grow large with many media
+    files and high sampling limits.
     """
     temporary_directory = tempfile.TemporaryDirectory(prefix="tmp_comp_frames")
     cache: Dict[str, str] = {}  # Maps media_path to cached image path
@@ -311,6 +314,77 @@ class FrameCache:
         return sampled_paths
 
     @classmethod
+    def get_dynamic_media_stats(cls, media_path: str) -> Dict[str, Optional[float]]:
+        """
+        Return lightweight metadata useful for debug logging.
+
+        Keys:
+            - media_type: "video", "pdf", or "other"
+            - total_items: total frames/pages when known
+            - duration_seconds: video duration when available, else None
+            - fps: video fps when available, else None
+        """
+        media_path_lower = media_path.lower()
+        is_video = config.enable_videos and any(
+            media_path_lower.endswith(ext) for ext in config.video_types
+        )
+        if is_video:
+            cap = cv2.VideoCapture(media_path)
+            try:
+                total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+                fps = float(cap.get(cv2.CAP_PROP_FPS))
+                duration_seconds = None
+                if fps and fps > 0 and total_frames > 0:
+                    duration_seconds = total_frames / fps
+                return {
+                    "media_type": "video",
+                    "total_items": total_frames if total_frames > 0 else None,
+                    "duration_seconds": duration_seconds,
+                    "fps": fps if fps > 0 else None,
+                }
+            except Exception:
+                return {
+                    "media_type": "video",
+                    "total_items": None,
+                    "duration_seconds": None,
+                    "fps": None,
+                }
+            finally:
+                cap.release()
+
+        is_pdf = media_path_lower.endswith(".pdf") and config.enable_pdfs and has_imported_pypdfium2
+        if is_pdf:
+            pdf = None
+            try:
+                pdf = pdfium.PdfDocument(media_path)
+                return {
+                    "media_type": "pdf",
+                    "total_items": len(pdf),
+                    "duration_seconds": None,
+                    "fps": None,
+                }
+            except Exception:
+                return {
+                    "media_type": "pdf",
+                    "total_items": None,
+                    "duration_seconds": None,
+                    "fps": None,
+                }
+            finally:
+                if pdf is not None:
+                    try:
+                        pdf.close()
+                    except Exception:
+                        pass
+
+        return {
+            "media_type": "other",
+            "total_items": None,
+            "duration_seconds": None,
+            "fps": None,
+        }
+
+    @classmethod
     def _extract_video_sample_frames(
         cls,
         video_path: str,
@@ -423,6 +497,27 @@ class FrameCache:
         Returns None if the media is not in the cache or is not a type that uses a temp file.
         """
         return cls.cache.get(media_path)
+
+    @classmethod
+    def get_media_path_for_cached(cls, maybe_cached_path: str) -> Optional[str]:
+        """
+        Resolve a cached frame/page path back to the original media path.
+
+        Returns:
+            The original media path if *maybe_cached_path* is known in the cache,
+            otherwise None.
+        """
+        if not maybe_cached_path:
+            return None
+        for media_path, cached_path in cls.cache.items():
+            if cached_path == maybe_cached_path:
+                return media_path
+        for key, sampled_paths in cls.sampled_cache.items():
+            for sampled_path in sampled_paths:
+                if sampled_path == maybe_cached_path:
+                    media_path = key.split("|", 1)[0]
+                    return media_path
+        return None
 
     @classmethod
     def remove_from_cache(cls, media_path: str, delete_temp_file: bool = False) -> None:

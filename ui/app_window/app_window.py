@@ -685,6 +685,12 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
 
         # Apply directory to file browser
         self.sidebar_panel.update_base_dir_display(new_dir)
+        previous_file = base_cache.get(new_dir, "image_cursor")
+        previous_file_path = (
+            Utils.get_valid_file(new_dir, previous_file)
+            if previous_file and previous_file != ""
+            else None
+        )
         preferred_initial_file = None
         if (
             self._startup_image_path
@@ -693,6 +699,9 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             and os.path.dirname(self._startup_image_path) == new_dir
         ):
             preferred_initial_file = self._startup_image_path
+        elif previous_file_path and os.path.isfile(previous_file_path):
+            # Seed incremental loading with the cached media when available.
+            preferred_initial_file = previous_file_path
         self.file_browser.set_directory_with_preferred_file(
             new_dir, preferred_file=preferred_initial_file
         )
@@ -717,7 +726,6 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
                 if progress_text:
                     self.notification_ctrl.set_label_state(text=progress_text)
             else:
-                previous_file = base_cache.get(new_dir, "image_cursor")
                 if previous_file and previous_file != "":
                     if not self.media_navigator.go_to_file(search_text=previous_file, retry_with_delay=1):
                         self.media_navigator.show_next_media()

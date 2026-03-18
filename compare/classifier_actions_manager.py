@@ -434,27 +434,59 @@ class ClassifierAction:
                 media_path, sample_ratio=self.dynamic_content_sample_ratio
             )
             if len(sampled_frames) > 0:
+                stats = FrameCache.get_dynamic_media_stats(media_path) if config.debug else None
                 lookahead_eval_cache = {}
                 positive_count = 0
                 total_samples = len(sampled_frames)
                 required_positive_count = math.ceil(
                     total_samples * self.dynamic_content_positive_ratio
                 )
+                processed_samples = 0
+                last_processed_index = -1
+                threshold_met = False
+                reached_last_sample = False
                 for idx, sampled_path in enumerate(sampled_frames):
                     try:
+                        processed_samples += 1
+                        last_processed_index = idx
                         if self.matches_image_path(sampled_path, lookahead_eval_cache=lookahead_eval_cache):
                             positive_count += 1
                             # Early success once the positive threshold is met.
                             if positive_count >= required_positive_count:
-                                return self.run_action(media_path, hide_callback, notify_callback, add_mark_callback)
+                                threshold_met = True
+                                break
                         # Early failure if even all remaining samples cannot meet threshold.
                         remaining_samples = total_samples - (idx + 1)
                         if positive_count + remaining_samples < required_positive_count:
-                            return None
+                            break
                     except Exception as e:
                         logger.debug(
                             f"Sample frame prevalidation failed for {sampled_path}: {e}"
                         )
+                reached_last_sample = processed_samples >= total_samples
+                if config.debug:
+                    media_type = stats["media_type"] if stats else "dynamic"
+                    total_items = stats["total_items"] if stats else None
+                    duration_seconds = stats["duration_seconds"] if stats else None
+                    logger.debug(
+                        "Dynamic prevalidation summary | action=%s media=%s type=%s "
+                        "sample_idx=%s/%s tested=%s positives=%s required=%s met=%s reached_last=%s "
+                        "total_items=%s duration_s=%s",
+                        self.name,
+                        media_path,
+                        media_type,
+                        (last_processed_index + 1) if last_processed_index >= 0 else 0,
+                        total_samples,
+                        processed_samples,
+                        positive_count,
+                        required_positive_count,
+                        threshold_met,
+                        reached_last_sample,
+                        total_items,
+                        f"{duration_seconds:.2f}" if isinstance(duration_seconds, (int, float)) else "n/a",
+                    )
+                if threshold_met:
+                    return self.run_action(media_path, hide_callback, notify_callback, add_mark_callback)
                 return None
 
         try:
