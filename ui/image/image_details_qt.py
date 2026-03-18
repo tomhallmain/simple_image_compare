@@ -130,7 +130,15 @@ class ImageDetails(SmartDialog):
             geometry="700x900",
         )
         self._parent_ref = parent
+        self._media_path = media_path
         self._image_path = FrameCache.get_image_path(media_path)
+        self._temp_path = (
+            self._image_path
+            if self._image_path != self._media_path
+            else None
+        )
+        media_ext = os.path.splitext(self._media_path)[1].lower()
+        self._show_temp_path = media_ext in {".svg", ".pdf"} and self._temp_path is not None
         self._prompt_extraction_failed = True
         self._app_actions = app_actions
         self._do_refresh = do_refresh
@@ -247,7 +255,13 @@ class ImageDetails(SmartDialog):
 
         # -- Info labels -------------------------------------------
         _header(_("Image Path"), row)
-        self._lbl_path = _value(self._image_path, row)
+        self._lbl_path = _value(self._media_path, row)
+        row += 1
+
+        self._lbl_temp_path_header = _header(_("Temp Path"), row)
+        self._lbl_temp_path = _value(self._temp_path or "", row)
+        self._lbl_temp_path_header.setVisible(self._show_temp_path)
+        self._lbl_temp_path.setVisible(self._show_temp_path)
         row += 1
 
         _header(_("File Index"), row)
@@ -442,7 +456,15 @@ class ImageDetails(SmartDialog):
 
     def update_image_details(self, image_path: str, index_text: str) -> None:
         """Refresh all displayed fields for a new image."""
-        self._image_path = image_path
+        self._media_path = image_path
+        self._image_path = FrameCache.get_image_path(image_path)
+        self._temp_path = (
+            self._image_path
+            if self._image_path != self._media_path
+            else None
+        )
+        media_ext = os.path.splitext(self._media_path)[1].lower()
+        self._show_temp_path = media_ext in {".svg", ".pdf"} and self._temp_path is not None
         self._is_image = not any(
             self._image_path.lower().endswith(ext)
             for ext in config.video_types
@@ -470,7 +492,11 @@ class ImageDetails(SmartDialog):
             related_image_text = ""
 
         mod_time, file_size = self._get_file_info()
-        self._lbl_path.setText(image_path)
+        self._lbl_path.setText(self._media_path)
+        if self._lbl_temp_path is not None and self._lbl_temp_path_header is not None:
+            self._lbl_temp_path_header.setVisible(self._show_temp_path)
+            self._lbl_temp_path.setVisible(self._show_temp_path)
+            self._lbl_temp_path.setText(self._temp_path if self._show_temp_path else "")
         self._lbl_index.setText(index_text)
         self._lbl_mode.setText(image_mode)
         self._lbl_dims.setText(image_dims)
