@@ -45,6 +45,7 @@ class FrameCache:
     temporary_directory = tempfile.TemporaryDirectory(prefix="tmp_comp_frames")
     cache: Dict[str, str] = {}  # Maps media_path to cached image path
     sampled_cache: Dict[str, List[str]] = {}  # Maps media_path|sample_ratio to sampled frame paths
+    media_stats_cache: Dict[str, Dict[str, Optional[float]]] = {}  # Maps media_path to lightweight stats
 
     @classmethod
     def get_image_path(cls, media_path: str) -> str:
@@ -149,6 +150,12 @@ class FrameCache:
             logger.info(f"Extracting first page from PDF: {pdf_path}")
             pdf = pdfium.PdfDocument(pdf_path)
             if len(pdf) > 0:
+                cls.media_stats_cache[pdf_path] = {
+                    "media_type": "pdf",
+                    "total_items": len(pdf),
+                    "duration_seconds": None,
+                    "fps": None,
+                }
                 page = pdf[0]
                 # Use a higher scale for better quality
                 image = page.render(scale=4).to_pil()
@@ -250,6 +257,17 @@ class FrameCache:
         logger.info(f"Extracting first frame from video: {video_path}")
         cap = cv2.VideoCapture(video_path)
         try:
+            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            fps = float(cap.get(cv2.CAP_PROP_FPS))
+            duration_seconds = None
+            if fps and fps > 0 and total_frames > 0:
+                duration_seconds = total_frames / fps
+            cls.media_stats_cache[video_path] = {
+                "media_type": "video",
+                "total_items": total_frames if total_frames > 0 else None,
+                "duration_seconds": duration_seconds,
+                "fps": fps if fps > 0 else None,
+            }
             ret, frame = cap.read()
             if not ret:
                 raise ValueError("Could not read the first frame")
@@ -309,7 +327,9 @@ class FrameCache:
                 max_sample_count=max_sample_pages,
             )
         if len(sampled_paths) == 0:
-            sampled_paths = [cls.get_image_path(media_path)]
+            # Avoid forcing another immediate first-frame extraction attempt
+            # for problematic dynamic media files.
+            sampled_paths = [media_path] if (is_video or is_pdf) else [cls.get_image_path(media_path)]
         cls.sampled_cache[cache_key] = sampled_paths
         return sampled_paths
 
@@ -324,58 +344,8 @@ class FrameCache:
             - duration_seconds: video duration when available, else None
             - fps: video fps when available, else None
         """
-        media_path_lower = media_path.lower()
-        is_video = config.enable_videos and any(
-            media_path_lower.endswith(ext) for ext in config.video_types
-        )
-        if is_video:
-            cap = cv2.VideoCapture(media_path)
-            try:
-                total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-                fps = float(cap.get(cv2.CAP_PROP_FPS))
-                duration_seconds = None
-                if fps and fps > 0 and total_frames > 0:
-                    duration_seconds = total_frames / fps
-                return {
-                    "media_type": "video",
-                    "total_items": total_frames if total_frames > 0 else None,
-                    "duration_seconds": duration_seconds,
-                    "fps": fps if fps > 0 else None,
-                }
-            except Exception:
-                return {
-                    "media_type": "video",
-                    "total_items": None,
-                    "duration_seconds": None,
-                    "fps": None,
-                }
-            finally:
-                cap.release()
-
-        is_pdf = media_path_lower.endswith(".pdf") and config.enable_pdfs and has_imported_pypdfium2
-        if is_pdf:
-            pdf = None
-            try:
-                pdf = pdfium.PdfDocument(media_path)
-                return {
-                    "media_type": "pdf",
-                    "total_items": len(pdf),
-                    "duration_seconds": None,
-                    "fps": None,
-                }
-            except Exception:
-                return {
-                    "media_type": "pdf",
-                    "total_items": None,
-                    "duration_seconds": None,
-                    "fps": None,
-                }
-            finally:
-                if pdf is not None:
-                    try:
-                        pdf.close()
-                    except Exception:
-                        pass
+        if media_path in cls.media_stats_cache:
+            return cls.media_stats_cache[media_path]
 
         return {
             "media_type": "other",
@@ -399,6 +369,16 @@ class FrameCache:
         sampled_paths: List[str] = []
         try:
             total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            fps = float(cap.get(cv2.CAP_PROP_FPS))
+            duration_seconds = None
+            if fps and fps > 0 and total_frames > 0:
+                duration_seconds = total_frames / fps
+            cls.media_stats_cache[video_path] = {
+                "media_type": "video",
+                "total_items": total_frames if total_frames > 0 else None,
+                "duration_seconds": duration_seconds,
+                "fps": fps if fps > 0 else None,
+            }
             frame_indices = cls._compute_sample_indices(
                 total_items=total_frames,
                 sample_ratio=sample_ratio,
@@ -442,6 +422,12 @@ class FrameCache:
         try:
             pdf = pdfium.PdfDocument(pdf_path)
             total_pages = len(pdf)
+            cls.media_stats_cache[pdf_path] = {
+                "media_type": "pdf",
+                "total_items": total_pages,
+                "duration_seconds": None,
+                "fps": None,
+            }
             page_indices = cls._compute_sample_indices(
                 total_items=total_pages,
                 sample_ratio=sample_ratio,
@@ -527,6 +513,7 @@ class FrameCache:
         file so the temp file is not left behind and no handles are held.
         """
         temp_path = cls.cache.pop(media_path, None)
+        cls.media_stats_cache.pop(media_path, None)
         if delete_temp_file and temp_path and os.path.isfile(temp_path):
             try:
                 os.remove(temp_path)
@@ -549,6 +536,7 @@ class FrameCache:
         """Clear the frame cache."""
         cls.cache.clear()
         cls.sampled_cache.clear()
+        cls.media_stats_cache.clear()
 
     @classmethod
     def cleanup(cls) -> None:
