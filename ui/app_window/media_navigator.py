@@ -269,7 +269,8 @@ class MediaNavigator:
 
         # --- Search in current window ---
         if self._app.mode == Mode.BROWSE:
-            self._fb.refresh()
+            if not self._fb.is_incremental_loading:
+                self._fb.refresh()
             if config.debug:
                 logger.debug(f"Finding file in current window: {search_text}, closest sort by: {closest_sort_by}")
             image_path = self._fb.find(
@@ -296,7 +297,8 @@ class MediaNavigator:
                 continue
 
             if window.mode == Mode.BROWSE:
-                window.file_browser.refresh()
+                if not window.file_browser.is_incremental_loading:
+                    window.file_browser.refresh()
                 found_path = window.file_browser.find(
                     search_text=search_text,
                     retry_with_delay=retry_with_delay,
@@ -319,7 +321,8 @@ class MediaNavigator:
                     window.activateWindow()
                     return True
                 # If not found in compare results, search the full directory
-                window.file_browser.refresh()
+                if not window.file_browser.is_incremental_loading:
+                    window.file_browser.refresh()
                 found_path = window.file_browser.find(
                     search_text=search_text,
                     retry_with_delay=retry_with_delay,
@@ -362,7 +365,8 @@ class MediaNavigator:
             return False
 
         try:
-            self._fb.refresh()
+            if not self._fb.is_incremental_loading:
+                self._fb.refresh()
             file_path = self._fb.go_to_index(index)
             if file_path:
                 self.create_image(file_path)

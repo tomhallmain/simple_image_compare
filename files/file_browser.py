@@ -44,6 +44,9 @@ class FileBrowser:
         self._incremental_files_discovered = 0
         self._incremental_batch_size = 200
         self._use_incremental_on_full_refresh = False
+        # One-shot arming: incremental loading should run after explicit
+        # directory/recurse changes, not on every later refresh.
+        self._incremental_refresh_armed = False
         self._is_external_drive_directory = Utils.is_external_drive(self.directory)
 
     def has_files(self) -> bool:
@@ -77,6 +80,7 @@ class FileBrowser:
             logger.debug(f"File browser set recursive: {recursive}")
         self.recursive = recursive
         self._recompute_incremental_decision()
+        self._incremental_refresh_armed = self._use_incremental_on_full_refresh
         self.refresh()
 
     def is_recursive(self) -> bool:
@@ -132,6 +136,7 @@ class FileBrowser:
         self._files_cache = {}
         self._preferred_initial_file = None
         self._recompute_incremental_decision()
+        self._incremental_refresh_armed = self._use_incremental_on_full_refresh
         logger.info(f"Setting base directory: {directory}")
         return self.refresh()
 
@@ -144,6 +149,7 @@ class FileBrowser:
         self._files_cache = {}
         self._preferred_initial_file = preferred_file
         self._recompute_incremental_decision()
+        self._incremental_refresh_armed = self._use_incremental_on_full_refresh
         logger.info(f"Setting base directory: {directory}")
         return self.refresh()
 
@@ -655,7 +661,7 @@ class FileBrowser:
             return False
         if self.use_file_paths_json:
             return False
-        return self._use_incremental_on_full_refresh
+        return self._use_incremental_on_full_refresh and self._incremental_refresh_armed
 
     def _recompute_incremental_decision(self, threshold: int = 5000) -> None:
         if self.use_file_paths_json or not os.path.isdir(self.directory):
@@ -682,6 +688,7 @@ class FileBrowser:
         self._incremental_files_discovered = 0
 
     def _start_incremental_load(self) -> None:
+        self._incremental_refresh_armed = False
         self.is_incremental_loading = True
         self._incremental_scanned_dirs = 0
         self._incremental_files_discovered = 0
