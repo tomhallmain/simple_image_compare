@@ -11,7 +11,7 @@ from __future__ import annotations
 import os
 from typing import Optional
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QDialog, QFileDialog, QFrame, QGridLayout,
@@ -53,6 +53,10 @@ class DirectoryNotesWindow(SmartDialog):
         )
         self._app_actions = app_actions
         self._base_dir = base_dir
+        self._build_token = 0
+        self._pending_note_items: list[tuple[str, str]] = []
+        self._notes_render_index = 0
+        self._notes_loading_label: Optional[QLabel] = None
 
         # Scroll area
         self._scroll = QScrollArea(self)
@@ -84,6 +88,8 @@ class DirectoryNotesWindow(SmartDialog):
     # Widget builders
     # ==================================================================
     def _build_widgets(self) -> None:
+        self._build_token += 1
+        build_token = self._build_token
         self._row = 0
 
         # Header
@@ -125,8 +131,21 @@ class DirectoryNotesWindow(SmartDialog):
 
         file_notes = DirectoryNotes.get_all_file_notes(self._base_dir)
         if file_notes:
-            for filepath, note in sorted(file_notes.items()):
-                self._add_note_row(filepath, note)
+            self._pending_note_items = [
+                (
+                    str(filepath),
+                    note if isinstance(note, str) else ("" if note is None else str(note)),
+                )
+                for filepath, note in file_notes.items()
+            ]
+            self._pending_note_items.sort(key=lambda item: item[0].lower())
+            self._notes_render_index = 0
+            self._notes_loading_label = self._add_text_label(
+                _("Loading file notes...")
+            )
+            QTimer.singleShot(
+                0, lambda token=build_token: self._render_note_rows_batch(token)
+            )
         else:
             self._add_text_label(_("(No file notes)"))
 
@@ -196,16 +215,53 @@ class DirectoryNotesWindow(SmartDialog):
         self._grid.addWidget(open_btn, self._row, 1)
         self._row += 1
 
-        # Read-only note preview
-        preview = QPlainTextEdit(note)
-        preview.setReadOnly(True)
+        # Read-only note preview (use QLabel for lower render overhead on
+        # directories with many notes).
+        preview_text = note if len(note) <= 600 else (note[:600] + " ...")
+        preview = QLabel(preview_text)
+        preview.setWordWrap(True)
         preview.setMaximumHeight(70)
+        preview.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+        )
         preview.setStyleSheet(
             f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_INPUT}; "
             f"border: 1px solid {AppStyle.BORDER_COLOR}; padding: 2px;"
         )
         self._grid.addWidget(preview, self._row, 0, 1, 3)
         self._row += 1
+
+    def _render_note_rows_batch(self, token: int) -> None:
+        """
+        Incrementally render note rows to keep the UI responsive for very
+        large note sets.
+        """
+        if token != self._build_token:
+            return
+        batch_size = self.MAX_ROWS
+        rendered = 0
+        while (
+            rendered < batch_size
+            and self._notes_render_index < len(self._pending_note_items)
+        ):
+            filepath, note = self._pending_note_items[self._notes_render_index]
+            self._add_note_row(filepath, note)
+            self._notes_render_index += 1
+            rendered += 1
+
+        if self._notes_loading_label is not None:
+            if self._notes_render_index < len(self._pending_note_items):
+                self._notes_loading_label.setText(
+                    _("Loading file notes... {0}/{1}").format(
+                        self._notes_render_index, len(self._pending_note_items)
+                    )
+                )
+            else:
+                self._notes_loading_label.hide()
+                self._notes_loading_label = None
+
+        if self._notes_render_index < len(self._pending_note_items):
+            QTimer.singleShot(0, lambda t=token: self._render_note_rows_batch(t))
 
     # ==================================================================
     # Actions
@@ -393,13 +449,14 @@ class DirectoryNotesWindow(SmartDialog):
         self._grid.addWidget(lbl, self._row, 0, 1, 3)
         self._row += 1
 
-    def _add_text_label(self, text: str) -> None:
+    def _add_text_label(self, text: str) -> QLabel:
         lbl = QLabel(text)
         lbl.setStyleSheet(
             f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_COLOR};"
         )
         self._grid.addWidget(lbl, self._row, 0, 1, 3)
         self._row += 1
+        return lbl
 
     def _add_separator(self) -> None:
         line = QFrame()
@@ -409,6 +466,10 @@ class DirectoryNotesWindow(SmartDialog):
         self._row += 1
 
     def _clear_widgets(self) -> None:
+        self._build_token += 1
+        self._pending_note_items = []
+        self._notes_render_index = 0
+        self._notes_loading_label = None
         while self._grid.count():
             item = self._grid.takeAt(0)
             w = item.widget()

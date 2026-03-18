@@ -96,6 +96,11 @@ class SidebarPanel(QWidget):
         self.set_base_dir_box.setPlaceholderText(_("Enter base directory..."))
         self.set_base_dir_box.returnPressed.connect(lambda: self._app.set_base_dir())
         self._scroll.add_widget(self.set_base_dir_box)
+
+        self.open_directory_notes_btn = self._make_button(
+            _("Directory notes"),
+            lambda: self._app.window_launcher.open_directory_notes_window(),
+        )
         self._add_spacer()
 
         # Browsing section
