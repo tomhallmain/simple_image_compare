@@ -6,6 +6,14 @@ from typing import Dict, Iterator, List, Optional, Tuple
 import cv2
 import numpy as np
 
+# Quieter libav*/swscale stderr from OpenCV's bundled FFmpeg when supported.
+os.environ.setdefault("OPENCV_FFMPEG_LOGLEVEL", "-8")
+
+try:
+    cv2.utils.logging.setLogLevel(cv2.utils.logging.LOG_LEVEL_ERROR)
+except (AttributeError, cv2.error):
+    pass
+
 has_imported_pypdfium2 = False
 try:
     import pypdfium2 as pdfium
@@ -27,6 +35,18 @@ try:
 except ImportError:
     pass
 
+has_imported_pyav = False
+try:
+    import av
+
+    has_imported_pyav = True
+    try:
+        av.logging.set_level(av.logging.ERROR)
+    except (AttributeError, ValueError):
+        pass
+except ImportError:
+    av = None  # type: ignore[misc, assignment]
+
 from utils.config import config
 from utils.logging_setup import get_logger
 from utils.constants import CompareMediaType
@@ -34,7 +54,7 @@ from utils.constants import CompareMediaType
 logger = get_logger("frame_cache")
 
 # Bumps sample cache keys when extraction semantics change (invalidates in-memory entries).
-_VIDEO_SAMPLE_CACHE_REV = "seqff2"
+_VIDEO_SAMPLE_CACHE_REV = "pyav1"
 
 
 def _open_video_capture(path: str) -> cv2.VideoCapture:
@@ -55,8 +75,69 @@ def _open_video_capture(path: str) -> cv2.VideoCapture:
         cap = cv2.VideoCapture(path, api)
         last_cap = cap
         if cap.isOpened():
+            _configure_video_capture(cap)
             return cap
-    return last_cap if last_cap is not None else cv2.VideoCapture(path)
+    cap = last_cap if last_cap is not None else cv2.VideoCapture(path)
+    if cap.isOpened():
+        _configure_video_capture(cap)
+    return cap
+
+
+def _configure_video_capture(cap: cv2.VideoCapture) -> None:
+    """
+    Mitigate broken or noisy FFmpeg decoding (swscale slice errors, blank frames)
+    from hardware paths and odd RGB conversion.
+    """
+    if not cap.isOpened():
+        return
+    cc = getattr(cv2, "CAP_PROP_CONVERT_RGB", None)
+    if cc is not None:
+        try:
+            cap.set(int(cc), 1.0)
+        except cv2.error:
+            pass
+    ha_prop = getattr(cv2, "CAP_PROP_HW_ACCELERATION", None)
+    ha_none = getattr(cv2, "VIDEO_ACCELERATION_NONE", None)
+    if ha_prop is not None and ha_none is not None:
+        try:
+            cap.set(int(ha_prop), int(ha_none))
+        except cv2.error:
+            pass
+
+
+def _normalize_decoded_frame(frame: Optional[np.ndarray]) -> Optional[np.ndarray]:
+    """
+    Ensure uint8 BGR and even width/height. Odd dimensions and exotic dtypes often
+    trigger libswscale \"Slice parameters … are invalid\" and black or corrupt output.
+    """
+    if frame is None or not hasattr(frame, "size") or frame.size == 0:
+        return None
+    if frame.ndim < 2:
+        return None
+    if frame.dtype == np.float32 or frame.dtype == np.float64:
+        mx = float(np.nanmax(frame)) if frame.size else 0.0
+        if mx <= 1.0:
+            frame = (np.clip(frame, 0.0, 1.0) * 255.0).astype(np.uint8)
+        else:
+            frame = np.clip(frame, 0.0, 255.0).astype(np.uint8)
+    elif frame.dtype != np.uint8:
+        frame = np.clip(np.asarray(frame, dtype=np.float64), 0, 255).astype(np.uint8)
+
+    if frame.ndim == 2:
+        frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+    elif frame.ndim == 3:
+        ch = int(frame.shape[2])
+        if ch == 4:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
+        elif ch == 1:
+            frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+        elif ch != 3:
+            return None
+    h, w = int(frame.shape[0]), int(frame.shape[1])
+    ph, pw = h % 2, w % 2
+    if ph or pw:
+        frame = cv2.copyMakeBorder(frame, 0, ph, 0, pw, cv2.BORDER_REPLICATE)
+    return frame
 
 
 def _is_likely_decoder_blank(frame: np.ndarray) -> bool:
@@ -77,17 +158,140 @@ def _is_likely_decoder_blank(frame: np.ndarray) -> bool:
     return peak < 6.0 and mean_m < 2.5 and std_m < 3.0
 
 
+def _read_frame_via_imageio(video_path: str, frame_index: int) -> Optional[np.ndarray]:
+    """Fallback decode path using imageio (own FFmpeg pipeline) when OpenCV swscale fails."""
+    try:
+        import imageio.v3 as iio
+    except ImportError:
+        return None
+    try:
+        arr = iio.imread(video_path, index=int(frame_index))
+    except Exception as e:
+        logger.debug(
+            "imageio frame read failed for %s index=%s: %s",
+            video_path,
+            frame_index,
+            e,
+        )
+        return None
+    if arr is None or arr.size == 0:
+        return None
+    arr = np.asarray(arr)
+    if arr.ndim == 2:
+        arr = cv2.cvtColor(arr, cv2.COLOR_GRAY2BGR)
+    elif arr.ndim == 3:
+        c = arr.shape[2]
+        if c == 4:
+            arr = cv2.cvtColor(arr, cv2.COLOR_RGBA2BGR)
+        elif c >= 3:
+            arr = cv2.cvtColor(arr[:, :, :3], cv2.COLOR_RGB2BGR)
+        elif c == 1:
+            arr = cv2.cvtColor(arr, cv2.COLOR_GRAY2BGR)
+    return _normalize_decoded_frame(arr)
+
+
+def _opencv_first_decoded_frame(cap: cv2.VideoCapture) -> Tuple[bool, Optional[np.ndarray]]:
+    """Single read + normalize; no blank-frame scan (fast thumbnail path)."""
+    ret, raw = cap.read()
+    if not ret or raw is None:
+        return False, None
+    frame = _normalize_decoded_frame(raw)
+    return (frame is not None, frame)
+
+
 def _first_substantive_frame(
-    cap: cv2.VideoCapture, max_frames: int = 360
+    cap: cv2.VideoCapture,
+    video_path: Optional[str] = None,
+    max_frames: int = 360,
 ) -> Tuple[bool, Optional[np.ndarray]]:
-    """Read forward until the first non-blank frame or EOF. Used for first-frame thumbnail."""
+    """Read forward until the first non-blank frame or EOF (when ``config.debug2``)."""
     for _ in range(max(1, max_frames)):
-        ret, frame = cap.read()
-        if not ret or frame is None:
-            return False, None
-        if not _is_likely_decoder_blank(frame):
+        ret, raw = cap.read()
+        if not ret or raw is None:
+            break
+        frame = _normalize_decoded_frame(raw)
+        if frame is not None and not _is_likely_decoder_blank(frame):
             return True, frame
+    if video_path:
+        io_frame = _read_frame_via_imageio(video_path, 0)
+        if io_frame is not None and not _is_likely_decoder_blank(io_frame):
+            return True, io_frame
     return False, None
+
+
+def _pyav_video_stats(path: str) -> Tuple[int, float, Optional[float]]:
+    """Frame count (estimate if needed), average FPS, and stream duration in seconds."""
+    assert av is not None
+    container = av.open(path, metadata_errors="ignore")
+    try:
+        if not container.streams.video:
+            return 0, 0.0, None
+        s = container.streams.video[0]
+        fps = float(s.average_rate) if s.average_rate else 0.0
+        duration_s: Optional[float] = None
+        if s.duration is not None:
+            duration_s = float(s.duration * s.time_base)
+        total = 0
+        if getattr(s, "frames", None) not in (None, 0):
+            total = int(s.frames)
+        elif duration_s is not None and fps > 0:
+            total = max(0, int(duration_s * fps))
+        return total, fps, duration_s
+    finally:
+        container.close()
+
+
+def _pyav_first_decoded_bgr(video_path: str) -> Optional[np.ndarray]:
+    """First successfully decoded frame only (fast; no blank-frame scan)."""
+    assert av is not None
+    container = av.open(video_path, metadata_errors="ignore")
+    try:
+        if not container.streams.video:
+            return None
+        stream = container.streams.video[0]
+        try:
+            stream.thread_type = "AUTO"
+        except Exception:
+            pass
+        for frame in container.decode(stream):
+            try:
+                raw = frame.to_ndarray(format="bgr24")
+            except Exception:
+                continue
+            bgr = _normalize_decoded_frame(np.asarray(raw))
+            if bgr is not None:
+                return bgr
+    except Exception:
+        return None
+    finally:
+        container.close()
+    return None
+
+
+def _pyav_first_substantive_bgr(video_path: str, max_frames: int = 360) -> Optional[np.ndarray]:
+    assert av is not None
+    container = av.open(video_path, metadata_errors="ignore")
+    try:
+        stream = container.streams.video[0]
+        try:
+            stream.thread_type = "AUTO"
+        except Exception:
+            pass
+        for i, frame in enumerate(container.decode(stream)):
+            if i >= max_frames:
+                break
+            try:
+                bgr = frame.to_ndarray(format="bgr24")
+            except Exception:
+                continue
+            bgr = _normalize_decoded_frame(np.asarray(bgr))
+            if bgr is not None and not _is_likely_decoder_blank(bgr):
+                return bgr
+    except Exception:
+        return None
+    finally:
+        container.close()
+    return None
 
 
 class FrameCache:
@@ -309,10 +513,54 @@ class FrameCache:
         """
         Extract the first frame from a video/GIF file.
 
+        Uses PyAV (FFmpeg bindings) when available — far more reliable than OpenCV's
+        bundled decoder for HEVC/odd dimensions/exotic pixel formats.
+
+        When ``config.debug2`` is true, skips past uniform-black decoder glitches by
+        scanning for a substantive frame (slower). When false, uses the first decoded
+        frame only.
+
         Args:
             video_path: Path to the video/GIF file
         """
         logger.info(f"Extracting first frame from video: {video_path}")
+        if has_imported_pyav:
+            try:
+                total_frames, fps, duration_s = _pyav_video_stats(video_path)
+                if total_frames <= 0:
+                    cap = _open_video_capture(video_path)
+                    try:
+                        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+                        if fps <= 0:
+                            fps = float(cap.get(cv2.CAP_PROP_FPS))
+                    finally:
+                        cap.release()
+                duration_seconds = duration_s
+                if duration_seconds is None and fps > 0 and total_frames > 0:
+                    duration_seconds = total_frames / fps
+                cls.media_stats_cache[video_path] = {
+                    "media_type": "video",
+                    "total_items": total_frames if total_frames > 0 else None,
+                    "duration_seconds": duration_seconds,
+                    "fps": fps if fps > 0 else None,
+                }
+                if config.debug2:
+                    frame = _pyav_first_substantive_bgr(video_path)
+                else:
+                    frame = _pyav_first_decoded_bgr(video_path)
+                if frame is not None:
+                    basename = os.path.splitext(os.path.basename(video_path))[0] + ".jpg"
+                    frame_path = os.path.join(cls.temporary_directory.name, basename)
+                    cv2.imwrite(frame_path, frame, [cv2.IMWRITE_JPEG_QUALITY, 95])
+                    cls.cache[video_path] = frame_path
+                    return
+            except Exception as e:
+                logger.warning(
+                    "PyAV first-frame extract failed for %s (%s); using OpenCV",
+                    video_path,
+                    e,
+                )
+
         cap = _open_video_capture(video_path)
         try:
             total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -326,13 +574,16 @@ class FrameCache:
                 "duration_seconds": duration_seconds,
                 "fps": fps if fps > 0 else None,
             }
-            ok, frame = _first_substantive_frame(cap)
+            if config.debug2:
+                ok, frame = _first_substantive_frame(cap, video_path=video_path)
+            else:
+                ok, frame = _opencv_first_decoded_frame(cap)
             if not ok or frame is None:
-                raise ValueError("Could not read a substantive frame from the video")
+                raise ValueError("Could not read a frame from the video")
 
             basename = os.path.splitext(os.path.basename(video_path))[0] + ".jpg"
             frame_path = os.path.join(cls.temporary_directory.name, basename)
-            
+
             # Use high quality JPEG compression
             cv2.imwrite(frame_path, frame, [cv2.IMWRITE_JPEG_QUALITY, 95])
             cls.cache[video_path] = frame_path
@@ -384,7 +635,7 @@ class FrameCache:
             return len(cached), iter(cached)
 
         if is_video:
-            return cls._stream_video_frame_samples(
+            return cls._stream_video_frame_samples_dispatch(
                 media_path,
                 ratio,
                 min_sample_count=min_sample_count,
@@ -432,7 +683,203 @@ class FrameCache:
         return sampled_paths
 
     @classmethod
-    def _stream_video_frame_samples(
+    def _stream_video_frame_samples_dispatch(
+        cls,
+        video_path: str,
+        sample_ratio: float,
+        min_sample_count: int,
+        max_sample_count: int,
+        cache_key: str,
+    ) -> Tuple[int, Iterator[str]]:
+        if has_imported_pyav:
+            try:
+                return cls._stream_pyav_video_frame_samples(
+                    video_path,
+                    sample_ratio,
+                    min_sample_count=min_sample_count,
+                    max_sample_count=max_sample_count,
+                    cache_key=cache_key,
+                )
+            except Exception as e:
+                logger.warning(
+                    "PyAV video sampling failed for %s (%s); falling back to OpenCV",
+                    video_path,
+                    e,
+                )
+        return cls._opencv_stream_video_frame_samples(
+            video_path,
+            sample_ratio,
+            min_sample_count=min_sample_count,
+            max_sample_count=max_sample_count,
+            cache_key=cache_key,
+        )
+
+    @classmethod
+    def _stream_pyav_video_frame_samples(
+        cls,
+        video_path: str,
+        sample_ratio: float,
+        min_sample_count: int,
+        max_sample_count: int,
+        cache_key: str,
+    ) -> Tuple[int, Iterator[str]]:
+        assert av is not None
+        total_frames, fps, duration_s = _pyav_video_stats(video_path)
+        if total_frames <= 0:
+            cap = _open_video_capture(video_path)
+            try:
+                total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+                if fps <= 0:
+                    fps = float(cap.get(cv2.CAP_PROP_FPS))
+            finally:
+                cap.release()
+
+        duration_seconds = duration_s
+        if duration_seconds is None and fps > 0 and total_frames > 0:
+            duration_seconds = total_frames / fps
+        cls.media_stats_cache[video_path] = {
+            "media_type": "video",
+            "total_items": total_frames if total_frames > 0 else None,
+            "duration_seconds": duration_seconds,
+            "fps": fps if fps > 0 else None,
+        }
+        frame_indices = cls._compute_sample_indices(
+            total_items=total_frames,
+            sample_ratio=sample_ratio,
+            min_sample_count=min_sample_count,
+            max_sample_count=max_sample_count,
+        )
+        if len(frame_indices) == 0:
+
+            def gen_empty() -> Iterator[str]:
+                cls.sampled_cache[cache_key] = [video_path]
+                yield video_path
+
+            return 1, gen_empty()
+
+        basename = os.path.splitext(os.path.basename(video_path))[0]
+        planned = len(frame_indices)
+
+        def gen() -> Iterator[str]:
+            accumulated: List[str] = []
+            completed = False
+            try:
+                yield from cls._iter_pyav_video_sample_paths(
+                    video_path,
+                    frame_indices,
+                    basename,
+                    accumulated,
+                )
+                if len(accumulated) == 0:
+                    accumulated.append(video_path)
+                    yield video_path
+                completed = True
+            finally:
+                if completed:
+                    cls.sampled_cache[cache_key] = accumulated
+
+        return planned, gen()
+
+    @classmethod
+    def _iter_pyav_video_sample_paths(
+        cls,
+        video_path: str,
+        frame_indices: List[int],
+        basename: str,
+        accumulated: List[str],
+    ) -> Iterator[str]:
+        assert av is not None
+        targets = sorted(set(frame_indices))
+        want = set(targets)
+        idx = 0
+        max_target = max(targets)
+        scan_limit = min(
+            max(max_target + 10_000, len(targets) * 200),
+            800_000,
+        )
+        lookahead_cap = 128
+
+        container = av.open(video_path, metadata_errors="ignore")
+        try:
+            if not container.streams.video:
+                raise ValueError("no video stream")
+            stream = container.streams.video[0]
+            try:
+                stream.thread_type = "AUTO"
+            except Exception:
+                pass
+            decoder = container.decode(stream)
+            while want and idx < scan_limit:
+                if idx not in want:
+                    try:
+                        next(decoder)
+                    except StopIteration:
+                        break
+                    idx += 1
+                    continue
+
+                chosen: Optional[np.ndarray] = None
+                extra = 0
+                try:
+                    av_frame = next(decoder)
+                except StopIteration:
+                    break
+                try:
+                    raw = av_frame.to_ndarray(format="bgr24")
+                except Exception as e:
+                    logger.debug("PyAV to_ndarray failed at %s for %s: %s", idx, video_path, e)
+                    want.discard(idx)
+                    idx += 1
+                    continue
+
+                frame = _normalize_decoded_frame(np.asarray(raw))
+                if frame is not None and not _is_likely_decoder_blank(frame):
+                    chosen = frame
+                else:
+                    for _ in range(lookahead_cap):
+                        try:
+                            av2 = next(decoder)
+                        except StopIteration:
+                            break
+                        extra += 1
+                        try:
+                            raw2 = av2.to_ndarray(format="bgr24")
+                        except Exception:
+                            continue
+                        f2 = _normalize_decoded_frame(np.asarray(raw2))
+                        if f2 is not None and not _is_likely_decoder_blank(f2):
+                            chosen = f2
+                            break
+
+                if chosen is not None:
+                    frame_path = os.path.join(
+                        cls.temporary_directory.name,
+                        f"{basename}_sample_{idx}.jpg",
+                    )
+                    cv2.imwrite(frame_path, chosen, [cv2.IMWRITE_JPEG_QUALITY, 95])
+                    accumulated.append(frame_path)
+                    yield frame_path
+                else:
+                    logger.debug(
+                        "Degenerate PyAV sampled frame at index %s for %s (skipped)",
+                        idx,
+                        video_path,
+                    )
+                want.discard(idx)
+                idx += 1 + extra
+        finally:
+            container.close()
+
+        if want:
+            logger.warning(
+                "Video sampling incomplete for %s — missing %s/%s indices (decoder ended or scan cap)",
+                video_path,
+                len(want),
+                len(targets),
+            )
+
+    @classmethod
+    def _opencv_stream_video_frame_samples(
         cls,
         video_path: str,
         sample_ratio: float,
@@ -488,7 +935,7 @@ class FrameCache:
             accumulated: List[str] = []
             completed = False
             try:
-                yield from cls._iter_video_sample_paths_sequential(
+                yield from cls._iter_opencv_video_sample_paths(
                     cap,
                     video_path,
                     frame_indices,
@@ -507,7 +954,7 @@ class FrameCache:
         return planned, gen()
 
     @classmethod
-    def _iter_video_sample_paths_sequential(
+    def _iter_opencv_video_sample_paths(
         cls,
         cap: cv2.VideoCapture,
         video_path: str,
@@ -516,7 +963,7 @@ class FrameCache:
         accumulated: List[str],
     ) -> Iterator[str]:
         """
-        Decode target frames by linear read only; write each JPEG and yield its path.
+        OpenCV VideoCapture sequential decode (fallback when PyAV is unavailable).
         Appends each path to *accumulated* (same list the outer generator caches).
         """
         targets = sorted(set(frame_indices))
@@ -533,26 +980,38 @@ class FrameCache:
         lookahead_cap = 128
 
         while want and idx < scan_limit:
-            ret, frame = cap.read()
-            if not ret or frame is None:
+            ret, raw = cap.read()
+            if not ret or raw is None:
                 break
             if idx not in want:
                 idx += 1
                 continue
 
+            frame = _normalize_decoded_frame(raw)
             chosen: Optional[np.ndarray] = None
             extra = 0
-            if not _is_likely_decoder_blank(frame):
+            if frame is not None and not _is_likely_decoder_blank(frame):
                 chosen = frame
             else:
                 for _ in range(lookahead_cap):
-                    r2, f2 = cap.read()
+                    r2, raw2 = cap.read()
                     extra += 1
-                    if not r2 or f2 is None:
+                    if not r2 or raw2 is None:
                         break
-                    if not _is_likely_decoder_blank(f2):
+                    f2 = _normalize_decoded_frame(raw2)
+                    if f2 is not None and not _is_likely_decoder_blank(f2):
                         chosen = f2
                         break
+
+            if chosen is None:
+                io_frame = _read_frame_via_imageio(video_path, idx)
+                if io_frame is not None and not _is_likely_decoder_blank(io_frame):
+                    chosen = io_frame
+                    logger.debug(
+                        "Using imageio fallback for %s frame index %s",
+                        video_path,
+                        idx,
+                    )
 
             if chosen is not None:
                 frame_path = os.path.join(
