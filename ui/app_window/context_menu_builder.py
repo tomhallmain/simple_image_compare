@@ -177,6 +177,10 @@ class ContextMenuBuilder:
             _("Convert directory images to JPG"),
             lambda: app.file_ops_ctrl.convert_directory_images_to_jpg(),
         )
+        menu.addAction(
+            _("Convert directory SVGs to PNG"),
+            lambda: app.file_ops_ctrl.convert_directory_svg_to_png(),
+        )
 
         menu.addSeparator()
 

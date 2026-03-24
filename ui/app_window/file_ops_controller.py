@@ -318,7 +318,7 @@ class FileOpsController:
         Ported from App.hide_current_media.
         """
         filepath = self._nav.get_active_media_filepath() if image_path is None else image_path
-        if filepath not in self._cm.hidden_images:
+        if filepath is not None and filepath not in self._cm.hidden_images:
             self._cm.hidden_images.append(filepath)
         if image_path is None:
             self._app.notification_ctrl.toast(_("Hid current image.\nTo unhide, press Shift+B."))
@@ -374,7 +374,7 @@ class FileOpsController:
 
         base_dir = self._app.get_base_dir()
         if not base_dir or not os.path.isdir(base_dir):
-            self._app.notification_ctrl.warn(_("No valid base directory to convert"))
+            self._app.app_actions.warn(_("No valid base directory to convert"))
             return
 
         # Force-refresh at the AppWindow layer to align with existing refresh
@@ -476,9 +476,101 @@ class FileOpsController:
                 _("Converted {0} files to JPG").format(converted_count)
             )
         else:
-            self._app.notification_ctrl.warn(
+            self._app.app_actions.warn(
                 _(
                     "Converted {0} files to JPG, {1} failed, {2} skipped existing"
+                ).format(converted_count, failed_count, skipped_existing_count)
+            )
+
+    def convert_directory_svg_to_png(self, event=None) -> None:
+        """
+        Convert all SVG files in the current file-browser scope to PNG.
+        """
+        from image.frame_cache import FrameCache
+        base_dir = self._app.get_base_dir()
+        
+        if not base_dir or not os.path.isdir(base_dir):
+            self._app.app_actions.warn(_("No valid base directory to convert"))
+            return
+            
+        # Force-refresh at the AppWindow layer
+        self._app.app_actions.refresh(file_check=False)
+        
+        # Get files sorted by creation time
+        files = self._fb.get_files_sorted_for_operation(
+            sort_by=SortBy.CREATION_TIME,
+            sort=Sort.ASC,
+        )
+        
+        if len(files) == 0:
+            self._app.notification_ctrl.toast(_("No files found to convert"))
+            return
+            
+        convert_candidates = []
+        
+        def _target_png_path(filepath: str) -> str:
+            return os.path.splitext(filepath)[0] + ".png"
+            
+        for filepath in files:
+            if os.path.splitext(filepath)[1].lower() == ".svg":
+                convert_candidates.append(filepath)
+                
+        if len(convert_candidates) == 0:
+            self._app.notification_ctrl.toast(_("No SVG files found to convert"))
+            return
+            
+        choice = self._app.app_actions.alert(
+            _("Convert Directory SVG to PNG"),
+            _(
+                "Confirm convert SVG files in current directory scope.\n\n"
+                "{0}\n\n"
+                "How should existing PNG files be handled?\n"
+                "- Existing PNG files: {1}\n\n"
+                "Yes = overwrite existing PNG files\n"
+                "No = keep existing PNG files unchanged\n"
+                "Cancel = cancel conversion"
+            ).format(base_dir, len([f for f in convert_candidates if os.path.exists(_target_png_path(f))]),),
+            kind="askyesnocancel",
+        )
+        
+        if choice == QMessageBox.StandardButton.Cancel:
+            return
+            
+        overwrite_existing = choice == QMessageBox.StandardButton.Yes
+        
+        converted_count = 0
+        failed_count = 0
+        skipped_existing_count = 0
+        
+        for filepath in convert_candidates:
+            try:
+                target_path = _target_png_path(filepath)
+                
+                if os.path.exists(target_path) and not overwrite_existing:
+                    skipped_existing_count += 1
+                    continue
+                    
+                # Convert SVG to PNG using FrameCache
+                source_path = FrameCache.get_image_path(filepath)
+                
+                shutil.copy2(source_path, target_path)
+                converted_count += 1
+                
+            except Exception as e:
+                failed_count += 1
+                logger.warning(f"Failed to convert to PNG: {filepath} - {e}")
+        
+        if converted_count > 0:
+            self._app.refresh()
+            
+        if failed_count == 0 and skipped_existing_count == 0:
+            self._app.notification_ctrl.toast(
+                _("Converted {0} SVG files to PNG").format(converted_count)
+            )
+        else:
+            self._app.app_actions.warn(
+                _(
+                    "Converted {0} files, {1} failed, {2} skipped existing"
                 ).format(converted_count, failed_count, skipped_existing_count)
             )
 
@@ -503,7 +595,7 @@ class FileOpsController:
 
         if filepath is None:
             self._app.notification_ctrl.handle_error(
-                _("Invalid target filepath for replacement: ") + _filepath
+                _("Invalid target filepath for replacement: ") + "None"
             )
             return
 

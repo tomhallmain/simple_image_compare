@@ -34,7 +34,7 @@ class DirectoryNotesWindow(SmartDialog):
     with edit, export-to-file, and import-from-file capabilities.
     """
 
-    MAX_ROWS = 30
+    MAX_ROWS = 300
 
     def __init__(
         self,
