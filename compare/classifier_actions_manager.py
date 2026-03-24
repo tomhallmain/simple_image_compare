@@ -105,12 +105,19 @@ class ClassifierAction:
         self.can_run = bool(can_run)
         self.initialization_error = initialization_error
         self._blocked_run_logged = False
+        self._model_strategy_sig: Optional[tuple] = None
+        self._model_strategy_positives: Optional[frozenset[str]] = None
 
     def mark_runtime_valid(self) -> None:
         """Call after validate() succeeds (e.g. user saved in the editor) to clear load-time failure state."""
         self.can_run = True
         self.initialization_error = None
         self._blocked_run_logged = False
+        self._invalidate_model_strategy_cache()
+
+    def _invalidate_model_strategy_cache(self) -> None:
+        self._model_strategy_sig = None
+        self._model_strategy_positives = None
 
     def __eq__(self, other):
         """Check equality based on name (classifier actions are uniquely identified by name)."""
@@ -150,6 +157,7 @@ class ClassifierAction:
         self.image_classifier = image_classifier_manager.get_classifier(classifier_name)
         self._missing_image_classifier_logged = False
         self.image_classifier_categories = []
+        self._invalidate_model_strategy_cache()
         if self.image_classifier is not None:
             self.image_classifier_categories.extend(list(self.image_classifier.model_categories))
 
@@ -818,34 +826,45 @@ class ClassifierAction:
 
         return ClassifierAction(**d)
 
-    def _resolve_model_strategy_positive_categories(self) -> set[str]:
-        model_name = (self.image_classifier_name or "").strip()
-        if not model_name:
+    def _resolve_model_strategy_positive_categories(self) -> frozenset[str]:
+        name = (self.image_classifier_name or "").strip()
+        if not name:
             raise Exception(
                 "Image classifier name must be set when using model strategy classification mode."
             )
-        metadata = getattr(image_classifier_manager, "classifier_metadata", {})
-        resolved = image_classifier_manager.resolve_registered_model_name(model_name)
-        model_config = metadata.get(resolved) if resolved else None
-        if model_config is None:
+        resolved = image_classifier_manager.resolve_registered_model_name(name)
+        cfg = (
+            image_classifier_manager.classifier_metadata.get(resolved)
+            if resolved
+            else None
+        )
+        groups_sig = tuple(
+            tuple(g)
+            for g in ((cfg.positive_groups if cfg else None) or [])
+            if isinstance(g, list) and g
+        )
+        sig = (resolved, groups_sig)
+        if sig == self._model_strategy_sig and self._model_strategy_positives is not None:
+            return self._model_strategy_positives
+
+        if cfg is None:
             raise Exception(
-                f"Image classifier model config \"{model_name}\" is invalid or unavailable; "
+                f'Image classifier model config "{name}" is invalid or unavailable; '
                 "objects depending on this model strategy are invalid."
             )
-        positive_groups = [list(g) for g in (model_config.positive_groups or []) if isinstance(g, list) and len(g) > 0]
-        if len(positive_groups) == 0:
+        if not groups_sig:
             raise Exception(
-                f"Image classifier model config \"{model_name}\" must define positive_groups "
+                f'Image classifier model config "{name}" must define positive_groups '
                 "for model strategy classification mode."
             )
-        positive_categories: set[str] = set()
-        for group in positive_groups:
-            positive_categories.update(group)
-        if len(positive_categories) == 0:
+        positives = frozenset(c for grp in groups_sig for c in grp)
+        if not positives:
             raise Exception(
-                f"Image classifier model config \"{model_name}\" has no usable positive categories."
+                f'Image classifier model config "{name}" has no usable positive categories.'
             )
-        return positive_categories
+        self._model_strategy_sig = sig
+        self._model_strategy_positives = positives
+        return positives
 
     def __str__(self) -> str:
         out = self.name

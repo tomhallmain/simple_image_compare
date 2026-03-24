@@ -13,6 +13,11 @@ from image.image_classifier_model_config import ImageClassifierModelConfig
 
 logger = get_logger("image_classifier")
 
+# TODO: expose as config or model_kwarg (typical range ~0.05–0.10). Split-positive
+# assignment only applies when a group's combined mass exceeds aggregate neutral mass
+# by more than this margin (probability points on the model's output scale).
+_SPLIT_GROUP_OVER_NEUTRAL_MARGIN = 0.05
+
 
 class BackendType(Enum):
     """Backend type for image classifiers"""
@@ -978,7 +983,10 @@ class ImageClassifierWrapper:
                 combined_prob = sum(
                     classed_predictions.get(cat, 0) for cat in group_cats
                 )
-                if combined_prob > neutral_prob and combined_prob > best_combined_prob:
+                if (
+                    combined_prob > neutral_prob + _SPLIT_GROUP_OVER_NEUTRAL_MARGIN
+                    and combined_prob > best_combined_prob
+                ):
                     split_detected = True
                     best_combined_prob = combined_prob
                     best_group = group_cats

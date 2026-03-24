@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMessageBox,
     QPlainTextEdit,
     QPushButton,
     QTabWidget,
@@ -247,6 +248,11 @@ class _InstalledModelEditDialog(SmartDialog):
         categories = [c.strip() for c in (self._categories_edit.text() or "").split(",") if c.strip()]
         backend = (self._backend_combo.currentText() or "auto").strip()
         if not model_name or not model_location or not categories:
+            QMessageBox.warning(
+                self,
+                _("Missing fields"),
+                _("Model name, model file path, and at least one category are required."),
+            )
             return
         model_details: dict[str, Any] = {
             "model_name": model_name,
@@ -286,8 +292,9 @@ class _InstalledModelEditDialog(SmartDialog):
             model_details["model_kwargs"] = model_kwargs
 
         try:
-            normalized = ImageClassifierModelConfig.from_dict(model_details)
-        except Exception:
+            normalized = ImageClassifierModelConfig.from_dict(model_details, logger=logger)
+        except Exception as e:
+            QMessageBox.warning(self, _("Invalid model configuration"), str(e))
             return
         self._save_callback(normalized.to_dict(), self._initial_name)
         self.close()
@@ -503,7 +510,13 @@ class HfModelManagerWindow(SmartDialog):
 
         self._installed_tree = QTreeWidget()
         self._installed_tree.setHeaderLabels(
-            [_("Model Name"), _("Backend"), _("Categories"), _("Model Location")]
+            [
+                _("Model Name"),
+                _("Backend"),
+                _("Categories"),
+                _("Model Location"),
+                _("Config"),
+            ]
         )
         self._installed_tree.setRootIsDecorated(False)
         self._installed_tree.setAlternatingRowColors(True)
@@ -817,13 +830,17 @@ class HfModelManagerWindow(SmartDialog):
         total_count = 0
         for model in list(config.image_classifier_models):
             total_count += 1
-            normalized_model = self._normalize_model_dict(model)
+            normalized_model, parse_err = self._parse_installed_model(model)
             if normalized_model is not None and self._is_valid_installed_model(normalized_model):
                 valid_count += 1
             display_model = normalized_model if normalized_model is not None else model
             categories = display_model.get("model_categories") or []
             categories_text = ", ".join(str(c) for c in categories)
             backend = str(display_model.get("backend", "auto"))
+            if parse_err:
+                config_col = parse_err if len(parse_err) <= 120 else parse_err[:117] + "…"
+            else:
+                config_col = _("OK")
             item = QTreeWidgetItem(
                 self._installed_tree,
                 [
@@ -831,9 +848,14 @@ class HfModelManagerWindow(SmartDialog):
                     backend,
                     categories_text,
                     str(display_model.get("model_location", "")),
+                    config_col,
                 ],
             )
             item.setData(0, Qt.ItemDataRole.UserRole, dict(display_model))
+            item.setToolTip(
+                4,
+                parse_err if parse_err else _("Configuration is valid."),
+            )
         if valid_count == 0:
             self._installed_notice_label.setText(
                 _("No valid installed models found. Use the HF Hub Search tab to discover and install models, or add one manually.")
@@ -851,11 +873,12 @@ class HfModelManagerWindow(SmartDialog):
         return bool(model_name and model_location and os.path.exists(model_location) and isinstance(categories, list) and len(categories) > 0)
 
     @staticmethod
-    def _normalize_model_dict(model: dict[str, Any]) -> Optional[dict[str, Any]]:
+    def _parse_installed_model(model: dict[str, Any]) -> tuple[Optional[dict[str, Any]], str]:
         try:
-            return ImageClassifierModelConfig.from_dict(model, warn_unknown_keys=False).to_dict()
-        except Exception:
-            return None
+            normalized = ImageClassifierModelConfig.from_dict(model, warn_unknown_keys=False).to_dict()
+            return normalized, ""
+        except Exception as e:
+            return None, str(e)
 
     def _selected_installed_model_name(self) -> Optional[str]:
         selected = self._installed_tree.selectedItems()

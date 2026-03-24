@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import difflib
+from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
@@ -33,6 +34,33 @@ class ImageClassifierModelConfig:
     }
     AUXILIARY_KEYS = {"hf_repo_id", "hf_selected_filename"}
     KNOWN_KEYS = WRAPPER_ALLOWED_KEYS.union(AUXILIARY_KEYS)
+
+    @staticmethod
+    def _validate_category_references(
+        model_categories: list[str],
+        positive_groups: list[list[str]],
+        neutral_categories: list[str],
+        severity_order: list[str],
+    ) -> None:
+        """Every name in split fields must match a ``model_categories`` entry exactly (no typos)."""
+        allowed = set(model_categories)
+        hint = f"allowed names: {sorted(allowed)}"
+        for gi, grp in enumerate(positive_groups):
+            for c in grp:
+                if c not in allowed:
+                    raise ValueError(
+                        f"positive_groups[{gi}] references unknown category {c!r}; {hint}"
+                    )
+        for c in neutral_categories:
+            if c not in allowed:
+                raise ValueError(
+                    f"neutral_categories references unknown category {c!r}; {hint}"
+                )
+        for si, c in enumerate(severity_order):
+            if c not in allowed:
+                raise ValueError(
+                    f"severity_order[{si}] references unknown category {c!r}; {hint}"
+                )
 
     @classmethod
     def from_dict(cls, data: dict[str, Any], logger=None, warn_unknown_keys: bool = True) -> "ImageClassifierModelConfig":
@@ -102,6 +130,13 @@ class ImageClassifierModelConfig:
         if not isinstance(severity_order_raw, list):
             raise ValueError("severity_order must be a list when provided")
         severity_order = [str(c).strip() for c in severity_order_raw if str(c).strip()]
+
+        cat_counts = Counter(model_categories)
+        dupes = sorted(c for c, n in cat_counts.items() if n > 1)
+        if dupes:
+            raise ValueError(f"model_categories must not contain duplicates: {dupes}")
+
+        cls._validate_category_references(model_categories, positive_groups, neutral_categories, severity_order)
 
         hf_repo_id_raw = str(data.get("hf_repo_id", "") or "").strip()
         hf_selected_filename_raw = str(data.get("hf_selected_filename", "") or "").strip()
