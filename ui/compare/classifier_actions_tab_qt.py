@@ -301,6 +301,13 @@ class ClassifierActionsTab(QWidget):
         profile = self._get_selected_profile()
         if profile is None:
             return
+        if not classifier_action.can_run:
+            self._app_actions.warn(
+                _("This classifier action cannot run until configuration is fixed: {0}").format(
+                    classifier_action.initialization_error or _("unknown error")
+                )
+            )
+            return
 
         msg = _("Run classifier action '{0}' on the following directories?").format(
             classifier_action.name
@@ -333,7 +340,7 @@ class ClassifierActionsTab(QWidget):
         if profile is None:
             return
 
-        active = [ca for ca in self._filtered if ca.is_active]
+        active = [ca for ca in self._filtered if ca.is_active and ca.can_run]
         if not active:
             self._app_actions.warn(_("No active classifier actions to run"))
             return

@@ -832,10 +832,16 @@ class ImageClassifierWrapper:
                             f"neutral_categories references unknown category {c!r} "
                             f"(not in model_categories)"
                         )
-            except Exception as e:
+            except Exception:
                 self.can_run = False
-                logger.error(e)
-                logger.warning("Failed to set model details for image classifier: " + str(self.__dict__))
+                logger.exception(
+                    "Image classifier %r: config validation failed before load (location=%r, "
+                    "positive_groups=%s, neutral_categories=%s)",
+                    self.model_name,
+                    self.model_location,
+                    self.positive_groups,
+                    self.neutral_categories,
+                )
             if self.can_run:
                 self.load_classifier()
 

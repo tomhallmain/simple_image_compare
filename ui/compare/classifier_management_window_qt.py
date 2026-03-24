@@ -497,6 +497,7 @@ class ClassifierActionModifyWindow(SmartDialog):
 
         self._finalize_specific()
         ca.validate()
+        ca.mark_runtime_valid()
         self.close()
         self._refresh_callback(ca)
 

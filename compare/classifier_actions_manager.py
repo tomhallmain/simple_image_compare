@@ -67,7 +67,8 @@ class ClassifierAction:
                  is_active=True, use_prototype=False, prototype_directory="", 
                  negative_prototype_directory="", negative_prototype_lambda=0.5,
                  dynamic_content_sample_ratio=0.1, dynamic_content_positive_ratio=0.1,
-                 _last_used_profile=None, lookahead_names=[]):
+                 _last_used_profile=None, lookahead_names=[],
+                 can_run: bool = True, initialization_error: Optional[str] = None):
         self.name = name
         self.positives = positives
         self.negatives = negatives
@@ -101,7 +102,15 @@ class ClassifierAction:
         # and require this proportion of positives before firing the action.
         self.dynamic_content_sample_ratio = self._normalize_ratio(dynamic_content_sample_ratio, default_val=0.1)
         self.dynamic_content_positive_ratio = self._normalize_ratio(dynamic_content_positive_ratio, default_val=0.1)
+        self.can_run = bool(can_run)
+        self.initialization_error = initialization_error
+        self._blocked_run_logged = False
 
+    def mark_runtime_valid(self) -> None:
+        """Call after validate() succeeds (e.g. user saved in the editor) to clear load-time failure state."""
+        self.can_run = True
+        self.initialization_error = None
+        self._blocked_run_logged = False
 
     def __eq__(self, other):
         """Check equality based on name (classifier actions are uniquely identified by name)."""
@@ -381,7 +390,16 @@ class ClassifierAction:
         if not self.is_active:
             logger.info(f"Classifier action {self.name} is disabled, skipping")
             return
-        
+        if not self.can_run:
+            if not self._blocked_run_logged:
+                logger.warning(
+                    "Classifier action %r is skipped (runtime init failed): %s",
+                    self.name,
+                    self.initialization_error or _("unknown error"),
+                )
+                self._blocked_run_logged = True
+            return
+
         # Store the last used profile or directory path
         if profile_name_or_path:
             self._last_used_profile = profile_name_or_path
@@ -402,7 +420,9 @@ class ClassifierAction:
     def matches_image_path(self, image_path, lookahead_eval_cache=None) -> bool:
         # Note: Image classifier and prototype should be loaded before calling this method
         # (see ClassifierActionsWindow.run_classifier_action for pre-loading)
-        
+        if not self.can_run:
+            return False
+
         # Check each enabled validation type with short-circuit OR logic        
         if self.use_prototype:
             if self._check_prototype_validation(image_path):
@@ -453,6 +473,8 @@ class ClassifierAction:
         return is_video or is_pdf
 
     def run_on_media_path(self, media_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
+        if not self.can_run:
+            return None
         if self._is_dynamic_media_path(media_path):
             sampled_frames = FrameCache.get_frame_samples(
                 media_path, sample_ratio=self.dynamic_content_sample_ratio
@@ -525,6 +547,8 @@ class ClassifierAction:
             return self.run_on_image_path(actual_image_path, hide_callback, notify_callback, add_mark_callback)
 
     def run_on_image_path(self, image_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
+        if not self.can_run:
+            return None
         if self.matches_image_path(image_path):
             return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
         return None
@@ -647,12 +671,28 @@ class ClassifierAction:
                 (self.negatives is None or len(self.negatives) == 0):
             raise Exception("At least one of positive or negative texts must be set when using embedding or prompt validation.")
         
-        # Validate image classifier settings if enabled
+        # Validate image classifier settings if enabled (registry only — no lazy load here;
+        # wrappers load during prevalidation / matches_image_path via ensure_image_classifier_loaded).
         if self.use_image_classifier:
-            if self.image_classifier is not None and any([category not in self.image_classifier_categories for category in self.image_classifier_selected_categories]):
-                raise Exception(f"One or more selected categories {self.image_classifier_selected_categories} were not found in the image classifier's category options")
-            if self.image_classifier_name is not None and self.image_classifier_name.strip() != "" and self.image_classifier is None:
-                raise Exception(f"The image classifier \"{self.image_classifier_name}\" was not found in the available image classifiers")
+            name = (self.image_classifier_name or "").strip()
+            if name:
+                resolved = image_classifier_manager.resolve_registered_model_name(self.image_classifier_name)
+                if resolved is None:
+                    keys = list(image_classifier_manager.classifier_metadata.keys())
+                    raise Exception(
+                        f"The image classifier \"{self.image_classifier_name}\" was not found in the available image classifiers. "
+                        f"Registered model_name keys: {keys}. "
+                        f"If this is a Hugging Face repo id, ensure the model config sets hf_repo_id to match."
+                    )
+                model_cfg = image_classifier_manager.classifier_metadata[resolved]
+                allowed = set(model_cfg.model_categories)
+                if self.image_classifier_selected_categories:
+                    bad = [c for c in self.image_classifier_selected_categories if c not in allowed]
+                    if bad:
+                        raise Exception(
+                            f"One or more selected categories {bad} were not found in the image classifier's "
+                            f"category options (model \"{resolved}\": {list(model_cfg.model_categories)})"
+                        )
             if self.classification_mode == ImageClassifierClassificationMode.MODEL_STRATEGY:
                 self._resolve_model_strategy_positive_categories()
         
@@ -773,7 +813,9 @@ class ClassifierAction:
         if 'prototype_threshold' not in d:
             # Use existing threshold as prototype_threshold for backward compatibility
             d['prototype_threshold'] = d.get('threshold', 0.23)
-        
+        d.pop("can_run", None)
+        d.pop("initialization_error", None)
+
         return ClassifierAction(**d)
 
     def _resolve_model_strategy_positive_categories(self) -> set[str]:
@@ -783,7 +825,8 @@ class ClassifierAction:
                 "Image classifier name must be set when using model strategy classification mode."
             )
         metadata = getattr(image_classifier_manager, "classifier_metadata", {})
-        model_config = metadata.get(model_name)
+        resolved = image_classifier_manager.resolve_registered_model_name(model_name)
+        model_config = metadata.get(resolved) if resolved else None
         if model_config is None:
             raise Exception(
                 f"Image classifier model config \"{model_name}\" is invalid or unavailable; "
@@ -838,7 +881,9 @@ class ClassifierAction:
 
         if not self.is_active:
             out += " [" + _("disabled") + "]"
-        
+        if not self.can_run:
+            out += " [" + _("cannot run") + "]"
+
         return out
 
 
@@ -853,7 +898,7 @@ class Prevalidation(ClassifierAction):
                  lookahead_names=[], profile_name=None, use_prototype=False, prototype_directory="", 
                  negative_prototype_directory="", negative_prototype_lambda=0.5,
                  dynamic_content_sample_ratio=0.1, dynamic_content_positive_ratio=0.1,
-                 _last_used_profile=None):
+                 _last_used_profile=None, can_run: bool = True, initialization_error: Optional[str] = None):
         # Pass all parameters including prototype settings to parent ClassifierAction
         super().__init__(name, positives, negatives, threshold, 
                         text_embedding_threshold, prototype_threshold, action, action_modifier, 
@@ -862,7 +907,8 @@ class Prevalidation(ClassifierAction):
                         is_active, use_prototype, prototype_directory,
                         negative_prototype_directory, negative_prototype_lambda,
                         dynamic_content_sample_ratio, dynamic_content_positive_ratio,
-                        _last_used_profile, lookahead_names=lookahead_names)
+                        _last_used_profile, lookahead_names=lookahead_names,
+                        can_run=can_run, initialization_error=initialization_error)
         self.profile_name = profile_name  # Name of DirectoryProfile to use (None = global)
         self.profile = None  # Cached DirectoryProfile instance (set after loading, or temporary for backward compatibility)
         # Note: run_on_folder parameter is kept for backward compatibility in from_dict but not stored as instance variable
@@ -1005,7 +1051,9 @@ class Prevalidation(ClassifierAction):
         if 'prototype_threshold' not in d:
             # Use existing threshold as prototype_threshold for backward compatibility
             d['prototype_threshold'] = d.get('threshold', 0.23)
-        
+        d.pop("can_run", None)
+        d.pop("initialization_error", None)
+
         # Handle backward compatibility: if run_on_folder exists but no profile_name, create temporary profile
         run_on_folder = d.get('run_on_folder')
         if run_on_folder and not d.get('profile_name'):
@@ -1049,11 +1097,23 @@ class ClassifierActionsManager:
                 prevalidation.validate_dirs()
                 prevalidation.ensure_prototype_loaded(None)
                 prevalidation.validate()
+                prevalidation.can_run = True
+                prevalidation.initialization_error = None
+                prevalidation._blocked_run_logged = False
             except Exception as e:
-                logger.error(f"Error initializing prevalidation {prevalidation.name}: {e}")
-                if prevalidation in ClassifierActionsManager.prevalidations:
-                    ClassifierActionsManager.prevalidations.remove(prevalidation)
+                prevalidation.can_run = False
+                prevalidation.initialization_error = str(e)
+                logger.error(
+                    "Prevalidation %r cannot run until fixed (kept in list): %s",
+                    prevalidation.name,
+                    e,
+                )
         ClassifierActionsManager._prevalidations_initialized = True
+
+    @staticmethod
+    def reset_prevalidation_lazy_init() -> None:
+        """Call when image classifier registry changes so lazy init re-runs on next prevalidate."""
+        ClassifierActionsManager._prevalidations_initialized = False
     
     @staticmethod
     def prevalidate_media(media_path, get_base_dir_func, hide_callback, notify_callback, add_mark_callback) -> Optional[ClassifierActionType]:
@@ -1071,7 +1131,7 @@ class ClassifierActionsManager:
         if media_path not in ClassifierActionsManager.prevalidated_cache:
             prevalidation_action = None
             for prevalidation in ClassifierActionsManager.prevalidations:
-                if prevalidation.is_active:
+                if prevalidation.is_active and prevalidation.can_run:
                     if prevalidation.is_move_action() and prevalidation.action_modifier == base_dir:
                         continue
                     # Check if prevalidation should run on this directory
@@ -1243,10 +1303,19 @@ class ClassifierActionsManager:
             try:
                 classifier_action.validate_dirs()
                 classifier_action.validate()
-                if classifier_action not in ClassifierActionsManager.classifier_actions:
-                    ClassifierActionsManager.classifier_actions.append(classifier_action)
+                classifier_action.can_run = True
+                classifier_action.initialization_error = None
+                classifier_action._blocked_run_logged = False
             except Exception as e:
-                logger.error(f"Skipping invalid classifier action {classifier_action.name}: {e}")
+                classifier_action.can_run = False
+                classifier_action.initialization_error = str(e)
+                logger.error(
+                    "Classifier action %r cannot run until fixed (kept in list): %s",
+                    classifier_action.name,
+                    e,
+                )
+            if classifier_action not in ClassifierActionsManager.classifier_actions:
+                ClassifierActionsManager.classifier_actions.append(classifier_action)
     
     @staticmethod
     def store_classifier_actions():

@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from compare.classifier_actions_manager import ClassifierActionsManager
 from extensions.hf_hub_api import HfHubApiBackend
 from image.image_classifier_manager import image_classifier_manager
 from image.image_classifier_model_config import ImageClassifierModelConfig
@@ -776,6 +777,7 @@ class HfModelManagerWindow(SmartDialog):
         try:
             config.set_image_classifier_models(updated_models)
             image_classifier_manager.set_classifier_metadata(config.image_classifier_models)
+            ClassifierActionsManager.reset_prevalidation_lazy_init()
         except Exception as e:
             logger.error(f"Failed to persist model details: {e}")
             self._app_actions.alert(_("Config Update Error"), str(e), kind="error", master=self)
@@ -918,6 +920,7 @@ class HfModelManagerWindow(SmartDialog):
         try:
             config.set_image_classifier_models(updated_models)
             image_classifier_manager.set_classifier_metadata(config.image_classifier_models)
+            ClassifierActionsManager.reset_prevalidation_lazy_init()
             self._refresh_installed_models()
             self._app_actions.success(_("Saved model '{0}'.").format(model_name))
         except Exception as e:
@@ -1036,6 +1039,7 @@ class HfModelManagerWindow(SmartDialog):
         try:
             config.set_image_classifier_models(updated_models)
             image_classifier_manager.set_classifier_metadata(config.image_classifier_models)
+            ClassifierActionsManager.reset_prevalidation_lazy_init()
         except Exception as e:
             logger.error(f"Failed to remove model details: {e}")
             self._app_actions.alert(_("Config Update Error"), str(e), kind="error", master=self)
