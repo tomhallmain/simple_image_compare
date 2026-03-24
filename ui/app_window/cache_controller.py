@@ -65,6 +65,9 @@ class CacheController:
             ImageDetails.load_image_generation_mode()
             ClassifierManagementWindow.set_prevalidations()
             ClassifierManagementWindow.set_classifier_actions()
+            from compare.classifier_actions_manager import ClassifierActionsManager
+
+            ClassifierActionsManager.load_prevalidation_file_cache_from_disk()
             FavoritesWindow.load_favorites()
             GoToFile.load_persisted_data()
             TargetDirectoryWindow.load_recent_directories()
@@ -142,6 +145,9 @@ class CacheController:
         FavoritesWindow.store_favorites()
         GoToFile.save_persisted_data()
         TargetDirectoryWindow.save_recent_directories()
+        from compare.classifier_actions_manager import ClassifierActionsManager
+
+        ClassifierActionsManager.store_prevalidation_file_cache_to_disk()
         app_info_cache.store()
 
     # ------------------------------------------------------------------

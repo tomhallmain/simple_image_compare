@@ -8,15 +8,29 @@ This module centralizes the management of:
 """
 
 from enum import Enum
+import hashlib
+import json
 import math
 import os
 import threading
-from typing import List, Optional
+import time
+from typing import Dict, List, Optional
 
 from compare.compare_embeddings_clip import CompareEmbeddingClip
 from compare.embedding_prototype import EmbeddingPrototype
 from compare.lookahead import Lookahead
 from files.directory_profile import DirectoryProfile
+from lib.file_invalidation_cache import (
+    DEFAULT_STALE_ENTRY_MAX_AGE_SECONDS,
+    FileKeyedInvalidationCache,
+    evacuate_stale_file_buckets,
+    get_file_bucket_for_media,
+    get_signature_memo,
+    install_file_bucket,
+    invalidate_policy_caches,
+    iter_file_buckets,
+    set_signature_memo,
+)
 from files.file_action import FileAction
 from image.image_classifier_manager import image_classifier_manager
 from image.image_data_extractor import image_data_extractor
@@ -1102,13 +1116,124 @@ class Prevalidation(ClassifierAction):
 
 class ClassifierActionsManager:
     """Manages prevalidations, classifier actions, and directory profiles."""
-    
+
+    PREVALIDATION_FILE_CACHE_META_KEY = "prevalidation_file_invalidation_cache_v2"
+
     # Lists managed by this module
     prevalidations: List['Prevalidation'] = []
     classifier_actions: List['ClassifierAction'] = []
-    prevalidated_cache: dict[str, ClassifierActionType] = {}
+    prevalidated_cache: Dict[str, Optional[ClassifierActionType]] = {}
     directories_to_exclude: list[str] = []
     _prevalidations_initialized: bool = False
+
+    @staticmethod
+    def _parse_cached_action_name(name: Optional[str]) -> Optional[ClassifierActionType]:
+        if name is None:
+            return None
+        try:
+            return ClassifierActionType[name]
+        except KeyError:
+            return None
+
+    @staticmethod
+    def _compute_prevalidation_signature() -> str:
+        def _strip_last_used(d):
+            out = dict(d)
+            out.pop("_last_used_profile", None)
+            return out
+
+        payload = {
+            "prevalidations": [_strip_last_used(pv.to_dict()) for pv in ClassifierActionsManager.prevalidations],
+            "classifier_actions": [_strip_last_used(a.to_dict()) for a in ClassifierActionsManager.classifier_actions],
+            "enable_prevalidations": config.enable_prevalidations,
+            "dynamic_media_min_sample_count": config.dynamic_media_min_sample_count,
+            "dynamic_media_max_sample_frames": config.dynamic_media_max_sample_frames,
+            "dynamic_media_max_sample_pages": config.dynamic_media_max_sample_pages,
+            "profiles": [p.to_dict() for p in DirectoryProfile.directory_profiles],
+            "lookaheads": [la.to_dict() for la in Lookahead.lookaheads],
+        }
+        return hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
+
+    @staticmethod
+    def get_prevalidation_signature() -> str:
+        """Policy fingerprint; memo lives in ``lib.file_invalidation_cache``."""
+        m = get_signature_memo()
+        if m is None:
+            s = ClassifierActionsManager._compute_prevalidation_signature()
+            set_signature_memo(s)
+            return s
+        return m
+
+    @staticmethod
+    def _invalidate_after_prevalidation_policy_change() -> None:
+        """Call when rules or models that affect prevalidation outcomes change."""
+        invalidate_policy_caches()
+        ClassifierActionsManager.prevalidated_cache.clear()
+
+    @staticmethod
+    def load_prevalidation_file_cache_from_disk() -> None:
+        raw = app_info_cache.get_meta(ClassifierActionsManager.PREVALIDATION_FILE_CACHE_META_KEY, default_val=None)
+        if not isinstance(raw, dict):
+            return
+        disk_sig = raw.get("signature")
+        entries = raw.get("entries")
+        if not isinstance(disk_sig, str) or not isinstance(entries, list):
+            return
+        if disk_sig != ClassifierActionsManager.get_prevalidation_signature():
+            return
+        for item in entries:
+            if not isinstance(item, dict):
+                continue
+            try:
+                media_key = item["media_key"]
+                path_mtimes = item["path_mtimes"]
+                val = ClassifierActionsManager._parse_cached_action_name(item.get("value"))
+                bucket_sig = item.get("bucket_signature", disk_sig)
+                epoch_at_set = item.get("epoch_at_set")
+            except (KeyError, TypeError):
+                continue
+            cached_at = item.get("cached_at_unix")
+            if isinstance(cached_at, (int, float)):
+                if time.time() - float(cached_at) > DEFAULT_STALE_ENTRY_MAX_AGE_SECONDS:
+                    continue
+            b: FileKeyedInvalidationCache[Optional[ClassifierActionType]] = FileKeyedInvalidationCache()
+            b.load_from_snapshot(
+                path_mtimes,
+                val,
+                bucket_sig if isinstance(bucket_sig, str) else disk_sig,
+                epoch_at_set if isinstance(epoch_at_set, int) else None,
+                float(cached_at) if isinstance(cached_at, (int, float)) else None,
+            )
+            install_file_bucket(media_key, b)
+
+    @staticmethod
+    def store_prevalidation_file_cache_to_disk() -> None:
+        evacuate_stale_file_buckets()
+        entries = []
+        for media_key, bucket in iter_file_buckets():
+            snap = bucket.snapshot_for_persistence()
+            if snap is None:
+                continue
+            v = bucket.peek_value()
+            entries.append(
+                {
+                    "media_key": media_key,
+                    "path_mtimes": snap["path_mtimes"],
+                    "bucket_signature": snap.get("signature"),
+                    "epoch_at_set": snap.get("epoch_at_set"),
+                    "cached_at_unix": snap.get("cached_at_unix"),
+                    "value": v.name if v is not None else None,
+                }
+            )
+        payload = {
+            "signature": ClassifierActionsManager.get_prevalidation_signature(),
+            "entries": entries,
+        }
+        app_info_cache.set_meta(ClassifierActionsManager.PREVALIDATION_FILE_CACHE_META_KEY, payload)
+
+    @staticmethod
+    def clear_prevalidation_result_cache() -> None:
+        ClassifierActionsManager._invalidate_after_prevalidation_policy_change()
 
     @staticmethod
     def _prevalidations_post_init():
@@ -1139,38 +1264,50 @@ class ClassifierActionsManager:
     def reset_prevalidation_lazy_init() -> None:
         """Call when image classifier registry changes so lazy init re-runs on next prevalidate."""
         ClassifierActionsManager._prevalidations_initialized = False
+        ClassifierActionsManager._invalidate_after_prevalidation_policy_change()
     
     @staticmethod
     def prevalidate_media(media_path, get_base_dir_func, hide_callback, notify_callback, add_mark_callback) -> Optional[ClassifierActionType]:
         # Lazy initialization - ensure prevalidations are initialized before first use
         if not ClassifierActionsManager._prevalidations_initialized:
             ClassifierActionsManager._prevalidations_post_init()
-        
+
         # Reset lookahead cache for this prevalidate call
         for lookahead in Lookahead.lookaheads:
             lookahead.run_result = None
-        
+
         base_dir = get_base_dir_func()
         if len(ClassifierActionsManager.directories_to_exclude) > 0 and base_dir in ClassifierActionsManager.directories_to_exclude:
             return None
-        if media_path not in ClassifierActionsManager.prevalidated_cache:
-            prevalidation_action = None
-            for prevalidation in ClassifierActionsManager.prevalidations:
-                if prevalidation.is_active and prevalidation.can_run:
-                    if prevalidation.is_move_action() and prevalidation.action_modifier == base_dir:
-                        continue
-                    # Check if prevalidation should run on this directory
-                    if prevalidation.profile is not None and base_dir not in prevalidation.profile.directories:
-                        continue
-                    prevalidation_action = prevalidation.run_on_media_path(
-                        media_path, hide_callback, notify_callback, add_mark_callback
-                    )
-                    if prevalidation_action is not None:
-                        break
-            if prevalidation_action is None or prevalidation_action.is_cache_type():
-                ClassifierActionsManager.prevalidated_cache[media_path] = prevalidation_action
+
+        if media_path in ClassifierActionsManager.prevalidated_cache:
+            return ClassifierActionsManager.prevalidated_cache[media_path]
+
+        bucket = get_file_bucket_for_media(media_path)
+        ok_hit, cached_action = bucket.try_get((media_path,))
+        if ok_hit:
+            ClassifierActionsManager.prevalidated_cache[media_path] = cached_action
+            return cached_action
+
+        prevalidation_action = None
+        for prevalidation in ClassifierActionsManager.prevalidations:
+            if prevalidation.is_active and prevalidation.can_run:
+                if prevalidation.is_move_action() and prevalidation.action_modifier == base_dir:
+                    continue
+                if prevalidation.profile is not None and base_dir not in prevalidation.profile.directories:
+                    continue
+                prevalidation_action = prevalidation.run_on_media_path(
+                    media_path, hide_callback, notify_callback, add_mark_callback
+                )
+                if prevalidation_action is not None:
+                    break
+
+        if prevalidation_action is None or prevalidation_action.is_cache_type():
+            ClassifierActionsManager.prevalidated_cache[media_path] = prevalidation_action
+            pv_sig = ClassifierActionsManager.get_prevalidation_signature()
+            bucket.set((media_path,), prevalidation_action, pv_sig)
         else:
-            prevalidation_action = ClassifierActionsManager.prevalidated_cache[media_path]
+            bucket.clear()
         return prevalidation_action
     
     @staticmethod
@@ -1300,6 +1437,8 @@ class ClassifierActionsManager:
                 if prevalidation.is_move_action() and prevalidation.action_modifier not in ClassifierActionsManager.directories_to_exclude:
                     ClassifierActionsManager.directories_to_exclude.append(prevalidation.action_modifier)
 
+        ClassifierActionsManager._invalidate_after_prevalidation_policy_change()
+
     @staticmethod
     def store_prevalidations():
         """Store prevalidations to cache."""
@@ -1319,7 +1458,7 @@ class ClassifierActionsManager:
         for prevalidation in ClassifierActionsManager.prevalidations:
             prevalidation_dicts.append(prevalidation.to_dict())
         app_info_cache.set_meta("recent_prevalidations", prevalidation_dicts)
-    
+
     @staticmethod
     def load_classifier_actions():
         """Load classifier actions from cache."""
@@ -1341,7 +1480,9 @@ class ClassifierActionsManager:
                 )
             if classifier_action not in ClassifierActionsManager.classifier_actions:
                 ClassifierActionsManager.classifier_actions.append(classifier_action)
-    
+
+        ClassifierActionsManager._invalidate_after_prevalidation_policy_change()
+
     @staticmethod
     def store_classifier_actions():
         """Store classifier actions to cache."""

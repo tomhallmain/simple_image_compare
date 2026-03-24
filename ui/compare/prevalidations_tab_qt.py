@@ -178,7 +178,7 @@ class PrevalidationsTab(QWidget):
 
     @staticmethod
     def clear_prevalidated_cache() -> None:
-        ClassifierActionsManager.prevalidated_cache.clear()
+        ClassifierActionsManager.clear_prevalidation_result_cache()
         ClassifierActionsManager.directories_to_exclude.clear()
 
     @staticmethod
@@ -574,7 +574,7 @@ class PrevalidationsTab(QWidget):
         ):
             ClassifierActionsManager.prevalidations.insert(0, prevalidation)
         self._filtered = ClassifierActionsManager.prevalidations[:]
-        ClassifierActionsManager.prevalidated_cache.clear()
+        ClassifierActionsManager.clear_prevalidation_result_cache()
         ClassifierActionsManager.directories_to_exclude.clear()
         for pv in ClassifierActionsManager.prevalidations:
             if pv.is_move_action():

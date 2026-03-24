@@ -1,3 +1,4 @@
+import hashlib
 import os
 import tempfile
 import asyncio
@@ -55,6 +56,22 @@ logger = get_logger("frame_cache")
 
 # Bumps sample cache keys when extraction semantics change (invalidates in-memory entries).
 _VIDEO_SAMPLE_CACHE_REV = "pyav1"
+
+
+def _stable_media_path_hash(media_path: str) -> str:
+    """Deterministic ASCII-safe name component from absolute media path (for temp output files)."""
+    n = os.path.normpath(os.path.abspath(media_path))
+    return hashlib.sha256(n.encode("utf-8")).hexdigest()
+
+
+def _make_sample_cache_key(media_path: str, ratio: float) -> str:
+    min_sample_count = config.dynamic_media_min_sample_count
+    max_sample_frames = config.dynamic_media_max_sample_frames
+    max_sample_pages = config.dynamic_media_max_sample_pages
+    return (
+        f"{media_path}|{ratio:.4f}|min:{min_sample_count}"
+        f"|maxf:{max_sample_frames}|maxp:{max_sample_pages}|{_VIDEO_SAMPLE_CACHE_REV}"
+    )
 
 
 def _open_video_capture(path: str) -> cv2.VideoCapture:
@@ -310,6 +327,39 @@ class FrameCache:
     media_stats_cache: Dict[str, Dict[str, Optional[float]]] = {}  # Maps media_path to lightweight stats
 
     @classmethod
+    def _write_cv2_jpeg(cls, frame: np.ndarray, path: str) -> Optional[str]:
+        if cv2.imwrite(path, frame, [cv2.IMWRITE_JPEG_QUALITY, 95]) and os.path.isfile(path):
+            return os.path.abspath(path)
+        logger.debug("cv2.imwrite failed for %s", path)
+        return None
+
+    @classmethod
+    def _write_pil_image(cls, pil_image, path: str, **save_kw) -> Optional[str]:
+        try:
+            pil_image.save(path, **save_kw)
+        except OSError as e:
+            logger.debug("PIL save failed for %s: %s", path, e)
+            return None
+        if os.path.isfile(path):
+            return os.path.abspath(path)
+        return None
+
+    @classmethod
+    def get_cached_sampled_frame_paths_if_any(
+        cls, media_path: str, sample_ratio: float
+    ) -> Optional[List[str]]:
+        """Return sampled frame paths if :meth:`stream_frame_samples` has already materialized them."""
+        try:
+            ratio = float(sample_ratio)
+        except Exception:
+            ratio = 0.1
+        ratio = max(0.0, min(1.0, ratio))
+        cache_key = _make_sample_cache_key(media_path, ratio)
+        if cache_key in cls.sampled_cache:
+            return list(cls.sampled_cache[cache_key])
+        return None
+
+    @classmethod
     def get_image_path(cls, media_path: str) -> str:
         """
         Get the image path for a media file. If it's a video/GIF/PDF/SVG/HTML, extracts the first frame.
@@ -422,11 +472,13 @@ class FrameCache:
                 # Use a higher scale for better quality
                 image = page.render(scale=4).to_pil()
                 
-                basename = os.path.splitext(os.path.basename(pdf_path))[0] + ".jpg"
-                frame_path = os.path.join(cls.temporary_directory.name, basename)
-                
-                image.save(frame_path, quality=95)
-                cls.cache[pdf_path] = frame_path
+                mh = _stable_media_path_hash(pdf_path)
+                frame_path = os.path.join(cls.temporary_directory.name, f"{mh}_first.jpg")
+
+                resolved = cls._write_pil_image(image, frame_path, quality=95)
+                if resolved is None:
+                    raise OSError(f"Could not write or resolve PDF frame path: {frame_path}")
+                cls.cache[pdf_path] = resolved
             else:
                 raise ValueError("PDF has no pages")
         except Exception as e:
@@ -443,8 +495,8 @@ class FrameCache:
         """
         try:
             logger.info(f"Converting SVG to PNG: {svg_path}")
-            basename = os.path.splitext(os.path.basename(svg_path))[0] + ".png"
-            frame_path = os.path.join(cls.temporary_directory.name, basename)
+            mh = _stable_media_path_hash(svg_path)
+            frame_path = os.path.join(cls.temporary_directory.name, f"{mh}.png")
             
             # Convert SVG to PNG using cairosvg
             cairosvg.svg2png(url=svg_path, write_to=frame_path)
@@ -464,8 +516,8 @@ class FrameCache:
         try:
             logger.info(f"Converting HTML to image: {html_path}")
             # First convert HTML to PDF
-            pdf_path = os.path.join(cls.temporary_directory.name, 
-                                  os.path.splitext(os.path.basename(html_path))[0] + ".pdf")
+            mh = _stable_media_path_hash(html_path)
+            pdf_path = os.path.join(cls.temporary_directory.name, f"{mh}_from_html.pdf")
             
             # Convert HTML to PDF using Pyppeteer
             async def convert_html_to_pdf():
@@ -549,10 +601,12 @@ class FrameCache:
                 else:
                     frame = _pyav_first_decoded_bgr(video_path)
                 if frame is not None:
-                    basename = os.path.splitext(os.path.basename(video_path))[0] + ".jpg"
-                    frame_path = os.path.join(cls.temporary_directory.name, basename)
-                    cv2.imwrite(frame_path, frame, [cv2.IMWRITE_JPEG_QUALITY, 95])
-                    cls.cache[video_path] = frame_path
+                    mh = _stable_media_path_hash(video_path)
+                    frame_path = os.path.join(cls.temporary_directory.name, f"{mh}_first.jpg")
+                    resolved = cls._write_cv2_jpeg(frame, frame_path)
+                    if resolved is None:
+                        raise OSError(f"Could not write or resolve video frame path: {frame_path}")
+                    cls.cache[video_path] = resolved
                     return
             except Exception as e:
                 logger.warning(
@@ -581,12 +635,13 @@ class FrameCache:
             if not ok or frame is None:
                 raise ValueError("Could not read a frame from the video")
 
-            basename = os.path.splitext(os.path.basename(video_path))[0] + ".jpg"
-            frame_path = os.path.join(cls.temporary_directory.name, basename)
+            mh = _stable_media_path_hash(video_path)
+            frame_path = os.path.join(cls.temporary_directory.name, f"{mh}_first.jpg")
 
-            # Use high quality JPEG compression
-            cv2.imwrite(frame_path, frame, [cv2.IMWRITE_JPEG_QUALITY, 95])
-            cls.cache[video_path] = frame_path
+            resolved = cls._write_cv2_jpeg(frame, frame_path)
+            if resolved is None:
+                raise ValueError("Could not write extracted frame to disk")
+            cls.cache[video_path] = resolved
         finally:
             cap.release()
 
@@ -625,10 +680,7 @@ class FrameCache:
         min_sample_count = config.dynamic_media_min_sample_count
         max_sample_frames = config.dynamic_media_max_sample_frames
         max_sample_pages = config.dynamic_media_max_sample_pages
-        cache_key = (
-            f"{media_path}|{ratio:.4f}|min:{min_sample_count}"
-            f"|maxf:{max_sample_frames}|maxp:{max_sample_pages}|{_VIDEO_SAMPLE_CACHE_REV}"
-        )
+        cache_key = _make_sample_cache_key(media_path, ratio)
 
         if cache_key in cls.sampled_cache:
             cached = cls.sampled_cache[cache_key]
@@ -672,13 +724,7 @@ class FrameCache:
             except Exception:
                 ratio = 0.1
             ratio = max(0.0, min(1.0, ratio))
-            min_sample_count = config.dynamic_media_min_sample_count
-            max_sample_frames = config.dynamic_media_max_sample_frames
-            max_sample_pages = config.dynamic_media_max_sample_pages
-            cache_key = (
-                f"{media_path}|{ratio:.4f}|min:{min_sample_count}"
-                f"|maxf:{max_sample_frames}|maxp:{max_sample_pages}|{_VIDEO_SAMPLE_CACHE_REV}"
-            )
+            cache_key = _make_sample_cache_key(media_path, ratio)
             cls.sampled_cache[cache_key] = sampled_paths
         return sampled_paths
 
@@ -757,7 +803,7 @@ class FrameCache:
 
             return 1, gen_empty()
 
-        basename = os.path.splitext(os.path.basename(video_path))[0]
+        media_hash = _stable_media_path_hash(video_path)
         planned = len(frame_indices)
 
         def gen() -> Iterator[str]:
@@ -767,7 +813,7 @@ class FrameCache:
                 yield from cls._iter_pyav_video_sample_paths(
                     video_path,
                     frame_indices,
-                    basename,
+                    media_hash,
                     accumulated,
                 )
                 if len(accumulated) == 0:
@@ -785,7 +831,7 @@ class FrameCache:
         cls,
         video_path: str,
         frame_indices: List[int],
-        basename: str,
+        media_hash: str,
         accumulated: List[str],
     ) -> Iterator[str]:
         assert av is not None
@@ -854,11 +900,18 @@ class FrameCache:
                 if chosen is not None:
                     frame_path = os.path.join(
                         cls.temporary_directory.name,
-                        f"{basename}_sample_{idx}.jpg",
+                        f"{media_hash}_sample_{idx}.jpg",
                     )
-                    cv2.imwrite(frame_path, chosen, [cv2.IMWRITE_JPEG_QUALITY, 95])
-                    accumulated.append(frame_path)
-                    yield frame_path
+                    resolved = cls._write_cv2_jpeg(chosen, frame_path)
+                    if resolved is None:
+                        logger.debug(
+                            "Could not write sampled frame JPEG at index %s for %s",
+                            idx,
+                            video_path,
+                        )
+                    else:
+                        accumulated.append(resolved)
+                        yield resolved
                 else:
                     logger.debug(
                         "Degenerate PyAV sampled frame at index %s for %s (skipped)",
@@ -928,7 +981,7 @@ class FrameCache:
 
             return 1, gen_empty()
 
-        basename = os.path.splitext(os.path.basename(video_path))[0]
+        media_hash = _stable_media_path_hash(video_path)
         planned = len(frame_indices)
 
         def gen() -> Iterator[str]:
@@ -939,7 +992,7 @@ class FrameCache:
                     cap,
                     video_path,
                     frame_indices,
-                    basename,
+                    media_hash,
                     accumulated,
                 )
                 if len(accumulated) == 0:
@@ -959,7 +1012,7 @@ class FrameCache:
         cap: cv2.VideoCapture,
         video_path: str,
         frame_indices: List[int],
-        basename: str,
+        media_hash: str,
         accumulated: List[str],
     ) -> Iterator[str]:
         """
@@ -1016,11 +1069,18 @@ class FrameCache:
             if chosen is not None:
                 frame_path = os.path.join(
                     cls.temporary_directory.name,
-                    f"{basename}_sample_{idx}.jpg",
+                    f"{media_hash}_sample_{idx}.jpg",
                 )
-                cv2.imwrite(frame_path, chosen, [cv2.IMWRITE_JPEG_QUALITY, 95])
-                accumulated.append(frame_path)
-                yield frame_path
+                resolved = cls._write_cv2_jpeg(chosen, frame_path)
+                if resolved is None:
+                    logger.debug(
+                        "Could not write sampled frame JPEG at index %s for %s",
+                        idx,
+                        video_path,
+                    )
+                else:
+                    accumulated.append(resolved)
+                    yield resolved
             else:
                 logger.debug(
                     "Degenerate sampled frame at index %s for %s (skipped)",
@@ -1110,7 +1170,7 @@ class FrameCache:
 
             return 1, gen_no_pages()
 
-        basename = os.path.splitext(os.path.basename(pdf_path))[0]
+        media_hash = _stable_media_path_hash(pdf_path)
         planned = len(page_indices)
         pdf_ref = pdf
 
@@ -1123,11 +1183,18 @@ class FrameCache:
                     image = page.render(scale=4).to_pil()
                     page_path = os.path.join(
                         cls.temporary_directory.name,
-                        f"{basename}_sample_page_{page_index}.jpg",
+                        f"{media_hash}_sample_page_{page_index}.jpg",
                     )
-                    image.save(page_path, quality=95)
-                    accumulated.append(page_path)
-                    yield page_path
+                    resolved = cls._write_pil_image(image, page_path, quality=95)
+                    if resolved is None:
+                        logger.debug(
+                            "Could not write sampled PDF page %s for %s",
+                            page_index,
+                            pdf_path,
+                        )
+                        continue
+                    accumulated.append(resolved)
+                    yield resolved
                 if len(accumulated) == 0:
                     accumulated.append(pdf_path)
                     yield pdf_path
