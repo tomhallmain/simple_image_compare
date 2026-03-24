@@ -1,9 +1,10 @@
 import os
 import tempfile
 import asyncio
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import cv2
+import numpy as np
 
 has_imported_pypdfium2 = False
 try:
@@ -31,6 +32,63 @@ from utils.logging_setup import get_logger
 from utils.constants import CompareMediaType
 
 logger = get_logger("frame_cache")
+
+# Bumps sample cache keys when extraction semantics change (invalidates in-memory entries).
+_VIDEO_SAMPLE_CACHE_REV = "seqff1"
+
+
+def _open_video_capture(path: str) -> cv2.VideoCapture:
+    """
+    Prefer FFmpeg backend for file-backed video; default (e.g. MSMF on Windows) often
+    mishandles H.264/HEVC seek and returns blank frames after CAP_PROP_POS_FRAMES.
+    """
+    apis: List[int] = []
+    ff = getattr(cv2, "CAP_FFMPEG", None)
+    if ff is not None:
+        apis.append(int(ff))
+    any_api = getattr(cv2, "CAP_ANY", 0)
+    if any_api not in apis:
+        apis.append(int(any_api))
+
+    last_cap: Optional[cv2.VideoCapture] = None
+    for api in apis:
+        cap = cv2.VideoCapture(path, api)
+        last_cap = cap
+        if cap.isOpened():
+            return cap
+    return last_cap if last_cap is not None else cv2.VideoCapture(path)
+
+
+def _is_likely_decoder_blank(frame: np.ndarray) -> bool:
+    """
+    Detect near-uniform black frames that commonly appear when random frame seek fails
+    but decode still "succeeds". Deliberately ignores legitimately very dark scenes by
+    requiring simultaneously low mean, low variance, and low channel peaks.
+    """
+    if frame is None or frame.size == 0:
+        return True
+    if frame.ndim < 2:
+        return True
+    gray = frame if frame.ndim == 2 else cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    mean_m = cv2.mean(gray)[0]
+    _, stddev = cv2.meanStdDev(gray)
+    std_m = float(stddev[0, 0])
+    peak = float(np.max(gray))
+    return peak < 6.0 and mean_m < 2.5 and std_m < 3.0
+
+
+def _first_substantive_frame(
+    cap: cv2.VideoCapture, max_frames: int = 360
+) -> Tuple[bool, Optional[np.ndarray]]:
+    """Read forward until the first non-blank frame or EOF. Used for first-frame thumbnail."""
+    for _ in range(max(1, max_frames)):
+        ret, frame = cap.read()
+        if not ret or frame is None:
+            return False, None
+        if not _is_likely_decoder_blank(frame):
+            return True, frame
+    return False, None
+
 
 class FrameCache:
     """
@@ -255,7 +313,7 @@ class FrameCache:
             video_path: Path to the video/GIF file
         """
         logger.info(f"Extracting first frame from video: {video_path}")
-        cap = cv2.VideoCapture(video_path)
+        cap = _open_video_capture(video_path)
         try:
             total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
             fps = float(cap.get(cv2.CAP_PROP_FPS))
@@ -268,9 +326,9 @@ class FrameCache:
                 "duration_seconds": duration_seconds,
                 "fps": fps if fps > 0 else None,
             }
-            ret, frame = cap.read()
-            if not ret:
-                raise ValueError("Could not read the first frame")
+            ok, frame = _first_substantive_frame(cap)
+            if not ok or frame is None:
+                raise ValueError("Could not read a substantive frame from the video")
 
             basename = os.path.splitext(os.path.basename(video_path))[0] + ".jpg"
             frame_path = os.path.join(cls.temporary_directory.name, basename)
@@ -306,7 +364,7 @@ class FrameCache:
         max_sample_pages = config.dynamic_media_max_sample_pages
         cache_key = (
             f"{media_path}|{ratio:.4f}|min:{min_sample_count}"
-            f"|maxf:{max_sample_frames}|maxp:{max_sample_pages}"
+            f"|maxf:{max_sample_frames}|maxp:{max_sample_pages}|{_VIDEO_SAMPLE_CACHE_REV}"
         )
 
         if cache_key in cls.sampled_cache:
@@ -332,6 +390,96 @@ class FrameCache:
             sampled_paths = [media_path] if (is_video or is_pdf) else [cls.get_image_path(media_path)]
         cls.sampled_cache[cache_key] = sampled_paths
         return sampled_paths
+
+    @classmethod
+    def _write_sample_jpegs(
+        cls,
+        basename: str,
+        frame_by_index: Dict[int, np.ndarray],
+        frame_indices: List[int],
+    ) -> List[str]:
+        sampled_paths: List[str] = []
+        for frame_index in frame_indices:
+            frame = frame_by_index.get(frame_index)
+            if frame is None:
+                continue
+            frame_path = os.path.join(
+                cls.temporary_directory.name,
+                f"{basename}_sample_{frame_index}.jpg",
+            )
+            cv2.imwrite(frame_path, frame, [cv2.IMWRITE_JPEG_QUALITY, 95])
+            sampled_paths.append(frame_path)
+        return sampled_paths
+
+    @classmethod
+    def _collect_video_sample_frames_sequential(
+        cls,
+        cap: cv2.VideoCapture,
+        video_path: str,
+        frame_indices: List[int],
+    ) -> Dict[int, np.ndarray]:
+        """
+        Collect target frames by linear decode only (no index seek).
+
+        Broken or inaccurate ``CAP_PROP_POS_FRAMES`` on some codecs produces blank
+        frames; sequential reads match the decoder timeline.
+        """
+        targets = sorted(set(frame_indices))
+        want = set(targets)
+        collected: Dict[int, np.ndarray] = {}
+        idx = 0
+        max_target = max(targets)
+        total_reported = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        scan_limit = max(
+            max_target + 10_000,
+            total_reported + 5000 if total_reported > 0 else max_target + 5000,
+            len(targets) * 200,
+        )
+        scan_limit = min(scan_limit, 800_000)
+
+        lookahead_cap = 128
+
+        while want and idx < scan_limit:
+            ret, frame = cap.read()
+            if not ret or frame is None:
+                break
+            if idx not in want:
+                idx += 1
+                continue
+
+            chosen: Optional[np.ndarray] = None
+            extra = 0
+            if not _is_likely_decoder_blank(frame):
+                chosen = frame
+            else:
+                for _ in range(lookahead_cap):
+                    r2, f2 = cap.read()
+                    extra += 1
+                    if not r2 or f2 is None:
+                        break
+                    if not _is_likely_decoder_blank(f2):
+                        chosen = f2
+                        break
+
+            if chosen is not None:
+                collected[idx] = chosen
+            else:
+                logger.debug(
+                    "Degenerate sampled frame at index %s for %s (skipped)",
+                    idx,
+                    video_path,
+                )
+            want.discard(idx)
+            idx += 1 + extra
+
+        if want:
+            logger.warning(
+                "Video sampling incomplete for %s — missing %s/%s indices (decoder ended or scan cap)",
+                video_path,
+                len(want),
+                len(targets),
+            )
+        return collected
 
     @classmethod
     def get_dynamic_media_stats(cls, media_path: str) -> Dict[str, Optional[float]]:
@@ -365,7 +513,7 @@ class FrameCache:
         """
         Extract sampled frames from a video based on the configured ratio.
         """
-        cap = cv2.VideoCapture(video_path)
+        cap = _open_video_capture(video_path)
         sampled_paths: List[str] = []
         try:
             total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -389,17 +537,10 @@ class FrameCache:
                 return sampled_paths
 
             basename = os.path.splitext(os.path.basename(video_path))[0]
-            for frame_index in frame_indices:
-                cap.set(cv2.CAP_PROP_POS_FRAMES, frame_index)
-                ret, frame = cap.read()
-                if not ret:
-                    continue
-                frame_path = os.path.join(
-                    cls.temporary_directory.name,
-                    f"{basename}_sample_{frame_index}.jpg",
-                )
-                cv2.imwrite(frame_path, frame, [cv2.IMWRITE_JPEG_QUALITY, 95])
-                sampled_paths.append(frame_path)
+            collected = cls._collect_video_sample_frames_sequential(
+                cap, video_path, frame_indices
+            )
+            sampled_paths = cls._write_sample_jpegs(basename, collected, frame_indices)
         except Exception as e:
             logger.warning(f"Error extracting sampled frames from {video_path}: {e}")
         finally:
