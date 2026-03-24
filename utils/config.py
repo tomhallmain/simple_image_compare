@@ -109,8 +109,8 @@ class Config:
         self.text_embedding_search_presets_exclusive = False
         self.enable_prevalidations = True
         # Dynamic media prevalidation sampling bounds.
-        self.dynamic_media_min_sample_count = 5
-        self.dynamic_media_max_sample_frames = 40
+        self.dynamic_media_min_sample_count = 4
+        self.dynamic_media_max_sample_frames = 20
         self.dynamic_media_max_sample_pages = 40
         self.show_negative_prompt = True
         self.sd_runner_client_port = 6000

@@ -484,40 +484,46 @@ class ClassifierAction:
         if not self.can_run:
             return None
         if self._is_dynamic_media_path(media_path):
-            sampled_frames = FrameCache.get_frame_samples(
+            planned_slots, sample_iter = FrameCache.stream_frame_samples(
                 media_path, sample_ratio=self.dynamic_content_sample_ratio
             )
-            if len(sampled_frames) > 0:
+            if planned_slots > 0:
                 stats = FrameCache.get_dynamic_media_stats(media_path) if config.debug else None
                 lookahead_eval_cache = {}
                 positive_count = 0
-                total_samples = len(sampled_frames)
                 required_positive_count = math.ceil(
-                    total_samples * self.dynamic_content_positive_ratio
+                    planned_slots * self.dynamic_content_positive_ratio
                 )
                 processed_samples = 0
                 last_processed_index = -1
                 threshold_met = False
                 reached_last_sample = False
-                for idx, sampled_path in enumerate(sampled_frames):
-                    try:
-                        processed_samples += 1
-                        last_processed_index = idx
-                        if self.matches_image_path(sampled_path, lookahead_eval_cache=lookahead_eval_cache):
-                            positive_count += 1
-                            # Early success once the positive threshold is met.
-                            if positive_count >= required_positive_count:
-                                threshold_met = True
+                try:
+                    for idx, sampled_path in enumerate(sample_iter):
+                        try:
+                            processed_samples += 1
+                            last_processed_index = idx
+                            if self.matches_image_path(sampled_path, lookahead_eval_cache=lookahead_eval_cache):
+                                positive_count += 1
+                                # Early success once the positive threshold is met.
+                                if positive_count >= required_positive_count:
+                                    threshold_met = True
+                                    break
+                            # Early failure if even all remaining planned slots cannot meet threshold.
+                            remaining_samples = planned_slots - (idx + 1)
+                            if positive_count + remaining_samples < required_positive_count:
                                 break
-                        # Early failure if even all remaining samples cannot meet threshold.
-                        remaining_samples = total_samples - (idx + 1)
-                        if positive_count + remaining_samples < required_positive_count:
-                            break
-                    except Exception as e:
-                        logger.debug(
-                            f"Sample frame prevalidation failed for {sampled_path}: {e}"
-                        )
-                reached_last_sample = processed_samples >= total_samples
+                        except Exception as e:
+                            logger.debug(
+                                f"Sample frame prevalidation failed for {sampled_path}: {e}"
+                            )
+                    else:
+                        # No break: consumed all yielded samples (may be fewer than planned_slots).
+                        reached_last_sample = True
+                finally:
+                    close_m = getattr(sample_iter, "close", None)
+                    if callable(close_m):
+                        close_m()
                 if config.debug:
                     media_type = stats["media_type"] if stats else "dynamic"
                     total_items = stats["total_items"] if stats else None
@@ -530,7 +536,7 @@ class ClassifierAction:
                         media_path,
                         media_type,
                         (last_processed_index + 1) if last_processed_index >= 0 else 0,
-                        total_samples,
+                        planned_slots,
                         processed_samples,
                         positive_count,
                         required_positive_count,
