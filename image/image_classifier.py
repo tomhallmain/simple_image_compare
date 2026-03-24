@@ -9,6 +9,8 @@ from PIL import Image
 from utils.config import config
 from utils.logging_setup import get_logger
 
+from image.image_classifier_model_config import ImageClassifierModelConfig
+
 logger = get_logger("image_classifier")
 
 
@@ -17,6 +19,21 @@ class BackendType(Enum):
     PYTORCH = "pytorch"
     HDF5 = "hdf5"
     OTHER = "other"
+
+    @staticmethod
+    def parse(backend: Union["BackendType", str, None]) -> Optional["BackendType"]:
+        """Parse backend input into a BackendType enum value."""
+        if isinstance(backend, BackendType):
+            return backend
+
+        backend_str = str(backend).lower().strip()
+        if backend_str == "auto":
+            return None  # Will be determined from file extension
+        if backend_str in ("tensorflow", "hdf5", "h5"):
+            return BackendType.HDF5
+        if backend_str in ("pytorch", "torch"):
+            return BackendType.PYTORCH
+        return BackendType.OTHER
 
 
 def import_model_architecture(import_path: str):
@@ -741,27 +758,45 @@ class PyTorchImageClassifier(BaseImageClassifier):
             raise ValueError(f"Prediction failed: {str(e)}")
 
 
+def derive_neutral_categories_from_positive_groups(
+    model_categories: List[str],
+    positive_groups: List[List[str]],
+) -> List[str]:
+    """Categories not present in any positive group (complement of the union of groups)."""
+    positive_categories: set[str] = set()
+    for group in positive_groups:
+        positive_categories.update(group)
+    return [cat for cat in model_categories if cat not in positive_categories]
+
+
 class ImageClassifierWrapper:
-    def __init__(self, model_name="", model_categories=["drawing", "photograph"],
-                 model_location="", use_hub_keras_layers=False, 
-                 backend="auto", model_kwargs=None):
-        """General purpose image classifier wrapper
-        
-        Args:
-            model_name: Name of the model
-            model_categories: List of category names
-            model_location: Path to model file
-            use_hub_keras_layers: For TensorFlow Hub layers (TensorFlow only)
-            backend: BackendType enum or string ("auto", "tensorflow"/"hdf5", or "pytorch")
-            model_kwargs: Additional kwargs for model initialization
+    def __init__(self, model_config: ImageClassifierModelConfig):
+        """Load and run an image classifier from a single :class:`ImageClassifierModelConfig`.
+
+        Split-positive options (``positive_groups``, ``neutral_categories``, ``severity_order``)
+        are read from ``model_config``. If ``positive_groups`` is non-empty and
+        ``neutral_categories`` is omitted or empty, neutrals are derived as the complement of
+        the union of all positive groups within ``model_categories``.
         """
-        self.model_name = model_name
-        self.model_categories = model_categories
-        self.model_location = model_location
-        self.use_hub_keras_layers = use_hub_keras_layers
-        # Convert string backend to enum, handling legacy values
-        self.backend = self._parse_backend(backend)
-        self.model_kwargs = model_kwargs or {}
+        self.model_name = model_config.model_name
+        self.model_categories = list(model_config.model_categories)
+        self.model_location = model_config.model_location
+        self.use_hub_keras_layers = model_config.use_hub_keras_layers
+        self.backend = BackendType.parse(model_config.backend)
+        self.model_kwargs = dict(model_config.model_kwargs)
+        self.positive_groups = [list(g) for g in model_config.positive_groups]
+        self.neutral_categories = list(model_config.neutral_categories)
+        self.severity_order = list(model_config.severity_order)
+
+        if self.positive_groups and not self.neutral_categories:
+            self.neutral_categories = derive_neutral_categories_from_positive_groups(
+                self.model_categories, self.positive_groups
+            )
+            if config.debug2 and self.neutral_categories:
+                logger.debug(
+                    f"Derived neutral_categories for {self.model_name}: {self.neutral_categories}"
+                )
+
         self.can_run = True
         self.classifier = None
         self.predictions_cache = {}
@@ -778,27 +813,31 @@ class ImageClassifierWrapper:
                     raise Exception(f"Invalid model location: {self.model_location}")
                 if not type(self.use_hub_keras_layers) == bool:
                     raise Exception(f"Invalid use hub keras layers flag, must be boolean: {self.use_hub_keras_layers}")
+                allowed = set(self.model_categories)
+                if self.positive_groups:
+                    if not isinstance(self.positive_groups, list):
+                        raise Exception(f"positive_groups must be a list, got {type(self.positive_groups)}")
+                    for grp in self.positive_groups:
+                        if not isinstance(grp, list):
+                            raise Exception(f"positive_groups entries must be lists, got {type(grp)}")
+                        for c in grp:
+                            if c not in allowed:
+                                raise Exception(
+                                    f"positive_groups references unknown category {c!r} "
+                                    f"(not in model_categories)"
+                                )
+                for c in self.neutral_categories:
+                    if c not in allowed:
+                        raise Exception(
+                            f"neutral_categories references unknown category {c!r} "
+                            f"(not in model_categories)"
+                        )
             except Exception as e:
                 self.can_run = False
                 logger.error(e)
                 logger.warning("Failed to set model details for image classifier: " + str(self.__dict__))
             if self.can_run:
                 self.load_classifier()
-
-    def _parse_backend(self, backend):
-        """Parse backend string to BackendType enum"""
-        if isinstance(backend, BackendType):
-            return backend
-        
-        backend_str = str(backend).lower().strip()
-        if backend_str == "auto":
-            return None  # Will be determined from file extension
-        elif backend_str in ("tensorflow", "hdf5", "h5"):
-            return BackendType.HDF5
-        elif backend_str == "pytorch" or backend_str == "torch":
-            return BackendType.PYTORCH
-        else:
-            return BackendType.OTHER
 
     def load_classifier(self):
         """Load appropriate classifier based on backend and file extension"""
@@ -915,8 +954,62 @@ class ImageClassifierWrapper:
     def classify_image(self, image_path):
         if not self.can_run:
             raise Exception(f"Invalid state: Image classifier details failed to initialize, unable to classify image")
-        
+
         classed_predictions = self.predict_image(image_path)
+
+        if self.positive_groups:
+            neutral_prob = sum(
+                classed_predictions.get(cat, 0) for cat in self.neutral_categories
+            )
+            split_detected = False
+            best_combined_prob = 0.0
+            best_category: Optional[str] = None
+            best_group: Optional[List[str]] = None
+
+            for group_cats in self.positive_groups:
+                if len(group_cats) <= 1:
+                    continue
+                combined_prob = sum(
+                    classed_predictions.get(cat, 0) for cat in group_cats
+                )
+                if combined_prob > neutral_prob and combined_prob > best_combined_prob:
+                    split_detected = True
+                    best_combined_prob = combined_prob
+                    best_group = group_cats
+                    picked: Optional[str] = None
+                    if self.severity_order:
+                        for severe_cat in self.severity_order:
+                            if (
+                                severe_cat in group_cats
+                                and classed_predictions.get(severe_cat, 0) > 0
+                            ):
+                                picked = severe_cat
+                                break
+                    if not picked:
+                        group_predictions = [
+                            (cat, classed_predictions.get(cat, 0)) for cat in group_cats
+                        ]
+                        picked = max(group_predictions, key=lambda x: x[1])[0]
+                    best_category = picked
+
+            if split_detected and best_category:
+                if config.debug2:
+                    ordered_pairs = sorted(
+                        classed_predictions.items(), key=lambda kv: kv[1], reverse=True
+                    )
+                    prediction_line = ", ".join(
+                        [f"{name}={score:.6f}" for name, score in ordered_pairs]
+                    )
+                    group_name = "+".join(best_group or [])
+                    logger.debug(
+                        f"Image classifier prediction map ({self.model_name}): {prediction_line}"
+                    )
+                    logger.debug(
+                        f"Split positive in group '{group_name}': "
+                        f"combined={best_combined_prob:.6f}, assigned={best_category}"
+                    )
+                return best_category
+
         keys = list(self.model_categories)
         keys.sort(key=lambda c: classed_predictions[c], reverse=True)
         classed_category = keys[0]
@@ -952,31 +1045,34 @@ class ImageClassifierWrapper:
 
 # Factory function for convenience
 def create_image_classifier(model_name: str = "",
-                           model_categories: List[str] = None,
+                           model_categories: Optional[List[str]] = None,
                            model_location: str = "",
                            use_hub_keras_layers: bool = False,
                            backend: Union[str, BackendType] = "auto",
                            **kwargs) -> ImageClassifierWrapper:
-    """Factory function to create an ImageClassifierWrapper
-    
-    Args:
-        model_name: Name of the model
-        model_categories: List of categories the model can classify
-        model_location: Path to the model file
-        use_hub_keras_layers: Whether to use Hub Keras layers
-        backend: Backend type
-        **kwargs: Additional keyword arguments
+    """Convenience wrapper that builds an :class:`ImageClassifierModelConfig` and classifier.
+
+    For split-positive settings or full control, construct :class:`ImageClassifierModelConfig`
+    (or use :meth:`ImageClassifierModelConfig.from_dict`) and pass it to
+    :class:`ImageClassifierWrapper` directly.
+
+    **kwargs: Passed as ``model_kwargs`` on the config.
     """
     if model_categories is None:
         model_categories = ["drawing", "photograph"]
-    
-    return ImageClassifierWrapper(
-        model_name=model_name,
-        model_categories=model_categories,
+    parsed_backend = BackendType.parse(backend)
+    backend_str = "auto" if parsed_backend is None else parsed_backend.value
+    if not backend_str:
+        backend_str = "auto"
+
+    mc = ImageClassifierModelConfig(
+        model_name=str(model_name).strip(),
         model_location=model_location,
+        model_categories=list(model_categories),
         use_hub_keras_layers=use_hub_keras_layers,
-        backend=backend,
-        model_kwargs=kwargs,
+        backend=backend_str,
+        model_kwargs=dict(kwargs),
     )
+    return ImageClassifierWrapper(mc)
 
 

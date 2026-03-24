@@ -37,6 +37,20 @@ _ = I18N._
 logger = get_logger("classifier_actions_manager")
 
 
+class ImageClassifierClassificationMode(Enum):
+    SELECTED_CATEGORIES = "selected_categories"
+    MODEL_STRATEGY = "model_strategy"
+
+    @staticmethod
+    def from_value(value):
+        if isinstance(value, ImageClassifierClassificationMode):
+            return value
+        value_str = str(value or "").strip().lower()
+        if value_str == ImageClassifierClassificationMode.MODEL_STRATEGY.value:
+            return ImageClassifierClassificationMode.MODEL_STRATEGY
+        return ImageClassifierClassificationMode.SELECTED_CATEGORIES
+
+
 
 
 
@@ -48,6 +62,7 @@ class ClassifierAction:
                  text_embedding_threshold=None, prototype_threshold=0.23,
                  action=ClassifierActionType.NOTIFY, action_modifier="",
                  image_classifier_name="", image_classifier_selected_categories=[], 
+                 classification_mode=ImageClassifierClassificationMode.SELECTED_CATEGORIES,
                  use_embedding=True, use_image_classifier=False, use_prompts=False, use_blacklist=False,
                  is_active=True, use_prototype=False, prototype_directory="", 
                  negative_prototype_directory="", negative_prototype_lambda=0.5,
@@ -69,6 +84,7 @@ class ClassifierAction:
         self._missing_image_classifier_logged = False
         self.image_classifier_categories = []
         self.image_classifier_selected_categories = image_classifier_selected_categories
+        self.classification_mode = ImageClassifierClassificationMode.from_value(classification_mode)
         self.lookahead_names = lookahead_names if lookahead_names else []  # List of lookahead names (strings)
         self.use_embedding = use_embedding
         self.use_image_classifier = use_image_classifier
@@ -405,8 +421,16 @@ class ClassifierAction:
                 # Lazy attempt; no notify callback here.
                 self.ensure_image_classifier_loaded(None)
             if self.image_classifier is not None:
-                if self.image_classifier.test_image_for_categories(image_path, self.image_classifier_selected_categories):
-                    return True
+                if self.classification_mode == ImageClassifierClassificationMode.MODEL_STRATEGY:
+                    predicted_category = self.image_classifier.classify_image(image_path)
+                    positive_categories = self._resolve_model_strategy_positive_categories()
+                    if predicted_category in positive_categories:
+                        return True
+                else:
+                    if self.image_classifier.test_image_for_categories(
+                        image_path, self.image_classifier_selected_categories
+                    ):
+                        return True
             else:
                 if not self._missing_image_classifier_logged:
                     logger.error(f"Image classifier {self.image_classifier_name} not found for classifier action {self.name}")
@@ -629,6 +653,8 @@ class ClassifierAction:
                 raise Exception(f"One or more selected categories {self.image_classifier_selected_categories} were not found in the image classifier's category options")
             if self.image_classifier_name is not None and self.image_classifier_name.strip() != "" and self.image_classifier is None:
                 raise Exception(f"The image classifier \"{self.image_classifier_name}\" was not found in the available image classifiers")
+            if self.classification_mode == ImageClassifierClassificationMode.MODEL_STRATEGY:
+                self._resolve_model_strategy_positive_categories()
         
         if self.is_move_action() and not os.path.isdir(self.action_modifier):
             raise Exception('Action modifier must be a valid directory')
@@ -687,6 +713,7 @@ class ClassifierAction:
             "is_active": self.is_active,
             "image_classifier_name": self.image_classifier_name,
             "image_classifier_selected_categories": self.image_classifier_selected_categories,
+            "classification_mode": self.classification_mode.value,
             "use_embedding": self.use_embedding,
             "use_image_classifier": self.use_image_classifier,
             "use_prompts": self.use_prompts,
@@ -715,6 +742,8 @@ class ClassifierAction:
                 d['use_image_classifier'] = False
         if 'use_image_classifier' not in d:
             d['use_image_classifier'] = False
+        if 'classification_mode' not in d:
+            d['classification_mode'] = ImageClassifierClassificationMode.SELECTED_CATEGORIES.value
         if 'lookahead_names' not in d:
             d['lookahead_names'] = []
         if 'use_prompts' not in d:
@@ -746,6 +775,34 @@ class ClassifierAction:
             d['prototype_threshold'] = d.get('threshold', 0.23)
         
         return ClassifierAction(**d)
+
+    def _resolve_model_strategy_positive_categories(self) -> set[str]:
+        model_name = (self.image_classifier_name or "").strip()
+        if not model_name:
+            raise Exception(
+                "Image classifier name must be set when using model strategy classification mode."
+            )
+        metadata = getattr(image_classifier_manager, "classifier_metadata", {})
+        model_config = metadata.get(model_name)
+        if model_config is None:
+            raise Exception(
+                f"Image classifier model config \"{model_name}\" is invalid or unavailable; "
+                "objects depending on this model strategy are invalid."
+            )
+        positive_groups = [list(g) for g in (model_config.positive_groups or []) if isinstance(g, list) and len(g) > 0]
+        if len(positive_groups) == 0:
+            raise Exception(
+                f"Image classifier model config \"{model_name}\" must define positive_groups "
+                "for model strategy classification mode."
+            )
+        positive_categories: set[str] = set()
+        for group in positive_groups:
+            positive_categories.update(group)
+        if len(positive_categories) == 0:
+            raise Exception(
+                f"Image classifier model config \"{model_name}\" has no usable positive categories."
+            )
+        return positive_categories
 
     def __str__(self) -> str:
         out = self.name
@@ -791,6 +848,7 @@ class Prevalidation(ClassifierAction):
                  text_embedding_threshold=None, prototype_threshold=0.23,
                  action=ClassifierActionType.NOTIFY, action_modifier="", run_on_folder=None, is_active=True,
                  image_classifier_name="", image_classifier_selected_categories=[], 
+                 classification_mode=ImageClassifierClassificationMode.SELECTED_CATEGORIES,
                  use_embedding=True, use_image_classifier=False, use_prompts=False, use_blacklist=False,
                  lookahead_names=[], profile_name=None, use_prototype=False, prototype_directory="", 
                  negative_prototype_directory="", negative_prototype_lambda=0.5,
@@ -799,7 +857,7 @@ class Prevalidation(ClassifierAction):
         # Pass all parameters including prototype settings to parent ClassifierAction
         super().__init__(name, positives, negatives, threshold, 
                         text_embedding_threshold, prototype_threshold, action, action_modifier, 
-                        image_classifier_name, image_classifier_selected_categories,
+                        image_classifier_name, image_classifier_selected_categories, classification_mode,
                         use_embedding, use_image_classifier, use_prompts, use_blacklist,
                         is_active, use_prototype, prototype_directory,
                         negative_prototype_directory, negative_prototype_lambda,
@@ -916,6 +974,8 @@ class Prevalidation(ClassifierAction):
                 d['use_image_classifier'] = False
         if 'use_image_classifier' not in d:
             d['use_image_classifier'] = False
+        if 'classification_mode' not in d:
+            d['classification_mode'] = ImageClassifierClassificationMode.SELECTED_CATEGORIES.value
         if 'use_prompts' not in d:
             d['use_prompts'] = False
         if 'use_blacklist' not in d:
@@ -988,9 +1048,11 @@ class ClassifierActionsManager:
                 prevalidation.update_profile_instance()
                 prevalidation.validate_dirs()
                 prevalidation.ensure_prototype_loaded(None)
+                prevalidation.validate()
             except Exception as e:
                 logger.error(f"Error initializing prevalidation {prevalidation.name}: {e}")
-                # ClassifierActionsManager.prevalidations.remove(prevalidation)
+                if prevalidation in ClassifierActionsManager.prevalidations:
+                    ClassifierActionsManager.prevalidations.remove(prevalidation)
         ClassifierActionsManager._prevalidations_initialized = True
     
     @staticmethod
@@ -1178,9 +1240,13 @@ class ClassifierActionsManager:
         """Load classifier actions from cache."""
         for classifier_action_dict in list(app_info_cache.get_meta("recent_classifier_actions", default_val=[])):
             classifier_action: ClassifierAction = ClassifierAction.from_dict(classifier_action_dict)
-            classifier_action.validate_dirs()
-            if classifier_action not in ClassifierActionsManager.classifier_actions:
-                ClassifierActionsManager.classifier_actions.append(classifier_action)
+            try:
+                classifier_action.validate_dirs()
+                classifier_action.validate()
+                if classifier_action not in ClassifierActionsManager.classifier_actions:
+                    ClassifierActionsManager.classifier_actions.append(classifier_action)
+            except Exception as e:
+                logger.error(f"Skipping invalid classifier action {classifier_action.name}: {e}")
     
     @staticmethod
     def store_classifier_actions():

@@ -106,6 +106,23 @@
         "use_transformers_auto_model": true,
         "hf_pretrained_path": "path/to/hf/snapshot"
       }
+    },
+    {
+      "model_name": "nsfw split-group example (be sure to change this)",
+      "model_location": "path/to/my/nsfw/model.safetensors",
+      "model_categories": ["nsfw_cat_1", "nsfw_cat_2", "nsfw_cat_3", "nsfw_cat_4", "nsfw_cat_5"],
+      "backend": "pytorch",
+      "positive_groups": [
+        ["nsfw_cat_3", "nsfw_cat_4", "nsfw_cat_5"],
+        ["nsfw_cat_3", "nsfw_cat_4"],
+        ["nsfw_cat_3", "nsfw_cat_5"]
+      ],
+      "neutral_categories": ["nsfw_cat_1", "nsfw_cat_2"],
+      "severity_order": ["nsfw_cat_5", "nsfw_cat_4", "nsfw_cat_3", "nsfw_cat_2", "nsfw_cat_1"],
+      "model_kwargs": {
+        "architecture_module_name": "my_model_architecture_module",
+        "architecture_location": "path/to/my/model_architecture.py (optional)"
+      }
     }
   ],
   "text_embedding_search_presets_exclusive": false,

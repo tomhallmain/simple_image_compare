@@ -259,6 +259,17 @@ class ClassifierActionCopyWindow(SmartDialog):
             else:
                 new_item = ClassifierAction.from_dict(source_dict)
 
+        try:
+            new_item.validate()
+        except Exception as e:
+            qt_alert(
+                _("Invalid Copy Target"),
+                str(e),
+                kind="warning",
+                master=self,
+            )
+            return
+
         # Add and open modify window
         if target_class == ClassifierActionClass.PREVALIDATION:
             if new_item not in ClassifierActionsManager.prevalidations:

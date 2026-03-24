@@ -15,6 +15,9 @@ class ImageClassifierModelConfig:
     model_kwargs: dict[str, Any] = field(default_factory=dict)
     hf_repo_id: Optional[str] = None
     hf_selected_filename: Optional[str] = None
+    positive_groups: list[list[str]] = field(default_factory=list)
+    neutral_categories: list[str] = field(default_factory=list)
+    severity_order: list[str] = field(default_factory=list)
 
     REQUIRED_KEYS = {"model_name", "model_location", "model_categories"}
     WRAPPER_ALLOWED_KEYS = {
@@ -24,6 +27,9 @@ class ImageClassifierModelConfig:
         "use_hub_keras_layers",
         "backend",
         "model_kwargs",
+        "positive_groups",
+        "neutral_categories",
+        "severity_order",
     }
     AUXILIARY_KEYS = {"hf_repo_id", "hf_selected_filename"}
     KNOWN_KEYS = WRAPPER_ALLOWED_KEYS.union(AUXILIARY_KEYS)
@@ -72,6 +78,31 @@ class ImageClassifierModelConfig:
         if not isinstance(model_kwargs, dict):
             raise ValueError("model_kwargs must be a dict when provided")
 
+        positive_groups_raw = data.get("positive_groups", [])
+        if positive_groups_raw is None:
+            positive_groups_raw = []
+        if not isinstance(positive_groups_raw, list):
+            raise ValueError("positive_groups must be a list of category lists when provided")
+        positive_groups: list[list[str]] = []
+        for item in positive_groups_raw:
+            if not isinstance(item, list):
+                raise ValueError("positive_groups must be a list of lists of category names")
+            positive_groups.append([str(c).strip() for c in item if str(c).strip()])
+
+        neutral_categories_raw = data.get("neutral_categories", [])
+        if neutral_categories_raw is None:
+            neutral_categories_raw = []
+        if not isinstance(neutral_categories_raw, list):
+            raise ValueError("neutral_categories must be a list when provided")
+        neutral_categories = [str(c).strip() for c in neutral_categories_raw if str(c).strip()]
+
+        severity_order_raw = data.get("severity_order", [])
+        if severity_order_raw is None:
+            severity_order_raw = []
+        if not isinstance(severity_order_raw, list):
+            raise ValueError("severity_order must be a list when provided")
+        severity_order = [str(c).strip() for c in severity_order_raw if str(c).strip()]
+
         hf_repo_id_raw = str(data.get("hf_repo_id", "") or "").strip()
         hf_selected_filename_raw = str(data.get("hf_selected_filename", "") or "").strip()
 
@@ -84,6 +115,9 @@ class ImageClassifierModelConfig:
             model_kwargs=dict(model_kwargs),
             hf_repo_id=hf_repo_id_raw if hf_repo_id_raw else None,
             hf_selected_filename=hf_selected_filename_raw if hf_selected_filename_raw else None,
+            positive_groups=positive_groups,
+            neutral_categories=neutral_categories,
+            severity_order=severity_order,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -100,16 +134,10 @@ class ImageClassifierModelConfig:
             out["hf_repo_id"] = self.hf_repo_id
         if self.hf_selected_filename:
             out["hf_selected_filename"] = self.hf_selected_filename
+        if self.positive_groups:
+            out["positive_groups"] = [list(g) for g in self.positive_groups]
+        if self.neutral_categories:
+            out["neutral_categories"] = list(self.neutral_categories)
+        if self.severity_order:
+            out["severity_order"] = list(self.severity_order)
         return out
-
-    def to_wrapper_kwargs(self) -> dict[str, Any]:
-        kwargs = {
-            "model_name": self.model_name,
-            "model_location": self.model_location,
-            "model_categories": list(self.model_categories),
-            "use_hub_keras_layers": bool(self.use_hub_keras_layers),
-            "backend": self.backend,
-        }
-        if self.model_kwargs:
-            kwargs["model_kwargs"] = dict(self.model_kwargs)
-        return kwargs

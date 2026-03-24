@@ -68,7 +68,7 @@ class ImageClassifierManager:
         if model_name not in self.classifier_metadata:
             raise Exception(f"Failed to find image classifier with model name: \"{model_name}\"")
         model_config = self.classifier_metadata[model_name]
-        classifier = ImageClassifierWrapper(**model_config.to_wrapper_kwargs())
+        classifier = ImageClassifierWrapper(model_config)
         self.classifiers[model_name] = classifier
         return classifier
 

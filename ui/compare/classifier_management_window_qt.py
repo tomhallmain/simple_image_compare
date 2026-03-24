@@ -30,6 +30,7 @@ from PySide6.QtWidgets import (
 from compare.classifier_actions_manager import (
     ClassifierAction,
     ClassifierActionsManager,
+    ImageClassifierClassificationMode,
 )
 from image.image_classifier_manager import image_classifier_manager
 from lib.fast_directory_picker_qt import get_existing_directory
@@ -238,6 +239,19 @@ class ClassifierActionModifyWindow(SmartDialog):
         grid.addWidget(self._ic_cat_list, row, 1)
         row += 1
 
+        # -- Image classifier mode ----------------------------------------
+        self._ic_mode_lbl = self._lbl(_("Image Classifier Classification Mode"))
+        grid.addWidget(self._ic_mode_lbl, row, 0, Qt.AlignLeft)
+        self._ic_mode_combo = QComboBox()
+        self._ic_mode_combo.addItem(_("Selected categories (legacy)"), ImageClassifierClassificationMode.SELECTED_CATEGORIES.value)
+        self._ic_mode_combo.addItem(_("Model strategy"), ImageClassifierClassificationMode.MODEL_STRATEGY.value)
+        mode_value = ca.classification_mode.value if hasattr(ca, "classification_mode") else ImageClassifierClassificationMode.SELECTED_CATEGORIES.value
+        idx = self._ic_mode_combo.findData(mode_value)
+        self._ic_mode_combo.setCurrentIndex(idx if idx >= 0 else 0)
+        self._ic_mode_combo.currentIndexChanged.connect(self._update_ui_for_validation_types)
+        grid.addWidget(self._ic_mode_combo, row, 1)
+        row += 1
+
         # -- Prototype directory ------------------------------------------
         self._proto_dir_lbl = self._lbl(_("Prototype Directory"))
         grid.addWidget(self._proto_dir_lbl, row, 0, Qt.AlignLeft)
@@ -338,8 +352,12 @@ class ClassifierActionModifyWindow(SmartDialog):
         # Image classifier fields
         self._ic_name_lbl.setVisible(use_ic)
         self._ic_name_combo.setVisible(use_ic)
-        self._ic_cat_lbl.setVisible(use_ic)
-        self._ic_cat_list.setVisible(use_ic)
+        mode = ImageClassifierClassificationMode.from_value(self._ic_mode_combo.currentData())
+        uses_selected_categories = mode == ImageClassifierClassificationMode.SELECTED_CATEGORIES
+        self._ic_mode_lbl.setVisible(use_ic)
+        self._ic_mode_combo.setVisible(use_ic)
+        self._ic_cat_lbl.setVisible(use_ic and uses_selected_categories)
+        self._ic_cat_list.setVisible(use_ic and uses_selected_categories)
 
         # Prototype fields
         self._proto_dir_lbl.setVisible(use_proto)
@@ -466,6 +484,9 @@ class ClassifierActionModifyWindow(SmartDialog):
         ca.image_classifier_selected_categories = [
             item.text() for item in self._ic_cat_list.selectedItems()
         ]
+        ca.classification_mode = ImageClassifierClassificationMode.from_value(
+            self._ic_mode_combo.currentData()
+        )
 
         ca.prototype_directory = self._proto_dir_edit.text().strip()
         ca.negative_prototype_directory = self._neg_proto_dir_edit.text().strip()

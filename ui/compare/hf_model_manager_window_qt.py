@@ -100,6 +100,24 @@ class _InstalledModelEditDialog(SmartDialog):
         row3.addWidget(self._categories_edit, stretch=1)
         layout.addLayout(row3)
 
+        row3b = QHBoxLayout()
+        row3b.addWidget(QLabel(_("Positive groups")))
+        self._positive_groups_edit = QLineEdit(self._format_positive_groups(initial_model.get("positive_groups")))
+        self._positive_groups_edit.setPlaceholderText(_("group1_catA,group1_catB; group2_catA,group2_catB"))
+        row3b.addWidget(self._positive_groups_edit, stretch=1)
+        layout.addLayout(row3b)
+
+        row3c = QHBoxLayout()
+        row3c.addWidget(QLabel(_("Neutral categories")))
+        self._neutral_categories_edit = QLineEdit(",".join([str(c) for c in (initial_model.get("neutral_categories") or [])]))
+        self._neutral_categories_edit.setPlaceholderText(_("Optional, comma-separated"))
+        row3c.addWidget(self._neutral_categories_edit, stretch=1)
+        row3c.addWidget(QLabel(_("Severity order")))
+        self._severity_order_edit = QLineEdit(",".join([str(c) for c in (initial_model.get("severity_order") or [])]))
+        self._severity_order_edit.setPlaceholderText(_("Optional, comma-separated"))
+        row3c.addWidget(self._severity_order_edit, stretch=1)
+        layout.addLayout(row3c)
+
         row4 = QHBoxLayout()
         row4.addWidget(QLabel(_("HF repo id")))
         self._hf_repo_id_edit = QLineEdit(str(initial_model.get("hf_repo_id", "")))
@@ -201,6 +219,27 @@ class _InstalledModelEditDialog(SmartDialog):
         else:
             self._model_location_edit.setText(selected_file)
 
+    @staticmethod
+    def _format_positive_groups(groups: Any) -> str:
+        if not isinstance(groups, list):
+            return ""
+        out: list[str] = []
+        for group in groups:
+            if isinstance(group, list):
+                cats = [str(c).strip() for c in group if str(c).strip()]
+                if cats:
+                    out.append(",".join(cats))
+        return "; ".join(out)
+
+    @staticmethod
+    def _parse_positive_groups(text: str) -> list[list[str]]:
+        groups: list[list[str]] = []
+        for raw_group in (text or "").split(";"):
+            cats = [c.strip() for c in raw_group.split(",") if c.strip()]
+            if cats:
+                groups.append(cats)
+        return groups
+
     def _save(self) -> None:
         model_name = (self._model_name_edit.text() or "").strip()
         model_location = (self._model_location_edit.text() or "").strip()
@@ -214,6 +253,15 @@ class _InstalledModelEditDialog(SmartDialog):
             "model_categories": categories,
             "backend": backend,
         }
+        positive_groups = self._parse_positive_groups((self._positive_groups_edit.text() or "").strip())
+        neutral_categories = [c.strip() for c in (self._neutral_categories_edit.text() or "").split(",") if c.strip()]
+        severity_order = [c.strip() for c in (self._severity_order_edit.text() or "").split(",") if c.strip()]
+        if positive_groups:
+            model_details["positive_groups"] = positive_groups
+        if neutral_categories:
+            model_details["neutral_categories"] = neutral_categories
+        if severity_order:
+            model_details["severity_order"] = severity_order
         repo_id = (self._hf_repo_id_edit.text() or "").strip()
         selected_file = (self._repo_file_combo.currentText() or "").strip()
         if repo_id:
