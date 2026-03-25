@@ -1267,7 +1267,14 @@ class ClassifierActionsManager:
         ClassifierActionsManager._invalidate_after_prevalidation_policy_change()
     
     @staticmethod
-    def prevalidate_media(media_path, get_base_dir_func, hide_callback, notify_callback, add_mark_callback) -> Optional[ClassifierActionType]:
+    def prevalidate_media(
+        media_path,
+        get_base_dir_func,
+        hide_callback,
+        notify_callback,
+        add_mark_callback,
+        force: bool = False,
+    ) -> Optional[ClassifierActionType]:
         # Lazy initialization - ensure prevalidations are initialized before first use
         if not ClassifierActionsManager._prevalidations_initialized:
             ClassifierActionsManager._prevalidations_post_init()
@@ -1280,14 +1287,15 @@ class ClassifierActionsManager:
         if len(ClassifierActionsManager.directories_to_exclude) > 0 and base_dir in ClassifierActionsManager.directories_to_exclude:
             return None
 
-        if media_path in ClassifierActionsManager.prevalidated_cache:
-            return ClassifierActionsManager.prevalidated_cache[media_path]
-
         bucket = get_file_bucket_for_media(media_path)
-        ok_hit, cached_action = bucket.try_get((media_path,))
-        if ok_hit:
-            ClassifierActionsManager.prevalidated_cache[media_path] = cached_action
-            return cached_action
+        if not force:
+            if media_path in ClassifierActionsManager.prevalidated_cache:
+                return ClassifierActionsManager.prevalidated_cache[media_path]
+
+            ok_hit, cached_action = bucket.try_get((media_path,))
+            if ok_hit:
+                ClassifierActionsManager.prevalidated_cache[media_path] = cached_action
+                return cached_action
 
         prevalidation_action = None
         for prevalidation in ClassifierActionsManager.prevalidations:

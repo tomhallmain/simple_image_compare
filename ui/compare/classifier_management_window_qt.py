@@ -243,7 +243,7 @@ class ClassifierActionModifyWindow(SmartDialog):
         self._ic_mode_lbl = self._lbl(_("Image Classifier Classification Mode"))
         grid.addWidget(self._ic_mode_lbl, row, 0, Qt.AlignLeft)
         self._ic_mode_combo = QComboBox()
-        self._ic_mode_combo.addItem(_("Selected categories (legacy)"), ImageClassifierClassificationMode.SELECTED_CATEGORIES.value)
+        self._ic_mode_combo.addItem(_("Selected categories"), ImageClassifierClassificationMode.SELECTED_CATEGORIES.value)
         self._ic_mode_combo.addItem(_("Model strategy"), ImageClassifierClassificationMode.MODEL_STRATEGY.value)
         mode_value = ca.classification_mode.value if hasattr(ca, "classification_mode") else ImageClassifierClassificationMode.SELECTED_CATEGORIES.value
         idx = self._ic_mode_combo.findData(mode_value)

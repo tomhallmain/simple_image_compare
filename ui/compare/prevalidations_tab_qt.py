@@ -178,8 +178,25 @@ class PrevalidationsTab(QWidget):
 
     @staticmethod
     def clear_prevalidated_cache() -> None:
-        ClassifierActionsManager.clear_prevalidation_result_cache()
+        """
+        Clear in-memory prevalidation results for the current run.
+
+        Note: we intentionally do not bump the prevalidation policy epoch here.
+        Manual keybind runs can bypass stale results via the `force=` flag.
+        """
+        ClassifierActionsManager.prevalidated_cache.clear()
         ClassifierActionsManager.directories_to_exclude.clear()
+
+    @staticmethod
+    def remove_directory_from_exclusion_list(directory: str) -> bool:
+        if directory in ClassifierActionsManager.directories_to_exclude:
+            ClassifierActionsManager.directories_to_exclude.remove(directory)
+            return True
+        return False
+
+    @staticmethod
+    def add_directory_to_exclusion_list(directory: str):
+        ClassifierActionsManager.directories_to_exclude.append(directory)
 
     @staticmethod
     def prevalidate(
@@ -188,6 +205,7 @@ class PrevalidationsTab(QWidget):
         hide_callback,
         notify_callback,
         add_mark_callback,
+        force: bool = False,
     ):
         """Run prevalidations and return action type or None."""
         return ClassifierActionsManager.prevalidate_media(
@@ -196,6 +214,7 @@ class PrevalidationsTab(QWidget):
             hide_callback,
             notify_callback,
             add_mark_callback,
+            force=force,
         )
 
     # ------------------------------------------------------------------

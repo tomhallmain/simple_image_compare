@@ -368,9 +368,9 @@ class WindowLauncher:
                 return
 
         logger.warning("Running prevalidations for " + self._app.get_base_dir())
-        PrevalidationsTab.clear_prevalidated_cache()
         from PySide6.QtWidgets import QApplication
         from files.marked_files import MarkedFiles
+        directory_was_excluded = PrevalidationsTab.remove_directory_from_exclusion_list(self._app.get_base_dir())
         for media_path in fb.get_files():
             try:
                 PrevalidationsTab.prevalidate(
@@ -379,11 +379,14 @@ class WindowLauncher:
                     self._app.file_ops_ctrl.hide_current_media,
                     self._app.notification_ctrl.title_notify,
                     MarkedFiles.add_mark_if_not_present,
+                    force=False,  # TODO optionally allow force=True via different keybind
                 )
             except Exception as e:
                 logger.error(e)
             # Keep the UI responsive during long-running prevalidation
             QApplication.processEvents()
+        if directory_was_excluded:
+            PrevalidationsTab.add_directory_to_exclusion_list(self._app.get_base_dir())
 
     @require_password(ProtectedActions.RUN_PREVALIDATIONS)
     def toggle_prevalidations(self, event=None) -> None:
