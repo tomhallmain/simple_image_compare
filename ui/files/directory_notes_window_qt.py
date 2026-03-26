@@ -164,9 +164,17 @@ class DirectoryNotesWindow(SmartDialog):
     # ------------------------------------------------------------------
     def _add_marked_file_row(self, filepath: str) -> None:
         basename = os.path.basename(filepath)
+        display_name = self._compact_filename(basename)
+        row_text = basename
+        rel_dir_hint = self._relative_dir_hint(filepath)
+        if rel_dir_hint:
+            row_text = f"{display_name}\n[{rel_dir_hint}]"
+        else:
+            row_text = display_name
 
-        name_lbl = QLabel(f"{basename}\n{filepath}")
-        name_lbl.setWordWrap(True)
+        name_lbl = QLabel(row_text)
+        name_lbl.setWordWrap(False)
+        name_lbl.setToolTip(filepath)
         name_lbl.setTextInteractionFlags(
             Qt.TextInteractionFlag.TextSelectableByMouse
         )
@@ -198,15 +206,20 @@ class DirectoryNotesWindow(SmartDialog):
     # ------------------------------------------------------------------
     def _add_note_row(self, filepath: str, note: str) -> None:
         basename = os.path.basename(filepath)
+        display_name = self._compact_filename(basename)
         preview_text = note.replace("\n", " ").strip()
         if len(preview_text) > 220:
             preview_text = preview_text[:220] + " ..."
-        row_text = f"{basename}\n{filepath}"
+        row_text = display_name
+        rel_dir_hint = self._relative_dir_hint(filepath)
+        if rel_dir_hint:
+            row_text += f"\n[{rel_dir_hint}]"
         if preview_text:
             row_text += f"\n{preview_text}"
 
         name_lbl = QLabel(row_text)
         name_lbl.setWordWrap(True)
+        name_lbl.setToolTip(filepath)
         name_lbl.setTextInteractionFlags(
             Qt.TextInteractionFlag.TextSelectableByMouse
         )
@@ -317,13 +330,12 @@ class DirectoryNotesWindow(SmartDialog):
 
     def _open_file(self, filepath: str) -> None:
         basename = os.path.basename(filepath)
-        if hasattr(self._app_actions, "get_window"):
-            window = self._app_actions.get_window(base_dir=self._base_dir)
-            if window is not None:
-                window.go_to_file(search_text=basename, exact_match=True)
-                window.media_canvas.focus()
-                self._app_actions.toast(_("Opened file: {0}").format(basename))
-                return
+        if hasattr(self._app_actions, "go_to_file"):
+            self._app_actions.go_to_file(search_text=basename, exact_match=True)
+            if hasattr(self._app_actions, "refocus"):
+                self._app_actions.refocus()
+            self._app_actions.toast(_("Opened file: {0}").format(basename))
+            return
         if hasattr(self._app_actions, "new_window"):
             self._app_actions.new_window(base_dir=self._base_dir, image_path=filepath)
             self._app_actions.toast(
@@ -499,6 +511,32 @@ class DirectoryNotesWindow(SmartDialog):
         line.setStyleSheet(f"color: {AppStyle.FG_COLOR};")
         self._grid.addWidget(line, self._row, 0, 1, 3)
         self._row += 1
+
+    def _relative_dir_hint(self, filepath: str) -> str:
+        """
+        Return a compact relative directory hint for rows.
+        Empty string means "same directory as base dir" (no extra info).
+        """
+        try:
+            rel = os.path.relpath(os.path.dirname(filepath), self._base_dir)
+        except Exception:
+            return ""
+        if rel in (".", ""):
+            return ""
+        return rel
+
+    def _compact_filename(self, basename: str, max_len: int = 26) -> str:
+        """
+        Compact very long basenames while preserving extension visibility.
+        """
+        if len(basename) <= max_len:
+            return basename
+        stem, ext = os.path.splitext(basename)
+        if not ext:
+            return basename[: max_len - 3] + "..."
+        reserve = len(ext) + 3  # "...<ext>"
+        head_len = max(6, max_len - reserve)
+        return stem[:head_len] + "..." + ext
 
     def _clear_widgets(self) -> None:
         self._build_token += 1
