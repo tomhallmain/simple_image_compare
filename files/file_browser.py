@@ -776,6 +776,10 @@ class FileBrowser:
 
         Uses cached SortableFile instances, so time-based sorts can reuse
         existing stat-derived metadata.
+
+        The returned paths are exactly the browser's current file list: when
+        ``self.recursive`` is True, that list includes files in subfolders
+        (same scope as navigation); each path keeps its directory.
         """
         if len(self._files) == 0:
             return []

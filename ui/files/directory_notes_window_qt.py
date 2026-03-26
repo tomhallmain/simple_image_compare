@@ -34,7 +34,7 @@ class DirectoryNotesWindow(SmartDialog):
     with edit, export-to-file, and import-from-file capabilities.
     """
 
-    MAX_ROWS = 300
+    MAX_ROWS = 80
 
     def __init__(
         self,
@@ -54,6 +54,9 @@ class DirectoryNotesWindow(SmartDialog):
         self._app_actions = app_actions
         self._base_dir = base_dir
         self._build_token = 0
+        self._pending_marked_items: list[str] = []
+        self._marked_render_index = 0
+        self._marked_loading_label: Optional[QLabel] = None
         self._pending_note_items: list[tuple[str, str]] = []
         self._notes_render_index = 0
         self._notes_loading_label: Optional[QLabel] = None
@@ -119,8 +122,15 @@ class DirectoryNotesWindow(SmartDialog):
 
         marked_files = DirectoryNotes.get_marked_files(self._base_dir)
         if marked_files:
-            for filepath in marked_files:
-                self._add_marked_file_row(filepath)
+            self._pending_marked_items = [str(p) for p in marked_files]
+            self._pending_marked_items.sort(key=lambda p: p.lower())
+            self._marked_render_index = 0
+            self._marked_loading_label = self._add_text_label(
+                _("Loading marked files...")
+            )
+            QTimer.singleShot(
+                0, lambda token=build_token: self._render_marked_rows_batch(token)
+            )
         else:
             self._add_text_label(_("(No marked files)"))
 
@@ -155,28 +165,32 @@ class DirectoryNotesWindow(SmartDialog):
     def _add_marked_file_row(self, filepath: str) -> None:
         basename = os.path.basename(filepath)
 
-        name_lbl = QLabel(basename)
+        name_lbl = QLabel(f"{basename}\n{filepath}")
+        name_lbl.setWordWrap(True)
+        name_lbl.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+        )
         name_lbl.setStyleSheet(
-            f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_COLOR};"
+            f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_COLOR}; "
+            f"border: 1px solid {AppStyle.BORDER_COLOR}; padding: 4px;"
         )
         self._grid.addWidget(name_lbl, self._row, 0, Qt.AlignLeft | Qt.AlignTop)
 
-        rm_btn = QPushButton(_("Remove"))
-        rm_btn.clicked.connect(lambda _c=False, fp=filepath: self._remove_marked(fp))
-        self._grid.addWidget(rm_btn, self._row, 1)
+        action_box = QWidget()
+        action_row = QHBoxLayout(action_box)
+        action_row.setContentsMargins(0, 0, 0, 0)
+        action_row.setSpacing(4)
 
         open_btn = QPushButton(_("Open"))
         open_btn.clicked.connect(lambda _c=False, fp=filepath: self._open_file(fp))
-        self._grid.addWidget(open_btn, self._row, 2)
-        self._row += 1
+        action_row.addWidget(open_btn)
 
-        # Subdued path line
-        path_lbl = QLabel(filepath)
-        path_lbl.setStyleSheet(
-            f"color: gray; background: {AppStyle.BG_COLOR}; "
-            f"font-size: 9pt; padding-left: 20px;"
-        )
-        self._grid.addWidget(path_lbl, self._row, 0, 1, 3, Qt.AlignLeft)
+        rm_btn = QPushButton(_("Remove"))
+        rm_btn.clicked.connect(lambda _c=False, fp=filepath: self._remove_marked(fp))
+        action_row.addWidget(rm_btn)
+        action_row.addStretch()
+        self._grid.addWidget(action_box, self._row, 1, 1, 2, Qt.AlignLeft)
+
         self._row += 1
 
     # ------------------------------------------------------------------
@@ -184,52 +198,73 @@ class DirectoryNotesWindow(SmartDialog):
     # ------------------------------------------------------------------
     def _add_note_row(self, filepath: str, note: str) -> None:
         basename = os.path.basename(filepath)
+        preview_text = note.replace("\n", " ").strip()
+        if len(preview_text) > 220:
+            preview_text = preview_text[:220] + " ..."
+        row_text = f"{basename}\n{filepath}"
+        if preview_text:
+            row_text += f"\n{preview_text}"
 
-        name_lbl = QLabel(basename)
+        name_lbl = QLabel(row_text)
+        name_lbl.setWordWrap(True)
+        name_lbl.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+        )
         name_lbl.setStyleSheet(
-            f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_COLOR};"
+            f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_INPUT}; "
+            f"border: 1px solid {AppStyle.BORDER_COLOR}; padding: 4px;"
         )
         self._grid.addWidget(name_lbl, self._row, 0, Qt.AlignLeft | Qt.AlignTop)
+
+        action_box = QWidget()
+        action_row = QHBoxLayout(action_box)
+        action_row.setContentsMargins(0, 0, 0, 0)
+        action_row.setSpacing(4)
+
+        open_btn = QPushButton(_("Open"))
+        open_btn.clicked.connect(lambda _c=False, fp=filepath: self._open_file(fp))
+        action_row.addWidget(open_btn)
 
         edit_btn = QPushButton(_("Edit Note"))
         edit_btn.clicked.connect(
             lambda _c=False, fp=filepath, n=note: self._edit_note_dialog(fp, n)
         )
-        self._grid.addWidget(edit_btn, self._row, 1)
+        action_row.addWidget(edit_btn)
 
         rm_btn = QPushButton(_("Remove Note"))
         rm_btn.clicked.connect(lambda _c=False, fp=filepath: self._remove_note(fp))
-        self._grid.addWidget(rm_btn, self._row, 2)
+        action_row.addWidget(rm_btn)
+        action_row.addStretch()
+        self._grid.addWidget(action_box, self._row, 1, 1, 2, Qt.AlignLeft)
         self._row += 1
 
-        # Path line
-        path_lbl = QLabel(filepath)
-        path_lbl.setStyleSheet(
-            f"color: gray; background: {AppStyle.BG_COLOR}; "
-            f"font-size: 9pt; padding-left: 20px;"
-        )
-        self._grid.addWidget(path_lbl, self._row, 0, Qt.AlignLeft)
+    def _render_marked_rows_batch(self, token: int) -> None:
+        if token != self._build_token:
+            return
+        batch_size = self.MAX_ROWS
+        rendered = 0
+        while (
+            rendered < batch_size
+            and self._marked_render_index < len(self._pending_marked_items)
+        ):
+            filepath = self._pending_marked_items[self._marked_render_index]
+            self._add_marked_file_row(filepath)
+            self._marked_render_index += 1
+            rendered += 1
 
-        open_btn = QPushButton(_("Open"))
-        open_btn.clicked.connect(lambda _c=False, fp=filepath: self._open_file(fp))
-        self._grid.addWidget(open_btn, self._row, 1)
-        self._row += 1
+        if self._marked_loading_label is not None:
+            if self._marked_render_index < len(self._pending_marked_items):
+                self._marked_loading_label.setText(
+                    _("Loading marked files... {0}/{1}").format(
+                        self._marked_render_index, len(self._pending_marked_items)
+                    )
+                )
+            else:
+                self._marked_loading_label.hide()
+                self._marked_loading_label = None
 
-        # Read-only note preview (use QLabel for lower render overhead on
-        # directories with many notes).
-        preview_text = note if len(note) <= 600 else (note[:600] + " ...")
-        preview = QLabel(preview_text)
-        preview.setWordWrap(True)
-        preview.setMaximumHeight(70)
-        preview.setTextInteractionFlags(
-            Qt.TextInteractionFlag.TextSelectableByMouse
-        )
-        preview.setStyleSheet(
-            f"color: {AppStyle.FG_COLOR}; background: {AppStyle.BG_INPUT}; "
-            f"border: 1px solid {AppStyle.BORDER_COLOR}; padding: 2px;"
-        )
-        self._grid.addWidget(preview, self._row, 0, 1, 3)
-        self._row += 1
+        if self._marked_render_index < len(self._pending_marked_items):
+            QTimer.singleShot(0, lambda t=token: self._render_marked_rows_batch(t))
 
     def _render_note_rows_batch(self, token: int) -> None:
         """
@@ -467,6 +502,9 @@ class DirectoryNotesWindow(SmartDialog):
 
     def _clear_widgets(self) -> None:
         self._build_token += 1
+        self._pending_marked_items = []
+        self._marked_render_index = 0
+        self._marked_loading_label = None
         self._pending_note_items = []
         self._notes_render_index = 0
         self._notes_loading_label = None
