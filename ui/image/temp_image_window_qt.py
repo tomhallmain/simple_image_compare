@@ -14,13 +14,12 @@ import os
 import sys
 from typing import Optional
 
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QGuiApplication, QKeySequence, QPixmap, QShortcut
-from PySide6.QtWidgets import QLabel, QMenu, QSizePolicy, QVBoxLayout, QWidget
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QGuiApplication, QKeySequence, QShortcut
+from PySide6.QtWidgets import QMenu, QVBoxLayout, QWidget
 
-from image.frame_cache import FrameCache
 from lib.multi_display_qt import SmartWindow
-from ui.app_style import AppStyle
+from ui.app_window.media_frame import MediaFrame
 from ui.files.marked_file_mover_qt import MarkedFiles
 from utils.config import config
 from utils.translations import I18N
@@ -33,7 +32,6 @@ class TempImageWindow(SmartWindow):
     """Lightweight image viewer window.  Qt replacement for TempImageCanvas."""
 
     _instance: Optional[TempImageWindow] = None
-    _current_pixmap: Optional[QPixmap] = None
 
     def __init__(
         self,
@@ -57,23 +55,12 @@ class TempImageWindow(SmartWindow):
         self._app_actions = app_actions
         self._image_path: Optional[str] = None
 
-        # Debounce timer for smooth scaling after resize settles
-        self._smooth_timer = QTimer(self)
-        self._smooth_timer.setSingleShot(True)
-        self._smooth_timer.setInterval(120)
-        self._smooth_timer.timeout.connect(self._apply_smooth_scale)
-
         # -- layout --
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        self._image_label = QLabel()
-        self._image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self._image_label.setStyleSheet(f"background: {AppStyle.BG_COLOR};")
-        self._image_label.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
-        )
-        layout.addWidget(self._image_label)
-        self.setLayout(layout)
+        self._media_frame = MediaFrame(self)
+        self._media_frame.set_fill_canvas(False)
+        layout.addWidget(self._media_frame)
 
         self._bind_shortcuts()
 
@@ -116,9 +103,8 @@ class TempImageWindow(SmartWindow):
     def create_image(
         self, media_path: str, extra_text: str | None = None
     ) -> None:
-        self._image_path = FrameCache.get_image_path(media_path)
-        TempImageWindow._current_pixmap = QPixmap(self._image_path)
-        self._update_scaled_image()
+        self._image_path = media_path
+        self._media_frame.show_image(self._image_path)
         title = (
             media_path
             if extra_text is None
@@ -130,38 +116,11 @@ class TempImageWindow(SmartWindow):
         self.activateWindow()
 
     def clear_image(self) -> None:
-        self._image_label.clear()
+        self._media_frame.clear()
         self._image_path = None
-        TempImageWindow._current_pixmap = None
         self.setWindowTitle(
             _("Open a new related image with Shift+R on main window")
         )
-
-    def _update_scaled_image(self, smooth: bool = True) -> None:
-        pm = TempImageWindow._current_pixmap
-        if pm and not pm.isNull():
-            mode = (
-                Qt.TransformationMode.SmoothTransformation
-                if smooth
-                else Qt.TransformationMode.FastTransformation
-            )
-            scaled = pm.scaled(
-                self._image_label.size(),
-                Qt.AspectRatioMode.KeepAspectRatio,
-                mode,
-            )
-            self._image_label.setPixmap(scaled)
-
-    def _apply_smooth_scale(self) -> None:
-        """Called after resize events settle to apply high-quality scaling."""
-        self._update_scaled_image(smooth=True)
-
-    def resizeEvent(self, event) -> None:  # noqa: N802
-        super().resizeEvent(event)
-        # Fast scale for immediate feedback during resize
-        self._update_scaled_image(smooth=False)
-        # Schedule a smooth re-scale once resizing stops
-        self._smooth_timer.start()
 
     # -- guards ----------------------------------------------------
     def _require_image(self) -> bool:
@@ -271,3 +230,10 @@ class TempImageWindow(SmartWindow):
             self._copy_image_path,
         )
         menu.exec(event.globalPos())
+
+    def closeEvent(self, event) -> None:  # noqa: N802
+        try:
+            self._media_frame.release_media()
+        except Exception:
+            pass
+        super().closeEvent(event)
