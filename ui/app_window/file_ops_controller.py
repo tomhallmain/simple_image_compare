@@ -393,13 +393,22 @@ class FileOpsController:
         existing_jpg_count = 0
         existing_target_count = 0
         convert_candidates = []
+        image_files = []
         jpg_extensions = frozenset([".jpg", ".jpeg"])
+        convertible_image_extensions = frozenset([
+            ".png", ".bmp", ".gif", ".webp", ".tif", ".tiff", ".ico", ".svg",
+            ".jpg", ".jpeg",
+        ])
         def _target_jpg_path(filepath: str) -> str:
             source_ext = os.path.splitext(filepath)[1].lower()
             target_ext = ".jpeg" if source_ext == ".jpeg" else ".jpg"
             return os.path.splitext(filepath)[0] + target_ext
         for filepath in files:
             ext = os.path.splitext(filepath)[1].lower()
+            if ext not in convertible_image_extensions:
+                # Ignore non-image media by default for this action.
+                continue
+            image_files.append(filepath)
             if ext in jpg_extensions:
                 existing_jpg_count += 1
             else:
@@ -407,7 +416,7 @@ class FileOpsController:
                 if os.path.exists(_target_jpg_path(filepath)):
                     existing_target_count += 1
 
-        if len(convert_candidates) == 0 and existing_jpg_count == 0:
+        if len(image_files) == 0 and existing_jpg_count == 0:
             self._app.notification_ctrl.toast(_("No image files found to convert"))
             return
 
@@ -431,10 +440,7 @@ class FileOpsController:
         converted_count = 0
         failed_count = 0
         skipped_existing_count = 0
-        standard_image_extensions = frozenset([
-            ".png", ".bmp", ".gif", ".webp", ".tif", ".tiff", ".ico",
-        ])
-        process_candidates = files if overwrite_existing else convert_candidates
+        process_candidates = image_files if overwrite_existing else convert_candidates
         for filepath in process_candidates:
             try:
                 source_path = filepath
@@ -452,9 +458,8 @@ class FileOpsController:
                     skipped_existing_count += 1
                     continue
 
-                # Non-standard image-like media (video/pdf/svg/html, etc.) must
-                # convert from the cached frame while targeting a deterministic output path.
-                if ext not in standard_image_extensions:
+                # SVG conversion runs through FrameCache to rasterize first.
+                if ext == ".svg":
                     source_path = FrameCache.get_image_path(filepath)
                     source_ext = os.path.splitext(source_path)[1].lower()
                     if source_ext in jpg_extensions:
