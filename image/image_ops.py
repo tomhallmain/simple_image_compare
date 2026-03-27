@@ -16,6 +16,9 @@ from extensions.gimp.gimp_gegl_client import GimpGeglClient
 
 logger = get_logger("image_ops")
 
+from utils.pillow_plugins import ensure_pillow_plugins_registered
+ensure_pillow_plugins_registered()
+
 
 class ImageOps:
     COLORS = ["red", "green", "blue", "yellow", "purple", "orange", "black", "white", "gray", "pink", "brown"]

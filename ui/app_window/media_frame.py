@@ -35,6 +35,8 @@ logger = get_logger("media_frame_qt")
 # Optional: Pillow for formats Qt may not support (HEIC, AVIF, etc.)
 try:
     from PIL import Image
+    from utils.pillow_plugins import ensure_pillow_plugins_registered
+    ensure_pillow_plugins_registered()
     _PIL_AVAILABLE = True
 except ImportError:
     _PIL_AVAILABLE = False

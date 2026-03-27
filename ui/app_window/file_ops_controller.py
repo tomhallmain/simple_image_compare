@@ -15,6 +15,7 @@ from __future__ import annotations
 import os
 import shutil
 import sys
+import importlib
 from typing import TYPE_CHECKING, Optional
 
 from PySide6.QtCore import QTimer
@@ -395,10 +396,27 @@ class FileOpsController:
         convert_candidates = []
         image_files = []
         jpg_extensions = frozenset([".jpg", ".jpeg"])
-        convertible_image_extensions = frozenset([
-            ".png", ".bmp", ".gif", ".webp", ".tif", ".tiff", ".ico", ".svg",
-            ".jpg", ".jpeg",
-        ])
+        configured_image_extensions = frozenset(
+            e.lower() for e in getattr(config, "image_types", []) if isinstance(e, str)
+        )
+        # Include SVG explicitly for this conversion workflow, even if not in config.
+        convertible_image_extensions = configured_image_extensions | {".svg", ".gif"}
+
+        def _is_non_animated_gif(filepath: str) -> bool:
+            # GIF is usually dynamic media; only allow conversion when effectively single-frame.
+            try:
+                pil_image_mod = importlib.import_module("PIL.Image")
+                Image = getattr(pil_image_mod, "Image", None)
+                if Image is None:
+                    return False
+                with Image.open(filepath) as im:
+                    frame_count = int(getattr(im, "n_frames", 1) or 1)
+                    return frame_count <= 1
+            except Exception:
+                # Be conservative on decode/read failures: treat as animated and skip.
+                logger.debug("Skipping GIF conversion (unable to inspect frames): %s", filepath)
+                return False
+
         def _target_jpg_path(filepath: str) -> str:
             source_ext = os.path.splitext(filepath)[1].lower()
             target_ext = ".jpeg" if source_ext == ".jpeg" else ".jpg"
@@ -407,6 +425,8 @@ class FileOpsController:
             ext = os.path.splitext(filepath)[1].lower()
             if ext not in convertible_image_extensions:
                 # Ignore non-image media by default for this action.
+                continue
+            if ext == ".gif" and not _is_non_animated_gif(filepath):
                 continue
             image_files.append(filepath)
             if ext in jpg_extensions:
@@ -459,6 +479,8 @@ class FileOpsController:
                     continue
 
                 # SVG conversion runs through FrameCache to rasterize first.
+                # Animated GIFs are filtered out earlier; other configured image
+                # formats convert directly via ImageOps.
                 if ext == ".svg":
                     source_path = FrameCache.get_image_path(filepath)
                     source_ext = os.path.splitext(source_path)[1].lower()
