@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2026-02-28 20:35-0500\n"
-"PO-Revision-Date: 2026-02-28 20:35-0500\n"
+"POT-Creation-Date: 2026-03-27 20:48-0400\n"
+"PO-Revision-Date: 2026-03-27 20:48-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: zh Team <<EMAIL>>\n"
 "Language: zh\n"
@@ -17,24 +17,23 @@ msgstr ""
 msgid " Simple Image Compare "
 msgstr " 简单图像比较 "
 
-#: app.py:132 ui/app_window/window_manager.py:76
+#: ui/app_window/window_manager.py:76
 msgid "(Main Window)"
 msgstr "（主窗口）"
 
-#: app.py:195 ui/app_window/app_window.py:989
+#: ui/app_window/app_window.py:1099
 msgid "Theme switched to {0}."
 msgstr "主题切换到{0} 。"
 
-#: app.py:287 app.py:509 app.py:1074 compare/compare_wrapper.py:507
-#: ui/app_window/sidebar_panel.py:76
+#: compare/compare_wrapper.py:492 ui/app_window/sidebar_panel.py:77
 msgid "Set a directory to run comparison."
 msgstr "设置目录以运行比较 。"
 
-#: app.py:294 ui/app_window/sidebar_panel.py:84
+#: ui/app_window/sidebar_panel.py:86
 msgid "Toggle theme"
 msgstr "切换主题"
 
-#: app.py:295 ui/app_window/sidebar_panel.py:89
+#: ui/app_window/sidebar_panel.py:92
 msgid "Set directory"
 msgstr "设置目录"
 
@@ -42,33 +41,32 @@ msgstr "设置目录"
 msgid "Add dirpath..."
 msgstr "添加目录路径..."
 
-#: app.py:300 ui/app_window/sidebar_panel.py:98
+#: ui/app_window/sidebar_panel.py:110
 msgid "Filter files by glob pattern"
 msgstr "用 glob 模式筛选文件"
 
-#: app.py:307 ui/app_window/sidebar_panel.py:104
+#: ui/app_window/sidebar_panel.py:116
 msgid "Browsing mode - Sort by"
 msgstr "浏览模式 - 排序"
 
-#: app.py:314 ui/app_window/sidebar_panel.py:113
+#: ui/app_window/sidebar_panel.py:125
 msgid "Recurse subdirectories"
 msgstr "递归子目录"
 
-#: app.py:319 ui/app_window/sidebar_panel.py:118
+#: ui/app_window/sidebar_panel.py:130
 msgid "Image resize to full window"
 msgstr "图像大小调整到全窗口"
 
-#: app.py:323 ui/app_window/sidebar_panel.py:123
+#: ui/app_window/sidebar_panel.py:135
 #: ui/compare/compare_settings_window_qt.py:249
-#: ui_tk/compare/compare_settings_window.py:277
 msgid "Search only return closest"
 msgstr "仅最接近返回"
 
-#: app.py:328 ui/app_window/sidebar_panel.py:132
+#: ui/app_window/sidebar_panel.py:146
 msgid "Set search file"
 msgstr "设定搜索文件"
 
-#: app.py:332 ui/app_window/sidebar_panel.py:136
+#: ui/app_window/sidebar_panel.py:150
 msgid ""
 "Set an image file to search for similar images.\n"
 "Uses embedding similarity to find visually similar images."
@@ -76,11 +74,11 @@ msgstr ""
 "设置图像文件以搜索相似图像。\n"
 "使用嵌入相似性来查找视觉上相似的图像。"
 
-#: app.py:341 ui/app_window/sidebar_panel.py:149
+#: ui/app_window/sidebar_panel.py:175
 msgid "Search text (embedding mode)"
 msgstr "搜索文本 (嵌入模式)"
 
-#: app.py:345 ui/app_window/sidebar_panel.py:154
+#: ui/app_window/sidebar_panel.py:180
 msgid ""
 "Positive text: Find images similar to this text.\n"
 "Negative text: Exclude images similar to this text.\n"
@@ -90,50 +88,44 @@ msgstr ""
 "负向文本：排除与该文本相似的图像。\n"
 "两者均采用嵌入式相似度匹配。"
 
-#: app.py:349 ui/app_window/sidebar_panel.py:160
+#: ui/app_window/sidebar_panel.py:186
 msgid "Positive text:"
 msgstr "积极文本："
 
-#: app.py:357 ui/app_window/sidebar_panel.py:168
+#: ui/app_window/sidebar_panel.py:194
 msgid "Negative text:"
 msgstr "负面文本："
 
-#: app.py:365 ui/app_window/sidebar_panel.py:177
+#: ui/app_window/sidebar_panel.py:204
 #: ui/compare/classifier_actions_tab_qt.py:96
-#: ui/compare/classifier_management_window_qt.py:534
-#: ui_tk/compare/classifier_actions_tab.py:103
-#: ui_tk/compare/classifier_management_window.py:619
+#: ui/compare/classifier_management_window_qt.py:557
 msgid "Classifier Actions"
 msgstr "分类器操作"
 
-#: app.py:369 ui/app_window/sidebar_panel.py:181
+#: ui/app_window/sidebar_panel.py:212
 #: ui/compare/compare_settings_window_qt.py:88
 #: ui/compare/compare_settings_window_qt.py:115
 #: ui/compare/compare_settings_window_qt.py:184
-#: ui_tk/compare/compare_settings_window.py:38
-#: ui_tk/compare/compare_settings_window.py:53
-#: ui_tk/compare/compare_settings_window.py:161
 msgid "Compare Settings"
 msgstr "比较设置"
 
-#: app.py:375 ui/app_window/sidebar_panel.py:195
+#: ui/app_window/sidebar_panel.py:228
 msgid "Run image compare"
 msgstr "运行图像对比"
 
-#: app.py:377 ui/app_window/sidebar_panel.py:199
+#: ui/app_window/sidebar_panel.py:232
 msgid "Find duplicates"
 msgstr "查找复制件"
 
-#: app.py:379 ui/app_window/sidebar_panel.py:203
-#: ui/image/image_details_qt.py:127 ui_tk/image/image_details.py:75
+#: ui/app_window/sidebar_panel.py:236 ui/image/image_details_qt.py:129
 msgid "Image details"
 msgstr "图片详情"
 
-#: app.py:391 ui/app_window/sidebar_panel.py:209
+#: ui/app_window/sidebar_panel.py:242
 msgid "Search current image"
 msgstr "搜索当前图像"
 
-#: app.py:395 ui/app_window/sidebar_panel.py:214
+#: ui/app_window/sidebar_panel.py:247
 msgid ""
 "Search for images similar to the currently displayed image.\n"
 "Uses embedding similarity matching."
@@ -141,413 +133,399 @@ msgstr ""
 "搜索与当前显示图像相似的图片。\n"
 "采用嵌入式相似度匹配技术。"
 
-#: app.py:396 ui/app_window/sidebar_panel.py:220 ui/help_and_config_qt.py:121
-#: utils/help_and_config.py:87
+#: ui/app_window/sidebar_panel.py:255 ui/help_and_config_qt.py:121
 msgid "Open media location"
 msgstr "打开媒体位置"
 
-#: app.py:397 ui/app_window/sidebar_panel.py:224
+#: ui/app_window/sidebar_panel.py:259
 msgid "Copy image path"
 msgstr "复制图像路径"
 
-#: app.py:398 ui/app_window/sidebar_panel.py:228
+#: ui/app_window/sidebar_panel.py:263
 msgid "Copy media basename"
 msgstr "复制文件的基名"
 
-#: app.py:399 ui/app_window/sidebar_panel.py:232
+#: ui/app_window/sidebar_panel.py:267
 msgid "---- DELETE ----"
 msgstr "---- 删除 ----"
 
-#: app.py:568 ui/app_window/app_window.py:1095
+#: ui/app_window/app_window.py:1203
 msgid "Confirm Quit"
 msgstr "确认退出"
 
-#: app.py:568 ui/app_window/app_window.py:1095
+#: ui/app_window/app_window.py:1203
 msgid "Would you like to quit the application?"
 msgstr "您想要退出申请吗 ?"
 
-#: app.py:692 ui/app_window/sidebar_panel.py:373
+#: ui/app_window/sidebar_panel.py:415
 msgid "Ended slideshows"
 msgstr "结束幻灯片放映"
 
-#: app.py:745 app.py:2192 app.py:2199 app.py:2203 app.py:2207 app.py:2213
-#: app.py:2320 app.py:2336 app.py:2353 ui/app_window/app_window.py:852
-#: ui/app_window/file_ops_controller.py:210
-#: ui/app_window/file_ops_controller.py:216
-#: ui/app_window/file_ops_controller.py:220
-#: ui/app_window/file_ops_controller.py:227
-#: ui/app_window/file_ops_controller.py:235
-#: ui/app_window/search_controller.py:541
-#: ui/app_window/search_controller.py:581
-#: ui/app_window/search_controller.py:643
+#: ui/app_window/app_window.py:954 ui/app_window/file_ops_controller.py:213
+#: ui/app_window/file_ops_controller.py:219
+#: ui/app_window/file_ops_controller.py:223
+#: ui/app_window/file_ops_controller.py:230
+#: ui/app_window/file_ops_controller.py:238
+#: ui/app_window/search_controller.py:578
+#: ui/app_window/search_controller.py:621
+#: ui/app_window/search_controller.py:683
 msgid "Warning"
 msgstr "警告"
 
-#: app.py:745 ui/app_window/app_window.py:852
+#: ui/app_window/app_window.py:954
 msgid "No files found in directory after refresh."
 msgstr "刷新后在目录中未发现文件。"
 
-#: app.py:797 ui/app_window/media_navigator.py:432
+#: ui/app_window/media_navigator.py:477
 msgid "Slideshow for new images started"
 msgstr "开始播放新图像的幻灯片"
 
-#: app.py:799 ui/app_window/media_navigator.py:434
+#: ui/app_window/media_navigator.py:480
 msgid "Slideshow started"
 msgstr "幻灯片播放开始"
 
-#: app.py:802 ui/app_window/media_navigator.py:441
+#: ui/app_window/media_navigator.py:484
 msgid "Slideshows ended"
 msgstr "幻灯片放映结束"
 
-#: app.py:815 ui/app_window/app_window.py:770
+#: ui/app_window/app_window.py:851
 msgid "Browsing mode set."
 msgstr "浏览模式设置 。"
 
-#: app.py:860 ui/app_window/context_menu_builder.py:64 utils/constants.py:434
+#: ui/app_window/context_menu_builder.py:62 utils/constants.py:544
 msgid "View Media Details"
 msgstr "查看媒体详情"
 
-#: app.py:861 ui/app_window/context_menu_builder.py:69
+#: ui/app_window/context_menu_builder.py:67
 msgid "Hide Media"
 msgstr "隐藏媒体"
 
-#: app.py:862 ui/app_window/context_menu_builder.py:78
+#: ui/app_window/context_menu_builder.py:76
 msgid "Remove from Marks"
 msgstr "从标记中移除"
 
-#: app.py:862 ui/app_window/context_menu_builder.py:78
+#: ui/app_window/context_menu_builder.py:76
 msgid "Add to Marks"
 msgstr "添加到标记"
 
-#: app.py:864 ui/app_window/context_menu_builder.py:92
+#: ui/app_window/context_menu_builder.py:90
 msgid "Remove from Favorites"
 msgstr "从收藏夹中移除"
 
-#: app.py:864 ui/app_window/context_menu_builder.py:92
+#: ui/app_window/context_menu_builder.py:90
 msgid "Add to Favorites"
 msgstr "添加到收藏夹"
 
-#: app.py:867 ui/app_window/context_menu_builder.py:105
+#: ui/app_window/context_menu_builder.py:103
 msgid "Remove from Directory Notes"
 msgstr "从目录注释中删除"
 
-#: app.py:867 ui/app_window/context_menu_builder.py:105
+#: ui/app_window/context_menu_builder.py:103
 msgid "Add to Directory Notes"
 msgstr "添加到目录的注释中"
 
-#: app.py:869 ui/app_window/context_menu_builder.py:109
+#: ui/app_window/context_menu_builder.py:107
 msgid "Edit File Note"
 msgstr "编辑文件注释"
 
-#: app.py:871 ui/app_window/context_menu_builder.py:119
+#: ui/app_window/context_menu_builder.py:117
 msgid "Open in GIMP"
 msgstr "在GIMP中打开"
 
-#: app.py:872 ui/app_window/context_menu_builder.py:123
-#: ui/help_and_config_qt.py:156 ui/image/image_details_qt.py:352
-#: ui/image/temp_image_window_qt.py:263 ui_tk/image/image_details.py:213
-#: ui_tk/image/temp_image_canvas.py:195 utils/constants.py:440
-#: utils/help_and_config.py:138
+#: ui/app_window/context_menu_builder.py:121 ui/help_and_config_qt.py:156
+#: ui/image/image_details_qt.py:370 ui/image/temp_image_window_qt.py:222
+#: utils/constants.py:550
 msgid "Run Image Generation"
 msgstr "运行图像生成"
 
-#: app.py:873 ui/app_window/context_menu_builder.py:127
+#: ui/app_window/context_menu_builder.py:125
 msgid "Run Image Generation on Directory"
 msgstr "在目录上运行图像生成"
 
-#: app.py:874 ui/app_window/context_menu_builder.py:135
+#: ui/app_window/context_menu_builder.py:133
 msgid "Show Source Image"
 msgstr "显示源图像"
 
-#: app.py:875 ui/app_window/context_menu_builder.py:139
+#: ui/app_window/context_menu_builder.py:137
 msgid "Find Related Images"
 msgstr "查找相关图片"
 
-#: app.py:876 ui/app_window/context_menu_builder.py:143
+#: ui/app_window/context_menu_builder.py:141
 msgid "Set Marks from Downstream Related Images"
 msgstr "从下游相关图像中设置标记"
 
-#: app.py:878 ui/app_window/context_menu_builder.py:153
+#: ui/app_window/context_menu_builder.py:151
 msgid "Set Current Image as Search Image"
 msgstr "将当前图像设置为搜索图像"
 
-#: app.py:879 ui/app_window/context_menu_builder.py:157
+#: ui/app_window/context_menu_builder.py:155
 msgid "Add Current Image to Negative Search"
 msgstr "将当前图像添加到负片搜索中"
 
-#: app.py:880 ui/app_window/context_menu_builder.py:182
+#: ui/app_window/context_menu_builder.py:188
 msgid "Run Refacdir"
 msgstr "运行 RefacDir"
 
-#: app.py:898 ui/app_window/window_launcher.py:255
+#: ui/app_window/window_launcher.py:265
 msgid "(Open this image as part of a directory to see index details.)"
 msgstr "(将此图片作为目录的一部分打开，可查看索引详情）。"
 
-#: app.py:935 app.py:1681 ui/app_window/app_window.py:786
-#: ui/app_window/window_launcher.py:347
+#: ui/app_window/app_window.py:867 ui/app_window/window_launcher.py:361
 msgid "Many Files"
 msgstr "许多文件"
 
-#: app.py:963 ui/app_window/app_window.py:731
+#: ui/app_window/app_window.py:799
 msgid ""
 "A directory with a large number of files or a directory with a fair-sized "
 "number of files on external storage was detected, which may result in a slow"
 " load time. Please confirm you want to load the full directory."
 msgstr "检测到外部存储设备中存在包含大量文件的目录或包含一定数量文件的目录，这可能导致加载速度变慢。请确认您是否要加载整个目录。"
 
-#: app.py:964 ui/app_window/app_window.py:730
+#: ui/app_window/app_window.py:798
 msgid "Large Directory Detected: {0}"
 msgstr "检测到大型目录：{0}"
 
-#: app.py:994 ui/app_window/search_controller.py:629
+#: ui/app_window/search_controller.py:669
 msgid "No downstream related image(s) found in {0}"
 msgstr "在 {0} 中未发现与下游相关的图像"
 
-#: app.py:1016 ui/app_window/file_marks_controller.py:371
+#: ui/app_window/file_marks_controller.py:371
 msgid "{0} file marks set"
 msgstr "{0} 文件标记设定"
 
-#: app.py:1022 ui/help_and_config_qt.py:40
+#: ui/help_and_config_qt.py:40
 msgid "Help and Config"
 msgstr "帮助和配置"
 
-#: app.py:1134 ui/files/recent_directory_window_qt.py:108
+#: ui/files/recent_directory_window_qt.py:109
 msgid "Set Image Comparison Directory"
 msgstr "设置图像比较目录"
 
-#: app.py:1188 ui/app_window/search_controller.py:139
+#: ui/app_window/search_controller.py:139
+#: ui/app_window/search_controller.py:169
 msgid "No image selected."
 msgstr "未选择图像 。"
 
-#: app.py:1188 ui/app_window/search_controller.py:139
+#: ui/app_window/search_controller.py:139
+#: ui/app_window/search_controller.py:169
 msgid "Invalid Setting"
 msgstr "无效设置"
 
-#: app.py:1227 ui/app_window/search_controller.py:187
+#: ui/app_window/search_controller.py:203
 msgid ""
 "Compare mode must be set to an embedding mode to search text embeddings"
 msgstr "比较模式必须设置为嵌入模式，才能搜索文本嵌入内容"
 
-#: app.py:1232 ui/app_window/search_controller.py:193
+#: ui/app_window/search_controller.py:209
 msgid "Select image file"
 msgstr "选择图像文件"
 
-#: app.py:1261 ui/app_window/media_navigator.py:395
+#: ui/app_window/media_navigator.py:442
 msgid "Somehow, the search file is invalid"
 msgstr "不知何故, 搜索文件无效"
 
-#: app.py:1347 app.py:1372 ui/app_window/search_controller.py:409
-#: ui/app_window/search_controller.py:448
+#: ui/app_window/search_controller.py:443
+#: ui/app_window/search_controller.py:482
 msgid "Failed to get active image filepath"
 msgstr "获取活动图像文件路径失败"
 
-#: app.py:1457 ui/app_window/search_controller.py:275
+#: ui/app_window/search_controller.py:291
 msgid "{0}: {1}% complete"
 msgstr "{0} : {1} 完成"
 
-#: app.py:1463 ui/app_window/search_controller.py:314
+#: ui/app_window/search_controller.py:330
 msgid "Confirm comparison"
 msgstr "确认比较"
 
-#: app.py:1464 ui/app_window/search_controller.py:315
+#: ui/app_window/search_controller.py:331
 msgid "No base directory has been set, will use current base directory of "
 msgstr "未设置基本目录，将使用当前基本目录： "
 
-#: app.py:1465 ui/app_window/search_controller.py:316
+#: ui/app_window/search_controller.py:332
 msgid "Are you sure you want to proceed?"
 msgstr "你确定要继续吗?"
 
-#: app.py:1492 ui/app_window/search_controller.py:267
+#: ui/app_window/search_controller.py:283
 msgid "Error running compare"
 msgstr "运行比较出错"
 
-#: app.py:1527 ui/app_window/file_marks_controller.py:70
+#: ui/app_window/file_marks_controller.py:70
 msgid "DELETE_LOCK_MARK_STOP"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡时无法添加标记"
 
-#: app.py:1538 ui/app_window/file_marks_controller.py:84
+#: ui/app_window/file_marks_controller.py:84
 msgid "Mark removed. Remaining: {0}"
 msgstr "标记已去除。剩余 {0}"
 
-#: app.py:1542 ui/app_window/file_marks_controller.py:90
+#: ui/app_window/file_marks_controller.py:90
 msgid "Mark added. Total set: {0}"
 msgstr "马克补充道。全套 {0}"
 
-#: app.py:1559 ui/app_window/file_marks_controller.py:127
+#: ui/app_window/file_marks_controller.py:127
 msgid "Marks added. Total set: {0}"
 msgstr "标记已添加。总分 {0}"
 
-#: app.py:1568 ui/app_window/file_marks_controller.py:147
+#: ui/app_window/file_marks_controller.py:147
 msgid "First sorted mark"
 msgstr "第一个排序标记"
 
-#: app.py:1575 ui/app_window/file_marks_controller.py:155
+#: ui/app_window/file_marks_controller.py:155
 msgid "Only one marked file set."
 msgstr "只有一个标记的文件集 。"
 
-#: app.py:1588 ui/app_window/file_marks_controller.py:192
+#: ui/app_window/file_marks_controller.py:192
 msgid "Invalid file path"
 msgstr "无效的文件路径"
 
-#: app.py:1588 ui/app_window/file_marks_controller.py:193
+#: ui/app_window/file_marks_controller.py:193
 msgid "The file path {0} is invalid."
 msgstr "文件路径 {0} 无效。"
 
-#: app.py:1594 ui/app_window/file_marks_controller.py:202
+#: ui/app_window/file_marks_controller.py:202
 msgid "Including marks: {0}"
 msgstr "包括标记：{0}"
 
-#: app.py:1636 ui/app_window/file_marks_controller.py:308
+#: ui/app_window/file_marks_controller.py:308
 msgid "NO_MARKS_SET"
 msgstr ""
 "已设置 {0} 标记(预计 >={1})。\n"
 "使用 Shift+M 设置标记。"
 
-#: app.py:1681 ui/app_window/window_launcher.py:348
+#: ui/app_window/window_launcher.py:362
 msgid ""
 "Are you sure you want to run all prevalidations on directory {0} ? This may "
 "take a while."
 msgstr "您确定要在目录{0}上运行所有预验证吗？这可能需要一些时间。"
 
-#: app.py:1696 ui/app_window/window_launcher.py:380
+#: ui/app_window/window_launcher.py:397
 msgid "Prevalidations now running"
 msgstr "前缀正在运行"
 
-#: app.py:1696 ui/app_window/window_launcher.py:381
+#: ui/app_window/window_launcher.py:398
 msgid "Prevalidations turned off"
 msgstr "关闭前缀"
 
-#: app.py:1700 ui/app_window/window_launcher.py:389
+#: ui/app_window/window_launcher.py:408
 msgid "Extra debug logging enabled"
 msgstr "启用额外调试日志记录"
 
-#: app.py:1700 ui/app_window/window_launcher.py:390
+#: ui/app_window/window_launcher.py:409
 msgid "Extra debug logging disabled"
 msgstr "已禁用额外调试日志记录"
 
-#: app.py:1721 ui/app_window/window_launcher.py:124
+#: ui/app_window/window_launcher.py:124
 msgid "Please set a base directory first"
 msgstr "请先设置一个基础目录"
 
-#: app.py:1750 ui/app_window/window_launcher.py:408
+#: ui/app_window/window_launcher.py:427
 msgid "Removed from directory notes: {0}"
 msgstr "从目录注释中移除：{0}"
 
-#: app.py:1753 ui/app_window/window_launcher.py:413
+#: ui/app_window/window_launcher.py:432
 msgid "Added to directory notes: {0}"
 msgstr "添加到目录的注释中：{0}"
 
-#: app.py:1776 ui/app_window/window_launcher.py:441
-#: ui/files/directory_notes_window_qt.py:248
-#: ui_tk/files/directory_notes_window.py:242
+#: ui/app_window/window_launcher.py:460
+#: ui/files/directory_notes_window_qt.py:351
 msgid "Edit Note - {0}"
 msgstr "编辑注释 - {0}"
 
-#: app.py:1800 ui/app_window/window_launcher.py:465
-#: ui/files/directory_notes_window_qt.py:278
-#: ui_tk/files/directory_notes_window.py:266
+#: ui/app_window/window_launcher.py:484
+#: ui/files/directory_notes_window_qt.py:381
 msgid "Note saved for: {0}"
 msgstr "笔记已保存至：{0}"
 
-#: app.py:1813 ui/app_window/window_launcher.py:454
-#: ui/files/directory_notes_window_qt.py:271
-#: ui_tk/files/directory_notes_window.py:273
+#: ui/app_window/window_launcher.py:473
+#: ui/compare/hf_model_manager_window_qt.py:166
+#: ui/files/directory_notes_window_qt.py:374
 msgid "Save"
 msgstr "保存"
 
-#: app.py:1816 lib/custom_dialogs.py:75 lib/custom_dialogs_qt.py:122
-#: lib/qt_alert.py:28 ui/app_window/window_launcher.py:455
+#: lib/custom_dialogs_qt.py:122 lib/fast_directory_picker_qt.py:330
+#: lib/qt_alert.py:28 ui/app_window/window_launcher.py:474
 #: ui/auth/app_startup_auth_qt.py:76 ui/auth/password_admin_window.py:83
 #: ui/auth/password_dialog.py:197 ui/auth/password_dialog.py:267
 #: ui/auth/password_dialog.py:288
 #: ui/compare/classifier_action_copy_window_qt.py:174
 #: ui/compare/compare_settings_window_qt.py:295
-#: ui/files/directory_notes_window_qt.py:272
-#: ui/files/pdf_options_window_qt.py:113
-#: ui/files/type_configuration_window_qt.py:221
-#: ui_tk/auth/app_startup_auth.py:127 ui_tk/auth/password_admin_window.py:461
-#: ui_tk/auth/password_dialog.py:152 ui_tk/auth/password_dialog.py:221
-#: ui_tk/auth/password_dialog.py:238
-#: ui_tk/compare/classifier_action_copy_window.py:158
-#: ui_tk/compare/compare_settings_window.py:373
-#: ui_tk/files/directory_notes_window.py:276
-#: ui_tk/files/pdf_options_window.py:77
-#: ui_tk/files/target_directory_window.py:152
-#: ui_tk/files/type_configuration_window.py:183 utils/constants.py:227
+#: ui/compare/hf_model_manager_window_qt.py:163
+#: ui/files/directory_notes_window_qt.py:375
+#: ui/files/pdf_options_window_qt.py:133
+#: ui/files/type_configuration_window_qt.py:221 utils/constants.py:337
 msgid "Cancel"
 msgstr "取消"
 
-#: app.py:1930 ui/app_window/media_navigator.py:303
+#: ui/app_window/media_navigator.py:349
 msgid "File not found"
 msgstr "未找到文件"
 
-#: app.py:1930 ui/app_window/media_navigator.py:304
+#: ui/app_window/media_navigator.py:350
 msgid "No file was found for the search text: \"{0}\""
 msgstr "没有找到搜索文本的文件 \"{0}”"
 
-#: app.py:1939 ui/app_window/media_navigator.py:316
+#: ui/app_window/media_navigator.py:362
 msgid "Index navigation not available"
 msgstr "索引导航不可用"
 
-#: app.py:1939 ui/app_window/media_navigator.py:317
+#: ui/app_window/media_navigator.py:363
 msgid "Index navigation is only available in BROWSE mode."
 msgstr "索引导航仅在浏览模式下可用。"
 
-#: app.py:1950 ui/app_window/media_navigator.py:328
+#: ui/app_window/media_navigator.py:375
 msgid "Invalid index"
 msgstr "无效索引"
 
-#: app.py:1966 ui/app_window/window_launcher.py:330
+#: ui/app_window/window_launcher.py:344
 msgid "No image selected"
 msgstr "未选择图像"
 
-#: app.py:1966 ui/app_window/window_launcher.py:331
+#: ui/app_window/window_launcher.py:345
 msgid "No image was selected for comparison"
 msgstr "没有选择图像进行比较"
 
-#: app.py:1980 ui/app_window/search_controller.py:471
+#: ui/app_window/search_controller.py:507
 msgid "No Text Search Presets Found"
 msgstr "未找到文本搜索预设"
 
-#: app.py:1981 ui/app_window/search_controller.py:472
+#: ui/app_window/search_controller.py:508
 msgid ""
 "No text embedding search presets found. Set them in the config.json file."
 msgstr "未找到文本嵌入搜索预设。请在 config.json 文件中进行设置。"
 
-#: app.py:2078 ui/app_window/file_ops_controller.py:430
+#: ui/app_window/file_ops_controller.py:670
 msgid "Opening media file: {0}"
 msgstr "打开媒体文件：{0}"
 
-#: app.py:2081 ui/app_window/file_ops_controller.py:434
+#: ui/app_window/file_ops_controller.py:674
 msgid "Failed to open current media file, unable to get valid filepath"
 msgstr "无法打开当前媒体文件，无法获取有效的文件路径。"
 
-#: app.py:2086 ui/app_window/file_ops_controller.py:446
+#: ui/app_window/file_ops_controller.py:686
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
 msgstr "GIMP 集成未配置。请在 config.json 中设置 ‘gimp_exe_loc’。"
 
-#: app.py:2086 ui/app_window/file_ops_controller.py:447
+#: ui/app_window/file_ops_controller.py:687
 msgid "GIMP Integration Error"
 msgstr "GIMP 集成错误"
 
-#: app.py:2098 ui/app_window/file_ops_controller.py:468
+#: ui/app_window/file_ops_controller.py:708
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr "在 GIMP 中打开当前文件失败，无法获取有效的文件路径"
 
-#: app.py:2109 ui/app_window/file_ops_controller.py:349
-#: ui/image/temp_image_window_qt.py:222 ui_tk/image/temp_image_canvas.py:167
+#: ui/app_window/file_ops_controller.py:352
+#: ui/image/temp_image_window_qt.py:181
 msgid "Copied filepath to clipboard"
 msgstr "已将文件路径复制到剪贴板"
 
-#: app.py:2117 ui/app_window/file_ops_controller.py:364
+#: ui/app_window/file_ops_controller.py:367
 msgid "Copied filename to clipboard"
 msgstr "文件名已复制到剪贴板"
 
-#: app.py:2124 ui/app_window/file_ops_controller.py:322
+#: ui/app_window/file_ops_controller.py:325
 msgid ""
 "Hid current image.\n"
 "To unhide, press Shift+B."
@@ -555,411 +533,405 @@ msgstr ""
 "隐藏当前图像。\n"
 "要取消隐藏，请按 Shift+B。"
 
-#: app.py:2129 ui/app_window/file_ops_controller.py:328
+#: ui/app_window/file_ops_controller.py:331
 msgid "Cleared all hidden images."
 msgstr "清除所有隐藏图像"
 
-#: app.py:2137 ui/app_window/file_ops_controller.py:115
+#: ui/app_window/file_ops_controller.py:118
 msgid "DELETE_LOCK"
 msgstr ""
 "幻灯片放映后删除锁定\n"
 "过渡阻止删除"
 
-#: app.py:2155 ui/app_window/file_ops_controller.py:138
+#: ui/app_window/file_ops_controller.py:141
 msgid "Invalid action, no files found to delete"
 msgstr "无效操作，未找到要删除的文件"
 
-#: app.py:2158 ui/app_window/file_ops_controller.py:144
+#: ui/app_window/file_ops_controller.py:147
 msgid "Invalid action, search image not found"
 msgstr "无效操作，未找到搜索图像"
 
-#: app.py:2173 ui/app_window/file_ops_controller.py:165
+#: ui/app_window/file_ops_controller.py:168
 msgid "Failed to delete current file, unable to get valid filepath"
 msgstr "删除当前文件失败，无法获取有效的文件路径"
 
-#: app.py:2180 ui/app_window/file_ops_controller.py:188
+#: ui/app_window/file_ops_controller.py:191
 msgid "Removing directory: {0}"
 msgstr "删除目录：{0}"
 
-#: app.py:2182 ui/app_window/file_ops_controller.py:193
+#: ui/app_window/file_ops_controller.py:196
 msgid "Removing file: {0}"
 msgstr "删除文件： {0}"
 
-#: app.py:2192 app.py:2213 ui/app_window/file_ops_controller.py:210
-#: ui/app_window/file_ops_controller.py:235
+#: ui/app_window/file_ops_controller.py:213
+#: ui/app_window/file_ops_controller.py:238
 msgid "Failed to delete item: {0}"
 msgstr "无法删除项目：{0}"
 
-#: app.py:2196 ui/app_window/file_ops_controller.py:213
+#: ui/app_window/file_ops_controller.py:216
 msgid ""
 "Failed to move directory to {0}. Double check the trash folder is set "
 "properly in config.json."
 msgstr "无法将目录移动到 {0}。请确认 config.json 文件中垃圾桶文件夹的设置是否正确。"
 
-#: app.py:2198 ui/app_window/file_ops_controller.py:215
+#: ui/app_window/file_ops_controller.py:218
 msgid ""
 "Failed to send file to {0}. Double check the trash folder is set properly in"
 " config.json."
 msgstr "无法将文件发送至 {0}。请确认 config.json 文件中垃圾箱文件夹的设置是否正确。"
 
-#: app.py:2204 ui/app_window/file_ops_controller.py:221
+#: ui/app_window/file_ops_controller.py:224
 msgid ""
 "Failed to move directory to the trash. Either pip install send2trash or set "
 "a specific trash folder in config.json."
 msgstr ""
 "无法将目录移动到回收站。请通过 pip install send2trash 安装该工具，或在 config.json 文件中设置特定的回收站文件夹。"
 
-#: app.py:2208 ui/app_window/file_ops_controller.py:228
+#: ui/app_window/file_ops_controller.py:231
 msgid ""
 "Failed to send file to the trash, so it will be deleted. Either pip install "
 "send2trash or set a specific trash folder in config.json."
 msgstr ""
 "发送文件到垃圾箱失败，因此文件将被删除。要么用 pip 安装 send2trash，要么在 config.json 中设置特定的垃圾文件夹。"
 
-#: app.py:2218 ui/app_window/file_ops_controller.py:254
+#: ui/app_window/file_ops_controller.py:257
 msgid "Invalid directory"
 msgstr "无效目录"
 
-#: app.py:2218 ui/app_window/file_ops_controller.py:254
+#: ui/app_window/file_ops_controller.py:257
 msgid "No valid base directory to delete"
 msgstr "没有有效的基目录可供删除。"
 
-#: app.py:2229 ui/app_window/file_ops_controller.py:267
+#: ui/app_window/file_ops_controller.py:270
 msgid "Cannot Delete Directory"
 msgstr "无法删除目录"
 
-#: app.py:2233 ui/app_window/file_ops_controller.py:272
+#: ui/app_window/file_ops_controller.py:275
 msgid "Are you sure you want to delete the directory and all contents?"
 msgstr "您确定要删除该目录及其所有内容吗？"
 
-#: app.py:2235 ui/app_window/file_ops_controller.py:274
+#: ui/app_window/file_ops_controller.py:277
 msgid "Contents to be deleted:"
 msgstr "需删除的内容："
 
-#: app.py:2237 ui/app_window/file_ops_controller.py:278
+#: ui/app_window/file_ops_controller.py:281
 msgid "Confirm Delete Directory"
 msgstr "确认删除目录"
 
-#: app.py:2268 ui/app_window/file_ops_controller.py:303
+#: ui/app_window/file_ops_controller.py:306
 msgid "Delete Directory Error"
 msgstr "删除目录错误"
 
-#: app.py:2270 ui/app_window/file_ops_controller.py:306
+#: ui/app_window/file_ops_controller.py:309
 msgid "Directory {0} deleted."
 msgstr "目录 {0} 已删除。"
 
-#: app.py:2286 ui/app_window/file_ops_controller.py:387
+#: ui/app_window/file_ops_controller.py:627
 msgid "Invalid target filepath for replacement: "
 msgstr "替换的目标文件路径无效： "
 
-#: app.py:2290 ui/app_window/file_ops_controller.py:392
+#: ui/app_window/file_ops_controller.py:632
 msgid "Moved search image to "
 msgstr "将搜索图像移至 ： "
 
-#: app.py:2320 ui/app_window/search_controller.py:643
+#: ui/app_window/search_controller.py:683
 msgid "Failed to get active media filepath"
 msgstr "获取活动媒体文件路径失败"
 
-#: app.py:2334 ui/app_window/search_controller.py:537
+#: ui/app_window/search_controller.py:574
 msgid "Running image gen: "
 msgstr "运行图像基因 ： "
 
-#: app.py:2336 app.py:2353 ui/app_window/search_controller.py:541
-#: ui/app_window/search_controller.py:581
+#: ui/app_window/search_controller.py:578
+#: ui/app_window/search_controller.py:621
 msgid "Error running image generation:"
 msgstr "生成图像时出错："
 
-#: app.py:2351 ui/app_window/search_controller.py:576
+#: ui/app_window/search_controller.py:616
 msgid "Running image gen on directory: "
 msgstr "在目录上运行图像生成器： "
 
-#: app.py:2360 ui/app_window/file_ops_controller.py:481
+#: ui/app_window/file_ops_controller.py:727
 msgid "Running refacdir"
 msgstr "正在运行 reacdir"
 
-#: app.py:2365 extensions/gimp/gimp_wrapper.py:689
-#: extensions/gimp/gimp_wrapper.py:718 files/pdf_creator.py:132
-#: files/pdf_creator.py:136 files/pdf_creator.py:139
-#: ui/app_window/notification_controller.py:182
+#: extensions/gimp/gimp_wrapper.py:689 extensions/gimp/gimp_wrapper.py:718
+#: files/pdf_creator.py:137 files/pdf_creator.py:141 files/pdf_creator.py:144
+#: files/pdf_creator.py:232 files/pdf_creator.py:250 files/pdf_creator.py:282
+#: ui/app_window/notification_controller.py:223
 #: ui/auth/app_startup_auth_qt.py:124 ui/auth/password_admin_window.py:130
 #: ui/auth/password_admin_window.py:537 ui/auth/password_dialog.py:305
 #: ui/compare/classifier_action_copy_window_qt.py:227
 #: ui/compare/classifier_action_copy_window_qt.py:235
-#: ui/files/marked_file_mover_qt.py:497 ui_tk/auth/app_startup_auth.py:141
-#: ui_tk/auth/password_dialog.py:249
-#: ui_tk/compare/classifier_action_copy_window.py:227
-#: ui_tk/compare/classifier_action_copy_window.py:241
+#: ui/files/marked_file_mover_qt.py:613 ui/files/marked_file_mover_qt.py:701
 msgid "Error"
 msgstr "错误"
 
-#: app.py:2470 ui/app_window/notification_controller.py:209
+#: ui/app_window/notification_controller.py:250
 msgid "GROUP_DETAILS"
 msgstr ""
 "第 {0} 组 {1}\n"
 "大小： {2}"
 
-#: app.py:2474 ui/app_window/notification_controller.py:217
+#: ui/app_window/notification_controller.py:258
 msgid "No image files found"
 msgstr "未找到图像文件"
 
-#: app.py:2476 ui/app_window/notification_controller.py:219
+#: ui/app_window/notification_controller.py:260
 msgid "1 image file found"
 msgstr "找到一个图像文件"
 
-#: app.py:2477 ui/app_window/notification_controller.py:221
+#: ui/app_window/notification_controller.py:262
 msgid "{0} image files found"
 msgstr "找到 {0} 图像文件"
 
-#: app.py:2479 ui/app_window/notification_controller.py:226
+#: ui/app_window/notification_controller.py:267
 msgid "(filtered)"
 msgstr "(过滤)"
 
-#: compare/base_compare.py:249
+#: compare/base_compare.py:282
 msgid "Image data collection"
 msgstr "图像数据收集"
 
-#: compare/base_compare.py:250
+#: compare/base_compare.py:283
 msgid "Image comparison"
 msgstr "图片对比"
 
-#: compare/base_compare.py:321
+#: compare/base_compare.py:354
 msgid "Invalid Checkpoint Data - Confirm Restart"
 msgstr "检查点数据无效 - 确认重启"
 
-#: compare/base_compare.py:323
+#: compare/base_compare.py:356
 msgid "Invalid Checkpoint Data"
 msgstr "检查点数据无效"
 
-#: compare/base_compare.py:324
+#: compare/base_compare.py:357
 msgid ""
 "Checkpoint data contains invalid indices. Would you like to restart the "
 "comparison?"
 msgstr "检查点数据包含无效索引。您想重新开始比较吗？"
 
-#: compare/base_compare.py:329
+#: compare/base_compare.py:362
 msgid "Restarting Comparison"
 msgstr "重新启动比较"
 
-#: compare/classifier_actions_manager.py:42
+#: compare/classifier_actions_manager.py:72
 msgid "(no positives set)"
 msgstr "(无正片设置）"
 
-#: compare/classifier_actions_manager.py:43
+#: compare/classifier_actions_manager.py:73
 msgid "(no negatives set)"
 msgstr "(没有底片）"
 
-#: compare/classifier_actions_manager.py:45
-#: ui/compare/classifier_management_window_qt.py:83
-#: ui_tk/compare/classifier_management_window.py:59
+#: compare/classifier_actions_manager.py:75
+#: ui/compare/classifier_management_window_qt.py:85
 msgid "New Classifier Action"
 msgstr "新分类器操作"
 
-#: compare/classifier_actions_manager.py:119
+#: compare/classifier_actions_manager.py:183
 msgid "Loading image classifier <{0}> ..."
 msgstr "加载图像分类器 <{0}> ..."
 
-#: compare/classifier_actions_manager.py:214
+#: compare/classifier_actions_manager.py:294
 msgid "Loading embedding prototype from {0}..."
 msgstr "正在从 {0} 加载嵌入原型..."
 
-#: compare/classifier_actions_manager.py:230
+#: compare/classifier_actions_manager.py:310
 msgid "Loading negative embedding prototype from {0}..."
 msgstr "正在从 {0} 加载负向嵌入原型..."
 
-#: compare/classifier_actions_manager.py:385
+#: compare/classifier_actions_manager.py:585
 msgid " detected"
 msgstr " 检测"
 
-#: compare/classifier_actions_manager.py:387
+#: compare/classifier_actions_manager.py:587
 msgid " - skipped"
 msgstr " - 跳过"
 
-#: compare/classifier_actions_manager.py:390
+#: compare/classifier_actions_manager.py:590
 msgid " - hidden"
 msgstr " - 隐藏"
 
-#: compare/classifier_actions_manager.py:395
+#: compare/classifier_actions_manager.py:595
 msgid " - marked"
 msgstr " - 显著的"
 
-#: compare/classifier_actions_manager.py:403
+#: compare/classifier_actions_manager.py:613
 msgid "Moving file: "
 msgstr "移动文件 : "
 
-#: compare/classifier_actions_manager.py:449
+#: compare/classifier_actions_manager.py:659
 msgid "Deleting file: "
 msgstr "删除文件 : "
 
-#: compare/classifier_actions_manager.py:505
+#: compare/classifier_actions_manager.py:733
 msgid "Action modifier is not a valid directory: "
 msgstr "修改动作不是一个有效的目录 : "
 
-#: compare/classifier_actions_manager.py:507
+#: compare/classifier_actions_manager.py:735
 msgid "Invalid classifier action {0}, may cause errors or be unable to run!"
 msgstr "无效分类器操作 {0}，可能导致错误或无法运行！"
 
-#: compare/classifier_actions_manager.py:614
+#: compare/classifier_actions_manager.py:893
 msgid "embedding"
 msgstr "嵌入"
 
-#: compare/classifier_actions_manager.py:616
+#: compare/classifier_actions_manager.py:895
 msgid "classifier {0}"
 msgstr "幅图像 {0}"
 
-#: compare/classifier_actions_manager.py:618
+#: compare/classifier_actions_manager.py:897
 msgid "prompts"
 msgstr "提示"
 
-#: compare/classifier_actions_manager.py:620
+#: compare/classifier_actions_manager.py:899
 msgid "prototype"
 msgstr "原型"
 
-#: compare/classifier_actions_manager.py:628
+#: compare/classifier_actions_manager.py:907
 msgid "categories: {0}"
 msgstr "类别： {0}"
 
-#: compare/classifier_actions_manager.py:632
+#: compare/classifier_actions_manager.py:911
 msgid "{0} positives, {1} negatives"
 msgstr "{0}阳性，{1}阴性"
 
-#: compare/classifier_actions_manager.py:636
+#: compare/classifier_actions_manager.py:915
 msgid " using {0} ({1})"
 msgstr " {0} ({1})"
 
-#: compare/classifier_actions_manager.py:638
+#: compare/classifier_actions_manager.py:917
 msgid " using {0}"
 msgstr " {0}"
 
-#: compare/classifier_actions_manager.py:640
+#: compare/classifier_actions_manager.py:919
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0}阳性，{1}阴性)"
 
-#: compare/classifier_actions_manager.py:643
+#: compare/classifier_actions_manager.py:922
 msgid "disabled"
 msgstr "停用"
 
-#: compare/classifier_actions_manager.py:650
-#: ui/compare/classifier_management_window_qt.py:79
+#: compare/classifier_actions_manager.py:931
+#: ui/compare/classifier_management_window_qt.py:81
 #: ui/compare/prevalidations_tab_qt.py:69
-#: ui_tk/compare/classifier_management_window.py:55
-#: ui_tk/compare/prevalidations_tab.py:31
 msgid "New Prevalidation"
 msgstr "新建前缀"
 
-#: compare/classifier_actions_manager.py:730
+#: compare/classifier_actions_manager.py:1021
 msgid "Profile directory is not a valid directory: "
 msgstr "配置文件目录不是有效的目录： "
 
-#: compare/classifier_actions_manager.py:732
+#: compare/classifier_actions_manager.py:1023
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr "无效的预先验证{0}, 可能导致错误或无法运行 !"
 
-#: compare/classifier_actions_manager.py:812
+#: compare/classifier_actions_manager.py:1111
 msgid "lookaheads: {0}"
 msgstr "向前查找：{0}"
 
-#: compare/compare_wrapper.py:77 compare/compare_wrapper.py:80
+#: compare/compare_wrapper.py:76 compare/compare_wrapper.py:79
 msgid "Invalid mode"
 msgstr "无效模式"
 
-#: compare/compare_wrapper.py:110 compare/compare_wrapper.py:131
+#: compare/compare_wrapper.py:109 compare/compare_wrapper.py:130
 msgid "Search required"
 msgstr "需要搜索"
 
-#: compare/compare_wrapper.py:110 compare/compare_wrapper.py:131
+#: compare/compare_wrapper.py:109 compare/compare_wrapper.py:130
 msgid "No matches found. Search again to find potential matches."
 msgstr "未找到匹配项。请再次搜索，以找到可能的匹配项。"
 
-#: compare/compare_wrapper.py:189
+#: compare/compare_wrapper.py:174
 msgid "Skipped %s images."
 msgstr "跳过 {0} 幅图像。"
 
-#: compare/compare_wrapper.py:195
+#: compare/compare_wrapper.py:180
 msgid "No Unrelated Images"
 msgstr "无不相关的图像"
 
-#: compare/compare_wrapper.py:195
+#: compare/compare_wrapper.py:180
 msgid "No unrelated images found."
 msgstr "未找到不相关的图像 。"
 
-#: compare/compare_wrapper.py:232 compare/compare_wrapper.py:404
+#: compare/compare_wrapper.py:217 compare/compare_wrapper.py:389
 msgid "No Groups Found"
 msgstr "没有找到组"
 
-#: compare/compare_wrapper.py:302
+#: compare/compare_wrapper.py:287
 msgid ""
 "Gathering image data... setup may take a while depending on number of files "
 "involved."
 msgstr "收集图像数据......根据所涉及文件的数量，设置可能需要一段时间。"
 
-#: compare/compare_wrapper.py:324
+#: compare/compare_wrapper.py:309
 msgid "Confirm group run"
 msgstr "确认小组运行"
 
-#: compare/compare_wrapper.py:325
+#: compare/compare_wrapper.py:310
 msgid ""
 "Search mode detected, please confirm switch to group mode before run. Group "
 "mode will take longer as all images in the base directory are compared."
 msgstr "检测到搜索模式，请确认切换到组模式后再运行。群组模式将需要更长的时间，因为要对基本目录中的所有图像进行比较。"
 
-#: compare/compare_wrapper.py:332
+#: compare/compare_wrapper.py:317
 msgid "Gathering image data for comparison"
 msgstr "收集图像数据进行比较"
 
-#: compare/compare_wrapper.py:370
+#: compare/compare_wrapper.py:355
 msgid "Searching images..."
 msgstr "正在搜索图像..."
 
-#: compare/compare_wrapper.py:376
+#: compare/compare_wrapper.py:361
 msgid "Set a directory and search file or search text."
 msgstr "设置目录和搜索文件或搜索文本。"
 
-#: compare/compare_wrapper.py:377
+#: compare/compare_wrapper.py:362
 msgid "No Match Found"
 msgstr "找不到匹配"
 
-#: compare/compare_wrapper.py:377
+#: compare/compare_wrapper.py:362
 msgid "None of the files match the search filters with current settings."
 msgstr "在当前设置下，没有任何文件符合搜索筛选条件。"
 
-#: compare/compare_wrapper.py:390
+#: compare/compare_wrapper.py:375
 msgid "%s possibly related images found."
 msgstr "{0} 可能找到相关的图像 。"
 
-#: compare/compare_wrapper.py:398
+#: compare/compare_wrapper.py:383
 msgid "Running image comparisons..."
 msgstr "运行图像比较..."
 
-#: compare/compare_wrapper.py:403 compare/compare_wrapper.py:418
+#: compare/compare_wrapper.py:388 compare/compare_wrapper.py:403
 msgid "Set a directory and search file."
 msgstr "设置目录和搜索文件 。"
 
-#: compare/compare_wrapper.py:404
+#: compare/compare_wrapper.py:389
 msgid "None of the files can be grouped with current settings."
 msgstr "所有文件都无法按当前设置进行分组。"
 
-#: compare/compare_wrapper.py:419
+#: compare/compare_wrapper.py:404
 msgid "No Duplicates Found"
 msgstr "未找到复制件"
 
-#: compare/compare_wrapper.py:419
+#: compare/compare_wrapper.py:404
 msgid ""
 "None of the files appear to be duplicates based on the current settings."
 msgstr "根据当前设置，没有任何文件看起来是重复的。"
 
-#: compare/compare_wrapper.py:443
+#: compare/compare_wrapper.py:428
 msgid "Stranded Group Members Found"
 msgstr "找到受困的小组成员"
 
-#: compare/compare_wrapper.py:443
+#: compare/compare_wrapper.py:428
 msgid "Some group members were left stranded by the grouping process."
 msgstr "一些小组成员在分组过程中陷入困境。"
 
-#: compare/compare_wrapper.py:498
+#: compare/compare_wrapper.py:483
 msgid "No More Groups"
 msgstr "没有更多组"
 
-#: compare/compare_wrapper.py:499
+#: compare/compare_wrapper.py:484
 msgid ""
 "There are no more image groups remaining for this directory and current "
 "filter settings."
@@ -1109,157 +1081,159 @@ msgstr ""
 msgid "Confirm Overwrite"
 msgstr "确认覆盖"
 
-#: extensions/gimp/gimp_wrapper.py:752
+#: extensions/gimp/gimp_wrapper.py:751
 msgid "File overwrite cancelled"
 msgstr "文件覆盖已取消"
 
-#: files/file_browser.py:155 files/file_browser.py:167
-#: files/file_browser.py:179
+#: files/file_browser.py:190 files/file_browser.py:202
+#: files/file_browser.py:214 ui/app_window/media_navigator.py:142
+#: ui/app_window/media_navigator.py:185
 msgid " (try setting recursive to True)"
 msgstr " (尝试将递归设置为 True）"
 
-#: files/file_browser.py:156 files/file_browser.py:168
-#: files/file_browser.py:180 files/file_browser.py:218
+#: files/file_browser.py:191 files/file_browser.py:203
+#: files/file_browser.py:215 files/file_browser.py:253
+#: ui/app_window/media_navigator.py:144 ui/app_window/media_navigator.py:187
 msgid "No files found for current browsing settings."
 msgstr "当前浏览设置未找到文件。"
 
-#: files/file_browser.py:204
+#: files/file_browser.py:239
 msgid "FILE_BROWSER_INDEX_DETAILS"
 msgstr "目录中 {1} 个文件中的 {0} 个，按{2}{3}排序"
 
-#: files/file_browser.py:222
+#: files/file_browser.py:257
 msgid "Index must be 1 or greater."
 msgstr "索引必须大于等于1。"
 
-#: files/file_browser.py:226
+#: files/file_browser.py:261
 msgid "Index {0} is out of range. There are {1} files."
 msgstr "索引 {0} 超出范围。共有 {1} 个文件。"
 
-#: files/file_browser.py:254
+#: files/file_browser.py:289
 msgid "Search text provided to file_browser.find() was invalid."
 msgstr "提供给 file_browser.find() 的搜索文本无效。"
 
-#: files/file_browser.py:781
+#: files/file_browser.py:963
 msgid "No files found"
 msgstr "未找到任何文件"
 
-#: files/marked_files.py:78 files/marked_files.py:497
+#: files/marked_files.py:136 files/marked_files.py:555
 msgid "Marks cleared."
 msgstr "标记清除。"
 
-#: files/marked_files.py:98
+#: files/marked_files.py:156
 msgid "Set current marks from previous."
 msgstr "从上一个标记设置当前标记。"
 
-#: files/marked_files.py:98
+#: files/marked_files.py:156
 msgid "Total set: {0}"
 msgstr "全套： {0}"
 
-#: files/marked_files.py:148
+#: files/marked_files.py:206
 msgid "NO_MARK_TARGET_SET"
 msgstr ""
 "未设置永久标记目标！\n"
 "使用 “标记 ”窗口中的 Ctrl+T 进行设置。"
 
-#: files/marked_files.py:164
+#: files/marked_files.py:222
 msgid "NO_HOTKEY_ACTION_SET"
 msgstr ""
 "未为 {0} 设置热键操作。\n"
 "在标记窗口中用 {1} 设置。"
 
-#: files/marked_files.py:195
+#: files/marked_files.py:253
 msgid "Moving"
 msgstr "移动"
 
-#: files/marked_files.py:195
+#: files/marked_files.py:253
 msgid "Copying"
 msgstr "复制"
 
-#: files/marked_files.py:259
+#: files/marked_files.py:317
 msgid "Moved {0} files to {1}"
 msgstr ""
 "将 {0} 文件移至\n"
 "{1}"
 
-#: files/marked_files.py:261
+#: files/marked_files.py:319
 msgid "Copied {0} files to {1}"
 msgstr ""
 "将 {0} 个文件复制到\n"
 "{1}"
 
-#: files/marked_files.py:332
+#: files/marked_files.py:390
 msgid "Existing filenames match!"
 msgstr "现有文件名匹配！"
 
-#: files/marked_files.py:334
+#: files/marked_files.py:392
 msgid "WARNING: Exact file match."
 msgstr "警告：文件完全匹配。"
 
-#: files/marked_files.py:336
+#: files/marked_files.py:394
 msgid "INFO: Target files with different EXIF data replaced."
 msgstr "INFO: 替换了具有不同EXIF数据的目标文件。"
 
-#: files/marked_files.py:338 files/marked_files.py:461
+#: files/marked_files.py:396 files/marked_files.py:519
 msgid "WARNING: Short filenames."
 msgstr "警告:文件短。"
 
-#: files/marked_files.py:362
+#: files/marked_files.py:420
 msgid "Moving back"
 msgstr "向后移动"
 
-#: files/marked_files.py:362
+#: files/marked_files.py:420
 msgid "Removing"
 msgstr "删除"
 
-#: files/marked_files.py:363
+#: files/marked_files.py:421
 msgid "Moved back"
 msgstr "向后移动"
 
-#: files/marked_files.py:363
+#: files/marked_files.py:421
 msgid "Removed"
 msgstr "已删除"
 
-#: files/marked_files.py:406
+#: files/marked_files.py:464
 msgid "Moved back {0} files from {1}"
 msgstr ""
 "从 {1}\n"
 "移回 {0} 个文件"
 
-#: files/marked_files.py:408
+#: files/marked_files.py:466
 msgid "Removed {0} files from {1}"
 msgstr ""
 "从 {1}\n"
 "移除 {0} 个文件"
 
-#: files/marked_files.py:451
+#: files/marked_files.py:509
 msgid "Existing filenames found!"
 msgstr "找到已有文件名 !"
 
-#: files/marked_files.py:453
+#: files/marked_files.py:511
 msgid "WARNING: All file hashes match."
 msgstr "所有档案都匹配"
 
-#: files/marked_files.py:455
+#: files/marked_files.py:513
 msgid "WARNING: %s of %s file hashes match."
 msgstr "警告 : {0} {1} 文件散列匹配 。"
 
-#: files/marked_files.py:457
+#: files/marked_files.py:515
 msgid "INFO: %s files have identical content but different EXIF data."
 msgstr "INFO: %s 个文件内容相同但 EXIF 数据不同。"
 
-#: files/marked_files.py:459
+#: files/marked_files.py:517
 msgid "WARNING: All files are either identical or have matching content."
 msgstr "警告：所有文件要么完全相同，要么内容完全一致。"
 
-#: files/marked_files.py:465
+#: files/marked_files.py:523
 msgid "No existing filenames found."
 msgstr "未找到现有文件名 。"
 
-#: files/marked_files.py:499
+#: files/marked_files.py:557
 msgid "Removed {0} marks"
 msgstr "删除{0}标记"
 
-#: files/marked_files.py:532
+#: files/marked_files.py:590
 msgid ""
 "WARNING: You just copied this file to this directory, and now you're trying to move it here.\n"
 "\n"
@@ -1279,50 +1253,47 @@ msgstr ""
 "\n"
 "是否继续并删除源文件？"
 
-#: files/marked_files.py:538
+#: files/marked_files.py:596
 msgid "Potential Mistake Detected"
 msgstr "检测到潜在错误"
 
-#: files/marked_files.py:568
+#: files/marked_files.py:626
 msgid "Removed marked file from source: {0}"
 msgstr "已从源位置移除标记文件：{0}"
 
-#: files/marked_files.py:612 ui/files/file_actions_window_qt.py:222
-#: ui_tk/files/file_actions_window.py:130
+#: files/marked_files.py:670 ui/files/file_actions_window_qt.py:222
 msgid "Moved"
 msgstr "移动"
 
-#: files/marked_files.py:612 ui/files/file_actions_window_qt.py:222
-#: ui_tk/files/file_actions_window.py:136
+#: files/marked_files.py:670 ui/files/file_actions_window_qt.py:222
 msgid "Copied"
 msgstr "复制"
 
-#: files/pdf_creator.py:44
+#: files/pdf_creator.py:48
 msgid "No files to create PDF"
 msgstr "没有文件可以创建 PDF"
 
-#: files/pdf_creator.py:52 ui/files/pdf_options_window_qt.py:86
-#: ui_tk/files/pdf_options_window.py:52
+#: files/pdf_creator.py:56 ui/files/pdf_options_window_qt.py:104
 msgid "combined_images"
 msgstr "合并图片"
 
-#: files/pdf_creator.py:128
+#: files/pdf_creator.py:132
 msgid "compressed"
 msgstr "压缩"
 
-#: files/pdf_creator.py:128
+#: files/pdf_creator.py:132
 msgid "high quality"
 msgstr "高品质"
 
-#: files/pdf_creator.py:129
+#: files/pdf_creator.py:134
 msgid "Created {0} PDF with {1} pages"
 msgstr "创建了 {0} 个 PDF 文件，包含 {1} 个页面"
 
-#: files/pdf_creator.py:132
+#: files/pdf_creator.py:137
 msgid "No pages could be added to the PDF"
 msgstr "PDF 无法添加任何页面"
 
-#: files/pdf_creator.py:136
+#: files/pdf_creator.py:141
 msgid "PDF creation requires pypdfium2 package"
 msgstr "创建 PDF 需要 pypdfium2 软件包"
 
@@ -1330,13 +1301,13 @@ msgstr "创建 PDF 需要 pypdfium2 软件包"
 msgid "(Unable to parse image prompt information for this file.)"
 msgstr "(无法解析此文件的图像提示信息。)"
 
-#: lib/caps_lock_mixin.py:64 ui/auth/password_dialog.py:61
+#: ui/auth/password_dialog.py:61
 msgid "⚠ Caps Lock is ON"
 msgstr "⚠ 大写锁定键已开启"
 
-#: lib/custom_dialogs.py:69 lib/custom_dialogs_qt.py:128 lib/qt_alert.py:27
+#: lib/custom_dialogs_qt.py:128 lib/qt_alert.py:27
 #: ui/auth/app_startup_auth_qt.py:79 ui/auth/password_dialog.py:200
-#: ui_tk/auth/app_startup_auth.py:124 ui_tk/auth/password_dialog.py:149
+#: ui/compare/hf_model_manager_window_qt.py:843
 msgid "OK"
 msgstr "好的"
 
@@ -1348,83 +1319,81 @@ msgstr "是"
 msgid "No"
 msgstr "不"
 
-#: ui/help_and_config_qt.py:71 utils/help_and_config.py:35
+#: ui/help_and_config_qt.py:71
 msgid "Main Window Shortcuts"
 msgstr "主窗口快捷键"
 
 #: ui/help_and_config_qt.py:74 ui/help_and_config_qt.py:143
-#: ui/help_and_config_qt.py:187 utils/help_and_config.py:42
-#: utils/help_and_config.py:125 utils/help_and_config.py:176
+#: ui/help_and_config_qt.py:187
 msgid "Command"
 msgstr "命令"
 
 #: ui/help_and_config_qt.py:74 ui/help_and_config_qt.py:143
-#: ui/help_and_config_qt.py:187 utils/help_and_config.py:42
-#: utils/help_and_config.py:125 utils/help_and_config.py:176
+#: ui/help_and_config_qt.py:187
 msgid "Description"
 msgstr "说明"
 
-#: ui/help_and_config_qt.py:75 utils/help_and_config.py:43
+#: ui/help_and_config_qt.py:75
 msgid "Search current image in new window"
 msgstr "在新窗口中搜索当前图像"
 
-#: ui/help_and_config_qt.py:76 utils/help_and_config.py:44
+#: ui/help_and_config_qt.py:76
 msgid "Return to Browsing mode"
 msgstr "返回浏览模式"
 
-#: ui/help_and_config_qt.py:77 utils/help_and_config.py:45
+#: ui/help_and_config_qt.py:77
 msgid "Copy marks list"
 msgstr "复制标记列表"
 
-#: ui/help_and_config_qt.py:78 utils/help_and_config.py:46
+#: ui/help_and_config_qt.py:78
 msgid "Set current marks from previous marks list"
 msgstr "从先前的标记列表中设定当前标记"
 
-#: ui/help_and_config_qt.py:79 utils/help_and_config.py:48
+#: ui/help_and_config_qt.py:79
 msgid "Open Favorites window"
 msgstr "打开收藏夹窗口"
 
-#: ui/help_and_config_qt.py:80 utils/help_and_config.py:49
+#: ui/help_and_config_qt.py:80
 msgid "Open Go to file window"
 msgstr "打开 转到文件窗口"
 
-#: ui/help_and_config_qt.py:81 utils/help_and_config.py:50
+#: ui/help_and_config_qt.py:81
 msgid "Hide/show sidebar"
 msgstr "隐藏/ 显示侧边栏"
 
-#: ui/help_and_config_qt.py:82 utils/help_and_config.py:51
+#: ui/help_and_config_qt.py:82
 msgid "Open hotkeys window (*when marks window open)"
 msgstr "打开热键窗口(* 当标记窗口打开时)"
 
-#: ui/help_and_config_qt.py:83 utils/help_and_config.py:52
+#: ui/help_and_config_qt.py:83
 msgid "Open content filters window"
 msgstr "打开内容过滤窗口"
 
-#: ui/help_and_config_qt.py:84 utils/help_and_config.py:53
+#: ui/help_and_config_qt.py:84
 msgid "Open marks window (no GUI)"
 msgstr "打开标记窗口( 无图形界面)"
 
-#: ui/help_and_config_qt.py:85 utils/help_and_config.py:54
+#: ui/help_and_config_qt.py:85
 msgid "Open marks window"
 msgstr "打开标记窗口"
 
-#: ui/help_and_config_qt.py:86 utils/help_and_config.py:55
+#: ui/help_and_config_qt.py:86
 msgid "Open marks action history window"
 msgstr "打开标记动作历史窗口"
 
-#: ui/help_and_config_qt.py:87 utils/help_and_config.py:56
+#: ui/help_and_config_qt.py:87
 msgid "Quit"
 msgstr "退出"
 
-#: ui/help_and_config_qt.py:88 utils/help_and_config.py:57
+#: ui/help_and_config_qt.py:88
 msgid "Open security configuration window"
 msgstr "打开安全配置窗口"
 
-#: ui/help_and_config_qt.py:89 utils/help_and_config.py:58
+#: ui/help_and_config_qt.py:89
 msgid "Run previous marks action"
 msgstr "运行上一个标记动作"
 
-#: ui/help_and_config_qt.py:90 utils/help_and_config.py:47
+#: ui/help_and_config_qt.py:90
 msgid "Run penultimate marks action"
 msgstr "运行倒数第二个标记动作"
 
@@ -1432,134 +1401,133 @@ msgstr "运行倒数第二个标记动作"
 msgid "Run third-most-recent marks action"
 msgstr "运行第三近的标记操作"
 
-#: ui/help_and_config_qt.py:92 utils/help_and_config.py:59
+#: ui/help_and_config_qt.py:92
 msgid "Continue image generation"
 msgstr "继续图像生成"
 
-#: ui/help_and_config_qt.py:93 utils/help_and_config.py:60
+#: ui/help_and_config_qt.py:93
 msgid "Cancel image generation"
 msgstr "取消图像生成"
 
-#: ui/help_and_config_qt.py:94 utils/help_and_config.py:91
+#: ui/help_and_config_qt.py:94
 msgid "Toggle slideshow"
 msgstr "切换幻灯片放映"
 
-#: ui/help_and_config_qt.py:95 utils/help_and_config.py:61
+#: ui/help_and_config_qt.py:95
 msgid "Run next text embedding search preset"
 msgstr "运行下一个嵌入搜索预设的文本"
 
-#: ui/help_and_config_qt.py:96 utils/help_and_config.py:62
+#: ui/help_and_config_qt.py:96
 msgid "Run permanent marks action"
 msgstr "运行永久标记动作"
 
-#: ui/help_and_config_qt.py:97 utils/help_and_config.py:63
+#: ui/help_and_config_qt.py:97
 msgid "Open type configuration window"
 msgstr "打开类型配置窗口"
 
-#: ui/help_and_config_qt.py:98 utils/help_and_config.py:64
+#: ui/help_and_config_qt.py:98
 msgid "Open new compare window"
 msgstr "打开新比较窗口"
 
-#: ui/help_and_config_qt.py:99 utils/help_and_config.py:65
+#: ui/help_and_config_qt.py:99
 msgid "Move previous marks to a different directory"
 msgstr "将上一个标记移动到不同的目录"
 
 #: ui/help_and_config_qt.py:100 ui/help_and_config_qt.py:130
-#: utils/help_and_config.py:66 utils/help_and_config.py:96
 msgid "Undo previous marks changes"
 msgstr "撤消先前的标记更改"
 
-#: ui/help_and_config_qt.py:101 utils/help_and_config.py:67
+#: ui/help_and_config_qt.py:101
 msgid "Toggle fullscreen"
 msgstr "切换全屏"
 
-#: ui/help_and_config_qt.py:102 utils/help_and_config.py:68
+#: ui/help_and_config_qt.py:102
 msgid "Go to first sorted image"
 msgstr "转到第一个排序的图像"
 
-#: ui/help_and_config_qt.py:103 utils/help_and_config.py:69
+#: ui/help_and_config_qt.py:103
 msgid "Go to last sorted image"
 msgstr "转到上次排序的图像"
 
-#: ui/help_and_config_qt.py:104 utils/help_and_config.py:70
+#: ui/help_and_config_qt.py:104
 msgid "Show previous/next image"
 msgstr "显示上一个/ 下一个图像"
 
-#: ui/help_and_config_qt.py:105 utils/help_and_config.py:71
+#: ui/help_and_config_qt.py:105
 msgid "Page through images"
 msgstr "通过图像页面"
 
-#: ui/help_and_config_qt.py:106 utils/help_and_config.py:72
+#: ui/help_and_config_qt.py:106
 msgid "Search current image in current window"
 msgstr "在当前窗口中搜索当前图像"
 
-#: ui/help_and_config_qt.py:107 utils/help_and_config.py:73
+#: ui/help_and_config_qt.py:107
 msgid "Clear all hidden images"
 msgstr "清除所有隐藏的图像"
 
-#: ui/help_and_config_qt.py:108 utils/help_and_config.py:74
+#: ui/help_and_config_qt.py:108
 msgid "Clear marks list"
 msgstr "清除标记列表"
 
-#: ui/help_and_config_qt.py:109 utils/help_and_config.py:75
+#: ui/help_and_config_qt.py:109
 msgid "Show image details"
 msgstr "显示图像细节"
 
-#: ui/help_and_config_qt.py:110 utils/help_and_config.py:76
+#: ui/help_and_config_qt.py:110
 msgid "Delete image (or marked file group if marks window selected)"
 msgstr "删除图像( 如果选中标记窗口, 则标记文件组)"
 
-#: ui/help_and_config_qt.py:111 utils/help_and_config.py:77
+#: ui/help_and_config_qt.py:111
 msgid "Delete current base directory and all contents"
 msgstr "删除当前基础目录及其所有内容"
 
-#: ui/help_and_config_qt.py:112 utils/help_and_config.py:78
+#: ui/help_and_config_qt.py:112
 msgid "Go to next mark"
 msgstr "转到下一个标记"
 
-#: ui/help_and_config_qt.py:113 utils/help_and_config.py:79
+#: ui/help_and_config_qt.py:113
 msgid "Show help window"
 msgstr "显示帮助窗口"
 
-#: ui/help_and_config_qt.py:114 utils/help_and_config.py:80
+#: ui/help_and_config_qt.py:114
 msgid "Run image generation"
 msgstr "运行图像生成"
 
-#: ui/help_and_config_qt.py:115 utils/help_and_config.py:81
+#: ui/help_and_config_qt.py:115
 msgid "Open context menu"
 msgstr "打开上下文菜单"
 
-#: ui/help_and_config_qt.py:116 utils/help_and_config.py:82
+#: ui/help_and_config_qt.py:116
 msgid "Run content filters for all files in the current directory"
 msgstr "运行当前目录中所有文件的内容过滤器"
 
-#: ui/help_and_config_qt.py:117 utils/help_and_config.py:83
+#: ui/help_and_config_qt.py:117
 msgid "View last moved image mark"
 msgstr "查看上次移动的图像标记"
 
-#: ui/help_and_config_qt.py:118 utils/help_and_config.py:84
+#: ui/help_and_config_qt.py:118
 msgid "Toggle content filters"
 msgstr "切换内容过滤器"
 
-#: ui/help_and_config_qt.py:119 utils/help_and_config.py:85
+#: ui/help_and_config_qt.py:119
 msgid "Add or remove a mark for current image"
 msgstr "添加或删除当前图像的标记"
 
-#: ui/help_and_config_qt.py:120 utils/help_and_config.py:86
+#: ui/help_and_config_qt.py:120
 msgid ""
 "Add all marks between most recently set and current selected inclusive, or "
 "all marks in current group"
 msgstr "在最近设置和当前选中的包含之间添加所有标记, 或者在当前组中添加所有标记"
 
-#: ui/help_and_config_qt.py:122 utils/help_and_config.py:88
+#: ui/help_and_config_qt.py:122
 msgid "Open image in GIMP"
 msgstr "在 GIMP 中打开图像"
 
-#: ui/help_and_config_qt.py:123 utils/help_and_config.py:89
+#: ui/help_and_config_qt.py:123
 msgid "Randomly modify image"
 msgstr "随机修改图像"
 
-#: ui/help_and_config_qt.py:124 utils/help_and_config.py:90
+#: ui/help_and_config_qt.py:124
 msgid "View related image (controlnet, etc.)"
 msgstr "查看相关的图像( 控制网等)"
 
@@ -1567,128 +1535,114 @@ msgstr "查看相关的图像( 控制网等)"
 msgid "Capture screenshot"
 msgstr "捕获截屏"
 
-#: ui/help_and_config_qt.py:126 utils/help_and_config.py:92
+#: ui/help_and_config_qt.py:126
 msgid "Find related images in open window"
 msgstr "在打开的窗口中查找相关的图像"
 
-#: ui/help_and_config_qt.py:127 utils/help_and_config.py:93
+#: ui/help_and_config_qt.py:127
 msgid "Run refacdir"
 msgstr "运行 reacdir"
 
-#: ui/help_and_config_qt.py:128 utils/help_and_config.py:94
+#: ui/help_and_config_qt.py:128
 msgid "Hide current image"
 msgstr "隐藏当前图像"
 
-#: ui/help_and_config_qt.py:129 utils/help_and_config.py:95
+#: ui/help_and_config_qt.py:129
 msgid "Set marks from downstream related images"
 msgstr "从下游相关图像设置标记"
 
-#: ui/help_and_config_qt.py:131 utils/help_and_config.py:97
+#: ui/help_and_config_qt.py:131
 msgid "Show previous/next group"
 msgstr "显示上/下一组"
 
-#: ui/help_and_config_qt.py:140 utils/help_and_config.py:118
+#: ui/help_and_config_qt.py:140
 msgid "Image Details Shortcuts"
 msgstr "图片详情快捷方式"
 
-#: ui/help_and_config_qt.py:144 ui/image/image_details_qt.py:310
-#: ui_tk/image/image_details.py:171 utils/help_and_config.py:126
+#: ui/help_and_config_qt.py:144 ui/image/image_details_qt.py:328
 msgid "Crop Image (Smart Detect)"
 msgstr "裁剪图像( 智能检测)"
 
-#: ui/help_and_config_qt.py:145 ui/image/image_details_qt.py:306
-#: ui_tk/image/image_details.py:166 utils/help_and_config.py:127
+#: ui/help_and_config_qt.py:145 ui/image/image_details_qt.py:324
 msgid "Rotate Image Left"
 msgstr "向左旋转图像"
 
-#: ui/help_and_config_qt.py:146 ui/image/image_details_qt.py:307
-#: ui_tk/image/image_details.py:167 utils/help_and_config.py:128
+#: ui/help_and_config_qt.py:146 ui/image/image_details_qt.py:325
 msgid "Rotate Image Right"
 msgstr "向右旋转图像"
 
-#: ui/help_and_config_qt.py:147 ui/image/image_details_qt.py:311
-#: ui_tk/image/image_details.py:172 utils/help_and_config.py:129
+#: ui/help_and_config_qt.py:147 ui/image/image_details_qt.py:329
 msgid "Enhance Image"
 msgstr "增强图像"
 
-#: ui/help_and_config_qt.py:148 ui/image/image_details_qt.py:314
-#: ui_tk/image/image_details.py:176 utils/help_and_config.py:130
+#: ui/help_and_config_qt.py:148 ui/image/image_details_qt.py:332
 msgid "Random Crop"
 msgstr "随机裁剪"
 
-#: ui/help_and_config_qt.py:149 utils/help_and_config.py:131
+#: ui/help_and_config_qt.py:149
 msgid "Randomly Modify Image"
 msgstr "随机修改图像"
 
-#: ui/help_and_config_qt.py:150 ui/image/image_details_qt.py:318
-#: ui_tk/image/image_details.py:181 utils/help_and_config.py:132
+#: ui/help_and_config_qt.py:150 ui/image/image_details_qt.py:336
 msgid "Flip Image Horizontally"
 msgstr "水平翻转图像"
 
-#: ui/help_and_config_qt.py:151 ui/image/image_details_qt.py:319
-#: ui_tk/image/image_details.py:182 utils/help_and_config.py:133
+#: ui/help_and_config_qt.py:151 ui/image/image_details_qt.py:337
 msgid "Flip Image Vertically"
 msgstr "垂直翻转图像"
 
-#: ui/help_and_config_qt.py:152 ui/image/image_details_qt.py:326
-#: ui_tk/image/image_details.py:185 utils/help_and_config.py:134
+#: ui/help_and_config_qt.py:152 ui/image/image_details_qt.py:344
 msgid "Copy Without EXIF"
 msgstr "无 EXIF 复制"
 
-#: ui/help_and_config_qt.py:153 ui/image/image_details_qt.py:327
-#: ui_tk/image/image_details.py:187 utils/help_and_config.py:135
+#: ui/help_and_config_qt.py:153 ui/image/image_details_qt.py:345
 msgid "Convert to JPG"
 msgstr "转换为 JPG"
 
-#: ui/help_and_config_qt.py:154 ui/image/image_details_qt.py:330
-#: ui_tk/image/image_details.py:190 utils/help_and_config.py:136
+#: ui/help_and_config_qt.py:154 ui/image/image_details_qt.py:348
 msgid "Show Metadata"
 msgstr "显示元数据"
 
-#: ui/help_and_config_qt.py:155 ui/image/image_details_qt.py:334
-#: ui_tk/image/image_details.py:196 utils/help_and_config.py:137
+#: ui/help_and_config_qt.py:155 ui/image/image_details_qt.py:352
 msgid "Open Related Image"
 msgstr "打开相关图像"
 
-#: ui/help_and_config_qt.py:157 ui/image/image_details_qt.py:356
-#: ui_tk/image/image_details.py:218 utils/constants.py:215
-#: utils/help_and_config.py:139
+#: ui/help_and_config_qt.py:157 ui/image/image_details_qt.py:374
+#: utils/constants.py:323
 msgid "Redo Prompt"
 msgstr "重做提示"
 
-#: ui/help_and_config_qt.py:164 utils/help_and_config.py:152
+#: ui/help_and_config_qt.py:164
 msgid ""
 "Note: Using Ctrl instead of Shift marks the created file and opens the marks"
 " window without GUI."
 msgstr "注意：使用Ctrl键代替Shift键可标记创建的文件并打开标记窗口，且不显示图形用户界面。"
 
-#: ui/help_and_config_qt.py:184 utils/help_and_config.py:169
+#: ui/help_and_config_qt.py:184
 msgid "Go To File Shortcuts"
 msgstr "转到文件快捷方式"
 
 #: ui/files/go_to_file_qt.py:277 ui/help_and_config_qt.py:188
-#: ui_tk/files/go_to_file.py:141 utils/help_and_config.py:177
 msgid "Go To Last Moved"
 msgstr "转到最后移动位置"
 
-#: ui/help_and_config_qt.py:189 utils/help_and_config.py:178
+#: ui/help_and_config_qt.py:189
 msgid "Browse File"
 msgstr "浏览文件"
 
 #: ui/files/go_to_file_qt.py:388 ui/help_and_config_qt.py:190
-#: ui_tk/files/go_to_file.py:385 utils/help_and_config.py:179
 msgid "Current Media"
 msgstr "当前媒体"
 
-#: ui/help_and_config_qt.py:191 utils/help_and_config.py:180
+#: ui/help_and_config_qt.py:191
 msgid "Find Related Files"
 msgstr "查找相关文件"
 
-#: ui/help_and_config_qt.py:192 utils/help_and_config.py:181
+#: ui/help_and_config_qt.py:192
 msgid "Extract Base ID"
 msgstr "提取基础ID"
 
-#: ui/help_and_config_qt.py:193 utils/help_and_config.py:182
+#: ui/help_and_config_qt.py:193
 msgid "Browse Directory"
 msgstr "浏览目录"
 
@@ -1696,52 +1650,51 @@ msgstr "浏览目录"
 msgid "Config Settings"
 msgstr "配置设置"
 
-#: ui/help_and_config_qt.py:206 utils/help_and_config.py:244
+#: ui/help_and_config_qt.py:206
 msgid "Show Toasts"
 msgstr "显示烤面包"
 
-#: ui/help_and_config_qt.py:209 utils/help_and_config.py:246
+#: ui/help_and_config_qt.py:209
 msgid "Slideshow Interval (sec)"
 msgstr "幻灯片放映间隔( 秒)"
 
-#: ui/help_and_config_qt.py:212 utils/help_and_config.py:248
+#: ui/help_and_config_qt.py:212
 msgid "File Check Interval (sec)"
 msgstr "文件刷新间隔 (秒)"
 
-#: ui/help_and_config_qt.py:215 utils/help_and_config.py:250
+#: ui/help_and_config_qt.py:215
 msgid "Max Search Results"
 msgstr "最大搜索结果"
 
-#: ui/help_and_config_qt.py:219 utils/help_and_config.py:252
+#: ui/help_and_config_qt.py:219
 msgid "Sort By"
 msgstr "按"
 
-#: ui/compare/prevalidations_tab_qt.py:279 ui/help_and_config_qt.py:227
-#: ui_tk/compare/prevalidations_tab.py:236 utils/help_and_config.py:254
+#: ui/compare/prevalidations_tab_qt.py:302 ui/help_and_config_qt.py:227
 msgid "Enable Prevalidations"
 msgstr "启用预先批准"
 
-#: ui/help_and_config_qt.py:230 utils/help_and_config.py:256
+#: ui/help_and_config_qt.py:230
 msgid "Toasts Persist (sec)"
 msgstr "吐司坚守( 秒)"
 
-#: ui/help_and_config_qt.py:233 utils/help_and_config.py:258
+#: ui/help_and_config_qt.py:233
 msgid "Title Notify Persist (sec)"
 msgstr "标题 通知 持久 (秒)"
 
-#: ui/help_and_config_qt.py:236 utils/help_and_config.py:260
+#: ui/help_and_config_qt.py:236
 msgid "Delete Instantly"
 msgstr "立即删除"
 
-#: ui/help_and_config_qt.py:239 utils/help_and_config.py:262
+#: ui/help_and_config_qt.py:239
 msgid "Trash Folder"
 msgstr "回收文件夹"
 
-#: ui/help_and_config_qt.py:242 utils/help_and_config.py:264
+#: ui/help_and_config_qt.py:242
 msgid "Image Tagging Enabled"
 msgstr "启用图像标记"
 
-#: ui/help_and_config_qt.py:245 utils/help_and_config.py:266
+#: ui/help_and_config_qt.py:245
 msgid "Escape Backslash Filepaths"
 msgstr "逃离文件路径中的反斜线"
 
@@ -1793,48 +1746,47 @@ msgstr "截图目录"
 msgid "Save Screenshot To Same Dir"
 msgstr "将截图保存到同一目录"
 
-#: ui/app_window/app_window.py:533
+#: ui/app_window/app_window.py:545
 msgid "Set Title Bar Color..."
 msgstr "设置标题栏颜色..."
 
-#: ui/app_window/app_window.py:542
+#: ui/app_window/app_window.py:554
 msgid "Clear Title Bar Color"
 msgstr "清除标题栏颜色"
 
-#: ui/app_window/app_window.py:555
+#: ui/app_window/app_window.py:567
 msgid "No directory loaded."
 msgstr "未加载目录。"
 
-#: ui/app_window/app_window.py:562
+#: ui/app_window/app_window.py:574
 msgid "Choose Title Bar Color"
 msgstr "选择标题栏颜色"
 
-#: ui/app_window/app_window.py:570
+#: ui/app_window/app_window.py:582
 msgid "Title bar color set for this directory."
 msgstr "为此目录的标题栏颜色设置"
 
-#: ui/app_window/app_window.py:585
+#: ui/app_window/app_window.py:597
 msgid "Title bar color cleared for this directory."
 msgstr "此目录的标题栏颜色已重置。"
 
-#: ui/app_window/app_window.py:626 ui/app_window/sidebar_panel.py:93
+#: ui/app_window/app_window.py:638 ui/app_window/sidebar_panel.py:96
 msgid "Enter base directory..."
 msgstr "输入基目录..."
 
-#: ui/app_window/app_window.py:630 ui/files/recent_directory_window_qt.py:163
-#: ui_tk/files/recent_directory_window.py:178
+#: ui/app_window/app_window.py:643 ui/files/recent_directory_window_qt.py:164
 msgid "Set image comparison directory"
 msgstr "设定图像比较目录"
 
-#: ui/app_window/app_window.py:926
+#: ui/app_window/app_window.py:1031
 msgid "Screenshots are available for videos and animated GIF files."
 msgstr "截图可用于视频和动态GIF文件。"
 
-#: ui/app_window/app_window.py:936 ui/app_window/app_window.py:951
+#: ui/app_window/app_window.py:1041 ui/app_window/app_window.py:1056
 msgid "Screenshot Failed"
 msgstr "截图失败"
 
-#: ui/app_window/app_window.py:937
+#: ui/app_window/app_window.py:1042
 msgid ""
 "Unable to create screenshot directory:\n"
 "{0}\n"
@@ -1846,7 +1798,7 @@ msgstr ""
 "\n"
 "{1}"
 
-#: ui/app_window/app_window.py:952
+#: ui/app_window/app_window.py:1057
 msgid ""
 "Unable to save screenshot.\n"
 "\n"
@@ -1856,7 +1808,7 @@ msgstr ""
 "\n"
 "{0}"
 
-#: ui/app_window/app_window.py:958
+#: ui/app_window/app_window.py:1063
 msgid ""
 "Screenshot saved to:\n"
 "{0}"
@@ -1864,23 +1816,21 @@ msgstr ""
 "截图已保存到：\n"
 "{0}"
 
-#: ui/app_window/context_menu_builder.py:167
+#: ui/app_window/context_menu_builder.py:165
 msgid "Copy file path"
 msgstr "复制文件路径"
 
-#: ui/app_window/context_menu_builder.py:171
+#: ui/app_window/context_menu_builder.py:169
 msgid "Copy file name"
 msgstr "复制文件名"
 
-#: ui/app_window/context_menu_builder.py:175
+#: ui/app_window/context_menu_builder.py:173
 msgid "Open file location"
 msgstr "打开文件位置"
 
-#: ui/app_window/context_menu_builder.py:190
+#: ui/app_window/context_menu_builder.py:196
 #: ui/compare/classifier_actions_tab_qt.py:204
-#: ui/compare/prevalidations_tab_qt.py:498
-#: ui_tk/compare/classifier_actions_tab.py:227
-#: ui_tk/compare/prevalidations_tab.py:518 utils/constants.py:387
+#: ui/compare/prevalidations_tab_qt.py:542 utils/constants.py:497
 msgid "Delete"
 msgstr "删除"
 
@@ -1888,105 +1838,92 @@ msgstr "删除"
 msgid "Album art"
 msgstr "专辑封面"
 
-#: ui/app_window/media_frame.py:757
+#: ui/app_window/media_frame.py:823
 msgid "Video: "
 msgstr "视频： "
 
-#: ui/app_window/media_frame.py:918
+#: ui/app_window/media_frame.py:987
 msgid "No output path provided."
 msgstr "未指定输出路径。"
 
-#: ui/app_window/media_frame.py:922
+#: ui/app_window/media_frame.py:991
 msgid "VLC player is unavailable."
 msgstr "VLC媒体播放器不可用。"
 
-#: ui/app_window/media_frame.py:926
+#: ui/app_window/media_frame.py:995
 msgid "VLC snapshot operation failed."
 msgstr "VLC截屏操作失败了"
 
-#: ui/app_window/media_frame.py:931
+#: ui/app_window/media_frame.py:1000
 msgid "Snapshot file was not created."
 msgstr "快照文件未创建。"
 
-#: ui/app_window/media_frame.py:942
+#: ui/app_window/media_frame.py:1011
 msgid "No GIF frame available for screenshot."
 msgstr "无 GIF 帧可用于截图。"
 
-#: ui/app_window/media_frame.py:948
+#: ui/app_window/media_frame.py:1017
 msgid "Failed to save GIF frame image."
 msgstr "未能保存GIF帧图像。"
 
-#: ui/app_window/media_frame.py:951
+#: ui/app_window/media_frame.py:1020
 msgid "No time-based media is currently active."
 msgstr "目前没有基于时间的媒体处于活动状态。"
 
-#: ui/app_window/search_controller.py:195 ui_tk/files/go_to_file.py:228
+#: ui/app_window/search_controller.py:211
 msgid "Image files"
 msgstr "图像文件"
 
-#: ui/app_window/sidebar_panel.py:141
+#: ui/app_window/sidebar_panel.py:155
 msgid "Search image path..."
 msgstr "搜索图片路径..."
 
 #: ui/auth/app_startup_auth_qt.py:28 ui/auth/app_startup_auth_qt.py:41
-#: ui_tk/auth/app_startup_auth.py:32 ui_tk/auth/app_startup_auth.py:92
 msgid "Application Password Required"
 msgstr "需要软件应用密码"
 
-#: ui/auth/app_startup_auth_qt.py:49 ui_tk/auth/app_startup_auth.py:99
+#: ui/auth/app_startup_auth_qt.py:49
 msgid "A password is required to open this application."
 msgstr "打开此软件应用程序需要密码。"
 
 #: ui/auth/app_startup_auth_qt.py:56 ui/auth/password_dialog.py:178
-#: ui_tk/auth/app_startup_auth.py:108 ui_tk/auth/password_dialog.py:133
 msgid "Password:"
 msgstr "密码:"
 
 #: ui/auth/app_startup_auth_qt.py:124 ui/auth/password_dialog.py:306
-#: ui_tk/auth/app_startup_auth.py:141 ui_tk/auth/password_dialog.py:249
 msgid "Incorrect password"
 msgstr "密码错误"
 
 #: ui/auth/password_admin_window.py:38 ui/auth/password_admin_window.py:53
 #: ui/auth/password_admin_window.py:86 ui/auth/password_admin_window.py:290
-#: ui_tk/auth/password_admin_window.py:194
-#: ui_tk/auth/password_admin_window.py:383
-#: ui_tk/auth/password_admin_window.py:398
-#: ui_tk/auth/password_admin_window.py:458
 msgid "Change Password"
 msgstr "更改密码"
 
-#: ui/auth/password_admin_window.py:60 ui_tk/auth/password_admin_window.py:405
+#: ui/auth/password_admin_window.py:60
 msgid "Current Password:"
 msgstr "当前密码:"
 
 #: ui/auth/password_admin_window.py:67 ui/auth/password_admin_window.py:306
-#: ui_tk/auth/password_admin_window.py:214
-#: ui_tk/auth/password_admin_window.py:414
 msgid "New Password:"
 msgstr "新密码："
 
-#: ui/auth/password_admin_window.py:74 ui_tk/auth/password_admin_window.py:423
+#: ui/auth/password_admin_window.py:74
 msgid "Confirm New Password:"
 msgstr "确认新密码："
 
-#: ui/auth/password_admin_window.py:99 ui_tk/auth/password_admin_window.py:440
+#: ui/auth/password_admin_window.py:99
 msgid "Current password is incorrect."
 msgstr "当前密码不正确。"
 
 #: ui/auth/password_admin_window.py:103
-#: ui_tk/auth/password_admin_window.py:444
 msgid "New passwords do not match."
 msgstr "新密码不匹配。"
 
 #: ui/auth/password_admin_window.py:107 ui/auth/password_admin_window.py:471
-#: ui_tk/auth/password_admin_window.py:366
-#: ui_tk/auth/password_admin_window.py:448
 msgid "Password must be at least 6 characters long."
 msgstr "密码长度至少为 6 个字符。"
 
 #: ui/auth/password_admin_window.py:115 ui/auth/password_admin_window.py:118
-#: ui_tk/auth/password_admin_window.py:453
 msgid "Password changed successfully."
 msgstr "密码更改成功。"
 
@@ -1995,7 +1932,6 @@ msgid "Info"
 msgstr "信息"
 
 #: ui/auth/password_admin_window.py:122
-#: ui_tk/auth/password_admin_window.py:456
 msgid "Failed to change password."
 msgstr "更改密码失败。"
 
@@ -2003,1057 +1939,857 @@ msgstr "更改密码失败。"
 msgid "Administration Error"
 msgstr "管理错误"
 
-#: ui/auth/password_admin_window.py:144 ui_tk/auth/password_admin_window.py:34
+#: ui/auth/password_admin_window.py:144
 msgid "Password Administration"
 msgstr "密码管理"
 
-#: ui/auth/password_admin_window.py:189 ui_tk/auth/password_admin_window.py:84
+#: ui/auth/password_admin_window.py:189
 msgid "Password Protection Settings"
 msgstr "密码保护设置"
 
-#: ui/auth/password_admin_window.py:201 ui_tk/auth/password_admin_window.py:96
+#: ui/auth/password_admin_window.py:201
 msgid "Protected Actions"
 msgstr "受保护的行动"
 
 #: ui/auth/password_admin_window.py:209
-#: ui_tk/auth/password_admin_window.py:102
 msgid "Select which actions require password authentication:"
 msgstr "选择哪些操作需要密码验证："
 
 #: ui/auth/password_admin_window.py:225
-#: ui_tk/auth/password_admin_window.py:118
 msgid "(Always protected if a password is set)"
 msgstr "(如果设置了密码，则始终受保护）"
 
 #: ui/auth/password_admin_window.py:241
-#: ui_tk/auth/password_admin_window.py:137
 msgid "Session Timeout Settings"
 msgstr "会话超时设置"
 
 #: ui/auth/password_admin_window.py:249
-#: ui_tk/auth/password_admin_window.py:143
 msgid "Enable session timeout (remember password for a period)"
 msgstr "启用会话超时（在一段时间内记住密码）"
 
 #: ui/auth/password_admin_window.py:258
-#: ui_tk/auth/password_admin_window.py:155
 msgid "Session timeout duration (minutes):"
 msgstr "会话超时时间（分钟）："
 
 #: ui/auth/password_admin_window.py:268
-#: ui_tk/auth/password_admin_window.py:164
 msgid "Security Advice Settings"
 msgstr "安全建议设置"
 
 #: ui/auth/password_admin_window.py:273
-#: ui_tk/auth/password_admin_window.py:170
 msgid "Show security advice when no password is configured"
 msgstr "当未配置密码时显示安全提示"
 
 #: ui/auth/password_admin_window.py:279
-#: ui_tk/auth/password_admin_window.py:178
 msgid "Password Setup"
 msgstr "密码设置"
 
 #: ui/auth/password_admin_window.py:286
-#: ui_tk/auth/password_admin_window.py:188
 msgid "Password is configured"
 msgstr "密码已配置"
 
 #: ui/auth/password_admin_window.py:294 ui/auth/password_admin_window.py:497
-#: ui_tk/auth/password_admin_window.py:199
-#: ui_tk/auth/password_admin_window.py:471
 msgid "Remove Password"
 msgstr "删除密码"
 
 #: ui/auth/password_admin_window.py:298
-#: ui_tk/auth/password_admin_window.py:204
 msgid "Set up a password to enable protection:"
 msgstr "设置密码以启用保护："
 
 #: ui/auth/password_admin_window.py:317
-#: ui_tk/auth/password_admin_window.py:227
 msgid "Confirm Password:"
 msgstr "确认密码："
 
 #: ui/auth/password_admin_window.py:325
-#: ui_tk/auth/password_admin_window.py:236
 msgid "Set Password"
 msgstr "设置密码"
 
 #: ui/auth/password_admin_window.py:338 ui/auth/password_admin_window.py:404
-#: ui_tk/auth/password_admin_window.py:246
-#: ui_tk/auth/password_admin_window.py:305
 msgid "Reset to Defaults"
 msgstr "重置为默认值"
 
 #: ui/auth/password_admin_window.py:342 ui/auth/password_admin_window.py:430
-#: ui_tk/auth/password_admin_window.py:250
-#: ui_tk/auth/password_admin_window.py:330
 msgid "Set to Current"
 msgstr "设置为当前"
 
 #: ui/auth/password_admin_window.py:346
-#: ui_tk/auth/password_admin_window.py:254
 msgid "Export Cache as JSON"
 msgstr "以 JSON 格式导出缓存"
 
 #: ui/auth/password_admin_window.py:350
-#: ui_tk/auth/password_admin_window.py:258
 msgid "Save Settings"
 msgstr "保存设置"
 
-#: ui/auth/password_admin_window.py:354 ui/files/directory_picker_dialog.py:62
-#: ui_tk/auth/password_admin_window.py:262
+#: ui/auth/password_admin_window.py:354
+#: ui/compare/hf_model_manager_window_qt.py:49
+#: ui/files/directory_picker_dialog.py:63
 msgid "Close"
 msgstr "关闭"
 
 #: ui/auth/password_admin_window.py:396
-#: ui_tk/auth/password_admin_window.py:299
 msgid "Password protection settings saved."
 msgstr "保存密码保护设置。"
 
 #: ui/auth/password_admin_window.py:405
-#: ui_tk/auth/password_admin_window.py:306
 msgid ""
 "Are you sure you want to reset all password protection settings to their "
 "default values?"
 msgstr "您确定要将所有密码保护设置重置为默认值吗？"
 
 #: ui/auth/password_admin_window.py:423
-#: ui_tk/auth/password_admin_window.py:325
 msgid "Settings reset to defaults."
 msgstr "设置重置为默认值。"
 
 #: ui/auth/password_admin_window.py:431
-#: ui_tk/auth/password_admin_window.py:331
 msgid ""
 "Are you sure you want to restore all settings to their current saved state? "
 "This will discard any unsaved changes."
 msgstr "您确定要将所有设置恢复到当前保存的状态吗？这将放弃任何未保存的更改。"
 
 #: ui/auth/password_admin_window.py:448
-#: ui_tk/auth/password_admin_window.py:349
 msgid "Settings restored to current saved state."
 msgstr "设置恢复到当前保存状态。"
 
 #: ui/auth/password_admin_window.py:459
-#: ui_tk/auth/password_admin_window.py:358
 msgid "Please enter a password."
 msgstr "请输入密码。"
 
 #: ui/auth/password_admin_window.py:465
-#: ui_tk/auth/password_admin_window.py:362
 msgid "Passwords do not match."
 msgstr "密码不匹配。"
 
 #: ui/auth/password_admin_window.py:477
-#: ui_tk/auth/password_admin_window.py:371
 msgid "Password set successfully."
 msgstr "密码设置成功。"
 
 #: ui/auth/password_admin_window.py:483
-#: ui_tk/auth/password_admin_window.py:378
 msgid "Failed to set password."
 msgstr "密码设置失败。"
 
 #: ui/auth/password_admin_window.py:498
-#: ui_tk/auth/password_admin_window.py:472
 msgid ""
 "Are you sure you want to remove password protection? This will disable all "
 "password requirements."
 msgstr "您确定要取消密码保护吗？这将禁用所有密码要求。"
 
 #: ui/auth/password_admin_window.py:505
-#: ui_tk/auth/password_admin_window.py:478
 msgid "Password removed successfully."
 msgstr "密码已成功删除。"
 
 #: ui/auth/password_admin_window.py:509
-#: ui_tk/auth/password_admin_window.py:482
 msgid "Failed to remove password."
 msgstr "删除密码失败。"
 
 #: ui/auth/password_admin_window.py:549
-#: ui_tk/auth/password_admin_window.py:517
 msgid "Cache exported as JSON to:"
 msgstr "缓存以 JSON 格式导出到:"
 
 #: ui/auth/password_admin_window.py:553
-#: ui_tk/auth/password_admin_window.py:519
 msgid "Failed to export cache as JSON:"
 msgstr "以 JSON 格式导出缓存失败："
 
 #: ui/auth/password_dialog.py:97 ui/auth/password_dialog.py:152
-#: ui_tk/auth/password_dialog.py:45 ui_tk/auth/password_dialog.py:103
 msgid "Password Required"
 msgstr "需要密码"
 
-#: ui/auth/password_dialog.py:99 ui_tk/auth/password_dialog.py:45
+#: ui/auth/password_dialog.py:99
 msgid "Password Protection"
 msgstr "密码保护"
 
-#: ui/auth/password_dialog.py:160 ui_tk/auth/password_dialog.py:110
+#: ui/auth/password_dialog.py:160
 msgid "Password required for: {0}"
 msgstr "需要密码： {0}"
 
-#: ui/auth/password_dialog.py:207 ui_tk/auth/password_dialog.py:158
+#: ui/auth/password_dialog.py:207
 msgid "Password Protection Available"
 msgstr "提供密码保护"
 
-#: ui/auth/password_dialog.py:215 ui_tk/auth/password_dialog.py:165
+#: ui/auth/password_dialog.py:215
 msgid "This action requires password protection: {0}"
 msgstr "此操作需要密码保护： {0}"
 
-#: ui/auth/password_dialog.py:234 ui_tk/auth/password_dialog.py:181
+#: ui/auth/password_dialog.py:234
 msgid "Password protection is not currently configured. You can:"
 msgstr "当前未配置密码保护。您可以 :"
 
-#: ui/auth/password_dialog.py:243 ui_tk/auth/password_dialog.py:191
+#: ui/auth/password_dialog.py:243
 msgid "• Configure password protection for sensitive actions"
 msgstr "• 为敏感操作配置密码保护"
 
-#: ui/auth/password_dialog.py:251 ui_tk/auth/password_dialog.py:196
+#: ui/auth/password_dialog.py:251
 msgid "• Continue without password protection (less secure)"
 msgstr "• 不使用密码保护（不太安全）"
 
-#: ui/auth/password_dialog.py:258 ui_tk/auth/password_dialog.py:203
+#: ui/auth/password_dialog.py:258
 msgid "Don't show this security advice again"
 msgstr "不再显示此安全提示"
 
-#: ui/auth/password_dialog.py:270 ui_tk/auth/password_dialog.py:217
+#: ui/auth/password_dialog.py:270
 msgid "Continue Without Protection"
 msgstr "在没有保护的情况下继续"
 
 #: ui/auth/password_dialog.py:273 ui/auth/password_dialog.py:291
-#: ui_tk/auth/password_dialog.py:213 ui_tk/auth/password_dialog.py:234
 msgid "Configure Protection"
 msgstr "配置保护"
 
-#: ui/auth/password_dialog.py:279 ui_tk/auth/password_dialog.py:225
+#: ui/auth/password_dialog.py:279
 msgid ""
 "Password protection is required for this action but is not currently "
 "configured."
 msgstr "此操作需要密码保护，但目前尚未配置。"
 
 #: ui/compare/classifier_action_copy_window_qt.py:64
-#: ui_tk/compare/classifier_action_copy_window.py:51
 msgid "Copy Classifier Action / Prevalidation"
 msgstr "复制分类器操作 / 预验证"
 
 #: ui/compare/classifier_action_copy_window_qt.py:111
-#: ui_tk/compare/classifier_action_copy_window.py:82
 msgid "Copying from:"
-msgstr "复制来自：[链接位置]"
+msgstr "来自:"
 
 #: ui/compare/classifier_action_copy_window_qt.py:134
-#: ui_tk/compare/classifier_action_copy_window.py:109
 msgid "Copy to:"
 msgstr "复制到："
 
 #: ui/compare/classifier_action_copy_window_qt.py:140
-#: ui_tk/compare/classifier_action_copy_window.py:114
 msgid "Target Type:"
 msgstr "目标类型："
 
 #: ui/compare/classifier_action_copy_window_qt.py:156
-#: ui_tk/compare/classifier_action_copy_window.py:137
 msgid "New Name:"
 msgstr "新名字"
 
 #: ui/compare/classifier_action_copy_window_qt.py:170
 #: ui/compare/classifier_actions_tab_qt.py:200
-#: ui/compare/prevalidations_tab_qt.py:492
-#: ui/files/file_actions_window_qt.py:316 ui/files/marked_file_mover_qt.py:307
-#: ui_tk/compare/classifier_action_copy_window.py:156
-#: ui_tk/compare/classifier_actions_tab.py:219
-#: ui_tk/compare/prevalidations_tab.py:511
-#: ui_tk/files/file_actions_window.py:250 ui_tk/files/marked_file_mover.py:215
-#: utils/constants.py:385
+#: ui/compare/directory_profile_window_qt.py:314
+#: ui/compare/directory_profile_window_qt.py:338
+#: ui/compare/prevalidations_tab_qt.py:536
+#: ui/files/file_actions_window_qt.py:316 ui/files/marked_file_mover_qt.py:324
+#: utils/constants.py:495
 msgid "Copy"
 msgstr "复制"
 
 #: ui/compare/classifier_action_copy_window_qt.py:227
-#: ui_tk/compare/classifier_action_copy_window.py:227
 msgid "Name cannot be empty"
 msgstr "名称不能为空"
 
 #: ui/compare/classifier_action_copy_window_qt.py:236
-#: ui_tk/compare/classifier_action_copy_window.py:242
 msgid "A {0} with this name already exists"
 msgstr "一个{0}具有这个名称的已经存在。"
 
 #: ui/compare/classifier_actions_tab_qt.py:102
-#: ui_tk/compare/classifier_actions_tab.py:109
 msgid "Add Classifier Action"
 msgstr "添加分类器操作"
 
 #: ui/compare/classifier_actions_tab_qt.py:106
-#: ui_tk/compare/classifier_actions_tab.py:111
 msgid "Clear Classifier Actions"
 msgstr "清除分类器操作"
 
 #: ui/compare/classifier_actions_tab_qt.py:110
-#: ui_tk/compare/classifier_actions_tab.py:113
 msgid "Run All"
 msgstr "运行全部"
 
 #: ui/compare/classifier_actions_tab_qt.py:119
-#: ui_tk/compare/classifier_actions_tab.py:117
 msgid "Run on Profile:"
 msgstr "在配置文件上运行："
 
 #: ui/compare/classifier_actions_tab_qt.py:167
-#: ui/compare/prevalidations_tab_qt.py:449
-#: ui_tk/compare/classifier_actions_tab.py:152
-#: ui_tk/compare/prevalidations_tab.py:458
+#: ui/compare/prevalidations_tab_qt.py:493
 msgid "Active"
 msgstr "活动"
 
 #: ui/compare/classifier_actions_tab_qt.py:167
-#: ui/compare/classifier_management_window_qt.py:100
-#: ui/compare/prevalidations_tab_qt.py:448
-#: ui_tk/compare/classifier_actions_tab.py:156
-#: ui_tk/compare/prevalidations_tab.py:449 utils/constants.py:133
+#: ui/compare/classifier_management_window_qt.py:102
+#: ui/compare/prevalidations_tab_qt.py:492 utils/constants.py:133
 #: utils/constants.py:148
 msgid "Name"
 msgstr "名称"
 
 #: ui/compare/classifier_actions_tab_qt.py:167
-#: ui/compare/classifier_management_window_qt.py:204
-#: ui/compare/prevalidations_tab_qt.py:448
-#: ui_tk/compare/classifier_actions_tab.py:160
-#: ui_tk/compare/classifier_management_window.py:163
-#: ui_tk/compare/prevalidations_tab.py:452
+#: ui/compare/classifier_management_window_qt.py:206
+#: ui/compare/prevalidations_tab_qt.py:492
 msgid "Action"
 msgstr "行动"
 
 #: ui/compare/classifier_actions_tab_qt.py:178
-#: ui_tk/compare/classifier_actions_tab.py:182
 msgid "Run"
 msgstr "运行"
 
 #: ui/compare/classifier_actions_tab_qt.py:196
-#: ui/compare/prevalidations_tab_qt.py:486
+#: ui/compare/prevalidations_tab_qt.py:530
 #: ui/files/file_actions_window_qt.py:331
 #: ui/files/file_actions_window_qt.py:377
-#: ui_tk/compare/classifier_actions_tab.py:211
-#: ui_tk/compare/prevalidations_tab.py:504
-#: ui_tk/files/file_actions_window.py:261
-#: ui_tk/files/file_actions_window.py:312
 msgid "Modify"
 msgstr "修改"
 
 #: ui/compare/classifier_actions_tab_qt.py:208
-#: ui/compare/prevalidations_tab_qt.py:504
-#: ui_tk/compare/classifier_actions_tab.py:235
-#: ui_tk/compare/prevalidations_tab.py:525
+#: ui/compare/prevalidations_tab_qt.py:548
 msgid "Move down"
 msgstr "向下移动"
 
 #: ui/compare/classifier_actions_tab_qt.py:297
-#: ui/compare/prevalidations_tab_qt.py:379
-#: ui_tk/compare/classifier_actions_tab.py:304
-#: ui_tk/compare/classifier_actions_tab.py:370
-#: ui_tk/compare/prevalidations_tab.py:391
+#: ui/compare/prevalidations_tab_qt.py:402
 msgid "directories"
 msgstr "目录"
 
-#: ui/compare/classifier_actions_tab_qt.py:305
-#: ui_tk/compare/classifier_actions_tab.py:310
+#: ui/compare/classifier_actions_tab_qt.py:312
 msgid "Run classifier action '{0}' on the following directories?"
 msgstr "是否在以下目录上运行分类器操作 ‘{0}’？"
 
-#: ui/compare/classifier_actions_tab_qt.py:310
-#: ui_tk/compare/classifier_actions_tab.py:314
+#: ui/compare/classifier_actions_tab_qt.py:317
 msgid "Run Classifier Action"
 msgstr "运行分类器操作"
 
-#: ui/compare/classifier_actions_tab_qt.py:338
-#: ui_tk/compare/classifier_actions_tab.py:354
+#: ui/compare/classifier_actions_tab_qt.py:345
 msgid "No active classifier actions to run"
 msgstr "没有可运行的活动分类器操作"
 
-#: ui/compare/classifier_actions_tab_qt.py:343
-#: ui_tk/compare/classifier_actions_tab.py:378
+#: ui/compare/classifier_actions_tab_qt.py:350
 msgid "Run {0} active classifier action(s) on the following directories?"
 msgstr "在以下目录上运行 {0} 个活动分类器操作？"
 
-#: ui/compare/classifier_actions_tab_qt.py:351
-#: ui_tk/compare/classifier_actions_tab.py:382
+#: ui/compare/classifier_actions_tab_qt.py:358
 msgid "Run All Classifier Actions"
 msgstr "运行所有分类器操作"
 
-#: ui/compare/classifier_management_window_qt.py:77
+#: ui/compare/classifier_management_window_qt.py:79
 #: ui/compare/prevalidations_tab_qt.py:67
-#: ui_tk/compare/classifier_management_window.py:53
-#: ui_tk/compare/prevalidations_tab.py:30
 msgid "Modify Prevalidation"
 msgstr "修改前缀"
 
-#: ui/compare/classifier_management_window_qt.py:78
+#: ui/compare/classifier_management_window_qt.py:80
 #: ui/compare/prevalidations_tab_qt.py:68
-#: ui_tk/compare/classifier_management_window.py:54
-#: ui_tk/compare/prevalidations_tab.py:30
 msgid "Prevalidation Name"
 msgstr "预验证名称"
 
-#: ui/compare/classifier_management_window_qt.py:81
-#: ui_tk/compare/classifier_management_window.py:57
+#: ui/compare/classifier_management_window_qt.py:83
 msgid "Modify Classifier Action"
 msgstr "修改分类器操作"
 
-#: ui/compare/classifier_management_window_qt.py:82
-#: ui_tk/compare/classifier_management_window.py:58
+#: ui/compare/classifier_management_window_qt.py:84
 msgid "Classifier Action Name"
 msgstr "分类器名称 操作"
 
-#: ui/compare/classifier_management_window_qt.py:101
+#: ui/compare/classifier_management_window_qt.py:103
 msgid "New"
 msgstr "新"
 
-#: ui/compare/classifier_management_window_qt.py:146
-#: ui_tk/compare/classifier_management_window.py:96
+#: ui/compare/classifier_management_window_qt.py:148
 msgid "Positives"
 msgstr "积极方面"
 
-#: ui/compare/classifier_management_window_qt.py:153
-#: ui_tk/compare/classifier_management_window.py:104
+#: ui/compare/classifier_management_window_qt.py:155
 msgid "Negatives"
 msgstr "底片"
 
-#: ui/compare/classifier_management_window_qt.py:160
-#: ui_tk/compare/classifier_management_window.py:112
+#: ui/compare/classifier_management_window_qt.py:162
 msgid "Validation Types"
 msgstr "验证类型"
 
-#: ui/compare/classifier_management_window_qt.py:161
-#: ui_tk/compare/classifier_management_window.py:115
+#: ui/compare/classifier_management_window_qt.py:163
 msgid "Use Text Embeddings"
 msgstr "使用文本嵌入"
 
-#: ui/compare/classifier_management_window_qt.py:167
-#: ui_tk/compare/classifier_management_window.py:122
+#: ui/compare/classifier_management_window_qt.py:169
 msgid "Use Image Classifier"
 msgstr "使用图像分类器"
 
-#: ui/compare/classifier_management_window_qt.py:173
-#: ui_tk/compare/classifier_management_window.py:129
+#: ui/compare/classifier_management_window_qt.py:175
 msgid "Use Prompts"
 msgstr "使用提示"
 
-#: ui/compare/classifier_management_window_qt.py:179
-#: ui_tk/compare/classifier_management_window.py:138
+#: ui/compare/classifier_management_window_qt.py:181
 msgid "Use Embedding Prototype"
 msgstr "使用嵌入原型"
 
-#: ui/compare/classifier_management_window_qt.py:186
-#: ui_tk/compare/classifier_management_window.py:147
+#: ui/compare/classifier_management_window_qt.py:188
 msgid "Text Embedding Threshold"
 msgstr "文本嵌入阈值"
 
-#: ui/compare/classifier_management_window_qt.py:195
-#: ui_tk/compare/classifier_management_window.py:155
+#: ui/compare/classifier_management_window_qt.py:197
 msgid "Embedding Prototype Threshold"
 msgstr "嵌入原型的阈值"
 
-#: ui/compare/classifier_management_window_qt.py:213
-#: ui_tk/compare/classifier_management_window.py:175
+#: ui/compare/classifier_management_window_qt.py:215
 msgid "Action Modifier"
 msgstr "动作修改器"
 
-#: ui/compare/classifier_management_window_qt.py:219
-#: ui_tk/compare/classifier_management_window.py:183
+#: ui/compare/classifier_management_window_qt.py:221
 msgid "Image Classifier Name"
 msgstr "图像分类器名称"
 
-#: ui/compare/classifier_management_window_qt.py:231
-#: ui_tk/compare/classifier_management_window.py:196
+#: ui/compare/classifier_management_window_qt.py:233
 msgid "Image Classifier Selected Category"
 msgstr "图像分类器选定类别"
 
-#: ui/compare/classifier_management_window_qt.py:241
-#: ui_tk/compare/classifier_management_window.py:242
+#: ui/compare/classifier_management_window_qt.py:256
 msgid "Prototype Directory"
 msgstr "原型目录"
 
-#: ui/compare/classifier_management_window_qt.py:246
-#: ui/compare/classifier_management_window_qt.py:264
-#: ui/files/go_to_file_qt.py:273 ui/files/go_to_file_qt.py:381
-#: ui_tk/compare/classifier_management_window.py:257
-#: ui_tk/compare/classifier_management_window.py:295
-#: ui_tk/files/go_to_file.py:137 ui_tk/files/go_to_file.py:378
+#: ui/compare/classifier_management_window_qt.py:261
+#: ui/compare/classifier_management_window_qt.py:279
+#: ui/compare/hf_model_manager_window_qt.py:93 ui/files/go_to_file_qt.py:273
+#: ui/files/go_to_file_qt.py:381
 msgid "Browse..."
 msgstr "浏览..."
 
-#: ui/compare/classifier_management_window_qt.py:253
-#: ui_tk/compare/classifier_management_window.py:265
+#: ui/compare/classifier_management_window_qt.py:268
 msgid "Force Recalculate Prototype"
 msgstr "强制重新计算原型"
 
-#: ui/compare/classifier_management_window_qt.py:259
-#: ui_tk/compare/classifier_management_window.py:275
+#: ui/compare/classifier_management_window_qt.py:274
 msgid "Negative Prototype Directory (Optional)"
 msgstr "负原型目录（可选）"
 
-#: ui/compare/classifier_management_window_qt.py:271
-#: ui_tk/compare/classifier_management_window.py:305
+#: ui/compare/classifier_management_window_qt.py:286
 msgid "Negative Prototype Weight (λ)"
 msgstr "负原型的权重（λ）"
 
-#: ui/compare/classifier_management_window_qt.py:285
-#: ui_tk/compare/classifier_management_window.py:215
+#: ui/compare/classifier_management_window_qt.py:300
 msgid "Should Run"
 msgstr "应运行"
 
-#: ui/compare/classifier_management_window_qt.py:286
-#: ui_tk/compare/classifier_management_window.py:218
+#: ui/compare/classifier_management_window_qt.py:301
 msgid "Enable this classifier action"
 msgstr "启用此分类器操作"
 
-#: ui/compare/classifier_management_window_qt.py:292
-#: ui/compare/directory_profile_window_qt.py:135
+#: ui/compare/classifier_management_window_qt.py:307
+#: ui/compare/directory_profile_window_qt.py:176
 #: ui/compare/lookahead_window_qt.py:153
-#: ui_tk/compare/classifier_management_window.py:227
-#: ui_tk/compare/lookahead_window.py:102
-#: ui_tk/files/directory_profile_window.py:99
 msgid "Done"
 msgstr "已完成"
 
-#: ui/compare/classifier_management_window_qt.py:377
-#: ui_tk/compare/classifier_management_window.py:488
+#: ui/compare/classifier_management_window_qt.py:396
 msgid "Select Prototype Directory"
 msgstr "选择原型目录"
 
-#: ui/compare/classifier_management_window_qt.py:384
-#: ui_tk/compare/classifier_management_window.py:499
+#: ui/compare/classifier_management_window_qt.py:403
 msgid "Select Negative Prototype Directory"
 msgstr "选择负原型目录"
 
-#: ui/compare/classifier_management_window_qt.py:434
-#: ui_tk/compare/classifier_management_window.py:560
+#: ui/compare/classifier_management_window_qt.py:453
 msgid "Prototypes recalculated successfully"
 msgstr "原型机重新计算成功"
 
-#: ui/compare/classifier_management_window_qt.py:511
-#: ui_tk/compare/classifier_management_window.py:592
+#: ui/compare/classifier_management_window_qt.py:534
 msgid "Classifier Management"
 msgstr "分类器管理"
 
-#: ui/compare/classifier_management_window_qt.py:536
-#: ui/compare/prevalidations_tab_qt.py:268
-#: ui_tk/compare/classifier_management_window.py:620
-#: ui_tk/compare/prevalidations_tab.py:221
+#: ui/compare/classifier_management_window_qt.py:559
+#: ui/compare/prevalidations_tab_qt.py:291
 msgid "Prevalidations"
 msgstr "前言"
 
-#: ui/compare/classifier_management_window_qt.py:542
-#: ui_tk/compare/classifier_management_window.py:635
+#: ui/compare/classifier_management_window_qt.py:565
 msgid ""
 "Prevalidations are disabled. Enable them in the Prevalidations tab settings."
 msgstr "预验证功能已禁用。请在“预验证”选项卡设置中启用该功能。"
 
 #: ui/compare/compare_settings_window_qt.py:134
-#: ui_tk/compare/compare_settings_window.py:70
 msgid "Comparison Modes"
 msgstr "比较模式"
 
 #: ui/compare/compare_settings_window_qt.py:149
-#: ui_tk/compare/compare_settings_window.py:102
 msgid "Add Instance"
 msgstr "添加实例"
 
 #: ui/compare/compare_settings_window_qt.py:157
-#: ui_tk/compare/compare_settings_window.py:122
 msgid "Combination Logic:"
 msgstr "组合逻辑："
 
 #: ui/compare/compare_settings_window_qt.py:194
 #: ui/compare/lookahead_window_qt.py:131
-#: ui_tk/compare/compare_settings_window.py:183
-#: ui_tk/compare/lookahead_window.py:95
 msgid "Threshold"
 msgstr "阈值"
 
 #: ui/compare/compare_settings_window_qt.py:207
-#: ui_tk/compare/compare_settings_window.py:223
 msgid "Max files to compare"
 msgstr "要比较的最大文件"
 
 #: ui/compare/compare_settings_window_qt.py:225
-#: ui_tk/compare/compare_settings_window.py:247
 msgid "Compare faces"
 msgstr "比较面孔"
 
 #: ui/compare/compare_settings_window_qt.py:233
-#: ui_tk/compare/compare_settings_window.py:257
 msgid "Overwrite cache"
 msgstr "覆盖缓存"
 
 #: ui/compare/compare_settings_window_qt.py:241
-#: ui_tk/compare/compare_settings_window.py:267
 msgid "Store checkpoints"
 msgstr "储存检查站"
 
 #: ui/compare/compare_settings_window_qt.py:256
-#: ui_tk/compare/compare_settings_window.py:296
 msgid "Filters (Applied Before Comparison)"
 msgstr "过滤器（比较前应用）"
 
 #: ui/compare/compare_settings_window_qt.py:262
-#: ui_tk/compare/compare_settings_window.py:310
 msgid "Size Filter:"
 msgstr "尺寸筛选器："
 
 #: ui/compare/compare_settings_window_qt.py:265
-#: ui_tk/compare/compare_settings_window.py:319
 msgid "(Size filtering UI to be implemented)"
 msgstr "(大小筛选界面待实现)"
 
 #: ui/compare/compare_settings_window_qt.py:272
-#: ui_tk/compare/compare_settings_window.py:333
 msgid "Model Filter:"
 msgstr "模型过滤器："
 
 #: ui/compare/compare_settings_window_qt.py:275
-#: ui_tk/compare/compare_settings_window.py:342
 msgid "(Model filtering UI to be implemented)"
 msgstr "(模型过滤界面待实现)"
 
 #: ui/compare/compare_settings_window_qt.py:291
-#: ui_tk/compare/compare_settings_window.py:366
 msgid "Apply"
 msgstr "申请"
 
 #: ui/compare/compare_settings_window_qt.py:398
-#: ui_tk/compare/compare_settings_window.py:473
 msgid "Instance Weights:"
 msgstr "实例权重："
 
-#: ui/compare/directory_profile_window_qt.py:61
-#: ui/compare/prevalidations_tab_qt.py:256
-#: ui_tk/compare/prevalidations_tab.py:374
-#: ui_tk/files/directory_profile_window.py:37
+#: ui/compare/directory_profile_window_qt.py:98
+#: ui/compare/prevalidations_tab_qt.py:276
 msgid "Edit Profile"
 msgstr "编辑目录配置文件"
 
-#: ui/compare/directory_profile_window_qt.py:61
-#: ui_tk/files/directory_profile_window.py:37
+#: ui/compare/directory_profile_window_qt.py:98
 msgid "Create Profile"
 msgstr "创建目录配置文件"
 
-#: ui/compare/directory_profile_window_qt.py:84
-#: ui_tk/files/directory_profile_window.py:49
+#: ui/compare/directory_profile_window_qt.py:122
 msgid "Profile Name"
 msgstr "目录配置文件名称"
 
-#: ui/compare/directory_profile_window_qt.py:93
-#: ui_tk/files/directory_profile_window.py:59
+#: ui/compare/directory_profile_window_qt.py:131
 msgid "Directories"
 msgstr "目录"
 
-#: ui/compare/directory_profile_window_qt.py:110
-#: ui_tk/files/directory_profile_window.py:79
+#: ui/compare/directory_profile_window_qt.py:148
 msgid "Add"
 msgstr "添加"
 
-#: ui/compare/directory_profile_window_qt.py:114
-#: ui_tk/files/directory_profile_window.py:82
+#: ui/compare/directory_profile_window_qt.py:152
 msgid "Edit"
 msgstr "编辑"
 
-#: ui/compare/directory_profile_window_qt.py:118
-#: ui/files/directory_notes_window_qt.py:145
-#: ui_tk/files/directory_notes_window.py:137
-#: ui_tk/files/directory_profile_window.py:85
+#: ui/compare/directory_profile_window_qt.py:156
+#: ui/compare/directory_profile_window_qt.py:404
+#: ui/files/directory_notes_window_qt.py:196
 msgid "Remove"
 msgstr "移除"
 
-#: ui/compare/directory_profile_window_qt.py:122
-#: ui_tk/files/directory_profile_window.py:88
+#: ui/compare/directory_profile_window_qt.py:160
 msgid "Add dirs from subdirs"
 msgstr "从子目录添加目录"
 
-#: ui/compare/directory_profile_window_qt.py:126
-#: ui_tk/files/directory_profile_window.py:91
+#: ui/compare/directory_profile_window_qt.py:164
 msgid "Clear all"
 msgstr "清除所有"
 
-#: ui/compare/directory_profile_window_qt.py:148
-#: ui/files/directory_picker_dialog.py:208
-#: ui_tk/files/directory_profile_window.py:110
+#: ui/compare/directory_profile_window_qt.py:218
+#: ui/files/directory_picker_dialog.py:209
 msgid "Select directory"
 msgstr "选择目录"
 
-#: ui/compare/directory_profile_window_qt.py:159
-#: ui_tk/files/directory_profile_window.py:140
+#: ui/compare/directory_profile_window_qt.py:229
 msgid "Add Directory"
 msgstr "添加目录"
 
-#: ui/compare/directory_profile_window_qt.py:181
-#: ui_tk/files/directory_profile_window.py:165
+#: ui/compare/directory_profile_window_qt.py:251
 msgid "Edit Directory"
 msgstr "编辑目录"
 
-#: ui/compare/directory_profile_window_qt.py:210
-#: ui_tk/files/directory_profile_window.py:199
+#: ui/compare/directory_profile_window_qt.py:280
 msgid "Select directory to add subdirectories from"
 msgstr "选择要添加子目录的目录"
 
 #: ui/compare/lookahead_window_qt.py:62
-#: ui/compare/prevalidations_tab_qt.py:229
-#: ui_tk/compare/lookahead_window.py:30
-#: ui_tk/compare/prevalidations_tab.py:279
+#: ui/compare/prevalidations_tab_qt.py:249
 msgid "Edit Lookahead"
 msgstr "编辑前瞻"
 
-#: ui/compare/lookahead_window_qt.py:62 ui_tk/compare/lookahead_window.py:30
+#: ui/compare/lookahead_window_qt.py:62
 msgid "Create Lookahead"
 msgstr "创建前瞻"
 
-#: ui/compare/lookahead_window_qt.py:94 ui_tk/compare/lookahead_window.py:42
+#: ui/compare/lookahead_window_qt.py:94
 msgid "Lookahead Name"
 msgstr "前瞻名称"
 
-#: ui/compare/lookahead_window_qt.py:104 ui_tk/compare/lookahead_window.py:53
+#: ui/compare/lookahead_window_qt.py:104
 msgid "Reference existing prevalidation name"
 msgstr "引用现有预验证名称"
 
-#: ui/compare/lookahead_window_qt.py:112 ui_tk/compare/lookahead_window.py:66
+#: ui/compare/lookahead_window_qt.py:112
 msgid "Prevalidation Name or Custom Text"
 msgstr "预验证名称或自定义文本"
 
 #: ui/compare/prevalidations_tab_qt.py:83
-#: ui_tk/compare/prevalidations_tab.py:42
 msgid "Lookaheads (select from shared list)"
 msgstr "前瞻（从共享列表中选择）"
 
 #: ui/compare/prevalidations_tab_qt.py:97
-#: ui_tk/compare/prevalidations_tab.py:61
 msgid "Directory Profile"
 msgstr "目录简介"
 
-#: ui/compare/prevalidations_tab_qt.py:213
-#: ui_tk/compare/prevalidations_tab.py:249
+#: ui/compare/prevalidations_tab_qt.py:233
 msgid "Lookaheads"
 msgstr "前瞻"
 
-#: ui/compare/prevalidations_tab_qt.py:226
-#: ui_tk/compare/prevalidations_tab.py:276
+#: ui/compare/prevalidations_tab_qt.py:246
 msgid "Add Lookahead"
 msgstr "添加前瞻"
 
-#: ui/compare/prevalidations_tab_qt.py:232
-#: ui_tk/compare/prevalidations_tab.py:282
+#: ui/compare/prevalidations_tab_qt.py:252
 msgid "Remove Lookahead"
 msgstr "移除前瞻"
 
-#: ui/compare/prevalidations_tab_qt.py:240
-#: ui_tk/compare/prevalidations_tab.py:344
+#: ui/compare/prevalidations_tab_qt.py:260
 msgid "Directory Profiles"
 msgstr "目录简介"
 
-#: ui/compare/prevalidations_tab_qt.py:253
-#: ui_tk/compare/prevalidations_tab.py:371
+#: ui/compare/prevalidations_tab_qt.py:273
 msgid "Add Profile"
 msgstr "添加目录配置文件"
 
-#: ui/compare/prevalidations_tab_qt.py:259
-#: ui_tk/compare/prevalidations_tab.py:377
+#: ui/compare/prevalidations_tab_qt.py:282
 msgid "Remove Profile"
 msgstr "删除目录配置文件"
 
-#: ui/compare/prevalidations_tab_qt.py:269
-#: ui_tk/compare/prevalidations_tab.py:227
+#: ui/compare/prevalidations_tab_qt.py:292
 msgid "Add prevalidation"
 msgstr "添加预验证"
 
-#: ui/compare/prevalidations_tab_qt.py:272
-#: ui_tk/compare/prevalidations_tab.py:229
+#: ui/compare/prevalidations_tab_qt.py:295
 msgid "Clear prevalidations"
 msgstr "清除预先验证"
 
-#: ui/compare/prevalidations_tab_qt.py:310
-#: ui_tk/compare/prevalidations_tab.py:295
+#: ui/compare/prevalidations_tab_qt.py:333
 msgid "{name} ({name_or_text}, threshold: {threshold:.2f})"
 msgstr "{name}（{name_or_text}，阈值：{threshold:.2f}）"
 
-#: ui/compare/prevalidations_tab_qt.py:379
-#: ui_tk/compare/prevalidations_tab.py:391
+#: ui/compare/prevalidations_tab_qt.py:402
 msgid "directory"
 msgstr "目录"
 
-#: ui/compare/prevalidations_tab_qt.py:448
-#: ui_tk/compare/prevalidations_tab.py:455
+#: ui/compare/prevalidations_tab_qt.py:492
 msgid "Profile"
 msgstr "目录简介"
 
-#: ui/compare/prevalidations_tab_qt.py:474
-#: ui_tk/compare/prevalidations_tab.py:480
+#: ui/compare/prevalidations_tab_qt.py:518
 msgid "(Global)"
 msgstr "(全球)"
 
 #: ui/files/directory_notes_window_qt.py:49
-#: ui_tk/files/directory_notes_window.py:38
 msgid "Directory Notes - {0}"
 msgstr "目录注释 - {0}"
 
-#: ui/files/directory_notes_window_qt.py:90
-#: ui_tk/files/directory_notes_window.py:57
+#: ui/files/directory_notes_window_qt.py:99
 msgid "Directory: {0}"
 msgstr "目录：{0}"
 
-#: ui/files/directory_notes_window_qt.py:95
-#: ui_tk/files/directory_notes_window.py:66
+#: ui/files/directory_notes_window_qt.py:104
 msgid "Export to Text File"
 msgstr "导出为文本文件"
 
-#: ui/files/directory_notes_window_qt.py:96
-#: ui_tk/files/directory_notes_window.py:70
+#: ui/files/directory_notes_window_qt.py:105
 msgid "Import from Text File"
 msgstr "从文本文件导入"
 
-#: ui/files/directory_notes_window_qt.py:97
-#: ui_tk/files/directory_notes_window.py:73
+#: ui/files/directory_notes_window_qt.py:106
 msgid "Import from JSON File"
 msgstr "从JSON文件导入"
 
-#: ui/files/directory_notes_window_qt.py:112
-#: ui_tk/files/directory_notes_window.py:85
+#: ui/files/directory_notes_window_qt.py:121
 msgid "MARKED FILES"
 msgstr "标记文件"
 
-#: ui/files/directory_notes_window_qt.py:119
-#: ui_tk/files/directory_notes_window.py:95
+#: ui/files/directory_notes_window_qt.py:135
 msgid "(No marked files)"
 msgstr "（无标记文件）"
 
-#: ui/files/directory_notes_window_qt.py:124
-#: ui_tk/files/directory_notes_window.py:105
+#: ui/files/directory_notes_window_qt.py:140
 msgid "FILE NOTES"
 msgstr "文件备注"
 
-#: ui/files/directory_notes_window_qt.py:131
-#: ui_tk/files/directory_notes_window.py:115
+#: ui/files/directory_notes_window_qt.py:160
 msgid "(No file notes)"
 msgstr "（无文件注释）"
 
-#: ui/files/directory_notes_window_qt.py:149
-#: ui/files/directory_notes_window_qt.py:194
+#: ui/files/directory_notes_window_qt.py:192
+#: ui/files/directory_notes_window_qt.py:237
 #: ui/files/favorites_window_qt.py:200
-#: ui_tk/files/directory_notes_window.py:148
-#: ui_tk/files/directory_notes_window.py:217
-#: ui_tk/files/favorites_window.py:142
 msgid "Open"
 msgstr "打开"
 
-#: ui/files/directory_notes_window_qt.py:175
-#: ui_tk/files/directory_notes_window.py:197
+#: ui/files/directory_notes_window_qt.py:241
 msgid "Edit Note"
 msgstr "编辑笔记"
 
-#: ui/files/directory_notes_window_qt.py:181
-#: ui_tk/files/directory_notes_window.py:206
+#: ui/files/directory_notes_window_qt.py:247
 msgid "Remove Note"
 msgstr "删除笔记"
 
-#: ui/files/directory_notes_window_qt.py:216
-#: ui_tk/files/directory_notes_window.py:142
+#: ui/files/directory_notes_window_qt.py:320
 msgid "Removed marked file: {0}"
 msgstr "已删除标记文件：{0}"
 
-#: ui/files/directory_notes_window_qt.py:223
-#: ui_tk/files/directory_notes_window.py:211
+#: ui/files/directory_notes_window_qt.py:327
 msgid "Removed note for: {0}"
 msgstr "已删除针对 {0} 的注释"
 
-#: ui/files/directory_notes_window_qt.py:234
-#: ui_tk/files/directory_notes_window.py:157
-#: ui_tk/files/directory_notes_window.py:226
+#: ui/files/directory_notes_window_qt.py:337
 msgid "Opened file: {0}"
 msgstr "打开了文件：{0}"
 
-#: ui/files/directory_notes_window_qt.py:239
-#: ui_tk/files/directory_notes_window.py:162
-#: ui_tk/files/directory_notes_window.py:231
+#: ui/files/directory_notes_window_qt.py:342
 msgid "Opened file in new window: {0}"
 msgstr "在新窗口中打开文件：{0}"
 
-#: ui/files/directory_notes_window_qt.py:303
-#: ui_tk/files/directory_notes_window.py:320
+#: ui/files/directory_notes_window_qt.py:406
 msgid "Export Directory Notes"
 msgstr "导出目录的注释"
 
-#: ui/files/directory_notes_window_qt.py:305
-#: ui/files/directory_notes_window_qt.py:320
+#: ui/files/directory_notes_window_qt.py:408
+#: ui/files/directory_notes_window_qt.py:423
 msgid "Text files (*.txt);;All files (*)"
 msgstr "文本文件 (*.txt);;所有文件 (*)"
 
-#: ui/files/directory_notes_window_qt.py:310
-#: ui_tk/files/directory_notes_window.py:328
+#: ui/files/directory_notes_window_qt.py:413
 msgid "Exported notes to: {0}"
 msgstr "导出笔记至：{0}"
 
-#: ui/files/directory_notes_window_qt.py:312
-#: ui_tk/files/directory_notes_window.py:331
+#: ui/files/directory_notes_window_qt.py:415
 msgid "Export Error"
 msgstr "导出错误"
 
-#: ui/files/directory_notes_window_qt.py:313
-#: ui_tk/files/directory_notes_window.py:331
+#: ui/files/directory_notes_window_qt.py:416
 msgid "Failed to export notes: {0}"
 msgstr "导出笔记失败：{0}"
 
-#: ui/files/directory_notes_window_qt.py:318
-#: ui_tk/files/directory_notes_window.py:338
+#: ui/files/directory_notes_window_qt.py:421
 msgid "Import Marked Files from Text File"
 msgstr "从文本文件导入标记文件"
 
-#: ui/files/directory_notes_window_qt.py:328
-#: ui_tk/files/directory_notes_window.py:348
+#: ui/files/directory_notes_window_qt.py:431
 msgid "Import Options"
 msgstr "导入选项"
 
-#: ui/files/directory_notes_window_qt.py:329
-#: ui_tk/files/directory_notes_window.py:349
+#: ui/files/directory_notes_window_qt.py:432
 msgid "Search recursively in subdirectories for matching filenames?"
 msgstr "递归搜索子目录中匹配的文件名？"
 
-#: ui/files/directory_notes_window_qt.py:337
-#: ui/files/directory_notes_window_qt.py:367
-#: ui_tk/files/directory_notes_window.py:356
-#: ui_tk/files/directory_notes_window.py:388
+#: ui/files/directory_notes_window_qt.py:440
+#: ui/files/directory_notes_window_qt.py:470
 msgid "Imported {0} files."
 msgstr "导入 {0} 个文件。"
 
-#: ui/files/directory_notes_window_qt.py:339
-#: ui_tk/files/directory_notes_window.py:358
+#: ui/files/directory_notes_window_qt.py:442
 msgid "{0} filenames not found:"
 msgstr "{0} 未找到文件名："
 
-#: ui/files/directory_notes_window_qt.py:342
-#: ui/files/directory_notes_window_qt.py:372
+#: ui/files/directory_notes_window_qt.py:445
+#: ui/files/directory_notes_window_qt.py:475
 #: ui/files/file_actions_window_qt.py:250
-#: ui_tk/files/directory_notes_window.py:363
-#: ui_tk/files/directory_notes_window.py:395
-#: ui_tk/files/file_actions_window.py:193
 msgid "... and {0} more"
 msgstr "... 以及 {0} 项更多内容"
 
-#: ui/files/directory_notes_window_qt.py:344
-#: ui/files/directory_notes_window_qt.py:374
-#: ui_tk/files/directory_notes_window.py:365
-#: ui_tk/files/directory_notes_window.py:397
+#: ui/files/directory_notes_window_qt.py:447
+#: ui/files/directory_notes_window_qt.py:477
 msgid "Import Complete"
 msgstr "导入完成"
 
-#: ui/files/directory_notes_window_qt.py:345
-#: ui/files/directory_notes_window_qt.py:375
-#: ui_tk/files/directory_notes_window.py:366
-#: ui_tk/files/directory_notes_window.py:398
+#: ui/files/directory_notes_window_qt.py:448
+#: ui/files/directory_notes_window_qt.py:478
 msgid "Imported {0} marked files"
 msgstr "导入标记为{0}的文件"
 
-#: ui/files/directory_notes_window_qt.py:349
-#: ui/files/directory_notes_window_qt.py:379
-#: ui_tk/files/directory_notes_window.py:369
-#: ui_tk/files/directory_notes_window.py:401
+#: ui/files/directory_notes_window_qt.py:452
+#: ui/files/directory_notes_window_qt.py:482
 msgid "Import Error"
 msgstr "导入错误"
 
-#: ui/files/directory_notes_window_qt.py:350
-#: ui_tk/files/directory_notes_window.py:369
+#: ui/files/directory_notes_window_qt.py:453
 msgid "Failed to import from text file: {0}"
 msgstr "从文本文件导入失败：{0}"
 
-#: ui/files/directory_notes_window_qt.py:356
-#: ui_tk/files/directory_notes_window.py:376
+#: ui/files/directory_notes_window_qt.py:459
 msgid "Import Marked Files from JSON File"
 msgstr "从JSON文件导入标记文件"
 
-#: ui/files/directory_notes_window_qt.py:358
+#: ui/files/directory_notes_window_qt.py:461
 msgid "JSON files (*.json);;All files (*)"
 msgstr "JSON 文件 (*.json);;所有文件 (*)"
 
-#: ui/files/directory_notes_window_qt.py:369
-#: ui_tk/files/directory_notes_window.py:390
+#: ui/files/directory_notes_window_qt.py:472
 msgid "{0} invalid or missing file paths:"
 msgstr "{0}个无效或缺失的文件路径："
 
-#: ui/files/directory_notes_window_qt.py:380
-#: ui_tk/files/directory_notes_window.py:401
+#: ui/files/directory_notes_window_qt.py:483
 msgid "Failed to import from JSON file: {0}"
 msgstr "从 JSON 文件导入失败：{0}"
 
-#: ui/files/directory_picker_dialog.py:98
+#: lib/fast_directory_picker_qt.py:252 lib/fast_directory_picker_qt.py:538
+#: ui/files/directory_picker_dialog.py:99
 msgid "Select Directory"
 msgstr "选择目录"
 
-#: ui/files/directory_picker_dialog.py:121
-#: ui_tk/files/recent_directory_window.py:127
+#: ui/files/directory_picker_dialog.py:122
 msgid "Add directory"
 msgstr "添加目录"
 
-#: ui/files/directory_picker_dialog.py:126
-#: ui_tk/files/marked_file_mover.py:163
-#: ui_tk/files/recent_directory_window.py:129
+#: ui/files/directory_picker_dialog.py:127
 msgid "Add directories from parent"
 msgstr "从父目录添加目录"
 
-#: ui/files/directory_picker_dialog.py:131
-#: ui/files/marked_file_mover_qt.py:253 ui_tk/files/marked_file_mover.py:166
-#: ui_tk/files/recent_directory_window.py:131
+#: ui/files/directory_picker_dialog.py:132
+#: ui/files/marked_file_mover_qt.py:261
 msgid "Clear targets"
 msgstr "明确目标"
 
-#: ui/files/directory_picker_dialog.py:241
+#: ui/files/directory_picker_dialog.py:242
 #: ui/files/hotkey_actions_window_qt.py:111
-#: ui_tk/compare/prevalidations_tab.py:496
-#: ui_tk/files/hotkey_actions_window.py:94
 msgid "Set"
 msgstr "设定"
 
-#: ui/files/directory_picker_dialog.py:248
+#: ui/files/directory_picker_dialog.py:249
 msgid "Clear"
 msgstr "清除它"
 
-#: ui/files/directory_picker_dialog.py:330
+#: ui/files/directory_picker_dialog.py:331
 msgid "Filter: "
 msgstr "过滤： "
 
-#: ui/files/directory_picker_dialog.py:368
+#: ui/files/directory_picker_dialog.py:369
 msgid "Select parent directory"
 msgstr "选择父目录"
 
-#: ui/files/directory_picker_dialog.py:416
+#: ui/files/directory_picker_dialog.py:417
 msgid ""
 "No alphabet letters are currently used as the first character of any "
 "directory name in this list."
 msgstr "目前在本列表中，没有使用任何字母作为目录名称的第一个字符。"
 
-#: ui/files/directory_picker_dialog.py:421
+#: ui/files/directory_picker_dialog.py:422
 msgid ""
 "All letters A-Z are already used as the first character of at least one "
 "directory in this list."
 msgstr "所有字母A-Z已经被用作本列表中至少一个目录的第一个字符。"
 
-#: ui/files/directory_picker_dialog.py:426
+#: ui/files/directory_picker_dialog.py:427
 msgid "Unused starting letters:"
 msgstr "未使用的起始字母"
 
-#: ui/files/directory_picker_dialog.py:430
+#: ui/files/directory_picker_dialog.py:431
 msgid "Alphabet Availability"
 msgstr "字母可用性"
 
-#: ui/files/favorites_window_qt.py:74 ui_tk/files/favorites_window.py:51
+#: ui/files/favorites_window_qt.py:74
 msgid "Added favorite: "
 msgstr "已添加到收藏夹： "
 
-#: ui/files/favorites_window_qt.py:89 ui_tk/files/favorites_window.py:70
+#: ui/files/favorites_window_qt.py:89
 msgid "Favorites"
 msgstr "收藏夹"
 
-#: ui/files/favorites_window_qt.py:175 ui_tk/files/favorites_window.py:125
+#: ui/files/favorites_window_qt.py:175
 msgid ""
 "No favorites set.\n"
 "\n"
@@ -3063,7 +2799,7 @@ msgstr ""
 "\n"
 "要添加收藏夹，请右键点击图片并选择“添加到收藏夹”。"
 
-#: ui/files/favorites_window_qt.py:206 ui_tk/files/favorites_window.py:148
+#: ui/files/favorites_window_qt.py:206
 msgid "Remove Favorite"
 msgstr "移除收藏"
 
@@ -3075,25 +2811,23 @@ msgstr "文件未找到： "
 msgid "Error opening image: "
 msgstr "错误打开图像： "
 
-#: ui/files/favorites_window_qt.py:255 ui_tk/files/favorites_window.py:187
+#: ui/files/favorites_window_qt.py:255
 msgid "Removed favorite: "
 msgstr "已移除收藏： "
 
-#: ui/files/file_actions_window_qt.py:75 ui_tk/files/file_actions_window.py:44
+#: ui/files/file_actions_window_qt.py:75
 msgid "File Actions"
 msgstr "文件操作"
 
-#: ui/files/file_actions_window_qt.py:95 ui_tk/files/file_actions_window.py:72
+#: ui/files/file_actions_window_qt.py:95
 msgid "File Action History"
 msgstr "文件操作历史"
 
 #: ui/files/file_actions_window_qt.py:102
-#: ui_tk/files/file_actions_window.py:74
 msgid "Search Image"
 msgstr "搜索图片"
 
 #: ui/files/file_actions_window_qt.py:106
-#: ui_tk/files/file_actions_window.py:76
 msgid "Clear History"
 msgstr "清除历史记录"
 
@@ -3102,373 +2836,343 @@ msgid "Load More ({0} remaining)"
 msgstr "加载更多 ({0} 剩余)"
 
 #: ui/files/file_actions_window_qt.py:205
-#: ui_tk/files/file_actions_window.py:110
 msgid "Today's File Actions"
 msgstr "今日文件操作"
 
 #: ui/files/file_actions_window_qt.py:207
-#: ui_tk/files/file_actions_window.py:110
 msgid "File Action Statistics"
 msgstr "文件操作统计信息"
 
 #: ui/files/file_actions_window_qt.py:215
-#: ui_tk/files/file_actions_window.py:117
-#: ui_tk/files/file_actions_window.py:549
 msgid "All Time"
 msgstr "历时"
 
 #: ui/files/file_actions_window_qt.py:215
-#: ui_tk/files/file_actions_window.py:117
-#: ui_tk/files/file_actions_window.py:551
 msgid "Today Only"
 msgstr "仅限今日"
 
 #: ui/files/file_actions_window_qt.py:222
-#: ui_tk/files/file_actions_window.py:124
 msgid "Target Directory"
 msgstr "目标目录"
 
 #: ui/files/file_actions_window_qt.py:222
-#: ui_tk/files/file_actions_window.py:142
 msgid "Total"
 msgstr "总计"
 
 #: ui/files/file_actions_window_qt.py:306
-#: ui_tk/files/file_actions_window.py:243
 msgid " ({0} files)"
 msgstr " ({0} 文件)"
 
 #: ui/files/file_actions_window_qt.py:308
-#: ui_tk/files/file_actions_window.py:245
 msgid "(auto)"
 msgstr "(自动)"
 
-#: ui/files/file_actions_window_qt.py:316 ui/files/marked_file_mover_qt.py:300
-#: ui_tk/files/file_actions_window.py:250 ui_tk/files/marked_file_mover.py:208
-#: utils/constants.py:383
+#: ui/files/file_actions_window_qt.py:316 ui/files/marked_file_mover_qt.py:317
+#: utils/constants.py:493
 msgid "Move"
 msgstr "移动"
 
 #: ui/files/file_actions_window_qt.py:325
 #: ui/files/file_actions_window_qt.py:369
-#: ui_tk/files/file_actions_window.py:253
-#: ui_tk/files/file_actions_window.py:304
 msgid "Undo"
 msgstr "撤销"
 
 #: ui/files/file_actions_window_qt.py:357
-#: ui_tk/files/file_actions_window.py:288
 msgid "View"
 msgstr "视图"
 
 #: ui/files/file_actions_window_qt.py:363
-#: ui_tk/files/file_actions_window.py:296
 msgid "Copy Filename"
 msgstr "复制文件名"
 
-#: ui/files/file_actions_window_qt.py:409
-#: ui_tk/files/file_actions_window.py:329
+#: ui/files/file_actions_window_qt.py:410
 msgid "Image does not exist: "
 msgstr "图像不存在 : "
 
-#: ui/files/file_actions_window_qt.py:411
-#: ui/files/file_actions_window_qt.py:429
-#: ui_tk/files/file_actions_window.py:330
-#: ui_tk/files/file_actions_window.py:341
+#: ui/files/file_actions_window_qt.py:412
+#: ui/files/file_actions_window_qt.py:431
 msgid "File Action Error"
 msgstr "文件动作错误"
 
-#: ui/files/file_actions_window_qt.py:427
-#: ui_tk/files/file_actions_window.py:340
+#: ui/files/file_actions_window_qt.py:429
 msgid "Images not found"
 msgstr "未找到图像"
 
-#: ui/files/file_actions_window_qt.py:522
+#: ui/files/file_actions_window_qt.py:537
 msgid "Filter: {}"
 msgstr "筛选器：{}"
 
 #: ui/files/go_to_file_qt.py:236 ui/files/go_to_file_qt.py:250
-#: ui_tk/files/go_to_file.py:99 ui_tk/files/go_to_file.py:118
 msgid "Go To File"
 msgstr "转到文件"
 
-#: ui/files/go_to_file_qt.py:269 ui_tk/files/go_to_file.py:134
+#: ui/files/go_to_file_qt.py:269
 msgid "Go To"
 msgstr "去"
 
-#: ui/files/go_to_file_qt.py:285 ui_tk/files/go_to_file.py:148
+#: ui/files/go_to_file_qt.py:285
 msgid "Go to closest file if exact match not found"
 msgstr "若未找到完全匹配项，则转至最近的文件"
 
-#: ui/files/go_to_file_qt.py:292 ui_tk/files/go_to_file.py:159
+#: ui/files/go_to_file_qt.py:292
 msgid "Go to file by index (1-based)"
 msgstr "按索引（基于1）定位文件"
 
-#: ui/files/go_to_file_qt.py:301 ui_tk/files/go_to_file.py:300
+#: ui/files/go_to_file_qt.py:301
 msgid "Sort by for closest search:"
 msgstr "按以下条件排序以获得最接近的搜索结果："
 
-#: ui/files/go_to_file_qt.py:325 ui_tk/files/go_to_file.py:335
+#: ui/files/go_to_file_qt.py:325
 msgid "Find Related Filenames"
 msgstr "查找相关文件名"
 
-#: ui/files/go_to_file_qt.py:334 ui_tk/files/go_to_file.py:340
+#: ui/files/go_to_file_qt.py:334
 msgid ""
 "Enter a base ID manually or click 'Extract from filename' to auto-extract "
 "from the filename above."
 msgstr "手动输入基础ID，或点击“从文件名提取”自动从上方文件名中提取。"
 
-#: ui/files/go_to_file_qt.py:344 ui_tk/files/go_to_file.py:350
+#: ui/files/go_to_file_qt.py:344
 msgid "Base ID:"
 msgstr "基础ID："
 
-#: ui/files/go_to_file_qt.py:362 ui_tk/files/go_to_file.py:362
+#: ui/files/go_to_file_qt.py:362
 msgid "Extract from filename"
 msgstr "从文件名中提取"
 
-#: ui/files/go_to_file_qt.py:370 ui_tk/files/go_to_file.py:370
+#: ui/files/go_to_file_qt.py:370
 msgid "Target Directory:"
 msgstr "目标目录："
 
-#: ui/files/go_to_file_qt.py:392 ui_tk/files/go_to_file.py:388
+#: ui/files/go_to_file_qt.py:392
 msgid "Find Related"
 msgstr "查找相关"
 
-#: ui/files/go_to_file_qt.py:442 ui_tk/files/go_to_file.py:188
+#: ui/files/go_to_file_qt.py:442
 msgid "Invalid search string, please enter some text."
 msgstr "搜索字符串无效，请输入一些文本。"
 
-#: ui/files/go_to_file_qt.py:460 ui_tk/files/go_to_file.py:204
+#: ui/files/go_to_file_qt.py:460
 msgid "Index navigation enabled but input is not a valid number."
 msgstr "索引导航已启用，但输入的数字无效。"
 
-#: ui/files/go_to_file_qt.py:503 ui_tk/files/go_to_file.py:246
+#: ui/files/go_to_file_qt.py:503
 msgid "Select file to go to"
 msgstr "选择要跳转的文件"
 
-#: ui/files/go_to_file_qt.py:525 ui_tk/files/go_to_file.py:265
+#: ui/files/go_to_file_qt.py:525
 msgid "No last moved image found."
 msgstr "未找到最近移动的媒体文件。"
 
-#: ui/files/go_to_file_qt.py:554 ui_tk/files/go_to_file.py:518
+#: ui/files/go_to_file_qt.py:554
 msgid "Please enter a filename first."
 msgstr "请先输入文件名。"
 
-#: ui/files/go_to_file_qt.py:560 ui_tk/files/go_to_file.py:524
+#: ui/files/go_to_file_qt.py:560
 msgid "Base ID extracted: {}"
 msgstr "提取的基础ID：{}"
 
-#: ui/files/go_to_file_qt.py:564 ui_tk/files/go_to_file.py:526
+#: ui/files/go_to_file_qt.py:564
 msgid "Could not extract base ID from filename. Please enter it manually."
 msgstr "无法从文件名中提取基础ID。请手动输入。"
 
-#: ui/files/go_to_file_qt.py:569 ui_tk/files/go_to_file.py:527
+#: ui/files/go_to_file_qt.py:569
 msgid "Could not extract base ID. Please enter it manually."
 msgstr "无法提取基础ID。请手动输入。"
 
-#: ui/files/go_to_file_qt.py:603 ui_tk/files/go_to_file.py:448
+#: ui/files/go_to_file_qt.py:603
 msgid "Loading current media and searching..."
 msgstr "正在加载当前媒体并搜索..."
 
-#: ui/files/go_to_file_qt.py:615 ui_tk/files/go_to_file.py:460
+#: ui/files/go_to_file_qt.py:615
 msgid ""
 "Current media filename loaded. Select a target directory to find related "
 "filenames."
 msgstr "当前加载的媒体文件名。请选择目标目录以查找相关文件名。"
 
-#: ui/files/go_to_file_qt.py:621 ui_tk/files/go_to_file.py:462
+#: ui/files/go_to_file_qt.py:621
 msgid "No active media file found in the current window."
 msgstr "当前窗口中未找到有效的媒体文件。"
 
-#: ui/files/go_to_file_qt.py:625 ui_tk/files/go_to_file.py:464
+#: ui/files/go_to_file_qt.py:625
 msgid "Error getting current media filename: {}"
 msgstr "获取当前媒体文件名时出错：{}"
 
-#: ui/files/go_to_file_qt.py:636 ui_tk/files/go_to_file.py:535
+#: ui/files/go_to_file_qt.py:636
 msgid "Please enter a base ID or extract it from a filename."
 msgstr "请输入基础ID或从文件名中提取。"
 
-#: ui/files/go_to_file_qt.py:641 ui_tk/files/go_to_file.py:539
+#: ui/files/go_to_file_qt.py:641
 msgid "Please select a target directory to search in."
 msgstr "请选择要搜索的目标目录。"
 
-#: ui/files/go_to_file_qt.py:645 ui_tk/files/go_to_file.py:543
+#: ui/files/go_to_file_qt.py:645
 msgid "Target directory does not exist."
 msgstr "目标目录不存在。"
 
-#: ui/files/go_to_file_qt.py:665 ui_tk/files/go_to_file.py:563
+#: ui/files/go_to_file_qt.py:665
 msgid "Found {} related filenames"
 msgstr "找到 {} 个相关的文件名"
 
-#: ui/files/go_to_file_qt.py:669 ui_tk/files/go_to_file.py:566
+#: ui/files/go_to_file_qt.py:669
 msgid "No related filenames found with base ID \"{0}\" in {1}"
 msgstr "在 {1} 中未找到基准ID为 “{0}” 的相关文件名。"
 
-#: ui/files/go_to_file_qt.py:679 ui_tk/files/go_to_file.py:741
+#: ui/files/go_to_file_qt.py:679
 msgid "Opening file: {}"
 msgstr "打开文件：{}"
 
-#: ui/files/go_to_file_qt.py:711 ui_tk/files/go_to_file.py:683
+#: ui/files/go_to_file_qt.py:711
 msgid ""
 "The directory '{0}' contains many files ({1} files found so far). Searching "
 "may take a while. Do you want to proceed?"
 msgstr "目录'{0}'包含大量文件（迄今已发现{1}个文件）。搜索可能需要一段时间。是否继续？"
 
-#: ui/files/go_to_file_qt.py:716 ui_tk/files/go_to_file.py:684
+#: ui/files/go_to_file_qt.py:716
 msgid "Large Directory"
 msgstr "大型目录"
 
-#: ui/files/go_to_file_qt.py:724 ui_tk/files/go_to_file.py:693
+#: ui/files/go_to_file_qt.py:724
 msgid "Search cancelled by user."
 msgstr "搜索被用户取消。"
 
-#: ui/files/go_to_file_qt.py:753 ui_tk/files/go_to_file.py:729
+#: ui/files/go_to_file_qt.py:753
 msgid "Error searching directory: {}"
 msgstr "搜索目录错误：{}"
 
 #: ui/files/hotkey_actions_window_qt.py:56
-#: ui_tk/files/hotkey_actions_window.py:25
 msgid "Hotkey Actions"
 msgstr "热键操作"
 
 #: ui/files/hotkey_actions_window_qt.py:72
-#: ui_tk/files/hotkey_actions_window.py:48
 msgid "Key name"
 msgstr "关键名称"
 
 #: ui/files/hotkey_actions_window_qt.py:73
-#: ui_tk/files/hotkey_actions_window.py:52
 msgid "Target directory"
 msgstr "目标目录"
 
 #: ui/files/hotkey_actions_window_qt.py:105
 #: ui/files/hotkey_actions_window_qt.py:107
-#: ui_tk/files/hotkey_actions_window.py:84
-#: ui_tk/files/hotkey_actions_window.py:89
 msgid "(unset)"
 msgstr "(未设定)"
 
-#: ui/files/marked_file_mover_qt.py:79
+#: ui/files/marked_file_mover_qt.py:84
 msgid "Invalid directory: {0}"
 msgstr "无效目录： {0}"
 
-#: ui/files/marked_file_mover_qt.py:83 ui_tk/files/marked_file_mover.py:263
+#: ui/files/marked_file_mover_qt.py:88
 msgid "Select target directory for marked files"
 msgstr "为标记文件选择目标目录"
 
-#: ui/files/marked_file_mover_qt.py:94 ui_tk/files/marked_file_mover.py:316
+#: ui/files/marked_file_mover_qt.py:100
 msgid "Where should the marked files have gone?"
 msgstr "做了标记的文件应该放在哪里？"
 
-#: ui/files/marked_file_mover_qt.py:122 ui/files/marked_file_mover_qt.py:159
-#: ui_tk/files/marked_file_mover.py:73 ui_tk/files/marked_file_mover.py:84
+#: ui/files/marked_file_mover_qt.py:129 ui/files/marked_file_mover_qt.py:166
 msgid "Move {0} Marked File(s)"
 msgstr "移动 {0} 个标记文件？"
 
-#: ui/files/marked_file_mover_qt.py:225
+#: ui/files/marked_file_mover_qt.py:233
 msgid "New target:"
 msgstr "新监悑:"
 
-#: ui/files/marked_file_mover_qt.py:229 ui_tk/files/marked_file_mover.py:155
+#: ui/files/marked_file_mover_qt.py:237
 msgid "MOVE"
 msgstr "移动"
 
-#: ui/files/marked_file_mover_qt.py:236 ui_tk/files/marked_file_mover.py:159
+#: ui/files/marked_file_mover_qt.py:244
 msgid "COPY"
 msgstr "复制"
 
-#: ui/files/marked_file_mover_qt.py:243 ui_tk/files/marked_file_mover.py:161
+#: ui/files/marked_file_mover_qt.py:251
 msgid "DELETE"
 msgstr "删除"
 
-#: ui/files/marked_file_mover_qt.py:248
+#: ui/files/marked_file_mover_qt.py:256
 msgid "Add from parent"
 msgstr "从父级添加"
 
-#: ui/files/marked_file_mover_qt.py:258 ui/files/pdf_options_window_qt.py:117
-#: ui_tk/files/marked_file_mover.py:168 ui_tk/files/pdf_options_window.py:80
+#: ui/files/marked_file_mover_qt.py:266 ui/files/pdf_options_window_qt.py:137
 msgid "Create PDF"
 msgstr "创建 PDF"
 
-#: ui/files/marked_file_mover_qt.py:319
+#: ui/files/marked_file_mover_qt.py:349
 msgid "Remove this target directory"
 msgstr "删除此目标目录"
 
-#: ui/files/marked_file_mover_qt.py:398 ui_tk/files/marked_file_mover.py:545
+#: ui/files/marked_file_mover_qt.py:511
 msgid "Confirm Delete"
 msgstr "确认删除"
 
-#: ui/files/marked_file_mover_qt.py:399
+#: ui/files/marked_file_mover_qt.py:512
 msgid "Deleting {0} marked files - Are you sure you want to proceed?"
 msgstr "删除{0} 标记的文件 - 您确定要继续吗 ?"
 
-#: ui/files/marked_file_mover_qt.py:431 ui_tk/files/marked_file_mover.py:573
+#: ui/files/marked_file_mover_qt.py:544
 msgid "Delete Failed"
 msgstr "删除失败"
 
-#: ui/files/marked_file_mover_qt.py:432
+#: ui/files/marked_file_mover_qt.py:545
 msgid "Failed to delete {0} files - check log for details."
 msgstr "删除 {0} 文件 - 检查日志以获取细节失败 。"
 
-#: ui/files/marked_file_mover_qt.py:437
+#: ui/files/marked_file_mover_qt.py:550
 msgid "Deleted {0} marked files."
 msgstr "删除{0} 标记的文件 。"
 
-#: ui/files/marked_file_mover_qt.py:464 ui_tk/files/marked_file_mover.py:331
-#: ui_tk/files/recent_directory_window.py:227
+#: ui/files/marked_file_mover_qt.py:579
 msgid "Select parent directory for target directories"
 msgstr "选择目标目录的父目录"
 
-#: ui/files/marked_file_mover_qt.py:505 ui_tk/files/marked_file_mover.py:235
+#: ui/files/marked_file_mover_qt.py:621
 msgid ""
 "WARNING: This action sets hotkey actions that will be used for future file "
 "operations. You may have accidentally triggered this shortcut due to a "
 "sticky Control key. Please confirm you want to proceed."
 msgstr "警告：此操作将设置用于未来文件操作的快捷键动作。您可能因Control键卡住而意外触发此快捷键。请确认是否继续操作。"
 
-#: ui/files/marked_file_mover_qt.py:515 ui/files/marked_file_mover_qt.py:521
-#: ui_tk/files/marked_file_mover.py:241 ui_tk/files/marked_file_mover.py:247
+#: ui/files/marked_file_mover_qt.py:631 ui/files/marked_file_mover_qt.py:637
 msgid "Recording next mark target and action."
 msgstr "记录下一个标记目标和行动。"
 
-#: ui/files/marked_file_mover_qt.py:543 ui_tk/files/marked_file_mover.py:523
+#: ui/files/marked_file_mover_qt.py:659
 msgid "Sorted directories by embedding comparison."
 msgstr "通过嵌入比较排序目录 。"
 
-#: ui/files/marked_file_mover_qt.py:562 ui_tk/files/marked_file_mover.py:683
+#: ui/files/marked_file_mover_qt.py:684
 msgid "Save PDF as"
 msgstr "将 PDF 保存为"
 
-#: ui/files/marked_file_mover_qt.py:662
+#: ui/files/marked_file_mover_qt.py:820
 msgid "Found {0} downstream related images"
 msgstr "找到 {0} 下游相关图像"
 
-#: ui/files/marked_file_mover_qt.py:667 ui_tk/files/marked_file_mover.py:642
+#: ui/files/marked_file_mover_qt.py:825
 msgid "No downstream related images found"
 msgstr "未找到下游相关图像"
 
-#: ui/files/marked_file_mover_qt.py:697
+#: ui/files/marked_file_mover_qt.py:855
 msgid "Filter: {0}"
 msgstr "过滤器： {0}"
 
-#: ui/files/marked_file_mover_qt.py:868 ui_tk/files/marked_file_mover.py:656
+#: ui/files/marked_file_mover_qt.py:1038
 msgid "Cleared marked file"
 msgstr "清除已标记的文件"
 
-#: ui/files/pdf_options_window_qt.py:63 ui/files/pdf_options_window_qt.py:73
-#: ui_tk/files/pdf_options_window.py:31 ui_tk/files/pdf_options_window.py:42
+#: ui/files/pdf_options_window_qt.py:78 ui/files/pdf_options_window_qt.py:88
 msgid "PDF Creation Options"
 msgstr "PDF 创建选项"
 
-#: ui/files/pdf_options_window_qt.py:82 ui_tk/files/pdf_options_window.py:48
+#: ui/files/pdf_options_window_qt.py:97
 msgid "PDF Filename:"
 msgstr "PDF 文件名："
 
-#: ui/files/pdf_options_window_qt.py:95 ui_tk/files/pdf_options_window.py:60
+#: ui/files/pdf_options_window_qt.py:115
 msgid "Preserve original image quality and format"
 msgstr "保留原始图像质量和格式"
 
-#: ui/files/pdf_options_window_qt.py:101 ui_tk/files/pdf_options_window.py:67
+#: ui/files/pdf_options_window_qt.py:121
 msgid ""
 "If enabled, images will maintain their original quality and format.\n"
 "If disabled, images will be compressed to reduce PDF size."
@@ -3476,79 +3180,63 @@ msgstr ""
 "如果启用，图像将保持原始质量和格式。\n"
 "如果禁用，图像将被压缩，以减小 PDF 的大小。"
 
-#: ui/files/recent_directory_window_qt.py:183
-#: ui_tk/files/marked_file_mover.py:260
-#: ui_tk/files/recent_directory_window.py:175
+#: ui/files/recent_directory_window_qt.py:184
 msgid "Invalid directory: %s"
 msgstr "无效目录： {0}"
 
 #: ui/files/target_directory_window_qt.py:74
-#: ui_tk/files/target_directory_window.py:69
 msgid "Select Target Directory"
 msgstr "选择目标目录"
 
 #: ui/files/target_directory_window_qt.py:106
-#: ui_tk/files/target_directory_window.py:162
 msgid "Select directory to search for related files"
 msgstr "选择目录以搜索相关文件"
 
 #: ui/files/type_configuration_window_qt.py:48
-#: ui_tk/files/type_configuration_window.py:27
 msgid "Basic image files (PNG, JPG, etc.)"
 msgstr "基本图片文件(PNG、JPG 等)"
 
 #: ui/files/type_configuration_window_qt.py:49
-#: ui_tk/files/type_configuration_window.py:28
 msgid "Video files (MP4, AVI, etc.) - First frame will be extracted"
 msgstr "视频文件( MP4, AVI等) - 将提取第一帧"
 
 #: ui/files/type_configuration_window_qt.py:50
-#: ui_tk/files/type_configuration_window.py:29
 msgid "Animated GIF files - First frame will be extracted"
 msgstr "GIF 动画文件 - 第一个框架将被提取"
 
 #: ui/files/type_configuration_window_qt.py:51
-#: ui_tk/files/type_configuration_window.py:30
 msgid "PDF documents - First page will be extracted"
 msgstr "PDF 文档 - 将提取第一页"
 
 #: ui/files/type_configuration_window_qt.py:52
-#: ui_tk/files/type_configuration_window.py:31
 msgid "Vector graphics - Will be converted to raster image"
 msgstr "矢量图形 - 将转换为光栅图像"
 
 #: ui/files/type_configuration_window_qt.py:53
-#: ui_tk/files/type_configuration_window.py:32
 msgid "HTML files - Will be rendered and converted to image"
 msgstr "HTML 文件 - 将渲染并转换成图像"
 
 #: ui/files/type_configuration_window_qt.py:60
-#: ui_tk/files/type_configuration_window.py:40
 msgid "PDF support requires pypdfium2 package"
 msgstr "PDF 支持需要 pypdfium2 软件包"
 
 #: ui/files/type_configuration_window_qt.py:65
-#: ui_tk/files/type_configuration_window.py:45
 msgid "SVG support requires cairosvg package"
 msgstr "SVG 支持需要 cairosvg 软件包"
 
 #: ui/files/type_configuration_window_qt.py:70
-#: ui_tk/files/type_configuration_window.py:50
 msgid "HTML support requires pyppeteer package"
 msgstr "HTML 支持需要 pyppeter 软件包"
 
 #: ui/files/type_configuration_window_qt.py:143
-#: ui_tk/files/type_configuration_window.py:101
 msgid "Media Type Configuration"
 msgstr "媒体类型配置"
 
-#: ui/files/type_configuration_window_qt.py:154
-#: ui_tk/files/type_configuration_window.py:117 utils/constants.py:443
+#: ui/files/type_configuration_window_qt.py:154 utils/constants.py:553
 msgid "Configure Media Types"
 msgstr "配置媒体类型"
 
 #: ui/files/type_configuration_window_qt.py:161
-#: ui_tk/files/type_configuration_window.py:122
 msgid ""
 "Select which types of media files you want to compare. Changes will require "
 "a refresh of open comparisons but files in browsing mode should update "
@@ -3556,337 +3244,311 @@ msgid ""
 msgstr "选择要比较的媒体文件类型。更改将需要刷新打开的比较，但浏览模式下的文件应会自动更新。"
 
 #: ui/files/type_configuration_window_qt.py:225
-#: ui_tk/files/type_configuration_window.py:188
 msgid "Apply Changes"
 msgstr "应用更改"
 
 #: ui/files/type_configuration_window_qt.py:267
-#: ui_tk/files/type_configuration_window.py:230
 msgid "Confirm Changes"
 msgstr "确认更改"
 
 #: ui/files/type_configuration_window_qt.py:268
-#: ui_tk/files/type_configuration_window.py:231
 msgid "This will clear all existing compares in open windows. Continue?"
 msgstr "这将清除所有在开放窗口中的比较 。 继续?"
 
 #: ui/files/type_configuration_window_qt.py:324
-#: ui_tk/files/type_configuration_window.py:291
 msgid "Media type configuration updated"
 msgstr "更新媒体类型配置"
 
-#: ui/image/image_details_qt.py:245 ui_tk/image/image_details.py:133
+#: ui/image/image_details_qt.py:257
 msgid "Image Path"
 msgstr "图像路径"
 
-#: ui/image/image_details_qt.py:249 ui_tk/image/image_details.py:135
+#: ui/image/image_details_qt.py:267
 msgid "File Index"
 msgstr "文件索引"
 
-#: ui/image/image_details_qt.py:253 ui_tk/image/image_details.py:137
+#: ui/image/image_details_qt.py:271
 msgid "Color Mode"
 msgstr "颜色模式"
 
-#: ui/image/image_details_qt.py:257 ui_tk/image/image_details.py:139
+#: ui/image/image_details_qt.py:275
 msgid "Dimensions"
 msgstr "尺寸"
 
-#: ui/image/image_details_qt.py:261 ui_tk/image/image_details.py:141
-#: utils/constants.py:45 utils/constants.py:68 utils/constants.py:138
-#: utils/constants.py:158
+#: ui/image/image_details_qt.py:279 utils/constants.py:45
+#: utils/constants.py:68 utils/constants.py:138 utils/constants.py:158
 msgid "Size"
 msgstr "大小"
 
-#: ui/image/image_details_qt.py:265 ui_tk/image/image_details.py:143
+#: ui/image/image_details_qt.py:283
 msgid "Modification Time"
 msgstr "修改时间"
 
-#: ui/image/image_details_qt.py:269 ui_tk/image/image_details.py:145
+#: ui/image/image_details_qt.py:287
 msgid "Positive"
 msgstr "阳性"
 
-#: ui/image/image_details_qt.py:282 ui_tk/image/image_details.py:151
+#: ui/image/image_details_qt.py:300
 msgid "(negative prompt not shown by config setting)"
 msgstr "(配置设置未显示的负提示)"
 
-#: ui/image/image_details_qt.py:284 ui_tk/image/image_details.py:149
+#: ui/image/image_details_qt.py:302
 msgid "Negative"
 msgstr "负数"
 
-#: ui/image/image_details_qt.py:293 ui_tk/image/image_details.py:154
-#: utils/constants.py:46 utils/constants.py:70
+#: ui/image/image_details_qt.py:311 utils/constants.py:46
+#: utils/constants.py:70
 msgid "Models"
 msgstr "模型"
 
-#: ui/image/image_details_qt.py:297 ui_tk/image/image_details.py:156
+#: ui/image/image_details_qt.py:315
 msgid "LoRAs"
 msgstr "LoRA"
 
-#: ui/image/image_details_qt.py:302 ui_tk/image/image_details.py:161
+#: ui/image/image_details_qt.py:320
 msgid "Copy Prompt"
 msgstr "复制提示"
 
-#: ui/image/image_details_qt.py:303 ui_tk/image/image_details.py:162
+#: ui/image/image_details_qt.py:321
 msgid "Copy Prompt No BREAK"
 msgstr "复制提示不中断"
 
-#: ui/image/image_details_qt.py:315 ui_tk/image/image_details.py:177
+#: ui/image/image_details_qt.py:333
 msgid "Randomly Modify"
 msgstr "随机修改"
 
-#: ui/image/image_details_qt.py:322 ui/image/image_details_qt.py:791
+#: ui/image/image_details_qt.py:340 ui/image/image_details_qt.py:821
 msgid "Change Aspect Ratio"
 msgstr "更改纵横比"
 
-#: ui/image/image_details_qt.py:323
+#: ui/image/image_details_qt.py:341
 msgid "Flip Aspect Ratio"
 msgstr "翻转宽高比"
 
-#: ui/image/image_details_qt.py:331 ui_tk/image/image_details.py:192
+#: ui/image/image_details_qt.py:349
 msgid "Run OCR"
 msgstr "运行 OCR"
 
-#: ui/image/image_details_qt.py:339 ui_tk/image/image_details.py:205
+#: ui/image/image_details_qt.py:357
 msgid "Image Generation"
 msgstr "图像生成"
 
-#: ui/image/image_details_qt.py:353 ui_tk/image/image_details.py:215
+#: ui/image/image_details_qt.py:371
 msgid "Press Shift+I on a main app window to run this"
 msgstr "按Shift+键 我在主应用窗口运行这个"
 
-#: ui/image/image_details_qt.py:361 ui_tk/image/image_details.py:222
+#: ui/image/image_details_qt.py:379
 msgid "Tags"
 msgstr "标记"
 
-#: ui/image/image_details_qt.py:369 ui_tk/image/image_details.py:232
+#: ui/image/image_details_qt.py:387
 msgid "Update Tags"
 msgstr "更新标记"
 
-#: ui/image/image_details_qt.py:547 ui_tk/image/image_details.py:343
+#: ui/image/image_details_qt.py:577
 msgid "No prompt found"
 msgstr "未找到提示"
 
-#: ui/image/image_details_qt.py:554 ui_tk/image/image_details.py:351
+#: ui/image/image_details_qt.py:584
 msgid "Copied prompt without BREAK"
 msgstr "复制的快速无阻"
 
-#: ui/image/image_details_qt.py:573 ui_tk/image/image_details.py:372
+#: ui/image/image_details_qt.py:603
 msgid "No files found in current directory"
 msgstr "当前目录中未找到任何文件"
 
-#: ui/image/image_details_qt.py:578 ui_tk/image/image_details.py:377
+#: ui/image/image_details_qt.py:608
 msgid "No files available"
 msgstr "没有可用文件"
 
-#: ui/image/image_details_qt.py:603 ui_tk/image/image_details.py:403
+#: ui/image/image_details_qt.py:633
 msgid "Copied prompt from {0}"
 msgstr "提示内容复制自{0}"
 
-#: ui/image/image_details_qt.py:610 ui_tk/image/image_details.py:410
+#: ui/image/image_details_qt.py:640
 msgid "No files with prompts found in current directory"
 msgstr "当前目录中未找到带提示的文件"
 
-#: ui/image/image_details_qt.py:657 ui/image/image_details_qt.py:844
-#: ui_tk/image/image_details.py:416 ui_tk/image/image_details.py:512
+#: ui/image/image_details_qt.py:687 ui/image/image_details_qt.py:874
 msgid "Rotated image right"
 msgstr "向右旋转图像"
 
-#: ui/image/image_details_qt.py:657 ui/image/image_details_qt.py:844
-#: ui_tk/image/image_details.py:416 ui_tk/image/image_details.py:512
+#: ui/image/image_details_qt.py:687 ui/image/image_details_qt.py:874
 msgid "Rotated image left"
 msgstr "左旋图像"
 
-#: ui/image/image_details_qt.py:666 ui/image/image_details_qt.py:852
-#: ui_tk/image/image_details.py:427 ui_tk/image/image_details.py:523
+#: ui/image/image_details_qt.py:696 ui/image/image_details_qt.py:882
 msgid "Cropped image"
 msgstr "剪切图像"
 
-#: ui/image/image_details_qt.py:673 ui/image/image_details_qt.py:857
-#: ui_tk/image/image_details.py:431 ui_tk/image/image_details.py:527
+#: ui/image/image_details_qt.py:703 ui/image/image_details_qt.py:887
 msgid "No crops found"
 msgstr "没有找到作物"
 
-#: ui/image/image_details_qt.py:677 ui/image/image_details_qt.py:864
-#: ui_tk/image/image_details.py:438 ui_tk/image/image_details.py:534
+#: ui/image/image_details_qt.py:707 ui/image/image_details_qt.py:894
 msgid "Enhanced image"
 msgstr "增强图像"
 
-#: ui/image/image_details_qt.py:681 ui/image/image_details_qt.py:873
-#: ui_tk/image/image_details.py:446 ui_tk/image/image_details.py:543
+#: ui/image/image_details_qt.py:711 ui/image/image_details_qt.py:903
 msgid "Randomly cropped image"
 msgstr "随机裁剪的图像"
 
-#: ui/image/image_details_qt.py:695 ui/image/image_details_qt.py:881
-#: ui_tk/image/image_details.py:458 ui_tk/image/image_details.py:553
+#: ui/image/image_details_qt.py:725 ui/image/image_details_qt.py:911
 msgid "Randomly modified image"
 msgstr "随机修改的图像"
 
-#: ui/image/image_details_qt.py:703 ui/image/image_details_qt.py:886
-#: ui_tk/image/image_details.py:463 ui_tk/image/image_details.py:556
+#: ui/image/image_details_qt.py:733 ui/image/image_details_qt.py:916
 msgid "No new image created"
 msgstr "未创建新图像"
 
-#: ui/image/image_details_qt.py:710 ui_tk/image/image_details.py:469
+#: ui/image/image_details_qt.py:740
 msgid "Confirm Vertical Flip"
 msgstr "确认垂直翻转"
 
-#: ui/image/image_details_qt.py:712 ui_tk/image/image_details.py:470
+#: ui/image/image_details_qt.py:742
 msgid ""
 "Are you sure you want to flip this image vertically? This is an uncommon "
 "operation and may have been clicked by accident."
 msgstr "您确定要将此图像垂直翻转吗？此操作较为罕见，可能是误触所致。"
 
-#: ui/image/image_details_qt.py:722 ui/image/image_details_qt.py:890
-#: ui_tk/image/image_details.py:480 ui_tk/image/image_details.py:563
+#: ui/image/image_details_qt.py:752 ui/image/image_details_qt.py:920
 msgid "Flipped image"
 msgstr "翻转图像"
 
-#: ui/image/image_details_qt.py:755
+#: ui/image/image_details_qt.py:785
 msgid "Please enter a target ratio"
 msgstr "请输入目标比例"
 
-#: ui/image/image_details_qt.py:765
+#: ui/image/image_details_qt.py:795
 msgid "Changed image aspect ratio"
 msgstr "更改了图片长宽比"
 
-#: ui/image/image_details_qt.py:770
+#: ui/image/image_details_qt.py:800
 msgid "Error changing image aspect ratio"
 msgstr "错误更改图像宽高比"
 
-#: ui/image/image_details_qt.py:775 ui/image/image_details_qt.py:782
+#: ui/image/image_details_qt.py:805 ui/image/image_details_qt.py:812
 msgid "Aspect ratio changes are only available for images"
 msgstr "宽高比更改仅适用于图片。"
 
-#: ui/image/image_details_qt.py:796
+#: ui/image/image_details_qt.py:826
 msgid "Current ratio: {0}"
 msgstr "流动比率：{0}"
 
-#: ui/image/image_details_qt.py:798
+#: ui/image/image_details_qt.py:828
 msgid "Target ratio (e.g. 16:9 or 1.777):"
 msgstr "目标比例 (例如 16:9 或 1.777):"
 
-#: ui/image/image_details_qt.py:825 ui/image/image_details_qt.py:897
-#: ui_tk/image/image_details.py:488 ui_tk/image/image_details.py:572
+#: ui/image/image_details_qt.py:855 ui/image/image_details_qt.py:927
 msgid "Copied image without EXIF data"
 msgstr "复制的图像没有 EXIF 数据"
 
-#: ui/image/image_details_qt.py:830 ui/image/image_details_qt.py:903
-#: ui_tk/image/image_details.py:493 ui_tk/image/image_details.py:577
+#: ui/image/image_details_qt.py:860 ui/image/image_details_qt.py:933
 msgid "Error copying image without EXIF"
 msgstr "复制无 EXIF 的图像时出错"
 
-#: ui/image/image_details_qt.py:835 ui/image/image_details_qt.py:908
-#: ui_tk/image/image_details.py:500 ui_tk/image/image_details.py:585
+#: ui/image/image_details_qt.py:865 ui/image/image_details_qt.py:938
 msgid "Converted image to JPG"
 msgstr "将图像转换为 JPG"
 
-#: ui/image/image_details_qt.py:838 ui/image/image_details_qt.py:911
-#: ui_tk/image/image_details.py:505 ui_tk/image/image_details.py:590
+#: ui/image/image_details_qt.py:868 ui/image/image_details_qt.py:941
 msgid "Error converting image to JPG"
 msgstr "将图像转换为 JPG 时出错"
 
-#: ui/image/image_details_qt.py:918 ui_tk/image/image_details.py:595
+#: ui/image/image_details_qt.py:948
 msgid "No metadata found"
 msgstr "未找到元数据"
 
-#: ui/image/image_details_qt.py:937 ui_tk/image/image_details.py:608
+#: ui/image/image_details_qt.py:967
 msgid "OCR is only available for images"
 msgstr "光学字符识别（OCR）仅可用于图像。"
 
-#: ui/image/image_details_qt.py:940 ui_tk/image/image_details.py:611
+#: ui/image/image_details_qt.py:970
 msgid "Surya OCR is not installed"
 msgstr "Surya OCR 未安装"
 
-#: ui/image/image_details_qt.py:945 ui_tk/image/image_details.py:616
+#: ui/image/image_details_qt.py:975
 msgid "No text found in image"
 msgstr "在图片中未找到文本"
 
-#: ui/image/image_details_qt.py:952 ui_tk/image/image_details.py:623
+#: ui/image/image_details_qt.py:982
 msgid "OCR failed: "
 msgstr "OCR 失败： "
 
-#: ui/image/image_details_qt.py:977 ui/image/image_details_qt.py:1051
-#: ui_tk/image/image_details.py:639 ui_tk/image/image_details.py:697
+#: ui/image/image_details_qt.py:1007 ui/image/image_details_qt.py:1081
 msgid " (Exact Match Not Found)"
 msgstr " (没有找到精确匹配)"
 
-#: ui/image/image_details_qt.py:979 ui/image/image_details_qt.py:1048
-#: ui_tk/image/image_details.py:641 ui_tk/image/image_details.py:694
+#: ui/image/image_details_qt.py:1009 ui/image/image_details_qt.py:1078
 msgid "(No related image found)"
 msgstr "(没有找到相关的图像)"
 
-#: ui/image/image_details_qt.py:1162 ui/image/image_details_qt.py:1171
+#: ui/image/image_details_qt.py:1192 ui/image/image_details_qt.py:1201
 msgid "{0} downstream image(s) found."
 msgstr "{0} 找到下游图像 。"
 
-#: ui/image/image_details_qt.py:1165
+#: ui/image/image_details_qt.py:1195
 msgid "{0} (cached) downstream image(s) found."
 msgstr "{0} (cached) 下游图像找到 。"
 
-#: ui/image/image_details_qt.py:1175 ui_tk/image/image_details.py:766
+#: ui/image/image_details_qt.py:1205
 msgid "No downstream related images found in"
 msgstr "找不到下游相关图像"
 
-#: ui/image/image_details_qt.py:1262
+#: ui/image/image_details_qt.py:1293
 msgid "Updated tags for {0}"
 msgstr "{0} 的更新标签"
 
 #: ui/image/metadata_viewer_window_qt.py:46
 #: ui/image/metadata_viewer_window_qt.py:123
-#: ui_tk/image/metadata_viewer_window.py:66
 msgid "Metadata Viewer"
 msgstr "元数据查看器"
 
 #: ui/image/metadata_viewer_window_qt.py:70
-#: ui_tk/image/metadata_viewer_window.py:32
 msgid "Copy Metadata"
 msgstr "复制元数据"
 
 #: ui/image/metadata_viewer_window_qt.py:74
-#: ui_tk/image/metadata_viewer_window.py:35
 msgid "Raw Image Metadata"
 msgstr "Raw 图像元数据"
 
 #: ui/image/metadata_viewer_window_qt.py:131
-#: ui_tk/image/metadata_viewer_window.py:59
 msgid "Copied metadata to clipboard"
 msgstr "已将元数据复制到剪贴板"
 
 #: ui/image/metadata_viewer_window_qt.py:135
-#: ui_tk/image/metadata_viewer_window.py:62
 msgid "Error copying metadata to clipboard: "
 msgstr "将元数据复制到剪贴板时出错： "
 
 #: ui/image/ocr_text_window_qt.py:44 ui/image/ocr_text_window_qt.py:122
-#: ui_tk/image/ocr_text_window.py:102
 msgid "OCR Text"
 msgstr "OCR 文本"
 
-#: ui/image/ocr_text_window_qt.py:68 ui_tk/image/ocr_text_window.py:37
+#: ui/image/ocr_text_window_qt.py:68
 msgid "Copy All Text"
 msgstr "复制所有文本"
 
-#: ui/image/ocr_text_window_qt.py:72 ui_tk/image/ocr_text_window.py:40
+#: ui/image/ocr_text_window_qt.py:72
 msgid "OCR Result"
 msgstr "OCR结果"
 
-#: ui/image/ocr_text_window_qt.py:133 ui_tk/image/ocr_text_window.py:93
+#: ui/image/ocr_text_window_qt.py:133
 msgid "Copied OCR text to clipboard"
 msgstr "将OCR文本复制到剪贴板中"
 
-#: ui/image/ocr_text_window_qt.py:137 ui_tk/image/ocr_text_window.py:97
+#: ui/image/ocr_text_window_qt.py:137
 msgid "Error copying OCR text: "
 msgstr "错误复制OCR文本： "
 
-#: ui/image/temp_image_window_qt.py:137 ui_tk/image/temp_image_canvas.py:116
+#: ui/image/temp_image_window_qt.py:122
 msgid "Open a new related image with Shift+R on main window"
 msgstr "在主窗口打开 Shift+R 的新图像"
 
-#: ui/image/temp_image_window_qt.py:259 ui_tk/image/temp_image_canvas.py:191
+#: ui/image/temp_image_window_qt.py:218
 msgid "Open in Full Window"
 msgstr "在全屏中打开"
 
-#: ui/image/temp_image_window_qt.py:270 ui_tk/image/temp_image_canvas.py:202
+#: ui/image/temp_image_window_qt.py:229
 msgid "Copy File Path"
 msgstr "复制文件路径"
 
@@ -3972,7 +3634,7 @@ msgstr "找到 {0} 下游相关图像"
 msgid "Select Target Directory for Related Files Search"
 msgstr "选择相关文件搜索的目标目录"
 
-#: ui_tk/files/target_directory_window.py:127
+#: lib/fast_directory_picker_qt.py:334
 msgid "Select"
 msgstr "选择"
 
@@ -4116,170 +3778,1083 @@ msgstr "下降"
 msgid "random"
 msgstr "随机"
 
-#: utils/constants.py:271
-msgid "Image"
-msgstr "图像"
-
-#: utils/constants.py:273
-msgid "GIF"
-msgstr "全球投资框架"
-
-#: utils/constants.py:275
-msgid "Video"
-msgstr "视频"
-
-#: utils/constants.py:277
-msgid "PDF"
-msgstr "专题报告"
-
-#: utils/constants.py:279
-msgid "SVG"
-msgstr "SVG"
-
-#: utils/constants.py:281
-msgid "HTML"
-msgstr "HTML"
-
-#: utils/constants.py:301
-msgid "Moved files"
-msgstr "已移动文件"
-
-#: utils/constants.py:303
-msgid "Copied files"
-msgstr "复制文件"
-
-#: utils/constants.py:305
-msgid "Removed files"
-msgstr "删除的文件"
-
-#: utils/constants.py:307
-msgid "Marked files"
-msgstr "标记文件"
-
-#: utils/constants.py:309
-msgid "Unmarked files"
-msgstr "未标记的文件"
-
-#: utils/constants.py:311
-msgid "Searched files"
-msgstr "已搜索文件"
-
-#: utils/constants.py:313
-msgid "Compared files"
-msgstr "比较文件"
-
-#: utils/constants.py:315
-msgid "Generated images"
-msgstr "生成图像"
-
-#: utils/constants.py:317
-msgid "Changed directory"
-msgstr "更改目录"
-
-#: utils/constants.py:319
-msgid "System"
-msgstr "系统"
-
-#: utils/constants.py:331
-msgid "Classifier Action"
-msgstr "分类器操作"
-
-#: utils/constants.py:333
-msgid "Prevalidation"
-msgstr "预验证"
-
-#: utils/constants.py:377
-msgid "Hide"
-msgstr "隐藏"
-
-#: utils/constants.py:379
-msgid "Notify"
-msgstr "通知"
-
-#: utils/constants.py:381
-msgid "Skip"
-msgstr "跳过"
-
-#: utils/constants.py:389
-msgid "Add Mark"
-msgstr "添加标记"
-
-#: utils/constants.py:430
-msgid "Start Application"
-msgstr "启动软件应用程序"
-
-#: utils/constants.py:431
-msgid "Run Compares"
-msgstr "运行比较"
-
-#: utils/constants.py:432
-msgid "Run Search"
-msgstr "运行搜索"
-
-#: utils/constants.py:433
-msgid "Run Search Preset"
-msgstr "运行搜索预置"
-
-#: utils/constants.py:435
-msgid "View Recent Directories"
-msgstr "查看最新目录"
-
-#: utils/constants.py:436
-msgid "View File Actions"
-msgstr "查看文件操作"
-
-#: utils/constants.py:437
-msgid "Run File Actions"
-msgstr "运行文件操作"
-
-#: utils/constants.py:438
-msgid "Edit Prevalidations"
-msgstr "编辑批准书"
-
-#: utils/constants.py:439
-msgid "Run Prevalidations"
-msgstr "运行审批"
-
-#: utils/constants.py:441
-msgid "Run RefacDir"
-msgstr "运行 RefacDir"
-
-#: utils/constants.py:442
-msgid "Delete Media"
-msgstr "删除媒体"
-
-#: utils/constants.py:444
-msgid "Set Hotkey Actions"
-msgstr "设置热键操作"
-
-#: utils/constants.py:445
-msgid "Access Password Administration"
-msgstr "访问密码管理"
-
-#: utils/notification_manager.py:26
-msgid " etc."
-msgstr " 等等"
-
-#: utils/constants.py:217
+#: utils/constants.py:327
 msgid "Control Net"
 msgstr "控制网络"
 
-#: utils/constants.py:219
+#: utils/constants.py:329
 msgid "IP Adapter"
 msgstr "IP 适配器"
 
-#: utils/constants.py:221
+#: utils/constants.py:331
 msgid "Renoiser"
 msgstr "Renoiser"
 
-#: utils/constants.py:223
+#: utils/constants.py:222 utils/constants.py:333
 msgid "Image to Image"
 msgstr "图像转图像"
 
-#: utils/constants.py:225
+#: utils/constants.py:335
 msgid "Last Settings"
 msgstr "上次设置"
 
-#: utils/constants.py:229
+#: utils/constants.py:339
 msgid "Revert to Simple Generation"
 msgstr "还原到简单生成"
+
+#: utils/constants.py:381
+msgid "Image"
+msgstr "图像"
+
+#: utils/constants.py:383
+msgid "GIF"
+msgstr "全球投资框架"
+
+#: utils/constants.py:385
+msgid "Video"
+msgstr "视频"
+
+#: utils/constants.py:387
+msgid "PDF"
+msgstr "专题报告"
+
+#: utils/constants.py:389
+msgid "SVG"
+msgstr "SVG"
+
+#: utils/constants.py:391
+msgid "HTML"
+msgstr "HTML"
+
+#: utils/constants.py:411
+msgid "Moved files"
+msgstr "已移动文件"
+
+#: utils/constants.py:413
+msgid "Copied files"
+msgstr "复制文件"
+
+#: utils/constants.py:415
+msgid "Removed files"
+msgstr "删除的文件"
+
+#: utils/constants.py:417
+msgid "Marked files"
+msgstr "标记文件"
+
+#: utils/constants.py:419
+msgid "Unmarked files"
+msgstr "未标记的文件"
+
+#: utils/constants.py:421
+msgid "Searched files"
+msgstr "已搜索文件"
+
+#: utils/constants.py:423
+msgid "Compared files"
+msgstr "比较文件"
+
+#: utils/constants.py:425
+msgid "Generated images"
+msgstr "生成图像"
+
+#: utils/constants.py:427
+msgid "Changed directory"
+msgstr "更改目录"
+
+#: utils/constants.py:429
+msgid "System"
+msgstr "系统"
+
+#: utils/constants.py:441
+msgid "Classifier Action"
+msgstr "分类器操作"
+
+#: utils/constants.py:443
+msgid "Prevalidation"
+msgstr "预验证"
+
+#: utils/constants.py:487
+msgid "Hide"
+msgstr "隐藏"
+
+#: utils/constants.py:489
+msgid "Notify"
+msgstr "通知"
+
+#: utils/constants.py:491
+msgid "Skip"
+msgstr "跳过"
+
+#: utils/constants.py:499
+msgid "Add Mark"
+msgstr "添加标记"
+
+#: utils/constants.py:540
+msgid "Start Application"
+msgstr "启动软件应用程序"
+
+#: utils/constants.py:541
+msgid "Run Compares"
+msgstr "运行比较"
+
+#: utils/constants.py:542
+msgid "Run Search"
+msgstr "运行搜索"
+
+#: utils/constants.py:543
+msgid "Run Search Preset"
+msgstr "运行搜索预置"
+
+#: utils/constants.py:545
+msgid "View Recent Directories"
+msgstr "查看最新目录"
+
+#: utils/constants.py:546
+msgid "View File Actions"
+msgstr "查看文件操作"
+
+#: utils/constants.py:547
+msgid "Run File Actions"
+msgstr "运行文件操作"
+
+#: utils/constants.py:548
+msgid "Edit Prevalidations"
+msgstr "编辑批准书"
+
+#: utils/constants.py:549
+msgid "Run Prevalidations"
+msgstr "运行审批"
+
+#: utils/constants.py:551
+msgid "Run RefacDir"
+msgstr "运行 RefacDir"
+
+#: utils/constants.py:552
+msgid "Delete Media"
+msgstr "删除媒体"
+
+#: utils/constants.py:554
+msgid "Set Hotkey Actions"
+msgstr "设置热键操作"
+
+#: utils/constants.py:555
+msgid "Access Password Administration"
+msgstr "访问密码管理"
+
+#: utils/notification_manager.py:24
+msgid " etc."
+msgstr " 等等"
+
+#: compare/classifier_actions_manager.py:420
+#: ui/compare/classifier_actions_tab_qt.py:307
+msgid "unknown error"
+msgstr "未知错误"
+
+#: compare/classifier_actions_manager.py:924
+msgid "cannot run"
+msgstr "无法运行"
+
+#: files/file_browser.py:654
+msgid ""
+"Loading directory... {0} files currently available (scanned {1} folders; "
+"total unknown)"
+msgstr "正在加载目录... 当前有 {0} 个文件可用（已扫描 {1} 个文件夹；总数未知）"
+
+#: files/pdf_creator.py:172 ui/files/marked_file_mover_qt.py:273
+msgid "Diff PDFs"
+msgstr "比较 PDF"
+
+#: files/pdf_creator.py:173
+msgid "Please mark exactly 2 files."
+msgstr "请标记正好2个文件。"
+
+#: files/pdf_creator.py:181
+msgid "Invalid file"
+msgstr "无效文件"
+
+#: files/pdf_creator.py:182
+msgid "One or more marked files do not exist on disk."
+msgstr "一个或多个已标记的文件在磁盘上不存在。"
+
+#: files/pdf_creator.py:190
+msgid "diff-pdf not found"
+msgstr "diff-pdf未找到"
+
+#: files/pdf_creator.py:191
+msgid "The diff-pdf executable was not found on PATH."
+msgstr "diff-pdf 可执行文件未在 PATH 中找到。"
+
+#: files/pdf_creator.py:233
+msgid "Failed to convert marked file to PDF for diff: {0}"
+msgstr "未能将标记的文件转换为PDF以进行比较: {0}"
+
+#: files/pdf_creator.py:251
+msgid "Failed to run diff-pdf: {0}"
+msgstr "无法运行 diff-pdf: {0}"
+
+#: files/pdf_creator.py:275
+msgid "Created diff PDF: {0}"
+msgstr "创建了差异 PDF：{0}"
+
+#: files/pdf_creator.py:283
+msgid "diff-pdf did not create an output file."
+msgstr "diff-pdf 未创建输出文件。"
+
+#: lib/fast_directory_picker_qt.py:132 lib/fast_directory_picker_qt.py:193
+msgid "Home"
+msgstr "主页"
+
+#: lib/fast_directory_picker_qt.py:142
+msgid "Removable"
+msgstr "可移除的"
+
+#: lib/fast_directory_picker_qt.py:143
+msgid "Local"
+msgstr "本地"
+
+#: lib/fast_directory_picker_qt.py:144
+msgid "Network"
+msgstr "网络"
+
+#: lib/fast_directory_picker_qt.py:145
+msgid "CD/DVD"
+msgstr "光盘（CD/DVD）"
+
+#: lib/fast_directory_picker_qt.py:146
+msgid "RAM Disk"
+msgstr "内存磁盘"
+
+#: lib/fast_directory_picker_qt.py:158
+msgid "Unknown"
+msgstr "未知"
+
+#: lib/fast_directory_picker_qt.py:277
+msgid "Locations"
+msgstr "地点"
+
+#: lib/fast_directory_picker_qt.py:282
+msgid "Refresh locations"
+msgstr "刷新位置"
+
+#: lib/fast_directory_picker_qt.py:295
+msgid "Type or paste a directory path"
+msgstr "输入或粘贴一个目录路径"
+
+#: lib/fast_directory_picker_qt.py:299
+msgid "Go"
+msgstr "去"
+
+#: lib/fast_directory_picker_qt.py:303
+msgid "Up"
+msgstr "向上"
+
+#: lib/fast_directory_picker_qt.py:307
+msgid "New Folder"
+msgstr "新建文件夹"
+
+#: lib/fast_directory_picker_qt.py:311
+#: ui/compare/hf_model_manager_window_qt.py:545
+msgid "Refresh"
+msgstr "刷新"
+
+#: lib/fast_directory_picker_qt.py:315
+msgid "Folders"
+msgstr "文件夹"
+
+#: lib/fast_directory_picker_qt.py:398
+msgid "Create New Folder"
+msgstr "新建文件夹"
+
+#: lib/fast_directory_picker_qt.py:399
+msgid "Folder name:"
+msgstr "文件夹名称:"
+
+#: lib/fast_directory_picker_qt.py:405
+msgid "Folder name cannot be empty."
+msgstr "文件夹名称不能为空"
+
+#: lib/fast_directory_picker_qt.py:417
+msgid "A folder with that name already exists."
+msgstr "带有该名称的文件夹已存在。"
+
+#: lib/fast_directory_picker_qt.py:422
+msgid "Failed to create folder (check permissions/path)."
+msgstr "无法创建文件夹（检查权限/路径）"
+
+#: lib/fast_directory_picker_qt.py:471
+msgid "No folders found (or folder is not currently accessible)."
+msgstr "未找到文件夹（或当前无法访问文件夹）"
+
+#: lib/fast_directory_picker_qt.py:531 ui/files/marked_file_mover_qt.py:90
+#: ui/files/marked_file_mover_qt.py:102 ui/files/marked_file_mover_qt.py:581
+msgid "Current Base Directory"
+msgstr "当前基目录"
+
+#: ui/app_window/app_window.py:134 ui/app_window/app_window.py:195
+#: ui/app_window/app_window.py:775
+msgid " Weidr - Media Handler "
+msgstr " 微迪 - 媒体处理器 "
+
+#: ui/app_window/context_menu_builder.py:177
+msgid "Convert directory images to JPG"
+msgstr "将目录中的图片转换为JPG格式"
+
+#: ui/app_window/context_menu_builder.py:181
+msgid "Convert directory SVGs to PNG"
+msgstr "将单个目录中的 SVG 文件转换为 PNG 格式。"
+
+#: ui/app_window/file_ops_controller.py:378
+#: ui/app_window/file_ops_controller.py:521
+msgid "No valid base directory to convert"
+msgstr "没有有效的基目录可以转换"
+
+#: ui/app_window/file_ops_controller.py:391
+#: ui/app_window/file_ops_controller.py:534
+msgid "No files found to convert"
+msgstr "未找到任何文件用于转换"
+
+#: ui/app_window/file_ops_controller.py:440
+msgid "No image files found to convert"
+msgstr "没有找到可转换的图片文件。"
+
+#: ui/app_window/file_ops_controller.py:443
+#: ui/app_window/file_ops_controller.py:551
+msgid "(None found)"
+msgstr "（未找到）"
+
+#: ui/app_window/file_ops_controller.py:445
+msgid "Convert Directory Images to JPG"
+msgstr "将文件夹中的图片转换为 JPG"
+
+#: ui/app_window/file_ops_controller.py:447
+msgid ""
+"Confirm convert images in current directory scope.\n"
+"\n"
+"{0}\n"
+"\n"
+"How should existing JPG files be handled?\n"
+"- Existing JPG/JPEG files in scope: {1}\n"
+"- Non-JPG files with existing JPG targets: {2}\n"
+"\n"
+"Yes = overwrite existing JPG files (with no-EXIF conversion output)\n"
+"No = skip conversion for files with target conflicts\n"
+"Cancel = cancel conversion"
+msgstr ""
+"确认将当前目录范围内的图片进行转换。\n"
+"\n"
+"{0}\n"
+"\n"
+"如何处理现有的JPG文件？\n"
+"- 范围内现有 JPG/JPEG 文件：{1}\n"
+"- 现有目标为 JPG 的非 JPG 文件：{2}\n"
+"\n"
+"是=覆盖现有JPG文件（无EXIF转换输出）\n"
+"否=跳过存在目标冲突的文件转换\n"
+"取消=取消转换"
+
+#: ui/app_window/file_ops_controller.py:504
+msgid "Converted {0} files to JPG"
+msgstr "已将 {0} 个文件转换为 JPG 格式"
+
+#: ui/app_window/file_ops_controller.py:509
+msgid "Converted {0} files to JPG, {1} failed, {2} skipped existing"
+msgstr "已将 {0} 个文件转换为 JPG，{1} 个文件失败，跳过了已存在的 {2} 个文件。"
+
+#: ui/app_window/file_ops_controller.py:547
+msgid "No SVG files found to convert"
+msgstr "未找到可转换的 SVG 文件"
+
+#: ui/app_window/file_ops_controller.py:553
+msgid "Convert Directory SVG to PNG"
+msgstr "将目录 SVG 转换为 PNG"
+
+#: ui/app_window/file_ops_controller.py:555
+msgid ""
+"Convert SVGs in the current directory scope to PNG?\n"
+"\n"
+"{0}\n"
+"\n"
+"{1} SVG(s) already have a PNG at the matching output path.\n"
+"\n"
+"Yes = convert all SVGs and overwrite any existing PNGs\n"
+"No = skip conversion for SVGs with target conflicts\n"
+"Cancel = cancel"
+msgstr ""
+"将当前目录作用域内的SVG转换为PNG？\n"
+"\n"
+"{0}\n"
+"\n"
+"{1} SVG(们)已经在对应的输出路径下有一个PNG文件。\n"
+"\n"
+"是：将所有SVG转换为PNG，并覆盖已有的任何PNG文件\n"
+"否：跳过目标路径冲突的SVG转换\n"
+"取消"
+
+#: ui/app_window/file_ops_controller.py:597
+msgid "Converted {0} SVG files to PNG"
+msgstr "已转换 {0} 个 SVG 文件为 PNG"
+
+#: ui/app_window/file_ops_controller.py:602
+msgid "Converted {0} files, {1} failed, {2} skipped existing"
+msgstr "{0} 个文件已转换，{1} 失败了，{2} 跳过了现有的。"
+
+#: ui/app_window/media_frame.py:298
+msgid "No displayable files found in this directory for the current settings."
+msgstr "在当前设置下，此目录中未找到可显示的文件。"
+
+#: ui/app_window/media_frame.py:767
+msgid "Animated image format is not supported for playback: "
+msgstr "动态图片格式不支持播放！ "
+
+#: ui/app_window/media_frame.py:833
+msgid "Unable to display this file: "
+msgstr "无法显示此文件： "
+
+#: ui/app_window/media_navigator.py:139 ui/app_window/media_navigator.py:154
+msgid "Directory is still loading; no files available yet."
+msgstr "目录仍在加载中；目前没有可用文件。"
+
+#: ui/app_window/media_navigator.py:181
+msgid "Directory is still loading; try again in a moment."
+msgstr "目录仍在加载中；请稍后再试。"
+
+#: ui/app_window/sidebar_panel.py:101
+msgid "Directory notes"
+msgstr "目录注释"
+
+#: ui/app_window/sidebar_panel.py:107
+msgid "Browsing options"
+msgstr "浏览选项"
+
+#: ui/app_window/sidebar_panel.py:142
+#: ui/compare/hf_model_manager_window_qt.py:396
+#: ui/compare/hf_model_manager_window_qt.py:434
+msgid "Search"
+msgstr "搜索"
+
+#: ui/app_window/sidebar_panel.py:163
+msgid "Set negative search file"
+msgstr "设置负面搜索文件"
+
+#: ui/app_window/sidebar_panel.py:167
+msgid "Negative search image path..."
+msgstr "负搜索图像路径..."
+
+#: ui/app_window/sidebar_panel.py:208
+#: ui/compare/hf_model_manager_window_qt.py:349
+msgid "Model Manager"
+msgstr "模型管理员"
+
+#: ui/app_window/sidebar_panel.py:218
+msgid "Compare actions"
+msgstr "比较动作"
+
+#: ui/app_window/sidebar_panel.py:252
+msgid "File actions"
+msgstr "文件操作"
+
+#: ui/compare/classifier_action_copy_window_qt.py:266
+msgid "Invalid Copy Target"
+msgstr "无效的复制目标"
+
+#: ui/compare/classifier_actions_tab_qt.py:306
+msgid "This classifier action cannot run until configuration is fixed: {0}"
+msgstr "此分类器操作无法运行，直至配置修复：{0}"
+
+#: ui/compare/classifier_management_window_qt.py:243
+msgid "Image Classifier Classification Mode"
+msgstr "图像分类器分类模式"
+
+#: ui/compare/classifier_management_window_qt.py:246
+msgid "Selected categories"
+msgstr "精选分类"
+
+#: ui/compare/classifier_management_window_qt.py:247
+msgid "Model strategy"
+msgstr "模型策略"
+
+#: ui/compare/directory_profile_window_qt.py:96
+#: ui/compare/prevalidations_tab_qt.py:279
+msgid "Copy Profile"
+msgstr "复制配置文件"
+
+#: ui/compare/directory_profile_window_qt.py:181
+msgid "Copy associated prevalidations"
+msgstr "复制关联预验证"
+
+#: ui/compare/directory_profile_window_qt.py:189
+msgid "No prevalidations are associated with this profile."
+msgstr "此配置文件没有关联的预验证。"
+
+#: ui/compare/directory_profile_window_qt.py:195
+msgid "Optional: adjust action target directories for copied prevalidations."
+msgstr "(可选) 调整操作目标目录以适应已复制的预验证。"
+
+#: ui/compare/directory_profile_window_qt.py:382
+msgid "Copied prevalidation name"
+msgstr "已复制的预验证名称"
+
+#: ui/compare/directory_profile_window_qt.py:394
+msgid "Action target directory (action_modifier)"
+msgstr "动作目标目录(action_modifier)"
+
+#: ui/compare/directory_profile_window_qt.py:439
+msgid "Remove Prevalidation"
+msgstr "移除预验证"
+
+#: ui/compare/directory_profile_window_qt.py:440
+msgid "Remove prevalidation '{0}' from this copy operation?"
+msgstr "你是否要移除预验证 '{0}' 从此复制操作中？"
+
+#: ui/compare/hf_model_manager_window_qt.py:79
+#: ui/compare/hf_model_manager_window_qt.py:472
+msgid "Model name"
+msgstr "模型名称"
+
+#: ui/compare/hf_model_manager_window_qt.py:82
+#: ui/compare/hf_model_manager_window_qt.py:479
+#: ui/compare/hf_model_manager_window_qt.py:515
+msgid "Backend"
+msgstr "后端"
+
+#: ui/compare/hf_model_manager_window_qt.py:90
+msgid "Model location"
+msgstr "模型位置"
+
+#: ui/compare/hf_model_manager_window_qt.py:99
+#: ui/compare/hf_model_manager_window_qt.py:475
+#: ui/compare/hf_model_manager_window_qt.py:516
+msgid "Categories"
+msgstr "分类"
+
+#: ui/compare/hf_model_manager_window_qt.py:101
+#: ui/compare/hf_model_manager_window_qt.py:477
+msgid "Comma-separated categories"
+msgstr "逗号分隔的类别"
+
+#: ui/compare/hf_model_manager_window_qt.py:106
+msgid "Positive groups"
+msgstr "积极小组"
+
+#: ui/compare/hf_model_manager_window_qt.py:108
+msgid "group1_catA,group1_catB; group2_catA,group2_catB"
+msgstr "group1_catA,group1_catB; group2_catA,group2_catB"
+
+#: ui/compare/hf_model_manager_window_qt.py:113
+msgid "Neutral categories"
+msgstr "中性分类"
+
+#: ui/compare/hf_model_manager_window_qt.py:115
+#: ui/compare/hf_model_manager_window_qt.py:119
+msgid "Optional, comma-separated"
+msgstr "可选的，逗号分隔的"
+
+#: ui/compare/hf_model_manager_window_qt.py:117
+msgid "Severity order"
+msgstr "严重程度排序"
+
+#: ui/compare/hf_model_manager_window_qt.py:124
+msgid "HF repo id"
+msgstr "Hugging Face 仓库 ID"
+
+#: ui/compare/hf_model_manager_window_qt.py:127
+#: ui/compare/hf_model_manager_window_qt.py:460
+#: ui/compare/hf_model_manager_window_qt.py:537
+msgid "Load Repo Files"
+msgstr "加载代码库文件"
+
+#: ui/compare/hf_model_manager_window_qt.py:130
+#: ui/compare/hf_model_manager_window_qt.py:463
+#: ui/compare/hf_model_manager_window_qt.py:541
+msgid "View Model Card"
+msgstr "视图模型卡片"
+
+#: ui/compare/hf_model_manager_window_qt.py:136
+msgid "Repo file"
+msgstr "仓库文件"
+
+#: ui/compare/hf_model_manager_window_qt.py:141
+msgid "HF snapshot path"
+msgstr "HF快照路径"
+
+#: ui/compare/hf_model_manager_window_qt.py:144
+msgid "Use Repo File Path"
+msgstr "使用仓库文件路径"
+
+#: ui/compare/hf_model_manager_window_qt.py:150
+#: ui/compare/hf_model_manager_window_qt.py:486
+msgid "Use Transformers AutoModel"
+msgstr "使用Transformers AutoModel"
+
+#: ui/compare/hf_model_manager_window_qt.py:153
+#: ui/compare/hf_model_manager_window_qt.py:493
+msgid "Arch module"
+msgstr "结构模块"
+
+#: ui/compare/hf_model_manager_window_qt.py:156
+#: ui/compare/hf_model_manager_window_qt.py:498
+msgid "Arch class"
+msgstr "Arch 类别"
+
+#: ui/compare/hf_model_manager_window_qt.py:172
+msgid "Select model file"
+msgstr "选择模型文件"
+
+#: ui/compare/hf_model_manager_window_qt.py:207
+#: ui/compare/hf_model_manager_window_qt.py:700
+#: ui/compare/hf_model_manager_window_qt.py:999
+msgid "Model Card - {0}"
+msgstr "模型卡片 - {0}"
+
+#: ui/compare/hf_model_manager_window_qt.py:253
+msgid "Missing fields"
+msgstr "缺少字段"
+
+#: ui/compare/hf_model_manager_window_qt.py:254
+msgid "Model name, model file path, and at least one category are required."
+msgstr "模型名称、模型文件路径和至少一个类别是必需的。"
+
+#: ui/compare/hf_model_manager_window_qt.py:297
+msgid "Invalid model configuration"
+msgstr "无效的模型配置"
+
+#: ui/compare/hf_model_manager_window_qt.py:364
+msgid "HF Hub Search"
+msgstr "高频中心搜索"
+
+#: ui/compare/hf_model_manager_window_qt.py:365
+msgid "Installed Models"
+msgstr "已安装的模型"
+
+#: ui/compare/hf_model_manager_window_qt.py:398
+msgid "e.g. nsfw, classifier, coherence"
+msgstr "例如：nsfw、分类器、连贯性"
+
+#: ui/compare/hf_model_manager_window_qt.py:402
+#: ui/compare/hf_model_manager_window_qt.py:442
+msgid "Task"
+msgstr "任务"
+
+#: ui/compare/hf_model_manager_window_qt.py:409
+msgid "Sort"
+msgstr "排序"
+
+#: ui/compare/hf_model_manager_window_qt.py:416
+msgid "Direction"
+msgstr "方向"
+
+#: ui/compare/hf_model_manager_window_qt.py:423
+msgid "Limit"
+msgstr "限制"
+
+#: ui/compare/hf_model_manager_window_qt.py:430
+msgid "Include gated"
+msgstr "包含受控的"
+
+#: ui/compare/hf_model_manager_window_qt.py:442
+msgid "Repo"
+msgstr "仓库"
+
+#: ui/compare/hf_model_manager_window_qt.py:442 utils/constants.py:263
+msgid "Downloads"
+msgstr "下载"
+
+#: ui/compare/hf_model_manager_window_qt.py:442 utils/constants.py:264
+msgid "Likes"
+msgstr "喜欢"
+
+#: ui/compare/hf_model_manager_window_qt.py:442
+msgid "License"
+msgstr "许可证"
+
+#: ui/compare/hf_model_manager_window_qt.py:442
+msgid "Gated"
+msgstr "有门禁的"
+
+#: ui/compare/hf_model_manager_window_qt.py:455
+msgid "Model file"
+msgstr "模型文件"
+
+#: ui/compare/hf_model_manager_window_qt.py:466
+msgid "Download and Install"
+msgstr "下载和安装"
+
+#: ui/compare/hf_model_manager_window_qt.py:488
+msgid "Recommended for HF model repos with config.json and processor files."
+msgstr "推荐用于包含 config.json 和处理器文件的大语言模型仓库。"
+
+#: ui/compare/hf_model_manager_window_qt.py:514
+msgid "Model Name"
+msgstr "型号名称"
+
+#: ui/compare/hf_model_manager_window_qt.py:517
+msgid "Model Location"
+msgstr "模型位置"
+
+#: ui/compare/hf_model_manager_window_qt.py:518
+msgid "Config"
+msgstr "配置"
+
+#: ui/compare/hf_model_manager_window_qt.py:529
+msgid "Add New"
+msgstr "新增"
+
+#: ui/compare/hf_model_manager_window_qt.py:533
+msgid "Edit Selected"
+msgstr "编辑选定的"
+
+#: ui/compare/hf_model_manager_window_qt.py:549
+msgid "Remove Selected"
+msgstr "删除选定"
+
+#: ui/compare/hf_model_manager_window_qt.py:563
+msgid "Please select a model repository first."
+msgstr "请首先选择一个模型仓库。"
+
+#: ui/compare/hf_model_manager_window_qt.py:599
+msgid "yes"
+msgstr "是"
+
+#: ui/compare/hf_model_manager_window_qt.py:599
+msgid "no"
+msgstr "不"
+
+#: ui/compare/hf_model_manager_window_qt.py:609
+msgid "Found {0} results"
+msgstr "找到 {0} 个结果"
+
+#: ui/compare/hf_model_manager_window_qt.py:612
+msgid "HF Hub Search Error"
+msgstr "高性能计算中心搜索错误"
+
+#: ui/compare/hf_model_manager_window_qt.py:690
+#: ui/compare/hf_model_manager_window_qt.py:982
+msgid "Loaded repo files for {0}."
+msgstr "已加载 {0} 的仓库文件。"
+
+#: ui/compare/hf_model_manager_window_qt.py:705
+#: ui/compare/hf_model_manager_window_qt.py:1003
+msgid "Model Card Error"
+msgstr "模型卡片错误"
+
+#: ui/compare/hf_model_manager_window_qt.py:713
+msgid "Please enter a filename to download."
+msgstr "请输入要下载的文件名。"
+
+#: ui/compare/hf_model_manager_window_qt.py:720
+msgid "Unable to locate selected file in downloaded snapshot: {0}"
+msgstr "无法在下载的快照中找到选定文件：{0}"
+
+#: ui/compare/hf_model_manager_window_qt.py:723
+msgid "HF Hub Download Error"
+msgstr "HF中心下载错误"
+
+#: ui/compare/hf_model_manager_window_qt.py:729
+msgid "Model name must not be empty."
+msgstr "模型名称不能为空。"
+
+#: ui/compare/hf_model_manager_window_qt.py:735
+msgid "Please enter at least one category."
+msgstr "请至少输入一个类别。"
+
+#: ui/compare/hf_model_manager_window_qt.py:765
+msgid "Invalid Model Configuration"
+msgstr "无效的模型配置"
+
+#: ui/compare/hf_model_manager_window_qt.py:771
+msgid "Replace Existing Model?"
+msgstr "替换现有模型？"
+
+#: ui/compare/hf_model_manager_window_qt.py:772
+msgid "A model named '{0}' already exists. Replace it?"
+msgstr "{0} 已经存在。替换它？"
+
+#: ui/compare/hf_model_manager_window_qt.py:796
+#: ui/compare/hf_model_manager_window_qt.py:951
+#: ui/compare/hf_model_manager_window_qt.py:1068
+msgid "Config Update Error"
+msgstr "配置更新错误"
+
+#: ui/compare/hf_model_manager_window_qt.py:803
+msgid "Downloaded and installed model '{0}'."
+msgstr "下载并安装了模型'{0}'"
+
+#: ui/compare/hf_model_manager_window_qt.py:857
+msgid "Configuration is valid."
+msgstr "配置有效。"
+
+#: ui/compare/hf_model_manager_window_qt.py:861
+msgid ""
+"No valid installed models found. Use the HF Hub Search tab to discover and "
+"install models, or add one manually."
+msgstr "未找到有效的已安装模型。使用 HF Hub 搜索标签来发现和安装模型，或者手动添加一个。"
+
+#: ui/compare/hf_model_manager_window_qt.py:865
+msgid "Installed models: {0} valid of {1} total"
+msgstr "已安装模型：{0} 有效，占总数的 {1}"
+
+#: ui/compare/hf_model_manager_window_qt.py:905
+msgid "Add Installed Model"
+msgstr "添加已安装的模型"
+
+#: ui/compare/hf_model_manager_window_qt.py:915
+#: ui/compare/hf_model_manager_window_qt.py:974
+#: ui/compare/hf_model_manager_window_qt.py:989
+#: ui/compare/hf_model_manager_window_qt.py:1008
+msgid "Please select an installed model first."
+msgstr "请先选择一个已安装的模型。"
+
+#: ui/compare/hf_model_manager_window_qt.py:919
+msgid "Edit Installed Model"
+msgstr "编辑已安装的模型"
+
+#: ui/compare/hf_model_manager_window_qt.py:948
+msgid "Saved model '{0}'."
+msgstr "已保存模型 '{0}'."
+
+#: ui/compare/hf_model_manager_window_qt.py:978
+#: ui/compare/hf_model_manager_window_qt.py:993
+msgid "No HF repo id found for selected model."
+msgstr "未找到在所选模型下的Hugging Face (HF) 仓库ID。"
+
+#: ui/compare/hf_model_manager_window_qt.py:984
+msgid "HF Hub Error"
+msgstr "HF 集线器错误"
+
+#: ui/compare/hf_model_manager_window_qt.py:1023
+msgid "Remove Installed Model?"
+msgstr "删除已安装的模型？"
+
+#: ui/compare/hf_model_manager_window_qt.py:1024
+msgid "Remove '{0}' from configured image classifier models?"
+msgstr "从配置好的图像分类模型中移除'{0}'？"
+
+#: ui/compare/hf_model_manager_window_qt.py:1043
+msgid ""
+"Repo '{0}' is not currently available on Hugging Face.\n"
+"Remove config entry anyway?\n"
+"\n"
+"Details: {1}"
+msgstr ""
+"仓库 '{0}' 当前在 Hugging Face 上不可用\n"
+"仍然移除配置条目吗？\n"
+"\n"
+"详细信息: {1}"
+
+#: ui/compare/hf_model_manager_window_qt.py:1045
+msgid "Unknown error"
+msgstr "未知错误"
+
+#: ui/compare/hf_model_manager_window_qt.py:1047
+msgid ""
+"Unable to confirm this model came from Hugging Face. Remove config entry "
+"anyway?"
+msgstr "无法确认此模型来自Hugging Face。无论如何移除配置条目？"
+
+#: ui/compare/hf_model_manager_window_qt.py:1049
+msgid "Unable to Confirm HF Source"
+msgstr "无法确认HF来源"
+
+#: ui/compare/hf_model_manager_window_qt.py:1059
+msgid "No matching model named '{0}' was found."
+msgstr "没有找到名为'{0}'的匹配模型。"
+
+#: ui/compare/hf_model_manager_window_qt.py:1075
+msgid "Removed model '{0}' and deleted HF cache for {1}."
+msgstr "移除了模型 '{0}' 并删除了 {1} 的 HF 缓存。"
+
+#: ui/compare/hf_model_manager_window_qt.py:1079
+#: ui/compare/hf_model_manager_window_qt.py:1088
+msgid "Model Removed; Cache Retained"
+msgstr "模型已移除; 缓存保留"
+
+#: ui/compare/hf_model_manager_window_qt.py:1080
+msgid ""
+"Removed '{0}', but cache was not deleted.\n"
+"{1}\n"
+"Cache location: {2}"
+msgstr ""
+"{0} 已移除，但缓存未删除。\n"
+"{1}\n"
+"缓存位置：{2}"
+
+#: ui/compare/hf_model_manager_window_qt.py:1089
+msgid ""
+"Removed '{0}'. Hugging Face could not be reached, so cache deletion was skipped.\n"
+"Cache may still exist at:\n"
+"{1}"
+msgstr ""
+"已移除 '{0}'。由于无法联系到 Hugging Face，因此跳过了缓存删除。\n"
+"缓存文件可能仍然存在于此处：\n"
+"{1}"
+
+#: ui/compare/hf_model_manager_window_qt.py:1096
+msgid "Removed model '{0}'."
+msgstr "已移除模型'{0}'"
+
+#: ui/files/directory_notes_window_qt.py:129
+msgid "Loading marked files..."
+msgstr "加载已标记文件..."
+
+#: ui/files/directory_notes_window_qt.py:154
+msgid "Loading file notes..."
+msgstr "正在加载文件说明..."
+
+#: ui/files/directory_notes_window_qt.py:271
+msgid "Loading marked files... {0}/{1}"
+msgstr "正在加载已标记的文件... {0}/{1}"
+
+#: ui/files/directory_notes_window_qt.py:303
+msgid "Loading file notes... {0}/{1}"
+msgstr "正在加载文件备注... {0}/{1}"
+
+#: ui/files/marked_file_mover_qt.py:334
+msgid "Unlock"
+msgstr "解锁"
+
+#: ui/files/marked_file_mover_qt.py:336
+msgid "Lock"
+msgstr "锁"
+
+#: ui/files/marked_file_mover_qt.py:340
+msgid "Toggle GUI requirement for this target directory"
+msgstr "切换 GUI 要求针对此目标目录"
+
+#: ui/files/marked_file_mover_qt.py:415
+msgid "locked"
+msgstr "已锁定"
+
+#: ui/files/marked_file_mover_qt.py:415
+msgid "unlocked"
+msgstr "未上锁"
+
+#: ui/files/marked_file_mover_qt.py:417
+msgid "Target directory {0}: {1}"
+msgstr "目标目录 {0}: {1}"
+
+#: ui/files/marked_file_mover_qt.py:428
+msgid "Target is locked"
+msgstr "目标已锁定"
+
+#: ui/files/marked_file_mover_qt.py:430
+msgid ""
+"This target requires the GUI Marked File Mover window.\n"
+"\n"
+"Open the GUI mover (Ctrl+M) to confirm this destination."
+msgstr ""
+"此目标要求使用图形用户界面标记文件移动器窗口。\n"
+"\n"
+"打开GUI移动器（Ctrl+M）以确认该目标位置。"
+
+#: ui/files/marked_file_mover_qt.py:491
+msgid ""
+"You are about to move {0} marked files to:\n"
+"\n"
+"{1}\n"
+"\n"
+"Please confirm this destination is correct."
+msgstr ""
+"您正准备将 {0} 个已标记文件移动到：\n"
+"\n"
+"{1}\n"
+"\n"
+"请确认此目标位置正确。"
+
+#: ui/files/marked_file_mover_qt.py:496
+msgid ""
+"You are about to copy {0} marked files to:\n"
+"\n"
+"{1}\n"
+"\n"
+"Please confirm this destination is correct."
+msgstr ""
+"您即将复制以下标记的文件：{0} 份文件将被复制到：\n"
+"\n"
+"{1}\n"
+"\n"
+"请确认该目标位置是否正确。"
+
+#: ui/files/marked_file_mover_qt.py:501
+msgid "Confirm Large File Operation"
+msgstr "确认大文件操作"
+
+#: ui/files/marked_file_mover_qt.py:702
+msgid "Failed to create PDF from marked files."
+msgstr "无法从已标记的文件创建PDF"
+
+#: ui/image/image_details_qt.py:261
+msgid "Temp Path"
+msgstr "临时路径"
+
+#: utils/constants.py:220
+msgid "All visual media"
+msgstr "所有视觉媒体"
+
+#: utils/constants.py:221
+msgid "Text to Image"
+msgstr "文本到图像"
+
+#: utils/constants.py:223
+msgid "Image to Text"
+msgstr "图片转文字"
+
+#: utils/constants.py:224
+msgid "Image Classification"
+msgstr "图像分类"
+
+#: utils/constants.py:225
+msgid "Zero-shot Image Classification"
+msgstr "零样本图像分类"
+
+#: utils/constants.py:226
+msgid "Object Detection"
+msgstr "目标检测"
+
+#: utils/constants.py:227
+msgid "Image Segmentation"
+msgstr "图像分割"
+
+#: utils/constants.py:228
+msgid "Depth Estimation"
+msgstr "深度估计"
+
+#: utils/constants.py:229
+msgid "Visual Question Answering"
+msgstr "视觉问答系统"
+
+#: utils/constants.py:230
+msgid "Video Classification"
+msgstr "视频分类"
+
+#: utils/constants.py:231
+msgid "Text to Video"
+msgstr "文字转视频"
+
+#: utils/constants.py:232
+msgid "Image Feature Extraction"
+msgstr "图像特征提取"
+
+#: utils/constants.py:265
+msgid "Last Modified"
+msgstr "上一次编辑"
+
+#: utils/constants.py:266
+msgid "Created At"
+msgstr "创建时间"
+
+#: utils/constants.py:267
+msgid "Trending Score"
+msgstr "趋势得分"
+
+#: utils/constants.py:291
+msgid "Descending"
+msgstr "下降"
+
+#: utils/constants.py:292
+msgid "Ascending"
+msgstr "上升"
+
+#: utils/constants.py:325
+msgid "Take Prompt"
+msgstr "取提示"

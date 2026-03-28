@@ -440,6 +440,7 @@ class FileOpsController:
             self._app.notification_ctrl.toast(_("No image files found to convert"))
             return
 
+        none_found = " " + _("(None found)") if existing_target_count == 0 else ""
         choice = self._app.app_actions.alert(
             _("Convert Directory Images to JPG"),
             _(
@@ -448,7 +449,7 @@ class FileOpsController:
                 "- Existing JPG/JPEG files in scope: {1}\n"
                 "- Non-JPG files with existing JPG targets: {2}\n\n"
                 "Yes = overwrite existing JPG files (with no-EXIF conversion output)\n"
-                "No = keep existing JPG files unchanged\n"
+                "No = skip conversion for files with target conflicts" + none_found + "\n"
                 "Cancel = cancel conversion"
             ).format(base_dir, existing_jpg_count, existing_target_count),
             kind="askyesnocancel",
@@ -546,17 +547,18 @@ class FileOpsController:
             self._app.notification_ctrl.toast(_("No SVG files found to convert"))
             return
             
+        count_target_pngs = len([f for f in convert_candidates if os.path.exists(_target_png_path(f))])
+        none_found = " " + _("(None found)") if count_target_pngs == 0 else ""
         choice = self._app.app_actions.alert(
             _("Convert Directory SVG to PNG"),
             _(
-                "Confirm convert SVG files in current directory scope.\n\n"
+                "Convert SVGs in the current directory scope to PNG?\n\n"
                 "{0}\n\n"
-                "How should existing PNG files be handled?\n"
-                "- Existing PNG files: {1}\n\n"
-                "Yes = overwrite existing PNG files\n"
-                "No = keep existing PNG files unchanged\n"
-                "Cancel = cancel conversion"
-            ).format(base_dir, len([f for f in convert_candidates if os.path.exists(_target_png_path(f))]),),
+                "{1} SVG(s) already have a PNG at the matching output path.\n\n"
+                "Yes = convert all SVGs and overwrite any existing PNGs\n"
+                "No = skip conversion for SVGs with target conflicts" + none_found + "\n"
+                "Cancel = cancel"
+            ).format(base_dir, count_target_pngs),
             kind="askyesnocancel",
         )
         
