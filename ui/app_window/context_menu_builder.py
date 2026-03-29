@@ -177,8 +177,12 @@ class ContextMenuBuilder:
 
         if is_video_file(image_path):
             menu.addAction(
-                _("Strip audio (video)"),
+                _("Strip audio from video"),
                 lambda: app.file_ops_ctrl.strip_audio_from_current_video(),
+            )
+            menu.addAction(
+                _("Save copy without metadata"),
+                lambda: app.file_ops_ctrl.copy_current_video_without_metadata(),
             )
 
         menu.addAction(

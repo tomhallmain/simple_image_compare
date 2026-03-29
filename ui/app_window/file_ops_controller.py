@@ -713,6 +713,48 @@ class FileOpsController:
         self._app.refresh()
         self._app.notification_ctrl.toast(_("Audio removed from video"))
 
+    def copy_current_video_without_metadata(self, event=None) -> None:
+        """
+        Create a sibling copy of the current video with container metadata stripped (ffmpeg remux).
+        """
+        from image.video_ops import VideoOps, default_output_path_copy_without_metadata
+        from utils.media_utils import is_video_file
+
+        filepath = self._nav.get_active_media_filepath()
+        if not filepath:
+            return
+        if not is_video_file(filepath):
+            self._app.app_actions.warn(_("Not a video file"))
+            return
+        if not VideoOps.find_ffmpeg_executable():
+            self._app.app_actions.warn(_("ffmpeg not found on PATH."))
+            return
+
+        planned_out = default_output_path_copy_without_metadata(filepath)
+        if not self._app.app_actions.alert(
+            _("Save copy without metadata"),
+            _(
+                "Create a new file with container tags and chapters removed (stream copy, no re-encode). "
+                "The original file will not be changed.\n\n"
+                "Output:\n{0}"
+            ).format(planned_out),
+            kind="askyesno",
+        ):
+            return
+
+        if hasattr(self._app.media_frame, "pause_video_if_playing"):
+            self._app.media_frame.pause_video_if_playing()
+
+        try:
+            out_path = VideoOps.copy_video_without_metadata(filepath)
+        except Exception as e:
+            logger.warning("Copy without metadata failed: %s", e)
+            self._app.app_actions.warn(str(e))
+            return
+
+        self._app.refresh()
+        self._app.notification_ctrl.toast(_("Saved copy without metadata: {0}").format(out_path))
+
     def open_image_in_gimp(self, event=None) -> None:
         """
         Open the current image in GIMP.

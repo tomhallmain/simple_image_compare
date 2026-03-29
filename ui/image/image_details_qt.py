@@ -147,6 +147,8 @@ class ImageDetails(SmartDialog):
         self._is_image = True
 
         # -- Determine content type --------------------------------
+        # Video: container tags / stream metadata (MP4 moov, Matroska, etc.) can be
+        # surfaced later via image.video_ops.VideoOps.ffprobe_json for this panel.
         if any(
             self._image_path.lower().endswith(ext)
             for ext in config.video_types
