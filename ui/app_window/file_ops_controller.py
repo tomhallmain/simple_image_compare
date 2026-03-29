@@ -678,15 +678,16 @@ class FileOpsController:
         """
         Remove audio from the current video file in place (ffmpeg stream copy).
         """
-        from image.image_ops import ImageOps
+        from image.video_ops import VideoOps
+        from utils.media_utils import is_video_file
 
         filepath = self._nav.get_active_media_filepath()
         if not filepath:
             return
-        if not ImageOps.is_video_file(filepath):
+        if not is_video_file(filepath):
             self._app.app_actions.warn(_("Not a video file"))
             return
-        if not ImageOps.find_ffmpeg_executable():
+        if not VideoOps.find_ffmpeg_executable():
             self._app.app_actions.warn(_("ffmpeg not found on PATH. Install ffmpeg to strip audio."))
             return
 
@@ -703,7 +704,7 @@ class FileOpsController:
             self._app.media_frame.pause_video_if_playing()
 
         try:
-            ImageOps.strip_video_audio(filepath)
+            VideoOps.strip_video_audio(filepath)
         except Exception as e:
             logger.warning("Strip audio failed: %s", e)
             self._app.app_actions.warn(str(e))

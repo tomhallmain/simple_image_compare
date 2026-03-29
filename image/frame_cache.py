@@ -51,6 +51,7 @@ except ImportError:
 from utils.config import config
 from utils.logging_setup import get_logger
 from utils.constants import CompareMediaType
+from utils.media_utils import is_video_path_by_extension
 
 logger = get_logger("frame_cache")
 
@@ -404,10 +405,8 @@ class FrameCache:
                 return media_path
 
         # Check for video types from config (which may be dynamic)
-        if config.enable_videos:
-            for ext in config.video_types:
-                if media_path_lower.endswith(ext):
-                    return cls.get_first_frame(media_path, CompareMediaType.VIDEO)
+        if config.enable_videos and is_video_path_by_extension(media_path):
+            return cls.get_first_frame(media_path, CompareMediaType.VIDEO)
 
         return media_path
 
@@ -664,9 +663,7 @@ class FrameCache:
         Falls back to ``get_image_path`` for non-dynamic media.
         """
         media_path_lower = media_path.lower()
-        is_video = config.enable_videos and any(
-            media_path_lower.endswith(ext) for ext in config.video_types
-        )
+        is_video = config.enable_videos and is_video_path_by_extension(media_path)
         is_pdf = media_path_lower.endswith(".pdf") and config.enable_pdfs and has_imported_pypdfium2
         if not is_video and not is_pdf:
             p = cls.get_image_path(media_path)
@@ -713,9 +710,7 @@ class FrameCache:
         _, path_iter = cls.stream_frame_samples(media_path, sample_ratio)
         sampled_paths = list(path_iter)
         media_path_lower = media_path.lower()
-        is_video = config.enable_videos and any(
-            media_path_lower.endswith(ext) for ext in config.video_types
-        )
+        is_video = config.enable_videos and is_video_path_by_extension(media_path)
         is_pdf = media_path_lower.endswith(".pdf") and config.enable_pdfs and has_imported_pypdfium2
         if len(sampled_paths) == 0 and (is_video or is_pdf):
             sampled_paths = [media_path]

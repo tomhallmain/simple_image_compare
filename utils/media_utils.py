@@ -1,0 +1,100 @@
+"""
+Shared helpers for classifying video (and related) media paths.
+
+Centralizes extension checks and container signature sniffing so UI, cache, and
+file operations stay consistent.
+"""
+
+from __future__ import annotations
+
+import os
+
+from utils.config import config
+
+# Used when ``config.video_types`` is missing or empty (matches media_frame fallback).
+DEFAULT_VIDEO_EXTENSIONS = (".mp4", ".mkv", ".avi", ".webm", ".mov", ".m4v", ".ogv")
+
+
+def get_video_extensions() -> tuple[str, ...]:
+    """Configured video extensions, lowercased. Missing attribute uses :data:`DEFAULT_VIDEO_EXTENSIONS`; an empty list stays empty."""
+    vt = getattr(config, "video_types", None)
+    if vt is None:
+        return DEFAULT_VIDEO_EXTENSIONS
+    return tuple(str(e).lower() for e in vt)
+
+
+def is_video_path_by_extension(path: str) -> bool:
+    """
+    True if *path*'s suffix matches a configured video extension.
+
+    Does not require the path to exist or ``enable_videos`` to be set — use for
+    routing/display logic (e.g. media frame, frame cache when combined with
+    ``enable_videos``).
+    """
+    if not path:
+        return False
+    path_lower = path.lower()
+    return any(path_lower.endswith(ext) for ext in get_video_extensions())
+
+
+def is_video_container_signature(path: str) -> bool:
+    """
+    Detect common video containers from file signatures, regardless of extension.
+
+    Useful for mislabeled files (e.g. MP4 payload with a wrong suffix).
+    """
+    if not path or not os.path.isfile(path):
+        return False
+    try:
+        with open(path, "rb") as f:
+            head = f.read(64)
+    except OSError:
+        return False
+    if len(head) < 12:
+        return False
+
+    # ISO BMFF / MP4 family: [size:4][ftyp:4][major_brand:4]
+    if head[4:8] == b"ftyp":
+        major_brand = head[8:12].lower()
+        image_brands = {
+            b"heic", b"heix", b"hevc", b"hevx",
+            b"mif1", b"msf1",
+            b"avif", b"avis",
+        }
+        if major_brand in image_brands:
+            return False
+
+        compatible = head[12:64].lower()
+        video_markers = (
+            b"isom", b"iso2", b"avc1", b"hvc1", b"hev1",
+            b"mp41", b"mp42", b"m4v ", b"3gp", b"qt  ",
+        )
+        return major_brand in video_markers or any(m in compatible for m in video_markers)
+
+    # WebM / Matroska (EBML)
+    if head.startswith(b"\x1A\x45\xDF\xA3"):
+        return True
+
+    # Ogg container
+    if head.startswith(b"OggS"):
+        return True
+
+    return False
+
+
+def is_video_for_display(path: str) -> bool:
+    """Extension match or container signature (media frame / VLC routing)."""
+    return is_video_path_by_extension(path) or is_video_container_signature(path)
+
+
+def is_video_file(path: str) -> bool:
+    """
+    True when *path* is an existing file, videos are enabled, and the suffix is a
+    configured video type — suitable for file operations (e.g. strip audio).
+    """
+    if not path or not os.path.isfile(path):
+        return False
+    if not getattr(config, "enable_videos", True):
+        return False
+    ext = os.path.splitext(path)[1].lower()
+    return ext in set(get_video_extensions())

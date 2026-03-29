@@ -38,6 +38,7 @@ from image.frame_cache import FrameCache
 from image.image_ops import ImageOps
 from utils.app_info_cache import app_info_cache
 from utils.config import config
+from utils.media_utils import is_video_path_by_extension
 from utils.constants import ActionType, ClassifierActionType
 from utils.logging_setup import get_logger
 from utils.running_tasks_registry import start_thread
@@ -487,10 +488,7 @@ class ClassifierAction:
 
     def _is_dynamic_media_path(self, media_path: str) -> bool:
         media_path_lower = media_path.lower()
-        is_video = (
-            config.enable_videos
-            and any(media_path_lower.endswith(ext) for ext in config.video_types)
-        )
+        is_video = config.enable_videos and is_video_path_by_extension(media_path)
         is_pdf = config.enable_pdfs and media_path_lower.endswith(".pdf")
         return is_video or is_pdf
 

@@ -26,6 +26,7 @@ from ui.app_style import AppStyle
 from ui.app_window.media_controls_overlay import MediaControlsOverlay, OVERLAY_HEIGHT
 from utils.config import config
 from utils.logging_setup import get_logger
+from utils.media_utils import is_video_for_display, is_video_path_by_extension, is_video_container_signature
 from utils.utils import Utils
 from utils.translations import I18N
 
@@ -52,10 +53,6 @@ try:
     _SHIBOKEN_AVAILABLE = True
 except ImportError:
     _SHIBOKEN_AVAILABLE = False
-
-
-# Default video extensions if config.video_types is not set
-DEFAULT_VIDEO_TYPES = (".mp4", ".mkv", ".avi", ".webm", ".mov", ".m4v", ".ogv")
 
 
 class VideoUI:
@@ -302,59 +299,6 @@ class MediaFrame(QFrame):
         color = background_color or AppStyle.MEDIA_BG
         self.setStyleSheet(f"background-color: {color};")
         self._graphics_view.setStyleSheet(f"background-color: {color};")
-
-    def _video_types(self):
-        return getattr(config, "video_types", DEFAULT_VIDEO_TYPES)
-
-    def _is_video_path(self, path):
-        if not path:
-            return False
-        path_lower = path.lower()
-        return any(path_lower.endswith(ext) for ext in self._video_types())
-
-    def _is_video_container_signature(self, path: str) -> bool:
-        """
-        Detect common video containers from file signatures, regardless of extension.
-        Useful for mislabeled files like MP4 content with a .jpeg suffix.
-        """
-        if not path or not os.path.isfile(path):
-            return False
-        try:
-            with open(path, "rb") as f:
-                head = f.read(64)
-        except Exception:
-            return False
-        if len(head) < 12:
-            return False
-
-        # ISO BMFF / MP4 family: [size:4][ftyp:4][major_brand:4]
-        if head[4:8] == b"ftyp":
-            major_brand = head[8:12].lower()
-            # Known still-image BMFF brands (do not treat as video containers).
-            image_brands = {
-                b"heic", b"heix", b"hevc", b"hevx",
-                b"mif1", b"msf1",
-                b"avif", b"avis",
-            }
-            if major_brand in image_brands:
-                return False
-
-            compatible = head[12:64].lower()
-            video_markers = (
-                b"isom", b"iso2", b"avc1", b"hvc1", b"hev1",
-                b"mp41", b"mp42", b"m4v ", b"3gp", b"qt  ",
-            )
-            return major_brand in video_markers or any(m in compatible for m in video_markers)
-
-        # WebM / Matroska (EBML)
-        if head.startswith(b"\x1A\x45\xDF\xA3"):
-            return True
-
-        # Ogg container
-        if head.startswith(b"OggS"):
-            return True
-
-        return False
 
     def _is_animated_image_candidate(self, path: str) -> bool:
         """Return True for formats that may carry animation frames."""
@@ -816,7 +760,7 @@ class MediaFrame(QFrame):
             self.clear()
             return
         # Video dispatch: use VLC if available, otherwise show placeholder
-        if self._is_video_path(path) or self._is_video_container_signature(path):
+        if is_video_for_display(path):
             if _VLC_AVAILABLE and self.vlc_media_player:
                 self.show_video(path)
             else:
@@ -845,8 +789,7 @@ class MediaFrame(QFrame):
         """Play video in this frame (VLC embeds via winId())."""
         if not _VLC_AVAILABLE or not self.vlc_media_player:
             return
-        path_lower = (path or "").lower()
-        if not any(path_lower.endswith(ext) for ext in self._video_types()) and not self._is_video_container_signature(path):
+        if not is_video_path_by_extension(path) and not is_video_container_signature(path):
             return
         self.clear()
         self._graphics_view.set_interaction_enabled(False)
