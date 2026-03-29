@@ -676,7 +676,7 @@ class FileOpsController:
 
     def strip_audio_from_current_video(self, event=None) -> None:
         """
-        Remove audio from the current video file in place (ffmpeg stream copy).
+        Create a sibling copy of the current video with audio removed (ffmpeg stream copy).
         """
         from image.video_ops import VideoOps
         from utils.media_utils import is_video_file
@@ -691,11 +691,14 @@ class FileOpsController:
             self._app.app_actions.warn(_("ffmpeg not found on PATH. Install ffmpeg to strip audio."))
             return
 
+        planned_out = VideoOps.default_output_path_copy_without_audio(filepath)
         if not self._app.app_actions.alert(
-            _("Strip audio from video"),
+            _("Save copy without audio"),
             _(
-                "Remove all audio from this file? The video will be replaced in place.\n\n{0}"
-            ).format(filepath),
+                "Create a new file with all audio streams removed (stream copy, no re-encode). "
+                "The original file will not be changed.\n\n"
+                "Output:\n{0}"
+            ).format(planned_out),
             kind="askyesno",
         ):
             return
@@ -704,20 +707,20 @@ class FileOpsController:
             self._app.media_frame.pause_video_if_playing()
 
         try:
-            VideoOps.strip_video_audio(filepath)
+            out_path = VideoOps.copy_video_without_audio(filepath)
         except Exception as e:
             logger.warning("Strip audio failed: %s", e)
             self._app.app_actions.warn(str(e))
             return
 
         self._app.refresh()
-        self._app.notification_ctrl.toast(_("Audio removed from video"))
+        self._app.notification_ctrl.toast(_("Saved copy without audio: {0}").format(out_path))
 
     def copy_current_video_without_metadata(self, event=None) -> None:
         """
         Create a sibling copy of the current video with container metadata stripped (ffmpeg remux).
         """
-        from image.video_ops import VideoOps, default_output_path_copy_without_metadata
+        from image.video_ops import VideoOps
         from utils.media_utils import is_video_file
 
         filepath = self._nav.get_active_media_filepath()
@@ -730,7 +733,7 @@ class FileOpsController:
             self._app.app_actions.warn(_("ffmpeg not found on PATH."))
             return
 
-        planned_out = default_output_path_copy_without_metadata(filepath)
+        planned_out = VideoOps.default_output_path_copy_without_metadata(filepath)
         if not self._app.app_actions.alert(
             _("Save copy without metadata"),
             _(

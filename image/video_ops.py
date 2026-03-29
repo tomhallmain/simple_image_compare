@@ -29,21 +29,6 @@ logger = get_logger("video_ops")
 _ = I18N._
 
 
-def default_output_path_copy_without_metadata(video_path: str) -> str:
-    """
-    ``dir/foo.ext`` → ``dir/foo_nometa.ext``, or ``foo_nometa_N.ext`` if that exists.
-    """
-    dirname = os.path.dirname(os.path.abspath(video_path)) or "."
-    stem, ext = os.path.splitext(os.path.basename(video_path))
-    base = os.path.join(dirname, f"{stem}_nometa")
-    candidate = f"{base}{ext}"
-    n = 1
-    while os.path.exists(candidate):
-        candidate = f"{base}_{n}{ext}"
-        n += 1
-    return candidate
-
-
 class VideoOps:
     """Static helpers for video processing."""
 
@@ -53,15 +38,47 @@ class VideoOps:
         return shutil.which("ffmpeg")
 
     @staticmethod
-    def strip_video_audio(video_path: str) -> str:
+    def default_output_path_copy_without_metadata(video_path: str) -> str:
         """
-        Remove audio streams from *video_path* in place using ffmpeg (video stream copy).
+        ``dir/foo.ext`` → ``dir/foo_nometa.ext``, or ``foo_nometa_N.ext`` if that exists.
+        """
+        dirname = os.path.dirname(os.path.abspath(video_path)) or "."
+        stem, ext = os.path.splitext(os.path.basename(video_path))
+        base = os.path.join(dirname, f"{stem}_nometa")
+        candidate = f"{base}{ext}"
+        n = 1
+        while os.path.exists(candidate):
+            candidate = f"{base}_{n}{ext}"
+            n += 1
+        return candidate
 
-        Requires ffmpeg on PATH. Writes a temporary file next to the source, then replaces
-        the original atomically where the OS allows it.
+    @staticmethod
+    def default_output_path_copy_without_audio(video_path: str) -> str:
+        """
+        ``dir/foo.ext`` → ``dir/foo_noaudio.ext``, or ``foo_noaudio_N.ext`` if that exists.
+        """
+        dirname = os.path.dirname(os.path.abspath(video_path)) or "."
+        stem, ext = os.path.splitext(os.path.basename(video_path))
+        base = os.path.join(dirname, f"{stem}_noaudio")
+        candidate = f"{base}{ext}"
+        n = 1
+        while os.path.exists(candidate):
+            candidate = f"{base}_{n}{ext}"
+            n += 1
+        return candidate
+
+    @staticmethod
+    def copy_video_without_audio(
+        video_path: str, output_path: str | None = None
+    ) -> str:
+        """
+        Write a new file with audio streams removed (ffmpeg video stream copy, ``-an``).
+
+        Does not modify *video_path*. Default output is a sibling like ``foo_noaudio.ext``
+        (see :meth:`default_output_path_copy_without_audio`).
 
         Returns:
-            *video_path* on success.
+            Path to the written file on success.
 
         Raises:
             RuntimeError: If the file is not a video, ffmpeg is missing, or processing fails.
@@ -72,16 +89,14 @@ class VideoOps:
         if not ffmpeg:
             raise RuntimeError("ffmpeg not found on PATH")
 
-        src_dir = os.path.dirname(os.path.abspath(video_path)) or "."
-        tmp_path = os.path.join(
-            src_dir,
-            os.path.basename(video_path) + ".weidr_strip_audio.tmp",
+        out_path = output_path or VideoOps.default_output_path_copy_without_audio(
+            video_path
         )
-        if os.path.exists(tmp_path):
+        if os.path.exists(out_path):
             try:
-                os.unlink(tmp_path)
+                os.unlink(out_path)
             except OSError as e:
-                raise RuntimeError(f"Could not remove stale temp file: {e}") from e
+                raise RuntimeError(f"Could not remove existing output file: {e}") from e
 
         cmd = [
             ffmpeg,
@@ -95,7 +110,7 @@ class VideoOps:
             "-c:v",
             "copy",
             "-an",
-            tmp_path,
+            out_path,
         ]
         try:
             proc = subprocess.run(
@@ -107,8 +122,8 @@ class VideoOps:
             )
         except subprocess.TimeoutExpired as e:
             try:
-                if os.path.isfile(tmp_path):
-                    os.unlink(tmp_path)
+                if os.path.isfile(out_path):
+                    os.unlink(out_path)
             except OSError:
                 pass
             raise RuntimeError("ffmpeg timed out while stripping audio") from e
@@ -117,26 +132,16 @@ class VideoOps:
 
         if proc.returncode != 0:
             try:
-                if os.path.isfile(tmp_path):
-                    os.unlink(tmp_path)
+                if os.path.isfile(out_path):
+                    os.unlink(out_path)
             except OSError:
                 pass
             err = (proc.stderr or proc.stdout or "").strip()
             detail = f": {err}" if err else ""
             raise RuntimeError(f"ffmpeg failed{detail}")
 
-        try:
-            os.replace(tmp_path, video_path)
-        except OSError as e:
-            try:
-                if os.path.isfile(tmp_path):
-                    os.unlink(tmp_path)
-            except OSError:
-                pass
-            raise RuntimeError(f"Could not replace video file: {e}") from e
-
-        logger.info("Stripped audio: %s", video_path)
-        return video_path
+        logger.info("Wrote video without audio: %s", out_path)
+        return out_path
 
     @staticmethod
     def copy_video_without_metadata(
@@ -149,7 +154,7 @@ class VideoOps:
         Uses ffmpeg stream copy (no re-encode): ``-map_metadata -1`` removes global
         tags; ``-map_chapters -1`` drops chapters. Does not modify *video_path*.
 
-        If *output_path* is omitted, uses :func:`default_output_path_copy_without_metadata`.
+        If *output_path* is omitted, uses :meth:`default_output_path_copy_without_metadata`.
 
         Returns:
             Path to the written file.
@@ -163,7 +168,9 @@ class VideoOps:
         if not ffmpeg:
             raise RuntimeError("ffmpeg not found on PATH")
 
-        out = output_path or default_output_path_copy_without_metadata(video_path)
+        out = output_path or VideoOps.default_output_path_copy_without_metadata(
+            video_path
+        )
         out = os.path.abspath(out)
         if os.path.abspath(video_path) == out:
             raise RuntimeError("Output path must differ from the source file")
