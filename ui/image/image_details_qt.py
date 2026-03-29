@@ -70,6 +70,36 @@ def get_readable_file_size(path: str) -> str:
         return f"{round(size / (1024 * 1024), 1)} MB"
 
 
+# ~1000 words at ~6 chars/word; line cap keeps the dialog usable.
+_DETAILS_PROMPT_MAX_CHARS = 6000
+_DETAILS_PROMPT_MAX_LINES = 42
+_DETAILS_ELLIPSIS = "\u2026"
+
+
+def truncate_details_label_text(
+    text: str,
+    max_chars: int = _DETAILS_PROMPT_MAX_CHARS,
+    max_lines: int = _DETAILS_PROMPT_MAX_LINES,
+) -> str:
+    """
+    Shorten long prompts for on-screen labels: cap line count, then character length.
+    Copy actions use the untruncated strings stored on :class:`ImageDetails`.
+    """
+    if not text:
+        return text
+    lines = text.splitlines()
+    truncated_lines = False
+    if len(lines) > max_lines:
+        lines = lines[:max_lines]
+        truncated_lines = True
+    out = "\n".join(lines)
+    if truncated_lines:
+        out = out + "\n" + _DETAILS_ELLIPSIS
+    if len(out) > max_chars:
+        out = out[: max_chars - len(_DETAILS_ELLIPSIS)].rstrip() + _DETAILS_ELLIPSIS
+    return out
+
+
 # ── ImageDetails ──────────────────────────────────────────────────────
 
 
@@ -148,6 +178,8 @@ class ImageDetails(SmartDialog):
         self._take_focus = take_focus
         self._has_closed = False
         self.media_type = get_media_type_for_path(self._media_path)
+        self._full_positive_for_copy = None
+        self._full_negative_for_copy = None
 
         # -- Determine content type --------------------------------
         # Video: ffprobe on the actual file. Unconfigured: disabled type or bad path.
@@ -182,12 +214,17 @@ class ImageDetails(SmartDialog):
 
         mod_time, file_size = self._get_file_info()
 
+        pos_display, neg_display, neg_is_placeholder = (
+            self._store_prompt_strings_for_copy_and_get_display(positive, negative)
+        )
+
         # -- Build UI ----------------------------------------------
         self._build_ui(
             image_mode,
             image_dims,
-            positive,
-            negative,
+            pos_display,
+            neg_display,
+            neg_is_placeholder,
             models,
             loras,
             mod_time,
@@ -201,12 +238,27 @@ class ImageDetails(SmartDialog):
 
     # -- UI construction -------------------------------------------
 
+    def _store_prompt_strings_for_copy_and_get_display(
+        self, positive: str, negative: str
+    ) -> tuple[str, str, bool]:
+        """Keep full prompts for copy; return truncated label text and negative placeholder flag."""
+        self._full_positive_for_copy = positive
+        self._full_negative_for_copy = negative
+        pos_display = truncate_details_label_text(positive)
+        neg_is_placeholder = not config.show_negative_prompt or negative == ""
+        if neg_is_placeholder:
+            neg_display = _("(negative prompt not shown by config setting)")
+        else:
+            neg_display = truncate_details_label_text(negative)
+        return pos_display, neg_display, neg_is_placeholder
+
     def _build_ui(
         self,
         image_mode: str,
         image_dims: str,
-        positive: str,
-        negative: str,
+        positive_display: str,
+        negative_display: str,
+        neg_is_placeholder: bool,
         models,
         loras,
         mod_time: str,
@@ -298,7 +350,7 @@ class ImageDetails(SmartDialog):
         row += 1
 
         _header(_("Positive"), row)
-        self._lbl_positive = _value(positive, row)
+        self._lbl_positive = _value(positive_display, row)
         if self._prompt_extraction_failed:
             self._lbl_positive.setStyleSheet(
                 f"color: {ImageDetails._PROMPT_NOT_FOUND_COLOR};"
@@ -306,14 +358,8 @@ class ImageDetails(SmartDialog):
             )
         row += 1
 
-        neg_is_placeholder = not config.show_negative_prompt or negative == ""
-        neg_text = (
-            negative
-            if config.show_negative_prompt and negative != ""
-            else _("(negative prompt not shown by config setting)")
-        )
         _header(_("Negative"), row)
-        self._lbl_negative = _value(neg_text, row)
+        self._lbl_negative = _value(negative_display, row)
         if neg_is_placeholder:
             self._lbl_negative.setStyleSheet(
                 f"color: {ImageDetails._NEGATIVE_HIDDEN_COLOR};"
@@ -588,6 +634,9 @@ class ImageDetails(SmartDialog):
             related_image_text = self.get_related_image_text()
 
         mod_time, file_size = self._get_file_info()
+        pos_display, neg_display, neg_is_placeholder = (
+            self._store_prompt_strings_for_copy_and_get_display(positive, negative)
+        )
         self._lbl_path.setText(self._media_path)
         if self._lbl_temp_path is not None and self._lbl_temp_path_header is not None:
             self._lbl_temp_path_header.setVisible(self._show_temp_path)
@@ -598,7 +647,7 @@ class ImageDetails(SmartDialog):
         self._lbl_dims.setText(image_dims)
         self._lbl_mtime.setText(mod_time)
         self._lbl_size.setText(file_size)
-        self._lbl_positive.setText(positive)
+        self._lbl_positive.setText(pos_display)
         if self._prompt_extraction_failed:
             self._lbl_positive.setStyleSheet(
                 f"color: {ImageDetails._PROMPT_NOT_FOUND_COLOR};"
@@ -609,9 +658,13 @@ class ImageDetails(SmartDialog):
                 f"color: {AppStyle.FG_COLOR};"
                 f"background: {AppStyle.BG_COLOR};"
             )
-        if config.show_negative_prompt:
-            self._lbl_negative.setText(negative)
-            # Restore default style when actually showing negative prompt content
+        self._lbl_negative.setText(neg_display)
+        if neg_is_placeholder:
+            self._lbl_negative.setStyleSheet(
+                f"color: {ImageDetails._NEGATIVE_HIDDEN_COLOR};"
+                f"background: {AppStyle.BG_COLOR};"
+            )
+        else:
             self._lbl_negative.setStyleSheet(
                 f"color: {AppStyle.FG_COLOR};"
                 f"background: {AppStyle.BG_COLOR};"
@@ -630,13 +683,17 @@ class ImageDetails(SmartDialog):
     # ── Clipboard operations ──────────────────────────────────────
 
     def copy_prompt(self) -> None:
-        positive = self._lbl_positive.text()
+        positive = self._full_positive_for_copy
+        if positive is None:
+            positive = self._lbl_positive.text()
         ImageDetails._copy_prompt_static(
             positive, self._app_actions, self._prompt_extraction_failed
         )
 
     def copy_prompt_no_break(self) -> None:
-        positive = self._lbl_positive.text()
+        positive = self._full_positive_for_copy
+        if positive is None:
+            positive = self._lbl_positive.text()
         ImageDetails._copy_prompt_static(
             positive,
             self._app_actions,

@@ -755,6 +755,69 @@ class FileOpsController:
         self._app.refresh()
         self._app.notification_ctrl.toast(_("Saved copy without metadata: {0}").format(out_path))
 
+    def copy_directory_videos_without_metadata(self, event=None) -> None:
+        """
+        For each video in the current file-browser scope, write a sibling copy with
+        container metadata stripped (same behavior as single-file \"Save copy without metadata\").
+        """
+        from image.video_ops import VideoOps
+        from utils.media_utils import is_video_file
+
+        if not getattr(config, "enable_videos", True):
+            self._app.app_actions.warn(_("Video support is disabled in configuration"))
+            return
+
+        base_dir = self._app.get_base_dir()
+        if not base_dir or not os.path.isdir(base_dir):
+            self._app.app_actions.warn(_("No valid base directory"))
+            return
+
+        if not VideoOps.find_ffmpeg_executable():
+            self._app.app_actions.warn(_("ffmpeg not found on PATH."))
+            return
+
+        self._app.app_actions.refresh(file_check=False)
+
+        files = self._fb.get_files_sorted_for_operation(
+            sort_by=SortBy.CREATION_TIME,
+            sort=Sort.ASC,
+        )
+        video_paths = [fp for fp in files if is_video_file(fp)]
+        if len(video_paths) == 0:
+            self._app.notification_ctrl.toast(_("No video files found in this directory scope"))
+            return
+
+        if not self._app.app_actions.alert(
+            _("Save copies without metadata (videos in directory)"),
+            _(
+                "Create new files with container tags and chapters removed (stream copy) for each video.\n\n"
+                "Directory:\n{0}\n\nVideos to process: {1}"
+            ).format(base_dir, len(video_paths)),
+            kind="askyesno",
+        ):
+            return
+
+        ok = 0
+        failed = 0
+        for fp in video_paths:
+            try:
+                VideoOps.copy_video_without_metadata(fp)
+                ok += 1
+            except Exception as e:
+                failed += 1
+                logger.warning("Copy without metadata failed for %s: %s", fp, e)
+
+        if ok > 0:
+            self._app.refresh()
+        if failed == 0:
+            self._app.notification_ctrl.toast(
+                _("Wrote {0} video copy(ies) without metadata").format(ok)
+            )
+        else:
+            self._app.app_actions.warn(
+                _("Finished: {0} succeeded, {1} failed").format(ok, failed)
+            )
+
     def open_image_in_gimp(self, event=None) -> None:
         """
         Open the current image in GIMP.

@@ -15,6 +15,7 @@ from PySide6.QtWidgets import QMenu
 
 from files.directory_notes import DirectoryNotes
 from ui.files.marked_file_mover_qt import MarkedFiles
+from utils.config import config
 from utils.media_utils import is_video_file
 from utils.logging_setup import get_logger
 from utils.translations import I18N
@@ -189,10 +190,16 @@ class ContextMenuBuilder:
             _("Convert directory images to JPG"),
             lambda: app.file_ops_ctrl.convert_directory_images_to_jpg(),
         )
-        menu.addAction(
-            _("Convert directory SVGs to PNG"),
-            lambda: app.file_ops_ctrl.convert_directory_svg_to_png(),
-        )
+        if config.enable_svgs:
+            menu.addAction(
+                _("Convert directory SVGs to PNG"),
+                lambda: app.file_ops_ctrl.convert_directory_svg_to_png(),
+            )
+        if config.enable_videos: 
+            menu.addAction(
+                _("Save copies of all videos in directory without metadata"),
+                lambda: app.file_ops_ctrl.copy_directory_videos_without_metadata(),
+            )
 
         menu.addSeparator()
 
