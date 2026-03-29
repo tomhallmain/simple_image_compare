@@ -10,6 +10,7 @@ from __future__ import annotations
 import os
 
 from utils.config import config
+from utils.constants import MediaType
 
 # Used when ``config.video_types`` is missing or empty (matches media_frame fallback).
 DEFAULT_VIDEO_EXTENSIONS = (".mp4", ".mkv", ".avi", ".webm", ".mov", ".m4v", ".ogv")
@@ -87,6 +88,49 @@ def is_video_for_display(path: str) -> bool:
     return is_video_path_by_extension(path) or is_video_container_signature(path)
 
 
+def get_media_type_for_path(path: str) -> MediaType:
+    """
+    Classify *path* by suffix and config flags (videos, GIF, PDF, SVG, HTML).
+
+    Returns :data:`~utils.constants.MediaType.UNCONFIGURED` when *path* is missing or
+    not a string, when a video extension is present but videos are disabled, or when
+    the suffix matches GIF/PDF/SVG/HTML but that category is disabled in config.
+
+    Otherwise returns a concrete type; generic raster/unknown extensions map to ``IMAGE``.
+    """
+    if not path or not isinstance(path, str):
+        return MediaType.UNCONFIGURED
+
+    lower = path.lower()
+
+    if is_video_path_by_extension(path):
+        if config.enable_videos:
+            return MediaType.VIDEO
+        return MediaType.UNCONFIGURED
+
+    if lower.endswith(".gif"):
+        if config.enable_gifs:
+            return MediaType.GIF
+        return MediaType.UNCONFIGURED
+
+    if lower.endswith(".pdf"):
+        if config.enable_pdfs:
+            return MediaType.PDF
+        return MediaType.UNCONFIGURED
+
+    if lower.endswith(".svg"):
+        if config.enable_svgs:
+            return MediaType.SVG
+        return MediaType.UNCONFIGURED
+
+    if lower.endswith(".html") or lower.endswith(".htm"):
+        if config.enable_html:
+            return MediaType.HTML
+        return MediaType.UNCONFIGURED
+
+    return MediaType.IMAGE
+
+
 def is_video_file(path: str) -> bool:
     """
     True when *path* is an existing file, videos are enabled, and the suffix is a
@@ -94,7 +138,7 @@ def is_video_file(path: str) -> bool:
     """
     if not path or not os.path.isfile(path):
         return False
-    if not getattr(config, "enable_videos", True):
+    if not config.enable_videos:
         return False
     ext = os.path.splitext(path)[1].lower()
     return ext in set(get_video_extensions())

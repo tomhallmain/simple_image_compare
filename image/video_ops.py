@@ -8,6 +8,9 @@ for a details UI and to verify strips.
 
 Reading rich tags in Python often goes through **ffprobe** (same install as ffmpeg)
 or ExifTool; see project notes on format coverage.
+
+Use :meth:`VideoOps.merge_ffprobe_tag_dicts`, :meth:`VideoOps.ffprobe_video_mode_and_dims`,
+and :meth:`VideoOps.ffprobe_prompt_fields_from_tags` to interpret :meth:`VideoOps.ffprobe_json` output.
 """
 
 from __future__ import annotations
@@ -20,8 +23,10 @@ from typing import Any
 
 from utils.logging_setup import get_logger
 from utils.media_utils import is_video_file
+from utils.translations import I18N
 
 logger = get_logger("video_ops")
+_ = I18N._
 
 
 def default_output_path_copy_without_metadata(video_path: str) -> str:
@@ -268,3 +273,67 @@ class VideoOps:
         except json.JSONDecodeError as e:
             raise RuntimeError(f"Invalid ffprobe JSON: {e}") from e
         return data if isinstance(data, dict) else {}
+
+    @staticmethod
+    def merge_ffprobe_tag_dicts(probe: dict[str, Any]) -> dict[str, str]:
+        """Lowercased keys from format tags + first video stream tags."""
+        merged: dict[str, str] = {}
+        fmt_tags = (probe.get("format") or {}).get("tags") or {}
+        for k, v in fmt_tags.items():
+            merged[str(k).lower()] = str(v)
+        for s in probe.get("streams") or []:
+            if s.get("codec_type") != "video":
+                continue
+            for k, v in (s.get("tags") or {}).items():
+                lk = str(k).lower()
+                if lk not in merged:
+                    merged[lk] = str(v)
+            break
+        return merged
+
+    @staticmethod
+    def ffprobe_video_mode_and_dims(probe: dict[str, Any]) -> tuple[str, str]:
+        """Display strings for first video stream: label (translated) and ``WxH``."""
+        vcodec = ""
+        width = height = None
+        for s in probe.get("streams") or []:
+            if s.get("codec_type") == "video":
+                vcodec = str(s.get("codec_name") or "")
+                width = s.get("width")
+                height = s.get("height")
+                break
+        mode = _("Video ({0})").format(vcodec) if vcodec else _("Video")
+        dims = ""
+        if width and height:
+            dims = f"{int(width)}x{int(height)}"
+        return mode, dims
+
+    @staticmethod
+    def ffprobe_prompt_fields_from_tags(
+        probe: dict[str, Any],
+    ) -> tuple[str, str, list[str], list[str], bool]:
+        """
+        Map container / stream tags to positive & negative prompt fields.
+
+        Returns (positive, negative, models, loras, extraction_failed).
+        """
+        tags = VideoOps.merge_ffprobe_tag_dicts(probe)
+        if not tags:
+            return "", "", [], [], True
+
+        positive = (
+            tags.get("comment")
+            or tags.get("description")
+            or tags.get("title")
+            or ""
+        )
+        negative = (
+            tags.get("negative")
+            or tags.get("negative prompt")
+            or tags.get("com.apple.quicktime.description.negative")
+            or ""
+        )
+        if not positive.strip():
+            lines = [f"{k}: {v}" for k, v in sorted(tags.items())]
+            positive = "\n".join(lines)
+        return positive, negative, [], [], False

@@ -169,6 +169,8 @@ class TypeConfigurationWindow(SmartDialog):
 
         # Checkboxes
         for media_type in CompareMediaType:
+            if media_type == CompareMediaType.UNCONFIGURED:
+                continue
             row_layout = QHBoxLayout()
             row_layout.setContentsMargins(0, 0, 0, 0)
 
@@ -242,6 +244,7 @@ class TypeConfigurationWindow(SmartDialog):
             CompareMediaType.PDF: config.enable_pdfs,
             CompareMediaType.SVG: config.enable_svgs,
             CompareMediaType.HTML: config.enable_html,
+            CompareMediaType.UNCONFIGURED: False,
         }.get(media_type, False)
 
     def _store_pending_change(self, media_type: CompareMediaType) -> None:

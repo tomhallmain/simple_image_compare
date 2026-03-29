@@ -463,10 +463,14 @@ class ImageDataExtractor:
         except Exception:
             related_image_path = None
         if related_image_path is None:
-            with Image.open(image_path) as img:
-                info = img.info
-            if ImageDataExtractor.RELATED_IMAGE_KEY in info:
-                return str(info[ImageDataExtractor.RELATED_IMAGE_KEY])
+            try:
+                with Image.open(image_path) as img:
+                    info = img.info
+                if ImageDataExtractor.RELATED_IMAGE_KEY in info:
+                    return str(info[ImageDataExtractor.RELATED_IMAGE_KEY])
+            except Exception:
+                # Non-image paths (e.g. video) or unreadable files
+                pass
         return related_image_path
 
     def _build_a1111_prompt_info_object(self, prompt_text):

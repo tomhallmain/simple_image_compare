@@ -9,6 +9,7 @@ Non-UI imports (reuse policy):
   - FrameCache         from image.frame_cache
   - image_data_extractor from image.image_data_extractor
   - ImageOps           from image.image_ops
+  - VideoOps           from image.video_ops (ffprobe for video metadata)
   - Cropper            from image.smart_crop
   - app_info_cache     from utils.app_info_cache
 """
@@ -16,6 +17,7 @@ Non-UI imports (reuse policy):
 from __future__ import annotations
 
 import glob
+import json
 import math
 import os
 import random
@@ -36,6 +38,7 @@ from files.file_browser import FileBrowser
 from image.frame_cache import FrameCache
 from image.image_data_extractor import image_data_extractor
 from image.image_ops import ImageOps
+from image.video_ops import VideoOps
 from image.smart_crop import Cropper
 from lib.multi_display_qt import SmartDialog
 from ui.app_style import AppStyle
@@ -45,6 +48,7 @@ from ui.image.temp_image_window_qt import TempImageWindow
 from utils.app_info_cache import app_info_cache
 from utils.config import config
 from utils.constants import ImageGenerationType
+from utils.media_utils import get_media_type_for_path
 from utils.logging_setup import get_logger
 from utils.translations import I18N
 from utils.utils import Utils, ModifierKey
@@ -139,30 +143,37 @@ class ImageDetails(SmartDialog):
         )
         media_ext = os.path.splitext(self._media_path)[1].lower()
         self._show_temp_path = media_ext in {".svg", ".pdf"} and self._temp_path is not None
-        self._prompt_extraction_failed = True
         self._app_actions = app_actions
         self._do_refresh = do_refresh
         self._take_focus = take_focus
         self._has_closed = False
-        self._is_image = True
+        self.media_type = get_media_type_for_path(self._media_path)
 
         # -- Determine content type --------------------------------
-        # Video: container tags / stream metadata (MP4 moov, Matroska, etc.) can be
-        # surfaced later via image.video_ops.VideoOps.ffprobe_json for this panel.
-        if any(
-            self._image_path.lower().endswith(ext)
-            for ext in config.video_types
-        ):
-            self._is_image = False
-            image_mode = ""
-            image_dims = ""
-            positive = ""
-            negative = ""
-            models: list[str] = []
-            loras: list[str] = []
-            related_image_text = ""
+        # Video: ffprobe on the actual file. Unconfigured: disabled type or bad path.
+        if self.media_type.is_video():
+            (
+                image_mode,
+                image_dims,
+                positive,
+                negative,
+                models,
+                loras,
+                related_image_text,
+                self._prompt_extraction_failed,
+            ) = self._gather_video_details()
+        elif self.media_type.is_unconfigured():
+            (
+                image_mode,
+                image_dims,
+                positive,
+                negative,
+                models,
+                loras,
+                related_image_text,
+                self._prompt_extraction_failed,
+            ) = self._gather_unconfigured_details()
         else:
-            self._is_image = True
             image_mode, image_dims = self._get_image_info()
             (positive, negative, models, loras, prompt_extraction_failed,
             ) = image_data_extractor.get_image_prompts_and_models(self._image_path)
@@ -377,7 +388,7 @@ class ImageDetails(SmartDialog):
         row += 1
 
         # -- Tags section (conditional) ----------------------------
-        if config.image_tagging_enabled and self._is_image:
+        if config.image_tagging_enabled and self.media_type.supports_raster_image_details():
             _header(_("Tags"), row)
             tags = image_data_extractor.extract_tags(self._image_path)
             self._tags = tags if tags else []
@@ -440,6 +451,74 @@ class ImageDetails(SmartDialog):
             1, lambda: (self.raise_(), self.activateWindow())
         )
 
+    def _gather_unconfigured_details(self) -> tuple[str, str, str, str, list[str], list[str], str, bool]:
+        """Placeholder fields when the path is invalid or the file type is disabled in config."""
+        related_image_text = _("(Not available)")
+        return (
+            _("Unavailable"),
+            "",
+            _(
+                "This media type is not enabled in configuration, or the path is invalid."
+            ),
+            "",
+            [],
+            [],
+            related_image_text,
+            True,
+        )
+
+    def _gather_video_details(self) -> tuple[str, str, str, str, list[str], list[str], str, bool]:
+        """Load mode, dimensions, and tag-derived prompts from the video file via ffprobe."""
+        probe: dict | None = None
+        try:
+            if VideoOps.find_ffprobe_executable():
+                probe = VideoOps.ffprobe_json(self._media_path)
+        except RuntimeError as e:
+            logger.debug("ffprobe failed: %s", e)
+        try:
+            if probe:
+                image_mode, image_dims = VideoOps.ffprobe_video_mode_and_dims(probe)
+                positive, negative, models, loras, prompt_failed = (
+                    VideoOps.ffprobe_prompt_fields_from_tags(probe)
+                )
+            else:
+                image_mode = _("Video (ffprobe unavailable)")
+                image_dims = ""
+                positive = ""
+                negative = ""
+                models = []
+                loras = []
+                prompt_failed = True
+            related_image_text = self.get_related_image_text()
+        except Exception as e:
+            logger.warning("Video details gather failed: %s", e)
+            return (
+                _("Video"),
+                "",
+                "",
+                "",
+                [],
+                [],
+                _("(Could not load video details)"),
+                True,
+            )
+        return (
+            image_mode,
+            image_dims,
+            positive,
+            negative,
+            models,
+            loras,
+            related_image_text,
+            prompt_failed,
+        )
+
+    def _path_for_metadata_window(self) -> str:
+        """Path shown in the metadata viewer title (media file, not a cached frame)."""
+        if self.media_type.is_video() or self.media_type.is_unconfigured():
+            return self._media_path
+        return self._image_path
+
     # -- Info helpers ----------------------------------------------
 
     def _get_image_info(self) -> tuple[str, str]:
@@ -450,10 +529,14 @@ class ImageDetails(SmartDialog):
         return image_mode, image_dims
 
     def _get_file_info(self) -> tuple[str, str]:
+        if self.media_type.is_video() or self.media_type.is_unconfigured():
+            stat_path = self._media_path
+        else:
+            stat_path = self._image_path
         mod_time = datetime.fromtimestamp(
-            os.path.getmtime(self._image_path)
+            os.path.getmtime(stat_path)
         ).strftime("%Y-%m-%d %H:%M")
-        file_size = get_readable_file_size(self._image_path)
+        file_size = get_readable_file_size(stat_path)
         return mod_time, file_size
 
     def update_image_details(self, image_path: str, index_text: str) -> None:
@@ -467,11 +550,30 @@ class ImageDetails(SmartDialog):
         )
         media_ext = os.path.splitext(self._media_path)[1].lower()
         self._show_temp_path = media_ext in {".svg", ".pdf"} and self._temp_path is not None
-        self._is_image = not any(
-            self._image_path.lower().endswith(ext)
-            for ext in config.video_types
-        )
-        if self._is_image:
+        self.media_type = get_media_type_for_path(self._media_path)
+        if self.media_type.is_video():
+            (
+                image_mode,
+                image_dims,
+                positive,
+                negative,
+                models,
+                loras,
+                related_image_text,
+                self._prompt_extraction_failed,
+            ) = self._gather_video_details()
+        elif self.media_type.is_unconfigured():
+            (
+                image_mode,
+                image_dims,
+                positive,
+                negative,
+                models,
+                loras,
+                related_image_text,
+                self._prompt_extraction_failed,
+            ) = self._gather_unconfigured_details()
+        else:
             image_mode, image_dims = self._get_image_info()
             (
                 positive,
@@ -484,14 +586,6 @@ class ImageDetails(SmartDialog):
             )
             self._prompt_extraction_failed = prompt_extraction_failed
             related_image_text = self.get_related_image_text()
-        else:
-            image_mode = ""
-            image_dims = ""
-            positive = ""
-            negative = ""
-            models = []
-            loras = []
-            related_image_text = ""
 
         mod_time, file_size = self._get_file_info()
         self._lbl_path.setText(self._media_path)
@@ -803,14 +897,14 @@ class ImageDetails(SmartDialog):
             return False
 
     def flip_aspect_ratio(self) -> None:
-        if not self._is_image:
+        if not self.media_type.supports_raster_image_details():
             self._app_actions.toast(_("Aspect ratio changes are only available for images"))
             return
         width, height = self._get_current_dimensions()
         self._apply_aspect_ratio_change(f"{height}:{width}")
 
     def open_change_aspect_ratio_dialog(self) -> None:
-        if not self._is_image:
+        if not self.media_type.supports_raster_image_details():
             self._app_actions.toast(_("Aspect ratio changes are only available for images"))
             return
 
@@ -945,6 +1039,25 @@ class ImageDetails(SmartDialog):
     # ── Metadata viewer ──────────────────────────────────────────
 
     def show_metadata(self, event=None) -> None:
+        if self.media_type.is_unconfigured():
+            self._app_actions.toast(_("Metadata is not available for this path"))
+            return
+        if self.media_type.is_video():
+            try:
+                if not VideoOps.find_ffprobe_executable():
+                    self._app_actions.warn(_("ffprobe not found on PATH"))
+                    return
+                data = VideoOps.ffprobe_json(self._media_path)
+                metadata_text = json.dumps(data, indent=2, ensure_ascii=False)
+            except RuntimeError as e:
+                self._app_actions.warn(str(e))
+                return
+            if not metadata_text or metadata_text.strip() in ("", "{}"):
+                self._app_actions.toast(_("No metadata found"))
+                return
+            self._show_metadata_window(metadata_text)
+            return
+
         metadata_text = image_data_extractor.get_raw_metadata_text(self._image_path)
         if metadata_text is None:
             self._app_actions.toast(_("No metadata found"))
@@ -952,20 +1065,21 @@ class ImageDetails(SmartDialog):
             self._show_metadata_window(metadata_text)
 
     def _show_metadata_window(self, metadata_text: str) -> None:
+        path_for_title = self._path_for_metadata_window()
         mvw = ImageDetails.metadata_viewer_window
         if mvw is None or mvw.has_closed:
             ImageDetails.metadata_viewer_window = MetadataViewerWindow(
-                self, self._app_actions, metadata_text, self._image_path
+                self, self._app_actions, metadata_text, path_for_title
             )
             ImageDetails.metadata_viewer_window.show()
         else:
-            mvw.update_metadata(metadata_text, self._image_path)
+            mvw.update_metadata(metadata_text, path_for_title)
 
     # ── OCR ──────────────────────────────────────────────────────
 
     def run_ocr(self) -> None:
         """Run Surya OCR on the current image and show the result."""
-        if not self._is_image:
+        if not self.media_type.supports_raster_image_details():
             self._app_actions.toast(_("OCR is only available for images"))
             return
         if not ImageOps.is_surya_ocr_available():
@@ -997,6 +1111,11 @@ class ImageDetails(SmartDialog):
     # ── Related images ───────────────────────────────────────────
 
     def get_related_image_text(self) -> str:
+        # Related-image metadata is read via PIL / workflow JSON on image files only.
+        if self.media_type.is_unconfigured():
+            return _("(Not available)")
+        if self.media_type.is_video():
+            return _("(Related image lookup is not available for video)")
         node_id = ImageDetails.related_image_saved_node_id
         related_image_path, exact_match = (
             ImageDetails.get_related_image_path(
@@ -1011,6 +1130,12 @@ class ImageDetails(SmartDialog):
         return _("(No related image found)")
 
     def open_related_image(self, event=None) -> None:
+        if self.media_type.is_unconfigured():
+            self._app_actions.toast(_("Related image is not available for this path"))
+            return
+        if self.media_type.is_video():
+            self._app_actions.toast(_("Related image is not available for video files"))
+            return
         ImageDetails.show_related_image(
             self._parent_ref, None, self._image_path, self._app_actions
         )
