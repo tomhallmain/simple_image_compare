@@ -14,6 +14,7 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QMenu
 
 from files.directory_notes import DirectoryNotes
+from image.image_ops import ImageOps
 from ui.files.marked_file_mover_qt import MarkedFiles
 from utils.logging_setup import get_logger
 from utils.translations import I18N
@@ -173,6 +174,13 @@ class ContextMenuBuilder:
             _("Open file location"),
             lambda: app.file_ops_ctrl.open_media_location(),
         )
+
+        if ImageOps.is_video_file(image_path):
+            menu.addAction(
+                _("Strip audio (video)"),
+                lambda: app.file_ops_ctrl.strip_audio_from_current_video(),
+            )
+
         menu.addAction(
             _("Convert directory images to JPG"),
             lambda: app.file_ops_ctrl.convert_directory_images_to_jpg(),

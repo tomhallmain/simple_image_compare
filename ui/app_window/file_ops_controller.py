@@ -674,6 +674,44 @@ class FileOpsController:
                 _("Failed to open current media file, unable to get valid filepath")
             )
 
+    def strip_audio_from_current_video(self, event=None) -> None:
+        """
+        Remove audio from the current video file in place (ffmpeg stream copy).
+        """
+        from image.image_ops import ImageOps
+
+        filepath = self._nav.get_active_media_filepath()
+        if not filepath:
+            return
+        if not ImageOps.is_video_file(filepath):
+            self._app.app_actions.warn(_("Not a video file"))
+            return
+        if not ImageOps.find_ffmpeg_executable():
+            self._app.app_actions.warn(_("ffmpeg not found on PATH. Install ffmpeg to strip audio."))
+            return
+
+        if not self._app.app_actions.alert(
+            _("Strip audio from video"),
+            _(
+                "Remove all audio from this file? The video will be replaced in place.\n\n{0}"
+            ).format(filepath),
+            kind="askyesno",
+        ):
+            return
+
+        if hasattr(self._app.media_frame, "pause_video_if_playing"):
+            self._app.media_frame.pause_video_if_playing()
+
+        try:
+            ImageOps.strip_video_audio(filepath)
+        except Exception as e:
+            logger.warning("Strip audio failed: %s", e)
+            self._app.app_actions.warn(str(e))
+            return
+
+        self._app.refresh()
+        self._app.notification_ctrl.toast(_("Audio removed from video"))
+
     def open_image_in_gimp(self, event=None) -> None:
         """
         Open the current image in GIMP.
