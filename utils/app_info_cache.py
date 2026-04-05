@@ -324,7 +324,7 @@ class AppInfoCache(InflationMonitor):
             for d in directories:
                 if not os.path.isdir(d):
                     # The external drive this reference is pointing to may not be mounted, might still be valid
-                    if sys.platform == "win32" and not d.startswith("C:\\"):
+                    if sys.platform == "win32" and not d.upper().startswith("C:\\"):
                         base_dir = os.path.split("\\")[0] + "\\"
                         if not os.path.isdir(base_dir):
                             continue

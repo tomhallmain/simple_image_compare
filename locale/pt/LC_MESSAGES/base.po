@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"POT-Creation-Date: 2026-03-31 16:45-0400\n"
-"PO-Revision-Date: 2026-03-31 16:45-0400\n"
+"POT-Creation-Date: 2026-04-05 17:14-0400\n"
+"PO-Revision-Date: 2026-04-05 17:14-0400\n"
 "Last-Translator: Thomas Hall <tomhall.main@gmail.com>\n"
 "Language-Team: pt Team <<EMAIL>>\n"
 "Language: pt\n"
@@ -40,130 +40,130 @@ msgstr ""
 msgid "Restarting Comparison"
 msgstr "Reiniciando a comparação"
 
-#: compare/classifier_actions_manager.py:72
+#: compare/classifier_actions_manager.py:73
 msgid "(no positives set)"
 msgstr "(sem conjuntos positivos)"
 
-#: compare/classifier_actions_manager.py:73
+#: compare/classifier_actions_manager.py:74
 msgid "(no negatives set)"
 msgstr "(sem conjuntos negativos)"
 
-#: compare/classifier_actions_manager.py:75
+#: compare/classifier_actions_manager.py:76
 #: ui/compare/classifier_management_window_qt.py:85
 msgid "New Classifier Action"
 msgstr "Nova ação do classificador"
 
-#: compare/classifier_actions_manager.py:183
+#: compare/classifier_actions_manager.py:184
 msgid "Loading image classifier <{0}> ..."
 msgstr "A carregar o classificador de imagens <{0}> ..."
 
-#: compare/classifier_actions_manager.py:294
+#: compare/classifier_actions_manager.py:295
 msgid "Loading embedding prototype from {0}..."
 msgstr "A carregar protótipo de incorporação de {0}..."
 
-#: compare/classifier_actions_manager.py:310
+#: compare/classifier_actions_manager.py:311
 msgid "Loading negative embedding prototype from {0}..."
 msgstr "A carregar protótipo de incorporação negativa de {0}..."
 
-#: compare/classifier_actions_manager.py:420
+#: compare/classifier_actions_manager.py:421
 #: ui/compare/classifier_actions_tab_qt.py:307
 msgid "unknown error"
 msgstr "erro desconhecido"
 
-#: compare/classifier_actions_manager.py:585
+#: compare/classifier_actions_manager.py:583
 msgid " detected"
 msgstr " detectado"
 
-#: compare/classifier_actions_manager.py:587
+#: compare/classifier_actions_manager.py:585
 msgid " - skipped"
 msgstr " - Saltou"
 
-#: compare/classifier_actions_manager.py:590
+#: compare/classifier_actions_manager.py:588
 msgid " - hidden"
 msgstr " - Escondido"
 
-#: compare/classifier_actions_manager.py:595
+#: compare/classifier_actions_manager.py:593
 msgid " - marked"
 msgstr " - assinalado"
 
-#: compare/classifier_actions_manager.py:613
+#: compare/classifier_actions_manager.py:611
 msgid "Moving file: "
 msgstr "Movendo arquivo: "
 
-#: compare/classifier_actions_manager.py:659
+#: compare/classifier_actions_manager.py:657
 msgid "Deleting file: "
 msgstr "Excluindo arquivo: "
 
-#: compare/classifier_actions_manager.py:733
+#: compare/classifier_actions_manager.py:731
 msgid "Action modifier is not a valid directory: "
 msgstr "O modificador de ação não é uma pasta válida: "
 
-#: compare/classifier_actions_manager.py:735
+#: compare/classifier_actions_manager.py:733
 msgid "Invalid classifier action {0}, may cause errors or be unable to run!"
 msgstr ""
 "Ação inválida do classificador {0}, pode causar erros ou não ser possível "
 "executar!"
 
-#: compare/classifier_actions_manager.py:893
+#: compare/classifier_actions_manager.py:891
 msgid "embedding"
 msgstr "incorporação"
 
-#: compare/classifier_actions_manager.py:895
+#: compare/classifier_actions_manager.py:893
 msgid "classifier {0}"
 msgstr "classificador {0}"
 
-#: compare/classifier_actions_manager.py:897
+#: compare/classifier_actions_manager.py:895
 msgid "prompts"
 msgstr "avisos"
 
-#: compare/classifier_actions_manager.py:899
+#: compare/classifier_actions_manager.py:897
 msgid "prototype"
 msgstr "protótipo"
 
-#: compare/classifier_actions_manager.py:907
+#: compare/classifier_actions_manager.py:905
 msgid "categories: {0}"
 msgstr "categorias: {0}"
 
-#: compare/classifier_actions_manager.py:911
+#: compare/classifier_actions_manager.py:909
 msgid "{0} positives, {1} negatives"
 msgstr "{0} positivos, {1} negativos"
 
-#: compare/classifier_actions_manager.py:915
+#: compare/classifier_actions_manager.py:913
 msgid " using {0} ({1})"
 msgstr " usando {0} ({1})"
 
-#: compare/classifier_actions_manager.py:917
+#: compare/classifier_actions_manager.py:915
 msgid " using {0}"
 msgstr " usando {0}"
 
-#: compare/classifier_actions_manager.py:919
+#: compare/classifier_actions_manager.py:917
 msgid " ({0} positives, {1} negatives)"
 msgstr " ({0} positivos, {1} negativos)"
 
-#: compare/classifier_actions_manager.py:922
+#: compare/classifier_actions_manager.py:920
 msgid "disabled"
 msgstr "desativado"
 
-#: compare/classifier_actions_manager.py:924
+#: compare/classifier_actions_manager.py:922
 msgid "cannot run"
 msgstr "não consegue executar"
 
-#: compare/classifier_actions_manager.py:931
+#: compare/classifier_actions_manager.py:929
 #: ui/compare/classifier_management_window_qt.py:81
 #: ui/compare/prevalidations_tab_qt.py:69
 msgid "New Prevalidation"
 msgstr "Nova Prevalidação"
 
-#: compare/classifier_actions_manager.py:1021
+#: compare/classifier_actions_manager.py:1019
 msgid "Profile directory is not a valid directory: "
 msgstr "O diretório do perfil não é um diretório válido: "
 
-#: compare/classifier_actions_manager.py:1023
+#: compare/classifier_actions_manager.py:1021
 msgid "Invalid prevalidation {0}, may cause errors or be unable to run!"
 msgstr ""
 "Prevalidação inválida {0}, pode causar erros ou ser incapaz de executar!"
 
-#: compare/classifier_actions_manager.py:1111
+#: compare/classifier_actions_manager.py:1109
 msgid "lookaheads: {0}"
 msgstr "antevisões: {0}"
 
@@ -718,6 +718,15 @@ msgstr "o diff-pdf não criou um arquivo de saída"
 msgid "(Unable to parse image prompt information for this file.)"
 msgstr "(Incapaz de interpretar informações da imagem para este arquivo.)"
 
+#: image/video_ops.py:312
+msgid "Video ({0})"
+msgstr "Vídeo ({0})"
+
+#: image/video_ops.py:312 ui/image/image_details_qt.py:542
+#: utils/constants.py:387
+msgid "Video"
+msgstr "Vídeo"
+
 #: lib/custom_dialogs_qt.py:122 lib/fast_directory_picker_qt.py:330
 #: lib/qt_alert.py:28 ui/app_window/window_launcher.py:474
 #: ui/auth/app_startup_auth_qt.py:76 ui/auth/password_admin_window.py:83
@@ -728,7 +737,7 @@ msgstr "(Incapaz de interpretar informações da imagem para este arquivo.)"
 #: ui/compare/hf_model_manager_window_qt.py:163
 #: ui/files/directory_notes_window_qt.py:375
 #: ui/files/pdf_options_window_qt.py:133
-#: ui/files/type_configuration_window_qt.py:221 utils/constants.py:337
+#: ui/files/type_configuration_window_qt.py:223 utils/constants.py:337
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -1099,23 +1108,23 @@ msgstr "Mostrar o grupo anterior/próximo"
 msgid "Image Details Shortcuts"
 msgstr "Detalhes da imagem Atalhos"
 
-#: ui/help_and_config_qt.py:144 ui/image/image_details_qt.py:328
+#: ui/help_and_config_qt.py:144 ui/image/image_details_qt.py:387
 msgid "Crop Image (Smart Detect)"
 msgstr "Recortar a Imagem (Detecção Inteligente)"
 
-#: ui/help_and_config_qt.py:145 ui/image/image_details_qt.py:324
+#: ui/help_and_config_qt.py:145 ui/image/image_details_qt.py:383
 msgid "Rotate Image Left"
 msgstr "Rodar imagem à esquerda"
 
-#: ui/help_and_config_qt.py:146 ui/image/image_details_qt.py:325
+#: ui/help_and_config_qt.py:146 ui/image/image_details_qt.py:384
 msgid "Rotate Image Right"
 msgstr "Rodar imagem à direita"
 
-#: ui/help_and_config_qt.py:147 ui/image/image_details_qt.py:329
+#: ui/help_and_config_qt.py:147 ui/image/image_details_qt.py:388
 msgid "Enhance Image"
 msgstr "Melhorar a Imagem"
 
-#: ui/help_and_config_qt.py:148 ui/image/image_details_qt.py:332
+#: ui/help_and_config_qt.py:148 ui/image/image_details_qt.py:391
 msgid "Random Crop"
 msgstr "Recorte Aleatório"
 
@@ -1123,37 +1132,37 @@ msgstr "Recorte Aleatório"
 msgid "Randomly Modify Image"
 msgstr "Modificar imagem aleatoriamente"
 
-#: ui/help_and_config_qt.py:150 ui/image/image_details_qt.py:336
+#: ui/help_and_config_qt.py:150 ui/image/image_details_qt.py:395
 msgid "Flip Image Horizontally"
 msgstr "Inverter a Imagem Horizontalmente"
 
-#: ui/help_and_config_qt.py:151 ui/image/image_details_qt.py:337
+#: ui/help_and_config_qt.py:151 ui/image/image_details_qt.py:396
 msgid "Flip Image Vertically"
 msgstr "Inverter a Imagem Verticalmente"
 
-#: ui/help_and_config_qt.py:152 ui/image/image_details_qt.py:344
+#: ui/help_and_config_qt.py:152 ui/image/image_details_qt.py:403
 msgid "Copy Without EXIF"
 msgstr "Copiar sem EXIF"
 
-#: ui/help_and_config_qt.py:153 ui/image/image_details_qt.py:345
+#: ui/help_and_config_qt.py:153 ui/image/image_details_qt.py:404
 msgid "Convert to JPG"
 msgstr "Converter em JPG"
 
-#: ui/help_and_config_qt.py:154 ui/image/image_details_qt.py:348
+#: ui/help_and_config_qt.py:154 ui/image/image_details_qt.py:407
 msgid "Show Metadata"
 msgstr "Mostrar metadados"
 
-#: ui/help_and_config_qt.py:155 ui/image/image_details_qt.py:352
+#: ui/help_and_config_qt.py:155 ui/image/image_details_qt.py:411
 msgid "Open Related Image"
 msgstr "Abrir imagem relacionada"
 
-#: ui/app_window/context_menu_builder.py:121 ui/help_and_config_qt.py:156
-#: ui/image/image_details_qt.py:370 ui/image/temp_image_window_qt.py:222
-#: utils/constants.py:550
+#: ui/app_window/context_menu_builder.py:123 ui/help_and_config_qt.py:156
+#: ui/image/image_details_qt.py:429 ui/image/temp_image_window_qt.py:222
+#: utils/constants.py:579
 msgid "Run Image Generation"
 msgstr "Executar a Geração de Imagens"
 
-#: ui/help_and_config_qt.py:157 ui/image/image_details_qt.py:374
+#: ui/help_and_config_qt.py:157 ui/image/image_details_qt.py:433
 #: utils/constants.py:323
 msgid "Redo Prompt"
 msgstr "Refazer o Pedido"
@@ -1420,97 +1429,111 @@ msgstr "Confirmar Sair"
 msgid "Would you like to quit the application?"
 msgstr "Gostaria de sair da aplicação?"
 
-#: ui/app_window/context_menu_builder.py:62 utils/constants.py:544
+#: ui/app_window/context_menu_builder.py:64 utils/constants.py:573
 msgid "View Media Details"
 msgstr "Ver detalhes dos meios"
 
-#: ui/app_window/context_menu_builder.py:67
+#: ui/app_window/context_menu_builder.py:69
 msgid "Hide Media"
 msgstr "Ocultar mídia"
 
-#: ui/app_window/context_menu_builder.py:76
+#: ui/app_window/context_menu_builder.py:78
 msgid "Remove from Marks"
 msgstr "Remover das marcas"
 
-#: ui/app_window/context_menu_builder.py:76
+#: ui/app_window/context_menu_builder.py:78
 msgid "Add to Marks"
 msgstr "Adicionar às marcas"
 
-#: ui/app_window/context_menu_builder.py:90
+#: ui/app_window/context_menu_builder.py:92
 msgid "Remove from Favorites"
 msgstr "Remover dos Favoritos"
 
-#: ui/app_window/context_menu_builder.py:90
+#: ui/app_window/context_menu_builder.py:92
 msgid "Add to Favorites"
 msgstr "Adicionar aos Favoritos"
 
-#: ui/app_window/context_menu_builder.py:103
+#: ui/app_window/context_menu_builder.py:105
 msgid "Remove from Directory Notes"
 msgstr "Remover das Notas do diretório"
 
-#: ui/app_window/context_menu_builder.py:103
+#: ui/app_window/context_menu_builder.py:105
 msgid "Add to Directory Notes"
 msgstr "Adicionar às Notas do diretório"
 
-#: ui/app_window/context_menu_builder.py:107
+#: ui/app_window/context_menu_builder.py:109
 msgid "Edit File Note"
 msgstr "Editar a nota do ficheiro"
 
-#: ui/app_window/context_menu_builder.py:117
+#: ui/app_window/context_menu_builder.py:119
 msgid "Open in GIMP"
 msgstr "Abrir no GIMP"
 
-#: ui/app_window/context_menu_builder.py:125
+#: ui/app_window/context_menu_builder.py:127
 msgid "Run Image Generation on Directory"
 msgstr "Executar geração de imagem no diretório"
 
-#: ui/app_window/context_menu_builder.py:133
+#: ui/app_window/context_menu_builder.py:135
 msgid "Show Source Image"
 msgstr "Mostrar imagem original"
 
-#: ui/app_window/context_menu_builder.py:137
+#: ui/app_window/context_menu_builder.py:139
 msgid "Find Related Images"
 msgstr "Encontrar imagens relacionadas"
 
-#: ui/app_window/context_menu_builder.py:141
+#: ui/app_window/context_menu_builder.py:143
 msgid "Set Marks from Downstream Related Images"
 msgstr "Definir marcas a partir de imagens relacionadas a jusante"
 
-#: ui/app_window/context_menu_builder.py:151
+#: ui/app_window/context_menu_builder.py:153
 msgid "Set Current Image as Search Image"
 msgstr "Definir imagem atual como imagem de pesquisa"
 
-#: ui/app_window/context_menu_builder.py:155
+#: ui/app_window/context_menu_builder.py:157
 msgid "Add Current Image to Negative Search"
 msgstr "Adicionar imagem atual à pesquisa negativa"
 
-#: ui/app_window/context_menu_builder.py:165
+#: ui/app_window/context_menu_builder.py:167
 msgid "Copy file path"
 msgstr "Copiar caminho do arquivo"
 
-#: ui/app_window/context_menu_builder.py:169
+#: ui/app_window/context_menu_builder.py:171
 msgid "Copy file name"
 msgstr "Copiar nome do arquivo"
 
-#: ui/app_window/context_menu_builder.py:173
+#: ui/app_window/context_menu_builder.py:175
 msgid "Open file location"
 msgstr "Abra a localização do arquivo"
 
-#: ui/app_window/context_menu_builder.py:177
+#: ui/app_window/context_menu_builder.py:181
+#: ui/app_window/file_ops_controller.py:696
+msgid "Save copy without audio"
+msgstr "Guardar cópia sem áudio"
+
+#: ui/app_window/context_menu_builder.py:185
+#: ui/app_window/file_ops_controller.py:738
+msgid "Save copy without metadata"
+msgstr "Guardar cópia sem metadados"
+
+#: ui/app_window/context_menu_builder.py:190
 msgid "Convert directory images to JPG"
 msgstr "Converter imagens de diretório para JPG"
 
-#: ui/app_window/context_menu_builder.py:181
+#: ui/app_window/context_menu_builder.py:195
 msgid "Convert directory SVGs to PNG"
 msgstr "Conversão de diretórios SVG para PNG"
 
-#: ui/app_window/context_menu_builder.py:188
+#: ui/app_window/context_menu_builder.py:200
+msgid "Save copies of all videos in directory without metadata"
+msgstr "Guardar cópias de todos os vídeos no diretório sem metadados"
+
+#: ui/app_window/context_menu_builder.py:207
 msgid "Run Refacdir"
 msgstr "Executar RefacDir"
 
-#: ui/app_window/context_menu_builder.py:196
+#: ui/app_window/context_menu_builder.py:215
 #: ui/compare/classifier_actions_tab_qt.py:204
-#: ui/compare/prevalidations_tab_qt.py:542 utils/constants.py:497
+#: ui/compare/prevalidations_tab_qt.py:542 utils/constants.py:526
 msgid "Delete"
 msgstr "Apagar"
 
@@ -1794,7 +1817,94 @@ msgstr ""
 "Não foi possível abrir o ficheiro multimédia atual, impossível obter o "
 "caminho válido do ficheiro"
 
-#: ui/app_window/file_ops_controller.py:686
+#: ui/app_window/file_ops_controller.py:688
+#: ui/app_window/file_ops_controller.py:730
+msgid "Not a video file"
+msgstr "Não é um ficheiro de vídeo"
+
+#: ui/app_window/file_ops_controller.py:691
+msgid "ffmpeg not found on PATH. Install ffmpeg to strip audio."
+msgstr ""
+"O ffmpeg não foi encontrado no PATH. Instale o ffmpeg para remover o áudio."
+
+#: ui/app_window/file_ops_controller.py:698
+msgid ""
+"Create a new file with all audio streams removed (stream copy, no re-encode). The original file will not be changed.\n"
+"\n"
+"Output:\n"
+"{0}"
+msgstr ""
+"Criar um novo ficheiro sem quaisquer fluxos de áudio (cópia do fluxo, sem recodificação). O ficheiro original não será alterado.\n"
+"\n"
+"Resultado:\n"
+"{0}"
+
+#: ui/app_window/file_ops_controller.py:717
+msgid "Saved copy without audio: {0}"
+msgstr "Cópia salva sem áudio: {0}"
+
+#: ui/app_window/file_ops_controller.py:733
+#: ui/app_window/file_ops_controller.py:779
+msgid "ffmpeg not found on PATH."
+msgstr "O ffmpeg não foi encontrado no PATH."
+
+#: ui/app_window/file_ops_controller.py:740
+msgid ""
+"Create a new file with container tags and chapters removed (stream copy, no re-encode). The original file will not be changed.\n"
+"\n"
+"Output:\n"
+"{0}"
+msgstr ""
+"Criar um novo ficheiro sem as etiquetas de contêiner e sem os capítulos (cópia direta, sem recodificação). O ficheiro original não será alterado.\n"
+"\n"
+"Resultado:\n"
+"{0}"
+
+#: ui/app_window/file_ops_controller.py:759
+msgid "Saved copy without metadata: {0}"
+msgstr "Cópia salva sem metadados: {0}"
+
+#: ui/app_window/file_ops_controller.py:770
+msgid "Video support is disabled in configuration"
+msgstr "O suporte de vídeo está desabilitado na configuração"
+
+#: ui/app_window/file_ops_controller.py:775
+msgid "No valid base directory"
+msgstr "Nenhum diretório base válido"
+
+#: ui/app_window/file_ops_controller.py:790
+msgid "No video files found in this directory scope"
+msgstr "Não foram encontrados ficheiros de vídeo neste diretório"
+
+#: ui/app_window/file_ops_controller.py:794
+msgid "Save copies without metadata (videos in directory)"
+msgstr "Salvar cópiias sem metadados (vídeos na pasta)"
+
+#: ui/app_window/file_ops_controller.py:796
+msgid ""
+"Create new files with container tags and chapters removed (stream copy) for each video.\n"
+"\n"
+"Directory:\n"
+"{0}\n"
+"\n"
+"Videos to process: {1}"
+msgstr ""
+"Criar novos ficheiros sem as etiquetas de contentor e sem os capítulos (cópia de streaming) para cada vídeo.\n"
+"\n"
+"Diretório:\n"
+"{0}\n"
+"\n"
+"Vídeos a processar: {1}"
+
+#: ui/app_window/file_ops_controller.py:817
+msgid "Wrote {0} video copy(ies) without metadata"
+msgstr "Gravou {0} cópia(s) de vídeo sem metadados"
+
+#: ui/app_window/file_ops_controller.py:821
+msgid "Finished: {0} succeeded, {1} failed"
+msgstr "Concluído: {0} bem-sucedido, {1} falhado"
+
+#: ui/app_window/file_ops_controller.py:833
 msgid ""
 "GIMP integration is not configured. Please set 'gimp_exe_loc' in "
 "config.json."
@@ -1802,63 +1912,63 @@ msgstr ""
 "A integração com o GIMP não está configurada. Defina ‘gimp_exe_loc’ em "
 "config.json."
 
-#: ui/app_window/file_ops_controller.py:687
+#: ui/app_window/file_ops_controller.py:834
 msgid "GIMP Integration Error"
 msgstr "Erro de integração do GIMP"
 
-#: ui/app_window/file_ops_controller.py:708
+#: ui/app_window/file_ops_controller.py:855
 msgid "Failed to open current file in GIMP, unable to get valid filepath"
 msgstr ""
 "Falha ao abrir o ficheiro atual no GIMP, não foi possível obter um caminho "
 "de ficheiro válido"
 
-#: ui/app_window/file_ops_controller.py:727
+#: ui/app_window/file_ops_controller.py:874
 msgid "Running refacdir"
 msgstr "A executar o refacdir"
 
-#: ui/app_window/media_frame.py:298
+#: ui/app_window/media_frame.py:295
 msgid "No displayable files found in this directory for the current settings."
 msgstr ""
 "Nenhum arquivo exibível foi encontrado neste diretório com base nas "
 "configurações atuais."
 
-#: ui/app_window/media_frame.py:767
+#: ui/app_window/media_frame.py:711
 msgid "Animated image format is not supported for playback: "
 msgstr "O formato de imagem animada não é suportado para reprodução: "
 
-#: ui/app_window/media_frame.py:823
+#: ui/app_window/media_frame.py:767
 msgid "Video: "
 msgstr "Vídeo: "
 
-#: ui/app_window/media_frame.py:833
+#: ui/app_window/media_frame.py:777
 msgid "Unable to display this file: "
 msgstr "Não é possível exibir este arquivo: "
 
-#: ui/app_window/media_frame.py:987
+#: ui/app_window/media_frame.py:930
 msgid "No output path provided."
 msgstr "Nenhum caminho de saída fornecido."
 
-#: ui/app_window/media_frame.py:991
+#: ui/app_window/media_frame.py:934
 msgid "VLC player is unavailable."
 msgstr "O Reprodutor VLC está indisponível."
 
-#: ui/app_window/media_frame.py:995
+#: ui/app_window/media_frame.py:938
 msgid "VLC snapshot operation failed."
 msgstr "A captura de imagem no VLC falhou."
 
-#: ui/app_window/media_frame.py:1000
+#: ui/app_window/media_frame.py:943
 msgid "Snapshot file was not created."
 msgstr "O arquivo de snapshot não foi criado."
 
-#: ui/app_window/media_frame.py:1011
+#: ui/app_window/media_frame.py:954
 msgid "No GIF frame available for screenshot."
 msgstr "Nenhum quadro GIF está disponível para captura de tela."
 
-#: ui/app_window/media_frame.py:1017
+#: ui/app_window/media_frame.py:960
 msgid "Failed to save GIF frame image."
 msgstr "Falhou ao salvar imagem de quadro GIF."
 
-#: ui/app_window/media_frame.py:1020
+#: ui/app_window/media_frame.py:963
 msgid "No time-based media is currently active."
 msgstr "Nenhuma mídia baseada em tempo está atualmente ativa."
 
@@ -2132,7 +2242,7 @@ msgstr "Executar a comparação de imagens"
 msgid "Find duplicates"
 msgstr "Procurar duplicatas"
 
-#: ui/app_window/sidebar_panel.py:236 ui/image/image_details_qt.py:129
+#: ui/app_window/sidebar_panel.py:236 ui/image/image_details_qt.py:163
 msgid "Image details"
 msgstr "Detalhes da imagem"
 
@@ -2539,7 +2649,7 @@ msgstr "Novo Nome:"
 #: ui/compare/directory_profile_window_qt.py:338
 #: ui/compare/prevalidations_tab_qt.py:536
 #: ui/files/file_actions_window_qt.py:316 ui/files/marked_file_mover_qt.py:324
-#: utils/constants.py:495
+#: utils/constants.py:524
 msgid "Copy"
 msgstr "Copiar"
 
@@ -3716,7 +3826,7 @@ msgid "(auto)"
 msgstr "(auto)"
 
 #: ui/files/file_actions_window_qt.py:316 ui/files/marked_file_mover_qt.py:317
-#: utils/constants.py:493
+#: utils/constants.py:522
 msgid "Move"
 msgstr "Mover"
 
@@ -4178,7 +4288,7 @@ msgstr "O suporte HTML requer o pacote pyppeteer"
 msgid "Media Type Configuration"
 msgstr "Configuração do Tipo de Mídia"
 
-#: ui/files/type_configuration_window_qt.py:154 utils/constants.py:553
+#: ui/files/type_configuration_window_qt.py:154 utils/constants.py:582
 msgid "Configure Media Types"
 msgstr "Configurar tipos de mídia"
 
@@ -4192,175 +4302,197 @@ msgstr ""
 "alterações exigirão uma atualização das comparações abertas, mas os "
 "ficheiros em modo de navegação deverão ser actualizados automaticamente."
 
-#: ui/files/type_configuration_window_qt.py:225
+#: ui/files/type_configuration_window_qt.py:227
 msgid "Apply Changes"
 msgstr "Aplicar as Alterações"
 
-#: ui/files/type_configuration_window_qt.py:267
+#: ui/files/type_configuration_window_qt.py:270
 msgid "Confirm Changes"
 msgstr "Confirmar as Alterações"
 
-#: ui/files/type_configuration_window_qt.py:268
+#: ui/files/type_configuration_window_qt.py:271
 msgid "This will clear all existing compares in open windows. Continue?"
 msgstr ""
 "Isto irá limpar todas as comparações existentes nas janelas abertas. "
 "Continuar?"
 
-#: ui/files/type_configuration_window_qt.py:324
+#: ui/files/type_configuration_window_qt.py:327
 msgid "Media type configuration updated"
 msgstr "Configuração do tipo de mídia atualizada"
 
-#: ui/image/image_details_qt.py:257
+#: ui/image/image_details_qt.py:250
+msgid "(negative prompt not shown by config setting)"
+msgstr "(a mensagem negativa não é apresentada por definição de configuração)"
+
+#: ui/image/image_details_qt.py:322
 msgid "Image Path"
 msgstr "Localização da Imagem"
 
-#: ui/image/image_details_qt.py:261
+#: ui/image/image_details_qt.py:326
 msgid "Temp Path"
 msgstr "Caminho Temporário"
 
-#: ui/image/image_details_qt.py:267
+#: ui/image/image_details_qt.py:332
 msgid "File Index"
 msgstr "Índice do Arquivo"
 
-#: ui/image/image_details_qt.py:271
+#: ui/image/image_details_qt.py:336
 msgid "Color Mode"
 msgstr "Modo de Cor"
 
-#: ui/image/image_details_qt.py:275
+#: ui/image/image_details_qt.py:340
 msgid "Dimensions"
 msgstr "Dimensões"
 
-#: ui/image/image_details_qt.py:279 utils/constants.py:45
+#: ui/image/image_details_qt.py:344 utils/constants.py:45
 #: utils/constants.py:68 utils/constants.py:138 utils/constants.py:158
 msgid "Size"
 msgstr "Tamanho"
 
-#: ui/image/image_details_qt.py:283
+#: ui/image/image_details_qt.py:348
 msgid "Modification Time"
 msgstr "Tempo de Modificação"
 
-#: ui/image/image_details_qt.py:287
+#: ui/image/image_details_qt.py:352
 msgid "Positive"
 msgstr "Positivo"
 
-#: ui/image/image_details_qt.py:300
-msgid "(negative prompt not shown by config setting)"
-msgstr "(a mensagem negativa não é apresentada por definição de configuração)"
-
-#: ui/image/image_details_qt.py:302
+#: ui/image/image_details_qt.py:361
 msgid "Negative"
 msgstr "Negativo"
 
-#: ui/image/image_details_qt.py:311 utils/constants.py:46
+#: ui/image/image_details_qt.py:370 utils/constants.py:46
 #: utils/constants.py:70
 msgid "Models"
 msgstr "Modelos"
 
-#: ui/image/image_details_qt.py:315
+#: ui/image/image_details_qt.py:374
 msgid "LoRAs"
 msgstr "LoRA"
 
-#: ui/image/image_details_qt.py:320
+#: ui/image/image_details_qt.py:379
 msgid "Copy Prompt"
 msgstr "Copiar o Pedido"
 
-#: ui/image/image_details_qt.py:321
+#: ui/image/image_details_qt.py:380
 msgid "Copy Prompt No BREAK"
 msgstr "Copiar o prompt sem “BREAK”"
 
-#: ui/image/image_details_qt.py:333
+#: ui/image/image_details_qt.py:392
 msgid "Randomly Modify"
 msgstr "Modificar aleatoriamente"
 
-#: ui/image/image_details_qt.py:340 ui/image/image_details_qt.py:821
+#: ui/image/image_details_qt.py:399 ui/image/image_details_qt.py:974
 msgid "Change Aspect Ratio"
 msgstr "Alterar a Proporção de Aspecto"
 
-#: ui/image/image_details_qt.py:341
+#: ui/image/image_details_qt.py:400
 msgid "Flip Aspect Ratio"
 msgstr "Virar Proporção de Aspecto"
 
-#: ui/image/image_details_qt.py:349
+#: ui/image/image_details_qt.py:408
 msgid "Run OCR"
 msgstr "Executar OCR"
 
-#: ui/image/image_details_qt.py:357
+#: ui/image/image_details_qt.py:416
 msgid "Image Generation"
 msgstr "Geração de Imagens"
 
-#: ui/image/image_details_qt.py:371
+#: ui/image/image_details_qt.py:430
 msgid "Press Shift+I on a main app window to run this"
 msgstr "Pressione Shift+I na janela principal da aplicação para executar isto"
 
-#: ui/image/image_details_qt.py:379
+#: ui/image/image_details_qt.py:438
 msgid "Tags"
 msgstr "Etiquetas"
 
-#: ui/image/image_details_qt.py:387
+#: ui/image/image_details_qt.py:446
 msgid "Update Tags"
 msgstr "Actualizar as Marcas"
 
-#: ui/image/image_details_qt.py:577
+#: ui/image/image_details_qt.py:502 ui/image/image_details_qt.py:1173
+msgid "(Not available)"
+msgstr "(Não disponível)"
+
+#: ui/image/image_details_qt.py:504
+msgid "Unavailable"
+msgstr "Não disponível"
+
+#: ui/image/image_details_qt.py:507
+msgid ""
+"This media type is not enabled in configuration, or the path is invalid."
+msgstr ""
+"Este tipo de mídia não está ativado na configuração ou o caminho é inválido."
+
+#: ui/image/image_details_qt.py:531
+msgid "Video (ffprobe unavailable)"
+msgstr "Vídeo (ffprobe indisponível)"
+
+#: ui/image/image_details_qt.py:548
+msgid "(Could not load video details)"
+msgstr "(Não foi possível carregar os detalhes do vídeo)"
+
+#: ui/image/image_details_qt.py:730
 msgid "No prompt found"
 msgstr "Nenhum prompt encontrado"
 
-#: ui/image/image_details_qt.py:584
+#: ui/image/image_details_qt.py:737
 msgid "Copied prompt without BREAK"
 msgstr "Copiou o prompt sem “BREAK”"
 
-#: ui/image/image_details_qt.py:603
+#: ui/image/image_details_qt.py:756
 msgid "No files found in current directory"
 msgstr "Não foram encontrados ficheiros no diretório atual"
 
-#: ui/image/image_details_qt.py:608
+#: ui/image/image_details_qt.py:761
 msgid "No files available"
 msgstr "Não há ficheiros disponíveis"
 
-#: ui/image/image_details_qt.py:633
+#: ui/image/image_details_qt.py:786
 msgid "Copied prompt from {0}"
 msgstr "Mensagem copiada de {0}"
 
-#: ui/image/image_details_qt.py:640
+#: ui/image/image_details_qt.py:793
 msgid "No files with prompts found in current directory"
 msgstr "Não foram encontrados ficheiros com prompts no diretório atual"
 
-#: ui/image/image_details_qt.py:687 ui/image/image_details_qt.py:874
+#: ui/image/image_details_qt.py:840 ui/image/image_details_qt.py:1027
 msgid "Rotated image right"
 msgstr "Imagem rotacionada à direita"
 
-#: ui/image/image_details_qt.py:687 ui/image/image_details_qt.py:874
+#: ui/image/image_details_qt.py:840 ui/image/image_details_qt.py:1027
 msgid "Rotated image left"
 msgstr "Imagem rotacionada à esquerda"
 
-#: ui/image/image_details_qt.py:696 ui/image/image_details_qt.py:882
+#: ui/image/image_details_qt.py:849 ui/image/image_details_qt.py:1035
 msgid "Cropped image"
 msgstr "Imagem recortada"
 
-#: ui/image/image_details_qt.py:703 ui/image/image_details_qt.py:887
+#: ui/image/image_details_qt.py:856 ui/image/image_details_qt.py:1040
 msgid "No crops found"
 msgstr "Não foram encontradas recortas"
 
-#: ui/image/image_details_qt.py:707 ui/image/image_details_qt.py:894
+#: ui/image/image_details_qt.py:860 ui/image/image_details_qt.py:1047
 msgid "Enhanced image"
 msgstr "Imagem melhorada"
 
-#: ui/image/image_details_qt.py:711 ui/image/image_details_qt.py:903
+#: ui/image/image_details_qt.py:864 ui/image/image_details_qt.py:1056
 msgid "Randomly cropped image"
 msgstr "Imagem recortada aleatoriamente"
 
-#: ui/image/image_details_qt.py:725 ui/image/image_details_qt.py:911
+#: ui/image/image_details_qt.py:878 ui/image/image_details_qt.py:1064
 msgid "Randomly modified image"
 msgstr "Imagem modificada aleatoriamente"
 
-#: ui/image/image_details_qt.py:733 ui/image/image_details_qt.py:916
+#: ui/image/image_details_qt.py:886 ui/image/image_details_qt.py:1069
 msgid "No new image created"
 msgstr "Nenhuma nova imagem criada"
 
-#: ui/image/image_details_qt.py:740
+#: ui/image/image_details_qt.py:893
 msgid "Confirm Vertical Flip"
 msgstr "Confirmar inversão vertical"
 
-#: ui/image/image_details_qt.py:742
+#: ui/image/image_details_qt.py:895
 msgid ""
 "Are you sure you want to flip this image vertically? This is an uncommon "
 "operation and may have been clicked by accident."
@@ -4368,92 +4500,112 @@ msgstr ""
 "Tem a certeza de que deseja inverter esta imagem verticalmente? Esta é uma "
 "operação incomum e pode ter sido clicada acidentalmente."
 
-#: ui/image/image_details_qt.py:752 ui/image/image_details_qt.py:920
+#: ui/image/image_details_qt.py:905 ui/image/image_details_qt.py:1073
 msgid "Flipped image"
 msgstr "Imagem virada"
 
-#: ui/image/image_details_qt.py:785
+#: ui/image/image_details_qt.py:938
 msgid "Please enter a target ratio"
 msgstr "Por favor insira uma taxa-alvo"
 
-#: ui/image/image_details_qt.py:795
+#: ui/image/image_details_qt.py:948
 msgid "Changed image aspect ratio"
 msgstr "Mudou a taxa de aspecto da imagem"
 
-#: ui/image/image_details_qt.py:800
+#: ui/image/image_details_qt.py:953
 msgid "Error changing image aspect ratio"
 msgstr "Erro ao alterar a razão de aspecto da imagem"
 
-#: ui/image/image_details_qt.py:805 ui/image/image_details_qt.py:812
+#: ui/image/image_details_qt.py:958 ui/image/image_details_qt.py:965
 msgid "Aspect ratio changes are only available for images"
 msgstr ""
 "As alterações na proporção de aspecto estão disponíveis apenas para imagens."
 
-#: ui/image/image_details_qt.py:826
+#: ui/image/image_details_qt.py:979
 msgid "Current ratio: {0}"
 msgstr "Relação de liquidez corrente: {0}"
 
-#: ui/image/image_details_qt.py:828
+#: ui/image/image_details_qt.py:981
 msgid "Target ratio (e.g. 16:9 or 1.777):"
 msgstr "Liberatura alvo (exemplo: 16:9 ou 1,777):"
 
-#: ui/image/image_details_qt.py:855 ui/image/image_details_qt.py:927
+#: ui/image/image_details_qt.py:1008 ui/image/image_details_qt.py:1080
 msgid "Copied image without EXIF data"
 msgstr "Imagem copiada sem dados EXIF"
 
-#: ui/image/image_details_qt.py:860 ui/image/image_details_qt.py:933
+#: ui/image/image_details_qt.py:1013 ui/image/image_details_qt.py:1086
 msgid "Error copying image without EXIF"
 msgstr "Erro ao copiar imagem sem EXIF"
 
-#: ui/image/image_details_qt.py:865 ui/image/image_details_qt.py:938
+#: ui/image/image_details_qt.py:1018 ui/image/image_details_qt.py:1091
 msgid "Converted image to JPG"
 msgstr "Imagem convertida em JPG"
 
-#: ui/image/image_details_qt.py:868 ui/image/image_details_qt.py:941
+#: ui/image/image_details_qt.py:1021 ui/image/image_details_qt.py:1094
 msgid "Error converting image to JPG"
 msgstr "Erro ao converter a imagem em JPG"
 
-#: ui/image/image_details_qt.py:948
+#: ui/image/image_details_qt.py:1100
+msgid "Metadata is not available for this path"
+msgstr "Não existem metadados disponíveis para este caminho"
+
+#: ui/image/image_details_qt.py:1105
+msgid "ffprobe not found on PATH"
+msgstr "O ffprobe não foi encontrado no PATH"
+
+#: ui/image/image_details_qt.py:1113 ui/image/image_details_qt.py:1120
 msgid "No metadata found"
 msgstr "Não foram encontrados metadados"
 
-#: ui/image/image_details_qt.py:967
+#: ui/image/image_details_qt.py:1140
 msgid "OCR is only available for images"
 msgstr "O OCR está disponível apenas para imagens."
 
-#: ui/image/image_details_qt.py:970
+#: ui/image/image_details_qt.py:1143
 msgid "Surya OCR is not installed"
 msgstr "Surya OCR não está instalado"
 
-#: ui/image/image_details_qt.py:975
+#: ui/image/image_details_qt.py:1148
 msgid "No text found in image"
 msgstr "Nenhum texto encontrado na imagem"
 
-#: ui/image/image_details_qt.py:982
+#: ui/image/image_details_qt.py:1155
 msgid "OCR failed: "
 msgstr "OCR falhou: "
 
-#: ui/image/image_details_qt.py:1007 ui/image/image_details_qt.py:1081
+#: ui/image/image_details_qt.py:1175
+msgid "(Related image lookup is not available for video)"
+msgstr "(A pesquisa de imagens relacionadas não está disponível para vídeos)"
+
+#: ui/image/image_details_qt.py:1185 ui/image/image_details_qt.py:1265
 msgid " (Exact Match Not Found)"
 msgstr " (Correspondência exacta não encontrada)"
 
-#: ui/image/image_details_qt.py:1009 ui/image/image_details_qt.py:1078
+#: ui/image/image_details_qt.py:1187 ui/image/image_details_qt.py:1262
 msgid "(No related image found)"
 msgstr "(Nenhuma imagem relacionada encontrada)"
 
-#: ui/image/image_details_qt.py:1192 ui/image/image_details_qt.py:1201
+#: ui/image/image_details_qt.py:1191
+msgid "Related image is not available for this path"
+msgstr "Não há imagens relacionadas disponíveis para este caminho"
+
+#: ui/image/image_details_qt.py:1194
+msgid "Related image is not available for video files"
+msgstr "Não há imagens relacionadas disponíveis para ficheiros de vídeo"
+
+#: ui/image/image_details_qt.py:1376 ui/image/image_details_qt.py:1385
 msgid "{0} downstream image(s) found."
 msgstr "{0} imagem(ns) a jusante encontrada(s)."
 
-#: ui/image/image_details_qt.py:1195
+#: ui/image/image_details_qt.py:1379
 msgid "{0} (cached) downstream image(s) found."
 msgstr "{0} (em cache) imagem(ns) a jusante encontrada(s)."
 
-#: ui/image/image_details_qt.py:1205
+#: ui/image/image_details_qt.py:1389
 msgid "No downstream related images found in"
 msgstr "Não foram encontradas imagens relacionadas com o downstream em"
 
-#: ui/image/image_details_qt.py:1293
+#: ui/image/image_details_qt.py:1477
 msgid "Updated tags for {0}"
 msgstr "Etiquetas actualizadas para {0}"
 
@@ -4726,143 +4878,143 @@ msgstr "Configurações Anteriores"
 msgid "Revert to Simple Generation"
 msgstr "Reverter para Geração Simples"
 
-#: utils/constants.py:381
+#: utils/constants.py:383
 msgid "Image"
 msgstr "Imagem"
 
-#: utils/constants.py:383
+#: utils/constants.py:385
 msgid "GIF"
 msgstr "GIF"
 
-#: utils/constants.py:385
-msgid "Video"
-msgstr "Vídeo"
-
-#: utils/constants.py:387
+#: utils/constants.py:389
 msgid "PDF"
 msgstr "PDF"
 
-#: utils/constants.py:389
+#: utils/constants.py:391
 msgid "SVG"
 msgstr "SVG"
 
-#: utils/constants.py:391
+#: utils/constants.py:393
 msgid "HTML"
 msgstr "HTML"
 
-#: utils/constants.py:411
+#: utils/constants.py:395
+msgid "Unconfigured"
+msgstr "Não configurado"
+
+#: utils/constants.py:440
 msgid "Moved files"
 msgstr "Ficheiros movidos"
 
-#: utils/constants.py:413
+#: utils/constants.py:442
 msgid "Copied files"
 msgstr "Ficheiros copiados"
 
-#: utils/constants.py:415
+#: utils/constants.py:444
 msgid "Removed files"
 msgstr "Ficheiros removidos"
 
-#: utils/constants.py:417
+#: utils/constants.py:446
 msgid "Marked files"
 msgstr "Ficheiros marcados"
 
-#: utils/constants.py:419
+#: utils/constants.py:448
 msgid "Unmarked files"
 msgstr "Ficheiros não marcados"
 
-#: utils/constants.py:421
+#: utils/constants.py:450
 msgid "Searched files"
 msgstr "Ficheiros pesquisados"
 
-#: utils/constants.py:423
+#: utils/constants.py:452
 msgid "Compared files"
 msgstr "Ficheiros comparados"
 
-#: utils/constants.py:425
+#: utils/constants.py:454
 msgid "Generated images"
 msgstr "Imagens geradas"
 
-#: utils/constants.py:427
+#: utils/constants.py:456
 msgid "Changed directory"
 msgstr "Pasta alterada"
 
-#: utils/constants.py:429
+#: utils/constants.py:458
 msgid "System"
 msgstr "Sistema"
 
-#: utils/constants.py:441
+#: utils/constants.py:470
 msgid "Classifier Action"
 msgstr "Classificação de Ação"
 
-#: utils/constants.py:443
+#: utils/constants.py:472
 msgid "Prevalidation"
 msgstr "Pré-validação"
 
-#: utils/constants.py:487
+#: utils/constants.py:516
 msgid "Hide"
 msgstr "Ocultar"
 
-#: utils/constants.py:489
+#: utils/constants.py:518
 msgid "Notify"
 msgstr "Notificar"
 
-#: utils/constants.py:491
+#: utils/constants.py:520
 msgid "Skip"
 msgstr "Pular"
 
-#: utils/constants.py:499
+#: utils/constants.py:528
 msgid "Add Mark"
 msgstr "Adicionar marca"
 
-#: utils/constants.py:540
+#: utils/constants.py:569
 msgid "Start Application"
 msgstr "Iniciar a aplicação"
 
-#: utils/constants.py:541
+#: utils/constants.py:570
 msgid "Run Compares"
 msgstr "Executar comparações"
 
-#: utils/constants.py:542
+#: utils/constants.py:571
 msgid "Run Search"
 msgstr "Executar pesquisa"
 
-#: utils/constants.py:543
+#: utils/constants.py:572
 msgid "Run Search Preset"
 msgstr "Executar pesquisa predefinida"
 
-#: utils/constants.py:545
+#: utils/constants.py:574
 msgid "View Recent Directories"
 msgstr "Ver diretórios recentes"
 
-#: utils/constants.py:546
+#: utils/constants.py:575
 msgid "View File Actions"
 msgstr "Ver acções do ficheiro"
 
-#: utils/constants.py:547
+#: utils/constants.py:576
 msgid "Run File Actions"
 msgstr "Executar acções de ficheiros"
 
-#: utils/constants.py:548
+#: utils/constants.py:577
 msgid "Edit Prevalidations"
 msgstr "Editar pré-validações"
 
-#: utils/constants.py:549
+#: utils/constants.py:578
 msgid "Run Prevalidations"
 msgstr "Executar pré-validações"
 
-#: utils/constants.py:551
+#: utils/constants.py:580
 msgid "Run RefacDir"
 msgstr "Executar RefacDir"
 
-#: utils/constants.py:552
+#: utils/constants.py:581
 msgid "Delete Media"
 msgstr "Eliminar meios"
 
-#: utils/constants.py:554
+#: utils/constants.py:583
 msgid "Set Hotkey Actions"
 msgstr "Definir ações de teclas de atalho"
 
-#: utils/constants.py:555
+#: utils/constants.py:584
 msgid "Access Password Administration"
 msgstr "Acesso à administração da palavra-passe"
 
