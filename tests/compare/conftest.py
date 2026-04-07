@@ -1,10 +1,8 @@
 import os
 
-os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
-
 if "WEIDR_CACHE_DIR" not in os.environ:
     import atexit, shutil, tempfile
-    _tmp = tempfile.mkdtemp(prefix="weidr_ui_")
+    _tmp = tempfile.mkdtemp(prefix="weidr_compare_")
     os.environ["WEIDR_CACHE_DIR"] = os.path.join(_tmp, "cache")
     os.environ["WEIDR_CONFIGS_DIR"] = os.path.join(_tmp, "configs")
     os.makedirs(os.environ["WEIDR_CACHE_DIR"], exist_ok=True)
