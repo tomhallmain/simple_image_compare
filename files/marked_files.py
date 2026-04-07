@@ -653,13 +653,20 @@ class MarkedFiles():
         is_moving = move_func == Utils.move_file
 
         try:
+            # Release media canvas BEFORE acquiring the lock.
+            # release_media_canvas() calls QApplication.processEvents(), which
+            # drains Qt's event queue synchronously on the main thread.  If
+            # processEvents() fires the periodic file-check timer while the
+            # lock is already held, file_browser._gather_files() tries to
+            # re-acquire the same non-re-entrant threading.Lock and the main
+            # thread deadlocks with itself.  Moving the canvas release out of
+            # the locked section avoids that re-entrancy entirely.
+            if is_moving and current_image == marked_file:
+                if app_actions:
+                    app_actions.release_media_canvas()
+
             # Use lock to ensure thread-safe file operations
             with Utils.file_operation_lock:
-                # Handle media canvas release for moving operations
-                if is_moving and current_image == marked_file:
-                    if app_actions:
-                        app_actions.release_media_canvas()
-
                 # Perform the actual file operation on the resolved source
                 move_func(
                     actual_source,
