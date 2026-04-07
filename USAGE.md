@@ -29,6 +29,12 @@ If a search image is set simultaneously with search text, its embedding will be 
 
 ---
 
+## Running Tests
+
+Run from the project root with `pytest` (requires `pytest` and `pytest-qt` from `requirements.txt`). To run only the fast unit tests: `pytest tests/unit/`.
+
+---
+
 ## Configuration
 
 <details>

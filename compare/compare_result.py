@@ -138,6 +138,7 @@ class CompareResult:
         hash_list = []
         for f in files:
             hash_list.append(hash(f))
+        return hash_list
 
     def validate_indices(self, files):
         """
