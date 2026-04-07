@@ -19,7 +19,7 @@ os.environ.setdefault("WEIDR_CACHE_DIR", os.path.join(_bootstrap_tmp, "cache"))
 os.environ.setdefault("WEIDR_CONFIGS_DIR", os.path.join(_bootstrap_tmp, "configs"))
 os.makedirs(os.environ["WEIDR_CACHE_DIR"], exist_ok=True)
 os.makedirs(os.environ["WEIDR_CONFIGS_DIR"], exist_ok=True)
-_src_example = os.path.join(os.path.dirname(__file__), "configs", "config_example.json")
+_src_example = os.path.join(os.path.dirname(__file__), "..", "configs", "config_example.json")
 shutil.copy(_src_example, os.path.join(os.environ["WEIDR_CONFIGS_DIR"], "config.json"))
 atexit.register(shutil.rmtree, _bootstrap_tmp, True)
 
