@@ -19,7 +19,8 @@ class Config:
     @staticmethod
     def resolve_config_path():
         """Resolve the active config file path, preferring config.json."""
-        configs = [f.path for f in os.scandir(Config.CONFIGS_DIR_LOC) if f.is_file() and f.path.endswith(".json")]
+        configs_dir = os.environ.get("WEIDR_CONFIGS_DIR") or Config.CONFIGS_DIR_LOC
+        configs = [f.path for f in os.scandir(configs_dir) if f.is_file() and f.path.endswith(".json")]
         config_path = None
         for candidate in configs:
             basename = os.path.basename(candidate)
