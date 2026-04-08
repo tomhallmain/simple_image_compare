@@ -77,7 +77,7 @@ def show_high_severity_dialog(
     title: str,
     message: str,
     buttons: Optional[list[tuple[str, str]]] = None,
-) -> "bool | str | None":
+) -> "bool | str":
     """
     Show a custom dialog with red warning colours for high-severity operations.
 
@@ -87,16 +87,19 @@ def show_high_severity_dialog(
         message: Dialog message.
         buttons: Optional list of (label, role) pairs to replace the default
             OK/Cancel buttons.  Supported roles: ``"destructive"``,
-            ``"action"``, ``"reject"``.  When provided the function returns
-            the label of the clicked button, or ``None`` if a reject-role
-            button was clicked.  When *not* provided the legacy two-button
-            behaviour is used and a plain ``bool`` is returned.
+            ``"action"``, ``"reject"``.  When provided, reject-role buttons
+            return ``False`` and all other buttons return their label string,
+            so callers can uniformly use ``if not result:`` to detect
+            cancellation regardless of button mode.  When *not* provided the
+            legacy two-button behaviour is used and a plain ``bool`` is
+            returned.
 
     Returns:
-        * ``bool`` (legacy) when *buttons* is ``None``: ``True`` for OK,
-          ``False`` for Cancel.
-        * ``str`` when *buttons* is provided: the label of the clicked button.
-        * ``None`` when *buttons* is provided and a reject-role button was
+        * ``bool`` when *buttons* is ``None``: ``True`` for OK, ``False``
+          for Cancel.
+        * ``str`` (label) when *buttons* is provided and a non-reject button
+          was clicked.
+        * ``False`` when *buttons* is provided and a reject-role button was
           clicked.
     """
     dialog = QDialog(master)
@@ -161,6 +164,7 @@ def show_high_severity_dialog(
     # Custom-button mode: track which label was clicked
     _clicked_label: list[str | None] = [None]
 
+    _VALID_ROLES = {"destructive", "action", "reject"}
     _ROLE_OBJECT_NAMES = {
         "destructive": "ok_btn",
         "action": "action_btn",
@@ -168,15 +172,21 @@ def show_high_severity_dialog(
     }
     _reject_roles = {"reject"}
 
-    first_action_btn: Optional[QPushButton] = None
+    last_reject_btn: Optional[QPushButton] = None
 
     for label, role in buttons:
+        if role not in _VALID_ROLES:
+            raise ValueError(
+                f"Invalid button role {role!r}. Must be one of: {sorted(_VALID_ROLES)}"
+            )
         btn = QPushButton(label)
-        btn.setObjectName(_ROLE_OBJECT_NAMES.get(role, "action_btn"))
+        btn.setObjectName(_ROLE_OBJECT_NAMES[role])
 
         def _make_handler(lbl: str, is_reject: bool):
             def _handler():
-                _clicked_label[0] = lbl
+                # Reject-role buttons return False (consistent with legacy mode)
+                # so callers can uniformly use `if not result:` to detect cancellation.
+                _clicked_label[0] = False if is_reject else lbl
                 if is_reject:
                     dialog.reject()
                 else:
@@ -186,22 +196,13 @@ def show_high_severity_dialog(
         btn.clicked.connect(_make_handler(label, role in _reject_roles))
         btn_layout.addWidget(btn)
 
-        if role == "action" and first_action_btn is None:
-            first_action_btn = btn
+        if role == "reject":
+            last_reject_btn = btn
 
-    # Default focus: first action button, falling back to the last reject button
-    focus_btn = first_action_btn
-    if focus_btn is None:
-        for label, role in buttons:
-            if role == "reject":
-                # Re-find the widget — iterate btn_layout
-                for i in range(btn_layout.count()):
-                    item = btn_layout.itemAt(i)
-                    if item and item.widget() and item.widget().text() == label:
-                        focus_btn = item.widget()
-                        break
-    if focus_btn is not None:
-        focus_btn.setFocus()
+    # High-severity dialogs always default focus to the reject button so that
+    # an accidental Enter/Space press cannot trigger a destructive action.
+    if last_reject_btn is not None:
+        last_reject_btn.setFocus()
 
     layout.addLayout(btn_layout)
     dialog.adjustSize()

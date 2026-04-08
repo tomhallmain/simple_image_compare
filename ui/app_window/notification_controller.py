@@ -202,14 +202,15 @@ class NotificationController:
         severity: str = "normal",
         master: Optional[QWidget] = None,
         buttons: Optional[list[tuple[str, str]]] = None,
-    ) -> "bool | str | None":
+    ) -> "bool | str":
         """
         Show a modal message box.
 
         Returns True for OK/Yes, False otherwise for the default two-button
         modes.  When *buttons* is provided (a list of ``(label, role)`` pairs)
-        the return value is the label of the clicked button, or ``None`` if a
-        reject-role button was clicked.
+        the return value is the label of the clicked button, or ``False`` if a
+        reject-role button was clicked — so callers can use ``if not result:``
+        uniformly regardless of button mode.
 
         Pported from App.alert.
         """

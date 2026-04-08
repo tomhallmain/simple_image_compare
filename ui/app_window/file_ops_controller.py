@@ -290,7 +290,7 @@ class FileOpsController:
                 (_("Cancel"), "reject"),
             ],
         )
-        if clicked is None or clicked == _("Cancel"):
+        if not clicked:
             return
 
         move_files = clicked == _("Move Files")
