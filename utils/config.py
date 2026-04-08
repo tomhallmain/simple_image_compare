@@ -113,6 +113,10 @@ class Config:
         self.dynamic_media_min_sample_count = 4
         self.dynamic_media_max_sample_frames = 20
         self.dynamic_media_max_sample_pages = 40
+        # Maximum video duration (in seconds) to sample for prevalidation.
+        # Sampling is confined to the first N seconds; frames beyond this point
+        # are never decoded.  Set to 0 to disable the cap (sample the full video).
+        self.dynamic_media_max_sample_duration_seconds = 600
         self.show_negative_prompt = True
         self.sd_runner_client_port = 6000
         self.sd_runner_client_password = "<PASSWORD>"
@@ -220,6 +224,7 @@ class Config:
                             "dynamic_media_min_sample_count",
                             "dynamic_media_max_sample_frames",
                             "dynamic_media_max_sample_pages",
+                            "dynamic_media_max_sample_duration_seconds",
                             "sd_runner_client_port",
                             "refacdir_client_port")
             self.set_values(float,
@@ -260,6 +265,7 @@ class Config:
         self.set_directories_to_search_for_related_images()
         self.check_image_edit_configuration()
         self.remove_example_classifier_model_details()
+        self._warn_suspicious_values()
         
         # GIMP and GEGL availability will be checked lazily when first needed
 
@@ -476,6 +482,34 @@ class Config:
             if "(be sure to change this)" in model_details["model_name"]:
                 del self.image_classifier_models[i]
                 break
+
+    def _warn_suspicious_values(self) -> None:
+        """Log warnings for config values that are technically valid but almost certainly wrong."""
+        # Seconds values that must be at least 1 to be visible/functional
+        for attr, label in (
+            ("slideshow_interval_seconds",    "slideshow_interval_seconds"),
+            ("file_check_interval_seconds",   "file_check_interval_seconds"),
+            ("toasts_persist_seconds",        "toasts_persist_seconds"),
+            ("title_notify_persist_seconds",  "title_notify_persist_seconds"),
+        ):
+            val = getattr(self, attr)
+            if val < 1:
+                logger.warning(
+                    "Config value %s=%r is less than 1 second — "
+                    "this will likely produce unintended behavior. "
+                    "Use the matching 'show_*' / enable flag to disable the feature instead.",
+                    attr, val,
+                )
+        # Duration cap: 0 means disabled (valid); any positive value below 30 s
+        # is almost certainly a unit mistake (e.g. minutes entered as seconds).
+        dur = self.dynamic_media_max_sample_duration_seconds
+        if 0 < dur < 30:
+            logger.warning(
+                "Config value dynamic_media_max_sample_duration_seconds=%r is very short. "
+                "Prevalidation will only inspect the first %d second(s) of each video. "
+                "Set to 0 to disable the cap, or use a value >= 30 for a meaningful window.",
+                dur, dur,
+            )
 
     def validate_and_set_directory(self, key, override=False):
         loc = key if override else self.dict[key]

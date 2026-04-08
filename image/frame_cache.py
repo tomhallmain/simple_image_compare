@@ -259,6 +259,32 @@ def _pyav_video_stats(path: str) -> Tuple[int, float, Optional[float]]:
         container.close()
 
 
+def _apply_duration_cap(
+    total_frames: int,
+    fps: float,
+    duration_seconds: Optional[float],
+    max_duration_seconds: float,
+) -> int:
+    """
+    Return the effective frame count for sampling, capped to *max_duration_seconds*.
+
+    When ``max_duration_seconds <= 0`` or the video is shorter than the cap,
+    *total_frames* is returned unchanged so sampling covers the full video.
+    Otherwise the returned value is ``min(total_frames, fps * max_duration_seconds)``,
+    confining sample indices to the first N seconds of the file.
+    """
+    if max_duration_seconds <= 0 or total_frames <= 0:
+        return total_frames
+    known_duration = duration_seconds if duration_seconds is not None else (
+        total_frames / fps if fps > 0 else None
+    )
+    if known_duration is None or known_duration <= max_duration_seconds:
+        return total_frames
+    if fps <= 0:
+        return total_frames
+    return max(1, int(fps * max_duration_seconds))
+
+
 def _pyav_first_decoded_bgr(video_path: str) -> Optional[np.ndarray]:
     """First successfully decoded frame only (fast; no blank-frame scan)."""
     assert av is not None
@@ -677,6 +703,7 @@ class FrameCache:
         min_sample_count = config.dynamic_media_min_sample_count
         max_sample_frames = config.dynamic_media_max_sample_frames
         max_sample_pages = config.dynamic_media_max_sample_pages
+        max_sample_duration_seconds = config.dynamic_media_max_sample_duration_seconds
         cache_key = _make_sample_cache_key(media_path, ratio)
 
         if cache_key in cls.sampled_cache:
@@ -689,6 +716,7 @@ class FrameCache:
                 ratio,
                 min_sample_count=min_sample_count,
                 max_sample_count=max_sample_frames,
+                max_duration_seconds=max_sample_duration_seconds,
                 cache_key=cache_key,
             )
         return cls._stream_pdf_sample_pages(
@@ -730,6 +758,7 @@ class FrameCache:
         sample_ratio: float,
         min_sample_count: int,
         max_sample_count: int,
+        max_duration_seconds: float,
         cache_key: str,
     ) -> Tuple[int, Iterator[str]]:
         if has_imported_pyav:
@@ -739,6 +768,7 @@ class FrameCache:
                     sample_ratio,
                     min_sample_count=min_sample_count,
                     max_sample_count=max_sample_count,
+                    max_duration_seconds=max_duration_seconds,
                     cache_key=cache_key,
                 )
             except Exception as e:
@@ -752,6 +782,7 @@ class FrameCache:
             sample_ratio,
             min_sample_count=min_sample_count,
             max_sample_count=max_sample_count,
+            max_duration_seconds=max_duration_seconds,
             cache_key=cache_key,
         )
 
@@ -762,6 +793,7 @@ class FrameCache:
         sample_ratio: float,
         min_sample_count: int,
         max_sample_count: int,
+        max_duration_seconds: float,
         cache_key: str,
     ) -> Tuple[int, Iterator[str]]:
         assert av is not None
@@ -784,8 +816,14 @@ class FrameCache:
             "duration_seconds": duration_seconds,
             "fps": fps if fps > 0 else None,
         }
+        effective_frames = _apply_duration_cap(total_frames, fps, duration_seconds, max_duration_seconds)
+        if effective_frames < total_frames:
+            logger.debug(
+                "Capping video sampling to first %.0fs (%.0fs total) for %s",
+                max_duration_seconds, duration_seconds, video_path,
+            )
         frame_indices = cls._compute_sample_indices(
-            total_items=total_frames,
+            total_items=effective_frames,
             sample_ratio=sample_ratio,
             min_sample_count=min_sample_count,
             max_sample_count=max_sample_count,
@@ -933,6 +971,7 @@ class FrameCache:
         sample_ratio: float,
         min_sample_count: int,
         max_sample_count: int,
+        max_duration_seconds: float,
         cache_key: str,
     ) -> Tuple[int, Iterator[str]]:
         cap = _open_video_capture(video_path)
@@ -948,8 +987,14 @@ class FrameCache:
                 "duration_seconds": duration_seconds,
                 "fps": fps if fps > 0 else None,
             }
+            effective_frames = _apply_duration_cap(total_frames, fps, duration_seconds, max_duration_seconds)
+            if effective_frames < total_frames:
+                logger.debug(
+                    "Capping video sampling to first %.0fs (%.0fs total) for %s",
+                    max_duration_seconds, duration_seconds, video_path,
+                )
             frame_indices = cls._compute_sample_indices(
-                total_items=total_frames,
+                total_items=effective_frames,
                 sample_ratio=sample_ratio,
                 min_sample_count=min_sample_count,
                 max_sample_count=max_sample_count,

@@ -130,6 +130,7 @@
   "dynamic_media_min_sample_count": 4,
   "dynamic_media_max_sample_frames": 20,
   "dynamic_media_max_sample_pages": 40,
+  "dynamic_media_max_sample_duration_seconds": 600,
   "show_negative_prompt": true,
   "sd_runner_client_port": 6000,
   "sd_runner_client_password": "<PASSWORD>",
