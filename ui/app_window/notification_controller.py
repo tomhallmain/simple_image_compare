@@ -232,11 +232,18 @@ class NotificationController:
         """Wire up the sidebar spinner badge (called by SidebarPanel after init)."""
         self._prevalidation_spinner = spinner
 
-    def start_prevalidation_spinner(self) -> None:
-        """Show the spinner only when the title bar is currently notification-free."""
+    def start_prevalidation_spinner(self, force: bool = False) -> None:
+        """Show the spinner.
+
+        When *force* is False (default) the spinner is suppressed if a title-bar
+        notification is already active, to avoid adding noise.  Pass
+        ``force=True`` when the caller knows prevalidation is actively running
+        regardless of notification state — e.g. when looping through a series
+        of dynamic-media files where each iteration starts a new prevalidation.
+        """
         if self._prevalidation_spinner is None:
             return
-        if notification_manager.has_active_notifications(self._app.window_id):
+        if not force and notification_manager.has_active_notifications(self._app.window_id):
             return
         self._prevalidation_spinner.start()
 

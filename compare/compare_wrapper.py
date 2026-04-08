@@ -196,7 +196,7 @@ class CompareWrapper:
         loop = QEventLoop()
         worker = _Worker()
         worker.finished.connect(loop.quit)
-        app_actions.start_prevalidation_spinner()
+        app_actions.start_prevalidation_spinner(force=True)
         worker.start()
         loop.exec()
         app_actions.stop_prevalidation_spinner()
