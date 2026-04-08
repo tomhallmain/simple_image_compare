@@ -1166,6 +1166,9 @@ class ClassifierActionsManager:
     @staticmethod
     def _invalidate_after_prevalidation_policy_change() -> None:
         """Call when rules or models that affect prevalidation outcomes change."""
+        logger.info(
+            "Prevalidation cache: full eviction — policy change affects all directories"
+        )
         invalidate_policy_caches()
         ClassifierActionsManager.prevalidated_cache.clear()
 
@@ -1248,6 +1251,11 @@ class ClassifierActionsManager:
         affected directories need re-evaluation.  Fall back to
         clear_prevalidation_result_cache() for global-scope changes.
         """
+        logger.info(
+            "Prevalidation cache: targeted eviction for %d dir(s): %s",
+            len(directories),
+            sorted(directories),
+        )
         evacuate_buckets_for_directories(directories)
         norm_dirs = {os.path.normcase(os.path.normpath(d)) for d in directories}
         for path in list(ClassifierActionsManager.prevalidated_cache.keys()):

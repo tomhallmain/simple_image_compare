@@ -506,7 +506,10 @@ class PrevalidationsTab(QWidget):
         def _on_edited(*_args) -> None:
             # profile.directories now reflects the post-edit state.
             new_dirs = self._profile_linked_dirs(profile)
-            self._invalidate_for_dir_sets(old_dirs, new_dirs)
+            self._invalidate_for_dir_sets(
+                old_dirs, new_dirs,
+                reason=f"profile '{profile.name}' edited",
+            )
             self._rebuild_supporting_state()
             self._refresh_prof_listbox()
 
@@ -529,8 +532,18 @@ class PrevalidationsTab(QWidget):
         if linked:
             # Linked prevalidations lose their profile scope and become global;
             # cached None results in previously unscoped dirs are now stale.
+            logger.info(
+                "Prevalidation cache: full eviction — profile '%s' removed,"
+                " linked prevalidations become global-scoped",
+                profile.name,
+            )
             ClassifierActionsManager.clear_prevalidation_result_cache()
-        # else: profile was unused → nothing cached under its scope.
+        else:
+            logger.info(
+                "Prevalidation cache: no eviction — profile '%s' removed"
+                " but no prevalidations were linked to it",
+                profile.name,
+            )
         self._rebuild_supporting_state()
         if self._is_modify_window_valid():
             try:
@@ -708,19 +721,35 @@ class PrevalidationsTab(QWidget):
         )
         return set(profile.directories) if used else set()
 
-    def _invalidate_for_dir_sets(self, *dir_sets: "set[str] | None") -> None:
+    def _invalidate_for_dir_sets(
+        self, *dir_sets: "set[str] | None", reason: str = ""
+    ) -> None:
         """
         Evict the union of *dir_sets* from both caches, or perform a full
         eviction if any element is ``None`` (global prevalidation scope).
         """
         if any(d is None for d in dir_sets):
+            logger.info(
+                "Prevalidation cache: full eviction requested — %s"
+                " (global-scoped prevalidation affected)",
+                reason,
+            )
             ClassifierActionsManager.clear_prevalidation_result_cache()
             return
         affected: set[str] = set()
         for d in dir_sets:
             affected |= d  # type: ignore[operator]
         if affected:
+            logger.info(
+                "Prevalidation cache: targeted eviction requested — %s", reason
+            )
             ClassifierActionsManager.invalidate_for_directories(affected)
+        else:
+            logger.info(
+                "Prevalidation cache: no eviction needed — %s"
+                " (no directories affected)",
+                reason,
+            )
 
     def _rebuild_supporting_state(self) -> None:
         """Rebuild directories_to_exclude and repaint the UI rows."""
@@ -754,8 +783,16 @@ class PrevalidationsTab(QWidget):
                 if prevalidation is not None
                 else set()
             )
-            self._invalidate_for_dir_sets(old_dirs, new_dirs)
+            pv_name = prevalidation.name if prevalidation is not None else "<new>"
+            self._invalidate_for_dir_sets(
+                old_dirs, new_dirs,
+                reason=f"prevalidation '{pv_name}' saved",
+            )
         else:
+            logger.info(
+                "Prevalidation cache: full eviction — prevalidation saved"
+                " via external caller (no snapshot available)"
+            )
             ClassifierActionsManager.clear_prevalidation_result_cache()
 
         self._rebuild_supporting_state()
@@ -773,7 +810,16 @@ class PrevalidationsTab(QWidget):
         # no cached result becomes wrong → no eviction needed.
         # Profile-scoped removal → evict only the affected directories.
         if dirs is not None:
-            self._invalidate_for_dir_sets(dirs)
+            pv_name = prevalidation.name if prevalidation is not None else "<unknown>"
+            self._invalidate_for_dir_sets(
+                dirs, reason=f"prevalidation '{pv_name}' deleted"
+            )
+        else:
+            logger.info(
+                "Prevalidation cache: no eviction — global prevalidation '%s'"
+                " deleted (scope narrows, no cached results become stale)",
+                prevalidation.name if prevalidation is not None else "<unknown>",
+            )
         self._rebuild_supporting_state()
 
     def _move_down(self, idx: int, prevalidation) -> None:
@@ -783,6 +829,7 @@ class PrevalidationsTab(QWidget):
     def _clear_all(self) -> None:
         ClassifierActionsManager.prevalidations.clear()
         self._filtered.clear()
+        logger.info("Prevalidation cache: full eviction — all prevalidations cleared")
         ClassifierActionsManager.clear_prevalidation_result_cache()
         self._rebuild_supporting_state()
 
