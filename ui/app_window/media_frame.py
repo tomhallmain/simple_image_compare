@@ -804,6 +804,10 @@ class MediaFrame(QFrame):
         self._graphics_view.hide()
         self._placeholder_label.hide()
         self._controls_overlay.set_audio_controls_visible(True)
+        # VLC renders into the native window handle and may set a busy cursor
+        # at the OS level.  Force an arrow cursor so the user doesn't see a
+        # spinner while a video is simply playing.
+        self.setCursor(Qt.CursorShape.ArrowCursor)
         self.on_track_changed()
         self._sync_overlay_volume_state(force=True)
         self._playback_timer.start()
@@ -847,6 +851,7 @@ class MediaFrame(QFrame):
             self.vlc_media.release()
             self.vlc_media = None
         self._video_ui = None
+        self.unsetCursor()
         self.on_playback_stopped()
         self._playback_timer.stop()
 
