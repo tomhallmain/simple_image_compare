@@ -259,6 +259,15 @@ class NotificationManager:
                 app_actions.title(current_title)
         debug_log("Notification addition completed")
 
+    def has_active_notifications(self, window_id: int = 0) -> bool:
+        """Return True if there are unexpired notifications for *window_id*."""
+        current_time = time.time()
+        with self._lock:
+            return any(
+                n.window_id == window_id and n.expires_at > current_time
+                for n in self._notifications
+            )
+
     def set_current_title(self, title: str, window_id: int = 0) -> None:
         """Set the current window title."""
         debug_log(f"Setting current title for window {window_id}: {title}")

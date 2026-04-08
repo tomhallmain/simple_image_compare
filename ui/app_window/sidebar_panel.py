@@ -29,6 +29,7 @@ from PySide6.QtWidgets import (
 from lib.aware_entry_qt import AwareEntry
 from lib.scroll_frame_qt import ScrollFrame
 from lib.tooltip_qt import create_tooltip
+from ui.prevalidation_spinner_qt import PrevalidationSpinnerBadge
 from utils.config import config
 from utils.constants import Mode, SortBy
 from utils.logging_setup import get_logger
@@ -70,9 +71,16 @@ class SidebarPanel(QWidget):
         outer.addWidget(self._scroll)
         self._add_spacer()
 
-        # -- Mode & state labels -------------------------------------------
-        self.label_mode = QLabel(Mode.BROWSE.get_text(), self)
-        self._scroll.add_widget(self.label_mode)
+        # -- Mode label + prevalidation spinner (inline row) ---------------
+        mode_row = QWidget(self)
+        mode_row_layout = QHBoxLayout(mode_row)
+        mode_row_layout.setContentsMargins(0, 0, 0, 0)
+        mode_row_layout.setSpacing(4)
+        self.label_mode = QLabel(Mode.BROWSE.get_text(), mode_row)
+        mode_row_layout.addWidget(self.label_mode, 1)
+        self.prevalidation_spinner = PrevalidationSpinnerBadge(mode_row)
+        mode_row_layout.addWidget(self.prevalidation_spinner)
+        self._scroll.add_widget(mode_row)
 
         self.label_state = QLabel(_("Set a directory to run comparison."), self)
         self.label_state.setWordWrap(True)

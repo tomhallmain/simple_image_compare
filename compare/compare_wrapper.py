@@ -147,16 +147,62 @@ class CompareWrapper:
         if image_path in self.hidden_images:
             return True
         if config.enable_prevalidations:
-            prevalidation_action = ClassifierActionsManager.prevalidate_media(
-                image_path,
-                self._app_actions.get_base_dir,
-                self._app_actions.hide_current_media,
-                self._app_actions.title_notify,
-                MarkedFiles.add_mark_if_not_present
-            )
+            if ClassifierActionsManager.is_dynamic_prevalidation_media(image_path):
+                prevalidation_action = self._run_dynamic_prevalidation_with_spinner(image_path)
+            else:
+                prevalidation_action = ClassifierActionsManager.prevalidate_media(
+                    image_path,
+                    self._app_actions.get_base_dir,
+                    self._app_actions.hide_current_media,
+                    self._app_actions.title_notify,
+                    MarkedFiles.add_mark_if_not_present,
+                )
             if prevalidation_action is not None:
                 return prevalidation_action != ClassifierActionType.NOTIFY
         return False
+
+    def _run_dynamic_prevalidation_with_spinner(self, image_path):
+        """
+        Run prevalidation for dynamic media (video/PDF) on a worker QThread so
+        the main-thread event loop keeps processing — allowing the spinner badge
+        to animate during the (potentially expensive) frame-sampling loop.
+
+        `hide_current_media` is already wrapped with BlockingQueuedConnection via
+        ts(), so it is safe to call from the worker thread while the main-thread
+        event loop is running.  `title_notify` uses Qt signals and is likewise
+        thread-safe.  `add_mark_if_not_present` writes shared state and must run
+        on the main thread; collected paths are applied after the thread joins.
+        """
+        from PySide6.QtCore import QEventLoop, QThread
+
+        result = [None]
+        deferred_marks = []
+
+        def _collect_mark(path):
+            deferred_marks.append(path)
+
+        app_actions = self._app_actions
+
+        class _Worker(QThread):
+            def run(self_inner):
+                result[0] = ClassifierActionsManager.prevalidate_media(
+                    image_path,
+                    app_actions.get_base_dir,
+                    app_actions.hide_current_media,
+                    app_actions.title_notify,
+                    _collect_mark,
+                )
+
+        loop = QEventLoop()
+        worker = _Worker()
+        worker.finished.connect(loop.quit)
+        app_actions.start_prevalidation_spinner()
+        worker.start()
+        loop.exec()
+        app_actions.stop_prevalidation_spinner()
+        for path in deferred_marks:
+            MarkedFiles.add_mark_if_not_present(path)
+        return result[0]
 
     def find_next_unrelated_image(self, file_browser, forward=True):
         found_unrelated_image = False

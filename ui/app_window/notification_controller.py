@@ -46,6 +46,7 @@ class NotificationController:
         self._signals.toast_requested.connect(self._do_toast)
         self._signals.title_notify_requested.connect(self._do_title_notify)
         self._status_title_override_active = False
+        self._prevalidation_spinner = None  # set by SidebarPanel after construction
 
     # ------------------------------------------------------------------
     # Toast
@@ -223,6 +224,26 @@ class NotificationController:
             return show_high_severity_dialog(parent, title, message, buttons=buttons)
 
         return qt_alert(parent, title, message, kind=kind)
+
+    # ------------------------------------------------------------------
+    # Prevalidation spinner
+    # ------------------------------------------------------------------
+    def set_prevalidation_spinner(self, spinner) -> None:
+        """Wire up the sidebar spinner badge (called by SidebarPanel after init)."""
+        self._prevalidation_spinner = spinner
+
+    def start_prevalidation_spinner(self) -> None:
+        """Show the spinner only when the title bar is currently notification-free."""
+        if self._prevalidation_spinner is None:
+            return
+        if notification_manager.has_active_notifications(self._app.window_id):
+            return
+        self._prevalidation_spinner.start()
+
+    def stop_prevalidation_spinner(self) -> None:
+        """Always hide the spinner regardless of notification state."""
+        if self._prevalidation_spinner is not None:
+            self._prevalidation_spinner.stop()
 
     def handle_error(self, error_text: str, title: Optional[str] = None, kind: str = "error") -> None:
         """Display an error dialog."""

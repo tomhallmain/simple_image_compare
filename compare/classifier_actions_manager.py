@@ -1295,6 +1295,15 @@ class ClassifierActionsManager:
         ClassifierActionsManager._invalidate_after_prevalidation_policy_change()
     
     @staticmethod
+    def is_dynamic_prevalidation_media(path: str) -> bool:
+        """Return True if *path* requires dynamic (frame-sampling) prevalidation."""
+        path_lower = path.lower()
+        return (
+            (config.enable_videos and is_video_path_by_extension(path))
+            or (config.enable_pdfs and path_lower.endswith(".pdf"))
+        )
+
+    @staticmethod
     def prevalidate_media(
         media_path,
         get_base_dir_func,

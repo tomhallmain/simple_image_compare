@@ -263,6 +263,9 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         # Controllers
         # ------------------------------------------------------------------
         self.notification_ctrl = NotificationController(app_window=self)
+        self.notification_ctrl.set_prevalidation_spinner(
+            self.sidebar_panel.prevalidation_spinner
+        )
 
         self.cache_ctrl = CacheController(
             app_window=self,
@@ -411,6 +414,8 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             "toast": ts(self.notification_ctrl.toast),
             "title_notify": ts(self.notification_ctrl.title_notify),
             "_alert": ts(self.notification_ctrl.alert),
+            "start_prevalidation_spinner": self.notification_ctrl.start_prevalidation_spinner,
+            "stop_prevalidation_spinner": self.notification_ctrl.stop_prevalidation_spinner,
             # Navigation / display
             "refresh": ts(self.refresh),
             "refocus": ts(self.refocus),
