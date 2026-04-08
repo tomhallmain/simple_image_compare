@@ -6,6 +6,8 @@ import sys
 import threading
 from typing import Any, Dict, List
 
+from lib.equivalence import are_equivalent
+
 from utils.constants import AppInfo
 from utils.encryptor import encrypt_data_to_file, decrypt_data_from_file
 from utils.logging_setup import get_logger
@@ -353,7 +355,7 @@ class AppInfoCache(InflationMonitor):
         with self._lock:
             if AppInfoCache.META_INFO_KEY not in self._cache:
                 self._cache[AppInfoCache.META_INFO_KEY] = {}
-            if self._has_changes or self._cache[AppInfoCache.META_INFO_KEY].get(key) != value:
+            if self._has_changes or not are_equivalent(self._cache[AppInfoCache.META_INFO_KEY].get(key), value):
                 self._cache[AppInfoCache.META_INFO_KEY][key] = value
                 self._has_changes = True
 
@@ -416,8 +418,7 @@ class AppInfoCache(InflationMonitor):
             directory_info = self._get_directory_info()
             if directory not in directory_info:
                 directory_info[directory] = {}
-            
-            if self._has_changes or directory_info[directory][key] != value
+            if self._has_changes or not are_equivalent(directory_info[directory].get(key), value):
                 directory_info[directory][key] = value
                 self._has_changes = True
 
