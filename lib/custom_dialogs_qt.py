@@ -27,6 +27,7 @@ _ = I18N._
 _BG = "#ff4444"
 _BTN_OK = "#cc0000"
 _BTN_CANCEL = "#666666"
+_BTN_ACTION = "#2255aa"
 _FG = "white"
 
 _STYLE = f"""
@@ -58,6 +59,16 @@ _STYLE = f"""
     QPushButton#cancel_btn:hover {{
         background-color: #777777;
     }}
+    QPushButton#action_btn {{
+        background-color: {_BTN_ACTION};
+        color: {_FG};
+        border: 2px solid #1a3d77;
+        padding: 6px 20px;
+        border-radius: 3px;
+    }}
+    QPushButton#action_btn:hover {{
+        background-color: #2f66cc;
+    }}
 """
 
 
@@ -65,7 +76,8 @@ def show_high_severity_dialog(
     master: Optional[QWidget],
     title: str,
     message: str,
-) -> bool:
+    buttons: Optional[list[tuple[str, str]]] = None,
+) -> "bool | str | None":
     """
     Show a custom dialog with red warning colours for high-severity operations.
 
@@ -73,9 +85,19 @@ def show_high_severity_dialog(
         master: Parent widget (or None).
         title: Dialog title.
         message: Dialog message.
+        buttons: Optional list of (label, role) pairs to replace the default
+            OK/Cancel buttons.  Supported roles: ``"destructive"``,
+            ``"action"``, ``"reject"``.  When provided the function returns
+            the label of the clicked button, or ``None`` if a reject-role
+            button was clicked.  When *not* provided the legacy two-button
+            behaviour is used and a plain ``bool`` is returned.
 
     Returns:
-        True if the user confirmed (OK), False if cancelled.
+        * ``bool`` (legacy) when *buttons* is ``None``: ``True`` for OK,
+          ``False`` for Cancel.
+        * ``str`` when *buttons* is provided: the label of the clicked button.
+        * ``None`` when *buttons* is provided and a reject-role button was
+          clicked.
     """
     dialog = QDialog(master)
     dialog.setWindowTitle(title)
@@ -119,19 +141,69 @@ def show_high_severity_dialog(
     btn_layout = QHBoxLayout()
     btn_layout.addStretch()
 
-    cancel_btn = QPushButton(_("Cancel"))
-    cancel_btn.setObjectName("cancel_btn")
-    cancel_btn.clicked.connect(dialog.reject)
-    cancel_btn.setFocus()  # Default focus on Cancel for safety
-    btn_layout.addWidget(cancel_btn)
+    if buttons is None:
+        # Legacy two-button mode: Cancel (focus) then OK
+        cancel_btn = QPushButton(_("Cancel"))
+        cancel_btn.setObjectName("cancel_btn")
+        cancel_btn.clicked.connect(dialog.reject)
+        cancel_btn.setFocus()  # Default focus on Cancel for safety
+        btn_layout.addWidget(cancel_btn)
 
-    ok_btn = QPushButton(_("OK"))
-    ok_btn.setObjectName("ok_btn")
-    ok_btn.clicked.connect(dialog.accept)
-    btn_layout.addWidget(ok_btn)
+        ok_btn = QPushButton(_("OK"))
+        ok_btn.setObjectName("ok_btn")
+        ok_btn.clicked.connect(dialog.accept)
+        btn_layout.addWidget(ok_btn)
+
+        layout.addLayout(btn_layout)
+        dialog.adjustSize()
+        return dialog.exec() == QDialog.DialogCode.Accepted
+
+    # Custom-button mode: track which label was clicked
+    _clicked_label: list[str | None] = [None]
+
+    _ROLE_OBJECT_NAMES = {
+        "destructive": "ok_btn",
+        "action": "action_btn",
+        "reject": "cancel_btn",
+    }
+    _reject_roles = {"reject"}
+
+    first_action_btn: Optional[QPushButton] = None
+
+    for label, role in buttons:
+        btn = QPushButton(label)
+        btn.setObjectName(_ROLE_OBJECT_NAMES.get(role, "action_btn"))
+
+        def _make_handler(lbl: str, is_reject: bool):
+            def _handler():
+                _clicked_label[0] = lbl
+                if is_reject:
+                    dialog.reject()
+                else:
+                    dialog.accept()
+            return _handler
+
+        btn.clicked.connect(_make_handler(label, role in _reject_roles))
+        btn_layout.addWidget(btn)
+
+        if role == "action" and first_action_btn is None:
+            first_action_btn = btn
+
+    # Default focus: first action button, falling back to the last reject button
+    focus_btn = first_action_btn
+    if focus_btn is None:
+        for label, role in buttons:
+            if role == "reject":
+                # Re-find the widget — iterate btn_layout
+                for i in range(btn_layout.count()):
+                    item = btn_layout.itemAt(i)
+                    if item and item.widget() and item.widget().text() == label:
+                        focus_btn = item.widget()
+                        break
+    if focus_btn is not None:
+        focus_btn.setFocus()
 
     layout.addLayout(btn_layout)
-
     dialog.adjustSize()
-
-    return dialog.exec() == QDialog.DialogCode.Accepted
+    dialog.exec()
+    return _clicked_label[0]

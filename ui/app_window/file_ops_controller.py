@@ -242,7 +242,8 @@ class FileOpsController:
 
     def delete_current_base_dir(self, event=None) -> None:
         """
-        Delete or trash the entire current base directory.
+        Delete or trash the entire current base directory, with an option to
+        move its contents to another directory first.
 
         Ported from App.delete_current_base_dir.
         """
@@ -277,11 +278,33 @@ class FileOpsController:
             + _("Contents to be deleted:") + "\n" + file_summary
         )
 
-        ok = self._app.notification_ctrl.alert(
-            _("Confirm Delete Directory"), alert_message, kind="askokcancel",
+        # Three-option dialog: Delete / Move Files / Cancel (high-severity styled)
+        clicked = self._app.notification_ctrl.alert(
+            _("Confirm Delete Directory"),
+            alert_message,
+            kind="askokcancel",
+            severity="high",
+            buttons=[
+                (_("Delete"), "destructive"),
+                (_("Move Files"), "action"),
+                (_("Cancel"), "reject"),
+            ],
         )
-        if not ok:
+        if clicked is None or clicked == _("Cancel"):
             return
+
+        move_files = clicked == _("Move Files")
+        target_dir: str | None = None
+
+        if move_files:
+            from lib.fast_directory_picker_qt import get_existing_directory
+            target_dir = get_existing_directory(
+                self._app,
+                _("Select target directory for directory contents"),
+                initial_dir=str(os.path.dirname(base_dir)),
+            )
+            if not target_dir:
+                return
 
         logger.info(f"Setting base directory to {replacement_dir} before deleting {base_dir}")
         self._app.sidebar_panel.update_base_dir_display(replacement_dir)
@@ -301,12 +324,45 @@ class FileOpsController:
             RecentDirectories.remove_directory(base_dir)
             app_info_cache.clear_directory_cache(base_dir)
             app_info_cache.store()
-            self._handle_delete(base_dir, toast=True, manual_delete=True, is_directory=True)
+            if move_files and target_dir:
+                self._move_dir_contents_then_delete(base_dir, target_dir)
+            else:
+                self._handle_delete(base_dir, toast=True, manual_delete=True, is_directory=True)
         except Exception as e:
             self._app.notification_ctrl.handle_error(str(e), title=_("Delete Directory Error"))
+            return
 
-        self._app.notification_ctrl.toast(
-            _("Directory {0} deleted.").format(base_dir), time_in_seconds=10
+        if move_files and target_dir:
+            self._app.notification_ctrl.toast(
+                _("Directory {0} contents moved to {1} and directory deleted.").format(base_dir, target_dir),
+                time_in_seconds=10,
+            )
+        else:
+            self._app.notification_ctrl.toast(
+                _("Directory {0} deleted.").format(base_dir), time_in_seconds=10
+            )
+
+    def _move_dir_contents_then_delete(self, base_dir: str, target_dir: str) -> None:
+        """Move all contents of base_dir into target_dir, then delete base_dir."""
+        item_name = os.path.basename(base_dir)
+        self._app.notification_ctrl.title_notify(
+            _("Moving directory contents: {0}").format(item_name),
+            action_type=ActionType.REMOVE_FILE,
+        )
+        logger.info(f"Moving contents of {base_dir} to {target_dir}")
+        for entry in os.listdir(base_dir):
+            src = os.path.join(base_dir, entry)
+            dst = os.path.join(target_dir, entry)
+            if os.path.exists(dst):
+                logger.warning(f"Skipping {src}: destination {dst} already exists")
+                continue
+            shutil.move(src, dst)
+        # Delete the now-empty directory (or whatever remains)
+        Utils.remove_path(
+            base_dir,
+            delete_instantly=config.delete_instantly,
+            trash_folder=config.trash_folder,
+            is_directory=True,
         )
 
     # ==================================================================

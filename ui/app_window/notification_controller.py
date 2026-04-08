@@ -201,11 +201,17 @@ class NotificationController:
         kind: str = "info",
         severity: str = "normal",
         master: Optional[QWidget] = None,
-    ) -> bool:
+        buttons: Optional[list[tuple[str, str]]] = None,
+    ) -> "bool | str | None":
         """
-        Show a modal message box. Returns True for OK/Yes, False otherwise.
+        Show a modal message box.
 
-        Ported from App.alert.
+        Returns True for OK/Yes, False otherwise for the default two-button
+        modes.  When *buttons* is provided (a list of ``(label, role)`` pairs)
+        the return value is the label of the clicked button, or ``None`` if a
+        reject-role button was clicked.
+
+        Pported from App.alert.
         """
         logger.warning(f'Alert - Title: "{title}" Message: {message}')
         parent = master or self._app
@@ -213,7 +219,7 @@ class NotificationController:
         # For dangerous operations with high severity, use a custom styled dialog
         if severity == "high" and kind == "askokcancel":
             from lib.custom_dialogs_qt import show_high_severity_dialog
-            return show_high_severity_dialog(parent, title, message)
+            return show_high_severity_dialog(parent, title, message, buttons=buttons)
 
         return qt_alert(parent, title, message, kind=kind)
 
