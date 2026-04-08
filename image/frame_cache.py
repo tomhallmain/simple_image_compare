@@ -259,6 +259,26 @@ def _pyav_video_stats(path: str) -> Tuple[int, float, Optional[float]]:
         container.close()
 
 
+def _adjust_duration_for_file_size(
+    max_duration_seconds: float,
+    file_size_mb: float,
+    max_size_mb: float,
+) -> float:
+    """
+    Scale *max_duration_seconds* down when the file is larger than *max_size_mb*.
+
+    The scale factor is ``max_size_mb / file_size_mb``, so a file twice the
+    threshold receives half the duration cap.  The result is floored at 30 s
+    so the cap never becomes trivially short.  Returns *max_duration_seconds*
+    unchanged when size-based scaling is disabled (``max_size_mb <= 0``), the
+    file is within the threshold, or the duration cap itself is already disabled.
+    """
+    if max_size_mb <= 0 or max_duration_seconds <= 0 or file_size_mb <= max_size_mb:
+        return max_duration_seconds
+    scale = max_size_mb / file_size_mb
+    return max(30.0, max_duration_seconds * scale)
+
+
 def _apply_duration_cap(
     total_frames: int,
     fps: float,
@@ -704,6 +724,7 @@ class FrameCache:
         max_sample_frames = config.dynamic_media_max_sample_frames
         max_sample_pages = config.dynamic_media_max_sample_pages
         max_sample_duration_seconds = config.dynamic_media_max_sample_duration_seconds
+        max_sample_size_mb = config.dynamic_media_max_sample_size_mb
         cache_key = _make_sample_cache_key(media_path, ratio)
 
         if cache_key in cls.sampled_cache:
@@ -711,12 +732,26 @@ class FrameCache:
             return len(cached), iter(cached)
 
         if is_video:
+            try:
+                file_size_mb = os.path.getsize(media_path) / (1024 * 1024)
+            except OSError:
+                file_size_mb = 0.0
+            effective_duration = _adjust_duration_for_file_size(
+                max_sample_duration_seconds, file_size_mb, max_sample_size_mb
+            )
+            size_cap_logged = effective_duration < max_sample_duration_seconds and max_sample_duration_seconds > 0
+            if size_cap_logged:
+                logger.debug(
+                    "Reducing duration cap from %.0fs to %.0fs for large file (%.0f MB) for %s",
+                    max_sample_duration_seconds, effective_duration, file_size_mb, media_path,
+                )
             return cls._stream_video_frame_samples_dispatch(
                 media_path,
                 ratio,
                 min_sample_count=min_sample_count,
                 max_sample_count=max_sample_frames,
-                max_duration_seconds=max_sample_duration_seconds,
+                max_duration_seconds=effective_duration,
+                suppress_cap_log=size_cap_logged,
                 cache_key=cache_key,
             )
         return cls._stream_pdf_sample_pages(
@@ -759,6 +794,7 @@ class FrameCache:
         min_sample_count: int,
         max_sample_count: int,
         max_duration_seconds: float,
+        suppress_cap_log: bool,
         cache_key: str,
     ) -> Tuple[int, Iterator[str]]:
         if has_imported_pyav:
@@ -769,6 +805,7 @@ class FrameCache:
                     min_sample_count=min_sample_count,
                     max_sample_count=max_sample_count,
                     max_duration_seconds=max_duration_seconds,
+                    suppress_cap_log=suppress_cap_log,
                     cache_key=cache_key,
                 )
             except Exception as e:
@@ -783,6 +820,7 @@ class FrameCache:
             min_sample_count=min_sample_count,
             max_sample_count=max_sample_count,
             max_duration_seconds=max_duration_seconds,
+            suppress_cap_log=suppress_cap_log,
             cache_key=cache_key,
         )
 
@@ -794,6 +832,7 @@ class FrameCache:
         min_sample_count: int,
         max_sample_count: int,
         max_duration_seconds: float,
+        suppress_cap_log: bool,
         cache_key: str,
     ) -> Tuple[int, Iterator[str]]:
         assert av is not None
@@ -817,7 +856,7 @@ class FrameCache:
             "fps": fps if fps > 0 else None,
         }
         effective_frames = _apply_duration_cap(total_frames, fps, duration_seconds, max_duration_seconds)
-        if effective_frames < total_frames:
+        if effective_frames < total_frames and not suppress_cap_log:
             logger.debug(
                 "Capping video sampling to first %.0fs (%.0fs total) for %s",
                 max_duration_seconds, duration_seconds, video_path,
@@ -972,6 +1011,7 @@ class FrameCache:
         min_sample_count: int,
         max_sample_count: int,
         max_duration_seconds: float,
+        suppress_cap_log: bool,
         cache_key: str,
     ) -> Tuple[int, Iterator[str]]:
         cap = _open_video_capture(video_path)
@@ -988,7 +1028,7 @@ class FrameCache:
                 "fps": fps if fps > 0 else None,
             }
             effective_frames = _apply_duration_cap(total_frames, fps, duration_seconds, max_duration_seconds)
-            if effective_frames < total_frames:
+            if effective_frames < total_frames and not suppress_cap_log:
                 logger.debug(
                     "Capping video sampling to first %.0fs (%.0fs total) for %s",
                     max_duration_seconds, duration_seconds, video_path,

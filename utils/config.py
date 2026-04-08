@@ -117,6 +117,10 @@ class Config:
         # Sampling is confined to the first N seconds; frames beyond this point
         # are never decoded.  Set to 0 to disable the cap (sample the full video).
         self.dynamic_media_max_sample_duration_seconds = 600
+        # File-size threshold (in MB) above which the duration cap is scaled down
+        # proportionally.  A file twice this size gets half the duration cap, etc.,
+        # with a floor of 30 s.  Set to 0 to disable size-based scaling.
+        self.dynamic_media_max_sample_size_mb = 500
         self.show_negative_prompt = True
         self.sd_runner_client_port = 6000
         self.sd_runner_client_password = "<PASSWORD>"
@@ -225,6 +229,7 @@ class Config:
                             "dynamic_media_max_sample_frames",
                             "dynamic_media_max_sample_pages",
                             "dynamic_media_max_sample_duration_seconds",
+                            "dynamic_media_max_sample_size_mb",
                             "sd_runner_client_port",
                             "refacdir_client_port")
             self.set_values(float,
@@ -509,6 +514,16 @@ class Config:
                 "Prevalidation will only inspect the first %d second(s) of each video. "
                 "Set to 0 to disable the cap, or use a value >= 30 for a meaningful window.",
                 dur, dur,
+            )
+        # Size threshold: 0 means disabled (valid); very small values would
+        # aggressively scale down almost every video, probably unintentionally.
+        size_mb = self.dynamic_media_max_sample_size_mb
+        if 0 < size_mb < 10:
+            logger.warning(
+                "Config value dynamic_media_max_sample_size_mb=%r is very small. "
+                "Almost every video will have its prevalidation duration scaled down. "
+                "Set to 0 to disable size-based scaling, or use a value >= 10.",
+                size_mb,
             )
 
     def validate_and_set_directory(self, key, override=False):
