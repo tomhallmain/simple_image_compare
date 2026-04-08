@@ -203,6 +203,7 @@ class AppInfoCache(InflationMonitor):
     def __init__(self):
         super().__init__()
         self._lock = threading.RLock()
+        self._has_changes = False
         self._cache = {self.META_INFO_KEY: {}, self.DIRECTORIES_KEY: {}}
         _override = os.environ.get("WEIDR_CACHE_DIR")
         self._cache_loc = os.path.join(_override, "app_info_cache.enc") if _override else self.CACHE_LOC
@@ -238,6 +239,12 @@ class AppInfoCache(InflationMonitor):
                 return self._cache.get(self.DIRECTORIES_KEY, {})
             return self._cache.get(scope_key, {})
 
+    @property
+    def has_changes(self) -> bool:
+        """True if there are pending writes that have not yet been stored."""
+        with self._lock:
+            return self._has_changes
+
     def store(self):
         """Persist cache to encrypted file. Returns True on success, False if encrypted store failed but JSON fallback succeeded. Raises on encoding or JSON fallback failure."""
         with self._lock:
@@ -256,6 +263,7 @@ class AppInfoCache(InflationMonitor):
                     AppInfo.APP_IDENTIFIER,
                     self._cache_loc
                 )
+                self._has_changes = False
                 return True  # Encryption successful
             except Exception as e:
                 logger.error(f"Error encrypting cache: {e}")
@@ -263,6 +271,7 @@ class AppInfoCache(InflationMonitor):
             try:
                 with open(self._json_loc, "w", encoding="utf-8") as f:
                     json.dump(self._cache, f)
+                self._has_changes = False
                 return False  # Encryption failed, but JSON fallback succeeded
             except Exception as e:
                 raise Exception(f"Error storing application cache: {e}")
@@ -344,7 +353,9 @@ class AppInfoCache(InflationMonitor):
         with self._lock:
             if AppInfoCache.META_INFO_KEY not in self._cache:
                 self._cache[AppInfoCache.META_INFO_KEY] = {}
-            self._cache[AppInfoCache.META_INFO_KEY][key] = value
+            if self._has_changes or self._cache[AppInfoCache.META_INFO_KEY].get(key) != value:
+                self._cache[AppInfoCache.META_INFO_KEY][key] = value
+                self._has_changes = True
 
     def get_meta(self, key, default_val=None):
         with self._lock:
@@ -405,7 +416,10 @@ class AppInfoCache(InflationMonitor):
             directory_info = self._get_directory_info()
             if directory not in directory_info:
                 directory_info[directory] = {}
-            directory_info[directory][key] = value
+            
+            if self._has_changes or directory_info[directory][key] != value
+                directory_info[directory][key] = value
+                self._has_changes = True
 
     def get(self, directory, key, default_val=None):
         with self._lock:
@@ -450,6 +464,7 @@ class AppInfoCache(InflationMonitor):
                 directory_info = self._get_directory_info()
                 if normalized_base_dir in directory_info:
                     del directory_info[normalized_base_dir]
+                    self._has_changes = True
             except Exception as e:
                 logger.error(f"Error clearing directory cache during delete: {e}")
 

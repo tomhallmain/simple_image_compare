@@ -100,7 +100,8 @@ class CacheController:
         from image.frame_cache import FrameCache
 
         base_dir = self._app.get_base_dir()
-        logger.info("Storing app info cache")
+        if config.debug2:
+            logger.debug(f"App info cache has_changes={app_info_cache.has_changes} and store will be attempted")
 
         if base_dir and base_dir != "":
             if not self._app.is_secondary():
@@ -148,7 +149,9 @@ class CacheController:
         from compare.classifier_actions_manager import ClassifierActionsManager
 
         ClassifierActionsManager.store_prevalidation_file_cache_to_disk()
-        app_info_cache.store()
+        if app_info_cache.has_changes:
+            logger.info("Storing app info cache")
+            app_info_cache.store()
 
     # ------------------------------------------------------------------
     # Display position
