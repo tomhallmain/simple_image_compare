@@ -100,6 +100,7 @@ from ui.app_style import AppStyle
 from utils.config import config
 from utils.logging_setup import get_logger
 from utils.translations import I18N
+from utils.utils import Utils
 
 _ = I18N._
 logger = get_logger("prevalidations_tab_qt")
@@ -355,9 +356,17 @@ class PrevalidationsTab(QWidget):
         add_pv = QPushButton(_("Add prevalidation"))
         add_pv.clicked.connect(lambda: self._open_modify_window())
         pv_title_row.addWidget(add_pv)
-        clear_pv = QPushButton(_("Clear prevalidations"))
-        clear_pv.clicked.connect(self._clear_all)
-        pv_title_row.addWidget(clear_pv)
+        self._clear_pv_btn = QPushButton(_("Clear prevalidations"))
+        self._clear_pv_btn.clicked.connect(self._clear_all)
+        pv_title_row.addWidget(self._clear_pv_btn)
+        self._clear_current_dir_cb = QCheckBox("")
+        self._clear_current_dir_cb.setToolTip(
+            _("When checked, the clear button evicts only the cached results\n"
+              "for the current base directory — prevalidation rules are kept.")
+        )
+        self._clear_current_dir_cb.toggled.connect(self._on_clear_scope_changed)
+        pv_title_row.addWidget(self._clear_current_dir_cb)
+        self._update_clear_dir_label()
         pv_title_row.addStretch()
         root.addLayout(pv_title_row)
 
@@ -826,18 +835,52 @@ class PrevalidationsTab(QWidget):
         prevalidation.move_index(idx, 1)
         self.refresh()
 
+    def _update_clear_dir_label(self) -> None:
+        """Refresh the scope checkbox text to reflect the current base directory."""
+        base_dir = self._app_actions.get_base_dir()
+        if base_dir:
+            short = Utils.get_relative_dirpath(base_dir, levels=2)
+        else:
+            short = _("current dir")
+        self._clear_current_dir_cb.setText(_("Only: {0}").format(short))
+        # Keep button text in sync if scope is already set to dir-only
+        if self._clear_current_dir_cb.isChecked():
+            self._clear_pv_btn.setText(_("Clear results ({0})").format(short))
+
+    def _on_clear_scope_changed(self, current_dir_only: bool) -> None:
+        base_dir = self._app_actions.get_base_dir()
+        short = Utils.get_relative_dirpath(base_dir, levels=2) if base_dir else _("current dir")
+        if current_dir_only:
+            self._clear_pv_btn.setText(_("Clear results ({0})").format(short))
+        else:
+            self._clear_pv_btn.setText(_("Clear prevalidations"))
+
     def _clear_all(self) -> None:
+        if self._clear_current_dir_cb.isChecked():
+            base_dir = self._app_actions.get_base_dir()
+            if not base_dir:
+                return
+            logger.info(
+                "Prevalidation cache: evicting results for current directory: %s", base_dir
+            )
+            ClassifierActionsManager.invalidate_for_directories({base_dir})
+            return
         ClassifierActionsManager.prevalidations.clear()
         self._filtered.clear()
         logger.info("Prevalidation cache: full eviction — all prevalidations cleared")
         ClassifierActionsManager.clear_prevalidation_result_cache()
         self._rebuild_supporting_state()
 
+    def showEvent(self, event) -> None:  # noqa: N802
+        super().showEvent(event)
+        self._update_clear_dir_label()
+
     def refresh(self) -> None:
         self._filtered = ClassifierActionsManager.prevalidations[:]
         self._refresh_lh_listbox()
         self._refresh_prof_listbox()
         self._rebuild_pv_rows()
+        self._update_clear_dir_label()
 
     # ------------------------------------------------------------------
     # Helpers
