@@ -124,15 +124,20 @@ class WindowLauncher:
                 self._app.notification_ctrl.toast(_("Please set a base directory first"))
                 return
 
-            # Re-use existing window if still open
+            # Re-use existing window if still open for the same directory.
+            # If the directory changed, close the stale window and open a fresh one.
             if self._directory_notes_window is not None:
                 try:
                     if self._directory_notes_window.isVisible():
-                        self._directory_notes_window.raise_()
-                        self._directory_notes_window.activateWindow()
-                        return
+                        if self._directory_notes_window._base_dir == base_dir:
+                            self._directory_notes_window.raise_()
+                            self._directory_notes_window.activateWindow()
+                            return
+                        else:
+                            self._directory_notes_window.close()
                 except (RuntimeError, AttributeError):
-                    self._directory_notes_window = None
+                    pass
+                self._directory_notes_window = None
 
             from ui.files.directory_notes_window_qt import DirectoryNotesWindow
             self._directory_notes_window = DirectoryNotesWindow(
@@ -436,7 +441,7 @@ class WindowLauncher:
         if self._directory_notes_window is not None:
             try:
                 if self._directory_notes_window.isVisible():
-                    self._directory_notes_window._refresh_widgets()
+                    self._directory_notes_window._refresh()
             except (RuntimeError, AttributeError):
                 pass
 
@@ -487,7 +492,7 @@ class WindowLauncher:
             if self._directory_notes_window is not None:
                 try:
                     if self._directory_notes_window.isVisible():
-                        self._directory_notes_window._refresh_widgets()
+                        self._directory_notes_window._refresh()
                 except (RuntimeError, AttributeError):
                     pass
 
