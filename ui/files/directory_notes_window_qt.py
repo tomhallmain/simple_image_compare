@@ -11,6 +11,8 @@ from __future__ import annotations
 import os
 from typing import Optional
 
+from files.marked_files import MarkedFiles
+
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (
@@ -102,6 +104,8 @@ class DirectoryNotesWindow(SmartDialog):
         btn_row = QHBoxLayout()
         for label, handler in [
             (_("Export to Text File"), self.export_to_file),
+            (_("Generate File List"), self.generate_file_list),
+            (_("Set as Runtime Marks"), self.set_as_runtime_marks),
             (_("Import from Text File"), self.import_from_text_file),
             (_("Import from JSON File"), self.import_from_json_file),
         ]:
@@ -414,6 +418,78 @@ class DirectoryNotesWindow(SmartDialog):
             except Exception as e:
                 QMessageBox.critical(self, _("Export Error"),
                                      _("Failed to export notes: {0}").format(str(e)))
+
+    def generate_file_list(self) -> None:
+        """Export marked files as a JSON list (file_paths.json format)."""
+        from utils.config import config
+        marked_files = DirectoryNotes.get_marked_files(self._base_dir)
+        if not marked_files:
+            QMessageBox.information(
+                self, _("No Marked Files"), _("There are no marked files to export.")
+            )
+            return
+
+        path, _filter = QFileDialog.getSaveFileName(
+            self,
+            _("Generate File List"),
+            config.file_paths_json_path,
+            _("JSON files (*.json);;All files (*)"),
+        )
+        if path:
+            try:
+                exported = DirectoryNotes.generate_file_list(self._base_dir, path)
+                self._app_actions.toast(
+                    _("File list ({0} entries) saved to: {1}").format(
+                        len(marked_files), exported
+                    )
+                )
+            except Exception as e:
+                QMessageBox.critical(
+                    self, _("Export Error"),
+                    _("Failed to generate file list: {0}").format(str(e)),
+                )
+
+    def set_as_runtime_marks(self) -> None:
+        """Load directory-notes marked files into the runtime MarkedFiles marks."""
+        from lib.qt_alert import qt_alert
+        marked_files = DirectoryNotes.get_marked_files(self._base_dir)
+        if not marked_files:
+            QMessageBox.information(
+                self, _("No Marked Files"), _("There are no marked files to set as marks.")
+            )
+            return
+
+        existing = len(MarkedFiles.file_marks)
+        if existing > 0:
+            replace = qt_alert(
+                self,
+                _("Replace Existing Marks?"),
+                _("There are already {0} runtime mark(s). Replace them with the {1} "
+                  "directory-note mark(s)?").format(existing, len(marked_files)),
+                kind="askyesno",
+            )
+            if not replace:
+                return
+
+        MarkedFiles.file_marks = list(marked_files)
+        MarkedFiles.mark_cursor = -1
+        self._app_actions.toast(
+            _("{0} runtime marks set from directory notes").format(len(marked_files))
+        )
+
+        # If the user is about to move these files, the stored paths in directory
+        # notes will become stale. Offer to clear them now so the notes stay clean.
+        clear = qt_alert(
+            self,
+            _("Clear Directory Note Marks?"),
+            _("If you plan to move these files, the saved paths will become stale.\n"
+              "Clear the directory note marks now?"),
+            kind="askyesno",
+        )
+        if clear:
+            DirectoryNotes.clear_marked_files(self._base_dir)
+            self._app_actions.toast(_("Directory note marks cleared."))
+            self._refresh()
 
     def import_from_text_file(self) -> None:
         path, _filter = QFileDialog.getOpenFileName(

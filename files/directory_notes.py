@@ -266,6 +266,25 @@ class DirectoryNotes:
         return added_count, len(not_found_filenames), not_found_filenames
     
     @staticmethod
+    def generate_file_list(base_dir: str, output_path: Optional[str] = None) -> str:
+        """
+        Generate a JSON file list of marked files (list of absolute paths, indent=4).
+        Defaults to config.file_paths_json_path when output_path is not given.
+        Returns the path to the generated file.
+        """
+        from utils.config import config
+        marked_files = DirectoryNotes.get_marked_files(base_dir)
+
+        if output_path is None:
+            output_path = config.file_paths_json_path
+
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(marked_files, f, indent=4)
+
+        logger.info(f"Generated file list ({len(marked_files)} entries) to {output_path}")
+        return output_path
+
+    @staticmethod
     def import_from_json_file(base_dir: str, file_path: str) -> Tuple[int, int, List[str]]:
         """
         Import marked files from a JSON file containing a list of file paths.
