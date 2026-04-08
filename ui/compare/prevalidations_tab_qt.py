@@ -13,6 +13,69 @@ Non-UI imports:
     from compare.classifier_actions_manager (reuse policy)
   - Lookahead from compare.lookahead (reuse policy)
   - DirectoryProfile from compare.directory_profile (reuse policy)
+
+Cache-invalidation policy
+-------------------------
+Every mutating operation must evict stale prevalidation results from both
+the session cache (ClassifierActionsManager.prevalidated_cache) and the
+persistent per-file bucket store (lib.file_invalidation_cache).
+
+On bulk load from disk the full cache is always wiped via
+ClassifierActionsManager.clear_prevalidation_result_cache().  For
+interactive edits during a session, targeted eviction is preferred so that
+expensive dynamic-media results for unaffected directories are preserved.
+
+The helpers ``_pv_dirs`` and ``_profile_linked_dirs`` compute the set of
+filesystem directories that a prevalidation or profile touches.  A return
+value of ``None`` from ``_pv_dirs`` means the prevalidation is global-scoped
+(no profile), which forces a full eviction via the ``_invalidate_for_dir_sets``
+dispatcher.
+
+Per-operation rules
+~~~~~~~~~~~~~~~~~~~
+Prevalidation *saved* (add or modify):
+    Evict the union of the prevalidation's profile directories **before** the
+    edit (snapshot taken in ``_open_modify_window`` before the window mutates
+    the object) and **after** the edit (read back from the now-modified object
+    in the callback).  Either state being ``None`` (global scope) forces a
+    full eviction.  A freshly added prevalidation has no prior state, so
+    ``old_dirs`` is treated as an empty set.
+
+Prevalidation *added via copy* (``ClassifierActionCopyWindow``):
+    The new prevalidation has no old state.  ``refresh_prevalidations`` falls
+    back to a full eviction because there is no snapshot — conservative but
+    correct, and this path is rare.
+
+Prevalidation *deleted*:
+    If the deleted prevalidation was profile-scoped, evict only its profile
+    directories.  If it was global, its removal **narrows** the effective
+    scope: no previously cached result becomes wrong, so no eviction is
+    needed.
+
+Prevalidation *reordered*:
+    No eviction.  Reordering can in theory change which prevalidation fires
+    first, but re-evaluating all dynamic media on every drag is too costly.
+    Operators can force a re-run via the ``force=True`` keybind path.
+
+All prevalidations *cleared*:
+    Full eviction.
+
+Profile *added* or *copied*:
+    No eviction — a brand-new profile has no prevalidations linked to it so
+    no files were ever cached under its scope.
+
+Profile *edited* (directories changed):
+    Evict the union of the profile's directory set **before** the edit
+    (snapshot taken in ``_edit_profile``) and **after** the edit (read from
+    the now-modified profile object in the callback), but **only** if at
+    least one prevalidation currently references this profile.  If no
+    prevalidations reference it, no files were cached under its scope.
+
+Profile *removed*:
+    If prevalidations referenced it their scope expands to global (the
+    profile filter no longer applies), meaning cached ``None`` results in
+    previously unscoped directories may now be wrong → **full eviction**.
+    If no prevalidations referenced the profile, no eviction is needed.
 """
 
 from __future__ import annotations
@@ -409,26 +472,23 @@ class PrevalidationsTab(QWidget):
                 PrevalidationsTab._modify_window = None
 
     def _add_profile(self) -> None:
-        from ui.compare.directory_profile_window_qt import (
-            DirectoryProfileWindow,
-        )
+        from ui.compare.directory_profile_window_qt import DirectoryProfileWindow
 
         if PrevalidationsTab._profile_window is not None:
             try:
                 PrevalidationsTab._profile_window.close()
             except Exception:
                 pass
+        # New profile has no prevalidations linked → no cache eviction needed.
         PrevalidationsTab._profile_window = DirectoryProfileWindow(
             self.window(),
             self._app_actions,
-            self.refresh_prevalidations,
+            self._on_profile_added,
         )
         PrevalidationsTab._profile_window.show()
 
     def _edit_profile(self) -> None:
-        from ui.compare.directory_profile_window_qt import (
-            DirectoryProfileWindow,
-        )
+        from ui.compare.directory_profile_window_qt import DirectoryProfileWindow
 
         idx = self._prof_listbox.currentRow()
         if idx < 0 or idx >= len(DirectoryProfile.directory_profiles):
@@ -438,11 +498,23 @@ class PrevalidationsTab(QWidget):
                 PrevalidationsTab._profile_window.close()
             except Exception:
                 pass
+        profile = DirectoryProfile.directory_profiles[idx]
+        # Snapshot the profile's linked directories *before* the window edits
+        # the profile object in-place.
+        old_dirs = self._profile_linked_dirs(profile)
+
+        def _on_edited(*_args) -> None:
+            # profile.directories now reflects the post-edit state.
+            new_dirs = self._profile_linked_dirs(profile)
+            self._invalidate_for_dir_sets(old_dirs, new_dirs)
+            self._rebuild_supporting_state()
+            self._refresh_prof_listbox()
+
         PrevalidationsTab._profile_window = DirectoryProfileWindow(
             self.window(),
             self._app_actions,
-            self.refresh_prevalidations,
-            DirectoryProfile.directory_profiles[idx],
+            _on_edited,
+            profile,
         )
         PrevalidationsTab._profile_window.show()
 
@@ -451,8 +523,15 @@ class PrevalidationsTab(QWidget):
         if idx < 0 or idx >= len(DirectoryProfile.directory_profiles):
             return
         profile = DirectoryProfile.directory_profiles[idx]
+        # Check linkage *before* removal while prevalidations still reference it.
+        linked = self._profile_linked_dirs(profile)
         DirectoryProfile.remove_profile(profile.name)
-        self.refresh_prevalidations()
+        if linked:
+            # Linked prevalidations lose their profile scope and become global;
+            # cached None results in previously unscoped dirs are now stale.
+            ClassifierActionsManager.clear_prevalidation_result_cache()
+        # else: profile was unused → nothing cached under its scope.
+        self._rebuild_supporting_state()
         if self._is_modify_window_valid():
             try:
                 PrevalidationsTab._modify_window.refresh_profile_options()
@@ -460,9 +539,7 @@ class PrevalidationsTab(QWidget):
                 PrevalidationsTab._modify_window = None
 
     def _copy_profile(self) -> None:
-        from ui.compare.directory_profile_window_qt import (
-            DirectoryProfileWindow,
-        )
+        from ui.compare.directory_profile_window_qt import DirectoryProfileWindow
 
         idx = self._prof_listbox.currentRow()
         if idx < 0 or idx >= len(DirectoryProfile.directory_profiles):
@@ -472,13 +549,19 @@ class PrevalidationsTab(QWidget):
                 PrevalidationsTab._profile_window.close()
             except Exception:
                 pass
+        # Copied profile is new → no prevalidations linked → no eviction needed.
         PrevalidationsTab._profile_window = DirectoryProfileWindow(
             self.window(),
             self._app_actions,
-            self.refresh_prevalidations,
+            self._on_profile_added,
             copy_from_profile=DirectoryProfile.directory_profiles[idx],
         )
         PrevalidationsTab._profile_window.show()
+
+    def _on_profile_added(self, *_args) -> None:
+        """Callback for profile add/copy — no eviction, just rebuild the UI."""
+        self._rebuild_supporting_state()
+        self._refresh_prof_listbox()
 
     # ------------------------------------------------------------------
     # Prevalidation rows
@@ -564,6 +647,12 @@ class PrevalidationsTab(QWidget):
                 PrevalidationsTab._modify_window.close()
             except Exception:
                 pass
+        # Snapshot the prevalidation's current profile dirs *before* the
+        # modify window mutates the object in-place via _finalize_specific.
+        # An add (prevalidation=None) has no prior state → treat as empty set.
+        self._modify_old_dirs = (
+            self._pv_dirs(prevalidation) if prevalidation is not None else set()
+        )
         PrevalidationsTab._modify_window = PrevalidationModifyWindow(
             self.window(),
             self._app_actions,
@@ -586,14 +675,56 @@ class PrevalidationsTab(QWidget):
             refresh_prevalidations_callback=self.refresh_prevalidations,
         ).show()
 
-    def refresh_prevalidations(self, prevalidation=None) -> None:
-        if (
-            prevalidation is not None
-            and prevalidation not in ClassifierActionsManager.prevalidations
-        ):
-            ClassifierActionsManager.prevalidations.insert(0, prevalidation)
+    # ------------------------------------------------------------------
+    # Cache-eviction helpers
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _pv_dirs(pv: "Prevalidation") -> "set[str] | None":
+        """
+        Return the set of directories this prevalidation is scoped to, or
+        ``None`` if it is global (no profile).
+        """
+        if pv.profile is not None:
+            return set(pv.profile.directories)
+        if pv.profile_name:
+            prof = next(
+                (p for p in DirectoryProfile.directory_profiles
+                 if p.name == pv.profile_name),
+                None,
+            )
+            if prof:
+                return set(prof.directories)
+        return None
+
+    @staticmethod
+    def _profile_linked_dirs(profile: "DirectoryProfile") -> set[str]:
+        """
+        Return the profile's directory set if at least one prevalidation
+        currently references it, otherwise an empty set (nothing to evict).
+        """
+        used = any(
+            pv.profile_name == profile.name or pv.profile is profile
+            for pv in ClassifierActionsManager.prevalidations
+        )
+        return set(profile.directories) if used else set()
+
+    def _invalidate_for_dir_sets(self, *dir_sets: "set[str] | None") -> None:
+        """
+        Evict the union of *dir_sets* from both caches, or perform a full
+        eviction if any element is ``None`` (global prevalidation scope).
+        """
+        if any(d is None for d in dir_sets):
+            ClassifierActionsManager.clear_prevalidation_result_cache()
+            return
+        affected: set[str] = set()
+        for d in dir_sets:
+            affected |= d  # type: ignore[operator]
+        if affected:
+            ClassifierActionsManager.invalidate_for_directories(affected)
+
+    def _rebuild_supporting_state(self) -> None:
+        """Rebuild directories_to_exclude and repaint the UI rows."""
         self._filtered = ClassifierActionsManager.prevalidations[:]
-        ClassifierActionsManager.clear_prevalidation_result_cache()
         ClassifierActionsManager.directories_to_exclude.clear()
         for pv in ClassifierActionsManager.prevalidations:
             if pv.is_move_action():
@@ -602,13 +733,48 @@ class PrevalidationsTab(QWidget):
                 )
         self.refresh()
 
+    # ------------------------------------------------------------------
+    # Prevalidation actions
+    # ------------------------------------------------------------------
+    def refresh_prevalidations(self, prevalidation=None) -> None:
+        if (
+            prevalidation is not None
+            and prevalidation not in ClassifierActionsManager.prevalidations
+        ):
+            ClassifierActionsManager.prevalidations.insert(0, prevalidation)
+
+        # Consume any targeted-eviction snapshot set by _open_modify_window.
+        # If the attribute is absent the call came from an external caller
+        # (e.g. ClassifierActionCopyWindow) → fall back to full eviction.
+        if hasattr(self, "_modify_old_dirs"):
+            old_dirs = self._modify_old_dirs
+            del self._modify_old_dirs
+            new_dirs = (
+                self._pv_dirs(prevalidation)
+                if prevalidation is not None
+                else set()
+            )
+            self._invalidate_for_dir_sets(old_dirs, new_dirs)
+        else:
+            ClassifierActionsManager.clear_prevalidation_result_cache()
+
+        self._rebuild_supporting_state()
+
     def _delete(self, prevalidation) -> None:
+        # Read dirs before removal; the object's profile attrs are still valid
+        # after list removal since we hold a reference to the same instance.
+        dirs = self._pv_dirs(prevalidation) if prevalidation is not None else set()
         if (
             prevalidation is not None
             and prevalidation in ClassifierActionsManager.prevalidations
         ):
             ClassifierActionsManager.prevalidations.remove(prevalidation)
-        self.refresh_prevalidations()
+        # Global prevalidation (dirs is None) removed → effective scope narrows,
+        # no cached result becomes wrong → no eviction needed.
+        # Profile-scoped removal → evict only the affected directories.
+        if dirs is not None:
+            self._invalidate_for_dir_sets(dirs)
+        self._rebuild_supporting_state()
 
     def _move_down(self, idx: int, prevalidation) -> None:
         prevalidation.move_index(idx, 1)
@@ -617,7 +783,8 @@ class PrevalidationsTab(QWidget):
     def _clear_all(self) -> None:
         ClassifierActionsManager.prevalidations.clear()
         self._filtered.clear()
-        self.refresh_prevalidations()
+        ClassifierActionsManager.clear_prevalidation_result_cache()
+        self._rebuild_supporting_state()
 
     def refresh(self) -> None:
         self._filtered = ClassifierActionsManager.prevalidations[:]

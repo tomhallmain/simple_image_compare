@@ -122,6 +122,29 @@ def evacuate_stale_file_buckets(
     return removed
 
 
+def evacuate_buckets_for_directories(directories: Iterable[str]) -> int:
+    """
+    Drop buckets whose file path falls under any of the given directories.
+
+    Intended for selective policy invalidation: when only profile-scoped
+    prevalidations change, callers can evict just the affected directories
+    instead of wiping the entire bucket map.
+
+    Returns the number of keys removed.
+    """
+    norm_dirs = {
+        os.path.normcase(os.path.normpath(os.path.abspath(d)))
+        for d in directories
+    }
+    removed = 0
+    for k in list(_file_buckets.keys()):
+        parent = os.path.dirname(k)
+        if parent in norm_dirs:
+            del _file_buckets[k]
+            removed += 1
+    return removed
+
+
 class FileKeyedInvalidationCache(Generic[T]):
     """Holds one value for a set of paths; invalidated by epoch, mtime, age, or clear."""
 

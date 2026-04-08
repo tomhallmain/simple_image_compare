@@ -23,6 +23,7 @@ from files.directory_profile import DirectoryProfile
 from lib.file_invalidation_cache import (
     DEFAULT_STALE_ENTRY_MAX_AGE_SECONDS,
     FileKeyedInvalidationCache,
+    evacuate_buckets_for_directories,
     evacuate_stale_file_buckets,
     get_file_bucket_for_media,
     get_signature_memo,
@@ -1234,6 +1235,27 @@ class ClassifierActionsManager:
         ClassifierActionsManager._invalidate_after_prevalidation_policy_change()
 
     @staticmethod
+    def invalidate_for_directories(directories: set[str]) -> None:
+        """
+        Targeted eviction: drop caches only for files whose immediate parent
+        directory is in *directories*.
+
+        Does NOT bump the policy epoch, so unaffected buckets remain valid
+        in-memory.  Clears the signature memo so subsequent bucket.set()
+        calls record the updated policy fingerprint.
+
+        Use this when a profile-scoped prevalidation changes and only the
+        affected directories need re-evaluation.  Fall back to
+        clear_prevalidation_result_cache() for global-scope changes.
+        """
+        evacuate_buckets_for_directories(directories)
+        norm_dirs = {os.path.normcase(os.path.normpath(d)) for d in directories}
+        for path in list(ClassifierActionsManager.prevalidated_cache.keys()):
+            if os.path.normcase(os.path.normpath(os.path.dirname(path))) in norm_dirs:
+                del ClassifierActionsManager.prevalidated_cache[path]
+        set_signature_memo(None)
+
+    @staticmethod
     def _prevalidations_post_init():
         """Lazy initialization of prevalidations - called just before first use."""
         if ClassifierActionsManager._prevalidations_initialized:
@@ -1313,6 +1335,10 @@ class ClassifierActionsManager:
             pv_sig = ClassifierActionsManager.get_prevalidation_signature()
             bucket.set((media_path,), prevalidation_action, pv_sig)
         else:
+            # Non-cacheable action (MOVE, COPY, DELETE) was triggered — evict both
+            # caches so a stale session-cache entry cannot shadow the cleared bucket
+            # on the next evaluation of this path.
+            ClassifierActionsManager.prevalidated_cache.pop(media_path, None)
             bucket.clear()
         return prevalidation_action
     
