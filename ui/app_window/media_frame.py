@@ -65,9 +65,38 @@ except ImportError:
 class VideoUI:
     """Placeholder for video state (path, active)."""
 
-    def __init__(self, filepath):
+    def __init__(self, filepath, has_video=True):
         self.filepath = filepath
         self.active = False
+        self.has_video = bool(has_video)
+
+
+def _probe_has_video_stream(path: str) -> bool:
+    """Return True if the file contains at least one video stream.
+
+    Checks with pyav first, then OpenCV. Falls back to True (old behaviour)
+    when neither library is available, so the caller is never worse off than
+    before this guard was added.
+    """
+    try:
+        import av as _av
+        container = _av.open(path, metadata_errors="ignore")
+        try:
+            return bool(container.streams.video)
+        finally:
+            container.close()
+    except Exception:
+        pass
+    try:
+        import cv2 as _cv2
+        cap = _cv2.VideoCapture(path)
+        try:
+            return cap.isOpened() and cap.get(_cv2.CAP_PROP_FRAME_HEIGHT) > 0
+        finally:
+            cap.release()
+    except Exception:
+        pass
+    return True
 
 
 def scale_dims(dims, max_dims, maximize=False):
@@ -802,15 +831,29 @@ class MediaFrame(QFrame):
         self.clear()
         self._graphics_view.set_interaction_enabled(False)
         self._graphics_view.reset_interaction()
-        self._video_ui = VideoUI(path)
+        # Probe for a video stream before attaching a window handle: libvlc can
+        # deadlock initialising its video-output module when set_hwnd/set_nsobject/
+        # set_xwindow is called on an audio-only container (e.g. a WEBM with no
+        # video track).  Skipping the window attachment for such files avoids the
+        # deadlock while still allowing VLC to play the audio.
+        has_video = _probe_has_video_stream(path)
+        self._video_ui = VideoUI(path, has_video=has_video)
         self.path = path
-        self.ensure_video_frame()
+        if has_video:
+            self.ensure_video_frame()
         self.vlc_media = self.vlc_instance.media_new(path)
         self.vlc_media_player.set_media(self.vlc_media)
         if self.vlc_media_player.play() == -1:
             raise Exception("Failed to play video")
-        self._graphics_view.hide()
-        self._placeholder_label.hide()
+        if has_video:
+            self._graphics_view.hide()
+            self._placeholder_label.hide()
+        else:
+            # Audio-only container: no window handle → no video output needed.
+            # Show a label so the user knows what is playing.
+            self._graphics_view.hide()
+            self._placeholder_label.setText(_("Audio: ") + os.path.basename(path))
+            self._placeholder_label.show()
         self._controls_overlay.set_audio_controls_visible(True)
         # VLC renders into the native window handle and may set a busy cursor
         # at the OS level.  Force an arrow cursor so the user doesn't see a
@@ -838,7 +881,8 @@ class MediaFrame(QFrame):
         """Start video playback (after ensure_video_frame)."""
         if not _VLC_AVAILABLE or not self.vlc_media_player or not self.path:
             return
-        self.ensure_video_frame()
+        if isinstance(self._video_ui, VideoUI) and self._video_ui.has_video:
+            self.ensure_video_frame()
         self.vlc_media = self.vlc_instance.media_new(self.path)
         self.vlc_media_player.set_media(self.vlc_media)
         if self.vlc_media_player.play() == -1:
