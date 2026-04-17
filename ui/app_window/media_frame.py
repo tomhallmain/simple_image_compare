@@ -49,6 +49,12 @@ try:
 except ImportError:
     _VLC_AVAILABLE = False
 
+# Holds VLC Instance objects whose release() must be deferred because a hung
+# stop() thread is still running inside libvlc.  Keeps the C-level instance
+# alive (refcount > 0) so the thread doesn't access freed memory.  Entries are
+# never explicitly released; they leak until process exit, which is intentional.
+_vlc_instances_pending_cleanup: list = []
+
 try:
     import shiboken6
     _SHIBOKEN_AVAILABLE = True
@@ -269,6 +275,7 @@ class MediaFrame(QFrame):
             self.vlc_instance = None
             self.vlc_media_player = None
             self.vlc_media = None
+        self._hung_stop_thread: threading.Thread | None = None
 
         self._controls_overlay = MediaControlsOverlay(self)
         self._controls_overlay.seek_requested.connect(self.seek_requested.emit)
@@ -862,6 +869,7 @@ class MediaFrame(QFrame):
                     "abandoning hung player and creating a fresh instance",
                     self.path,
                 )
+                self._hung_stop_thread = _t
                 self._replace_vlc_player()
             else:
                 try:
@@ -915,10 +923,22 @@ class MediaFrame(QFrame):
                 pass
             self.vlc_media_player = None
         if _VLC_AVAILABLE and self.vlc_instance:
-            try:
-                self.vlc_instance.release()
-            except Exception:
-                pass
+            t = self._hung_stop_thread
+            if t is not None and t.is_alive():
+                t.join(timeout=5.0)
+            self._hung_stop_thread = None
+            if t is not None and t.is_alive():
+                # libvlc_media_player_stop() is still running inside libvlc.
+                # Calling libvlc_release() now would free memory the thread is
+                # actively using, causing a segfault.  Keep the Python wrapper
+                # alive in a module-level list so GC doesn't collect it (and
+                # call libvlc_release() via __del__) before the thread exits.
+                _vlc_instances_pending_cleanup.append(self.vlc_instance)
+            else:
+                try:
+                    self.vlc_instance.release()
+                except Exception:
+                    pass
             self.vlc_instance = None
 
     def video_pause(self):
