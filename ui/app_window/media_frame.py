@@ -5,6 +5,7 @@ Port of ui/media_frame.py. Uses QGraphicsView for images (pan/zoom), VLC for vid
 
 import os
 import platform
+import threading
 import time
 import warnings
 
@@ -845,15 +846,51 @@ class MediaFrame(QFrame):
 
     def video_stop(self):
         if _VLC_AVAILABLE and self.vlc_media_player:
-            self.vlc_media_player.stop()
-            self.vlc_media_player.set_media(None)
+            player = self.vlc_media_player
+            # libvlc_media_player_stop() is synchronous in libvlc 3.x: it blocks
+            # until the internal decode loop exits.  For WEBM files without a Cues
+            # (seek-index) element, VLC performs a sequential scan and that loop can
+            # stall indefinitely — deadlocking the UI thread.  Run stop() in a daemon
+            # thread and give it a generous timeout; if it hangs, abandon the player
+            # and create a fresh one so the application stays responsive.
+            _t = threading.Thread(target=player.stop, daemon=True)
+            _t.start()
+            _t.join(timeout=3.0)
+            if _t.is_alive():
+                logger.warning(
+                    "VLC stop() timed out for %s — WEBM likely missing Cues element; "
+                    "abandoning hung player and creating a fresh instance",
+                    self.path,
+                )
+                self._replace_vlc_player()
+            else:
+                try:
+                    player.set_media(None)
+                except Exception:
+                    pass
         if _VLC_AVAILABLE and self.vlc_media:
-            self.vlc_media.release()
+            try:
+                self.vlc_media.release()
+            except Exception:
+                pass
             self.vlc_media = None
         self._video_ui = None
         self.unsetCursor()
         self.on_playback_stopped()
         self._playback_timer.stop()
+
+    def _replace_vlc_player(self):
+        """Spin up a fresh media player after the previous one failed to stop cleanly."""
+        if not _VLC_AVAILABLE or self.vlc_instance is None:
+            self.vlc_media_player = None
+            return
+        try:
+            new_player = self.vlc_instance.media_player_new()
+            new_player.video_set_mouse_input(False)
+            new_player.video_set_key_input(False)
+            self.vlc_media_player = new_player
+        except Exception:
+            self.vlc_media_player = None
 
     def dispose_vlc(self):
         """Fully tear down VLC resources for this widget instance."""
