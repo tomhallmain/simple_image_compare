@@ -1,16 +1,20 @@
 """
-Tests for the MediaFrame VLC video-stop deadlock fix.
+Tests for the MediaFrame VLC deadlock fix for Matroska files missing a Cues element.
 
-WEBM files without a Cues (seek-index) element cause libvlc_media_player_stop()
-to block indefinitely on the UI thread because VLC performs a sequential linear
-scan of the file and that decode loop never cleanly exits when interrupted.
-The fix runs stop() in a daemon thread with a 3-second timeout and, if the
-timeout fires, replaces the hung player with a fresh instance so the application
-stays responsive.
+Without a Cues (seek-index) element, libvlc_media_player_stop() blocks indefinitely
+because VLC performs a sequential linear scan of the file and that decode loop never
+cleanly exits when interrupted.
+
+Two complementary behaviours are in place:
+  1. video_stop() runs stop() in a daemon thread with a 3-second timeout.  On
+     timeout the hung player is replaced and the file path is recorded in
+     _matroska_missing_cues_paths.
+  2. show_video() checks _matroska_missing_cues_paths and sets the no-seek indicator
+     in MediaControlsOverlay for known-bad paths — the seek slider is disabled and a
+     warning label is shown.  VLC still plays the file (it can play but not seek).
 """
 
 import os
-import time
 
 import pytest
 
@@ -28,41 +32,21 @@ class TestMalformedWebmVlcStop:
     files that have no Cues element (example_malformed_absent_cues.webm).
     """
 
-    def test_video_stop_completes_within_timeout(self, media_frame, qtbot):
-        """video_stop() must return within a bounded time on the malformed WEBM.
+    def test_hanging_stop_records_path_and_replaces_player(self, media_frame, monkeypatch):
+        """When stop() times out the hung player is replaced and the path is recorded.
 
-        Before the fix this call would block the UI thread indefinitely.
+        Uses HangingVlcPlayer to trigger the timeout deterministically without
+        loading real media.  Also verifies that the path ends up in
+        _matroska_missing_cues_paths so subsequent show_video() calls are fast.
         """
-        assert os.path.isfile(MALFORMED_WEBM), (
-            f"Test asset not found: {MALFORMED_WEBM}"
-        )
-
-        media_frame.show_video(MALFORMED_WEBM)
-        # Give VLC a moment to enter its processing/scan state before stopping.
-        qtbot.wait(500)
-
-        start = time.monotonic()
-        media_frame.video_stop()
-        elapsed = time.monotonic() - start
-
-        # Must complete within the 3-second thread timeout plus generous margin.
-        assert elapsed < 5.0, (
-            f"video_stop() blocked for {elapsed:.1f}s — deadlock fix may be broken"
-        )
-
-    def test_hanging_stop_triggers_player_replacement(self, media_frame):
-        """When stop() exceeds the timeout the hung player must be replaced.
-
-        Injects VideoUI state and swaps in HangingVlcPlayer directly, without
-        loading real media.  Loading real media would leave a live VLC player
-        in the background while the daemon thread's 30-second sleep outlasts
-        fixture teardown, causing a use-after-free segfault when dispose_vlc()
-        releases the VLC instance.  An idle player has no such interaction.
-        """
+        import ui.app_window.media_frame as mf_module
         from ui.app_window.media_frame import VideoUI
 
-        media_frame._video_ui = VideoUI("fake.webm")
+        # Isolate the module-level set so this test doesn't pollute others.
+        monkeypatch.setattr(mf_module, "_matroska_missing_cues_paths", set())
 
+        media_frame._video_ui = VideoUI(MALFORMED_WEBM)
+        media_frame.path = MALFORMED_WEBM
         original_player = media_frame.vlc_media_player
         hanging = HangingVlcPlayer(original_player)
         media_frame.vlc_media_player = hanging
@@ -70,11 +54,40 @@ class TestMalformedWebmVlcStop:
         media_frame.video_stop()
 
         assert hanging.stop_called.is_set(), "stop() was never called on the player"
-        assert media_frame.vlc_media_player is not None, (
-            "vlc_media_player was not replaced after stop() timed out"
-        )
+        assert media_frame.vlc_media_player is not None
         assert media_frame.vlc_media_player is not hanging, (
             "hung player was not replaced — _replace_vlc_player() may not have run"
+        )
+        assert MALFORMED_WEBM in mf_module._matroska_missing_cues_paths, (
+            "path was not recorded in _matroska_missing_cues_paths after timeout"
+        )
+
+    def test_known_bad_path_shows_no_seek_indicator(self, media_frame, monkeypatch):
+        """show_video() on a known Cues-less path sets the overlay no-seek indicator.
+
+        Pre-populates _matroska_missing_cues_paths to simulate a prior stop() timeout,
+        then calls show_video().  VLC still plays the file; the overlay label is made
+        visible and the seek slider disabled to reflect that seeking is unavailable.
+
+        Checks isHidden() rather than isVisible() because the overlay is a top-level
+        Tool window that starts hidden — isVisible() returns False for children of a
+        hidden parent even when the child was explicitly shown via setVisible(True).
+        """
+        import ui.app_window.media_frame as mf_module
+
+        assert os.path.isfile(MALFORMED_WEBM), (
+            f"Test asset not found: {MALFORMED_WEBM}"
+        )
+        monkeypatch.setattr(mf_module, "_matroska_missing_cues_paths", {MALFORMED_WEBM})
+
+        media_frame.show_video(MALFORMED_WEBM)
+
+        overlay = media_frame._controls_overlay
+        assert not overlay._no_seek_label.isHidden(), (
+            "no-seek label must not be hidden for a known Cues-less path"
+        )
+        assert not overlay._seek_slider.isEnabled(), (
+            "seek slider should be disabled for a Cues-less path"
         )
 
     def test_replace_vlc_player_produces_a_new_player(self, media_frame):
@@ -94,7 +107,7 @@ class TestMalformedWebmVlcStop:
         would leave a libvlc_media_player_stop() daemon thread that outlasts the
         fixture's vlc_instance lifetime; that crash scenario is instead handled by
         the _vlc_instances_pending_cleanup guard in dispose_vlc(), exercised
-        implicitly by test_video_stop_completes_within_timeout.
+        implicitly by test_hanging_stop_records_path_and_replaces_player.
         """
         from PIL import Image
         from ui.app_window.media_frame import VideoUI
