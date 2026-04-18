@@ -62,13 +62,17 @@ except ImportError:
     _SHIBOKEN_AVAILABLE = False
 
 
+_MATROSKA_EXTENSIONS = {".webm", ".mkv", ".mka", ".mks"}
+
+
 class VideoUI:
     """Placeholder for video state (path, active)."""
 
-    def __init__(self, filepath, has_video=True):
+    def __init__(self, filepath, has_video=True, has_cues=True):
         self.filepath = filepath
         self.active = False
         self.has_video = bool(has_video)
+        self.has_cues = bool(has_cues)
 
 
 def _probe_has_video_stream(path: str) -> bool:
@@ -97,6 +101,31 @@ def _probe_has_video_stream(path: str) -> bool:
     except Exception:
         pass
     return True
+
+
+def _probe_matroska_has_cues(path: str) -> bool:
+    """Return False for Matroska-family files whose streams have no duration.
+
+    The Cues element is the seek index used by WebM, MKV, MKA, and MKS
+    containers.  Without it, VLC's Matroska demuxer falls back to a sequential
+    linear scan on stop(), which can block indefinitely.  Stream-level duration
+    is only written when Cues are present, so its absence is a reliable proxy.
+    Non-Matroska containers always return True (unaffected by this issue).
+    """
+    if os.path.splitext(path)[1].lower() not in _MATROSKA_EXTENSIONS:
+        return True
+    try:
+        import av as _av
+        container = _av.open(path, metadata_errors="ignore")
+        try:
+            for stream in container.streams:
+                if stream.duration is not None and stream.duration > 0:
+                    return True
+            return False
+        finally:
+            container.close()
+    except Exception:
+        return True
 
 
 def scale_dims(dims, max_dims, maximize=False):
@@ -831,28 +860,35 @@ class MediaFrame(QFrame):
         self.clear()
         self._graphics_view.set_interaction_enabled(False)
         self._graphics_view.reset_interaction()
-        # Probe for a video stream before attaching a window handle: libvlc can
-        # deadlock initialising its video-output module when set_hwnd/set_nsobject/
-        # set_xwindow is called on an audio-only container (e.g. a WEBM with no
-        # video track).  Skipping the window attachment for such files avoids the
-        # deadlock while still allowing VLC to play the audio.
+        # Probe for a video stream and a Matroska Cues element before attaching a
+        # window handle.  libvlc can deadlock on audio-only containers, and on
+        # Matroska files missing Cues (the seek index) stop() blocks indefinitely
+        # while VLC performs a sequential linear scan.  In both cases skip the
+        # window attachment so the user sees a descriptive placeholder instead.
         has_video = _probe_has_video_stream(path)
-        self._video_ui = VideoUI(path, has_video=has_video)
+        has_cues = _probe_matroska_has_cues(path)
+        self._video_ui = VideoUI(path, has_video=has_video, has_cues=has_cues)
         self.path = path
-        if has_video:
+        if has_video and has_cues:
             self.ensure_video_frame()
         self.vlc_media = self.vlc_instance.media_new(path)
         self.vlc_media_player.set_media(self.vlc_media)
         if self.vlc_media_player.play() == -1:
             raise Exception("Failed to play video")
-        if has_video:
+        if has_video and has_cues:
             self._graphics_view.hide()
             self._placeholder_label.hide()
-        else:
+        elif not has_video:
             # Audio-only container: no window handle → no video output needed.
-            # Show a label so the user knows what is playing.
             self._graphics_view.hide()
             self._placeholder_label.setText(_("Audio: ") + os.path.basename(path))
+            self._placeholder_label.show()
+        else:
+            # Matroska file missing Cues: video stream present but seek index absent.
+            # Attaching a window handle is skipped so VLC plays audio only here;
+            # stop() is still handled by the daemon-thread timeout in video_stop().
+            self._graphics_view.hide()
+            self._placeholder_label.setText(_("Video (no seek index): ") + os.path.basename(path))
             self._placeholder_label.show()
         self._controls_overlay.set_audio_controls_visible(True)
         # VLC renders into the native window handle and may set a busy cursor
@@ -881,7 +917,7 @@ class MediaFrame(QFrame):
         """Start video playback (after ensure_video_frame)."""
         if not _VLC_AVAILABLE or not self.vlc_media_player or not self.path:
             return
-        if isinstance(self._video_ui, VideoUI) and self._video_ui.has_video:
+        if isinstance(self._video_ui, VideoUI) and self._video_ui.has_video and self._video_ui.has_cues:
             self.ensure_video_frame()
         self.vlc_media = self.vlc_instance.media_new(self.path)
         self.vlc_media_player.set_media(self.vlc_media)
@@ -909,8 +945,8 @@ class MediaFrame(QFrame):
             _t.join(timeout=3.0)
             if _t.is_alive():
                 logger.warning(
-                    "VLC stop() timed out for %s — WEBM likely missing Cues element; "
-                    "abandoning hung player and creating a fresh instance",
+                    "VLC stop() timed out for %s — Matroska container likely missing "
+                    "Cues element; abandoning hung player and creating a fresh instance",
                     self.path,
                 )
                 self._hung_stop_thread = _t
