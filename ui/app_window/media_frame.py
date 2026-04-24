@@ -5,6 +5,7 @@ Port of ui/media_frame.py. Uses QGraphicsView for images (pan/zoom), VLC for vid
 
 import os
 import platform
+import threading
 import time
 import warnings
 
@@ -48,6 +49,12 @@ try:
 except ImportError:
     _VLC_AVAILABLE = False
 
+# Holds VLC Instance objects whose release() must be deferred because a hung
+# stop() thread is still running inside libvlc.  Keeps the C-level instance
+# alive (refcount > 0) so the thread doesn't access freed memory.  Entries are
+# never explicitly released; they leak until process exit, which is intentional.
+_vlc_instances_pending_cleanup: list = []
+
 try:
     import shiboken6
     _SHIBOKEN_AVAILABLE = True
@@ -55,12 +62,52 @@ except ImportError:
     _SHIBOKEN_AVAILABLE = False
 
 
+_MATROSKA_EXTENSIONS = {".webm", ".mkv", ".mka", ".mks"}
+
+# Matroska paths where video_stop() previously timed out, indicating a missing
+# Cues element.  show_video() skips VLC and shows a placeholder for these paths
+# on all subsequent loads.  Populated lazily on first timeout; never cleared.
+_matroska_missing_cues_paths: set = set()
+
+
 class VideoUI:
     """Placeholder for video state (path, active)."""
 
-    def __init__(self, filepath):
+    def __init__(self, filepath, has_video=True, has_cues=True):
         self.filepath = filepath
         self.active = False
+        self.has_video = bool(has_video)
+        self.has_cues = bool(has_cues)
+
+
+def _probe_has_video_stream(path: str) -> bool:
+    """Return True if the file contains at least one video stream.
+
+    Checks with pyav first, then OpenCV. Falls back to True (old behaviour)
+    when neither library is available, so the caller is never worse off than
+    before this guard was added.
+    """
+    try:
+        import av as _av
+        container = _av.open(path, metadata_errors="ignore")
+        try:
+            return bool(container.streams.video)
+        finally:
+            container.close()
+    except Exception:
+        pass
+    try:
+        import cv2 as _cv2
+        cap = _cv2.VideoCapture(path)
+        try:
+            return cap.isOpened() and cap.get(_cv2.CAP_PROP_FRAME_HEIGHT) > 0
+        finally:
+            cap.release()
+    except Exception:
+        pass
+    return True
+
+
 
 
 def scale_dims(dims, max_dims, maximize=False):
@@ -268,6 +315,7 @@ class MediaFrame(QFrame):
             self.vlc_instance = None
             self.vlc_media_player = None
             self.vlc_media = None
+        self._hung_stop_thread: threading.Thread | None = None
 
         self._controls_overlay = MediaControlsOverlay(self)
         self._controls_overlay.seek_requested.connect(self.seek_requested.emit)
@@ -794,21 +842,33 @@ class MediaFrame(QFrame):
         self.clear()
         self._graphics_view.set_interaction_enabled(False)
         self._graphics_view.reset_interaction()
-        self._video_ui = VideoUI(path)
+        has_video = _probe_has_video_stream(path)
+        has_cues = path not in _matroska_missing_cues_paths
+        self._video_ui = VideoUI(path, has_video=has_video, has_cues=has_cues)
         self.path = path
-        self.ensure_video_frame()
+        # For normal video: attach a window handle so libvlc renders into this widget.
+        # For audio-only: skip the window handle to avoid the libvlc video-output deadlock.
+        if has_video:
+            self.ensure_video_frame()
         self.vlc_media = self.vlc_instance.media_new(path)
         self.vlc_media_player.set_media(self.vlc_media)
         if self.vlc_media_player.play() == -1:
             raise Exception("Failed to play video")
-        self._graphics_view.hide()
-        self._placeholder_label.hide()
+        if has_video:
+            self._graphics_view.hide()
+            self._placeholder_label.hide()
+        else:
+            # Audio-only container: no window handle → no video output needed.
+            self._graphics_view.hide()
+            self._placeholder_label.setText(_("Audio: ") + os.path.basename(path))
+            self._placeholder_label.show()
         self._controls_overlay.set_audio_controls_visible(True)
         # VLC renders into the native window handle and may set a busy cursor
         # at the OS level.  Force an arrow cursor so the user doesn't see a
         # spinner while a video is simply playing.
         self.setCursor(Qt.CursorShape.ArrowCursor)
         self.on_track_changed()
+        self._controls_overlay.set_no_seek_index(not has_cues)
         self._sync_overlay_volume_state(force=True)
         self._playback_timer.start()
 
@@ -830,12 +890,15 @@ class MediaFrame(QFrame):
         """Start video playback (after ensure_video_frame)."""
         if not _VLC_AVAILABLE or not self.vlc_media_player or not self.path:
             return
-        self.ensure_video_frame()
+        if isinstance(self._video_ui, VideoUI) and self._video_ui.has_video:
+            self.ensure_video_frame()
         self.vlc_media = self.vlc_instance.media_new(self.path)
         self.vlc_media_player.set_media(self.vlc_media)
         if self.vlc_media_player.play() == -1:
             raise Exception("Failed to play video")
         self.on_track_changed()
+        if isinstance(self._video_ui, VideoUI):
+            self._controls_overlay.set_no_seek_index(not self._video_ui.has_cues)
         self._sync_overlay_volume_state(force=True)
         self._playback_timer.start()
 
@@ -845,15 +908,54 @@ class MediaFrame(QFrame):
 
     def video_stop(self):
         if _VLC_AVAILABLE and self.vlc_media_player:
-            self.vlc_media_player.stop()
-            self.vlc_media_player.set_media(None)
+            player = self.vlc_media_player
+            # libvlc_media_player_stop() is synchronous in libvlc 3.x: it blocks
+            # until the internal decode loop exits.  For WEBM files without a Cues
+            # (seek-index) element, VLC performs a sequential scan and that loop can
+            # stall indefinitely — deadlocking the UI thread.  Run stop() in a daemon
+            # thread and give it a generous timeout; if it hangs, abandon the player
+            # and create a fresh one so the application stays responsive.
+            _t = threading.Thread(target=player.stop, daemon=True)
+            _t.start()
+            _t.join(timeout=3.0)
+            if _t.is_alive():
+                logger.warning(
+                    "VLC stop() timed out for %s — Matroska container likely missing "
+                    "Cues element; abandoning hung player and creating a fresh instance",
+                    self.path,
+                )
+                if self.path and os.path.splitext(self.path)[1].lower() in _MATROSKA_EXTENSIONS:
+                    _matroska_missing_cues_paths.add(self.path)
+                self._hung_stop_thread = _t
+                self._replace_vlc_player()
+            else:
+                try:
+                    player.set_media(None)
+                except Exception:
+                    pass
         if _VLC_AVAILABLE and self.vlc_media:
-            self.vlc_media.release()
+            try:
+                self.vlc_media.release()
+            except Exception:
+                pass
             self.vlc_media = None
         self._video_ui = None
         self.unsetCursor()
         self.on_playback_stopped()
         self._playback_timer.stop()
+
+    def _replace_vlc_player(self):
+        """Spin up a fresh media player after the previous one failed to stop cleanly."""
+        if not _VLC_AVAILABLE or self.vlc_instance is None:
+            self.vlc_media_player = None
+            return
+        try:
+            new_player = self.vlc_instance.media_player_new()
+            new_player.video_set_mouse_input(False)
+            new_player.video_set_key_input(False)
+            self.vlc_media_player = new_player
+        except Exception:
+            self.vlc_media_player = None
 
     def dispose_vlc(self):
         """Fully tear down VLC resources for this widget instance."""
@@ -878,10 +980,22 @@ class MediaFrame(QFrame):
                 pass
             self.vlc_media_player = None
         if _VLC_AVAILABLE and self.vlc_instance:
-            try:
-                self.vlc_instance.release()
-            except Exception:
-                pass
+            t = self._hung_stop_thread
+            if t is not None and t.is_alive():
+                t.join(timeout=5.0)
+            self._hung_stop_thread = None
+            if t is not None and t.is_alive():
+                # libvlc_media_player_stop() is still running inside libvlc.
+                # Calling libvlc_release() now would free memory the thread is
+                # actively using, causing a segfault.  Keep the Python wrapper
+                # alive in a module-level list so GC doesn't collect it (and
+                # call libvlc_release() via __del__) before the thread exits.
+                _vlc_instances_pending_cleanup.append(self.vlc_instance)
+            else:
+                try:
+                    self.vlc_instance.release()
+                except Exception:
+                    pass
             self.vlc_instance = None
 
     def video_pause(self):
@@ -1063,6 +1177,7 @@ class MediaFrame(QFrame):
         self._placeholder_label.setText("")
         self._placeholder_label.hide()
         self._controls_overlay.set_audio_controls_visible(True)
+        self._controls_overlay.set_no_seek_index(False)
         self._controls_overlay.dismiss()
 
     def _show_placeholder(self, text: str) -> None:

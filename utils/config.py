@@ -252,10 +252,11 @@ class Config:
             if self.enable_html:
                 self.file_types.extend([".html", ".htm"])
 
-            try:
-                self.sd_prompt_reader_loc = self.validate_and_set_directory(key="sd_prompt_reader_loc")
-            except Exception as e:
-                logger.error(e)
+            if not os.environ.get("PYTEST_CURRENT_TEST"):
+                try:
+                    self.sd_prompt_reader_loc = self.validate_and_set_directory(key="sd_prompt_reader_loc")
+                except Exception as e:
+                    logger.warning(e)
 
             try:
                 self.compare_mode = CompareMode[self.dict["compare_mode"]]

@@ -146,6 +146,11 @@ class MediaControlsOverlay(QWidget):
         self._volume_slider.valueChanged.connect(self._on_volume_changed)
         layout.addWidget(self._volume_slider)
 
+        self._no_seek_label = QLabel("\u26A0 No seek index", self)
+        self._no_seek_label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
+        self._no_seek_label.hide()
+        layout.addWidget(self._no_seek_label)
+
     def _apply_child_styles(self):
         btn_style = (
             f"QPushButton {{"
@@ -183,6 +188,10 @@ class MediaControlsOverlay(QWidget):
         self._seek_slider.setStyleSheet(slider_style)
         self._volume_slider.setStyleSheet(slider_style)
         self._refresh_mute_button()
+
+        self._no_seek_label.setStyleSheet(
+            "color: #f0b429; font-size: 11px; background: transparent; border: none;"
+        )
 
     def update_progress(self, current_ms: int, duration_ms: int):
         self._current_ms = current_ms
@@ -233,6 +242,14 @@ class MediaControlsOverlay(QWidget):
         self._mute_btn.setEnabled(is_visible)
         self._volume_slider.setVisible(is_visible)
         self._volume_slider.setEnabled(is_visible)
+
+    def set_no_seek_index(self, active: bool):
+        """Show a warning and disable the seek slider for files with no Cues index."""
+        self._no_seek_label.setVisible(bool(active))
+        self._seek_slider.setEnabled(not active)
+        self._seek_slider.setToolTip(
+            "Seeking unavailable — container has no seek index" if active else ""
+        )
 
     def show_overlay(self):
         if not self._has_track:

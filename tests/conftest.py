@@ -10,7 +10,14 @@ mirror this same module-level assignment for the same reason.
 import atexit
 import os
 import shutil
+import sys
 import tempfile
+
+# Ensure the project root is on sys.path so that app packages (ui/, utils/,
+# etc.) are importable regardless of which directory pytest is invoked from.
+_project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _project_root not in sys.path:
+    sys.path.insert(0, _project_root)
 
 # Bootstrap a safe temporary location so that the singletons created during
 # initial import never touch the real cache or config files.
