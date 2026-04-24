@@ -169,7 +169,9 @@ class _InstalledModelEditDialog(SmartDialog):
         layout.addLayout(btn_row)
 
     def _browse_model_location(self) -> None:
-        path, _ = QFileDialog.getOpenFileName(self, _("Select model file"))
+        path, selected_filter = QFileDialog.getOpenFileName(
+            self, _("Select model file")
+        )
         if path:
             self._model_location_edit.setText(path)
 

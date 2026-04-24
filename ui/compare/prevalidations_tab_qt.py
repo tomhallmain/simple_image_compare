@@ -142,7 +142,6 @@ class PrevalidationModifyWindow(ClassifierActionModifyWindow):
         pv = self._classifier_action  # actually a Prevalidation
 
         # -- Lookaheads multi-select --------------------------------------
-        row += 1
         grid.addWidget(
             self._lbl(_("Lookaheads (select from shared list)")),
             row, 0, Qt.AlignLeft | Qt.AlignTop,
@@ -173,7 +172,7 @@ class PrevalidationModifyWindow(ClassifierActionModifyWindow):
             self._profile_combo.setCurrentIndex(0)
         grid.addWidget(self._profile_combo, row, 1)
 
-        return row
+        return row + 1
 
     def _populate_lookahead_list(self) -> None:
         pv = self._classifier_action

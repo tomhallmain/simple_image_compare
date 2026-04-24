@@ -214,6 +214,10 @@ class ClassifierActionModifyWindow(SmartDialog):
         # -- Action modifier ----------------------------------------------
         grid.addWidget(self._lbl(_("Action Modifier")), row, 0, Qt.AlignLeft)
         self._action_modifier_edit = QLineEdit(ca.action_modifier)
+        self._action_modifier_hint_text = _(
+            "Leave blank to auto-route by image-classifier selected category."
+        )
+        self._action_modifier_edit.setToolTip(self._action_modifier_hint_text)
         grid.addWidget(self._action_modifier_edit, row, 1)
         row += 1
 
@@ -354,6 +358,10 @@ class ClassifierActionModifyWindow(SmartDialog):
         self._ic_name_combo.setVisible(use_ic)
         mode = ImageClassifierClassificationMode.from_value(self._ic_mode_combo.currentData())
         uses_selected_categories = mode == ImageClassifierClassificationMode.SELECTED_CATEGORIES
+        if use_ic and uses_selected_categories:
+            self._action_modifier_edit.setPlaceholderText(self._action_modifier_hint_text)
+        else:
+            self._action_modifier_edit.setPlaceholderText("")
         self._ic_mode_lbl.setVisible(use_ic)
         self._ic_mode_combo.setVisible(use_ic)
         self._ic_cat_lbl.setVisible(use_ic and uses_selected_categories)
