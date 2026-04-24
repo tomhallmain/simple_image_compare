@@ -64,7 +64,7 @@ class _InstalledModelEditDialog(SmartDialog):
         save_callback: Callable[[dict[str, Any], str], None],
         model_file_extensions: set[str],
     ):
-        super().__init__(parent=parent, position_parent=parent, title=title, geometry="980x560")
+        super().__init__(parent=parent, position_parent=parent, title=title, geometry="980x600")
         self._api_getter = api_getter
         self._save_callback = save_callback
         self._model_file_extensions = model_file_extensions
@@ -101,6 +101,24 @@ class _InstalledModelEditDialog(SmartDialog):
         self._categories_edit.setPlaceholderText(_("Comma-separated categories"))
         row3.addWidget(self._categories_edit, stretch=1)
         layout.addLayout(row3)
+
+        row3_shape = QHBoxLayout()
+        input_shape_tip = _(
+            "Optional. PyTorch: width and height for the internal resize "
+            "(defaults to 224x224 when left blank). "
+            "HDF5 (.h5): the loaded model defines its own input size; this "
+            "value is stored in config but is not used when loading."
+        )
+        lbl_input_shape = QLabel(_("Input shape (WxH)"))
+        lbl_input_shape.setToolTip(input_shape_tip)
+        row3_shape.addWidget(lbl_input_shape)
+        self._input_shape_edit = QLineEdit(
+            _InstalledModelEditDialog._format_initial_input_shape(initial_model)
+        )
+        self._input_shape_edit.setPlaceholderText(_("224, 224"))
+        self._input_shape_edit.setToolTip(input_shape_tip)
+        row3_shape.addWidget(self._input_shape_edit, stretch=1)
+        layout.addLayout(row3_shape)
 
         row3b = QHBoxLayout()
         row3b.addWidget(QLabel(_("Positive groups")))
@@ -167,6 +185,18 @@ class _InstalledModelEditDialog(SmartDialog):
         save_btn.clicked.connect(self._save)
         btn_row.addWidget(save_btn)
         layout.addLayout(btn_row)
+
+    @staticmethod
+    def _format_initial_input_shape(initial_model: dict[str, Any]) -> str:
+        raw = initial_model.get("input_shape")
+        if raw is None:
+            mk = initial_model.get("model_kwargs")
+            if isinstance(mk, dict):
+                raw = mk.get("input_shape")
+        tup = ImageClassifierModelConfig.parse_input_shape(raw)
+        if tup is None:
+            return ""
+        return f"{tup[0]}, {tup[1]}"
 
     def _browse_model_location(self) -> None:
         path, selected_filter = QFileDialog.getOpenFileName(
@@ -271,6 +301,17 @@ class _InstalledModelEditDialog(SmartDialog):
             model_details["neutral_categories"] = neutral_categories
         if severity_order:
             model_details["severity_order"] = severity_order
+        raw_shape = (self._input_shape_edit.text() or "").strip()
+        if raw_shape:
+            parsed_shape = ImageClassifierModelConfig.parse_input_shape(raw_shape)
+            if parsed_shape is None:
+                QMessageBox.warning(
+                    self,
+                    _("Invalid input shape"),
+                    _("Use two positive integers, for example 224, 224 or 384x384."),
+                )
+                return
+            model_details["input_shape"] = [parsed_shape[0], parsed_shape[1]]
         repo_id = (self._hf_repo_id_edit.text() or "").strip()
         selected_file = (self._repo_file_combo.currentText() or "").strip()
         if repo_id:

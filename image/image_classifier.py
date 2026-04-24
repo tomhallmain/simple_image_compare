@@ -468,7 +468,22 @@ class PyTorchImageClassifier(BaseImageClassifier):
             except ImportError:
                 raise ImportError("PyTorch not installed. Install with: pip install torch torchvision")
         return device
-    
+
+    def _log_input_shape_override_if_any(self) -> None:
+        """Log once when the user supplied ``input_shape`` (applies to all load paths)."""
+        if self._input_shape_override is None:
+            return
+        if self.use_transformers_auto_model:
+            logger.info(
+                "Using user-specified input_shape %s (HF processor still controls preprocessing tensors).",
+                self.input_shape,
+            )
+        else:
+            logger.info(
+                "Using user-specified input_shape %s for torchvision resize and preprocessing.",
+                self.input_shape,
+            )
+
     def load_model(self) -> bool:
         """Load PyTorch model"""
         try:
@@ -498,7 +513,10 @@ class PyTorchImageClassifier(BaseImageClassifier):
                 self.model = AutoModelForImageClassification.from_pretrained(model_root).to(self.device)
                 self.model.eval()
                 self.is_loaded = True
-                self.input_shape = self._infer_transformers_input_shape()
+                self.input_shape = (
+                    self._input_shape_override or self._infer_transformers_input_shape()
+                )
+                self._log_input_shape_override_if_any()
                 logger.info(f"Transformers auto image classifier loaded from: {model_root}")
                 return True
             except Exception as e:
@@ -539,10 +557,9 @@ class PyTorchImageClassifier(BaseImageClassifier):
             self.model.eval()
             self.is_loaded = True
             
-            # Setup transforms and input shape
-            self._setup_transforms()
             self.input_shape = self._input_shape_override or self._infer_input_shape()
-            self._setup_transforms()  # Update transforms with correct shape
+            self._log_input_shape_override_if_any()
+            self._setup_transforms()
             
             logger.info(f"Safetensors model loaded successfully on device: {self.device}")
             return True
@@ -622,16 +639,9 @@ class PyTorchImageClassifier(BaseImageClassifier):
             self.model.eval()
             self.is_loaded = True
             
-            # Setup transforms and input shape
+            self.input_shape = self._input_shape_override or self._infer_input_shape()
+            self._log_input_shape_override_if_any()
             self._setup_transforms()
-            
-            # Try to infer input shape
-            if self._input_shape_override:
-                self.input_shape = self._input_shape_override
-            else:
-                self.input_shape = self._infer_input_shape()
-                # Update transforms with correct shape
-                self._setup_transforms()
                 
             logger.info(f"PyTorch model loaded successfully on device: {self.device}")
             return True
@@ -789,6 +799,7 @@ class ImageClassifierWrapper:
         self.use_hub_keras_layers = model_config.use_hub_keras_layers
         self.backend = BackendType.parse(model_config.backend)
         self.model_kwargs = dict(model_config.model_kwargs)
+        self.input_shape = model_config.input_shape
         self.positive_groups = [list(g) for g in model_config.positive_groups]
         self.neutral_categories = list(model_config.neutral_categories)
         self.severity_order = list(model_config.severity_order)
@@ -900,6 +911,8 @@ class ImageClassifierWrapper:
             elif self.backend == BackendType.PYTORCH:
                 # Default kwargs for PyTorch
                 pytorch_kwargs = self.model_kwargs.copy()
+                if self.input_shape is not None:
+                    pytorch_kwargs["input_shape"] = self.input_shape
                 
                 # Set defaults for converted models if not specified
                 if 'weights_only' not in pytorch_kwargs:

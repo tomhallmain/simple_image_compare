@@ -3,7 +3,7 @@ from __future__ import annotations
 import difflib
 from collections import Counter
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any, Optional, Tuple
 
 
 @dataclass(slots=True)
@@ -16,6 +16,8 @@ class ImageClassifierModelConfig:
     model_kwargs: dict[str, Any] = field(default_factory=dict)
     hf_repo_id: Optional[str] = None
     hf_selected_filename: Optional[str] = None
+    # Optional (width, height) in pixels for PyTorch resize path; overrides inference when set.
+    input_shape: Optional[Tuple[int, int]] = None
     positive_groups: list[list[str]] = field(default_factory=list)
     neutral_categories: list[str] = field(default_factory=list)
     severity_order: list[str] = field(default_factory=list)
@@ -28,6 +30,7 @@ class ImageClassifierModelConfig:
         "use_hub_keras_layers",
         "backend",
         "model_kwargs",
+        "input_shape",
         "positive_groups",
         "neutral_categories",
         "severity_order",
@@ -141,19 +144,70 @@ class ImageClassifierModelConfig:
         hf_repo_id_raw = str(data.get("hf_repo_id", "") or "").strip()
         hf_selected_filename_raw = str(data.get("hf_selected_filename", "") or "").strip()
 
+        input_shape_top = cls.parse_input_shape(data.get("input_shape"))
+        input_shape_kw = cls.parse_input_shape(model_kwargs.get("input_shape"))
+        input_shape = input_shape_top or input_shape_kw
+        model_kwargs_out = dict(model_kwargs)
+        if "input_shape" in model_kwargs_out:
+            model_kwargs_out.pop("input_shape", None)
+
         return cls(
             model_name=model_name,
             model_location=model_location,
             model_categories=model_categories,
             use_hub_keras_layers=use_hub_keras_layers,
             backend=backend,
-            model_kwargs=dict(model_kwargs),
+            model_kwargs=model_kwargs_out,
             hf_repo_id=hf_repo_id_raw if hf_repo_id_raw else None,
             hf_selected_filename=hf_selected_filename_raw if hf_selected_filename_raw else None,
+            input_shape=input_shape,
             positive_groups=positive_groups,
             neutral_categories=neutral_categories,
             severity_order=severity_order,
         )
+
+    @staticmethod
+    def parse_input_shape(raw: Any) -> Optional[Tuple[int, int]]:
+        """Parse user-specified input size as (width, height). Returns None if unset/invalid."""
+        if raw is None:
+            return None
+        if isinstance(raw, str):
+            s = raw.strip().lower().replace(" ", "")
+            if not s:
+                return None
+            for sep in ("x", ",", "*"):
+                if sep in s:
+                    left, right = s.split(sep, 1)
+                    return ImageClassifierModelConfig.parse_input_shape([left, right])
+            return None
+        if isinstance(raw, (list, tuple)) and len(raw) == 2:
+            try:
+                w = int(raw[0])
+                h = int(raw[1])
+            except (TypeError, ValueError):
+                return None
+            if w <= 0 or h <= 0:
+                return None
+            return (w, h)
+        if isinstance(raw, int):
+            n = int(raw)
+            if n <= 0:
+                return None
+            return (n, n)
+        if isinstance(raw, dict):
+            w = raw.get("width", raw.get("w"))
+            h = raw.get("height", raw.get("h"))
+            if w is None or h is None:
+                return None
+            try:
+                wi = int(w)
+                hi = int(h)
+            except (TypeError, ValueError):
+                return None
+            if wi <= 0 or hi <= 0:
+                return None
+            return (wi, hi)
+        return None
 
     def to_dict(self) -> dict[str, Any]:
         out = {
@@ -163,6 +217,8 @@ class ImageClassifierModelConfig:
             "use_hub_keras_layers": bool(self.use_hub_keras_layers),
             "backend": self.backend,
         }
+        if self.input_shape is not None:
+            out["input_shape"] = [int(self.input_shape[0]), int(self.input_shape[1])]
         if self.model_kwargs:
             out["model_kwargs"] = dict(self.model_kwargs)
         if self.hf_repo_id:
