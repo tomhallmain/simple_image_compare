@@ -441,24 +441,26 @@ class ClassifierAction:
         if self.use_prototype:
             self._run_with_batch_prototype_validation(directory_paths, hide_callback, notify_callback, add_mark_callback, max_images_per_batch)
 
-    def matches_image_path(self, image_path, lookahead_eval_cache=None) -> bool:
+    def _evaluate_image_path_match(
+        self, image_path: str, lookahead_eval_cache=None
+    ) -> tuple[bool, Optional[str]]:
         # Note: Image classifier and prototype should be loaded before calling this method
         # (see ClassifierActionsWindow.run_classifier_action for pre-loading)
         if not self.can_run:
-            return False
+            return False, None
 
         # Check each enabled validation type with short-circuit OR logic        
         if self.use_prototype:
             if self._check_prototype_validation(image_path):
-                return True
+                return True, None
 
         # Check lookaheads first - if any pass, skip this prevalidation
         if self._check_lookaheads(image_path, lookahead_eval_cache=lookahead_eval_cache):
-            return False
+            return False, None
 
         if self.use_embedding:
             if CompareEmbeddingClip.multi_text_compare(image_path, self.positives, self.negatives, self.text_embedding_threshold):
-                return True
+                return True, None
         
         if self.use_image_classifier:
             if self.image_classifier is None and self.image_classifier_name:
@@ -469,12 +471,20 @@ class ClassifierAction:
                     predicted_category = self.image_classifier.classify_image(image_path)
                     positive_categories = self._resolve_model_strategy_positive_categories()
                     if predicted_category in positive_categories:
-                        return True
+                        return True, predicted_category
                 else:
                     if self.image_classifier.test_image_for_categories(
                         image_path, self.image_classifier_selected_categories
                     ):
-                        return True
+                        try:
+                            predicted_category = self.image_classifier.classify_image(
+                                image_path
+                            )
+                        except Exception:
+                            predicted_category = None
+                        if predicted_category in self.image_classifier_selected_categories:
+                            return True, predicted_category
+                        return True, None
             else:
                 if not self._missing_image_classifier_logged:
                     logger.error(f"Image classifier {self.image_classifier_name} not found for classifier action {self.name}")
@@ -482,10 +492,16 @@ class ClassifierAction:
         
         if self.use_prompts:
             if self._check_prompt_validation(image_path):
-                return True
+                return True, None
         
         # No validation type passed
-        return False
+        return False, None
+
+    def matches_image_path(self, image_path, lookahead_eval_cache=None) -> bool:
+        is_match, _ = self._evaluate_image_path_match(
+            image_path, lookahead_eval_cache=lookahead_eval_cache
+        )
+        return is_match
 
     def _is_dynamic_media_path(self, media_path: str) -> bool:
         media_path_lower = media_path.lower()
@@ -517,14 +533,20 @@ class ClassifierAction:
                 processed_samples = 0
                 last_processed_index = -1
                 threshold_met = False
+                resolved_match_category: Optional[str] = None
                 reached_last_sample = False
                 try:
                     for idx, sampled_path in enumerate(sample_iter):
                         try:
                             processed_samples += 1
                             last_processed_index = idx
-                            if self.matches_image_path(sampled_path, lookahead_eval_cache=lookahead_eval_cache):
+                            is_match, matched_category = self._evaluate_image_path_match(
+                                sampled_path, lookahead_eval_cache=lookahead_eval_cache
+                            )
+                            if is_match:
                                 positive_count += 1
+                                if matched_category:
+                                    resolved_match_category = matched_category
                                 # Early success once the positive threshold is met.
                                 if positive_count >= required_positive_count:
                                     threshold_met = True
@@ -572,6 +594,7 @@ class ClassifierAction:
                         notify_callback,
                         add_mark_callback,
                         base_directory=base_directory or os.path.dirname(media_path),
+                        resolved_category=resolved_match_category,
                     )
                 return None
 
@@ -608,13 +631,15 @@ class ClassifierAction:
     ) -> Optional[ClassifierActionType]:
         if not self.can_run:
             return None
-        if self.matches_image_path(image_path):
+        is_match, matched_category = self._evaluate_image_path_match(image_path)
+        if is_match:
             return self.run_action(
                 image_path,
                 hide_callback,
                 notify_callback,
                 add_mark_callback,
                 base_directory=base_directory,
+                resolved_category=matched_category,
             )
         return None
 
@@ -639,13 +664,18 @@ class ClassifierAction:
             )
         return None
 
-    def _resolve_action_target_directory(self, image_path: str, base_directory: Optional[str] = None) -> Optional[str]:
+    def _resolve_action_target_directory(
+        self,
+        image_path: str,
+        base_directory: Optional[str] = None,
+        resolved_category: Optional[str] = None,
+    ) -> Optional[str]:
         explicit_dir = (self.action_modifier or "").strip()
         if explicit_dir:
             return explicit_dir
         if not self.is_move_action():
             return None
-        category = self._resolve_classifier_target_category(image_path)
+        category = resolved_category or self._resolve_classifier_target_category(image_path)
         if not category:
             return None
         resolved_base_dir = (base_directory or os.path.dirname(image_path) or "").strip()
@@ -660,6 +690,7 @@ class ClassifierAction:
         notify_callback,
         add_mark_callback=None,
         base_directory: Optional[str] = None,
+        resolved_category: Optional[str] = None,
     ):
         base_message = self.name + _(" detected")
         if self.action == ClassifierActionType.SKIP:
@@ -674,7 +705,9 @@ class ClassifierAction:
             notify_callback("\n" + base_message + _(" - marked"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
         elif self.action == ClassifierActionType.MOVE or self.action == ClassifierActionType.COPY:
             target_directory = self._resolve_action_target_directory(
-                image_path, base_directory=base_directory
+                image_path,
+                base_directory=base_directory,
+                resolved_category=resolved_category,
             )
             if target_directory is not None and len(target_directory) > 0:
                 if not os.path.exists(target_directory):
