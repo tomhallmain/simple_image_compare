@@ -493,7 +493,14 @@ class ClassifierAction:
         is_pdf = config.enable_pdfs and media_path_lower.endswith(".pdf")
         return is_video or is_pdf
 
-    def run_on_media_path(self, media_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
+    def run_on_media_path(
+        self,
+        media_path,
+        hide_callback,
+        notify_callback,
+        add_mark_callback=None,
+        base_directory: Optional[str] = None,
+    ) -> Optional[ClassifierActionType]:
         if not self.can_run:
             return None
         if self._is_dynamic_media_path(media_path):
@@ -559,11 +566,23 @@ class ClassifierAction:
                         f"{duration_seconds:.2f}" if isinstance(duration_seconds, (int, float)) else "n/a",
                     )
                 if threshold_met:
-                    return self.run_action(media_path, hide_callback, notify_callback, add_mark_callback)
+                    return self.run_action(
+                        media_path,
+                        hide_callback,
+                        notify_callback,
+                        add_mark_callback,
+                        base_directory=base_directory or os.path.dirname(media_path),
+                    )
                 return None
 
         try:
-            return self.run_on_image_path(media_path, hide_callback, notify_callback, add_mark_callback)
+            return self.run_on_image_path(
+                media_path,
+                hide_callback,
+                notify_callback,
+                add_mark_callback,
+                base_directory=base_directory or os.path.dirname(media_path),
+            )
         except Exception as e:
             # For non-image media, fall back to first extracted frame.
             # TODO: Extend dynamic multi-sample handling to additional media
@@ -571,16 +590,77 @@ class ClassifierAction:
             actual_image_path = FrameCache.get_image_path(media_path)
             if actual_image_path == media_path:
                 raise e
-            return self.run_on_image_path(actual_image_path, hide_callback, notify_callback, add_mark_callback)
+            return self.run_on_image_path(
+                actual_image_path,
+                hide_callback,
+                notify_callback,
+                add_mark_callback,
+                base_directory=base_directory or os.path.dirname(media_path),
+            )
 
-    def run_on_image_path(self, image_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
+    def run_on_image_path(
+        self,
+        image_path,
+        hide_callback,
+        notify_callback,
+        add_mark_callback=None,
+        base_directory: Optional[str] = None,
+    ) -> Optional[ClassifierActionType]:
         if not self.can_run:
             return None
         if self.matches_image_path(image_path):
-            return self.run_action(image_path, hide_callback, notify_callback, add_mark_callback)
+            return self.run_action(
+                image_path,
+                hide_callback,
+                notify_callback,
+                add_mark_callback,
+                base_directory=base_directory,
+            )
         return None
 
-    def run_action(self, image_path, hide_callback, notify_callback, add_mark_callback=None):
+    def _resolve_classifier_target_category(self, image_path: str) -> Optional[str]:
+        if not self.use_image_classifier:
+            return None
+        if self.image_classifier is None and self.image_classifier_name:
+            self.ensure_image_classifier_loaded(None)
+        if self.image_classifier is None:
+            return None
+        predicted_category = self.image_classifier.classify_image(image_path)
+        if predicted_category is None:
+            return None
+        if self.classification_mode == ImageClassifierClassificationMode.MODEL_STRATEGY:
+            positive_categories = self._resolve_model_strategy_positive_categories()
+            return predicted_category if predicted_category in positive_categories else None
+        if self.image_classifier_selected_categories:
+            return (
+                predicted_category
+                if predicted_category in self.image_classifier_selected_categories
+                else None
+            )
+        return None
+
+    def _resolve_action_target_directory(self, image_path: str, base_directory: Optional[str] = None) -> Optional[str]:
+        explicit_dir = (self.action_modifier or "").strip()
+        if explicit_dir:
+            return explicit_dir
+        if not self.is_move_action():
+            return None
+        category = self._resolve_classifier_target_category(image_path)
+        if not category:
+            return None
+        resolved_base_dir = (base_directory or os.path.dirname(image_path) or "").strip()
+        if not resolved_base_dir:
+            return None
+        return os.path.join(resolved_base_dir, category)
+
+    def run_action(
+        self,
+        image_path,
+        hide_callback,
+        notify_callback,
+        add_mark_callback=None,
+        base_directory: Optional[str] = None,
+    ):
         base_message = self.name + _(" detected")
         if self.action == ClassifierActionType.SKIP:
             notify_callback("\n" + base_message + _(" - skipped"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
@@ -593,21 +673,24 @@ class ClassifierAction:
             add_mark_callback(image_path)
             notify_callback("\n" + base_message + _(" - marked"), base_message=base_message, action_type=ActionType.SYSTEM, is_manual=False)
         elif self.action == ClassifierActionType.MOVE or self.action == ClassifierActionType.COPY:
-            if self.action_modifier is not None and len(self.action_modifier) > 0:
-                if not os.path.exists(self.action_modifier):
+            target_directory = self._resolve_action_target_directory(
+                image_path, base_directory=base_directory
+            )
+            if target_directory is not None and len(target_directory) > 0:
+                if not os.path.exists(target_directory):
                     try:
-                        os.makedirs(self.action_modifier, exist_ok=True)
+                        os.makedirs(target_directory, exist_ok=True)
                         logger.info(
                             f"Created missing action target directory for classifier action "
-                            f"{self.name}: {self.action_modifier}"
+                            f"{self.name}: {target_directory}"
                         )
                     except Exception as e:
                         raise Exception(
                             "Invalid move target directory for classifier action "
-                            + self.name + ": " + self.action_modifier + f" ({e})"
+                            + self.name + ": " + target_directory + f" ({e})"
                         )
-                if os.path.normpath(os.path.dirname(image_path)) != os.path.normpath(self.action_modifier):
-                    action_modifier_name = Utils.get_relative_dirpath(self.action_modifier, levels=2)
+                if os.path.normpath(os.path.dirname(image_path)) != os.path.normpath(target_directory):
+                    action_modifier_name = Utils.get_relative_dirpath(target_directory, levels=2)
                     action_type = ActionType.MOVE_FILE if self.action == ClassifierActionType.MOVE else ActionType.COPY_FILE
                     specific_message = _("Moving file: ") + os.path.basename(image_path) + " -> " + action_modifier_name
                     notify_callback("\n" + specific_message, base_message=base_message,
@@ -615,13 +698,13 @@ class ClassifierAction:
                     try:
                         FileAction.add_file_action(
                             Utils.move_file if self.action == ClassifierActionType.MOVE else Utils.copy_file,
-                            image_path, self.action_modifier
+                            image_path, target_directory
                         )
                     except Exception as e:
                         if (self.action == ClassifierActionType.MOVE and
                             "File already exists:" in str(e) and
                             os.path.exists(image_path)):
-                            target_path = os.path.join(self.action_modifier, os.path.basename(image_path))
+                            target_path = os.path.join(target_directory, os.path.basename(image_path))
                             if Utils.calculate_hash(image_path) == Utils.calculate_hash(target_path):
                                 # The file already exists in target, so we need to remove it from the source
                                 # NOTE: this is a hack to avoid an error that sometimes happens where a file gets stranded
@@ -643,7 +726,7 @@ class ClassifierAction:
                                     # Replace target with source file (source has more information)
                                     FileAction.add_file_action(
                                         Utils.move_file if self.action == ClassifierActionType.MOVE else Utils.copy_file,
-                                        image_path, self.action_modifier, auto=True, overwrite_existing=True
+                                        image_path, target_directory, auto=True, overwrite_existing=True
                                     )
                                     logger.info("Replaced target file with source: " + image_path)
                                 except Exception as e:
@@ -723,8 +806,21 @@ class ClassifierAction:
             if self.classification_mode == ImageClassifierClassificationMode.MODEL_STRATEGY:
                 self._resolve_model_strategy_positive_categories()
         
-        if self.is_move_action() and not os.path.isdir(self.action_modifier):
-            raise Exception('Action modifier must be a valid directory')
+        if self.is_move_action():
+            action_modifier = (self.action_modifier or "").strip()
+            if action_modifier and not os.path.isdir(action_modifier):
+                raise Exception('Action modifier must be a valid directory')
+            if not action_modifier and not self.use_image_classifier:
+                raise Exception('Action modifier must be set when image classifier is disabled')
+            if (
+                not action_modifier
+                and self.use_image_classifier
+                and self.classification_mode == ImageClassifierClassificationMode.SELECTED_CATEGORIES
+                and not self.image_classifier_selected_categories
+            ):
+                raise Exception(
+                    "Action modifier may be empty only when image classifier selected categories are provided."
+                )
 
     def validate_dirs(self):
         errors = []
@@ -1000,15 +1096,41 @@ class Prevalidation(ClassifierAction):
         else:
             self.profile = None
 
-    def run_on_image_path(self, image_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
+    def run_on_image_path(
+        self,
+        image_path,
+        hide_callback,
+        notify_callback,
+        add_mark_callback=None,
+        base_directory: Optional[str] = None,
+    ) -> Optional[ClassifierActionType]:
         # Lazy load the image classifier if needed
         super().ensure_image_classifier_loaded(notify_callback)
-        return super().run_on_image_path(image_path, hide_callback, notify_callback, add_mark_callback)
+        return super().run_on_image_path(
+            image_path,
+            hide_callback,
+            notify_callback,
+            add_mark_callback,
+            base_directory=base_directory,
+        )
 
-    def run_on_media_path(self, media_path, hide_callback, notify_callback, add_mark_callback=None) -> Optional[ClassifierActionType]:
+    def run_on_media_path(
+        self,
+        media_path,
+        hide_callback,
+        notify_callback,
+        add_mark_callback=None,
+        base_directory: Optional[str] = None,
+    ) -> Optional[ClassifierActionType]:
         # Keep lazy image-classifier loading behavior for sampled media paths too.
         super().ensure_image_classifier_loaded(notify_callback)
-        return super().run_on_media_path(media_path, hide_callback, notify_callback, add_mark_callback)
+        return super().run_on_media_path(
+            media_path,
+            hide_callback,
+            notify_callback,
+            add_mark_callback,
+            base_directory=base_directory,
+        )
 
     def validate_dirs(self):
         super().validate_dirs()
@@ -1342,7 +1464,11 @@ class ClassifierActionsManager:
                 if prevalidation.profile is not None and base_dir not in prevalidation.profile.directories:
                     continue
                 prevalidation_action = prevalidation.run_on_media_path(
-                    media_path, hide_callback, notify_callback, add_mark_callback
+                    media_path,
+                    hide_callback,
+                    notify_callback,
+                    add_mark_callback,
+                    base_directory=base_dir,
                 )
                 if prevalidation_action is not None:
                     break
@@ -1483,7 +1609,11 @@ class ClassifierActionsManager:
                 ClassifierActionsManager.prevalidations.append(prevalidation)
 
                 # Build directories_to_exclude from loaded prevalidations
-                if prevalidation.is_move_action() and prevalidation.action_modifier not in ClassifierActionsManager.directories_to_exclude:
+                if (
+                    prevalidation.is_move_action()
+                    and prevalidation.action_modifier
+                    and prevalidation.action_modifier not in ClassifierActionsManager.directories_to_exclude
+                ):
                     ClassifierActionsManager.directories_to_exclude.append(prevalidation.action_modifier)
 
         ClassifierActionsManager._invalidate_after_prevalidation_policy_change()

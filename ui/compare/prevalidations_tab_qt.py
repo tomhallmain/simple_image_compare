@@ -765,7 +765,7 @@ class PrevalidationsTab(QWidget):
         self._filtered = ClassifierActionsManager.prevalidations[:]
         ClassifierActionsManager.directories_to_exclude.clear()
         for pv in ClassifierActionsManager.prevalidations:
-            if pv.is_move_action():
+            if pv.is_move_action() and pv.action_modifier:
                 ClassifierActionsManager.directories_to_exclude.append(
                     pv.action_modifier
                 )
