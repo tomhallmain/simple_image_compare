@@ -1615,7 +1615,12 @@ class ClassifierActionsManager:
     
     @staticmethod
     def load_prevalidations():
-        """Load prevalidations from cache."""
+        """Load prevalidations from app cache (disk persistence).
+
+        Does **not** evict prevalidation result caches: restoring the same session
+        from disk is not a policy change. Call ``clear_prevalidation_result_cache``
+        (or targeted eviction) after user edits that change outcomes.
+        """
         # Load lookaheads first
         for lookahead_dict in list(app_info_cache.get_meta("recent_lookaheads", default_val=[])):
             lookahead = Lookahead.from_dict(lookahead_dict)
@@ -1649,7 +1654,7 @@ class ClassifierActionsManager:
                 ):
                     ClassifierActionsManager.directories_to_exclude.append(prevalidation.action_modifier)
 
-        ClassifierActionsManager._invalidate_after_prevalidation_policy_change()
+        set_signature_memo(None)
 
     @staticmethod
     def store_prevalidations():
@@ -1673,7 +1678,10 @@ class ClassifierActionsManager:
 
     @staticmethod
     def load_classifier_actions():
-        """Load classifier actions from cache."""
+        """Load classifier actions from app cache (disk persistence).
+
+        Does **not** evict prevalidation result caches; see :meth:`load_prevalidations`.
+        """
         for classifier_action_dict in list(app_info_cache.get_meta("recent_classifier_actions", default_val=[])):
             classifier_action: ClassifierAction = ClassifierAction.from_dict(classifier_action_dict)
             try:
@@ -1693,7 +1701,7 @@ class ClassifierActionsManager:
             if classifier_action not in ClassifierActionsManager.classifier_actions:
                 ClassifierActionsManager.classifier_actions.append(classifier_action)
 
-        ClassifierActionsManager._invalidate_after_prevalidation_policy_change()
+        set_signature_memo(None)
 
     @staticmethod
     def store_classifier_actions():
