@@ -128,6 +128,27 @@ class ContextMenuBuilder:
             lambda: app.search_ctrl.run_image_generation_on_directory(),
         )
 
+        menu.addSeparator()
+
+        # ------------------------------------------------------------------
+        # Prevalidations
+        # ------------------------------------------------------------------
+        prevalidations_toggle_text = (
+            _("Disable Prevalidations")
+            if config.enable_prevalidations
+            else _("Enable Prevalidations")
+        )
+        menu.addAction(
+            _("Run Prevalidations on Directory"),
+            lambda: app.window_launcher.run_prevalidations_for_base_dir(),
+        )
+        menu.addAction(
+            prevalidations_toggle_text,
+            lambda: app.window_launcher.toggle_prevalidations(),
+        )
+
+        menu.addSeparator()
+
         # ------------------------------------------------------------------
         # Related images
         # ------------------------------------------------------------------

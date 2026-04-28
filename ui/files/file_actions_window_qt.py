@@ -388,7 +388,7 @@ class FileActionsWindow(SmartDialog):
     # ==================================================================
     def _view(self, image_path: str) -> None:
         if not os.path.isfile(image_path):
-            self._app_actions.toast(
+            self._app_actions.warn(
                 _("File not found: ") + os.path.basename(image_path)
             )
             return

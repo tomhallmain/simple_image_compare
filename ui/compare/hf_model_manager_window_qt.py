@@ -564,6 +564,9 @@ class HfModelManagerWindow(SmartDialog):
         self._installed_tree.setRootIsDecorated(False)
         self._installed_tree.setAlternatingRowColors(True)
         self._installed_tree.setSortingEnabled(True)
+        self._installed_tree.itemDoubleClicked.connect(
+            lambda *_: self._edit_selected_installed_model()
+        )
         hdr = self._installed_tree.header()
         hdr.setStretchLastSection(True)
         layout.addWidget(self._installed_tree)
