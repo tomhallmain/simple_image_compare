@@ -743,6 +743,11 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         self._apply_directory_title_bar_color(new_dir)
         RecentDirectories.set_recent_directory(new_dir)
 
+        # Return focus to the main canvas so global shortcuts work without Escape
+        # after navigating via the base-directory entry field.
+        if QApplication.focusWidget() is self.sidebar_panel.set_base_dir_box:
+            self.refocus()
+
     def _start_incremental_status_updates(self) -> None:
         if not self.file_browser.is_incremental_loading:
             return
@@ -886,16 +891,20 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         file_check: bool = True,
         removed_files: Optional[list] = None,
         from_file_check: bool = False,
+        force: bool = False,
     ) -> None:
         """
         Refresh the file list and update the display.
 
         Ported from App.refresh.
+        When *force* is True, run a full rescan even while incremental directory
+        loading is in progress (used after bulk operations such as directory-wide
+        prevalidations).
         """
         if removed_files is None:
             removed_files = []
 
-        if self.file_browser.is_incremental_loading:
+        if self.file_browser.is_incremental_loading and not force:
             progress_text = self.file_browser.get_incremental_progress_text()
             if progress_text:
                 self.notification_ctrl.set_label_state(text=progress_text)

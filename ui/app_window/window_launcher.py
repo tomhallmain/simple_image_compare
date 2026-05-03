@@ -14,7 +14,7 @@ import os
 from typing import TYPE_CHECKING, Any, Optional
 
 from ui.auth.password_utils import require_password, check_session_expired
-from utils.constants import Mode, ProtectedActions
+from utils.constants import ClassifierActionType, Mode, ProtectedActions
 from utils.logging_setup import get_logger, set_logger_level
 from utils.translations import I18N
 
@@ -376,9 +376,16 @@ class WindowLauncher:
         from PySide6.QtWidgets import QApplication
         from files.marked_files import MarkedFiles
         directory_was_excluded = PrevalidationsTab.remove_directory_from_exclusion_list(self._app.get_base_dir())
+        files_checked = 0
+        outcomes = 0
+        moves = 0
+        copies = 0
+        deletes = 0
+        errors = 0
         for media_path in fb.get_files():
+            files_checked += 1
             try:
-                PrevalidationsTab.prevalidate(
+                result = PrevalidationsTab.prevalidate(
                     media_path,
                     self._app.get_base_dir,
                     self._app.file_ops_ctrl.hide_current_media,
@@ -386,12 +393,32 @@ class WindowLauncher:
                     MarkedFiles.add_mark_if_not_present,
                     force=False,  # TODO optionally allow force=True via different keybind
                 )
+                if result is not None:
+                    outcomes += 1
+                    if result == ClassifierActionType.MOVE:
+                        moves += 1
+                    elif result == ClassifierActionType.COPY:
+                        copies += 1
+                    elif result == ClassifierActionType.DELETE:
+                        deletes += 1
             except Exception as e:
+                errors += 1
                 logger.error(e)
             # Keep the UI responsive during long-running prevalidation
             QApplication.processEvents()
         if directory_was_excluded:
             PrevalidationsTab.add_directory_to_exclusion_list(self._app.get_base_dir())
+
+        # Rescan from disk so counts and paths match any moves/deletes (fast once
+        # the directory is loaded; *force* bypasses the incremental-load refresh guard).
+        self._app.refresh(force=True)
+        self._app.notification_ctrl.toast(
+            _(
+                "All prevalidations in this directory have finished.\n"
+                "Files checked: {0} — outcomes: {1} — moves: {2} — copies: {3} — deletes: {4} — errors: {5}"
+            ).format(files_checked, outcomes, moves, copies, deletes, errors),
+            time_in_seconds=10,
+        )
 
     @require_password(ProtectedActions.RUN_PREVALIDATIONS)
     def toggle_prevalidations(self, event=None) -> None:
