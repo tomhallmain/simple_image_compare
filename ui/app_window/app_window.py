@@ -636,6 +636,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
 
         self.cache_ctrl.store_info_cache()
 
+        dir_from_sidebar_entry = False
         if base_dir_from_dir_window is not None:
             new_dir = base_dir_from_dir_window
         else:
@@ -656,8 +657,14 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
                     return
             else:
                 new_dir = entry_text
+                dir_from_sidebar_entry = True
 
         if not new_dir or not os.path.isdir(new_dir):
+            if dir_from_sidebar_entry:
+                self.app_actions.warn(
+                    _("Path is not an existing directory:\n{0}").format(new_dir),
+                    time_in_seconds=12,
+                )
             return
 
         # Check for large directory before loading

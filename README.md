@@ -23,9 +23,6 @@ The UI can be used as a media file browser. The following features are available
     <li>Auto-refresh directory files</li>
     <li>Slideshow (customizable)</li>
     <li>Optionally play and compare video files and other media - typically will use the first image found for the comparison.</li>
-    <li>Quicker and smoother transitions between media files</li>
-    <li>Faster load time for directories with many media files in some cases</li>
-    <li>Faster load times when switching between sort types</li>
     <li>Go to file by string search or by index (1-based)</li>
     <li>Mark groups of files to enable quick transitions and comparisons</li>
     <li>Mark favorite media and access them quickly via the Favorites window</li>
