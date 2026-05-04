@@ -176,6 +176,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         self._is_refreshing = False
         self._suppress_file_check_refresh_until = 0.0
         self._incremental_status_timer: Optional[QTimer] = None
+        self._base_dir_load_spinner_active = False
         self._startup_image_path: Optional[str] = image_path
 
         # ------------------------------------------------------------------
@@ -263,8 +264,8 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         # Controllers
         # ------------------------------------------------------------------
         self.notification_ctrl = NotificationController(app_window=self)
-        self.notification_ctrl.set_prevalidation_spinner(
-            self.sidebar_panel.prevalidation_spinner
+        self.notification_ctrl.set_loading_spinner(
+            self.sidebar_panel.loading_spinner
         )
 
         self.cache_ctrl = CacheController(
@@ -414,8 +415,8 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             "toast": ts(self.notification_ctrl.toast),
             "title_notify": ts(self.notification_ctrl.title_notify),
             "_alert": ts(self.notification_ctrl.alert),
-            "start_prevalidation_spinner": self.notification_ctrl.start_prevalidation_spinner,
-            "stop_prevalidation_spinner": self.notification_ctrl.stop_prevalidation_spinner,
+            "start_prevalidation_spinner": self.notification_ctrl.start_loading_spinner,
+            "stop_prevalidation_spinner": self.notification_ctrl.stop_loading_spinner,
             # Navigation / display
             "refresh": ts(self.refresh),
             "refocus": ts(self.refocus),
@@ -671,53 +672,64 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         if self._check_large_directory_before_load(new_dir):
             return  # user cancelled
 
-        # Clear stale compare if the directory changed
-        if self.compare_manager.has_compare() and new_dir != self.compare_manager.compare().base_dir:
-            self.compare_manager.clear_compare()
-            self.notification_ctrl.set_label_state(group_number=None, size=0)
-            self.sidebar_panel.remove_all_mode_buttons()
+        # Spinner from here through file scan: avoid showing it during early returns,
+        # directory picker, or the large-directory confirmation dialog above.
+        self._start_base_dir_load_spinner()
+        try:
+            # Restore per-directory settings from cache (read before compare/directory work)
+            recursive = base_cache.get(new_dir, "recursive", default_val=False)
+            sort_by_text = base_cache.get(new_dir, "sort_by", default_val=None)
+            compare_mode_text = base_cache.get(new_dir, "compare_mode", default_val=None)
 
-        # Restore per-directory settings from cache before loading directory
-        recursive = base_cache.get(new_dir, "recursive", default_val=False)
-        sort_by_text = base_cache.get(new_dir, "sort_by", default_val=None)
-        compare_mode_text = base_cache.get(new_dir, "compare_mode", default_val=None)
+            # Clear stale compare if the directory changed
+            if self.compare_manager.has_compare() and new_dir != self.compare_manager.compare().base_dir:
+                self.compare_manager.clear_compare()
+                self.notification_ctrl.set_label_state(group_number=None, size=0)
+                self.sidebar_panel.remove_all_mode_buttons()
 
-        if recursive != self.file_browser.recursive:
-            self.file_browser.set_recursive(recursive)
-            self.sidebar_panel.recursive_check.setChecked(recursive)
+            if recursive != self.file_browser.recursive:
+                self.file_browser.set_recursive(recursive)
+                self.sidebar_panel.recursive_check.setChecked(recursive)
 
-        if sort_by_text:
-            try:
-                from files.file_browser import SortBy
-                sb = SortBy.get(sort_by_text) if isinstance(sort_by_text, str) else sort_by_text
-                self.file_browser.sort_by = sb
-                self.sidebar_panel.set_sort_by_value(sb.get_text())
-            except Exception as e:
-                logger.error(f"Error setting stored sort by: {e}")
+            if sort_by_text:
+                try:
+                    from files.file_browser import SortBy
+                    sb = SortBy.get(sort_by_text) if isinstance(sort_by_text, str) else sort_by_text
+                    self.file_browser.sort_by = sb
+                    self.sidebar_panel.set_sort_by_value(sb.get_text())
+                except Exception as e:
+                    logger.error(f"Error setting stored sort by: {e}")
 
-        # Apply directory to file browser
-        self.sidebar_panel.update_base_dir_display(new_dir)
-        previous_file = base_cache.get(new_dir, "image_cursor")
-        previous_file_path = (
-            Utils.get_valid_file(new_dir, previous_file)
-            if previous_file and previous_file != ""
-            else None
-        )
-        preferred_initial_file = None
-        if (
-            self._startup_image_path
-            and isinstance(self._startup_image_path, str)
-            and os.path.isfile(self._startup_image_path)
-            and os.path.dirname(self._startup_image_path) == new_dir
-        ):
-            preferred_initial_file = self._startup_image_path
-        elif previous_file_path and os.path.isfile(previous_file_path):
-            # Seed incremental loading with the cached media when available.
-            preferred_initial_file = previous_file_path
-        self.file_browser.set_directory_with_preferred_file(
-            new_dir, preferred_file=preferred_initial_file
-        )
-        self._start_incremental_status_updates()
+            # Apply directory to file browser
+            self.sidebar_panel.update_base_dir_display(new_dir)
+            previous_file = base_cache.get(new_dir, "image_cursor")
+            previous_file_path = (
+                Utils.get_valid_file(new_dir, previous_file)
+                if previous_file and previous_file != ""
+                else None
+            )
+            preferred_initial_file = None
+            if (
+                self._startup_image_path
+                and isinstance(self._startup_image_path, str)
+                and os.path.isfile(self._startup_image_path)
+                and os.path.dirname(self._startup_image_path) == new_dir
+            ):
+                preferred_initial_file = self._startup_image_path
+            elif previous_file_path and os.path.isfile(previous_file_path):
+                # Seed incremental loading with the cached media when available.
+                preferred_initial_file = previous_file_path
+
+            self.file_browser.set_directory_with_preferred_file(
+                new_dir, preferred_file=preferred_initial_file
+            )
+            self._start_incremental_status_updates()
+        except Exception:
+            self._stop_base_dir_load_spinner_if_active()
+            raise
+        finally:
+            if not self.file_browser.is_incremental_loading:
+                self._stop_base_dir_load_spinner_if_active()
 
         if compare_mode_text:
             try:
@@ -755,6 +767,17 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
         if QApplication.focusWidget() is self.sidebar_panel.set_base_dir_box:
             self.refocus()
 
+    def _start_base_dir_load_spinner(self) -> None:
+        """Show the sidebar loading spinner for base-directory scan/load."""
+        self._base_dir_load_spinner_active = True
+        self.notification_ctrl.start_loading_spinner(force=True)
+
+    def _stop_base_dir_load_spinner_if_active(self) -> None:
+        """Hide the base-dir load spinner if this window started it."""
+        if self._base_dir_load_spinner_active:
+            self._base_dir_load_spinner_active = False
+            self.notification_ctrl.stop_loading_spinner()
+
     def _start_incremental_status_updates(self) -> None:
         if not self.file_browser.is_incremental_loading:
             return
@@ -770,6 +793,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             if self._incremental_status_timer is not None:
                 self._incremental_status_timer.stop()
                 self._incremental_status_timer = None
+            self._stop_base_dir_load_spinner_if_active()
             self.notification_ctrl.set_status_title(None)
             self.notification_ctrl.set_label_state()
             if self.mode == Mode.BROWSE and self.img_path is None and self.file_browser.has_files():

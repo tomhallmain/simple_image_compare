@@ -1,8 +1,9 @@
 """
-Tiny indeterminate spinner badge for prevalidation activity indication.
+Tiny indeterminate spinner badge next to the mode label (sidebar).
 
-Draws a rotating arc segment with QPainter; no GIF asset required.
-Hidden by default — call start() / stop() to show and hide it.
+Used for long-running work such as prevalidation passes and base-directory
+scans (including incremental directory loads). Draws a rotating arc segment
+with QPainter; no GIF asset required. Hidden by default — call start() / stop().
 """
 
 from PySide6.QtCore import Qt, QTimer
@@ -12,13 +13,12 @@ from PySide6.QtWidgets import QWidget
 from ui.app_style import AppStyle
 
 
-class PrevalidationSpinnerBadge(QWidget):
+class LoadingSpinnerBadge(QWidget):
     """
     14×14 indeterminate spinner that paints a rotating arc.
 
-    Intended to sit inline with the sidebar mode label so it is always
-    visible but unobtrusive.  The animation runs only while the widget is
-    visible; start() / stop() drive both visibility and the timer.
+    Sits inline with the sidebar mode label. The animation runs only while the
+    widget is visible; start() / stop() drive both visibility and the timer.
     """
 
     _ARC_SPAN_DEG = 120   # length of the visible arc segment in degrees

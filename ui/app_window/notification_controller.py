@@ -46,7 +46,7 @@ class NotificationController:
         self._signals.toast_requested.connect(self._do_toast)
         self._signals.title_notify_requested.connect(self._do_title_notify)
         self._status_title_override_active = False
-        self._prevalidation_spinner = None  # set by SidebarPanel after construction
+        self._loading_spinner = None  # set by SidebarPanel after construction
 
     # ------------------------------------------------------------------
     # Toast
@@ -226,31 +226,31 @@ class NotificationController:
         return qt_alert(parent, title, message, kind=kind)
 
     # ------------------------------------------------------------------
-    # Prevalidation spinner
+    # Loading spinner
     # ------------------------------------------------------------------
-    def set_prevalidation_spinner(self, spinner) -> None:
+    def set_loading_spinner(self, spinner) -> None:
         """Wire up the sidebar spinner badge (called by SidebarPanel after init)."""
-        self._prevalidation_spinner = spinner
+        self._loading_spinner = spinner
 
-    def start_prevalidation_spinner(self, force: bool = False) -> None:
+    def start_loading_spinner(self, force: bool = False) -> None:
         """Show the spinner.
 
         When *force* is False (default) the spinner is suppressed if a title-bar
         notification is already active, to avoid adding noise.  Pass
-        ``force=True`` when the caller knows prevalidation is actively running
-        regardless of notification state — e.g. when looping through a series
-        of dynamic-media files where each iteration starts a new prevalidation.
+        ``force=True`` when the caller needs the spinner despite an active
+        title notification — e.g. prevalidation loops, or base-directory /
+        incremental loading where the indicator should stay visible.
         """
-        if self._prevalidation_spinner is None:
+        if self._loading_spinner is None:
             return
         if not force and notification_manager.has_active_notifications(self._app.window_id):
             return
-        self._prevalidation_spinner.start()
+        self._loading_spinner.start()
 
-    def stop_prevalidation_spinner(self) -> None:
+    def stop_loading_spinner(self) -> None:
         """Always hide the spinner regardless of notification state."""
-        if self._prevalidation_spinner is not None:
-            self._prevalidation_spinner.stop()
+        if self._loading_spinner is not None:
+            self._loading_spinner.stop()
 
     def handle_error(self, error_text: str, title: Optional[str] = None, kind: str = "error") -> None:
         """Display an error dialog."""
