@@ -831,6 +831,10 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
 
         try:
             self.file_browser.directory = base_dir
+            # Must match drive to *base_dir*: is_slow_total_files() uses a 5× factor for
+            # "external" paths; leaving the flag from a previous directory mis-classifies
+            # e.g. C:\ after browsing D:\ and triggers the large-dir prompt far below threshold.
+            self.file_browser._update_drive_characteristics()
             if self.file_browser.has_confirmed_dir():
                 return False
             self.file_browser._gather_files()
@@ -851,6 +855,7 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             self.file_browser.directory = original_directory
             self.file_browser._files = original_files
             self.file_browser.filepaths = original_filepaths
+            self.file_browser._update_drive_characteristics()
         return False
 
     def set_mode(self, mode: Mode, do_update: bool = True) -> None:
