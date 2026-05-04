@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QEvent, QObject, Qt
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QProgressBar,
     QPushButton,
+    QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
@@ -278,9 +279,18 @@ class SidebarPanel(QWidget):
         self._add_spacer()
 
         # Current image name label (at the bottom)
-        self.label_current_image_name = QLabel("", self)
-        self.label_current_image_name.setWordWrap(True)
-        self._scroll.add_widget(self.label_current_image_name)
+        self.label_current_media_name = QLabel("", self)
+        self.label_current_media_name.setWordWrap(True)
+        self.label_current_media_name.setAlignment(
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
+        )
+        self.label_current_media_name.setSizePolicy(
+            QSizePolicy.Policy.Preferred,
+            QSizePolicy.Policy.Preferred,
+        )
+        self.label_current_media_name.setMinimumWidth(0)
+        self._scroll.add_widget(self.label_current_media_name)
+        self._scroll.viewport().installEventFilter(self)
 
         # -- Mode-specific button container --------------------------------
         self._mode_button_container = QVBoxLayout()
@@ -453,9 +463,33 @@ class SidebarPanel(QWidget):
         """Update the base directory entry widget."""
         self.set_base_dir_box.setText(base_dir)
 
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        if watched is self._scroll.viewport() and event.type() == QEvent.Type.Resize:
+            self._sync_current_image_label_max_width()
+        return super().eventFilter(watched, event)
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        self._sync_current_image_label_max_width()
+
+    def _sync_current_image_label_max_width(self) -> None:
+        """
+        Clamp the filename label to the scroll viewport so unbroken long names
+        (hashes, URLs) cannot widen the sidebar column and clip centered buttons.
+        """
+        vp = self._scroll.viewport()
+        if vp is None:
+            return
+        # Layout margins (4×2) + room for vertical scrollbar when shown
+        margin = 24
+        w = max(48, vp.width() - margin)
+        self.label_current_media_name.setMaximumWidth(w)
+
     def update_current_image_label(self, text: str) -> None:
         """Update the current image name label."""
-        self.label_current_image_name.setText(text)
+        self.label_current_media_name.setText(text)
+        self.label_current_media_name.setToolTip(text if text else "")
+        self._sync_current_image_label_max_width()
 
     def update_state_label(self, text: str) -> None:
         """Update the file state label (e.g. '5 / 120')."""
