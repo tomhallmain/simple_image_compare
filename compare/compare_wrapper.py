@@ -196,10 +196,10 @@ class CompareWrapper:
         loop = QEventLoop()
         worker = _Worker()
         worker.finished.connect(loop.quit)
-        app_actions.start_prevalidation_spinner(force=True)
+        app_actions.start_loading_spinner(force=True)
         worker.start()
         loop.exec()
-        app_actions.stop_prevalidation_spinner()
+        app_actions.stop_loading_spinner()
         for path in deferred_marks:
             MarkedFiles.add_mark_if_not_present(path)
         return result[0]

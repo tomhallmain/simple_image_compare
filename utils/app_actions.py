@@ -15,7 +15,7 @@ class AppActions:
         "release_media_canvas", "store_info_cache", 
         "_add_buttons_for_mode", "_set_label_state",
         "_set_toggled_view_matches", "refresh_all_compares",
-        "start_prevalidation_spinner", "stop_prevalidation_spinner",
+        "start_loading_spinner", "stop_loading_spinner",
     }
     
     def __init__(self, actions: Dict[str, Callable[..., Any]], master: Optional[object] = None):

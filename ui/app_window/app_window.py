@@ -415,8 +415,8 @@ class AppWindow(FramelessWindowMixin, SmartMainWindow):
             "toast": ts(self.notification_ctrl.toast),
             "title_notify": ts(self.notification_ctrl.title_notify),
             "_alert": ts(self.notification_ctrl.alert),
-            "start_prevalidation_spinner": self.notification_ctrl.start_loading_spinner,
-            "stop_prevalidation_spinner": self.notification_ctrl.stop_loading_spinner,
+            "start_loading_spinner": self.notification_ctrl.start_loading_spinner,
+            "stop_loading_spinner": self.notification_ctrl.stop_loading_spinner,
             # Navigation / display
             "refresh": ts(self.refresh),
             "refocus": ts(self.refocus),
